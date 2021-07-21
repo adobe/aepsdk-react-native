@@ -39,7 +39,7 @@ jobs:
 
       - run:
           name: Building Android Sample App
-          command: cd tests/AEPSampleApp/android && ./gradlew assembleRelease
+          command: cd tests/AEPSampleApp/android && ./gradlew assembleRelease  -x bundleReleaseJsAndAssets
           
   build-sample-app-ios:
     macos:
