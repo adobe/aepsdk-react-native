@@ -10,7 +10,7 @@ This repository is a monorepo. It contains a collection of AEPSDK React Native m
 |  [@adobe/react-native-aepuserprofile](./packages/userprofile)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-acpuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-acpuserprofile)](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile)   |
 
 
-`@adobe/react-native-aep{extension}` is a wrapper around the iOS, tvOS and Android [AEP SDK](https://aep-sdks.gitbook.io/docs/) to allow for integration with React Native applications.
+`@adobe/react-native-aep{extension}` is a wrapper around the iOS and Android [AEP SDK](https://aep-sdks.gitbook.io/docs/) to allow for integration with React Native applications.
 
 ## Requirements
 
