@@ -27,6 +27,10 @@ jobs:
       - run:
           name: Install lerna
           command: npm install --global lerna
+      
+      - run:
+          name: yarn bootstrap
+          command: yarn bootstrap
 
       - run:
           name: intall pods
