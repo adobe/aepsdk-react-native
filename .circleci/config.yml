@@ -27,8 +27,8 @@ jobs:
           command: yarn tests:jest
 
   build-sample-app-android:
-    macos:
-      xcode: "12.0"
+    docker:
+      - image: circleci/android:api-30-node
 
     steps:
       - checkout
@@ -44,6 +44,7 @@ jobs:
       - run:
           name: Building Android Sample App
           command: yarn sampleapp:android:build
+          
   build-sample-app-ios:
     macos:
       xcode: "12.0"
