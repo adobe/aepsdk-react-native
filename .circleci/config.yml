@@ -4,7 +4,7 @@ version: 2.1
 jobs:
   unit-test:
     macos:
-      xcode: "12.5.1"
+      xcode: "12.0"
 
     steps:
       - checkout
@@ -28,7 +28,7 @@ jobs:
 
   build-sample-app-ios:
     macos:
-      xcode: "12.5.1"
+      xcode: "12.0"
 
     steps:
       - checkout
@@ -54,4 +54,4 @@ workflows:
   ci-workflow:
     jobs:
       - unit-test
-      # - build-sample-app-ios
+      - build-sample-app-ios
