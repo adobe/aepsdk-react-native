@@ -11,7 +11,16 @@ jobs:
 
       - run: npm install --global lerna
       - run: npm install jest@24.8.0 -g
+
+      - restore_cache:
+          keys: 
+            - yarn-cache-{{ checksum "yarn.lock" }}
       - run: yarn bootstrap 
+      - save_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+            - ./tests/AEPSampleApp/node_modules
 
       - run:
           name: Unit Tests
