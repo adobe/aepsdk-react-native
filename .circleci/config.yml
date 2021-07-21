@@ -41,3 +41,4 @@ workflows:
   ci-workflow:
     jobs:
       - unit-test
+      - build-sample-app-ios
