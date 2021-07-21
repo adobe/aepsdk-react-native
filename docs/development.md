@@ -27,7 +27,7 @@ yarn tests:jest
 
 ## Convention
 
-Due to the [symlinks not working in React Native](https://github.com/facebook/metro/issues/1) issue, the solution (used in this project) is to modify metro.config.js to manually follow symbolic links:
+Due to the [symlinks not working in React Native](https://github.com/facebook/metro/issues/1) issue, the solution (used in this project) is to modify [metro.config.js](../tests/AEPSampleApp/metro.config.js) to manually follow symbolic links:
 
 ```javascript
 watchFolders: [
