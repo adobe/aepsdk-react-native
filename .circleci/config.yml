@@ -71,6 +71,6 @@ workflows:
   version: 2.1
   ci-workflow:
     jobs:
-      # - unit-test
-      # - build-sample-app-ios
+      - unit-test
+      - build-sample-app-ios
       - build-sample-app-android
