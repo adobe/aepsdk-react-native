@@ -1,0 +1,38 @@
+{
+  "name": "aepsdk-react-native",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "tests/*"
+    ],
+    "nohoist": [
+      "**/@adobe/**",
+      "**/react",
+      "**/@react-navigation/**",
+      "**/react/**",
+      "**/react-native",
+      "**/react-native/**",
+      "**/react-navigation/**",
+      "**/jest/**"
+    ]
+  },
+  "scripts": {
+    "clean": "rm yarn.lock & lerna run clean",
+    "bootstrap": "lerna bootstrap",
+    "tests:jest": "jest",
+    "sampleapp:ios:pod:update": "cd tests/AEPSampleApp/ios && pod update",
+    "sampleapp:ios:build": "cd tests/AEPSampleApp && npx react-native run-ios",
+    "sampleapp:android:build": "cd tests/AEPSampleApp/android && ./gradlew assembleRelease"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "babel-jest": "^26.6.3",
+    "babel-preset-react-native": "5.0.2",
+    "@babel/generator": "^7.4.4",
+    "@babel/preset-flow": "^7.0.0",
+    "flow-typed": "^2.5.2",
+    "babel-plugin-module-resolver": "^3.1.3",
+    "lerna": "^4.0.0"
+  }
+}
