@@ -32,18 +32,14 @@ jobs:
 
     steps:
       - checkout
-
-      - run:
-          name: Install lerna
-          command: npm install --global lerna
       
       - run:
-          name: yarn bootstrap
-          command: yarn bootstrap
+          name: yarn install
+          command: yarn install
 
       - run:
           name: Building Android Sample App
-          command: yarn sampleapp:android:build
+          command: cd tests/AEPSampleApp/android && ./gradlew assembleRelease
           
   build-sample-app-ios:
     macos:
@@ -76,5 +72,5 @@ workflows:
   ci-workflow:
     jobs:
       # - unit-test
-      - build-sample-app-ios
-      # - build-sample-app-android
+      # - build-sample-app-ios
+      - build-sample-app-android
