@@ -39,7 +39,11 @@ jobs:
 
       - run:
           name: Building Android Sample App
+<<<<<<< HEAD
           command: yarn sampleapp:android:build
+=======
+          command: cd tests/AEPSampleApp/android && ./gradlew assembleRelease  -x bundleReleaseJsAndAssets
+>>>>>>> d18f0ec1a220f63086f0379ef30d8a111f61d0c8
           
   build-sample-app-ios:
     macos:
