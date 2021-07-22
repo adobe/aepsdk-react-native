@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/adobe/AEPSDK-React-Native",
+    "url": "https://github.com/adobe/aepsdk-react-native",
     "directory": "packages/userprofile"
   },
   "keywords": [
