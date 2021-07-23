@@ -21,10 +21,10 @@
     "clean": "rm yarn.lock | 1 & rm -rf node_modules | 1 & lerna run cleanup",
     "bootstrap": "lerna bootstrap",
     "tests:jest": "jest",
-    "sampleapp:ios:pod:update": "cd tests/AEPSampleApp/ios && pod update",
-    "sampleapp:ios:pod:install": "cd tests/AEPSampleApp/ios && pod install",
-    "sampleapp:ios:build": "cd tests/AEPSampleApp && npx react-native run-ios",
-    "sampleapp:android:build": "cd tests/AEPSampleApp/android && ./gradlew assembleRelease -x bundleReleaseJsAndAssets"
+    "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
+    "sampleapp:ios:pod:install": "cd apps/AEPSampleApp/ios && pod install",
+    "sampleapp:ios:build": "cd apps/AEPSampleApp && npx react-native run-ios",
+    "sampleapp:android:build": "cd apps/AEPSampleApp/android && ./gradlew assembleRelease -x bundleReleaseJsAndAssets"
   },
   "devDependencies": {
     "jest": "^26.6.3",
