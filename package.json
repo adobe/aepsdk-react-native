@@ -4,7 +4,7 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "tests/*"
+      "apps/*"
     ],
     "nohoist": [
       "**/@adobe/**",
@@ -18,7 +18,7 @@
     ]
   },
   "scripts": {
-    "clean": "rm yarn.lock & lerna run clean",
+    "clean": "rm yarn.lock | 1 & rm -rf node_modules | 1 & lerna run cleanup",
     "bootstrap": "lerna bootstrap",
     "tests:jest": "jest",
     "sampleapp:ios:pod:update": "cd tests/AEPSampleApp/ios && pod update",
