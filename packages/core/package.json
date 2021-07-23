@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "main": "./js/index.js",
   "scripts": {
-    "clean": "",
+    "cleanup": "rm -rf node_modules",
     "flow": "flow"
   },
   "repository": {

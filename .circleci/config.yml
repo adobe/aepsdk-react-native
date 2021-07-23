@@ -20,7 +20,7 @@ jobs:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-            - ./tests/AEPSampleApp/node_modules
+            - ./apps/AEPSampleApp/node_modules
 
       - run:
           name: Unit Tests

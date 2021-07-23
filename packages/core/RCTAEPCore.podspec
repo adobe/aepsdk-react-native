@@ -7,12 +7,12 @@ Pod::Spec.new do |s|
   s.summary      = "Core library for Adobe Experience Cloud SDK. Written and Supported by Adobe."
   s.author       = "Adobe Mobile SDK Team"
 
-  s.homepage     = "https://github.com/adobe/react-native-aep"
+  s.homepage     = "https://github.com/adobe/aepsdk-react-native"
 
   s.license      = "Apache 2.0 License"
   s.platforms    = { :ios => "10.0", :tvos => "10.0" }
 
-  s.source       = { :git => "https://github.com/adobe/react-native-aep.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/adobe/aepsdk-react-native.git", :tag => "#{s.version}" }
 
 
   s.requires_arc = true
