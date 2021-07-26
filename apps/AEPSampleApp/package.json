@@ -1,6 +1,6 @@
 {
   "name": "aepsampleapp",
-  "version": null,
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "cleanup": "rm -rf node_modules | 1",
