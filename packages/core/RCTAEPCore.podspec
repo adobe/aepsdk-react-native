@@ -14,14 +14,13 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/adobe/aepsdk-react-native.git", :tag => "#{s.version}" }
 
-
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "AEPCore"
-  s.dependency "AEPLifecycle"
-  s.dependency "AEPIdentity"
-  s.dependency "AEPSignal"
+  s.dependency "AEPCore", '~> 3.0'
+  s.dependency "AEPLifecycle", '~> 3.0'
+  s.dependency "AEPIdentity", '~> 3.0'
+  s.dependency "AEPSignal", '~> 3.0'
 
   s.source_files  = "ios/src/**/*.{h,m}"
 

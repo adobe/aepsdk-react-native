@@ -12,10 +12,10 @@ target 'AEPSampleApp' do
     :hermes_enabled => false
   )
   
-  pod 'AEPCore'
-  pod 'AEPLifecycle'
-  pod 'AEPIdentity'
-  pod 'AEPSignal'
+  # pod 'AEPCore'
+  # pod 'AEPLifecycle'
+  # pod 'AEPIdentity'
+  # pod 'AEPSignal'
   
   target 'AEPSampleAppTests' do
     inherit! :complete

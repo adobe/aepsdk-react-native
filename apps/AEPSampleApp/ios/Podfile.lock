@@ -33,13 +33,13 @@ PODS:
     - DoubleConversion
     - glog
   - RCTAEPCore (1.0.0):
-    - AEPCore
-    - AEPIdentity
-    - AEPLifecycle
-    - AEPSignal
+    - AEPCore (~> 3.0)
+    - AEPIdentity (~> 3)
+    - AEPLifecycle (~> 3)
+    - AEPSignal (~> 3)
     - React
   - RCTAEPUserProfile (1.0.0):
-    - AEPUserProfile
+    - AEPUserProfile (~> 3)
     - React
   - RCTRequired (0.64.2)
   - RCTTypeSafety (0.64.2):
@@ -330,10 +330,6 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
-  - AEPCore
-  - AEPIdentity
-  - AEPLifecycle
-  - AEPSignal
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -466,11 +462,11 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: 1b26d6bd23c2f8f852f8c9d931140afe6994098b
+  FBReactNativeSpec: a2f531d996fa0cfec14dc62700efc19d68982a65
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
-  RCTAEPCore: 4bcb957944bb22da5eb94f6097b89f50d637000f
-  RCTAEPUserProfile: 6d21eb0e261e5e5bc64c793294eff24e93200cc2
+  RCTAEPCore: 3d5aac240270f376870447c92616cd477caac25c
+  RCTAEPUserProfile: 376b39a0f02a5f87cf6fde0be7ae483965fcdfea
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
   React: bda6b6d7ae912de97d7a61aa5c160db24aa2ad69
@@ -500,6 +496,6 @@ SPEC CHECKSUMS:
   RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 76c9395ace134fcb32c854019d5da67bd38c03de
+PODFILE CHECKSUM: 858a52a88cd03ee8275e8d5664174f1324fe044c
 
 COCOAPODS: 1.10.1
