@@ -21,6 +21,7 @@
     "clean": "rm yarn.lock | 1 & rm -rf node_modules | 1 & lerna run cleanup",
     "bootstrap": "lerna bootstrap",
     "tests:jest": "jest",
+    "release-dry-run": "lerna publish from-package --skip-npm ",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
     "sampleapp:ios:pod:install": "cd apps/AEPSampleApp/ios && pod install",
     "sampleapp:ios:build": "cd apps/AEPSampleApp && npx react-native run-ios",
