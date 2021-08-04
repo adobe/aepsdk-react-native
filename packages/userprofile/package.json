@@ -1,0 +1,33 @@
+{
+  "name": "@adobe/react-native-aepuserprofile",
+  "version": "1.0.0-alpha.0",
+  "description": "Adobe Experience Platform support for React Native apps.",
+  "homepage": "https://aep-sdks.gitbook.io/docs/",
+  "license": "Apache-2.0",
+  "main": "./js/index.js",
+  "scripts": {
+    "cleanup": "rm -rf node_modules",
+    "flow": "flow"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adobe/aepsdk-react-native",
+    "directory": "packages/userprofile"
+  },
+  "keywords": [
+    "react-native",
+    "adobe",
+    "adobe experience platform",
+    "user",
+    "profile",
+    "ios",
+    "android"
+  ],
+  "author": {
+    "name": "Adobe Experience Platform SDK Team"
+  },
+  "peerDependencies": {
+    "@adobe/react-native-aepcore": "1.0.0",
+    "react-native": ">=0.60.0"
+  }
+}

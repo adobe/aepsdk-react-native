@@ -1,0 +1,76 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+jobs:
+  unit-test:
+    macos:
+      xcode: "12.0"
+
+    steps:
+      - checkout
+
+      - run: npm install --global lerna
+      - run: npm install jest@24.8.0 -g
+
+      - restore_cache:
+          keys: 
+            - yarn-cache-{{ checksum "yarn.lock" }}
+      - run: yarn bootstrap 
+      - save_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+            - ./apps/AEPSampleApp/node_modules
+
+      - run:
+          name: Unit Tests
+          command: yarn tests:jest
+
+  build-sample-app-android:
+    docker:
+      - image: circleci/android:api-30-node
+
+    steps:
+      - checkout
+      
+      - run:
+          name: yarn install
+          command: yarn install
+
+      - run:
+          name: Building Android Sample App
+          command: yarn sampleapp:android:build
+          
+  build-sample-app-ios:
+    macos:
+      xcode: "12.0"
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install lerna
+          command: npm install --global lerna
+      
+      - run:
+          name: yarn bootstrap
+          command: yarn bootstrap
+
+      - run:
+          name: Install latest Cocoapods
+          command: sudo gem install cocoapods
+          
+      - run:
+          name: intall pods
+          command: yarn sampleapp:ios:pod:install
+
+      - run:
+          name: Building iOS Sample App
+          command: yarn sampleapp:ios:build
+workflows:
+  version: 2.1
+  ci-workflow:
+    jobs:
+      - unit-test
+      - build-sample-app-ios
+      - build-sample-app-android
