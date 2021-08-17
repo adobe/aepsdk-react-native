@@ -61,6 +61,10 @@ jest.doMock('react-native', () => {
                     getUserAttributes: jest.fn(() => new Promise(resolve => resolve())),
                     updateUserAttributes: jest.fn(),
                 },
+                AEPEdge: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve())),
+                    sendEvent: jest.fn(() => new Promise(resolve => resolve())),
+                },
             },
         },
         ReactNative,

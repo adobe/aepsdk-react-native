@@ -6,6 +6,7 @@
 @import AEPLifecycle;
 @import AEPIdentity;
 @import AEPUserProfile;
+@import AEPEdge;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 

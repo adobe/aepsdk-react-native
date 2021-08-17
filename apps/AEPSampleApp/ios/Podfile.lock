@@ -1,15 +1,20 @@
 PODS:
-  - AEPCore (3.2.2):
+  - AEPCore (3.2.3):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.2.2)
-  - AEPIdentity (3.2.2):
-    - AEPCore (= 3.2.2)
-  - AEPLifecycle (3.2.2):
-    - AEPCore (= 3.2.2)
+    - AEPServices (= 3.2.3)
+  - AEPEdge (1.1.1):
+    - AEPCore (>= 3.1.1)
+    - AEPEdgeIdentity
+  - AEPEdgeIdentity (1.0.0):
+    - AEPCore (>= 3.1.1)
+  - AEPIdentity (3.2.3):
+    - AEPCore (= 3.2.3)
+  - AEPLifecycle (3.2.3):
+    - AEPCore (= 3.2.3)
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.2.2)
-  - AEPSignal (3.2.2):
-    - AEPCore (= 3.2.2)
+  - AEPServices (3.2.3)
+  - AEPSignal (3.2.3):
+    - AEPCore (= 3.2.3)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -32,14 +37,17 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
-  - RCTAEPCore (1.0.0):
+  - RCTAEPCore (1.0.0-alpha.0):
     - AEPCore (~> 3.0)
-    - AEPIdentity (~> 3)
-    - AEPLifecycle (~> 3)
-    - AEPSignal (~> 3)
+    - AEPIdentity (~> 3.0)
+    - AEPLifecycle (~> 3.0)
+    - AEPSignal (~> 3.0)
     - React
-  - RCTAEPUserProfile (1.0.0):
-    - AEPUserProfile (~> 3)
+  - RCTAEPEdge (1.0.0-alpha.0):
+    - AEPEdge (~> 1.0)
+    - React
+  - RCTAEPUserProfile (1.0.0-alpha.0):
+    - AEPUserProfile (~> 3.0)
     - React
   - RCTRequired (0.64.2)
   - RCTTypeSafety (0.64.2):
@@ -336,6 +344,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTAEPCore (from `../../../packages/core`)
+  - RCTAEPEdge (from `../../../packages/edge`)
   - RCTAEPUserProfile (from `../../../packages/userprofile`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -371,6 +380,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AEPCore
+    - AEPEdge
+    - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
     - AEPRulesEngine
@@ -392,6 +403,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTAEPCore:
     :path: "../../../packages/core"
+  RCTAEPEdge:
+    :path: "../../../packages/edge"
   RCTAEPUserProfile:
     :path: "../../../packages/userprofile"
   RCTRequired:
@@ -452,21 +465,24 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPCore: 1f15da7f4c843b8aa61c54486b7c5b85378187af
-  AEPIdentity: bdc78eb093c20d259bb3b7d79d7e0b75f30cff2e
-  AEPLifecycle: 54602c05131fd479b292cad24a62ab9f92509908
+  AEPCore: eaa2a725705c17d2a63c131aa682a21429688ee6
+  AEPEdge: ff0cf67e25c342a7a9d48e9a77e9485869dad043
+  AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
+  AEPIdentity: 8e28eeda440dbbaac977e6e499feeb5a2bf3f2a8
+  AEPLifecycle: e492629ac51c0e123e02b81238cebefaa3e7cb82
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: 8072b031649fea7ffd971e4e185f271dee3707fc
-  AEPSignal: dc658c701187d9e1658732d264fb711358b76df5
+  AEPServices: 29df53822d7708b602ab5789b668734e3b24b6c7
+  AEPSignal: 1bcaabf874da22a31cb777d6ff5908b63142b378
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: a2f531d996fa0cfec14dc62700efc19d68982a65
+  FBReactNativeSpec: ab2a43ad048a6372f9ff47f6c3b7b68225095789
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
-  RCTAEPCore: 3d5aac240270f376870447c92616cd477caac25c
-  RCTAEPUserProfile: 376b39a0f02a5f87cf6fde0be7ae483965fcdfea
+  RCTAEPCore: 01116edebbba2ea523afab5dd8b7204774dd94f1
+  RCTAEPEdge: 52b2f0963cbc244dde3057edc1603b52c888f6fa
+  RCTAEPUserProfile: d9b3a45c60bc555447b38975eee701e88f5278ef
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
   React: bda6b6d7ae912de97d7a61aa5c160db24aa2ad69
@@ -496,6 +512,6 @@ SPEC CHECKSUMS:
   RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 858a52a88cd03ee8275e8d5664174f1324fe044c
+PODFILE CHECKSUM: d560ebba567c3b39a448aa5c264b32c2a1a4fe75
 
 COCOAPODS: 1.10.1
