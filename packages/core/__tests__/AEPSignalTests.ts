@@ -12,14 +12,17 @@ governing permissions and limitations under the License.
 @format
 */
 
+
 import { NativeModules } from 'react-native';
-import AEPLifecycle from '../js/AEPLifecycle';
+import {AEPSignal} from '../';
 
-describe('AEPLifecycle', () => {
+describe('AEPSignal', () => {
 
-  test('extensionVersion is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPLifecycle, 'extensionVersion');
-    await AEPLifecycle.extensionVersion();
+  it('extensionVersion is called', async () => {
+    expect(AEPSignal.extensionVersion).toBeDefined();
+    const spy = jest.spyOn(NativeModules.AEPSignal, 'extensionVersion');
+    await AEPSignal.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
+
 });

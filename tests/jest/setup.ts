@@ -23,6 +23,44 @@ jest.doMock('react-native', () => {
                     getUserAttributes: jest.fn(() => new Promise(resolve => resolve(null))),
                     updateUserAttributes: jest.fn(),
                 },
+                AEPSignal: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))) 
+                },
+                AEPLifecycle: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))) 
+                },
+                AEPCore: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    configureWithAppId: jest.fn(),
+                    updateConfiguration: jest.fn(),
+                    setLogLevel: jest.fn(),
+                    getLogLevel: jest.fn(() => new Promise(resolve => resolve(''))),
+                    log: jest.fn(),
+                    setPrivacyStatus: jest.fn(),
+                    getPrivacyStatus: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getSdkIdentities: jest.fn(() => new Promise(resolve => resolve(''))),
+                    dispatchEvent: jest.fn(),
+                    dispatchEventWithResponseCallback: jest.fn(() => new Promise(resolve => resolve(null))),
+                    dispatchResponseEvent: jest.fn(() => new Promise(resolve => resolve(false))),
+                    trackAction: jest.fn(),
+                    trackState: jest.fn(),
+                    setAdvertisingIdentifier: jest.fn(),
+                    setPushIdentifier: jest.fn(),
+                    collectPii: jest.fn(),
+                    setSmallIconResourceID: jest.fn(),
+                    setLargeIconResourceID: jest.fn(),
+                    setAppGroup: jest.fn(),
+                },
+                AEPIdentity: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    syncIdentifiers: jest.fn(),
+                    syncIdentifiersWithAuthState: jest.fn(),
+                    syncIdentifier: jest.fn(),
+                    appendVisitorInfoForURL: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getIdentifiers: jest.fn(() => new Promise(resolve => resolve(null))),
+                    getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))) 
+                }
             },
         },
         ReactNative,
