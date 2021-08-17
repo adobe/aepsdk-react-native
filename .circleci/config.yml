@@ -46,12 +46,18 @@ jobs:
       - checkout
 
       - run:
-          name: Install lerna
-          command: npm install --global lerna
-      
-      - run:
-          name: yarn bootstrap
-          command: yarn bootstrap
+          name: Install latest NodeJS
+          command: sudo npm install n -g
+
+      - restore_cache:
+          keys: 
+            - yarn-cache-{{ checksum "yarn.lock" }}
+      - run: yarn bootstrap 
+      - save_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+            - ./apps/AEPSampleApp/node_modules
 
       - run:
           name: Install latest Cocoapods
@@ -69,5 +75,5 @@ workflows:
   ci-workflow:
     jobs:
       - unit-test
-      # - build-sample-app-ios
-      # - build-sample-app-android
+      - build-sample-app-ios
+      - build-sample-app-android
