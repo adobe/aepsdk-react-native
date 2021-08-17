@@ -51,7 +51,7 @@ static void InitializeFlipper(UIApplication *application) {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
   [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileUserProfile.class, AEPMobileEdge.class] completion:^{
           [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  [AEPMobileCore configureWithAppId:@"3805cb8645dd/c03dd4785f89/launch-f9b5643dee2d-development"];
+  //[AEPMobileCore configureWithAppId:@"yourAppId"];
   }
   ];
   return YES;

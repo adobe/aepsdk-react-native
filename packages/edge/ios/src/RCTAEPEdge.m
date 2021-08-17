@@ -37,10 +37,9 @@ RCT_EXPORT_METHOD(sendEvent: (nonnull NSDictionary*) experienceEventDict resolve
         reject(EXTENSION_NAME, FAILED_TO_CONVERT_EXPERIENCE_EVENT, nil);
         return;
     }
-
-    [AEPMobileEdge sendEvent:experienceEvent completion:^(NSArray<AEPEdgeEventHandle *> * _Nonnull handles){
+    [AEPMobileEdge sendExperienceEvent:experienceEvent completion:^(NSArray<AEPEdgeEventHandle *> * _Nonnull handles) {
         resolve(handles);
-            }];
+    }];
 }
 
 @end

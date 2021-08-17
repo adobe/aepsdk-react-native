@@ -21,7 +21,8 @@ function edgeExtensionVersion() {
 }
 
 function sendEvent() {
-  var experienceEvent = new AEPExperienceEvent({"xdmdata": "xdmdataValue"}, {"data": "dataValue"}, {"query": "queryValue"}, {"datasetIdentifier": "datasetIdentifierValue"});
+  var xdmData  = ("eventType" : "SampleXDMEvent");
+  var experienceEvent = new AEPExperienceEvent(xdmData);
   AEPEdge.sendEvent(experienceEvent);
 }
 

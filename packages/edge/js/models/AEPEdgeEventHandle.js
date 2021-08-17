@@ -20,7 +20,7 @@ class AEPEdgeEventHandle {
   payload: {[[string]: any]}
  
  
-  constructor(type?: {string}, payload?: {[string]: any}) {
+  constructor(type?: {string}, payload?: {[[string]: any]}) {
   	this.type = type;
     this.payload = payload;
   }

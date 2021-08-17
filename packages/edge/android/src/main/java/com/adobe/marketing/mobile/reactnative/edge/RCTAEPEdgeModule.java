@@ -11,14 +11,18 @@
 package com.adobe.marketing.mobile.reactnative.edge;
 
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.edge;
+import com.adobe.marketing.mobile.Edge;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.adobe.marketing.mobile.EdgeCallback;
+import com.adobe.marketing.mobile.EdgeEventHandle;
+import com.adobe.marketing.mobile.ExperienceEvent;
 
+import java.util.List;
 import java.util.Map;
 
 public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
@@ -42,31 +46,19 @@ public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void sendExperienceEvent(final ReadableMap experienceEventMap,
+  public void sendEvent(final ReadableMap experienceEventMap,
                                                 final Promise promise) {
-      Event event = RCTAEPCoreDataBridge.eventFromReadableMap(eventMap);
-      if (event == null) {
-          promise.reject(getName(), FAILED_TO_CONVERT_EVENT_MESSAGE, new Error(FAILED_TO_CONVERT_EVENT_MESSAGE));
+      ExperienceEvent experienceEvent = RCTAEPEdgeDataBridge.experienceEventFromReadableMap(experienceEventMap);
+      if (experienceEvent == null) {
+          promise.reject(getName(), FAILED_TO_CONVERT_EXPERIENCE_EVENT, new Error(FAILED_TO_CONVERT_EXPERIENCE_EVENT));
           return;
       }
 
-      EdgeCallback<Event> eventAdobeCallback = new AdobeCallback<Event>() {
+      Edge.sendEvent(experienceEvent, new EdgeCallback() {
           @Override
-          public void call(Event event) {
-              promise.resolve(RCTAEPCoreDataBridge.readableMapFromEvent(event));
+          public void onComplete(final List<EdgeEventHandle> handles) {
+              promise.resolve(handles);
           }
-      };
-
-      ExtensionErrorCallback<ExtensionError> extensionErrorExtensionErrorCallback = new ExtensionErrorCallback<ExtensionError>() {
-          @Override
-          public void error(ExtensionError extensionError) {
-              handleError(promise, extensionError);
-          }
-      };
-
-      Edge.sendEvent(experienceEvent, new EdgeCallback callback){
-
-      }   
+      });
   }
-
 }

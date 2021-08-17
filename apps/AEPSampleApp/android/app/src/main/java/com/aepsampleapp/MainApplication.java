@@ -57,6 +57,7 @@ public class MainApplication extends Application implements ReactApplication {
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
+    //MobileCore.configureWithAppID("yourAppID");
       try {
           UserProfile.registerExtension();
           Identity.registerExtension();
