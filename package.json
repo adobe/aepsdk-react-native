@@ -20,8 +20,8 @@
   },
   "scripts": {
     "clean": "rm yarn.lock | 1 & rm -rf node_modules | 1 & lerna run cleanup",
-    "bootstrap": "lerna bootstrap",
-    "tests:jest": "jest --clearCache",
+    "bootstrap": "npx lerna bootstrap",
+    "tests:jest": "npx jest",
     "release-dry-run": "lerna publish from-package --skip-npm --skip-git",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
     "sampleapp:ios:pod:install": "cd apps/AEPSampleApp/ios && pod install",
