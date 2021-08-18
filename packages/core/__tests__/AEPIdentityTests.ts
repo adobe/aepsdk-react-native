@@ -13,18 +13,18 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import AEPIdentity from '../js/AEPIdentity';
-import AEPMobileVisitorAuthenticationState from '../js/models/AEPMobileVisitorAuthenticationState';
+import {AEPIdentity, AEPMobileVisitorAuthenticationState} from '../';
 
 describe('AEPIdentity', () => {
 
-  test('extensionVersion is called', async () => {
+  it('extensionVersion is called', async () => {
+    expect(AEPIdentity.extensionVersion).toBeDefined();
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'extensionVersion');
     await AEPIdentity.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
-  test('syncIdentifiers is called with correct parameters', async () => {
+  it('syncIdentifiers is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'syncIdentifiers');
     let identifiers = {"testKey": "testValue"};
     await AEPIdentity.syncIdentifiers(identifiers);
@@ -43,7 +43,7 @@ describe('AEPIdentity', () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'syncIdentifier');
     let identifier = "testId"
     let identifierType = "testIdType"
-    let authState = AEPMobileVisitorAuthenticationState.LOGGED_IN;
+    let authState = AEPMobileVisitorAuthenticationState.AUTHENTICATED;
     await AEPIdentity.syncIdentifier(identifier, identifierType, authState);
     expect(spy).toHaveBeenCalledWith(identifier, identifierType, authState);
   });

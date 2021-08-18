@@ -5,6 +5,7 @@
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
   "main": "./js/index.js",
+  "types": "./js/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "flow": "flow"
