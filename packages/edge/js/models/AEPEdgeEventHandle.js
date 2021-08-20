@@ -16,11 +16,10 @@ governing permissions and limitations under the License.
 'use strict';
 
 class AEPEdgeEventHandle {
-  type: {string}
-  payload: {[[string]: any]}
+  type: string;
+  payload: Array<{[string]: any}>;
  
- 
-  constructor(type?: {string}, payload?: {[[string]: any]}) {
+  constructor(type?: string, payload?: Array<{[string]: any}>) {
   	this.type = type;
     this.payload = payload;
   }

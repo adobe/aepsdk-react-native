@@ -33,12 +33,14 @@ RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(R
 
 RCT_EXPORT_METHOD(sendEvent: (nonnull NSDictionary*) experienceEventDict resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     AEPExperienceEvent *experienceEvent = [RCTAEPExperienceEventDataBridge experienceEventFromDictionary:experienceEventDict];
+
     if (!experienceEvent) {
         reject(EXTENSION_NAME, FAILED_TO_CONVERT_EXPERIENCE_EVENT, nil);
         return;
     }
+    
     [AEPMobileEdge sendExperienceEvent:experienceEvent completion:^(NSArray<AEPEdgeEventHandle *> * _Nonnull handles) {
-        resolve(handles);
+        resolve([RCTAEPExperienceEventDataBridge dictionaryFromEdgeEventHandler:handles]);
     }];
 }
 

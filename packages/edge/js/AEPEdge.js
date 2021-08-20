@@ -35,11 +35,7 @@ module.exports = {
    * @param experieneceEvent Event to be sent to Adobe Experience Edge
    */
 
-  sendEvent(experienceEvent: AEPExperienceEvent){
-     return RCTAEPEdge.sendEvent(experienceEvent);
-  },
-
-  sendEvent(experienceEvent: AEPExperienceEvent): Promise<?AEPEdgeEventHandle> {
-     return RCTAEPEdge.sendEvent(experienceEvent);
+  sendEvent(experienceEvent: AEPExperienceEvent): Promise<Array<AEPEdgeEventHandle>> {
+     return Promise.resolve(RCTAEPEdge.sendEvent(experienceEvent));
   },
 };

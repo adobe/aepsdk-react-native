@@ -1,20 +1,20 @@
 PODS:
-  - AEPCore (3.2.3):
+  - AEPCore (3.2.4):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.2.3)
+    - AEPServices (= 3.2.4)
   - AEPEdge (1.1.1):
     - AEPCore (>= 3.1.1)
     - AEPEdgeIdentity
   - AEPEdgeIdentity (1.0.0):
     - AEPCore (>= 3.1.1)
-  - AEPIdentity (3.2.3):
-    - AEPCore (= 3.2.3)
-  - AEPLifecycle (3.2.3):
-    - AEPCore (= 3.2.3)
+  - AEPIdentity (3.2.4):
+    - AEPCore (= 3.2.4)
+  - AEPLifecycle (3.2.4):
+    - AEPCore (= 3.2.4)
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.2.3)
-  - AEPSignal (3.2.3):
-    - AEPCore (= 3.2.3)
+  - AEPServices (3.2.4)
+  - AEPSignal (3.2.4):
+    - AEPCore (= 3.2.4)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -45,6 +45,7 @@ PODS:
     - React
   - RCTAEPEdge (1.0.0-alpha.0):
     - AEPEdge (~> 1.0)
+    - AEPEdgeIdentity (~> 1.0)
     - React
   - RCTAEPUserProfile (1.0.0-alpha.0):
     - AEPUserProfile (~> 3.0)
@@ -465,14 +466,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPCore: eaa2a725705c17d2a63c131aa682a21429688ee6
+  AEPCore: 517f1375860222a12c6226c50d0782e51d27abf2
   AEPEdge: ff0cf67e25c342a7a9d48e9a77e9485869dad043
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
-  AEPIdentity: 8e28eeda440dbbaac977e6e499feeb5a2bf3f2a8
-  AEPLifecycle: e492629ac51c0e123e02b81238cebefaa3e7cb82
+  AEPIdentity: 6580a2a0359931cb7e32be934341df7d86ca73ed
+  AEPLifecycle: d822d28e71d201debfcbfc0f1c60cdee61412925
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: 29df53822d7708b602ab5789b668734e3b24b6c7
-  AEPSignal: 1bcaabf874da22a31cb777d6ff5908b63142b378
+  AEPServices: ffa6f91c0799f0a8651d89978a4b2a3d024ee6c4
+  AEPSignal: 0be73545905731da4768d5ece48faf29b2cae764
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
@@ -481,7 +482,7 @@ SPEC CHECKSUMS:
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPCore: 01116edebbba2ea523afab5dd8b7204774dd94f1
-  RCTAEPEdge: 52b2f0963cbc244dde3057edc1603b52c888f6fa
+  RCTAEPEdge: 56f1020a3c7f4ab3b0aedbcbf2337ddd2b113402
   RCTAEPUserProfile: d9b3a45c60bc555447b38975eee701e88f5278ef
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa

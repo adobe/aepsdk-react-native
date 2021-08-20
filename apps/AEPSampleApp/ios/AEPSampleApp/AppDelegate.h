@@ -7,6 +7,7 @@
 @import AEPIdentity;
 @import AEPUserProfile;
 @import AEPEdge;
+@import AEPEdgeIdentity;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 

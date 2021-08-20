@@ -18,9 +18,9 @@ governing permissions and limitations under the License.
 class AEPExperienceEvent {
   xdmData: {[string]: any}
   data: {[string]: any}
-  datasetIdentifier: {string: string};
+  datasetIdentifier: string;
  
-  constructor(xdmData: {[string]: any}, data?: {[string]: any}, datasetIdentifier?: {string: string}) {
+  constructor(xdmData: {[string]: any}, data?: {[string]: any}, datasetIdentifier?: string) {
   	this.xdmData = xdmData;
     this.data = data;
     this.datasetIdentifier = datasetIdentifier;

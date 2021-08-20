@@ -21,6 +21,10 @@ module.exports = {
     return require('./models/AEPExperienceEvent');
   },
 
+  get AEPEdgeEventHandle() {
+    return require('./models/AEPEdgeEventHandle');
+  },
+
   // Native modules
   get AEPEdge() {
     return require('./AEPEdge');

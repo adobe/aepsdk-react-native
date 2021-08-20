@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Adobe. All rights reserved.
+ Copyright 2021 Adobe. All rights reserved.
  This file is licensed to you under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -21,21 +21,44 @@ static NSString* const TYPE_KEY = @"type";
 static NSString* const PAYLOAD_KEY = @"payload";
 
 + (AEPExperienceEvent *)experienceEventFromDictionary: (nonnull NSDictionary *) dict {
+    
+    if (!dict || [dict isEqual:[NSNull null]]) {
+            return nil;
+        }
 
-    if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && ([[dict objectForKey:DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:DATA_KEY]) && ([[dict objectForKey:DATASET_IDENTIFIER_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:DATASET_IDENTIFIER_KEY])) {
-        return [[AEPExperienceEvent alloc]initWithXdm:[dict objectForKey:XDM_DATA_KEY] data:[dict objectForKey:DATA_KEY] datasetIdentifier:[dict objectForKey:DATASET_IDENTIFIER_KEY]];
-    }
-
+    NSDictionary  *xdmdata = [[dict objectForKey:XDM_DATA_KEY] isEqual:[NSNull null]] ? nil : [dict objectForKey:XDM_DATA_KEY];
+    NSDictionary  *data = [[dict objectForKey:DATA_KEY] isEqual:[NSNull null]] ? nil : [dict objectForKey:DATA_KEY];
+    NSString * datasetIdentifier = [[dict objectForKey:DATASET_IDENTIFIER_KEY] isEqual:[NSNull null]] ? nil : [dict objectForKey:DATASET_IDENTIFIER_KEY];
+    
+    if (!xdmdata) {
+        return nil;
+    } else if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && ([[dict objectForKey:DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:DATA_KEY]) && datasetIdentifier) {
+        return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:data datasetIdentifier:datasetIdentifier];
+        
+    } else if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && ([[dict objectForKey:DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:DATA_KEY])) {
+        return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:data datasetIdentifier:nil];
+        
+    } else if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && datasetIdentifier) {
+        return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:nil datasetIdentifier:datasetIdentifier];
+        
+     } else if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && datasetIdentifier) {
+        return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:nil datasetIdentifier:datasetIdentifier];
+     }
+    
     return nil;
 }
 
-+ (NSDictionary *)dictionaryFromExperienceEvent: (nonnull AEPExperienceEvent *) experienceEvent {
-    NSMutableDictionary *experienceEventDict = [NSMutableDictionary dictionary];
-    experienceEventDict[XDM_DATA_KEY] = experienceEvent.xdm;
-    experienceEventDict[DATA_KEY] = experienceEvent.data;
-    experienceEventDict[DATASET_IDENTIFIER_KEY] = experienceEvent.datasetIdentifier;
-
-    return experienceEventDict;
++ (NSArray *)dictionaryFromEdgeEventHandler: (NSArray<AEPEdgeEventHandle *> *) experienceEventHandle {
+    NSMutableArray *experienceEventArr = [NSMutableArray array];
+    for (AEPEdgeEventHandle *expEventHandle in experienceEventHandle) {
+        NSMutableDictionary *experienceEventHandleDic = [NSMutableDictionary dictionary];
+        experienceEventHandleDic[TYPE_KEY] = expEventHandle.type;
+        experienceEventHandleDic[PAYLOAD_KEY] = expEventHandle.payload;
+        [experienceEventArr addObject:experienceEventHandleDic];
+    }
+   
+    return experienceEventHandle;
 }
 
 @end
+
