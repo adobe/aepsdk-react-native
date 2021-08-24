@@ -1,12 +1,12 @@
 # aepsdk-react-native
 
-[![license](https://img.shields.io/npm/l/@adobe/react-native-aepcore.svg)](./LICENSE)
-[![CircleCI](https://img.shields.io/circleci/project/github/adobe/react-native-acpuserprofile/main.svg?logo=circleci)](https://circleci.com/gh/adobe/workflows/react-native-acpuserprofile) 
+<!--- [![license](https://img.shields.io/npm/l/@adobe/react-native-aepcore.svg)](./LICENSE)
+[![CircleCI](https://img.shields.io/circleci/project/github/adobe/react-native-aepuserprofile/main.svg?logo=circleci)](https://circleci.com/gh/adobe/workflows/react-native-aepuserprofile) --->
 
 This repository is a monorepo. It contains a collection of AEPSDK React Native modules/packages listed below. These modules/packages can be found in the [packages](./packages) directory. 
 | Package Name | Latest Version |
 | ---- | ---- |
-|  [@adobe/react-native-aepcore (required)](./packages/core)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-acpcore.svg)](https://www.npmjs.com/package/@adobe/react-native-acpcore) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-acpcore)](https://www.npmjs.com/package/@adobe/react-native-acpcore) |
+|  [@adobe/react-native-aepcore (required)](./packages/core)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcore.svg)](https://www.npmjs.com/package/@adobe/react-native-acpcore) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-acpcore)](https://www.npmjs.com/package/@adobe/react-native-acpcore) |
 |  [@adobe/react-native-aepuserprofile](./packages/userprofile)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-acpuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-acpuserprofile)](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile)   |
 
 
@@ -33,6 +33,11 @@ cd MyReactApp
 npm install @adobe/react-native-aep{extension}
 ```
 
+For iOS development, after installing the plugins from npm, download the pod dependencies by running the following command:
+`cd ios && pod install && cd ..`
+To update native dependencies to latest available versions, run the following command:
+`cd ios && pod update && cd ..`
+
 ### Link
 
 [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) links the module while building the app.
@@ -41,7 +46,6 @@ npm install @adobe/react-native-aep{extension}
 ## Development
 
 See [development.md](./docs/development.md) for development docs.
-
 
 ## Contributing
 See [CONTRIBUTING](CONTRIBUTING.md)
