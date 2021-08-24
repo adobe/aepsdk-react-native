@@ -36,7 +36,9 @@ jobs:
 
       - run:
           name: Building Android Sample App
-          command: yarn sampleapp:android:build
+          command: |
+            export NODE_OPTIONS=--max-old-space-size=8192
+            yarn sampleapp:android:build
           
   build-sample-app-ios:
     macos:
