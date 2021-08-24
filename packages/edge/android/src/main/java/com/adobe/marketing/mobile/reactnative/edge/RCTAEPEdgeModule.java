@@ -21,6 +21,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.adobe.marketing.mobile.EdgeCallback;
 import com.adobe.marketing.mobile.EdgeEventHandle;
 import com.adobe.marketing.mobile.ExperienceEvent;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableNativeArray;
 
 import java.util.List;
 import java.util.Map;
@@ -47,17 +49,28 @@ public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void sendEvent(final ReadableMap experienceEventMap,
-                                                final Promise promise) {
+                        final Promise promise) {
       ExperienceEvent experienceEvent = RCTAEPEdgeDataBridge.experienceEventFromReadableMap(experienceEventMap);
       if (experienceEvent == null) {
           promise.reject(getName(), FAILED_TO_CONVERT_EXPERIENCE_EVENT, new Error(FAILED_TO_CONVERT_EXPERIENCE_EVENT));
           return;
       }
 
+//      EdgeCallback<EdgeEventHandle> eventEdgeCallback = new EdgeCallback<EdgeEventHandle>() {
+//            @Override
+//            public void call(EdgeEventHandle event) {
+//                promise.resolve(RCTAEPEdgeDataBridge.readableMapFromEvent(EdgeEventHandle));
+//            }
+//        };
+
       Edge.sendEvent(experienceEvent, new EdgeCallback() {
           @Override
-          public void onComplete(final List<EdgeEventHandle> handles) {
-              promise.resolve(handles);
+          public void onComplete(List<EdgeEventHandle> handles) {
+              WritableArray arr = new WritableNativeArray();
+              for (EdgeEventHandle handle: handles) {
+                  arr.pushMap(RCTAEPEdgeDataBridge.mapFromEdegEventHandle(handle));
+              }
+              promise.resolve(arr);
           }
       });
   }
