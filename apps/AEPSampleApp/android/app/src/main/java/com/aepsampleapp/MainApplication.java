@@ -9,6 +9,7 @@ import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
 import com.facebook.react.PackageList;
@@ -56,11 +57,13 @@ public class MainApplication extends Application implements ReactApplication {
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
+    //MobileCore.configureWithAppID("yourAppID");
       try {
           UserProfile.registerExtension();
           Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
+          Edge.registerExtension();
           MobileCore.start(new AdobeCallback() {
               @Override
               public void call(Object o) {
