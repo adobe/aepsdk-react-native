@@ -3,11 +3,19 @@
 <!--- [![license](https://img.shields.io/npm/l/@adobe/react-native-aepcore.svg)](./LICENSE)
 [![CircleCI](https://img.shields.io/circleci/project/github/adobe/react-native-aepuserprofile/main.svg?logo=circleci)](https://circleci.com/gh/adobe/workflows/react-native-aepuserprofile) --->
 
+## BETA ACKNOWLEDGEMENT
+
+The react native modules containing in this repository are currently in Beta. Use of this code is by invitation only and not otherwise supported by Adobe. Please contact your Adobe Customer Success Manager to learn more.
+
+By using the Beta, you hereby acknowledge that the Beta is provided "as is" without warranty of any kind. Adobe shall have no obligation to maintain, correct, update, change, modify or otherwise support the Beta. You are advised to use caution and not to rely in any way on the correct functioning or performance of such Beta and/or accompanying materials.
+
+## About this project
+
 This repository is a monorepo. It contains a collection of AEPSDK React Native modules/packages listed below. These modules/packages can be found in the [packages](./packages) directory. 
 | Package Name | Latest Version |
 | ---- | ---- |
-|  [@adobe/react-native-aepcore (required)](./packages/core)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcore.svg)](https://www.npmjs.com/package/@adobe/react-native-acpcore) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-acpcore)](https://www.npmjs.com/package/@adobe/react-native-acpcore) |
-|  [@adobe/react-native-aepuserprofile](./packages/userprofile)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-acpuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-acpuserprofile)](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile)   |
+|  [@adobe/react-native-aepcore (required)](./packages/core)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcore.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcore) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcore)](https://www.npmjs.com/package/@adobe/react-native-aepcore) |
+|  [@adobe/react-native-aepuserprofile](./packages/userprofile)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepuserprofile)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile)   |
 
 
 `@adobe/react-native-aep{extension}` is a wrapper around the iOS and Android [AEP SDK](https://aep-sdks.gitbook.io/docs/) to allow for integration with React Native applications.
