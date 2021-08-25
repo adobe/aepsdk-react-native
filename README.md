@@ -1,7 +1,7 @@
 # aepsdk-react-native
 
-<!--- [![license](https://img.shields.io/npm/l/@adobe/react-native-aepcore.svg)](./LICENSE)
-[![CircleCI](https://img.shields.io/circleci/project/github/adobe/react-native-aepuserprofile/main.svg?logo=circleci)](https://circleci.com/gh/adobe/workflows/react-native-aepuserprofile) --->
+<!--- [![license](https://img.shields.io/npm/l/@adobe/react-native-aepcore.svg)](./LICENSE) --->
+[![CircleCI](https://circleci.com/gh/adobe/aepsdk-react-native/tree/main.svg?style=svg)](https://circleci.com/gh/adobe/aepsdk-react-native/tree/main)
 
 ## BETA ACKNOWLEDGEMENT
 
