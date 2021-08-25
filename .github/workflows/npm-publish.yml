@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@master
       with:
-        node-version: 12.0.0
+        node-version: 16.6.2
     - name: install dependencies
       run: yarn bootstrap
     - name: Authenticate with Registry
