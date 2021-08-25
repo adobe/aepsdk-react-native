@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha.1",
   "private": true,
   "scripts": {
-    "cleanup": "rm -rf node_modules | 1",
+    "cleanup": "rm -rf node_modules",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
