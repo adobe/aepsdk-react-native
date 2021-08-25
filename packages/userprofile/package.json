@@ -30,5 +30,8 @@
   "peerDependencies": {
     "@adobe/react-native-aepcore": "^1.0.0",
     "react-native": ">=0.60.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
