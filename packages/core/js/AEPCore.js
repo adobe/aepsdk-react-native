@@ -88,6 +88,7 @@ module.exports = {
   getLogLevel(): Promise<string> {
     return RCTAEPCore.getLogLevel();
   },
+
   /**
 	 * Sends a log message of the given {@code AEPMobileLogLevel}. If the specified {@code mode} is
 	 * more verbose than the current {@link AEPMobileLogLevel} set from {@link #setLogLevel(AEPMobileLogLevel)}

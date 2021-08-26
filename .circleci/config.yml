@@ -3,14 +3,11 @@ version: 2.1
 
 jobs:
   unit-test:
-    macos:
-      xcode: "12.0"
+    docker:
+      - image: cimg/node:16.6.2
 
     steps:
       - checkout
-
-      - run: npm install --global lerna
-      - run: npm install jest@24.8.0 -g
 
       - restore_cache:
           keys: 
@@ -21,7 +18,7 @@ jobs:
           paths:
             - ./node_modules
             - ./apps/AEPSampleApp/node_modules
-
+      
       - run:
           name: Unit Tests
           command: yarn tests:jest
@@ -39,7 +36,9 @@ jobs:
 
       - run:
           name: Building Android Sample App
-          command: yarn sampleapp:android:build
+          command: |
+            export NODE_OPTIONS=--max-old-space-size=8192
+            yarn sampleapp:android:build
           
   build-sample-app-ios:
     macos:
@@ -49,12 +48,18 @@ jobs:
       - checkout
 
       - run:
-          name: Install lerna
-          command: npm install --global lerna
-      
-      - run:
-          name: yarn bootstrap
-          command: yarn bootstrap
+          name: Install latest NodeJS
+          command: brew install node
+
+      - restore_cache:
+          keys: 
+            - ios-yarn-cache-{{ checksum "yarn.lock" }}
+      - run: yarn bootstrap 
+      - save_cache:
+          key: ios-yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+            - ./apps/AEPSampleApp/node_modules
 
       - run:
           name: Install latest Cocoapods

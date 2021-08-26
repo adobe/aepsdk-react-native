@@ -1,9 +1,9 @@
 {
   "name": "aepsampleapp",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "private": true,
   "scripts": {
-    "cleanup": "rm -rf node_modules | 1",
+    "cleanup": "rm -rf node_modules",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
@@ -11,8 +11,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@adobe/react-native-aepcore": "1.0.0-alpha.0",
-    "@adobe/react-native-aepuserprofile": "1.0.0-alpha.0",
+    "@adobe/react-native-aepcore": "^1.0.0-alpha.1",
+    "@adobe/react-native-aepuserprofile": "^1.0.0-alpha.2",
     "@adobe/react-native-aepedge": "1.0.0-alpha.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^5.8.0",
@@ -33,3 +33,4 @@
     "react-test-renderer": "17.0.1"
   }
 }
+

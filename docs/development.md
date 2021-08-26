@@ -20,10 +20,14 @@ Run `yarn bootstrap` to install the npm dependencies.
 
 This project contains jest unit tests which are contained in the `__tests__` directory, to run the tests locally:
 
+To run the (Jest) unit tests locally:
+
 ```
 yarn tests:jest
 ```
 > The `setupFiles` to configure or set up the (Jest) testing environment is located in [tests/jest/setup.js](../tests/jest/setup.js)
+
+> Jest expects to find test files in the sub-packages' `__test__` folder.
 
 ## Convention
 

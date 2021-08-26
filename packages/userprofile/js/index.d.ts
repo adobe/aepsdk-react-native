@@ -8,19 +8,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
+
 */
-package com.aepsampleapp;
-
-import com.facebook.react.ReactActivity;
-
-public class MainActivity extends ReactActivity {
-
-  /**
-   * Returns the name of the main component registered from JavaScript. This is used to schedule
-   * rendering of the component.
-   */
-  @Override
-  protected String getMainComponentName() {
-    return "AEPSampleApp";
-  }
-}
+export class AEPUserProfile{
+    static extensionVersion(): Promise<string>;
+    static removeUserAttributes(attributeNames: Array<string>): void;
+    static getUserAttributes(attributeNames: Array<string>): Promise<Map | null>;
+    static updateUserAttributes(attributeMap: Map):void;
+};

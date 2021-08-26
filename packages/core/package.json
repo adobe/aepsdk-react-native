@@ -1,10 +1,11 @@
 {
   "name": "@adobe/react-native-aepcore",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
   "main": "./js/index.js",
+  "types": "./js/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "flow": "flow"
