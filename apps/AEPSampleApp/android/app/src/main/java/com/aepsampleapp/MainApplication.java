@@ -15,6 +15,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.Identity;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
@@ -73,6 +74,7 @@ public class MainApplication extends Application implements ReactApplication {
           Lifecycle.registerExtension();
           Signal.registerExtension();
           MobileCore.configureWithAppID("yourAppID");
+          Assurance.registerExtension()
           MobileCore.start(new AdobeCallback() {
               @Override
               public void call(Object o) {

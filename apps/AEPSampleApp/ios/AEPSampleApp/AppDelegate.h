@@ -18,6 +18,7 @@ governing permissions and limitations under the License.
 @import AEPLifecycle;
 @import AEPIdentity;
 @import AEPUserProfile;
+@import AEPAssurance;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 
