@@ -25,7 +25,7 @@ describe('AEPAssurance', () => {
   });
 
   it('startSession is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPAssurance, 'extensionVersion');
+    const spy = jest.spyOn(NativeModules.AEPAssurance, 'startSession');
     await AEPAssurance.startSession('');
     expect(spy).toHaveBeenCalled();
   });
