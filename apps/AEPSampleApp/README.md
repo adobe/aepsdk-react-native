@@ -28,5 +28,5 @@ yarn sampleapp:ios:run
 Have an Android emulator running (quickest way to get started), or a device connected. https://developer.android.com/studio/run/emulator-commandline
 
 ```
-sampleapp:android:run
+yarn sampleapp:android:run
 ```
