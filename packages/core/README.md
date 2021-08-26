@@ -1,13 +1,13 @@
 # React Native AEP Core Extension
 
-[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-acpcore.svg)](https://www.npmjs.com/package/@adobe/react-native-acpcore) 
-[![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-acpcore)](https://www.npmjs.com/package/@adobe/react-native-acpcore)
+[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcore.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcore) 
+[![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcore)](https://www.npmjs.com/package/@adobe/react-native-aepcore)
 
 ## Usage
 
 ### Initializing:
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://aep-sdks.gitbook.io/docs/getting-started/get-the-sdk#2-add-initialization-code). The linked documentation initializes the User Profile extension which is not required, however, if you are interested in the User Profile extension for React Native you can find it [here](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile).
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://aep-sdks.gitbook.io/docs/getting-started/get-the-sdk#2-add-initialization-code). The linked documentation initializes the User Profile extension which is not required, however, if you are interested in the User Profile extension for React Native you can find it [here](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile).
 
 ### [Core](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core)
 
