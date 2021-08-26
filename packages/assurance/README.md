@@ -36,7 +36,7 @@ Initialize the SDK via native code inside your AppDelegate and MainApplication i
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-  [AEPMobileCore configureWithAppId:@"your-appId"];
+  [AEPMobileCore configureWithAppId:@"your-app-ID"];
   [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileAssurance.class] completion:^{
           [AEPMobileCore lifecycleStart:nil];
   }];
