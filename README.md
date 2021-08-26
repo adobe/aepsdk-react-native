@@ -1,6 +1,6 @@
 # aepsdk-react-native
 
-<!--- [![license](https://img.shields.io/npm/l/@adobe/react-native-aepcore.svg)](./LICENSE) --->
+[![license](https://img.shields.io/npm/l/@adobe/react-native-aepcore.svg)](./LICENSE)
 [![CircleCI](https://circleci.com/gh/adobe/aepsdk-react-native/tree/main.svg?style=svg)](https://circleci.com/gh/adobe/aepsdk-react-native/tree/main)
 
 ## BETA ACKNOWLEDGEMENT

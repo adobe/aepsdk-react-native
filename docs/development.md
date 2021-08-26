@@ -8,9 +8,7 @@
 - Android Studio
 - Node.js 12 TLS (or newer)
 - React Native >= v0.60
-- Lerna.js
 - Yarn
-- Jest
 
 ## Install dependencies 
 
