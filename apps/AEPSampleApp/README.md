@@ -20,7 +20,7 @@ yarn bootstrap && yarn sampleapp:ios:pod:install
 #### Run instructions for iOS:
 
 ```
-yarn sampleapp:ios:build
+yarn sampleapp:ios:run
 ```
 
 #### Run instructions for Android:
@@ -28,5 +28,5 @@ yarn sampleapp:ios:build
 Have an Android emulator running (quickest way to get started), or a device connected. https://developer.android.com/studio/run/emulator-commandline
 
 ```
-yarn sampleapp:android:build
+sampleapp:android:run
 ```
