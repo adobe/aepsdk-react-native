@@ -15,6 +15,7 @@ import com.adobe.marketing.mobile.EdgeEventHandle;
 import com.adobe.marketing.mobile.ExperienceEvent;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 
@@ -41,23 +42,20 @@ public final class RCTAEPEdgeDataBridge {
             return null;
         }
 
-        //ExperienceEvent.Builder event = new ExperienceEvent.Builder().setData(Map<String, Object> data)
+        Map<String, Object> xdmdata = RCTAEPEdgeMapUtil.toMap(getNullableMap(map, XDM_DATA_KEY));
+
+        if (xdmdata != null) {
+
+            Map<String, Object> data = RCTAEPEdgeMapUtil.toMap(getNullableMap(map, DATA_KEY));
+
+            String datasetId = getNullableString(map, DATASET_IDENTIFIER_KEY);
+
+            ExperienceEvent event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).build();
+            return event;
+        }
 
         return null;
     }
-
-//    public static ReadableMap mapFromEdegEventHandle(final ExperienceEvent event) {
-//        if (event == null) {
-//            return null;
-//        }
-//
-//        WritableNativeMap map = new WritableNativeMap();
-//        map.putMap(XDM_DATA_KEY, RCTAEPEdgeMapUtil.toWritableMap(event.getXdmSchema()));
-//        map.putMap(DATA_KEY, RCTAEPEdgeMapUtil.toWritableMap(event.getData()));
-//        map.putMap(DATASET_IDENTIFIER_KEY, RCTAEPEdgeMapUtil.toWritableMap(event.getData()));
-//        return map;
-//    }
-
 
     /**
      * Converts a {@link EdgeEventHandle} into a {@link WritableMap}
@@ -81,4 +79,9 @@ public final class RCTAEPEdgeDataBridge {
     public static String getNullableString(final ReadableMap data, final String key) {
         return data.hasKey(key) ? data.getString(key) : null;
     }
+
+    public static ReadableMap getNullableMap(final ReadableMap data, final String key) {
+        return (data.hasKey(key) && data.getType(key) == ReadableType.Map) ? data.getMap(key) : null;
+        }
+
 }

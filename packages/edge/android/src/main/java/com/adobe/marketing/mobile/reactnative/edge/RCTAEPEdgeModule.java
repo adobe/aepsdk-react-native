@@ -56,13 +56,6 @@ public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
           return;
       }
 
-//      EdgeCallback<EdgeEventHandle> eventEdgeCallback = new EdgeCallback<EdgeEventHandle>() {
-//            @Override
-//            public void call(EdgeEventHandle event) {
-//                promise.resolve(RCTAEPEdgeDataBridge.readableMapFromEvent(EdgeEventHandle));
-//            }
-//        };
-
       Edge.sendEvent(experienceEvent, new EdgeCallback() {
           @Override
           public void onComplete(List<EdgeEventHandle> handles) {

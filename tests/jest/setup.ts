@@ -60,6 +60,10 @@ jest.doMock('react-native', () => {
                     getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
                     getIdentifiers: jest.fn(() => new Promise(resolve => resolve(null))),
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))) 
+                },
+                AEPEdge: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve())),
+                    sendEvent: jest.fn(() => new Promise(resolve => resolve())),
                 }
             },
         },
