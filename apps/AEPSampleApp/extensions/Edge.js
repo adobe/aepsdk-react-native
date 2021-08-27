@@ -25,7 +25,6 @@ function sendEvent() {
   var data  = {"dataKey" : "dataValue"};
   var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
 
-
   AEPEdge.sendEvent(experienceEvent);
 }
 

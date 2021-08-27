@@ -68,7 +68,7 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.VERBOSE);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
       try {
           UserProfile.registerExtension();
           Identity.registerExtension();
