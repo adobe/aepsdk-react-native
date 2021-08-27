@@ -13,11 +13,12 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import {AEPEdge, AEPEdgeEventHandle, AEPExperienceEvent} from '../';
+import {AEPEdge,AEPExperienceEvent} from '../';
 
 describe('AEPEdge', () => {
 
   it('extensionVersion is called', async () => {
+    expect(AEPEdge.extensionVersion).toBeDefined();
     const spy = jest.spyOn(NativeModules.AEPEdge, 'extensionVersion');
     await AEPEdge.extensionVersion();
     expect(spy).toHaveBeenCalled();
@@ -29,6 +30,14 @@ describe('AEPEdge', () => {
     let data  = {"dataKey" : "dataValue"};
     let experienceEvent = new AEPExperienceEvent(xdmData, data, "indentifierID");
     await AEPEdge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(AEPEdgeEventHandle);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+  });
+
+   it('sendEvent is called with null paramet', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let xdmData  = {"eventType" : "SampleXDMEvent"};
+    let experienceEvent = new AEPExperienceEvent(xdmData, null, "");
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
 });

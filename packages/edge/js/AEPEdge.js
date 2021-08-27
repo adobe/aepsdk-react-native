@@ -25,7 +25,7 @@ module.exports = {
    * Returns the version of the AEPEdge extension
    * @param  {string} Promise a promise that resolves with the extension verison
    */
-  extesionVersion(): Promise<string> {
+  extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdge.extensionVersion());
   },
 
