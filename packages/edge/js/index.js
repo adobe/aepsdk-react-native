@@ -28,5 +28,5 @@ module.exports = {
   // Native modules
   get AEPEdge() {
     return require('./AEPEdge');
-  },
+  }
 };

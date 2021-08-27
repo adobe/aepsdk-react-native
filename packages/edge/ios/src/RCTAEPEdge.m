@@ -19,7 +19,7 @@
 RCT_EXPORT_MODULE(AEPEdge);
 
 static NSString* const EXTENSION_NAME = @"AEPEdge";
-static NSString* const FAILED_TO_CONVERT_EXPERIENCE_EVENT = @"Failed to convert dictionary to Experience Event";
+static NSString* const FAILED_TO_CONVERT_EXPERIENCE_EVENT = @"Failed to convert dictionary to Experience Event, Experience Event could be null.";
 
 - (dispatch_queue_t)methodQueue
 {
@@ -32,6 +32,7 @@ RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(R
 
 
 RCT_EXPORT_METHOD(sendEvent: (nonnull NSDictionary*) experienceEventDict resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    
     AEPExperienceEvent *experienceEvent = [RCTAEPExperienceEventDataBridge experienceEventFromDictionary:experienceEventDict];
 
     if (!experienceEvent) {

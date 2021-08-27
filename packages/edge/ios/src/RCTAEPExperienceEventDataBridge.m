@@ -25,29 +25,23 @@ static NSString* const PAYLOAD_KEY = @"payload";
     if (!dict || [dict isEqual:[NSNull null]]) {
             return nil;
         }
-
-    NSDictionary  *xdmdata = [[dict objectForKey:XDM_DATA_KEY] isEqual:[NSNull null]] ? nil : [dict objectForKey:XDM_DATA_KEY];
-    NSDictionary  *data = [[dict objectForKey:DATA_KEY] isEqual:[NSNull null]] ? nil : [dict objectForKey:DATA_KEY];
-    NSString * datasetIdentifier = [[dict objectForKey:DATASET_IDENTIFIER_KEY] isEqual:[NSNull null]] ? nil : [dict objectForKey:DATASET_IDENTIFIER_KEY];
+    
+    NSDictionary *xdmdata = [dict objectForKey:XDM_DATA_KEY];
+    NSDictionary *data = [dict objectForKey:DATA_KEY];
+    NSString *datasetIdentifier = [dict objectForKey:DATASET_IDENTIFIER_KEY];
     
     if (!xdmdata) {
         return nil;
-    } else if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && ([[dict objectForKey:DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:DATA_KEY]) && datasetIdentifier) {
-        return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:data datasetIdentifier:datasetIdentifier];
-        
-    } else if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && ([[dict objectForKey:DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:DATA_KEY])) {
-        return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:data datasetIdentifier:nil];
-        
-    } else if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && datasetIdentifier) {
-        return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:nil datasetIdentifier:datasetIdentifier];
-        
-     } else if (([[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY]) && datasetIdentifier) {
-        return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:nil datasetIdentifier:datasetIdentifier];
-     }
+    }
     
-    return nil;
-}
-
+    xdmdata = [[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY] ? xdmdata  : nil;
+    data =  [[dict objectForKey:DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:DATA_KEY] ? data : nil;
+    datasetIdentifier = [[dict objectForKey:DATASET_IDENTIFIER_KEY] isKindOfClass:[NSString class]] ? datasetIdentifier : nil;
+        
+    return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:data datasetIdentifier:datasetIdentifier];
+    
+  }
+    
 + (NSArray *)dictionaryFromEdgeEventHandler: (NSArray<AEPEdgeEventHandle *> *) experienceEventHandle {
     NSMutableArray *experienceEventArr = [NSMutableArray array];
     for (AEPEdgeEventHandle *expEventHandle in experienceEventHandle) {

@@ -30,7 +30,7 @@ import java.util.Map;
 public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
-  private static String FAILED_TO_CONVERT_EXPERIENCE_EVENT = "Failed to convert map to Experience Event";
+  private static String FAILED_TO_CONVERT_EXPERIENCE_EVENT = "Failed to convert map to Experience Event,  Experience Event could be null.";
 
   public RCTAEPEdgeModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -61,7 +61,7 @@ public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
           public void onComplete(List<EdgeEventHandle> handles) {
               WritableArray arr = new WritableNativeArray();
               for (EdgeEventHandle handle: handles) {
-                  arr.pushMap(RCTAEPEdgeDataBridge.mapFromEdegEventHandle(handle));
+                  arr.pushMap(RCTAEPEdgeDataBridge.mapFromEdgeEventHandle(handle));
               }
               promise.resolve(arr);
           }

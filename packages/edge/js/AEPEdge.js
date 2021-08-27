@@ -25,7 +25,7 @@ module.exports = {
    * Returns the version of the AEPEdge extension
    * @param  {string} Promise a promise that resolves with the extension verison
    */
-  extensionVersion(): Promise<string> {
+  extesionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdge.extensionVersion());
   },
 
@@ -34,8 +34,7 @@ module.exports = {
    *
    * @param experieneceEvent Event to be sent to Adobe Experience Edge
    */
-
   sendEvent(experienceEvent: AEPExperienceEvent): Promise<Array<AEPEdgeEventHandle>> {
      return Promise.resolve(RCTAEPEdge.sendEvent(experienceEvent));
-  },
+  }
 };

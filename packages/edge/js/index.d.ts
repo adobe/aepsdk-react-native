@@ -9,19 +9,23 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
-@format
 */
+export class AEPEdge{
+    static extensionVersion(): Promise<string>;
+    static sendEvent(event: AEPExperienceEvent): Promise<AEPExtensionEvent>;
+}
 
+export class AEPEdgeEventHandle{
+    type: string;
+    payload: Map;
 
-import { NativeModules } from 'react-native';
-import AEPSignal from '../js/AEPSignal';
+ constructor(type: string, playload: Map)
+}
 
-describe('AEPSignal', () => {
+export class AEPExperienceEvent{
+    xdmdata: Map;
+    data: Map;
+    datasetIdentifier: string;
 
-  test('extensionVersion is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPSignal, 'extensionVersion');
-    await AEPSignal.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
-
-});
+  constructor(xdmdata: Map, data: Map, datasetIdentifier: string)
+}

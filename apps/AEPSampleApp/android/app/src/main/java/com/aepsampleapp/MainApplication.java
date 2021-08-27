@@ -68,15 +68,16 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
-    //MobileCore.configureWithAppID("yourAppID");
+    MobileCore.setLogLevel(LoggingMode.VERBOSE);
       try {
           UserProfile.registerExtension();
           Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
           Edge.registerExtension();
-          MobileCore.configureWithAppID("yourAppID");
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+
+          MobileCore.configureWithAppID("your-app-ID");
           MobileCore.start(new AdobeCallback() {
               @Override
               public void call(Object o) {

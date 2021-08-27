@@ -11,6 +11,8 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative.edge;
 
+import android.util.Log;
+
 import com.adobe.marketing.mobile.EdgeEventHandle;
 import com.adobe.marketing.mobile.ExperienceEvent;
 import com.facebook.react.bridge.ReadableArray;
@@ -19,7 +21,6 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 
-import java.util.List;
 import java.util.Map;
 
 public final class RCTAEPEdgeDataBridge {
@@ -30,6 +31,7 @@ public final class RCTAEPEdgeDataBridge {
 
     public final static String TYPE_KEY = "type";
     public final static String PAYLOAD_KEY = "payload";
+    private static final String TAG = "RCTAEPEdgeDataBridge";
 
     /**
      * Converts a {@link ReadableMap} into an {@link ExperienceEvent}
@@ -43,17 +45,28 @@ public final class RCTAEPEdgeDataBridge {
         }
 
         Map<String, Object> xdmdata = RCTAEPEdgeMapUtil.toMap(getNullableMap(map, XDM_DATA_KEY));
+        String datasetId = null;
 
         if (xdmdata != null) {
 
             Map<String, Object> data = RCTAEPEdgeMapUtil.toMap(getNullableMap(map, DATA_KEY));
 
-            String datasetId = getNullableString(map, DATASET_IDENTIFIER_KEY);
+            try {
+                datasetId = getNullableString(map, DATASET_IDENTIFIER_KEY);
+            } catch (Exception e) {
+                Log.d(TAG, "experienceEventFromReadableMap: " + e);
+            }
+
+            if (!(data instanceof Map)) {
+                Log.d(TAG, "experienceEventFromReadableMap: experience event free form data is null");
+            }
 
             ExperienceEvent event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).build();
+
             return event;
         }
 
+        Log.d(TAG, "experienceEventFromReadableMap: xdmdata is required, but it is currently null.");
         return null;
     }
 
@@ -62,7 +75,7 @@ public final class RCTAEPEdgeDataBridge {
      * @param eventhandle The eventhandle object
      * @return A {@link WritableMap} that represents the visitorID
      */
-    public static WritableMap mapFromEdegEventHandle(final EdgeEventHandle eventhandle) {
+    public static WritableMap mapFromEdgeEventHandle(final EdgeEventHandle eventhandle) {
         if (eventhandle == null) {
             return null;
         }
@@ -83,5 +96,4 @@ public final class RCTAEPEdgeDataBridge {
     public static ReadableMap getNullableMap(final ReadableMap data, final String key) {
         return (data.hasKey(key) && data.getType(key) == ReadableType.Map) ? data.getMap(key) : null;
         }
-
 }

@@ -16,8 +16,8 @@ governing permissions and limitations under the License.
 'use strict';
 
 class AEPExperienceEvent {
-  xdmData: {[string]: any}
-  data: {[string]: any}
+  xdmData: {[string]: any};
+  data: {[string]: any};
   datasetIdentifier: string;
  
   constructor(xdmData: {[string]: any}, data?: {[string]: any}, datasetIdentifier?: string) {

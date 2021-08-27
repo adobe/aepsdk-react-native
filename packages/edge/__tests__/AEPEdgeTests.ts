@@ -13,13 +13,22 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import AEPLifecycle from '../js/AEPLifecycle';
+import {AEPEdge, AEPEdgeEventHandle, AEPExperienceEvent} from '../';
 
-describe('AEPLifecycle', () => {
+describe('AEPEdge', () => {
 
-  test('extensionVersion is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPLifecycle, 'extensionVersion');
-    await AEPLifecycle.extensionVersion();
+  it('extensionVersion is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'extensionVersion');
+    await AEPEdge.extensionVersion();
     expect(spy).toHaveBeenCalled();
+  });
+
+   it('sendEvent is called with correct parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let xdmData  = {"eventType" : "SampleXDMEvent"};
+    let data  = {"dataKey" : "dataValue"};
+    let experienceEvent = new AEPExperienceEvent(xdmData, data, "indentifierID");
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(AEPEdgeEventHandle);
   });
 });
