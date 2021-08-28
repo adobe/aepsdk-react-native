@@ -16,8 +16,6 @@ Run `yarn bootstrap` to install the npm dependencies.
 
 ## Tests
 
-This project contains jest unit tests which are contained in the `__tests__` directory, to run the tests locally:
-
 To run the (Jest) unit tests locally:
 
 ```
