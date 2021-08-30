@@ -5,13 +5,13 @@
 
 ## BETA ACKNOWLEDGEMENT
 
-The react native modules containing in this repository are currently in Beta. Use of this code is by invitation only and not otherwise supported by Adobe. Please contact your Adobe Customer Success Manager to learn more.
+The React Native modules contained in this repository are currently in Beta. Use of this code is by invitation only and not otherwise supported by Adobe. Please contact your Adobe Customer Success Manager to learn more.
 
 By using the Beta, you hereby acknowledge that the Beta is provided "as is" without warranty of any kind. Adobe shall have no obligation to maintain, correct, update, change, modify or otherwise support the Beta. You are advised to use caution and not to rely in any way on the correct functioning or performance of such Beta and/or accompanying materials.
 
 ## About this project
 
-This repository is a monorepo. It contains a collection of AEPSDK React Native modules/packages listed below. These modules/packages can be found in the [packages](./packages) directory. 
+This repository is a monorepo. It contains a collection of Adobe Experience Platform Mobile SDK React Native modules listed below. These modules can be found in the [packages](./packages) directory. 
 | Package Name | Latest Version |
 | ---- | ---- |
 |  [@adobe/react-native-aepcore (required)](./packages/core)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcore.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcore) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcore)](https://www.npmjs.com/package/@adobe/react-native-aepcore) |
@@ -26,9 +26,9 @@ This repository is a monorepo. It contains a collection of AEPSDK React Native m
 
 ## Installation
 
-You need to install the SDK with [npm](https://www.npmjs.com/) and configure the native Android/iOS project in your react native project.
+You need to install the SDK with [npm](https://www.npmjs.com/) and configure the native Android/iOS project in your React Native project.
 
-> Note: If you are new to React Native we suggest you follow the [React Native Getting Started](<https://facebook.github.io/react-native/docs/getting-started.html>) page before continuing.
+> Note: If you are new to React Native, we suggest you follow the [React Native Getting Started](<https://facebook.github.io/react-native/docs/getting-started.html>) page before continuing.
 
 ### Install npm package
 
