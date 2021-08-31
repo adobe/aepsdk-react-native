@@ -34,11 +34,11 @@ You need to install the SDK with [npm](https://www.npmjs.com/) and configure the
 
 > Requires `@adobe/react-native-aepcore` to be installed.
 
-Install the `@adobe/react-native-aepedge` package:
+Install the `@adobe/react-native-aep{extension}` package:
 
 ```bash
 cd MyReactApp
-npm install @adobe/react-native-aepedge
+npm install @adobe/react-native-aep{extension}
 ```
 
 For iOS development, after installing the plugins from npm, download the pod dependencies by running the following command:
