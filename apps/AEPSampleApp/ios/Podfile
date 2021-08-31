@@ -16,6 +16,8 @@ target 'AEPSampleApp' do
   # pod 'AEPLifecycle'
   # pod 'AEPIdentity'
   # pod 'AEPSignal'
+  pod 'AEPEdge'
+  pod 'AEPEdgeIdentity'
   
   target 'AEPSampleAppTests' do
     inherit! :complete
