@@ -72,7 +72,9 @@ public class MainApplication extends Application implements ReactApplication {
           Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
+          //The syntax of registering Identity Edge Network extension with Core Identity extension in the same app
           com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+          //For the only Identity Edge Network extension in the app, use Identity.registerExtension()
           MobileCore.configureWithAppID("your-app-ID");
           MobileCore.start(new AdobeCallback() {
               @Override
