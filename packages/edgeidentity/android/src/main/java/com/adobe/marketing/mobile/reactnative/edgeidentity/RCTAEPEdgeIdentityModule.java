@@ -8,10 +8,10 @@
  OF ANY KIND, either express or implied. See the License for the specific language
  governing permissions and limitations under the License.
  */
-package com.adobe.marketing.mobile.reactnative.userprofile;
+package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.EdgeIdentity;
+import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -37,27 +37,6 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void extensionVersion(final Promise promise) {
-    promise.resolve(EdgeEdgeIdentity.extensionVersion());
+    promise.resolve(Identity.extensionVersion());
   }
-
-  // @ReactMethod
-  // public void updateUserAttributes(ReadableMap attributeMap) {
-  //   UserProfile.updateUserAttributes(RCTAEPUserProfileMapUtil.toMap(attributeMap));
-  // }
-
-  // @ReactMethod
-  // public void getUserAttributes(final ReadableArray attributeNames, final Promise promise) {
-  //   UserProfile.getUserAttributes(RCTAEPUserProfileArrayUtil.toStringList(attributeNames), new AdobeCallback<Map<String, Object>>() {
-  //     @Override
-  //     public void call(Map<String, Object> stringObjectMap) {
-  //       promise.resolve(stringObjectMap);
-  //     }
-  //   });
-  // }
-
-  // @ReactMethod
-  // public void removeUserAttributes(final ReadableArray attributeNames) {
-  //   UserProfile.removeUserAttributes(RCTAEPUserProfileArrayUtil.toStringList(attributeNames));
-  }
-
 }

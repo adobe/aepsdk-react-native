@@ -19,7 +19,6 @@ import com.adobe.marketing.mobile.Identity;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.EdgeIdentity;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
@@ -73,7 +72,8 @@ public class MainApplication extends Application implements ReactApplication {
           Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
-          MobileCore.configureWithAppID("yourAppID");
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+          MobileCore.configureWithAppID("your-app-ID");
           MobileCore.start(new AdobeCallback() {
               @Override
               public void call(Object o) {

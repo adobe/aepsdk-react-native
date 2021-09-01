@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-package com.adobe.marketing.mobile.reactnative.userprofile;
+package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
@@ -57,10 +57,10 @@ public class RCTAEPEdgeIdentityArrayUtil {
                     array[i] = readableArray.getString(i);
                     break;
                 case Map:
-                    array[i] = RCTAEPUserProfileMapUtil.toMap(readableArray.getMap(i));
+                    array[i] = RCTAEPEdgeIdentityMapUtil.toMap(readableArray.getMap(i));
                     break;
                 case Array:
-                    array[i] = RCTAEPUserProfileArrayUtil.toObjectArray(readableArray.getArray(i));
+                    array[i] = RCTAEPEdgeIdentityArrayUtil.toObjectArray(readableArray.getArray(i));
                     break;
             }
         }
@@ -88,9 +88,9 @@ public class RCTAEPEdgeIdentityArrayUtil {
             } else if (value instanceof String) {
                 writableArr.pushString((String) value);
             } else if (value instanceof Map) {
-                writableArr.pushMap(RCTAEPUserProfileMapUtil.toWritableMap((Map<String, Object>) value));
+                writableArr.pushMap(RCTAEPEdgeIdentityMapUtil.toWritableMap((Map<String, Object>) value));
             } else if (value.getClass().isArray()) {
-                writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((Object[]) value));
+                writableArr.pushArray(RCTAEPEdgeIdentityArrayUtil.toWritableArray((Object[]) value));
             }
         }
 

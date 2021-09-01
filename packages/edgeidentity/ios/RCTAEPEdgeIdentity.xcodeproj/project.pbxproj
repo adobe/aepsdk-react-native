@@ -71,9 +71,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* RCTAEPUserProfile */ = {
+		58B511DA1A9E6C8500147676 /* RCTAEPEdgeIdentity */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTAEPUserProfile" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTAEPEdgeIdentity" */;
 			buildPhases = (
 				D078FD99F863A8DAB193C525 /* [CP] Check Pods Manifest.lock */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
@@ -84,7 +84,7 @@
 			);
 			dependencies = (
 			);
-			name = RCTAEPUserProfile;
+			name = RCTAEPEdgeIdentity;
 			productName = RCTDataManager;
 			productReference = 134814201AA4EA6300B7C361 /* libRCTAEPUserProfile.a */;
 			productType = "com.apple.product-type.library.static";
@@ -103,7 +103,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RCTAEPUserProfile" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RCTAEPEdgeIdentity" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -116,7 +116,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* RCTAEPUserProfile */,
+				58B511DA1A9E6C8500147676 /* RCTAEPEdgeIdentity */,
 			);
 		};
 /* End PBXProject section */
@@ -282,7 +282,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RCTAEPUserProfile" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RCTAEPEdgeIdentity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
@@ -291,7 +291,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTAEPUserProfile" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTAEPEdgeIdentity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,

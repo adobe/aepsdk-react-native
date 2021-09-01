@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-package com.adobe.marketing.mobile.reactnative.userprofile;
+package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -49,10 +49,10 @@ public class RCTAEPEdgeIdentityMapUtil {
                     map.put(key, readableMap.getString(key));
                     break;
                 case Map:
-                    map.put(key, RCTAEPUserProfileMapUtil.toMap(readableMap.getMap(key)));
+                    map.put(key, RCTAEPEdgeIdentityMapUtil.toMap(readableMap.getMap(key)));
                     break;
                 case Array:
-                    map.put(key, RCTAEPUserProfileArrayUtil.toObjectArray(readableMap.getArray(key)));
+                    map.put(key, RCTAEPEdgeIdentityArrayUtil.toObjectArray(readableMap.getArray(key)));
                     break;
             }
         }
@@ -108,9 +108,9 @@ public class RCTAEPEdgeIdentityMapUtil {
             } else if (value instanceof String) {
                 writableMap.putString((String) pair.getKey(), (String) value);
             } else if (value instanceof Map) {
-                writableMap.putMap((String) pair.getKey(), RCTAEPUserProfileMapUtil.toWritableMap((Map<String, Object>) value));
+                writableMap.putMap((String) pair.getKey(), RCTAEPEdgeIdentityMapUtil.toWritableMap((Map<String, Object>) value));
             } else if (value.getClass() != null && value.getClass().isArray()) {
-                writableMap.putArray((String) pair.getKey(), RCTAEPUserProfileArrayUtil.toWritableArray((Object[]) value));
+                writableMap.putArray((String) pair.getKey(), RCTAEPEdgeIdentityArrayUtil.toWritableArray((Object[]) value));
             }
 
             iterator.remove();
