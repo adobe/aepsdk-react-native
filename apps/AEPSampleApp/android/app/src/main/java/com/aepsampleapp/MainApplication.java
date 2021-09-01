@@ -19,6 +19,7 @@ import com.adobe.marketing.mobile.Identity;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
@@ -28,6 +29,7 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -72,6 +74,7 @@ public class MainApplication extends Application implements ReactApplication {
           Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
+          Messaging.registerExtension();
           MobileCore.configureWithAppID("yourAppID");
           MobileCore.start(new AdobeCallback() {
               @Override
@@ -82,7 +85,6 @@ public class MainApplication extends Application implements ReactApplication {
       } catch (InvalidInitException e) {
           e.printStackTrace();
       }
-
   }
 
   /**

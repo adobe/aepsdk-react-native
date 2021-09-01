@@ -11,7 +11,6 @@
 
 #import "RCTAEPMessaging.h"
 @import AEPMessaging;
-@import AEPCore;
 
 @implementation RCTAEPMessaging
 
