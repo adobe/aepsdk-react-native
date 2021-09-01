@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Platform, StyleSheet, Text, View, ScrollView, NativeModules} from 'react-native';
-import {AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent} from '@adobe/react-native-aepcore';
+import {AEPIdentity as AEPIdentity, AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent } from '@adobe/react-native-aepcore';
+import {AEPIdentity as AEPEdgeIdentity } from '@adobe/react-native-aepedgeidentity';
 
 export default Core = ({ navigation }) => {
 
@@ -10,6 +11,7 @@ export default Core = ({ navigation }) => {
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Core</Text>
         <Button title="extensionVersion()" onPress={coreExtensionVersion}/>
+        <Button title="AEPIdentity::extensionVersion()" onPress={identityExtensionVersion}/>
         <Button title="updateConfiguration" onPress={updateConfiguration}/>
         <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn}/>
         <Button title="getPrivacyStatus()" onPress={getPrivacyStatus}/>
@@ -28,7 +30,10 @@ export default Core = ({ navigation }) => {
         <Button title="AEPLifecycle::extensionVersion()" onPress={lifecycleExtensionVersion}/>
         <Text style={styles.welcome}>Signal</Text>
         <Button title="AEPSignal::extensionVersion()" onPress={signalExtensionVersion}/>
-        
+        <Text style={styles.welcome}>EdgeIdentity</Text>
+        <Button title="AEPEdgeIdentity::extensionVersion()" onPress={identityEdgeExtensionVersion}/>
+        <Text style={styles.welcome}></Text>
+        <Text style={styles.welcome}>End of the Test</Text>
         </ScrollView>
       </View>
   )
@@ -84,6 +89,10 @@ function lifecycleExtensionVersion() {
 
 function identityExtensionVersion() {
   AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPIdentity version: " + version));
+}
+
+function identityEdgeExtensionVersion() {
+  AEPEdgeIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
 }
 
 function signalExtensionVersion() {

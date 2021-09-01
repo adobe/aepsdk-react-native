@@ -8,20 +8,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
+
+@format
 */
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPEdgeIdentity;
+import { NativeModules } from 'react-native';
+import { AEPIdentity } from '../';
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
+describe('AEPIdentity', () => {
 
-@property (nonatomic, strong) UIWindow *window;
-
-@end
+  it('extensionVersion is called', async () => {
+    expect(AEPIdentity.extensionVersion).toBeDefined();
+    const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'extensionVersion');
+    await AEPIdentity.extensionVersion();
+    expect(spy).toHaveBeenCalled();
+  });
+});
