@@ -6,11 +6,28 @@
 
 ## Usage
 
+### Initializing:
+
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://aep-sdks.gitbook.io/docs/getting-started/get-the-sdk#2-add-initialization-code). 
+
+Example:
+
+Objective-C
+```objectivec
+[AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdgeIdentity.class, AEPMobileEdge.class] completion:^{
+          [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+```
+
+JAVA
+```java
+  Edge.registerExtension();
+```
+
 ### [Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension)
 
 #### Importing the extension:
 ```javascript
-import {AEPEdge} from '@adobe/react-native-aepedge';
+import {AEPEdge, AEPExperienceEvent} from '@adobe/react-native-aepedge';
 ```
 
 ##### Getting the extension version:
@@ -22,7 +39,7 @@ AEPEdge.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPE
 
 ```javascript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
-let experienceEvent = ExperienceEvent(xdmData);
+let experienceEvent = new AEPExperienceEvent(xdmData);
 ```
 
 ##### Add free form data to the Experience event:
@@ -30,14 +47,14 @@ let experienceEvent = ExperienceEvent(xdmData);
 ```javascript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"free": "form", "data": "example"};
-let experienceEvent = ExperienceEvent(xdmData, data);
+let experienceEvent = new AEPExperienceEvent(xdmData, data);
 ```
 
 ##### Set the destination Dataset identifier to the current Experience event:
 
 ```javascript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
-let experienceEvent = ExperienceEvent(xdmData, null, datasetIdentifier: "datasetIdExample")
+let experienceEvent = new AEPExperienceEvent(xdmData, null, "datasetIdExample")
 ```
 
 ##### Create Experience Event with xdmdata, free form data and the destination Dataset identifier:
@@ -45,11 +62,11 @@ let experienceEvent = ExperienceEvent(xdmData, null, datasetIdentifier: "dataset
 ```javascript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"dataKey" : "dataValue"};
-let experienceEvent = ExperienceEvent(xdmData, data, datasetIdentifier: "datasetIdExample")
+let experienceEvent = new AEPExperienceEvent(xdmData, data, "datasetIdExample")
 ```
 
 #### Send an Experience Event:
 
 ```javascript
-AEPEdge.sendEvent(ExperienceEvent)
+AEPEdge.sendEvent(experienceEvent)
 ```

@@ -4,7 +4,7 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 Pod::Spec.new do |s|
   s.name         = "RCTAEPEdge"
   s.version      = package["version"]
-  s.summary      = "Edge library for Adobe Experience Platform Mobile SDK. Written and Supported by Adobe."
+  s.summary      = "Adobe Experience Platform Edge Network extension for Adobe Experience Platform Mobile SDK. Written and maintained by Adobe"
   s.author       = "Adobe Experience Platform SDK Team"
 
   s.homepage     = "https://github.com/adobe/aepsdk-react-native"
@@ -19,4 +19,5 @@ Pod::Spec.new do |s|
 
   s.dependency "React"
   s.dependency "AEPEdge", '~> 1.0'
+  s.dependency "AEPEdgeIdentity", '~> 1.0'
 end
