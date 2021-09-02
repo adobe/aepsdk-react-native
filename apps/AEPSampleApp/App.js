@@ -6,6 +6,7 @@ import Profile from './extensions/Profile';
 import Core from './extensions/Core';
 import Identity from './extensions/Identity';
 import EdgeIdentity from './extensions/EdgeIdentity';
+import EdgeIdentityAndIdentity from './extensions/EdgeIdentityAndIdentity';
 
 function HomeScreen({ navigation }) {
   return (
@@ -26,6 +27,10 @@ function HomeScreen({ navigation }) {
         onPress={() => navigation.navigate('EdgeIdentity')}
         title="EdgeIdentity"
       />
+      <Button
+        onPress={() => navigation.navigate('EdgeIdentityAndIdentity')}
+        title="EdgeIdentityAndIdentity"
+      />
     </View>
   );
 }
@@ -41,6 +46,7 @@ export default function App() {
         <Drawer.Screen name="Profile" component={Profile} />
         <Drawer.Screen name="Identity" component={Identity} />
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
+        <Drawer.Screen name="EdgeIdentityAndIdentity" component={EdgeIdentityAndIdentity} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
