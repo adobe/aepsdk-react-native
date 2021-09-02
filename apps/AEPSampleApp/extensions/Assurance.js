@@ -4,7 +4,7 @@ import {AEPAssurance} from '@adobe/react-native-aepassurance';
 
 export default Assurance = ({ navigation }) => {
  const [version, setVersion] = useState('');
- const [sessionURL, setsessionURL] = useState('assurance://?adb_validation_sessionid=26bcb125-a6c2-445b-b57a-5442c16edc8c');
+ const [sessionURL, setsessionURL] = useState('your-assurance-url');
 
  AEPAssurance.extensionVersion().then(version => {
    setVersion(version)
