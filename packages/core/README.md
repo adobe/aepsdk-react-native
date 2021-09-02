@@ -5,7 +5,7 @@
 
 ## Usage
 
-### Initializing:
+### Initializing
 
 Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](../../README.md#initializing).
 
