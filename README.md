@@ -52,7 +52,7 @@ To update native dependencies to latest available versions, run the following co
 
 ### Initializing 
 
-Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to import and register the Mobile Core, Identity, Lifecycle, Signal, and Profile extensions. For other extensions, the documentation on how to initialize the extension can be found in `./packges/{extension}/README.md`
+Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to import and register the Mobile Core, Identity, Lifecycle, Signal, and Profile extensions. For other extensions, the documentation on how to initialize the extension can be found in `./packages/{extension}/README.md`
 
 ###### **iOS**
 ```objective-c
