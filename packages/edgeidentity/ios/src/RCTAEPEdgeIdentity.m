@@ -11,7 +11,6 @@
 
 #import "RCTAEPEdgeIdentity.h"
 @import AEPEdgeIdentity;
-@import AEPCore;
 
 @implementation RCTAEPEdgeIdentity
 

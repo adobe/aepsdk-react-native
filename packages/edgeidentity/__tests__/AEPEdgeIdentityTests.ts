@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 import { NativeModules } from 'react-native';
 import { AEPIdentity } from '../';
 
-describe('AEPIdentity', () => {
+describe('AEPEdgeIdentity', () => {
 
   it('extensionVersion is called', async () => {
     expect(AEPIdentity.extensionVersion).toBeDefined();

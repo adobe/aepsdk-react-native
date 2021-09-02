@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Platform, StyleSheet, Text, View, ScrollView, NativeModules} from 'react-native';
-import {AEPIdentity, AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent } from '@adobe/react-native-aepcore';
+import {AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent } from '@adobe/react-native-aepcore';
 
 export default Core = ({ navigation }) => {
 
@@ -10,7 +10,6 @@ export default Core = ({ navigation }) => {
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Core</Text>
         <Button title="extensionVersion()" onPress={coreExtensionVersion}/>
-        <Button title="AEPIdentity::extensionVersion()" onPress={identityExtensionVersion}/>
         <Button title="updateConfiguration" onPress={updateConfiguration}/>
         <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn}/>
         <Button title="getPrivacyStatus()" onPress={getPrivacyStatus}/>
