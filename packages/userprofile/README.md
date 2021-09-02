@@ -8,7 +8,7 @@
 
 ### Initializing and registering the extension
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](../../README.md#initializing).
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
 ### [User Profile](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/profile)
 
