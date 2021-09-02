@@ -6,6 +6,29 @@
 
 ## Usage
 
+### Initializing:
+
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://aep-sdks.gitbook.io/docs/getting-started/get-the-sdk#2-add-initialization-code). 
+
+Example:
+Objective-C
+```objectivec
+[AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileEdgeIdentity.class, AEPMobileEdge.class] completion:^{
+          [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+```
+
+JAVA
+```java
+  Identity.registerExtension();
+```
+
+```java
+  Identity.registerExtension();
+  Edge.registerExtension();
+ //The syntax of registering Identity Edge Network extension with Core Identity extension in the same app
+  com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+```
+
 ### [Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
 
 #### Importing the extension:
