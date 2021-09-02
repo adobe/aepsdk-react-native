@@ -67,7 +67,9 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:@"your-app-ID"];
-  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileUserProfile.class] completion:^{
+  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileUserProfile.class
+    // register other extensions here
+    ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
   ];
@@ -107,6 +109,7 @@ public class MainApplication extends Application implements ReactApplication {
       Identity.registerExtension();
       Lifecycle.registerExtension();
       Signal.registerExtension();
+      // register other extensions here
       MobileCore.start(new AdobeCallback () {
           @Override
           public void call(Object o) {
