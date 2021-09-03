@@ -51,7 +51,7 @@ static NSString* const PAYLOAD_KEY = @"payload";
         [experienceEventArr addObject:experienceEventHandleDic];
     }
    
-    return experienceEventHandle;
+    return experienceEventArr;
 }
 
 @end

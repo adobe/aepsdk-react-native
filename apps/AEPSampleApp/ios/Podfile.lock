@@ -45,6 +45,7 @@ PODS:
     - React
   - RCTAEPEdge (1.0.0-alpha.0):
     - AEPEdge (~> 1.0)
+    - AEPEdgeIdentity (~> 1.0)
     - React
   - RCTAEPUserProfile (1.0.0-alpha.2):
     - AEPUserProfile (~> 3.0)
@@ -477,11 +478,11 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: df60ffea6d14d0c9726f33fdaddb7f80fd44a24b
+  FBReactNativeSpec: 1afb61aa02a861bb795bd84ea344aa21df3e5504
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPCore: 6dfa0402c077510e4b08c1782350640d53cb83e4
-  RCTAEPEdge: 52b2f0963cbc244dde3057edc1603b52c888f6fa
+  RCTAEPEdge: 58fe165fd3d38a4b0a3b7e8b00f152b5219cf184
   RCTAEPUserProfile: 53b3cc558dccf3d0ec367fc27493087bde9e834d
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa

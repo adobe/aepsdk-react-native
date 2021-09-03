@@ -33,10 +33,50 @@ describe('AEPEdge', () => {
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
 
-   it('sendEvent is called with null parameters', async () => {
+   it('sendEvent is called with only xdmData parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
     let xdmData  = {"eventType" : "SampleXDMEvent"};
-    let experienceEvent = new AEPExperienceEvent(xdmData, null, "");
+    let experienceEvent = new AEPExperienceEvent(xdmData);
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+  });
+
+   it('sendEvent is called with null data parameter', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let xdmData  = {"eventType" : "SampleXDMEvent"};
+    let experienceEvent = new AEPExperienceEvent(xdmData, null, "indentifierID");
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+  });
+  
+  it('sendEvent is called with xdmData and data parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let xdmData  = {"eventType" : "SampleXDMEvent"};
+    let data  = {"dataKey" : "dataValue"};
+    let experienceEvent = new AEPExperienceEvent(xdmData, data);
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+  });
+
+  it('sendEvent is called with incorrect type data parameter', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let xdmData  = {"eventType" : "SampleXDMEvent"};
+    let experienceEvent = new AEPExperienceEvent(xdmData, "identifierValue");
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+  });
+
+  it('sendEvent is called with incorrect type of xdmData parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let data  = {"dataKey" : "dataValue"};
+    let experienceEvent = new AEPExperienceEvent("identifierValue", data);
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+  });
+
+  it('sendEvent is called with nul parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let experienceEvent = new AEPExperienceEvent(null);
     await AEPEdge.sendEvent(experienceEvent);
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });

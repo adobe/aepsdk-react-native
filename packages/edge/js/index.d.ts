@@ -27,5 +27,5 @@ export class AEPExperienceEvent{
     data: Map;
     datasetIdentifier: string;
 
-  constructor(xdmdata: Map, data: Map, datasetIdentifier: string)
+  constructor(xdmdata: Map, data?: Map, datasetIdentifier?: string)
 }

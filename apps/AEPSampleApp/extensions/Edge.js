@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
-import {AEPEdge, AEPExperienceEvent} from '@adobe/react-native-aepedge';
+import {AEPEdge, AEPExperienceEvent, AEPEdgeEventHandle} from '@adobe/react-native-aepedge';
 
 export default Edge = ({ navigation }) => {
 
@@ -26,6 +26,7 @@ export default Edge = ({ navigation }) => {
         <Text style={styles.welcome}>Edge</Text>
         <Button title="extensionVersion()" onPress={edgeExtensionVersion}/>
         <Button title="sendEvent()" onPress={sendEvent}/>
+        <Button title="sendEventWithResponseHandler()" onPress={sendEventWithResponseHandler}/>
         </ScrollView>
       </View>
   )
@@ -41,6 +42,14 @@ function sendEvent() {
   var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
 
   AEPEdge.sendEvent(experienceEvent);
+}
+
+function sendEventWithResponseHandler() {
+  var xdmData  = {"eventType" : "SampleXDMEvent"};
+  var data  = {"free": "form", "data": "example"};
+  var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
+
+  AEPEdge.sendEvent(experienceEvent).then(eventHandle => console.log("AdobeExperienceSDK: AEPEdgeEventHandle = " + JSON.stringify(eventHandle)));
 }
 
 const styles = StyleSheet.create({

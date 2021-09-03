@@ -21,6 +21,7 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public final class RCTAEPEdgeDataBridge {
@@ -72,8 +73,8 @@ public final class RCTAEPEdgeDataBridge {
 
     /**
      * Converts a {@link EdgeEventHandle} into a {@link WritableMap}
-     * @param eventhandle The eventhandle object
-     * @return A {@link WritableMap} that represents the visitorID
+     * @param eventhandle
+     * @return A {@link WritableMap} that represents the eventhandle
      */
     public static WritableMap mapFromEdgeEventHandle(final EdgeEventHandle eventhandle) {
         if (eventhandle == null) {
@@ -82,7 +83,7 @@ public final class RCTAEPEdgeDataBridge {
 
         WritableMap eventHandleMap = new WritableNativeMap();
         eventHandleMap.putString(TYPE_KEY, eventhandle.getType());
-        eventHandleMap.putArray(PAYLOAD_KEY, (ReadableArray) eventhandle.getPayload());
+        //eventHandleMap.putArray(PAYLOAD_KEY, ReadableArray.(eventhandle.getPayload()));
 
         return eventHandleMap;
     }
