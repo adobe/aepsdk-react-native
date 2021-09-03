@@ -19,5 +19,4 @@ Pod::Spec.new do |s|
 
   s.dependency "React"
   s.dependency "AEPEdge", '~> 1.0'
-  s.dependency "AEPEdgeIdentity", '~> 1.0'
 end

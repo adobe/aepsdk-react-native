@@ -48,6 +48,23 @@ describe('AEPEdge', () => {
     await AEPEdge.sendEvent(experienceEvent);
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
+
+    it('sendEvent is called with empty dataidentifier', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let xdmData  = {"eventType" : "SampleXDMEvent"};
+    let data  = {"dataKey" : "dataValue"};
+    let experienceEvent = new AEPExperienceEvent(xdmData, data, " ");
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+  });
+
+    it('sendEvent is called with null data and empty dataidentifier', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let xdmData  = {"eventType" : "SampleXDMEvent"};
+    let experienceEvent = new AEPExperienceEvent(xdmData, null, " ");
+    await AEPEdge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+  });
   
   it('sendEvent is called with xdmData and data parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
