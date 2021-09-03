@@ -71,7 +71,7 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
       try {
           UserProfile.registerExtension();
-          Identity.registerExtension();
+          com.adobe.marketing.mobile.Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
           Edge.registerExtension();
