@@ -20,7 +20,10 @@ Objective-C
 
 JAVA
 ```java
+  //Registering Edge
   Edge.registerExtension();
+  //Registering EdgeIdentity
+  Identity.registerExtension();
 ```
 
 ### [Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension)
