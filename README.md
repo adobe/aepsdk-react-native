@@ -109,6 +109,7 @@ public class MainApplication extends Application implements ReactApplication {
       Identity.registerExtension();
       Lifecycle.registerExtension();
       Signal.registerExtension();
+      // register other extensions here
       MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
         @Override
