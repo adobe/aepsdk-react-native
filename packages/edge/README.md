@@ -70,3 +70,9 @@ let experienceEvent = new AEPExperienceEvent(xdmData, data, "datasetIdExample")
 ```javascript
 AEPEdge.sendEvent(experienceEvent)
 ```
+
+#### Send an Experience Event with 
+
+```javascript
+AEPEdge.sendEvent(experienceEvent).then(eventHandle => console.log("AdobeExperienceSDK: AEPEdgeEventHandle = " + JSON.stringify(eventHandle)));
+```

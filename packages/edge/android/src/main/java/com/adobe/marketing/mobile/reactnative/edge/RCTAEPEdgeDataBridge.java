@@ -20,8 +20,9 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.WritableArray;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public final class RCTAEPEdgeDataBridge {
@@ -81,11 +82,17 @@ public final class RCTAEPEdgeDataBridge {
             return null;
         }
 
-        WritableMap eventHandleMap = new WritableNativeMap();
-        eventHandleMap.putString(TYPE_KEY, eventhandle.getType());
-        //eventHandleMap.putArray(PAYLOAD_KEY, ReadableArray.(eventhandle.getPayload()));
+        if (eventhandle.getPayload() != null) {
+            Object[] handles = new Object[] {eventhandle.getPayload().size()};
+            handles = eventhandle.getPayload().toArray();
 
-        return eventHandleMap;
+            WritableMap eventHandleMap = new WritableNativeMap();
+            eventHandleMap.putString(TYPE_KEY, eventhandle.getType());
+            eventHandleMap.putArray(PAYLOAD_KEY, RCTAEPEdgeArrayUtil.toWritableArray(handles));
+
+            return eventHandleMap;
+        }
+        return null;
     }
 
     // Helper methods
@@ -96,5 +103,5 @@ public final class RCTAEPEdgeDataBridge {
 
     public static ReadableMap getNullableMap(final ReadableMap data, final String key) {
         return (data.hasKey(key) && data.getType(key) == ReadableType.Map) ? data.getMap(key) : null;
-        }
+    }
 }
