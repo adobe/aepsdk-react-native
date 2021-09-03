@@ -52,6 +52,80 @@ To update native dependencies to latest available versions, run the following co
 
 [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) links the module while building the app.
 
+### Initializing 
+
+Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to import and register the Mobile Core, Identity, Lifecycle, Signal, and Profile extensions. For other extensions, the documentation on how to initialize the extension can be found in `./packages/{extension}/README.md`
+
+###### **iOS**
+```objective-c
+@import AEPCore;
+@import AEPServices;
+@import AEPSignal;
+@import AEPLifecycle;
+@import AEPIdentity;
+@import AEPUserProfile;
+...
+@implementation AppDelegate
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileUserProfile.class
+    // register other extensions here
+    ] completion:^{
+    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+  }
+  ];
+
+  return YES;
+}
+
+@end
+
+```
+
+###### **Android:**
+```java
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.UserProfile;
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+
+    try {
+      UserProfile.registerExtension();
+      Identity.registerExtension();
+      Lifecycle.registerExtension();
+      Signal.registerExtension();
+      // register other extensions here
+      MobileCore.configureWithAppID("yourAppID");
+      MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+          MobileCore.lifecycleStart(null);
+        }
+      });
+    } catch (InvalidInitException e) {
+      ...
+    }
+  }
+}   
+```
+
 
 ## Development
 
