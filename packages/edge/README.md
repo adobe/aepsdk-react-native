@@ -23,7 +23,7 @@ iOS
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:@"yourAppID"];
-  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileEdge.class, AEPMobileEdgeIdentity.class
+  [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdge.class, AEPMobileEdgeIdentity.class
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
