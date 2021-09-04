@@ -8,22 +8,72 @@
 
 ### Initializing:
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://aep-sdks.gitbook.io/docs/getting-started/get-the-sdk#2-add-initialization-code). 
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing). 
 
 Example:
 
-Objective-C
+iOS
 ```objectivec
-[AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdgeIdentity.class, AEPMobileEdge.class] completion:^{
-          [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+@import AEPCore;
+@import AEPLifecycle;
+@import AEPEdge;
+@import AEPEdgeIdentity;
+...
+@implementation AppDelegate
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileEdge.class, AEPMobileEdgeIdentity.class
+    ] completion:^{
+    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+  }
+  ];
+
+  return YES;
+}
+
+@end
 ```
 
-JAVA
+Android
 ```java
-  //Registering Edge
-  Edge.registerExtension();
-  //Registering EdgeIdentity
-  Identity.registerExtension();
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.identity;
+  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+
+    try {
+      Edge.registerExtension();
+      Identity.registerExtension();
+      Lifecycle.registerExtension();
+      MobileCore.configureWithAppID("yourAppID");
+      MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+          MobileCore.lifecycleStart(null);
+        }
+      });
+    } catch (InvalidInitException e) {
+      ...
+    }
+  }
+}     
 ```
 
 ### [Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension)
