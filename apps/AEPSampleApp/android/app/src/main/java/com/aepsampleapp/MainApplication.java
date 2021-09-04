@@ -27,6 +27,7 @@ import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.adobe.marketing.mobile.edge.identity
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -69,12 +70,12 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
       try {
           UserProfile.registerExtension();
-          Identity.registerExtension();
-          Lifecycle.registerExtension();
-          Signal.registerExtension();
-          //The syntax of registering Identity Edge Network extension with Core Identity extension in the same app
+           //The syntax of registering Core Identity extension with Identity Edge Network extension in the same app
+          com.adobe.marketing.mobile.Identity.registerExtension();
           com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
-          //For the only Identity Edge Network extension in the app, use Identity.registerExtension()
+          //For only one Identity extension in the app, use Identity.registerExtension()
+          Lifecycle.registerExtension();
+          Signal.registerExtension(); 
           MobileCore.configureWithAppID("your-app-ID");
           MobileCore.start(new AdobeCallback() {
               @Override

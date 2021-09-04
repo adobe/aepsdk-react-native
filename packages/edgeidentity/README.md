@@ -8,27 +8,108 @@
 
 ### Initializing:
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://aep-sdks.gitbook.io/docs/getting-started/get-the-sdk#2-add-initialization-code). 
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
 Example:
 
-Objective-C
+iOS
 ```objectivec
-[AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileEdgeIdentity.class, AEPMobileEdge.class] completion:^{
-          [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+@import AEPCore;
+@import AEPLifecycle;
+@import AEPEdgeIdentity;
+...
+@implementation AppDelegate
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+  [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdgeIdentity.class
+    ] completion:^{
+    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+  }
+  ];
+
+  return YES;
+}
+
+@end
 ```
 
-JAVA
+Android
 ```java
-  Identity.registerExtension();
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.edge.identity;
+  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+
+    try {
+      Identity.registerExtension();
+      Lifecycle.registerExtension();
+      MobileCore.configureWithAppID("yourAppID");
+      MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+          MobileCore.lifecycleStart(null);
+        }
+      });
+    } catch (InvalidInitException e) {
+      ...
+    }
+  }
+}     
 ```
 
-
 ```java
-  Identity.registerExtension();
-  Edge.registerExtension();
- //The syntax of registering Identity Edge Network extension with Core Identity extension in the same app
-  com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+
+    try {
+      //The syntax of registering Core Identity extension with Identity Edge Network extension in the same app
+      com.adobe.marketing.mobile.Identity.registerExtension();
+      com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+      Lifecycle.registerExtension();
+      MobileCore.configureWithAppID("yourAppID");
+      MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+          MobileCore.lifecycleStart(null);
+        }
+      });
+    } catch (InvalidInitException e) {
+      ...
+    }
+  }
+}     
 ```
 
 ### [Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
@@ -44,3 +125,18 @@ import {AEPIdentity} from '@adobe/react-native-aepedgeidentity';
 AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
 ```
 
+#### In the case of AEPIdentities and Identity for Edge Network in the same app
+
+```javascript
+import {AEPIdentity as AEPIdentity, AEPCore} from '@adobe/react-native-aepcore';
+import {AEPIdentity as AEPEdgeIdentity } from '@adobe/react-native-aepedgeidentity';
+
+
+function identityExtensionVersion() {
+  AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: Identity version: " + version));
+}
+
+function identityEdgeExtensionVersion() {
+  AEPEdgeIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
+}
+```
