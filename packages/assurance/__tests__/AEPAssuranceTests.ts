@@ -9,15 +9,24 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
-@flow
 @format
 */
 
-'use strict';
+import { NativeModules } from 'react-native';
+import { AEPAssurance } from '../';
 
-module.exports = {
-  // Native modules
-  get AEPUserProfile() {
-    return require('./AEPUserProfile');
-  },
-};
+describe('AEPAssurance', () => {
+
+  it('extensionVersion is called', async () => {
+    expect(AEPAssurance.extensionVersion).toBeDefined();
+    const spy = jest.spyOn(NativeModules.AEPAssurance, 'extensionVersion');
+    await AEPAssurance.extensionVersion();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('startSession is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPAssurance, 'startSession');
+    await AEPAssurance.startSession('');
+    expect(spy).toHaveBeenCalled();
+  });
+});
