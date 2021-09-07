@@ -20,17 +20,17 @@ function HomeScreen({ navigation }) {
         onPress={() => navigation.navigate('Profile')}
         title="UserProfile"
       />
-       <Button
+      <Button
         onPress={() => navigation.navigate('Identity')}
         title="Identity"
       />
       <Button
-        onPress={() => navigation.navigate('EdgeIdentity')}
-        title="EdgeIdentity"
-      />
-       <Button
         onPress={() => navigation.navigate('Edge')}
         title="Edge"
+      />
+      <Button
+        onPress={() => navigation.navigate('EdgeIdentity')}
+        title="EdgeIdentity"
       />
       <Button
         onPress={() => navigation.navigate('Assurance')}
