@@ -19,7 +19,7 @@ export class AEPEdgeEventHandle{
     type: string;
     payload: Map;
 
- constructor(type: string, playload: Map)
+ constructor(type?: string, playload?: Map)
 }
 
 export class AEPExperienceEvent{

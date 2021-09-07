@@ -96,5 +96,4 @@ public class RCTAEPEdgeArrayUtil {
 
         return writableArr;
     }
-
 }

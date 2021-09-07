@@ -40,7 +40,7 @@ function sendEvent() {
   var xdmData  = {"eventType" : "SampleXDMEvent"};
   var data  = {"free": "form", "data": "example"};
   var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
-
+ 
   AEPEdge.sendEvent(experienceEvent);
 }
 
@@ -48,7 +48,7 @@ function sendEventWithResponseHandler() {
   var xdmData  = {"eventType" : "SampleXDMEvent"};
   var data  = {"free": "form", "data": "example"};
   var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
-
+  
   AEPEdge.sendEvent(experienceEvent).then(eventHandle => console.log("AdobeExperienceSDK: AEPEdgeEventHandle = " + JSON.stringify(eventHandle)));
 }
 

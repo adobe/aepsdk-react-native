@@ -21,22 +21,15 @@ static NSString* const TYPE_KEY = @"type";
 static NSString* const PAYLOAD_KEY = @"payload";
 
 + (AEPExperienceEvent *)experienceEventFromDictionary: (nonnull NSDictionary *) dict {
-    
-    if (!dict || [dict isEqual:[NSNull null]]) {
-            return nil;
-        }
-    
-    NSDictionary *xdmdata = [dict objectForKey:XDM_DATA_KEY];
-    NSDictionary *data = [dict objectForKey:DATA_KEY];
-    NSString *datasetIdentifier = [dict objectForKey:DATASET_IDENTIFIER_KEY];
+     
+    NSDictionary *xdmdata = [[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] ? [dict objectForKey:XDM_DATA_KEY] : nil;
     
     if (!xdmdata) {
         return nil;
     }
     
-    xdmdata = [[dict objectForKey:XDM_DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:XDM_DATA_KEY] ? xdmdata  : nil;
-    data =  [[dict objectForKey:DATA_KEY] isKindOfClass:[NSDictionary class]] || ![dict objectForKey:DATA_KEY] ? data : nil;
-    datasetIdentifier = [[dict objectForKey:DATASET_IDENTIFIER_KEY] isKindOfClass:[NSString class]] ? datasetIdentifier : nil;
+    NSDictionary *data = [[dict objectForKey:DATA_KEY] isKindOfClass:[NSDictionary class]] ? [dict objectForKey:DATA_KEY] : nil;
+    NSString *datasetIdentifier = [[dict objectForKey:DATASET_IDENTIFIER_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:DATASET_IDENTIFIER_KEY] : nil;
         
     return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:data datasetIdentifier:datasetIdentifier];
     

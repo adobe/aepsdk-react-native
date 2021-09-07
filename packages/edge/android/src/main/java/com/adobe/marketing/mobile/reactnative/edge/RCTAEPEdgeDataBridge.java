@@ -59,10 +59,6 @@ public final class RCTAEPEdgeDataBridge {
                 Log.d(TAG, "experienceEventFromReadableMap: " + e);
             }
 
-            if (!(data instanceof Map)) {
-                Log.d(TAG, "experienceEventFromReadableMap: experience event free form data is null");
-            }
-
             ExperienceEvent event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).build();
 
             return event;
@@ -82,26 +78,25 @@ public final class RCTAEPEdgeDataBridge {
             return null;
         }
 
+        WritableMap eventHandleMap = new WritableNativeMap();
+        if (eventhandle.getType() != null) {
+            eventHandleMap.putString(TYPE_KEY, eventhandle.getType());
+        }
         if (eventhandle.getPayload() != null) {
             Object[] handles = new Object[] {eventhandle.getPayload().size()};
             handles = eventhandle.getPayload().toArray();
-
-            WritableMap eventHandleMap = new WritableNativeMap();
-            eventHandleMap.putString(TYPE_KEY, eventhandle.getType());
             eventHandleMap.putArray(PAYLOAD_KEY, RCTAEPEdgeArrayUtil.toWritableArray(handles));
-
-            return eventHandleMap;
         }
-        return null;
+        return eventHandleMap;
     }
 
     // Helper methods
 
-    public static String getNullableString(final ReadableMap data, final String key) {
+    private static String getNullableString(final ReadableMap data, final String key) {
         return data.hasKey(key) ? data.getString(key) : null;
     }
 
-    public static ReadableMap getNullableMap(final ReadableMap data, final String key) {
+    private static ReadableMap getNullableMap(final ReadableMap data, final String key) {
         return (data.hasKey(key) && data.getType(key) == ReadableType.Map) ? data.getMap(key) : null;
     }
 }
