@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+
 package com.aepsampleapp;
 
 import android.app.Application;
@@ -21,6 +22,7 @@ import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
 import com.facebook.react.PackageList;
@@ -70,11 +72,13 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
       try {
           UserProfile.registerExtension();
-          Identity.registerExtension();
+          com.adobe.marketing.mobile.Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
-          MobileCore.configureWithAppID("your-app-ID");
+          Edge.registerExtension();
           Assurance.registerExtension();
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+          MobileCore.configureWithAppID("your-app-ID");
           MobileCore.start(new AdobeCallback() {
               @Override
               public void call(Object o) {
