@@ -19,18 +19,25 @@ jest.doMock('react-native', () => {
                 ...ReactNative.NativeModules,
                 AEPEdgeIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                AEPEdge: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    sendEvent: jest.fn(() => new Promise(resolve => resolve(null))),
+                },
+                AEPAssurance: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    startSession: jest.fn()
                 },
                 AEPUserProfile: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     removeUserAttributes: jest.fn(),
                     getUserAttributes: jest.fn(() => new Promise(resolve => resolve(null))),
-                    updateUserAttributes: jest.fn(),
+                    updateUserAttributes: jest.fn()
                 },
                 AEPSignal: {
-                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))) 
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
                 },
                 AEPLifecycle: {
-                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))) 
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
                 },
                 AEPCore: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
@@ -52,7 +59,7 @@ jest.doMock('react-native', () => {
                     collectPii: jest.fn(),
                     setSmallIconResourceID: jest.fn(),
                     setLargeIconResourceID: jest.fn(),
-                    setAppGroup: jest.fn(),
+                    setAppGroup: jest.fn()
                 },
                 AEPIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
@@ -62,7 +69,7 @@ jest.doMock('react-native', () => {
                     appendVisitorInfoForURL: jest.fn(() => new Promise(resolve => resolve(''))),
                     getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
                     getIdentifiers: jest.fn(() => new Promise(resolve => resolve(null))),
-                    getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))) 
+                    getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve('')))
                 }
             },
         },

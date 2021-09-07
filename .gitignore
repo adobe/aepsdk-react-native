@@ -106,3 +106,4 @@ dist
 build/
 ## User settings
 xcuserdata/
+packages/.DS_Store
