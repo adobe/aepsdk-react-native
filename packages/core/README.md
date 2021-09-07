@@ -5,9 +5,9 @@
 
 ## Usage
 
-### Initializing:
+### Initializing and registering the extension
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://aep-sdks.gitbook.io/docs/getting-started/get-the-sdk#2-add-initialization-code). The linked documentation initializes the User Profile extension which is not required, however, if you are interested in the User Profile extension for React Native you can find it [here](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile).
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
 ### [Core](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core)
 

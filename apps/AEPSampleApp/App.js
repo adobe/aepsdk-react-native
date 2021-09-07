@@ -5,6 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import Profile from './extensions/Profile';
 import Core from './extensions/Core';
 import Identity from './extensions/Identity';
+import EdgeIdentity from './extensions/EdgeIdentity';
+import Edge from './extensions/Edge';
+import Assurance from './extensions/Assurance';
 
 function HomeScreen({ navigation }) {
   return (
@@ -17,9 +20,21 @@ function HomeScreen({ navigation }) {
         onPress={() => navigation.navigate('Profile')}
         title="UserProfile"
       />
-      <Button
+       <Button
         onPress={() => navigation.navigate('Identity')}
         title="Identity"
+      />
+      <Button
+        onPress={() => navigation.navigate('EdgeIdentity')}
+        title="EdgeIdentity"
+      />
+       <Button
+        onPress={() => navigation.navigate('Edge')}
+        title="Edge"
+      />
+      <Button
+        onPress={() => navigation.navigate('Assurance')}
+        title="Assurance"
       />
     </View>
   );
@@ -35,6 +50,9 @@ export default function App() {
         <Drawer.Screen name="Core" component={Core} />
         <Drawer.Screen name="Profile" component={Profile} />
         <Drawer.Screen name="Identity" component={Identity} />
+        <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
+        <Drawer.Screen name="Edge" component={Edge} />
+        <Drawer.Screen name="Assurance" component={Assurance} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
