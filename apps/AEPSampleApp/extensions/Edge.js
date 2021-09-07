@@ -15,39 +15,41 @@ governing permissions and limitations under the License.
 
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
-import {AEPUserProfile} from '@adobe/react-native-aepuserprofile';
+import {AEPEdge, AEPExperienceEvent, AEPEdgeEventHandle} from '@adobe/react-native-aepedge';
 
-export default Profile = ({ navigation }) => {
+export default Edge = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
-        <Text style={styles.welcome}>UserProfile</Text>
-        <Button title="extensionVersion()" onPress={profileExtensionVersion}/>
-        <Button title="updateUserAttributes()" onPress={updateUserAttributes}/>
-        <Button title="removeUserAttributes()" onPress={removeUserAttributes}/>
-        <Button title="getUserAttributes()" onPress={getUserAttributes}/>
+        <Text style={styles.welcome}>Edge</Text>
+        <Button title="extensionVersion()" onPress={edgeExtensionVersion}/>
+        <Button title="sendEvent()" onPress={sendEvent}/>
+        <Button title="sendEventWithResponseHandler()" onPress={sendEventWithResponseHandler}/>
         </ScrollView>
       </View>
   )
 }
 
-function profileExtensionVersion() {
-  AEPUserProfile.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPUserProfile version: " + version));
+function edgeExtensionVersion() {
+  AEPEdge.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdge version: " + version));
 }
 
-function updateUserAttributes() {
-  let attrMap = {"mapKey": "mapValue", "mapKey1": "mapValue1"};
-  AEPUserProfile.updateUserAttributes(attrMap);
+function sendEvent() {
+  var xdmData  = {"eventType" : "SampleXDMEvent"};
+  var data  = {"free": "form", "data": "example"};
+  var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
+ 
+  AEPEdge.sendEvent(experienceEvent);
 }
 
-function removeUserAttributes() {
-  AEPUserProfile.removeUserAttributes(["mapKey1"]);
-}
-
-function getUserAttributes(){
-  AEPUserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: AEPUserProfile getUserAttributes: " +map));
+function sendEventWithResponseHandler() {
+  var xdmData  = {"eventType" : "SampleXDMEvent"};
+  var data  = {"free": "form", "data": "example"};
+  var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
+  
+  AEPEdge.sendEvent(experienceEvent).then(eventHandle => console.log("AdobeExperienceSDK: AEPEdgeEventHandle = " + JSON.stringify(eventHandle)));
 }
 
 const styles = StyleSheet.create({

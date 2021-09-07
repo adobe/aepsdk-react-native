@@ -8,21 +8,24 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
+
 */
+export class AEPEdge{
+    static extensionVersion(): Promise<string>;
+    static sendEvent(event: AEPExperienceEvent): Promise<AEPExtensionEvent>;
+}
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPEdge;
-@import AEPEdgeIdentity;
+export class AEPEdgeEventHandle{
+    type: string;
+    payload: Map;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
+ constructor(type?: string, playload?: Map)
+}
 
-@property (nonatomic, strong) UIWindow *window;
+export class AEPExperienceEvent{
+    xdmdata: Map;
+    data: Map;
+    datasetIdentifier: string;
 
-@end
+  constructor(xdmdata: Map, data?: Map, datasetIdentifier?: string)
+}
