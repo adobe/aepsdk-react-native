@@ -1,20 +1,23 @@
 PODS:
-  - AEPCore (3.2.4):
+  - AEPAssurance (3.0.0):
+    - AEPCore (>= 3.1.0)
+    - AEPServices (>= 3.1.0)
+  - AEPCore (3.3.0):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.2.4)
-  - AEPEdge (1.1.1):
+    - AEPServices (= 3.3.0)
+  - AEPEdge (1.1.2):
     - AEPCore (>= 3.1.1)
     - AEPEdgeIdentity
   - AEPEdgeIdentity (1.0.0):
     - AEPCore (>= 3.1.1)
-  - AEPIdentity (3.2.4):
-    - AEPCore (= 3.2.4)
-  - AEPLifecycle (3.2.4):
-    - AEPCore (= 3.2.4)
+  - AEPIdentity (3.3.0):
+    - AEPCore (= 3.3.0)
+  - AEPLifecycle (3.3.0):
+    - AEPCore (= 3.3.0)
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.2.4)
-  - AEPSignal (3.2.4):
-    - AEPCore (= 3.2.4)
+  - AEPServices (3.3.0)
+  - AEPSignal (3.3.0):
+    - AEPCore (= 3.3.0)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -37,15 +40,17 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
+  - RCTAEPAssurance (3.0.0-alpha.0):
+    - AEPAssurance (~> 3.0)
+    - React
   - RCTAEPCore (1.0.0-alpha.1):
     - AEPCore (~> 3.0)
     - AEPIdentity (~> 3.0)
     - AEPLifecycle (~> 3.0)
     - AEPSignal (~> 3.0)
     - React
-  - RCTAEPEdge (1.0.0-alpha.0):
+  - RCTAEPEdge (1.0.0-alpha.1):
     - AEPEdge (~> 1.0)
-    - AEPEdgeIdentity (~> 1.0)
     - React
   - RCTAEPUserProfile (1.0.0-alpha.2):
     - AEPUserProfile (~> 3.0)
@@ -344,6 +349,7 @@ DEPENDENCIES:
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
+  - RCTAEPAssurance (from `../../../packages/assurance`)
   - RCTAEPCore (from `../../../packages/core`)
   - RCTAEPEdge (from `../../../packages/edge`)
   - RCTAEPUserProfile (from `../../../packages/userprofile`)
@@ -380,6 +386,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AEPAssurance
     - AEPCore
     - AEPEdge
     - AEPEdgeIdentity
@@ -402,6 +409,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
+  RCTAEPAssurance:
+    :path: "../../../packages/assurance"
   RCTAEPCore:
     :path: "../../../packages/core"
   RCTAEPEdge:
@@ -466,14 +475,15 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPCore: 517f1375860222a12c6226c50d0782e51d27abf2
-  AEPEdge: ff0cf67e25c342a7a9d48e9a77e9485869dad043
+  AEPAssurance: 18068627111e366a851dc2166239f22b665101bd
+  AEPCore: 0bd46c0a859d36099bb71294874837c31235ffe6
+  AEPEdge: 4208614f134d86131df95fd3420da20530fac275
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
-  AEPIdentity: 6580a2a0359931cb7e32be934341df7d86ca73ed
-  AEPLifecycle: d822d28e71d201debfcbfc0f1c60cdee61412925
+  AEPIdentity: ad3bc0d18db4a8a1408299e56883c1db1e874551
+  AEPLifecycle: a040570f7981f3d1892b9e39f3cd7b5de5280594
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: ffa6f91c0799f0a8651d89978a4b2a3d024ee6c4
-  AEPSignal: 0be73545905731da4768d5ece48faf29b2cae764
+  AEPServices: ccf8d0fdfe7a7e45303aa6b3c33af0687dd49cf1
+  AEPSignal: 7eb425e33e08d2bcdb039121157f2504e82e8dad
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
@@ -481,8 +491,9 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 1afb61aa02a861bb795bd84ea344aa21df3e5504
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
+  RCTAEPAssurance: 419c28c8d04829cdf40b802ed5227e7ab039c329
   RCTAEPCore: 6dfa0402c077510e4b08c1782350640d53cb83e4
-  RCTAEPEdge: 58fe165fd3d38a4b0a3b7e8b00f152b5219cf184
+  RCTAEPEdge: 1ff651b4e56d6200eaa8dde8ef049ba39a1eccaf
   RCTAEPUserProfile: 53b3cc558dccf3d0ec367fc27493087bde9e834d
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
