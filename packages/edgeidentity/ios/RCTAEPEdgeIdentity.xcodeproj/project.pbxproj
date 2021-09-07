@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		09037ACA74711BE35A9507C5 /* libPods-RCTACPUserProfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DF1315553E7A765C495C83 /* libPods-RCTACPUserProfile.a */; };
-		B3E7B58A1CC2AC0600A0062D /* RCTAEPUserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTAEPUserProfile.m */; };
+		09037ACA74711BE35A9507C5 /* libPods-RCTAEPEdgeIdentity.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DF1315553E7A765C495C83 /* libPods-RCTAEPEdgeIdentity.a */; };
+		B3E7B58A1CC2AC0600A0062D /* RCTAEPEdgeIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTAEPEdgeIdentity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,10 +24,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libRCTAEPUserProfile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTAEPUserProfile.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		13DF1315553E7A765C495C83 /* libPods-RCTACPUserProfile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RCTACPUserProfile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3E7B5881CC2AC0600A0062D /* RCTAEPUserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTAEPUserProfile.h; path = src/RCTAEPUserProfile.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* RCTAEPUserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTAEPUserProfile.m; path = src/RCTAEPUserProfile.m; sourceTree = "<group>"; };
+		134814201AA4EA6300B7C361 /* libRCTAEPEdgeIdentity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTAEPEdgeIdentity.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		13DF1315553E7A765C495C83 /* libPods-RCTAEPEdgeIdentity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RCTAEPEdgeIdentity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3E7B5881CC2AC0600A0062D /* RCTAEPEdgeIdentity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTAEPEdgeIdentity.h; path = src/RCTAEPEdgeIdentity.h; sourceTree = "<group>"; };
+		B3E7B5891CC2AC0600A0062D /* RCTAEPEdgeIdentity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTAEPEdgeIdentity.m; path = src/RCTAEPEdgeIdentity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09037ACA74711BE35A9507C5 /* libPods-RCTACPUserProfile.a in Frameworks */,
+				09037ACA74711BE35A9507C5 /* libPods-RCTAEPEdgeIdentity.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,7 +45,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libRCTAEPUserProfile.a */,
+				134814201AA4EA6300B7C361 /* libRCTAEPEdgeIdentity.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -53,7 +53,7 @@
 		536328606496798629B88317 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				13DF1315553E7A765C495C83 /* libPods-RCTACPUserProfile.a */,
+				13DF1315553E7A765C495C83 /* libPods-RCTAEPEdgeIdentity.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -61,8 +61,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				B3E7B5881CC2AC0600A0062D /* RCTAEPUserProfile.h */,
-				B3E7B5891CC2AC0600A0062D /* RCTAEPUserProfile.m */,
+				B3E7B5881CC2AC0600A0062D /* RCTAEPEdgeIdentity.h */,
+				B3E7B5891CC2AC0600A0062D /* RCTAEPEdgeIdentity.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 				536328606496798629B88317 /* Frameworks */,
 			);
@@ -86,7 +86,7 @@
 			);
 			name = RCTAEPEdgeIdentity;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libRCTAEPUserProfile.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libRCTAEPEdgeIdentity.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -137,7 +137,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-RCTACPUserProfile-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-RCTAEPEdgeIdentity-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -151,7 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* RCTAEPUserProfile.m in Sources */,
+				B3E7B58A1CC2AC0600A0062D /* RCTAEPEdgeIdentity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,7 +253,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RCTAEPUserProfile;
+				PRODUCT_NAME = RCTAEPEdgeIdentity;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
 			};
@@ -273,7 +273,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RCTAEPUserProfile;
+				PRODUCT_NAME = RCTAEPEdgeIdentity;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
 			};

@@ -72,46 +72,6 @@ public class MainApplication extends Application implements ReactApplication {
   }
 }     
 ```
-
-```java
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-  
-...
-import android.app.Application;
-...
-public class MainApplication extends Application implements ReactApplication {
-  ...
-  @Override
-  public void on Create(){
-    super.onCreate();
-    ...
-    MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
-
-    try {
-      //The syntax of registering Core Identity extension with Identity Edge Network extension in the same app
-      com.adobe.marketing.mobile.Identity.registerExtension();
-      com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
-      Lifecycle.registerExtension();
-      MobileCore.configureWithAppID("yourAppID");
-      MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-          MobileCore.lifecycleStart(null);
-        }
-      });
-    } catch (InvalidInitException e) {
-      ...
-    }
-  }
-}     
-```
-
 ### [Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
 
 #### Importing the extension:
@@ -123,20 +83,4 @@ import {AEPIdentity} from '@adobe/react-native-aepedgeidentity';
 
 ```javascript
 AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
-```
-
-#### In the case of AEPIdentities and Identity for Edge Network in the same app
-
-```javascript
-import {AEPIdentity as AEPIdentity, AEPCore} from '@adobe/react-native-aepcore';
-import {AEPIdentity as AEPEdgeIdentity } from '@adobe/react-native-aepedgeidentity';
-
-
-function identityExtensionVersion() {
-  AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: Identity version: " + version));
-}
-
-function identityEdgeExtensionVersion() {
-  AEPEdgeIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
-}
 ```

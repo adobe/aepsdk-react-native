@@ -1,17 +1,17 @@
 PODS:
-  - AEPCore (3.2.2):
+  - AEPCore (3.3.0):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.2.2)
+    - AEPServices (= 3.3.0)
   - AEPEdgeIdentity (1.0.0):
     - AEPCore (>= 3.1.1)
-  - AEPIdentity (3.2.2):
-    - AEPCore (= 3.2.2)
-  - AEPLifecycle (3.2.2):
-    - AEPCore (= 3.2.2)
+  - AEPIdentity (3.3.0):
+    - AEPCore (= 3.3.0)
+  - AEPLifecycle (3.3.0):
+    - AEPCore (= 3.3.0)
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.2.2)
-  - AEPSignal (3.2.2):
-    - AEPCore (= 3.2.2)
+  - AEPServices (3.3.0)
+  - AEPSignal (3.3.0):
+    - AEPCore (= 3.3.0)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -461,22 +461,22 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPCore: 1f15da7f4c843b8aa61c54486b7c5b85378187af
+  AEPCore: 0bd46c0a859d36099bb71294874837c31235ffe6
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
-  AEPIdentity: bdc78eb093c20d259bb3b7d79d7e0b75f30cff2e
-  AEPLifecycle: 54602c05131fd479b292cad24a62ab9f92509908
+  AEPIdentity: ad3bc0d18db4a8a1408299e56883c1db1e874551
+  AEPLifecycle: a040570f7981f3d1892b9e39f3cd7b5de5280594
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: 8072b031649fea7ffd971e4e185f271dee3707fc
-  AEPSignal: dc658c701187d9e1658732d264fb711358b76df5
+  AEPServices: ccf8d0fdfe7a7e45303aa6b3c33af0687dd49cf1
+  AEPSignal: 7eb425e33e08d2bcdb039121157f2504e82e8dad
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: 692a343a787f3da4f20467bd06927f26e95a7396
+  FBReactNativeSpec: 5c7541a92eb70665691900370965100a76d5f9ba
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPCore: 6dfa0402c077510e4b08c1782350640d53cb83e4
-  RCTAEPEdgeIdentity: fbf16ea4402a6ca461208459b130bdee6a3f4f91
+  RCTAEPEdgeIdentity: 1d87119ef1dca6119daed764e6f16bd880d3cb95
   RCTAEPUserProfile: 53b3cc558dccf3d0ec367fc27493087bde9e834d
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
