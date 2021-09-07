@@ -52,6 +52,9 @@ PODS:
   - RCTAEPEdge (1.0.0-alpha.1):
     - AEPEdge (~> 1.0)
     - React
+  - RCTAEPEdgeIdentity (1.0.0-alpha.1):
+    - AEPEdgeIdentity (~> 1.0)
+    - React
   - RCTAEPUserProfile (1.0.0-alpha.2):
     - AEPUserProfile (~> 3.0)
     - React
@@ -352,6 +355,7 @@ DEPENDENCIES:
   - RCTAEPAssurance (from `../../../packages/assurance`)
   - RCTAEPCore (from `../../../packages/core`)
   - RCTAEPEdge (from `../../../packages/edge`)
+  - RCTAEPEdgeIdentity (from `../../../packages/edgeidentity`)
   - RCTAEPUserProfile (from `../../../packages/userprofile`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -415,6 +419,8 @@ EXTERNAL SOURCES:
     :path: "../../../packages/core"
   RCTAEPEdge:
     :path: "../../../packages/edge"
+  RCTAEPEdgeIdentity:
+    :path: "../../../packages/edgeidentity"
   RCTAEPUserProfile:
     :path: "../../../packages/userprofile"
   RCTRequired:
@@ -488,12 +494,13 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: 1afb61aa02a861bb795bd84ea344aa21df3e5504
+  FBReactNativeSpec: 15f3fc73d5cf4aa8642af04a45a60de235394239
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPAssurance: 419c28c8d04829cdf40b802ed5227e7ab039c329
   RCTAEPCore: 6dfa0402c077510e4b08c1782350640d53cb83e4
   RCTAEPEdge: 1ff651b4e56d6200eaa8dde8ef049ba39a1eccaf
+  RCTAEPEdgeIdentity: 95c0697178995cc4e778d12491deeaa18366d492
   RCTAEPUserProfile: 53b3cc558dccf3d0ec367fc27493087bde9e834d
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
@@ -524,6 +531,6 @@ SPEC CHECKSUMS:
   RNScreens: eb0dfb2d6b21d2d7f980ad46b14eb306d2f1062e
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: d560ebba567c3b39a448aa5c264b32c2a1a4fe75
+PODFILE CHECKSUM: 2a644d6b375e7638e06413c828ae75a91d8f8598
 
 COCOAPODS: 1.10.1

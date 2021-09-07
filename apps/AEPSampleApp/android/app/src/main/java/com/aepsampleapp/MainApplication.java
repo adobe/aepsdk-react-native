@@ -73,11 +73,11 @@ public class MainApplication extends Application implements ReactApplication {
       try {
           UserProfile.registerExtension();
           com.adobe.marketing.mobile.Identity.registerExtension();
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
           Edge.registerExtension();
           Assurance.registerExtension();
-          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           MobileCore.configureWithAppID("your-app-ID");
           MobileCore.start(new AdobeCallback() {
               @Override

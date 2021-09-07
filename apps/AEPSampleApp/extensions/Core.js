@@ -43,7 +43,6 @@ export default Core = ({ navigation }) => {
         <Button title="AEPLifecycle::extensionVersion()" onPress={lifecycleExtensionVersion}/>
         <Text style={styles.welcome}>Signal</Text>
         <Button title="AEPSignal::extensionVersion()" onPress={signalExtensionVersion}/>
-        
         </ScrollView>
       </View>
   )

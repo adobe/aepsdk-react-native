@@ -17,6 +17,9 @@ jest.doMock('react-native', () => {
     return Object.setPrototypeOf({
             NativeModules: {
                 ...ReactNative.NativeModules,
+                AEPEdgeIdentity: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                },
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     sendEvent: jest.fn(() => new Promise(resolve => resolve(null))),
