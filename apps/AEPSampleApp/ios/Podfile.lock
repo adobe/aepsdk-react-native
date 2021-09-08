@@ -1,25 +1,25 @@
 PODS:
-  - AEPCore (3.2.2):
+  - AEPCore (3.2.4):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.2.2)
+    - AEPServices (= 3.2.4)
   - AEPEdge (1.1.1):
     - AEPCore (>= 3.1.1)
     - AEPEdgeIdentity
   - AEPEdgeIdentity (1.0.0):
     - AEPCore (>= 3.1.1)
-  - AEPIdentity (3.2.2):
-    - AEPCore (= 3.2.2)
-  - AEPLifecycle (3.2.2):
-    - AEPCore (= 3.2.2)
+  - AEPIdentity (3.2.4):
+    - AEPCore (= 3.2.4)
+  - AEPLifecycle (3.2.4):
+    - AEPCore (= 3.2.4)
   - AEPMessaging (1.0.0):
     - AEPCore
     - AEPEdge (>= 1.1.0)
     - AEPEdgeIdentity (>= 1.0.0)
     - AEPServices
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.2.2)
-  - AEPSignal (3.2.2):
-    - AEPCore (= 3.2.2)
+  - AEPServices (3.2.4)
+  - AEPSignal (3.2.4):
+    - AEPCore (= 3.2.4)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -343,8 +343,6 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
-  - AEPEdge
-  - AEPEdgeIdentity
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -473,15 +471,15 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPCore: 1f15da7f4c843b8aa61c54486b7c5b85378187af
+  AEPCore: 517f1375860222a12c6226c50d0782e51d27abf2
   AEPEdge: ff0cf67e25c342a7a9d48e9a77e9485869dad043
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
-  AEPIdentity: bdc78eb093c20d259bb3b7d79d7e0b75f30cff2e
-  AEPLifecycle: 54602c05131fd479b292cad24a62ab9f92509908
+  AEPIdentity: 6580a2a0359931cb7e32be934341df7d86ca73ed
+  AEPLifecycle: d822d28e71d201debfcbfc0f1c60cdee61412925
   AEPMessaging: 661cc08435254f3c9cc0899785c20a7952952e95
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: 8072b031649fea7ffd971e4e185f271dee3707fc
-  AEPSignal: dc658c701187d9e1658732d264fb711358b76df5
+  AEPServices: ffa6f91c0799f0a8651d89978a4b2a3d024ee6c4
+  AEPSignal: 0be73545905731da4768d5ece48faf29b2cae764
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
@@ -521,6 +519,6 @@ SPEC CHECKSUMS:
   RNScreens: eb0dfb2d6b21d2d7f980ad46b14eb306d2f1062e
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 4ae5d52c82cd0ab8a5d591c1e31a321def2a24aa
+PODFILE CHECKSUM: 2a644d6b375e7638e06413c828ae75a91d8f8598
 
 COCOAPODS: 1.10.1
