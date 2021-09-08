@@ -14,41 +14,78 @@ You need to install the SDK with [npm](https://www.npmjs.com/) and configure the
 
 ### [Messaging](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer)
 
-##### Importing the extension:
+### Initialization  
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).  
+
+Example:  
+
+iOS  
+```objectivec
+@import AEPCore;
+@import AEPLifecycle;
+@import AEPEdge;
+@import AEPEdgeIdentity;
+...
+@implementation AppDelegate
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+  [AEPMobileCore registerExtensions: @[AEPMobileEdge.class, AEPMobileEdgeIdentity.class, AEPMobileMessaging.class] completion:^{
+    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+  }
+  ];
+
+  return YES;
+}
+
+@end
+```
+
+Android  
+```java
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.identity;
+  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+
+    try {
+      Edge.registerExtension();
+      EdgeIdentity.registerExtension();
+      Messaging.registerExtension();
+      MobileCore.configureWithAppID("yourAppID");
+      MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+          MobileCore.lifecycleStart(null);
+        }
+      });
+    } catch (InvalidInitException e) {
+      ...
+    }
+  }
+}     
+```
+
+### Importing the extension:
 
 ```javascript
 import {AEPMessaging} from '@adobe/react-native-aepmessaging';
-```
-##### Registering the extension with AEPCore
-Initialize the Messaging SDK via native code inside Appdelegate and MainApplication for iOS and Android respectively.
-
-##### **iOS**
-```objective-c
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-  [AEPMobileCore configureWithAppId:@"your-app-ID"];
-  [AEPMobileCore registerExtensions: @[ AEPMobileMessaging.class ] completion:^{
-          
-  }];
-  return YES;
-```
-
-```swift
-func application(_ application: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    MobileCore.registerExtensions([ Messaging.self ]) {
-            MobileCore.configureWith(appId: "<appid>")            
-        }    
-```
-
-##### **Android**
-```java
-Messaging.registerExtension();        
-MobileCore.start(new AdobeCallback() {
-    @Override
-    public void call(Object o) {
-        MobileCore.configureWithAppID("<appId>")                        
-    }
-});
 ```
 
 ##### Getting the extension version:
