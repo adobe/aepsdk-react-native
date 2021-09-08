@@ -4,6 +4,12 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging) 
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 
+`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [AEPMessaging SDK](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer) to allow for integration with React Native applications.
+
+## Installation
+
+You need to install the SDK with [npm](https://www.npmjs.com/) and configure the native Android/iOS project in your React Native project. Before installing the Messaging extension it is recommended to begin by installing the peer dependencies [Core extension](../core/README.md), [Edge extension](../edge/README.md) and [EdgeIdentity extension](../edge/README.md).
+
 ## Usage
 
 ### [Messaging](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer)
@@ -49,19 +55,19 @@ MobileCore.start(new AdobeCallback() {
 ```javascript
 AEPMessaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPMessaging version: " + version));
 ```
-##### Configuring Edge and Launch  
-To configure the Launch and Edge for the Messaging follow [Configure Ege and Launch](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/EdgeAndLaunchConfiguration.md#configuring-edge--launch)
 
-##### **Push Notification Setup**  
-Push notification has to be setup at the native side in you React native project. For push notification setup at the native side read the instructions
+## Configure Adobe Journey Optimizer 
+To configure Adobe Journey optimizer Messaging in Launch follow steps in [Configure Adobe Journey optimizer](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer#setup-adobe-journey-optimizer-extension)
+
+## **Push Notification Setup**  
+The configuration for handling push notifications has to be done in the native Android/iOS project of React Native app. For setting up push notification in the native project follow the instructions    
 [iOS push notification setup](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns)  
 [Android push notification setup](https://firebase.google.com/docs/cloud-messaging/android/client)
 
-##### **Messaging SDK API usage**  
-Messaging SDK API's has to be called from the native code of you React Native project.  
-**iOS API usage**
-[iOS API usage](https://github.com/adobe/aepsdk-messaging-ios/blob/main/Documentation/APIUsage.md)
+## **Messaging SDK API usage**  
+Messaging SDK API's has to be called from the native Android/iOS project of React Native app.  
 
-**Android API usage**
-[Android API usage](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/APIUsage.md)
-[MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/push/MessagingPushPayload.md#messagingpushpayload-usage) can be used for getting the notification attributes like title, body, action etc. for creating the push notification.
+###### [iOS API usage](https://github.com/adobe/aepsdk-messaging-ios/blob/main/Documentation/APIUsage.md)  
+
+##### [Android API usage](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/APIUsage.md)
+In Android, [MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/push/MessagingPushPayload.md#messagingpushpayload-usage) can be used for getting the notification attributes like title, body, action etc. for creating push notification.
