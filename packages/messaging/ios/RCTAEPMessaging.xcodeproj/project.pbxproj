@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		09037ACA74711BE35A9507C5 /* libPods-RCTACPUserProfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DF1315553E7A765C495C83 /* libPods-RCTACPUserProfile.a */; };
 		B3E7B58A1CC2AC0600A0062D /* RCTAEPMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTAEPMessaging.m */; };
 /* End PBXBuildFile section */
 
@@ -35,7 +34,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09037ACA74711BE35A9507C5 /* libPods-RCTACPUserProfile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
