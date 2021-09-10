@@ -6,9 +6,16 @@
 
 `@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [AEPMessaging SDK](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer) to allow for integration with React Native applications.
 
+## Prerequisites
+
+The messaging extension has the following peer dependenices, which must be installed prior to installing the messaging extension:
+- [Core](../core/README.md)
+- [Edge](../edge/README.md)
+- [Edge Identity](../edgeidentity/README.md)
+
 ## Installation
 
-You need to install the SDK with [npm](https://www.npmjs.com/) and configure the native Android/iOS project in your React Native project. Before installing the Messaging extension it is recommended to begin by installing the peer dependencies [Core extension](../core/README.md), [Edge extension](../edge/README.md) and [EdgeIdentity extension](../edge/README.md).
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native/tree/messaging#requirements) instructions on the main page 
 
 ## Usage
 
@@ -96,15 +103,15 @@ AEPMessaging.extensionVersion().then(version => console.log("AdobeExperienceSDK:
 ## Configure Adobe Journey Optimizer 
 To configure Adobe Journey optimizer Messaging in Launch follow steps in [Configure Adobe Journey optimizer](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer#setup-adobe-journey-optimizer-extension)
 
-## **Push Notification Setup**  
-The configuration for handling push notifications has to be done in the native Android/iOS project of React Native app. For setting up push notification in the native project follow the instructions    
-[iOS push notification setup](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns)  
-[Android push notification setup](https://firebase.google.com/docs/cloud-messaging/android/client)
+## Push Notification Setup
+Handling push notifications must be done in native (Android/iOS) code for the React Native app. To configure push notification in the native project, follow the instructions provided by their respective platforms: 
+- [Apple - iOS push notification setup](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns)  
+- [Google - Android push notification setup](https://firebase.google.com/docs/cloud-messaging/android/client)
 
-## **Messaging SDK API usage**  
-Messaging SDK API's has to be called from the native Android/iOS project of React Native app.  
+## Messaging SDK API usage
+Messaging SDK APIs must be called from the native Android/iOS project of React Native app.  
 
 ###### [iOS API usage](https://github.com/adobe/aepsdk-messaging-ios/blob/main/Documentation/APIUsage.md)  
 
 ##### [Android API usage](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/APIUsage.md)
-In Android, [MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/push/MessagingPushPayload.md#messagingpushpayload-usage) can be used for getting the notification attributes like title, body, action etc. for creating push notification.
+In Android, [MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/push/MessagingPushPayload.md#messagingpushpayload-usage) can be used for getting the notification attributes like title, body, and action. These are useful for push notification creation.
