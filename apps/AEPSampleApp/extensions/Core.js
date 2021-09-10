@@ -13,9 +13,10 @@ governing permissions and limitations under the License.
 @format
 */
 
-import React, {Component} from 'react';
-import {Button, Platform, StyleSheet, Text, View, ScrollView, NativeModules} from 'react-native';
+import React from 'react';
+import {Button, Text, View, ScrollView, NativeModules} from 'react-native';
 import {AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent} from '@adobe/react-native-aepcore';
+import styles from '../styles/styles';
 
 export default Core = ({ navigation }) => {
 
@@ -118,17 +119,3 @@ function getPrivacyStatus() {
 function log() {
   AEPCore.log(AEPMobileLogLevel.ERROR, "React Native Tag", "React Native Message");
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 22,
-    textAlign: 'center',
-    margin: 10,
-  }
-});

@@ -13,9 +13,10 @@ governing permissions and limitations under the License.
 @format
 */
 
-import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
+import React from 'react';
+import {Button, Text, View, ScrollView} from 'react-native';
 import {AEPIdentity, AEPMobileVisitorAuthenticationState} from '@adobe/react-native-aepcore';
+import styles from '../styles/styles';
 
 export default Identity = ({ navigation }) => {
 
@@ -67,17 +68,3 @@ function getIdentifiers() {
 function getExperienceCloudId() {
   AEPIdentity.getExperienceCloudId().then(cloudId => console.log("AdobeExperienceSDK: CloudID = " + cloudId));
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 22,
-    textAlign: 'center',
-    margin: 10,
-  }
-});
