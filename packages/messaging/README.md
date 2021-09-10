@@ -73,7 +73,7 @@ public class MainApplication extends Application implements ReactApplication {
 
     try {
       Edge.registerExtension();
-      EdgeIdentity.registerExtension();
+      Identity.registerExtension();
       Messaging.registerExtension();
       MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
