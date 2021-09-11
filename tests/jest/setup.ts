@@ -70,7 +70,10 @@ jest.doMock('react-native', () => {
                     appendVisitorInfoForURL: jest.fn(() => new Promise(resolve => resolve(''))),
                     getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
                     getIdentifiers: jest.fn(() => new Promise(resolve => resolve(null))),
-                    getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve('')))
+                    getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))) 
+                },
+                AEPMessaging: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
                 }
             },
         },

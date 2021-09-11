@@ -2,22 +2,27 @@ PODS:
   - AEPAssurance (3.0.0):
     - AEPCore (>= 3.1.0)
     - AEPServices (>= 3.1.0)
-  - AEPCore (3.3.0):
+  - AEPCore (3.2.4):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.3.0)
-  - AEPEdge (1.1.2):
+    - AEPServices (= 3.2.4)
+  - AEPEdge (1.1.1):
     - AEPCore (>= 3.1.1)
     - AEPEdgeIdentity
   - AEPEdgeIdentity (1.0.0):
     - AEPCore (>= 3.1.1)
-  - AEPIdentity (3.3.0):
-    - AEPCore (= 3.3.0)
-  - AEPLifecycle (3.3.0):
-    - AEPCore (= 3.3.0)
+  - AEPIdentity (3.2.4):
+    - AEPCore (= 3.2.4)
+  - AEPLifecycle (3.2.4):
+    - AEPCore (= 3.2.4)
+  - AEPMessaging (1.0.0):
+    - AEPCore
+    - AEPEdge (>= 1.1.0)
+    - AEPEdgeIdentity (>= 1.0.0)
+    - AEPServices
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.3.0)
-  - AEPSignal (3.3.0):
-    - AEPCore (= 3.3.0)
+  - AEPServices (3.2.4)
+  - AEPSignal (3.2.4):
+    - AEPCore (= 3.2.4)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -54,6 +59,9 @@ PODS:
     - React
   - RCTAEPEdgeIdentity (1.0.0-alpha.1):
     - AEPEdgeIdentity (~> 1.0)
+    - React
+  - RCTAEPMessaging (1.0.0-alpha.1):
+    - AEPMessaging (~> 1.0)
     - React
   - RCTAEPUserProfile (1.0.0-alpha.2):
     - AEPUserProfile (~> 3.0)
@@ -356,6 +364,7 @@ DEPENDENCIES:
   - RCTAEPCore (from `../../../packages/core`)
   - RCTAEPEdge (from `../../../packages/edge`)
   - RCTAEPEdgeIdentity (from `../../../packages/edgeidentity`)
+  - RCTAEPMessaging (from `../../../packages/messaging`)
   - RCTAEPUserProfile (from `../../../packages/userprofile`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -396,6 +405,7 @@ SPEC REPOS:
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
+    - AEPMessaging
     - AEPRulesEngine
     - AEPServices
     - AEPSignal
@@ -421,6 +431,8 @@ EXTERNAL SOURCES:
     :path: "../../../packages/edge"
   RCTAEPEdgeIdentity:
     :path: "../../../packages/edgeidentity"
+  RCTAEPMessaging:
+    :path: "../../../packages/messaging"
   RCTAEPUserProfile:
     :path: "../../../packages/userprofile"
   RCTRequired:
@@ -482,25 +494,27 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AEPAssurance: 18068627111e366a851dc2166239f22b665101bd
-  AEPCore: 0bd46c0a859d36099bb71294874837c31235ffe6
-  AEPEdge: 4208614f134d86131df95fd3420da20530fac275
+  AEPCore: 517f1375860222a12c6226c50d0782e51d27abf2
+  AEPEdge: ff0cf67e25c342a7a9d48e9a77e9485869dad043
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
-  AEPIdentity: ad3bc0d18db4a8a1408299e56883c1db1e874551
-  AEPLifecycle: a040570f7981f3d1892b9e39f3cd7b5de5280594
+  AEPIdentity: 6580a2a0359931cb7e32be934341df7d86ca73ed
+  AEPLifecycle: d822d28e71d201debfcbfc0f1c60cdee61412925
+  AEPMessaging: 661cc08435254f3c9cc0899785c20a7952952e95
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: ccf8d0fdfe7a7e45303aa6b3c33af0687dd49cf1
-  AEPSignal: 7eb425e33e08d2bcdb039121157f2504e82e8dad
+  AEPServices: ffa6f91c0799f0a8651d89978a4b2a3d024ee6c4
+  AEPSignal: 0be73545905731da4768d5ece48faf29b2cae764
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: 15f3fc73d5cf4aa8642af04a45a60de235394239
+  FBReactNativeSpec: 02403654be033f905d9156b55635355f3a1cca1f
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPAssurance: 419c28c8d04829cdf40b802ed5227e7ab039c329
   RCTAEPCore: 6dfa0402c077510e4b08c1782350640d53cb83e4
   RCTAEPEdge: 1ff651b4e56d6200eaa8dde8ef049ba39a1eccaf
   RCTAEPEdgeIdentity: 95c0697178995cc4e778d12491deeaa18366d492
+  RCTAEPMessaging: bda1f87bc2740eb335ea911e73b8377049053e5e
   RCTAEPUserProfile: 53b3cc558dccf3d0ec367fc27493087bde9e834d
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
