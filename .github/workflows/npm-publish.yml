@@ -24,13 +24,12 @@ jobs:
         echo "@adobe:registry=http://registry.npmjs.org/" > .npmrc
         echo "registry=http://registry.npmjs.org/" >> .npmrc
         echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-        npm whoami        
+        npm whoami
       env: # More info about the environment variables in the README
         NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
     - name: lerna publish
-      run: npx lerna publish from-package --yes
+      run: npx lerna publish from-package --yes --dist-tag alpha
       env: # More info about the environment variables in the README
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
         NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
-  
