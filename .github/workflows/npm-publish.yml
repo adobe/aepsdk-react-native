@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
+      with:
+        ref: assurance_publish
     - name: Set up Node.js
       uses: actions/setup-node@master
       with:
