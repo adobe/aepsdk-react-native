@@ -23,7 +23,7 @@ This repository is a monorepo. It contains a collection of Adobe Experience Plat
 
 `@adobe/react-native-aep{extension}` is a wrapper around the iOS and Android [AEP SDK](https://aep-sdks.gitbook.io/docs/) to allow for integration with React Native applications.
 
-> Note: @adobe/react-native-aepassurance <=2.0 is not compatible with  @adobe/react-native-aepcore. Please use @adobe/react-native-aepassurance [3.x alpha versions or above] (./packages/assurance#install-npm-package)
+> Note: @adobe/react-native-aepassurance <=2.0 is not compatible with  @adobe/react-native-aepcore. Please use @adobe/react-native-aepassurance [3.x alpha versions or above](./packages/assurance#install-npm-package)
 
 ## Requirements
 
