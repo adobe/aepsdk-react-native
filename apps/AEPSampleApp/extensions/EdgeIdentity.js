@@ -25,6 +25,7 @@ export default EdgeIdentity = ({ navigation }) => {
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>EdgeIdentity</Text>
         <Button title="extensionVersion()" onPress={edgeIdentityExtensionVersion}/>
+        <Button title="getExperienceCloudId()" onPress={getExperienceCloudId}/>
         </ScrollView>
       </View>
   )
@@ -34,6 +35,9 @@ function edgeIdentityExtensionVersion() {
   AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
 }
 
+function getExperienceCloudId() {
+  AEPIdentity.getExperienceCloudId().then(cloudId => console.log("AdobeExperienceSDK: CloudID = " + cloudId));
+}
 
 const styles = StyleSheet.create({
   container: {

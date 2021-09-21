@@ -6,6 +6,17 @@
 
 ## Usage
 
+### Install npm package
+
+> Requires `@adobe/react-native-aepcore` to be installed.  - [Core](../core/README.md)
+
+Install the `@adobe/react-native-aepedgeidentity` package:
+
+```bash
+cd MyReactApp
+npm install @adobe/react-native-aepedgeidentity
+```
+
 ### Initializing:
 
 Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
@@ -21,7 +32,7 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"yourAppID"];
+  [AEPMobileCore configureWithAppId:@"your-app-ID"];
   [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdgeIdentity.class
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
@@ -59,7 +70,7 @@ public class MainApplication extends Application implements ReactApplication {
     try {
       Identity.registerExtension();
       Lifecycle.registerExtension();
-      MobileCore.configureWithAppID("yourAppID");
+      MobileCore.configureWithAppID("your-app-ID");
       MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {
@@ -83,4 +94,8 @@ import {AEPIdentity} from '@adobe/react-native-aepedgeidentity';
 
 ```javascript
 AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
+```
+##### Get Experience Cloud IDs:
+```javascript
+AEPIdentity.getExperienceCloudId().then(cloudId => console.log("AdobeExperienceSDK: CloudID = " + cloudId));
 ```

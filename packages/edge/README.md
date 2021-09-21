@@ -6,6 +6,18 @@
 
 ## Usage
 
+### Install npm package
+
+> Requires `@adobe/react-native-aepcore` to be installed. - [Core](../core/README.md)
+Install peer dependency `@adobe/react-native-aepedgeidentity` package. - [Edge Identity](../edgeidentity/README.md)
+
+Install the `@adobe/react-native-aepedge` package:
+
+```bash
+cd MyReactApp
+npm install @adobe/react-native-aepedge
+```
+
 ### Initializing:
 
 Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing). 
@@ -22,7 +34,7 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"yourAppID"];
+  [AEPMobileCore configureWithAppId:@"your-app-ID"];
   [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdge.class, AEPMobileEdgeIdentity.class
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
@@ -62,7 +74,7 @@ public class MainApplication extends Application implements ReactApplication {
       Edge.registerExtension();
       Identity.registerExtension();
       Lifecycle.registerExtension();
-      MobileCore.configureWithAppID("yourAppID");
+      MobileCore.configureWithAppID("your-app-ID");
       MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {
