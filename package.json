@@ -46,6 +46,7 @@
     "lerna": "^4.0.0",
     "ts-jest": "^27.0.4",
     "tslib": "^2.1.0",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "flow-bin": "0.92.0"
   }
 }

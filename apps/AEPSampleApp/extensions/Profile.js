@@ -1,6 +1,22 @@
-import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
+/*
+Copyright 2021 Adobe. All rights reserved.
+This file is licensed to you under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain a copy
+of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+OF ANY KIND, either express or implied. See the License for the specific language
+governing permissions and limitations under the License.
+
+@flow
+@format
+*/
+
+import React from 'react';
+import {Button, Text, View, ScrollView} from 'react-native';
 import {AEPUserProfile} from '@adobe/react-native-aepuserprofile';
+import styles from '../styles/styles';
 
 export default Profile = ({ navigation }) => {
 
@@ -34,17 +50,3 @@ function removeUserAttributes() {
 function getUserAttributes(){
   AEPUserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: AEPUserProfile getUserAttributes: " +map));
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 22,
-    textAlign: 'center',
-    margin: 10,
-  }
-});

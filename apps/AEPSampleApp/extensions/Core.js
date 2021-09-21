@@ -1,6 +1,22 @@
-import React, {Component} from 'react';
-import {Button, Platform, StyleSheet, Text, View, ScrollView, NativeModules} from 'react-native';
+/*
+Copyright 2021 Adobe. All rights reserved.
+This file is licensed to you under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain a copy
+of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+OF ANY KIND, either express or implied. See the License for the specific language
+governing permissions and limitations under the License.
+
+@flow
+@format
+*/
+
+import React from 'react';
+import {Button, Text, View, ScrollView, NativeModules} from 'react-native';
 import {AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent} from '@adobe/react-native-aepcore';
+import styles from '../styles/styles';
 
 export default Core = ({ navigation }) => {
 
@@ -28,7 +44,6 @@ export default Core = ({ navigation }) => {
         <Button title="AEPLifecycle::extensionVersion()" onPress={lifecycleExtensionVersion}/>
         <Text style={styles.welcome}>Signal</Text>
         <Button title="AEPSignal::extensionVersion()" onPress={signalExtensionVersion}/>
-        
         </ScrollView>
       </View>
   )
@@ -104,17 +119,3 @@ function getPrivacyStatus() {
 function log() {
   AEPCore.log(AEPMobileLogLevel.ERROR, "React Native Tag", "React Native Message");
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 22,
-    textAlign: 'center',
-    margin: 10,
-  }
-});
