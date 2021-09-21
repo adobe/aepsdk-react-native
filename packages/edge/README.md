@@ -8,11 +8,11 @@
 
 ### Install npm package
 
-Installation documentation can be found [here](https://github.com/adobe/aepsdk-react-native#installation)
+Installation documentation can be found [here](https://github.com/adobe/aepsdk-react-native#requirements)
 
-> Requires `@adobe/react-native-aepcore` to be installed. - [Core](https://github.com/cacheung/aepsdk-react-native/blob/edgeIdentity/packages/core/README.md)
+> Requires `@adobe/react-native-aepcore` to be installed. - [Core](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#readme)
 
-Install peer dependency `@adobe/react-native-aepedgeidentity` package. - [Edge Identity](https://github.com/cacheung/aepsdk-react-native/blob/edgeIdentity/packages/edgeidentity/README.md)
+Install peer dependency `@adobe/react-native-aepedgeidentity` package. - [Edge Identity](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgeidentity#readme)
 
 Install the `@adobe/react-native-aepedge` package:
 
