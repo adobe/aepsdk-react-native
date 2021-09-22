@@ -4,7 +4,27 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedge.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedge) 
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedge)](https://www.npmjs.com/package/@adobe/react-native-aepedge)
 
+`@adobe/react-native-aepedge` is a wrapper around the iOS and Android [Adobe Experience Platform Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension) to allow for integration with React Native applications.
+
+## Prerequisites
+
+The Edge Network extension has the following peer dependencies, which must be installed prior to installing the messaging extension:
+- [Core](../core/README.md)
+- [Edge Identity](../edgeidentity/README.md)
+
+## Installation
+
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
+
+Install the `@adobe/react-native-aepedge` package:
+
+```bash
+cd MyReactApp
+npm install @adobe/react-native-aepedge
+```
 ## Usage
+
+### [Adobe Experience Platform Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension)
 
 ### Initializing:
 
@@ -75,8 +95,6 @@ public class MainApplication extends Application implements ReactApplication {
   }
 }     
 ```
-
-### [Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension)
 
 #### Importing the extension:
 ```javascript
