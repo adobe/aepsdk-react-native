@@ -1,10 +1,30 @@
 
-# React Native AEP Identiity for Edge Network Extension
+# React Native AEP Identity for Edge Network Extension
 
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedgeidentity.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedgeidentity) 
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedgeidentity)](https://www.npmjs.com/package/@adobe/react-native-aepedgeidentity)
 
+`@adobe/react-native-aepedge` is a wrapper around the iOS and Android [AEP Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network) to allow for integration with React Native applications.
+
+## Prerequisites
+
+The AEP Identity for Edge Network extension has the following peer dependency, which must be installed prior to installing the messaging extension:
+- [Core](../core/README.md)
+
+## Installation
+
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
+
+Install the `@adobe/react-native-aepedgeidentity` package:
+
+```bash
+cd MyReactApp
+npm install @adobe/react-native-aepedgeidentity
+```
+
 ## Usage
+
+### [AEP Identity for Edge Network extension](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
 
 ### Initializing:
 
@@ -83,4 +103,8 @@ import {AEPIdentity} from '@adobe/react-native-aepedgeidentity';
 
 ```javascript
 AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
+```
+#### Get Experience Cloud ID:
+```javascript
+AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
 ```
