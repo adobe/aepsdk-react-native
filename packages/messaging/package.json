@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepmessaging",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
@@ -28,9 +28,9 @@
     "name": "Adobe Experience Platform SDK Team"
   },
   "peerDependencies": {
-    "@adobe/react-native-aepcore": "^1.0.0-alpha.1",
-    "@adobe/react-native-aepedge": "^1.0.0-alpha.1",
-    "@adobe/react-native-aepedgeidentity":"1.0.0-alpha.1",
+    "@adobe/react-native-aepcore": "^1.0.0-alpha",
+    "@adobe/react-native-aepedge": "^1.0.0-alpha",
+    "@adobe/react-native-aepedgeidentity": "^1.0.0-alpha",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {
