@@ -29,11 +29,9 @@ module.exports = {
    /**
    * @brief Returns the Experience Cloud ID.
    *
-   * The Experience Cloud ID is generated at initial launch and is stored and used from that point forward.
-   * This ID is preserved between app upgrades, is saved and restored during the standard application backup process,
-   * and is removed at uninstall.
+   * Returns the Experience Cloud ID. An empty string is returned if the Experience Cloud ID was previously cleared.
    *
-   * @param callback method which will be invoked once Experience Cloud ID is available.
+   * @param promise method which will be invoked once the Experience Cloud ID is available.
    */
   getExperienceCloudId(): Promise<?string> {
     return RCTAEPEdgeIdentity.getExperienceCloudId();

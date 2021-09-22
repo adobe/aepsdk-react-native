@@ -11,6 +11,8 @@
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
 import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.AdobeCallbackWithError;
+import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -42,7 +44,12 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getExperienceCloudId(final Promise promise) {
-      Identity.getExperienceCloudId(new AdobeCallback<String>() {
+      Identity.getExperienceCloudId(new AdobeCallbackWithError<String>() {
+          @Override
+          public void fail(AdobeError error) {
+              promise.reject("AdobeError", error.getErrorName());
+          }
+
           @Override
           public void call(String s) {
               promise.resolve(s);

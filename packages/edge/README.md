@@ -6,13 +6,15 @@
 
 ## Usage
 
-### Install npm package
+## Prerequisites
 
-Installation documentation can be found [here](https://github.com/adobe/aepsdk-react-native#requirements)
+The AEP Identity for Edge Network extension has the following peer dependencies, which must be installed prior to installing the messaging extension:
+- [Core](../core/README.md)
+- [Edge Identity](../edgeidentity/README.md)
 
-> Requires `@adobe/react-native-aepcore` to be installed. - [Core](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#readme)
+## Installation
 
-Install peer dependency `@adobe/react-native-aepedgeidentity` package. - [Edge Identity](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgeidentity#readme)
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
 
 Install the `@adobe/react-native-aepedge` package:
 

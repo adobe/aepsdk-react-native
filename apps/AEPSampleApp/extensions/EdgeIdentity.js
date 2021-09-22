@@ -36,7 +36,7 @@ function edgeIdentityExtensionVersion() {
 }
 
 function getExperienceCloudId() {
-  AEPIdentity.getExperienceCloudId().then(cloudId => console.log("AdobeExperienceSDK: CloudID = " + cloudId));
+  AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
 }
 
 const styles = StyleSheet.create({
