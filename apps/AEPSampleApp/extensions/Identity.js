@@ -24,7 +24,7 @@ export default Identity = ({ navigation }) => {
     <View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
-        <Text style={styles.welcome}>UserProfile</Text>
+        <Text style={styles.welcome}>Identity</Text>
         <Button title="extensionVersion()" onPress={identityExtensionVersion}/>
         <Button title="syncIdentifiers()" onPress={syncIdentifiers}/>
         <Button title="syncIdentifiersWithAuthState()" onPress={syncIdentifiersWithAuthState}/>
