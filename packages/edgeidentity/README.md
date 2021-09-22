@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedgeidentity.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedgeidentity) 
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedgeidentity)](https://www.npmjs.com/package/@adobe/react-native-aepedgeidentity)
 
-## Usage
+`@adobe/react-native-aepedge` is a wrapper around the iOS and Android [AEP Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network) to allow for integration with React Native applications.
 
 ## Prerequisites
 
@@ -22,6 +22,10 @@ cd MyReactApp
 npm install @adobe/react-native-aepedgeidentity
 ```
 
+## Usage
+
+### [AEP Identity for Edge Network extension](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
+
 ### Initializing:
 
 Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
@@ -37,7 +41,7 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"your-app-ID"];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
   [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdgeIdentity.class
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
@@ -75,7 +79,7 @@ public class MainApplication extends Application implements ReactApplication {
     try {
       Identity.registerExtension();
       Lifecycle.registerExtension();
-      MobileCore.configureWithAppID("your-app-ID");
+      MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {

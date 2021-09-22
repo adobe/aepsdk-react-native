@@ -42,7 +42,7 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"your-app-ID"];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
   [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdge.class, AEPMobileEdgeIdentity.class
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
@@ -82,7 +82,7 @@ public class MainApplication extends Application implements ReactApplication {
       Edge.registerExtension();
       Identity.registerExtension();
       Lifecycle.registerExtension();
-      MobileCore.configureWithAppID("your-app-ID");
+      MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {

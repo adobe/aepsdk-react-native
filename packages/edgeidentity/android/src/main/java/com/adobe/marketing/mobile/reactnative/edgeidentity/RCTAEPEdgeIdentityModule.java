@@ -42,18 +42,13 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
     promise.resolve(Identity.extensionVersion());
   }
 
-  @ReactMethod
-  public void getExperienceCloudId(final Promise promise) {
-      Identity.getExperienceCloudId(new AdobeCallbackWithError<String>() {
-          @Override
-          public void fail(AdobeError error) {
-              promise.reject("AdobeError", error.getErrorName());
-          }
-
-          @Override
-          public void call(String s) {
-              promise.resolve(s);
-          }
-      });
-  }
+ @ReactMethod
+    public void getExperienceCloudId(final Promise promise) {
+        Identity.getExperienceCloudId(new AdobeCallback<String>() {
+            @Override
+            public void call(String s) {
+                promise.resolve(s);
+            }
+        });
+    }
 }
