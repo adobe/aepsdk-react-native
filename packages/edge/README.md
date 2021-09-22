@@ -10,7 +10,7 @@
 
 The Edge Network extension has the following peer dependencies, which must be installed prior to installing the messaging extension:
 - [Core](../core/README.md)
-- [Edge Identity](../edgeidentity/README.md)
+- [Identity for Edge Network](../edgeidentity/README.md)
 
 ## Installation
 
