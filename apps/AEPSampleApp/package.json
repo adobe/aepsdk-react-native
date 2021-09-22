@@ -13,7 +13,7 @@
   "dependencies": {
     "@adobe/react-native-aepcore": "^1.0.0-alpha.1",
     "@adobe/react-native-aepuserprofile": "^1.0.0-alpha.3",
-    "@adobe/react-native-aepedge": "1.0.0-alpha.2",
+    "@adobe/react-native-aepedge": "^1.0.0-alpha.2",
     "@adobe/react-native-aepedgeidentity": "^1.0.0-alpha.2",
     "@adobe/react-native-aepmessaging": "^1.0.0-alpha.2",
     "@adobe/react-native-aepassurance": "^3.0.0-alpha.0",
