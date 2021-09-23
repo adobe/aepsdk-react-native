@@ -25,4 +25,15 @@ module.exports = {
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdgeIdentity.extensionVersion());
   },
+
+   /**
+   * @brief Returns the Experience Cloud ID.
+   *
+   * Returns the Experience Cloud ID. An empty string is returned if the Experience Cloud ID was previously cleared.
+   *
+   * @param promise method which will be invoked once the Experience Cloud ID is available.
+   */
+  getExperienceCloudId(): Promise<?string> {
+    return RCTAEPEdgeIdentity.getExperienceCloudId();
+  },
 };
