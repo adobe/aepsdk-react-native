@@ -23,4 +23,10 @@ describe('AEPEdgeIdentity', () => {
     await AEPIdentity.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
+
+  it('getExperienceCloudId is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'getExperienceCloudId');
+    await AEPIdentity.getExperienceCloudId();
+    expect(spy).toHaveBeenCalled();
+  });
 });
