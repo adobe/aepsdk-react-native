@@ -214,6 +214,11 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         MobileCore.log(LoggingMode.DEBUG, getName(), "downloadRules() cannot be invoked on Android");
     }
 
+    @ReactMethod
+     public void resetIdentities() {
+        MobileCore.resetIdentities();
+     }
+
     // Helper method/s
     private void handleError(Promise promise, ExtensionError error) {
         if (error == null || promise == null) {

@@ -158,4 +158,10 @@ describe('AEPCore', () => {
     expect(spy).toHaveBeenCalledWith(appGroup);
   });
 
+  it('resetIdentities is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPCore, 'resetIdentities');
+    await AEPCore.resetIdentities();
+    expect(spy).toHaveBeenCalled();
+  });
+
 });
