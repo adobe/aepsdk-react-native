@@ -1,10 +1,23 @@
 
 # React Native AEP User Profile Extension
 
-[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-acpuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile) 
-[![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-acpuserprofile)](https://www.npmjs.com/package/@adobe/react-native-acpuserprofile)
+[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile) 
+[![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepuserprofile)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile)
+
+## Prerequisites
+
+The UserProfile extension has the following peer dependency, which must be installed prior to installing the UserProfile extension:
+- [Core](../core/README.md)
+
+## Installation
+
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
 
 ## Usage
+
+### Initializing and registering the extension
+
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
 ### [User Profile](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/profile)
 

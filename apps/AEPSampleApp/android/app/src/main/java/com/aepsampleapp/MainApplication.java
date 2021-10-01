@@ -9,17 +9,21 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+
 package com.aepsampleapp;
 
 import android.app.Application;
 import android.content.Context;
 
 import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.Identity;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
 import com.facebook.react.PackageList;
@@ -28,6 +32,7 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -69,10 +74,14 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
       try {
           UserProfile.registerExtension();
-          Identity.registerExtension();
+          com.adobe.marketing.mobile.Identity.registerExtension();
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Lifecycle.registerExtension();
-          Signal.registerExtension();
-          MobileCore.configureWithAppID("yourAppID");
+          Signal.registerExtension();          
+          Edge.registerExtension();
+          Messaging.registerExtension();
+          Assurance.registerExtension();
+          MobileCore.configureWithAppID("your-app-ID");
           MobileCore.start(new AdobeCallback() {
               @Override
               public void call(Object o) {
@@ -82,7 +91,6 @@ public class MainApplication extends Application implements ReactApplication {
       } catch (InvalidInitException e) {
           e.printStackTrace();
       }
-
   }
 
   /**

@@ -25,7 +25,10 @@
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
     "sampleapp:ios:pod:install": "cd apps/AEPSampleApp/ios && pod install",
     "sampleapp:ios:build": "cd apps/AEPSampleApp && npx react-native run-ios",
-    "sampleapp:android:build": "cd apps/AEPSampleApp/android && ./gradlew assembleRelease -x bundleReleaseJsAndAssets"
+    "sampleapp:android:build": "cd apps/AEPSampleApp/android && ./gradlew assembleRelease -x bundleReleaseJsAndAssets",
+    "sampleapp:start": "cd apps/AEPSampleApp && npx react-native start",
+    "sampleapp:ios:run": "cd apps/AEPSampleApp && npx react-native run-ios",
+    "sampleapp:android:run": "cd apps/AEPSampleApp && npx react-native run-android"
   },
   "devDependencies": {
     "jest": "^27.0.6",
@@ -43,6 +46,7 @@
     "lerna": "^4.0.0",
     "ts-jest": "^27.0.4",
     "tslib": "^2.1.0",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "flow-bin": "0.92.0"
   }
 }
