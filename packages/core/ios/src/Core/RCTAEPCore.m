@@ -160,6 +160,11 @@ RCT_EXPORT_METHOD(setLargeIconResourceID: (NSInteger) resourceID) {
     [AEPLog debugWithLabel:EXTENSION_NAME message:@"setSmallIconResourceID is not suppported on iOS"];
 }
 
+
+RCT_EXPORT_METHOD(resetIdentities) {
+     [AEPMobileCore resetIdentities];
+}
+
 #pragma mark - Helper methods
 
 - (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject {
