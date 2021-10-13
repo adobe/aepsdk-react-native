@@ -15,7 +15,6 @@
 @implementation RCTAEPEdgeIdentity
 
 static NSString* const EXTENSION_NAME = @"AEPEdgeIdentity";
-static NSString* const FAILED_TO_CONVERT_EVENT_MESSAGE = @"Failed getting ECID";
 
 RCT_EXPORT_MODULE(AEPEdgeIdentity);
 
@@ -31,7 +30,7 @@ RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(R
 RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileEdgeIdentity getExperienceCloudId:^(NSString * _Nullable experienceCloudId, NSError * _Nullable error) {
         if (error) {
-            reject(EXTENSION_NAME, FAILED_TO_CONVERT_EVENT_MESSAGE, nil);
+            reject(EXTENSION_NAME, nil, error);
             return;
         } else {
             resolve(experienceCloudId);
