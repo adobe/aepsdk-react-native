@@ -58,7 +58,7 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
     }
 
   // Helper method
-  private final void handleError(Promise promise, AdobeError error, final String errorLocation) {
+  private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
     if (error == null || promise == null) {
       return;
     }
