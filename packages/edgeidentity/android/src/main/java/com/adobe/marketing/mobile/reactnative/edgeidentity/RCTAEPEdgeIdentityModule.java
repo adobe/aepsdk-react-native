@@ -10,7 +10,8 @@
  */
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
-import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.AdobeCallbackWithError;
+import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
