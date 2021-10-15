@@ -42,17 +42,17 @@ RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter
 #pragma mark - Helper methods
 
 - (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {
-    NSString *errorTimeOut = [NSString stringWithFormat:@"%@ call time out", location];
-    NSString *errorUnexpected = [NSString stringWithFormat:@"%@ all returned an unexpected error", location];
+    NSString *errorTimeOut = [NSString stringWithFormat:@"%@ call timed out", location];
+    NSString *errorUnexpected = [NSString stringWithFormat:@"%@ call returned an unexpected error", location];
     
     if (!error || !reject) {
         return;
     }
 
     if (error && error.code != AEPErrorNone) {
-        if (error.code == AEPErrorCallbackTimeout)
-            reject(EXTENSION_NAME, errorTimeOut, error);
-        return;
+        if (error.code == AEPErrorCallbackTimeout) {
+        reject(EXTENSION_NAME, errorTimeOut, error);
+        }
     } else {
         reject(EXTENSION_NAME, errorUnexpected, error);
     }
