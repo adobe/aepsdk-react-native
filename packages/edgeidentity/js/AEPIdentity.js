@@ -31,7 +31,7 @@ module.exports = {
    *
    * Returns the Experience Cloud ID. An empty string is returned if the Experience Cloud ID was previously cleared.
    *
-   * @param promise method which will be invoked once the Experience Cloud ID is available.
+   * @return promise method which will be invoked once the Experience Cloud ID is available or rejected if an unexpected error occurred or the request timed out.
    */
   getExperienceCloudId(): Promise<?string> {
     return RCTAEPEdgeIdentity.getExperienceCloudId();
