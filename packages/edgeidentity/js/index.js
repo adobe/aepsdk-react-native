@@ -16,8 +16,21 @@ governing permissions and limitations under the License.
 'use strict';
 
 module.exports = {
+  // Native models
+  get AEPAuthenticatedState() {
+    return require('./models/ACPAuthenticatedState');
+  },
+
+  get AEPIdentityItem() {
+    return require('./models/AEPIdentityItem');
+  },
+
+  get AEPIdentityMap() {
+    return require('./models/AEPIdentityItem');
+  },
+
   // Native modules
   get AEPIdentity() {
     return require('./AEPIdentity');
-  }
+  },
 };

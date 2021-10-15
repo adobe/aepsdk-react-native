@@ -13,7 +13,31 @@ governing permissions and limitations under the License.
 export class AEPIdentity{
     static extensionVersion(): Promise<string>;
     static getExperienceCloudId(): Promise<string>;
-    static getIdentities(): Promise<Map<?IdentityMap>>;
+    static getIdentities(): Promise<IdentityMap>;
     static updateIdentities(identityMap: Map);
-    static removeIdentityItem(item:<IdentityItem>, withNamespace: String)
+    static removeIdentityItem(item:<IdentityItem>, namespace: String)
 };
+
+export class AEPAuthenticatedState{
+    static AUTHENTICATED: string;
+    static LOGGED_OUT: string;
+    static AMBIGUOUS: string;
+}
+
+export class AEPIdentityItem {
+  id: string;
+  authenticatedState: AEPAuthenticatedState: ;
+  primary: boolean;
+  constructor(id: string, authenticatedState: AEPAuthenticatedState = AEPAuthenticatedState.AMBIGUOUS, primary: boolean = false)
+}
+
+export class AEPIdentityMap {
+  isEmpty: boolean;
+  namespaces: string;
+  item: AEPIdentityItem;
+  constructor(isEmpty: boolean, namespaces: string)
+
+  addItem(item: AEPIdentityItem, namespace: string)
+
+  removeItem(item: AEPIdentityItem, namespace: string)
+}

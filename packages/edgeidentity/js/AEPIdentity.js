@@ -40,36 +40,36 @@ module.exports = {
   /**
    * @brief Returns all identifiers, including customer identifiers which were previously added.
    *
-   * If there are no identifiers stored in the `Identity` extension, then an empty `IdentityMap` is returned.
+   * If there are no identifiers stored in the `AEPIdentity` extension, then an empty `AEPIdentityMap` is returned.
    *
-   * @return invoked once the identifiers are available, or an `AEPError` if an unexpected error occurs or the request timed out.
+   * @return promise method which will be invoked once the identifiers are available or rejected if an unexpected error occurred or the request timed out.
    */
 
-   getIdentities(): Promise<?AEPIdentityMap> {
+   getIdentities(): Promise<AEPIdentityMap> {
     return RCTAEPEdgeIdentity.getIdentities();
   },
 
   /**
-   * @brief Updates the currently known `IdentityMap` within the SDK.
+   * @brief Updates the currently known `AEPIdentityMap` within the SDK.
    *
-   * The Identity extension will merge the received identifiers with the previously saved one in an additive manner, no identifiers will be removed using this API.
+   * The AEPIdentity extension will merge the received identifiers with the previously saved one in an additive manner, no identifiers will be removed using this API.
    * Identifiers which have an empty  `id` or empty `namespace` are not allowed and are ignored.
    *
    * 
    */
    updateIdentities(identityMap:<AEPIdentityMap>) {
-    RCTAEPEdgeIdentity.updateIdentitiesA(AEPIdentityMap);
+    RCTAEPEdgeIdentity.updateIdentities(AEPIdentityMap);
   },
 
   /**
-   * @brief Removes the identity from the stored client-side `IdentityMap`. The Identity extension will stop sending this identifier.
+   * @brief Removes the AEPidentity from the stored client-side `AEPIdentityMap`. The AEPIdentity extension will stop sending this identifier.
    *  
    * This does not clear the identifier from the User Profile Graph.
    * - Parameters:
-   *  - item: The identity to remove.
-   *  - withNamespace: The namespace of the identity to remove.
+   *  - item: The AEPIdentity to remove.
+   *  - withNamespace: The namespace of the AEPIdentity to remove.
    */
-   removeIdentityItem(item:<IdentityItem>, withNamespace: String) {
-    RCTAEPEdgeIdentity.removeIdentifier(item, withNamespace);
+   removeIdentityItem(item:<IdentityItem>, namespace: String) {
+    RCTAEPEdgeIdentity.removeIdentifier(item, namespace);
   },
 };
