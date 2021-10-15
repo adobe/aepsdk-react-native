@@ -9,11 +9,30 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
+@format
 */
-export class AEPIdentity{
-    static extensionVersion(): Promise<string>;
-    static getExperienceCloudId(): Promise<string>;
-    static getIdentities(): Promise<Map<?IdentityMap>>;
-    static updateIdentities(identityMap: Map);
-    static removeIdentityItem(item:<IdentityItem>, withNamespace: String)
-};
+
+'use strict';
+
+const AUTHENTICATED = "AEP_AUTH_STATE_AUTHENTICATED";
+const LOGGED_OUT = "AEP_AUTH_STATE_LOGGED_OUT";
+const AMBIGUOUS = "AEP__AUTH_STATE_AMBIGUOUS";
+
+class AuthenticatedState {
+
+  static get AUTHENTICATED() {
+    return AUTHENTICATED;
+  }
+
+  static get LOGGED_OUT() {
+    return LOGGED_OUT;
+  }
+
+  static get AMBIGUOUS() {
+    return UNKNOWN;
+  }
+
+}
+
+module.exports = AuthenticateState;

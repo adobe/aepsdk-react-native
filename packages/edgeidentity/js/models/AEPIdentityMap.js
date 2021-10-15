@@ -9,11 +9,20 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
+@format
 */
-export class AEPIdentity{
-    static extensionVersion(): Promise<string>;
-    static getExperienceCloudId(): Promise<string>;
-    static getIdentities(): Promise<Map<?IdentityMap>>;
-    static updateIdentities(identityMap: Map);
-    static removeIdentityItem(item:<IdentityItem>, withNamespace: String)
-};
+
+'use strict';
+
+class AEPIdentityMap {
+  isEmpty: boolean;
+  namespaces: string;
+  
+  constructor(isEmpty: boolean, namespaces: string) {
+  	this.isEmpty = isEmpty;
+    this.namespaces = namespaces;
+  }
+}
+
+module.exports = AEPIdentityMap;
