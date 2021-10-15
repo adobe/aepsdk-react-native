@@ -106,5 +106,6 @@ AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: 
 ```
 #### Get Experience Cloud ID:
 ```javascript
-AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
+AEPIdentity.getExperienceCloudId().then(experienceCloudId => {console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId);}, error => {console.error(error);});
 ```
+

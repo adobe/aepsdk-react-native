@@ -11,8 +11,11 @@
 
 #import "RCTAEPEdgeIdentity.h"
 @import AEPEdgeIdentity;
+@import AEPCore;
 
 @implementation RCTAEPEdgeIdentity
+
+static NSString* const EXTENSION_NAME = @"AEPEdgeIdentity";
 
 RCT_EXPORT_MODULE(AEPEdgeIdentity);
 
@@ -27,8 +30,34 @@ RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(R
 
 RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileEdgeIdentity getExperienceCloudId:^(NSString * _Nullable experienceCloudId, NSError * _Nullable error) {
-        resolve(experienceCloudId);
+        
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getExperienceCloudId"];
+            } else {
+              resolve(experienceCloudId);
+            }
     }];
 }
+
+#pragma mark - Helper methods
+
+- (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {
+    NSString *errorTimeOut = [NSString stringWithFormat:@"%@ call timed out", location];
+    NSString *errorUnexpected = [NSString stringWithFormat:@"%@ call returned an unexpected error", location];
+    
+    if (!error || !reject) {
+        return;
+    }
+
+    if (error && error.code != AEPErrorNone) {
+        if (error.code == AEPErrorCallbackTimeout) {
+        reject(EXTENSION_NAME, errorTimeOut, error);
+        }
+    } else {
+        reject(EXTENSION_NAME, errorUnexpected, error);
+    }
+
+}
+
 @end
   
