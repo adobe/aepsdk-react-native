@@ -10,16 +10,24 @@
  */
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
+import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
+import com.adobe.marketing.mobile.VisitorID;
 import com.adobe.marketing.mobile.edge.identity.Identity;
+import com.adobe.marketing.mobile.edge.identity.IdentityItem;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.adobe.marketing.mobile.edge.identity.IdentityMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableArray;
 
+import java.util.List;
 import java.util.Map;
 
 public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
@@ -54,6 +62,45 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
                 promise.resolve(s);
           }
         });
+    }
+
+  @ReactMethod
+    public void getIdentities(final Promise promise) {
+        Identity.getIdentities(new AdobeCallbackWithError<IdentityMap>() {
+
+            @Override
+            public void fail(AdobeError error) {
+            handleError(promise, error, "getIdentities");
+            }
+
+            @Override
+            public void call(IdentityMap map) {
+                WritableMap identitymap = RCTAEPEdgeIdentityDataBridge.mapFromIdentityMap(map);
+                promise.resolve(identitymap);
+            }
+        });
+    }
+
+//    @ReactMethod
+//    public void addItem (final ReadableMap identityMap) {
+//          //ReadableMap identitymap = RCTAEPEdgeIdentityDataBridge.mapFromIdentityMap(identityMap)
+////        IdentityMap authState = RCTAEPIdentityDataBridge.authenticationStateFromString(authenticationState);
+////        Identity.syncIdentifier(identifierType, identifier, authState);
+//          //Identity.updateIdentities(identityMap);
+//    }
+
+    @ReactMethod
+    public void updateIdentities(final ReadableMap identitymap) {
+        IdentityMap mapobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityMap(identitymap);
+
+          Identity.updateIdentities(mapobj);
+    }
+
+    @ReactMethod
+    public void removeIdentifier(final ReadableMap item, String namespace) {
+        
+        IdentityItem itemobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityItem(item);
+        Identity.removeIdentity(itemobj, namespace);
     }
 
   // Helper method

@@ -39,6 +39,25 @@ RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter
     }];
 }
 
+RCT_EXPORT_METHOD(getIdentities: (nonnull NSDictionary*) AEPIdentityMap resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    
+    AEPExperienceEvent *experienceEvent = [RCTAEPExperienceEventDataBridge experienceEventFromDictionary:experienceEventDict];
+
+    if (!AEPIdentityMap) {
+        reject(EXTENSION_NAME, FAILED_TO_GET_IDENTITY_MAP, nil);
+        return;
+    }
+    
+    [AEPMobileEdgeIdentity getIdentities:^(AEPIdentityMap *map, NSError * error) {  
+         if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getIdentities"];
+            } else {
+              resolve(RCTAEPEdgeIdentity.getIdentities());
+            } 
+          
+    }];
+}
+
 #pragma mark - Helper methods
 
 - (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {

@@ -35,9 +35,13 @@ export class AEPIdentityMap {
   isEmpty: boolean;
   namespaces: string;
   item: AEPIdentityItem;
-  constructor(isEmpty: boolean, namespaces: string)
+  constructor()
+
+  isEmpty()
 
   addItem(item: AEPIdentityItem, namespace: string)
 
   removeItem(item: AEPIdentityItem, namespace: string)
+
+  getItem(namespace: string)
 }
