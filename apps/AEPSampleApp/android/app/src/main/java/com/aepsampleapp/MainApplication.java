@@ -15,17 +15,16 @@ package com.aepsampleapp;
 import android.app.Application;
 import android.content.Context;
 
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Assurance;
-import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
+import com.adobe.marketing.mobile.edge.identity.Identity;
+import com.adobe.marketing.mobile.optimize.Optimize;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -74,19 +73,17 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
       try {
           UserProfile.registerExtension();
-          com.adobe.marketing.mobile.Identity.registerExtension();
-          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Lifecycle.registerExtension();
-          Signal.registerExtension();          
+          Signal.registerExtension();
           Edge.registerExtension();
+          Identity.registerExtension();
           Messaging.registerExtension();
-          Assurance.registerExtension();
-          MobileCore.configureWithAppID("your-app-ID");
-          MobileCore.start(new AdobeCallback() {
-              @Override
-              public void call(Object o) {
-                  MobileCore.lifecycleStart(null);
-              }
+          Optimize.registerExtension();
+//          Assurance.registerExtension();
+          MobileCore.configureWithAppID("3149c49c3910/1405d5d17a20/launch-cdafde27097f-development");
+          MobileCore.start(o -> {
+              MobileCore.lifecycleStart(null);
+//                  Assurance.startSession("griffonlab://?adb_validation_sessionid=18f5611d-c1bf-4c75-a7f4-4aafcbfe3bfc");
           });
       } catch (InvalidInitException e) {
           e.printStackTrace();

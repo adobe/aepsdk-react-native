@@ -1,0 +1,39 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.1'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+//    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    jcenter()    
+}
+
+dependencies {
+    compileOnly files("./libs/optimize-phone-debug.aar")
+    compileOnly "com.adobe.marketing.mobile:core:1.+"
+    implementation "com.facebook.react:react-native:+"
+}

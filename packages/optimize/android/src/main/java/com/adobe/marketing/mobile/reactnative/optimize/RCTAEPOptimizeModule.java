@@ -1,0 +1,118 @@
+/*
+ Copyright 2021 Adobe. All rights reserved.
+ This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License. You may obtain a copy
+ of the License at http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software distributed under
+ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ OF ANY KIND, either express or implied. See the License for the specific language
+ governing permissions and limitations under the License.
+ */
+package com.adobe.marketing.mobile.reactnative.optimize;
+
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.AdobeCallbackWithError;
+import com.adobe.marketing.mobile.AdobeError;
+import com.adobe.marketing.mobile.optimize.DecisionScope;
+import com.adobe.marketing.mobile.optimize.Optimize;
+import com.adobe.marketing.mobile.optimize.Proposition;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
+
+    private final ReactApplicationContext reactContext;
+
+    public RCTAEPOptimizeModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.reactContext = reactContext;
+    }
+
+    @Override
+    public String getName() {
+        return "AEPOptimize";
+    }
+
+    @ReactMethod
+    public void extensionVersion(final Promise promise) {
+        promise.resolve(Optimize.extensionVersion());
+    }
+
+    @ReactMethod
+    public void clearCachedPropositions() {
+        Optimize.clearCachedPropositions();
+    }
+
+    @ReactMethod
+    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data) {
+        final List<DecisionScope> decisionScopeList = new ArrayList<>();
+
+        for (int i = 0; i < decisionScopesArray.size(); i++) {
+            decisionScopeList.add(new DecisionScope(decisionScopesArray.getString(i)));
+        }
+
+        Map<String, Object> mapXdm = RCTAEPOptimizeUtil.convertReadableMapToMap(xdm);
+        Map<String, Object> mapData = RCTAEPOptimizeUtil.convertReadableMapToMap(data);
+        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData);
+    }
+
+    @ReactMethod
+    public void getPropositions(final ReadableArray decisionScopesArray, final Promise promise) {
+        final List<DecisionScope> decisionScopeList = new ArrayList<>();
+
+        for (int i = 0; i < decisionScopesArray.size(); i++) {
+            decisionScopeList.add(new DecisionScope(decisionScopesArray.getString(i)));
+        }
+
+        Optimize.getPropositions(decisionScopeList, new AdobeCallbackWithError<Map<DecisionScope, Proposition>>() {
+            @Override
+            public void fail(AdobeError adobeError) {
+                promise.reject(String.valueOf(adobeError.getErrorCode()), adobeError.getErrorName());
+            }
+
+            @Override
+            public void call(final Map<DecisionScope, Proposition> decisionScopePropositionMap) {
+                final WritableMap writableMap = new WritableNativeMap();
+                for (final Map.Entry<DecisionScope, Proposition> entry : decisionScopePropositionMap.entrySet()) {
+                    writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
+                }
+                promise.resolve(writableMap);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void onPropositionsUpdate() {
+        Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, Proposition>>() {
+            @Override
+            public void call(final Map<DecisionScope, Proposition> decisionScopePropositionMap) {
+                sendUpdatedPropositionsEvent(decisionScopePropositionMap);
+            }
+        });
+    }
+
+    private void sendUpdatedPropositionsEvent(final Map<DecisionScope, Proposition> decisionScopePropositionMap) {
+        final WritableMap writableMap = new WritableNativeMap();
+        for (final Map.Entry<DecisionScope, Proposition> entry : decisionScopePropositionMap.entrySet()) {
+            writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
+        }
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("onPropositionsUpdate", writableMap);
+    }
+}
+
+
+//    "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9"
+//    "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkYTliNDMwNDg5OCJ9"
+//    "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkOTJjNmJhZDA4NCJ9"
+//    "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9"

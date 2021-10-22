@@ -1,0 +1,39 @@
+{
+  "name": "@adobe/react-native-aepoptimize",
+  "version": "1.0.0",
+  "description": "Adobe Experience Platform support for React Native apps.",
+  "homepage": "https://aep-sdks.gitbook.io/docs/",
+  "license": "Apache-2.0",
+  "main": "./js/index.js",
+  "types": "./js/index.d.ts",
+  "scripts": {
+    "cleanup": "rm -rf node_modules",
+    "flow": "flow"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adobe/aepsdk-react-native",
+    "directory": "packages/messaging"
+  },
+  "keywords": [
+    "react-native",
+    "adobe",
+    "adobe experience platform",
+    "ajo",
+    "optimize",
+    "ios",
+    "android"
+  ],
+  "author": {
+    "name": "Adobe Experience Platform SDK Team"
+  },
+  "peerDependencies": {
+    "@adobe/react-native-aepcore": "^1.0.0-alpha",
+    "@adobe/react-native-aepedge": "^1.0.0-alpha",
+    "@adobe/react-native-aepedgeidentity": "^1.0.0-alpha",
+    "react-native": ">=0.60.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

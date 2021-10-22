@@ -8,20 +8,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
+
+@format
 */
-package com.aepsampleapp;
 
+import { NativeModules } from 'react-native';
+import { AEPMessaging } from '../js';
 
-import com.facebook.react.ReactActivity;
-
-public class MainActivity extends ReactActivity {
-
-  /**
-   * Returns the name of the main component registered from JavaScript. This is used to schedule
-   * rendering of the component.
-   */
-  @Override
-  protected String getMainComponentName() {
-    return "AEPSampleApp";
-  }
-}
+describe('AEPMessaging', () => {
+  it('extensionVersion is called', async () => {
+    expect(AEPMessaging.extensionVersion).toBeDefined();
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
+    await AEPMessaging.extensionVersion();
+    expect(spy).toHaveBeenCalled();
+  });
+});
