@@ -18,7 +18,7 @@ governing permissions and limitations under the License.
 module.exports = {
   // Native models
   get AEPAuthenticatedState() {
-    return require('./models/AEPAuthenticatedState');
+    return require('./models/ACPAuthenticatedState');
   },
 
   get AEPIdentityItem() {

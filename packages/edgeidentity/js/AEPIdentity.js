@@ -57,8 +57,8 @@ module.exports = {
    *
    * 
    */
-   updateIdentities(identityMap: AEPIdentityMap) {
-    RCTAEPEdgeIdentity.updateIdentities(identityMap);
+   updateIdentities(identityMap:<AEPIdentityMap>) {
+    RCTAEPEdgeIdentity.updateIdentities(AEPIdentityMap);
   },
 
   /**
@@ -69,7 +69,7 @@ module.exports = {
    *  - item: The AEPIdentity to remove.
    *  - withNamespace: The namespace of the AEPIdentity to remove.
    */
-   removeIdentityItem(item: IdentityItem, namespace: String) {
+   removeIdentityItem(item:<IdentityItem>, namespace: String) {
     RCTAEPEdgeIdentity.removeIdentifier(item, namespace);
   },
 };

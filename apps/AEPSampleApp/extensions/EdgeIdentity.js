@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
-import {AEPIdentity, AEPIdentityItem, AEPIdentityMap, AEPAuthenticatedState} from '@adobe/react-native-aepedgeidentity';
+import {AEPIdentity} from '@adobe/react-native-aepedgeidentity';
 
 export default EdgeIdentity = ({ navigation }) => {
 
@@ -26,9 +26,6 @@ export default EdgeIdentity = ({ navigation }) => {
         <Text style={styles.welcome}>EdgeIdentity</Text>
         <Button title="extensionVersion()" onPress={edgeIdentityExtensionVersion}/>
         <Button title="getExperienceCloudId()" onPress={getExperienceCloudId}/>
-        <Button title="getIdentity()" onPress={getIdentities}/>
-        <Button title="updateIdentity()" onPress={updateIdentities}/>
-        <Button title="removeIdentity()" onPress={removeIdentities}/>
         </ScrollView>
       </View>
   )
@@ -40,34 +37,6 @@ function edgeIdentityExtensionVersion() {
 
 function getExperienceCloudId() {
   AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
-}
-
-function getIdentities() {
-  AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity = " + JSON.stringify(identity)));
-}
-
-function updateIdentities() {
-
-  var identifier = "id";
-  var namespace = "localTest"
-  var authenticatedState = "unknown";
-  var isPrimary = "true";
-
-  var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
-
-  var map = new AEPIdentityMap;
-  //map.addItem(identityItems, namespace);
-  AEPIdentity.updateIdentities(map);
-}
-
-function removeIdentities() {
-  var identifier = "id";
-  var namespace = "localTest"
-  var authenticatedState = "unknown";
-  var isPrimary = true;
-
-  var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
-  AEPIdentity.removeIdentityItem(identityItems, namespace);
 }
 
 const styles = StyleSheet.create({

@@ -19,10 +19,10 @@ import type {AEPAuthenticatedState} from './AEPAuthenticatedState';
 
 class AEPIdentityItem {
   id: string;
-  authenticatedState: AEPAuthenticatedState;
+  authenticatedState: AEPAuthenticatedState: ;
   primary: boolean;
 
-  constructor(id: string, authenticatedState: AEPAuthenticateState.AMBIGUOUS, primary: boolean = false) {
+  constructor(id: string, authenticatedState: AEPAuthenticatedState = AEPAuthenticatedState.AMBIGUOUS, primary: boolean = false) {
   	this.id = id;
     this.authenticatedState = authenticatedState;
     this.primary = primary

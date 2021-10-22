@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative.edge;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.adobe.marketing.mobile.EdgeEventHandle;
@@ -26,8 +25,7 @@ import com.facebook.react.bridge.WritableArray;
 import java.util.List;
 import java.util.Map;
 
-public final class
-RCTAEPEdgeDataBridge {
+public final class RCTAEPEdgeDataBridge {
 
     public final static String XDM_DATA_KEY = "xdmData";
     public final static String DATA_KEY = "data";
@@ -35,7 +33,7 @@ RCTAEPEdgeDataBridge {
 
     public final static String TYPE_KEY = "type";
     public final static String PAYLOAD_KEY = "payload";
-    private static final String TAG = "RCTAEPEdgeIdentityDataBridge";
+    private static final String TAG = "RCTAEPEdgeDataBridge";
 
     /**
      * Converts a {@link ReadableMap} into an {@link ExperienceEvent}
@@ -43,7 +41,6 @@ RCTAEPEdgeDataBridge {
      * @param map
      * @return An {@link ExperienceEvent}
      */
-    @SuppressLint("LongLogTag")
     public static ExperienceEvent experienceEventFromReadableMap(final ReadableMap map) {
         if (map == null) {
             return null;
