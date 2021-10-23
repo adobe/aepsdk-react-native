@@ -18,6 +18,8 @@ governing permissions and limitations under the License.
 import { DeviceEventEmitter, NativeModules } from 'react-native';
 const RCTAEPOptimize = NativeModules.AEPOptimize;
 
+import Proposition from './Proposition';
+
 var onPropositionUpdateSubscription;
 
 module.exports = {
@@ -26,13 +28,15 @@ module.exports = {
    * @param  {string} Promise a promise that resolves with the extension verison
    */
   extensionVersion() { 
-    return Promise.resolve(RCTAEPOptimize.extensionVersion());a
+    return Promise.resolve(RCTAEPOptimize.extensionVersion());
   },
   onPropositionUpdate(onPropositionUpdateCallback) {
     if(onPropositionUpdateSubscription) {
       onPropositionUpdateSubscription.remove();
     }
     onPropositionUpdateSubscription = DeviceEventEmitter.addListener("onPropositionsUpdate", propositions => {
+      const keys = Object.keys(propositions);
+      keys.map(key => propositions[key] = new Proposition(propositions[key]));
       onPropositionUpdateCallback(propositions);
     });
     RCTAEPOptimize.onPropositionsUpdate();        
@@ -41,7 +45,13 @@ module.exports = {
     RCTAEPOptimize.clearCachedPropositions();
   },
   getPropositions(decisionScopesArray) {
-    return Promise.resolve(RCTAEPOptimize.getPropositions(decisionScopesArray));
+    return new Promise((resolve, reject) => {
+      RCTAEPOptimize.getPropositions(decisionScopesArray).then(propositions => {
+        const keys = Object.keys(propositions);
+        keys.map(key => propositions[key] = new Proposition(propositions[key]));
+        resolve(propositions);
+      }).catch(error => reject(error));
+    });
   },
   updatePropositions(decisionScopesArray, xdm, data) {
     RCTAEPOptimize.updatePropositions(decisionScopesArray, xdm, data);

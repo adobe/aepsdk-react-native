@@ -14,6 +14,8 @@ import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
+import com.adobe.marketing.mobile.optimize.Offer;
+import com.adobe.marketing.mobile.optimize.OfferType;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.Proposition;
 import com.facebook.react.bridge.Promise;
@@ -102,6 +104,58 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         });
     }
 
+    @ReactMethod
+    public void offerDisplayed(final ReadableMap readableMap) {
+        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        Offer offer = createOffer(offerEventData);
+        offer.displayed();
+    }
+
+    @ReactMethod
+    public void offerTapped(final ReadableMap readableMap) {
+        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        Offer offer = createOffer(offerEventData);
+        offer.tapped();
+    }
+
+    @ReactMethod
+    public void generateDisplayInteractionXdm(final ReadableMap readableMap, final Promise promise){
+        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        Offer offer = createOffer(offerEventData);
+        final Map<String, Object> interactionXdm = offer.generateDisplayInteractionXdm();
+        final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
+        promise.resolve(writableMap);
+    }
+
+    @ReactMethod
+    public void generateReferenceXdm(final ReadableMap readableMap, final Promise promise) {
+        final Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        String id = (String) propositionEventData.get("id");
+        String scope = (String) propositionEventData.get("scope");
+        Map<String, Object> scopeDetails = (Map<String, Object>) propositionEventData.get("scopeDetails");
+        List<Map<String, Object>> offersMap = (List<Map<String, Object>>) propositionEventData.get("offers");
+        List<Offer> offers = new ArrayList<>();
+        for (Map<String, Object> eventData : offersMap) {
+            offers.add(createOffer(eventData));
+        }
+//        Proposition proposition = new Proposition(id, offers, scope, scopeDetails);
+//        Map<String, Object> referenceXdm = proposition.generateReferenceXdm();
+
+    }
+
+    private static Offer createOffer(Map<String, Object> offerEventData) {
+        String id = (String) offerEventData.get("id");
+        String type = (String) offerEventData.get("type");
+        String content = (String) offerEventData.get("content");
+        final Offer.Builder offerBuilder = new Offer.Builder(id, OfferType.valueOf(type), content);
+        offerBuilder.setEtag((String) offerEventData.get("etag"));
+        offerBuilder.setSchema((String) offerEventData.get("schema"));
+        offerBuilder.setLanguage((List<String>) offerEventData.get("language"));
+        offerBuilder.setCharacteristics((Map<String, String>) offerEventData.get("characteristics"));
+        Offer offer = offerBuilder.build();
+        return offer;
+    }
+
     private void sendUpdatedPropositionsEvent(final Map<DecisionScope, Proposition> decisionScopePropositionMap) {
         final WritableMap writableMap = new WritableNativeMap();
         for (final Map.Entry<DecisionScope, Proposition> entry : decisionScopePropositionMap.entrySet()) {
@@ -110,9 +164,3 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("onPropositionsUpdate", writableMap);
     }
 }
-
-
-//    "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9"
-//    "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkYTliNDMwNDg5OCJ9"
-//    "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkOTJjNmJhZDA4NCJ9"
-//    "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9"

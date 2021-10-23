@@ -13,7 +13,8 @@ governing permissions and limitations under the License.
 */
 
 import React, { useState } from 'react';
-import { Button, Text, View, ScrollView, Image, WebView } from 'react-native';
+import { Button, Text, View, ScrollView, Image } from 'react-native';
+// import { WebView } from 'react-native-webview';
 import { AEPOptimize } from '@adobe/react-native-aepoptimize';
 import styles from '../styles/styles';
 
@@ -21,8 +22,16 @@ export default ({ navigation }) => {
 
     const [version, setVersion] = useState('0.0.0');
     const [textOffer, setTextOffer] = useState('Text Place Holder!');
+    const [imageuri, setImageuri] = useState('');
+    const [html, setHtml] = useState('');
+    const [jsontext, setJsontext] = useState('');
 
-    const decisionScopes = ["eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9"]
+    const decisionScopeText = "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9"
+    const decisionScopeImage = "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkYTliNDMwNDg5OCJ9"
+    const decisionScopeHtml = "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkOTJjNmJhZDA4NCJ9"
+    const decisionScopeJson = "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9"
+
+    const decisionScopes = [ decisionScopeText, decisionScopeImage, decisionScopeHtml, decisionScopeJson ]
     const optimizeExtensionVersion = () => AEPOptimize.extensionVersion().then(newVersion => {
         console.log("AdobeExperienceSDK: AEPOptimize version: " + newVersion);
         setVersion(newVersion);
@@ -31,11 +40,19 @@ export default ({ navigation }) => {
     const getPropositions = () => AEPOptimize.getPropositions(decisionScopes).then(
         propositions => {
             console.log(`Get Proposition returned::: ${JSON.stringify(propositions)}`)
-            setTextOffer(propositions[decisionScopes[0]].offers[0].content);
+            setTextOffer(propositions[decisionScopeText].offers[0].content);
+            setImageuri(propositions[decisionScopeImage].offers[0].content);
+            setHtml(propositions[decisionScopeHtml].offers[0].content);
+            setJsontext(JSON.stringify(propositions[decisionScopeJson].offers[0].content));
+            console.log(`-------- ${propositions[decisionScopeJson].offers[0].content}`);
         });
     const clearCachedProposition = () => AEPOptimize.clearCachedPropositions();
     const onPropositionUpdate = () => AEPOptimize.onPropositionUpdate(propositions => {
         console.log(`Propositions has been update with data ${JSON.stringify(propositions)}`);        
+        setTextOffer(propositions[decisionScopeText].offers[0].content);
+        setImageuri(propositions[decisionScopeImage].offers[0].content);
+        setHtml(propositions[decisionScopeHtml].offers[0].content);
+        setJsontext(JSON.stringify(propositions[decisionScopeJson].offers[0].content));
     });
 
     return (<View style={styles.container}>
@@ -47,8 +64,11 @@ export default ({ navigation }) => {
         <Button title="Get Propositions" onPress={getPropositions}/>
         <Button title="On Proposition Update" onPress={onPropositionUpdate}/>
         <Button title="Clear Cached Proposition" onPress={clearCachedProposition}/>
-        <Text>{ version }</Text>
-        <Text>{ textOffer }</Text>
+        <Text>SDK Version:: { version }</Text>
+        <Text>Text Offer:: { textOffer }</Text>
+        <Image style={{width:50, height:50}} source={{uri: imageuri}}></Image>
+        {/* <WebView source={{ html: html }}></WebView> */}
+        <Text>JSON Offer:: { jsontext }</Text>
         </ScrollView>
     </View>
 )};
