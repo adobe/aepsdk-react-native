@@ -16,6 +16,8 @@ governing permissions and limitations under the License.
 'use strict';
 
 const RCTAEPEdgeIdentity = require('react-native').NativeModules.AEPEdgeIdentity;
+import type {AEPIdentityMap} from './models/AEPIdentityMap';
+import type {AEPIdentityItem} from './models/AEPIdentityItem';
 
 module.exports = {
   /**
@@ -50,6 +52,16 @@ module.exports = {
   },
 
   /**
+   * 
+   */
+   addItem(item: AEPIdentityItem, namespace: string){
+
+    map.addItem(item, namespace);
+    
+    RCTAEPEdgeIdentity.addItem(item, namespace);
+  },
+
+  /**
    * @brief Updates the currently known `AEPIdentityMap` within the SDK.
    *
    * The AEPIdentity extension will merge the received identifiers with the previously saved one in an additive manner, no identifiers will be removed using this API.
@@ -69,7 +81,8 @@ module.exports = {
    *  - item: The AEPIdentity to remove.
    *  - withNamespace: The namespace of the AEPIdentity to remove.
    */
-   removeIdentityItem(item: IdentityItem, namespace: String) {
+   removeIdentityItem(item: AEPIdentityItem, namespace: String) {
     RCTAEPEdgeIdentity.removeIdentifier(item, namespace);
   },
+
 };

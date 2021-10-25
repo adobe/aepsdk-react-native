@@ -15,7 +15,8 @@ export class AEPIdentity{
     static getExperienceCloudId(): Promise<string>;
     static getIdentities(): Promise<IdentityMap>;
     static updateIdentities(identityMap: Map);
-    static removeIdentityItem(item:<IdentityItem>, namespace: String)
+    //static addItem(item: AEPIdentityItem, namespace: string);
+    //static removeItem(item: AEPIdenitytItem, namespace: string);
 };
 
 export class AEPAuthenticatedState{
@@ -26,22 +27,23 @@ export class AEPAuthenticatedState{
 
 export class AEPIdentityItem {
   id: string;
-  authenticatedState: AEPAuthenticatedState: ;
+  authenticatedState: AEPAuthenticatedState;
   primary: boolean;
   constructor(id: string, authenticatedState: AEPAuthenticatedState = AEPAuthenticatedState.AMBIGUOUS, primary: boolean = false)
 }
 
 export class AEPIdentityMap {
-  isEmpty: boolean;
   namespaces: string;
   item: AEPIdentityItem;
-  constructor()
 
-  isEmpty()
+  constructor() {
+  }
 
-  addItem(item: AEPIdentityItem, namespace: string)
+  addItem(){
+    console.log("here  addItem");
+  }
 
-  removeItem(item: AEPIdentityItem, namespace: string)
-
-  getItem(namespace: string)
+  removeItem(item: AEPIdentityItem, namespace: string){
+    console.log("here  removeItem");
+  }
 }

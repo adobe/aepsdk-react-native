@@ -81,24 +81,26 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
         });
     }
 
-//    @ReactMethod
-//    public void addItem (final ReadableMap identityMap) {
-//          //ReadableMap identitymap = RCTAEPEdgeIdentityDataBridge.mapFromIdentityMap(identityMap)
-////        IdentityMap authState = RCTAEPIdentityDataBridge.authenticationStateFromString(authenticationState);
-////        Identity.syncIdentifier(identifierType, identifier, authState);
-//          //Identity.updateIdentities(identityMap);
-//    }
+    @ReactMethod
+     public void addItem (final ReadableMap item, final String namespace) {
+     IdentityMap map = new IdentityMap();
+     //map.addItem(RCTAEPEdgeIdentityDataBridge.mapToIdentityItem(item), namespace);
+    }
+
+    @ReactMethod
+    public void removeItem (final ReadableMap item, final String namespace) {
+        IdentityMap map = new IdentityMap();
+        map.removeItem(RCTAEPEdgeIdentityDataBridge.mapToIdentityItem(item), namespace);
+    }
 
     @ReactMethod
     public void updateIdentities(final ReadableMap identitymap) {
         IdentityMap mapobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityMap(identitymap);
-
-          Identity.updateIdentities(mapobj);
+        Identity.updateIdentities(mapobj);
     }
 
     @ReactMethod
     public void removeIdentifier(final ReadableMap item, String namespace) {
-        
         IdentityItem itemobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityItem(item);
         Identity.removeIdentity(itemobj, namespace);
     }

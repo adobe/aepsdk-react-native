@@ -43,7 +43,7 @@ function getExperienceCloudId() {
 }
 
 function getIdentities() {
-  AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity = " + JSON.stringify(identity)));
+  AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
 }
 
 function updateIdentities() {
@@ -53,11 +53,15 @@ function updateIdentities() {
   var authenticatedState = "unknown";
   var isPrimary = "true";
 
-  var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
+  //var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
+  var identityItems = new AEPIdentityItem(identifier);
+  var map = new AEPIdentityMap();
+  //AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
+  map.addItem(identityItems, namespace);
+  //console.log("I am here -  update Identity" + JSON.stringify(AEPIdentity.getIdentities()));
 
-  var map = new AEPIdentityMap;
-  //map.addItem(identityItems, namespace);
-  AEPIdentity.updateIdentities(map);
+  console.log("I am here -  update Identity" + JSON.stringify(map));
+  //AEPIdentity.updateIdentities();
 }
 
 function removeIdentities() {

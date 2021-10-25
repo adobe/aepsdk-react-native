@@ -18,27 +18,18 @@ governing permissions and limitations under the License.
 import AEPIdentityItem from './ACPIdentityItem';
 
 class AEPIdentityMap {
-  isEmpty: boolean
   namespaces: string;
   item: AEPIdentityItem;
 
   constructor() {}
   
-  function isEmpty() {
-  	return AEPIdentityItem.isEmpty;
-  }
-
-  function addItem(item: AEPIdentityItem, namespace: string){
+  addItem(item: AEPIdentityItem, namespace: string){
     this.item = item;
     this.namespaces = namespaces;
   }
 
-  function removeItem(item: AEPIdentityItem, namespace: string){
+  removeItem(item: AEPIdentityItem, namespace: string){
     this.item = item; 
-    this.namespaces = namespaces;
-  }
-
-  function getItems(namespace: string){
     this.namespaces = namespaces;
   }
 }
