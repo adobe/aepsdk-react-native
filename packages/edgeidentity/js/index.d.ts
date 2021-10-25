@@ -39,7 +39,7 @@ export class AEPIdentityMap {
   constructor() {
   }
 
-  addItem(){
+  addItem(item: AEPIdentityItem, namespace: string){
     console.log("here  addItem");
   }
 

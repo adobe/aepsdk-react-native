@@ -53,8 +53,7 @@ function updateIdentities() {
   var authenticatedState = "unknown";
   var isPrimary = "true";
 
-  //var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
-  var identityItems = new AEPIdentityItem(identifier);
+  var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
   var map = new AEPIdentityMap();
   //AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
   map.addItem(identityItems, namespace);
