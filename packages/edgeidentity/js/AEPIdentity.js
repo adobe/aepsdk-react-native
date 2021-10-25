@@ -51,15 +51,15 @@ module.exports = {
     return RCTAEPEdgeIdentity.getIdentities();
   },
 
-  /**
-   * 
-   */
-   addItem(item: AEPIdentityItem, namespace: string){
+  // /**
+  //  * 
+  //  */
+  //  addItem(item: AEPIdentityItem, namespace: string){
 
-    map.addItem(item, namespace);
+  //   map.addItem(item, namespace);
     
-    RCTAEPEdgeIdentity.addItem(item, namespace);
-  },
+  //   RCTAEPEdgeIdentity.addItem(item, namespace);
+  // },
 
   /**
    * @brief Updates the currently known `AEPIdentityMap` within the SDK.
