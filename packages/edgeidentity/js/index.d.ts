@@ -12,4 +12,5 @@ governing permissions and limitations under the License.
 */
 export class AEPIdentity{
     static extensionVersion(): Promise<string>;
+    static getExperienceCloudId(): Promise<string>;
 };

@@ -31,6 +31,7 @@ export class AEPCore{
     static setSmallIconResourceID(resourceID: number);
     static setLargeIconResourceID(resourceID: number);
     static setAppGroup(appGroup?: string);
+    static resetIdentities();
 }
 export class AEPLifecycle{
     static extensionVersion(): Promise<string>;

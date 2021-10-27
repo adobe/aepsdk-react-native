@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 const RCTAEPCore = require('react-native').NativeModules.AEPCore;
 
-import type {AEPExtensionEvent} from './models/AEPExtensionEvent';
+import type { AEPExtensionEvent } from './models/AEPExtensionEvent';
 
 module.exports = {
 
@@ -90,14 +90,14 @@ module.exports = {
   },
 
   /**
-	 * Sends a log message of the given {@code AEPMobileLogLevel}. If the specified {@code mode} is
-	 * more verbose than the current {@link AEPMobileLogLevel} set from {@link #setLogLevel(AEPMobileLogLevel)}
-	 * then the message is not printed.
-	 *
-	 * @param mode the {@link AEPMobileLogLevel} used to print the message
-	 * @param tag used to identify the source of the log message
-	 * @param message the message to log
-	 */
+   * Sends a log message of the given {@code AEPMobileLogLevel}. If the specified {@code mode} is
+   * more verbose than the current {@link AEPMobileLogLevel} set from {@link #setLogLevel(AEPMobileLogLevel)}
+   * then the message is not printed.
+   *
+   * @param mode the {@link AEPMobileLogLevel} used to print the message
+   * @param tag used to identify the source of the log message
+   * @param message the message to log
+   */
   log(logLevel: string, tag: string, message: string) {
     RCTAEPCore.log(logLevel, tag, message);
   },
@@ -141,15 +141,15 @@ module.exports = {
   },
 
   /**
-	 * This method will be used when the provided {@code AEPExtensionEvent} is used as a trigger and a response event
-	 * is expected in return. The returned event needs to be sent using
-	 * {@link #dispatchResponseEvent(Event, Event, ExtensionErrorCallback)}.
-	 * <p>
-	 *
-	 * @param event            required parameter, {@link AEPExtensionEvent} instance to be dispatched, used as a trigger
-	 * @param responseCallback required parameters, {@link Promise} to be called with the response event received
-	 *
-	 * @see AEPCore#dispatchResponseEvent(Event, Event, ExtensionErrorCallback)
+   * This method will be used when the provided {@code AEPExtensionEvent} is used as a trigger and a response event
+   * is expected in return. The returned event needs to be sent using
+   * {@link #dispatchResponseEvent(Event, Event, ExtensionErrorCallback)}.
+   * <p>
+   *
+   * @param event            required parameter, {@link AEPExtensionEvent} instance to be dispatched, used as a trigger
+   * @param responseCallback required parameters, {@link Promise} to be called with the response event received
+   *
+   * @see AEPCore#dispatchResponseEvent(Event, Event, ExtensionErrorCallback)
    */
   dispatchEventWithResponseCallback(event: AEPExtensionEvent): Promise<AEPExtensionEvent> {
     return RCTAEPCore.dispatchEventWithResponseCallback(event);
@@ -157,16 +157,16 @@ module.exports = {
 
   /**
    * Android Only
-	 * Dispatches a response event for a paired event that was sent to {@code dispatchEventWithResponseCallback}
-	 * and received by an extension listener {@code hear} method.
-	 *
-	 * @param responseEvent required parameter, {@link AEPExtensionEvent} instance to be dispatched as a response for the
-	 *                      event sent using {@link AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)}
-	 * @param requestEvent  required parameter, the event sent using
-	 * 						{@link AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)}
-	 * @return {@code boolean} indicating if the the event dispatching operation succeeded
-	 *
-	 * @see AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)
+   * Dispatches a response event for a paired event that was sent to {@code dispatchEventWithResponseCallback}
+   * and received by an extension listener {@code hear} method.
+   *
+   * @param responseEvent required parameter, {@link AEPExtensionEvent} instance to be dispatched as a response for the
+   *                      event sent using {@link AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)}
+   * @param requestEvent  required parameter, the event sent using
+   * 						{@link AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)}
+   * @return {@code boolean} indicating if the the event dispatching operation succeeded
+   *
+   * @see AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)
    */
   dispatchResponseEvent(responseEvent: AEPExtensionEvent, requestEvent: AEPExtensionEvent): Promise<boolean> {
     return RCTAEPCore.dispatchResponseEvent(responseEvent, requestEvent);
@@ -214,7 +214,7 @@ module.exports = {
    *
    * @param {String?} advertisingIdentifier the advertising idenifier string.
    */
-    setAdvertisingIdentifier(advertisingIdentifier?: String) {
+  setAdvertisingIdentifier(advertisingIdentifier?: String) {
     RCTAEPCore.setAdvertisingIdentifier(advertisingIdentifier);
   },
 
@@ -240,17 +240,17 @@ module.exports = {
   },
 
   /**
-	 * Sets the resource Id for small icon.
-	 * @param resourceID the resource Id of the icon
-	 */
+   * Sets the resource Id for small icon.
+   * @param resourceID the resource Id of the icon
+   */
   setSmallIconResourceID(resourceID: number) {
     RCTAEPCore.setSmallIconResourceID(resourceID);
   },
 
   /**
-	 * Sets the resource Id for large icon.
-	 * @param resourceID the resource Id of the icon
-	 */
+   * Sets the resource Id for large icon.
+   * @param resourceID the resource Id of the icon
+   */
   setLargeIconResourceID(resourceID: number) {
     RCTAEPCore.setLargeIconResourceID(resourceID);
   },
@@ -264,6 +264,15 @@ module.exports = {
    */
   setAppGroup(appGroup?: String) {
     RCTAEPCore.setAppGroup(appGroup);
+  },
+
+  /**
+   * 
+   * @brief This method requests that each extension resets the identities it owns. Each extension responds to this request uniquely.
+   * 
+   */
+  resetIdentities() {
+    RCTAEPCore.resetIdentities();
   },
 
 };
