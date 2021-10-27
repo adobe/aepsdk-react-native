@@ -23,8 +23,8 @@ jobs:
       run: yarn bootstrap
     - name: Authenticate with Registry
       run: |
-        echo "@adobe:registry=http://registry.npmjs.org/" > .npmrc
-        echo "registry=http://registry.npmjs.org/" >> .npmrc
+        echo "@adobe:registry=https://registry.npmjs.org/" > .npmrc
+        echo "registry=https://registry.npmjs.org/" >> .npmrc
         echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
         npm whoami
       env: # More info about the environment variables in the README
