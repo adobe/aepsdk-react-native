@@ -105,6 +105,12 @@ AEPCore.dispatchResponseEvent(responseEvent, requestEvent);
 AEPCore.collectPii({"myPii": "data"});
 ```
 
+##### Reset Identities:
+```javascript
+AEPCore.resetIdentities();
+```
+
+
 ### [Identity](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/identity)
 
 ##### Getting the extension version:
