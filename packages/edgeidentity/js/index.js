@@ -26,7 +26,7 @@ module.exports = {
   },
 
   get AEPIdentityMap() {
-    return require('./models/AEPIdentityItem');
+    return require('./models/AEPIdentityMap');
   },
 
   // Native modules

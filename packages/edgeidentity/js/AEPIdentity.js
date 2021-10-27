@@ -51,16 +51,6 @@ module.exports = {
     return RCTAEPEdgeIdentity.getIdentities();
   },
 
-  // /**
-  //  * 
-  //  */
-  //  addItem(item: AEPIdentityItem, namespace: string){
-
-  //   map.addItem(item, namespace);
-    
-  //   RCTAEPEdgeIdentity.addItem(item, namespace);
-  // },
-
   /**
    * @brief Updates the currently known `AEPIdentityMap` within the SDK.
    *
@@ -81,8 +71,8 @@ module.exports = {
    *  - item: The AEPIdentity to remove.
    *  - withNamespace: The namespace of the AEPIdentity to remove.
    */
-   removeIdentityItem(item: AEPIdentityItem, namespace: String) {
-    RCTAEPEdgeIdentity.removeIdentifier(item, namespace);
+   removeIdentity(item: AEPIdentityItem, namespace: String) {
+    RCTAEPEdgeIdentity.removeIdentities(item, namespace);
   },
 
 };

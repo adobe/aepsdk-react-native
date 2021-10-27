@@ -53,14 +53,37 @@ function updateIdentities() {
   var authenticatedState = "unknown";
   var isPrimary = "true";
 
-  var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
-  var map = new AEPIdentityMap();
-  //AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
-  map.addItem(identityItems, namespace);
-  //console.log("I am here -  update Identity" + JSON.stringify(AEPIdentity.getIdentities()));
+  var identifier1 = "2ndID";
+  var namespace1 = "2ndTest"
+  var authenticatedState1 = "unknown";
+  var isPrimary1 = "false";
 
-  console.log("I am here -  update Identity" + JSON.stringify(map));
-  //AEPIdentity.updateIdentities();
+  var identifier2 = "3ndID";
+  var namespace2 = "3ndTest"
+  var authenticatedState2 = "unknown";
+  var isPrimary2 = "false";
+
+  var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
+  var identityItems1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+  var identityItems2  = new AEPIdentityItem(identifier2, authenticatedState2, isPrimary2);
+  var map = new AEPIdentityMap();
+
+  map = AEPIdentity.getIdentities();
+
+  console.table(map);
+  console.log("hello -  update Identity" + JSON.stringify(identityItems));
+  console.log("hello -  update Identity" + namespace1);
+
+  //AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
+  //map.addItem(identityItems, namespace);
+  // map.addItem(identityItems1, namespace);
+  // map.addItem(identityItems2, namespace2);
+
+  //console.table(map);
+
+
+
+  AEPIdentity.updateIdentities(map);
 }
 
 function removeIdentities() {
@@ -70,7 +93,7 @@ function removeIdentities() {
   var isPrimary = true;
 
   var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
-  AEPIdentity.removeIdentityItem(identityItems, namespace);
+  AEPIdentity.removeIdentity(identityItems, namespace);
 }
 
 const styles = StyleSheet.create({
