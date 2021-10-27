@@ -18,7 +18,7 @@ Install the `@adobe/react-native-aepassurance` alpha package:
 
 ```bash
 cd MyReactApp
-npm install @adobe/react-native-aepassurance@3.0.0-alpha.1
+npm install @adobe/react-native-aepassurance@3.0.0-alpha.2
 ```
 
 For iOS development, after installing the plugins from npm, download the pod dependencies by running the following command:
