@@ -11,9 +11,17 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.adobe.marketing.mobile.Event;
 import com.adobe.marketing.mobile.edge.identity.AuthenticatedState;
+import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.ReadableNativeMap;
+import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
@@ -21,7 +29,10 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.adobe.marketing.mobile.edge.identity.IdentityMap;
 import com.adobe.marketing.mobile.edge.identity.IdentityItem;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +53,7 @@ public final class RCTAEPEdgeIdentityDataBridge {
             return new WritableNativeMap();
         }
 
-        WritableMap identityItemsAsWriteableMap = new WritableNativeMap();
         WritableMap identityMapAsWritableMap = new WritableNativeMap();
-
 
             for (String namespace : map.getNamespaces()) {
                 List<IdentityItem> items = map.getIdentityItemsForNamespace(namespace);
@@ -61,14 +70,27 @@ public final class RCTAEPEdgeIdentityDataBridge {
                 }
 
                 if (itemsAsArray.size() != 0) {
-                    identityItemsAsWriteableMap.putArray(namespace, itemsAsArray);
-                    identityMapAsWritableMap.putMap(IDENTITY_MAP_KEY, identityItemsAsWriteableMap);
+                    identityMapAsWritableMap.putArray(namespace, itemsAsArray);
                 }
             }
 
       return identityMapAsWritableMap;
     }
 
+    public static IdentityMap mapToIdentityMap(final ReadableMap map) {
+        if (map == null) {
+            return null;
+        }
+
+        IdentityMap identityMapFromReadableMap = new IdentityMap();
+
+        ReadableMapKeySetIterator iterator =  map.keySetIterator();
+
+
+            return null;
+
+        //return identityMapFromReadableMap;
+    }
 
     public static IdentityItem mapToIdentityItem(ReadableMap map) {
         if (map == null) {
@@ -77,15 +99,6 @@ public final class RCTAEPEdgeIdentityDataBridge {
 
         return new IdentityItem(getNullableString(map, ID_KEY), AuthenticatedState.fromString(AEP_AUTH_STATE_KEY), getNullableBoolean(map, IS_PRIMARY_KEY));
     }
-
-    public static IdentityMap mapToIdentityMap(ReadableMap map) {
-        if (map == null) {
-            return null;
-        }
-
-        return new IdentityMap();
-    }
-
     // Helper methods
 
     private static String getNullableString(final ReadableMap data, final String key) {

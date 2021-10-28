@@ -23,8 +23,6 @@ import java.util.Map;
 
 public class RCTAEPEdgeIdentityMapUtil {
 
-    private static Object IdentityMap;
-
     public static Map<String, Object> toMap(ReadableMap readableMap) {
         if (readableMap == null) {
             return null;
