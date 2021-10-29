@@ -20,4 +20,10 @@ module.exports = {
   get AEPOptimize() {
     return require('./AEPOptimize.js');
   },
+  get Offer() {
+    return require('./Offer');
+  },
+  get Proposition() {
+    return require('./Proposition');
+  }
 };

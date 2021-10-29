@@ -37,6 +37,7 @@ export default class Offer {
     }
 
     tapped = () => {
+        console.log("Offer is tapped:: Offer");
         RCTAEPOptimize.offerTapped(this);
     }
 

@@ -8,7 +8,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "bootstrap": "rm -rf node_modules && cd ../../ && yarn bootstrap && cd apps/AEPSampleApp"
   },
   "dependencies": {
     "@adobe/react-native-aepcore": "^1.0.0-alpha.2",

@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "AEPOptimize", :git => "https://github.com/adobe/aepsdk-optimize-ios.git"
+  s.dependency "AEPOptimize", :git => "https://github.com/adobe/aepsdk-optimize-ios.git", :branch => "dev"
 end

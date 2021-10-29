@@ -10,11 +10,11 @@
  */
 
 #import "RCTAEPOptimize.h"
-//@import AEPMessaging;
+
 
 @implementation RCTAEPOptimize
 
-//RCT_EXPORT_MODULE(AEPMessaging);
+RCT_EXPORT_MODULE(AEPOptimize);
 
 - (dispatch_queue_t)methodQueue
 {
