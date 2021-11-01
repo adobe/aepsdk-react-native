@@ -71,7 +71,7 @@ module.exports = {
    *  - item: The AEPIdentity to remove.
    *  - withNamespace: The namespace of the AEPIdentity to remove.
    */
-   removeIdentity(item: AEPIdentityItem, namespace: String) {
+   removeIdentity(item: AEPIdentityItem, namespace: string) {
     RCTAEPEdgeIdentity.removeIdentities(item, namespace);
   },
 

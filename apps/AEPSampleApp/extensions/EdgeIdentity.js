@@ -27,8 +27,12 @@ export default EdgeIdentity = ({ navigation }) => {
         <Button title="extensionVersion()" onPress={edgeIdentityExtensionVersion}/>
         <Button title="getExperienceCloudId()" onPress={getExperienceCloudId}/>
         <Button title="getIdentity()" onPress={getIdentities}/>
-        <Button title="updateIdentity()" onPress={updateIdentities}/>
+        <Button title="updateIdentity(), addItem()" onPress={updateIdentities}/>
         <Button title="removeIdentity()" onPress={removeIdentities}/>
+        <Button title="removeItem()" onPress={removeItem}/>
+        <Button title="isEmpty()" onPress={isEmpty}/>
+        <Button title="get_ListOfNameSpaces_In_IdentityMap()" onPress={get_ListOfNameSpaces_InIdentityMap}/>
+        <Button title="get_ListOfItems_In_Namespace()" onPress={get_ListOfItems_inNamespace()}/>
         </ScrollView>
       </View>
   )
@@ -48,57 +52,135 @@ function getIdentities() {
 
 function updateIdentities() {
 
-  var identifier = "id";
-  var namespace = "localTest"
-  var authenticatedState = "unknown";
-  var isPrimary = "true";
+  var identifier1 = "user@example.com";
+  var namespace1 = "1stNameSpace"
+  var authenticatedState1 = "authenticated";
+  var isPrimary1 = "true";
 
-  var identifier1 = "2ndID";
-  var namespace1 = "2ndTest"
-  var authenticatedState1 = "unknown";
-  var isPrimary1 = "false";
-
-  var identifier2 = "3ndID";
-  var namespace2 = "3ndTest"
-  var authenticatedState2 = "unknown";
+  var identifier2 = "2ndID";
+  var namespace2 = "2ndNameSpace"
+  var authenticatedState2 = "loggedOut";
   var isPrimary2 = "false";
 
-  var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
-  var identityItems1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+  var identifier3 = "3rdID";
+  var namespace3 = "3rdNameSpace"
+  var authenticatedState3 = "unknown";
+  var isPrimary3 = "false";
+
+  var identifier4 = "4thID";
+  var authenticatedState4 = "ambiguous";
+  var isPrimary4 = "false";
+
+  var identityItems1  = new AEPIdentityItem(identifier1,authenticatedState1, isPrimary1);
   var identityItems2  = new AEPIdentityItem(identifier2, authenticatedState2, isPrimary2);
+  var identityItems3  = new AEPIdentityItem(identifier3, authenticatedState3, isPrimary3);
+  var identityItems4  = new AEPIdentityItem(identifier4, authenticatedState4, isPrimary4);
   var map = new AEPIdentityMap();
   
+  //add item 1
+  map.addItem(identityItems1, namespace1);
 
-  //map = AEPIdentity.getIdentities();
+  //add item 1
+  map.addItem(identityItems2, namespace2);
 
-  //console.table(AEPIdentity.getIdentities());
-  console.log("hello -  update Identity" + JSON.stringify(identityItems));
-  console.log("hello -  update Identity" + namespace1);
+  //add item 3
+  map.addItem(identityItems3, namespace3);
 
-  //AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
-  map.addItem(identityItems, namespace);
-  map.addItem(identityItems1, namespace);
-  map.addItem(identityItems2, namespace1);
+  //add item 4 has the same namespace as namespace3
+  map.addItem(identityItems4, namespace3);
 
-  
-  console.log("hello -  update Identity final" + JSON.stringify(map));
-  AEPIdentity.updateIdentities(map);
+  console.log("sample app - update identity");
+  AEPIdentity.updateIdentities(map); 
 
+ 
+  //console.log("sample app - check empty map " +  map.isEmpty());
   
 }
 
 function removeIdentities() {
-  var identifier = "id";
-  var namespace = "removeTest"
-  var authenticatedState = "unknown";
-  var isPrimary = true;
+  var identifier1 = "user@example.com";
+  var namespace1 = "1stNameSpace"
+  var authenticatedState1 = "authenticated";
+  var isPrimary1 = "true";
+
+  var identifier3 = "3rdID";
+  var namespace3 = "3rdNameSpace"
+  var authenticatedState3 = "unknown";
+  var isPrimary3 = "false";
+
+  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+  var identityItems3  = new AEPIdentityItem(identifier3);
+
+  console.log("EdgeIdentity - removeIdentity");
+  AEPIdentity.removeIdentity(identityItems, namespace1);
+  AEPIdentity.removeIdentity(identityItems3, namespace3);
+}
+
+function removeItem() {
+  var identifier1 = "user@example.com";
+  var namespace1 = "1stNameSpace"
+  var authenticatedState1 = "authenticated";
+  var isPrimary1 = "true";
   var map = new AEPIdentityMap();
 
-  var identityItems  = new AEPIdentityItem(identifier, authenticatedState, isPrimary);
-  map.removeItem(identityItems, namespace);
-  AEPIdentity.updateIdentities(map);
+  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+
+  //map.removeItem(identityItems, namespace1);
+  //AEPIdentity.updateIdentities(map);
   console.log("EdgeIdentity - removeItem");
-  AEPIdentity.removeIdentity(identityItems, namespace);
+  AEPIdentity.removeIdentity(identityItems, namespace1);
+}
+
+function isEmpty() {
+  var identifier1 = "user@example.com";
+  var namespace1 = "1stNameSpace"
+  var authenticatedState1 = "authenticated";
+  var isPrimary1 = "true";
+  var map = new AEPIdentityMap();
+
+  var identifier3 = "3rdID";
+  var namespace3 = "3rdNameSpace"
+  var authenticatedState3 = "unknown";
+  var isPrimary3 = "false";
+
+  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+  var identityItems3  = new AEPIdentityItem(identifier3);
+
+  //map.removeItem(identityItems, namespace1);
+  //AEPIdentity.updateIdentities(map);
+  console.log("EdgeIdentity - removeItem");
+  AEPIdentity.removeIdentity(identityItems, namespace1);
+  AEPIdentity.removeIdentity(identityItem3, namespace3);
+}
+
+function get_ListOfNameSpaces_InIdentityMap() {
+  var identifier1 = "user@example.com";
+  var namespace1 = "1stNameSpace"
+  var authenticatedState1 = "authenticated";
+  var isPrimary1 = "true";
+  var map = new AEPIdentityMap();
+
+  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+
+  //map.removeItem(identityItems, namespace1);
+  //AEPIdentity.updateIdentities(map);
+  console.log("EdgeIdentity - removeItem");
+  AEPIdentity.removeIdentity(identityItems, namespace1);
+}
+
+function get_ListOfItems_inNamespace() {
+  var identifier1 = "user@example.com";
+  var namespace1 = "1stNameSpace"
+  var authenticatedState1 = "authenticated";
+  var isPrimary1 = "true";
+  var map = new AEPIdentityMap();
+
+  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+
+  //map.removeItem(identityItems, namespace1);
+  //AEPIdentity.updateIdentities(map);
+  console.log("EdgeIdentity - removeItem");
+  AEPIdentity.removeIdentity(identityItems, namespace1);
 }
 
 const styles = StyleSheet.create({

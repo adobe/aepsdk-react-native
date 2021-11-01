@@ -39,10 +39,13 @@ export class AEPIdentityMap {
   }
 
   addItem(item: AEPIdentityItem, namespace: string){
-    console.log("here  addItem");
+    console.log("add Identity Item");
   }
 
   removeItem(item: AEPIdentityItem, namespace: string){
-    console.log("here  removeItem");
+    console.log("remove Identity Item");
+  }
+
+  isEmpty() {
   }
 }

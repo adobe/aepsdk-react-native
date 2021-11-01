@@ -24,67 +24,73 @@ class AEPIdentityMap {
 
   constructor() {}
 
-  //addItem
+  /**
+   * @brief Add Items to Identity Item
+  */
   addItem(item: AEPIdentityItem, namespaces: string) {
     if (item === null) {
       console.log("add - ignore addItem, item can't be null");
       return;
   }
 
-  if (namespaces === null) {
-    console.log("add - ignore addItem, namespaces can't be null");
-    return;
-}
+    if (namespaces === null) {
+     console.log("add - ignore addItem, namespaces can't be null");
+     return;
+  }
 
+     // add item to the existing namespace
+    console.log("Add item set - " + JSON.stringify(item));
+    console.log(namespaces);
+    console.log("addItem - " + this.items[namespaces]);
   if (this.items[namespaces] !== undefined) {
       var list = this.items[namespaces];
       list.push(item);
-      this.items[namespaces] = list;
-      console.log("I am here -  namespaces " + JSON.stringify(this.items[namespaces]));
-      console.log("I am here -  has own property " + namespaces);
-     
+      this.items[namespaces] = list;     
   } else {
-      this.items[namespaces] = [item] // creates new list with item in it
-        //console.log("I am here -  namespaces " + JSON.stringify(this.items[namespaces]));
+      // creates new list with the item in it
+      this.items[namespaces] = [item] 
   }
-
-  console.log("Calise NameSpaces2 and NameSpacesKey2 " + namespaces);
   
-  Object.keys(this.items).forEach(namespaces => {
+    Object.keys(this.items).forEach(namespaces => {
     var namespacesKey: Array<String> = this.items[namespaces];
-    console.table(namespacesKey);
   });
   }
-    //console.table(namespacesKey);
- // }
   
-  isEmpty(){
-    return this.items.isEmpty();
-  }
+  // /**
+  // * @brief Check the if the item is empty
+  // */
+  // isEmpty(){
+  //   return 
+  // }
 
+  /**
+   * @brief Remove Identity Item item
+  */
   removeItem(item: AEPIdentityItem, namespaces: string){
     this.items = item; 
+
+    console.log("this remove item set - " + JSON.stringify(item));
+    console.log(namespaces);
 
     if (item === null) {
       console.log("remove - ignore addItem, item can't be null");
       return;
   }
-  if (namespaces === null) {
-    console.log("remove - ignore addItem, namespaces can't be null");
-    return;
-}
-    
+    if (namespaces === null) {
+      console.log("remove - ignore addItem, namespace can't be null");
+      return;
+  }
+    //remove item from the existing namespace
+    console.log("remove table");
+    console.log(this.items[namespaces]);
+
     if (this.items[namespaces] !== undefined) {
       var list = this.items[namespaces];
       list.splice(item);
       this.items[namespaces] = list;
-
-      console.table(this.items[namespaces]);
-      
-      console.log("removeItem -  namespaces" + namespaces);
+      console.log("removeItem -  move item from namespace: " + namespaces);
     } else {
       console.log("removeItem -  no item to remove");
-      //console.log("I am here -  namespaces " + JSON.stringify(this.items[namespaces]));
     }
 
   }
