@@ -7,6 +7,7 @@ import Core from './extensions/Core';
 import Identity from './extensions/Identity';
 import Messaging from './extensions/Messaging';
 import EdgeIdentity from './extensions/EdgeIdentity';
+import Consent from './extensions/Consent';
 import Edge from './extensions/Edge';
 import Assurance from './extensions/Assurance';
 
@@ -35,6 +36,10 @@ function HomeScreen({ navigation }) {
       <Button
         onPress={() => navigation.navigate('EdgeIdentity')}
         title="EdgeIdentity"
+      />
+      <Button
+        onPress={() => navigation.navigate('Consent')}
+        title="Consent"
       />
       <Button
         onPress={() => navigation.navigate('Assurance')}
