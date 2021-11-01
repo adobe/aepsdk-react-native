@@ -88,9 +88,6 @@ function updateIdentities() {
 
   console.log("sample app - update identity");
   AEPIdentity.updateIdentities(map); 
-  console.log("names spaces" + map.getNamespaces(namespace3));
-  console.log("sample app - check empty map " +  map.isEmpty());
-  
 }
 
 function removeIdentities() {
