@@ -20,7 +20,6 @@ import AEPIdentityItem from './AEPIdentityItem';
 class AEPIdentityMap {
   items: {string: Array<AEPIdentityItem>} = {};
   namespaces:string;
-  //namespacesKey = items[namespaces];
 
   constructor() {}
 
@@ -39,9 +38,6 @@ class AEPIdentityMap {
   }
 
      // add item to the existing namespace
-    console.log("Add item set - " + JSON.stringify(item));
-    console.log(namespaces);
-    console.log("addItem - " + this.items[namespaces]);
   if (this.items[namespaces] !== undefined) {
       var list = this.items[namespaces];
       list.push(item);
@@ -49,51 +45,45 @@ class AEPIdentityMap {
   } else {
       // creates new list with the item in it
       this.items[namespaces] = [item] 
-  }
-  
-    Object.keys(this.items).forEach(namespaces => {
-    var namespacesKey: Array<String> = this.items[namespaces];
-  });
+    }
   }
   
   // /**
   // * @brief Check the if the item is empty
   // */
-  // isEmpty(){
-  //   return 
-  // }
-
+  isEmpty() {
+     this.items.length === 0;
+  }
+  
   /**
-   * @brief Remove Identity Item item
+  * @brief Add Items to Identity Item
   */
-  removeItem(item: AEPIdentityItem, namespaces: string){
-    this.items = item; 
-
-    console.log("this remove item set - " + JSON.stringify(item));
-    console.log(namespaces);
-
-    if (item === null) {
-      console.log("remove - ignore addItem, item can't be null");
-      return;
-  }
-    if (namespaces === null) {
-      console.log("remove - ignore addItem, namespace can't be null");
-      return;
-  }
-    //remove item from the existing namespace
-    console.log("remove table");
-    console.log(this.items[namespaces]);
-
-    if (this.items[namespaces] !== undefined) {
-      var list = this.items[namespaces];
-      list.splice(item);
-      this.items[namespaces] = list;
-      console.log("removeItem -  move item from namespace: " + namespaces);
-    } else {
-      console.log("removeItem -  no item to remove");
+     removeItem(item: AEPIdentityItem, namespaces: string) {
+      if (item === null) {
+        console.log("removeItem - ignore to remove item, item can't be null");
+        return;
     }
-
-  }
+  
+      if (namespaces === null) {
+       console.log("removeItem - ignore to remove item, namespaces can't be null");
+       return;
+    }
+  
+       // remove item to the existing namespace
+    if (this.items[namespaces] !== undefined) {
+        var list = this.items[namespaces];
+        list.slice(item);
+        //this.items[namespaces] = list;     
+    } else {
+        // creates new list with the item in it
+        this.items[namespaces] = [item] 
+      }
+      Object.keys(this.items).forEach(namespaces => {
+        var namespacesKey: Array<String> = this.items[namespaces];
+        console.log("remove namespacekey " + namespacesKey);
+        console.table(namespacesKey);
+     });
+    }
 }
 
 module.exports = AEPIdentityMap;

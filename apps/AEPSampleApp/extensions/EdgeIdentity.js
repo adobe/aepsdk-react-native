@@ -30,9 +30,6 @@ export default EdgeIdentity = ({ navigation }) => {
         <Button title="updateIdentity(), addItem()" onPress={updateIdentities}/>
         <Button title="removeIdentity()" onPress={removeIdentities}/>
         <Button title="removeItem()" onPress={removeItem}/>
-        <Button title="isEmpty()" onPress={isEmpty}/>
-        <Button title="get_ListOfNameSpaces_In_IdentityMap()" onPress={get_ListOfNameSpaces_InIdentityMap}/>
-        <Button title="get_ListOfItems_In_Namespace()" onPress={get_ListOfItems_inNamespace()}/>
         </ScrollView>
       </View>
   )
@@ -91,9 +88,8 @@ function updateIdentities() {
 
   console.log("sample app - update identity");
   AEPIdentity.updateIdentities(map); 
-
- 
-  //console.log("sample app - check empty map " +  map.isEmpty());
+  console.log("names spaces" + map.getNamespaces(namespace3));
+  console.log("sample app - check empty map " +  map.isEmpty());
   
 }
 
@@ -111,7 +107,7 @@ function removeIdentities() {
   var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
   var identityItems3  = new AEPIdentityItem(identifier3);
 
-  console.log("EdgeIdentity - removeIdentity");
+  console.log("sample app - removeIdentity");
   AEPIdentity.removeIdentity(identityItems, namespace1);
   AEPIdentity.removeIdentity(identityItems3, namespace3);
 }
@@ -125,62 +121,13 @@ function removeItem() {
 
   var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
 
-  //map.removeItem(identityItems, namespace1);
-  //AEPIdentity.updateIdentities(map);
-  console.log("EdgeIdentity - removeItem");
-  AEPIdentity.removeIdentity(identityItems, namespace1);
-}
-
-function isEmpty() {
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-  var map = new AEPIdentityMap();
-
-  var identifier3 = "3rdID";
-  var namespace3 = "3rdNameSpace"
-  var authenticatedState3 = "unknown";
-  var isPrimary3 = "false";
-
-  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-  var identityItems3  = new AEPIdentityItem(identifier3);
-
-  //map.removeItem(identityItems, namespace1);
-  //AEPIdentity.updateIdentities(map);
-  console.log("EdgeIdentity - removeItem");
-  AEPIdentity.removeIdentity(identityItems, namespace1);
-  AEPIdentity.removeIdentity(identityItem3, namespace3);
-}
-
-function get_ListOfNameSpaces_InIdentityMap() {
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-  var map = new AEPIdentityMap();
-
-  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-
-  //map.removeItem(identityItems, namespace1);
-  //AEPIdentity.updateIdentities(map);
-  console.log("EdgeIdentity - removeItem");
-  AEPIdentity.removeIdentity(identityItems, namespace1);
+  console.log("sample app - removeItem");
+  map.removeItem(identityItems, namespace1); 
+  console.log("removeItem " + map)
+  AEPIdentity.updateIdentities(map); 
 }
 
 function get_ListOfItems_inNamespace() {
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-  var map = new AEPIdentityMap();
-
-  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-
-  //map.removeItem(identityItems, namespace1);
-  //AEPIdentity.updateIdentities(map);
-  console.log("EdgeIdentity - removeItem");
-  AEPIdentity.removeIdentity(identityItems, namespace1);
 }
 
 const styles = StyleSheet.create({
