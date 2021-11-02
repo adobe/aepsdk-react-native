@@ -25,7 +25,7 @@ import com.adobe.marketing.mobile.edge.identity.IdentityItem;
 import java.util.List;
 import java.util.Map;
 
-public final class RCTAEPEdgeIdentityDataBridge {
+final class RCTAEPEdgeIdentityDataBridge {
 
     //Identity Item
     final private static String ID_KEY = "id";
@@ -36,7 +36,7 @@ public final class RCTAEPEdgeIdentityDataBridge {
     private static final String AEP_AUTH_STATE_AUTHENTICATED = "authenticated";
     private static final String AEP_AUTH_STATE_LOGGED_OUT = "loggedOut";
 
-    public static WritableMap mapFromIdentityMap(final IdentityMap map) {
+    static WritableMap mapFromIdentityMap(final IdentityMap map) {
         if (map == null) {
             return null;
         }
@@ -68,7 +68,7 @@ public final class RCTAEPEdgeIdentityDataBridge {
         return identityMapAsWritableMap;
     }
 
-    public static AuthenticatedState authenticatedStateFromString(final String authenticatedStateString) {
+    static AuthenticatedState authenticatedStateFromString(final String authenticatedStateString) {
         if (authenticatedStateString == null) {
             return AuthenticatedState.AMBIGUOUS;
         }
@@ -82,7 +82,7 @@ public final class RCTAEPEdgeIdentityDataBridge {
         return AuthenticatedState.AMBIGUOUS;
     }
 
-    public static IdentityMap mapToIdentityMap(final ReadableMap map) {
+    static IdentityMap mapToIdentityMap(final ReadableMap map) {
         String idValue = "";
         Boolean isPrimary = false;
         AuthenticatedState authState = AuthenticatedState.AMBIGUOUS;
@@ -128,7 +128,7 @@ public final class RCTAEPEdgeIdentityDataBridge {
         return identityMapFromReadableMap;
     }
 
-    public static IdentityItem mapToIdentityItem(ReadableMap map) {
+    static IdentityItem mapToIdentityItem(ReadableMap map) {
         if (map == null) {
             return null;
         }

@@ -23,9 +23,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.adobe.marketing.mobile.edge.identity.IdentityMap;
 import com.facebook.react.bridge.WritableMap;
 
-import java.util.List;
-import java.util.Map;
-
 public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
