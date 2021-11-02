@@ -24,13 +24,13 @@ export default Consent = ({ navigation }) => {
         <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Consent</Text>
-        <Button title="extensionVersion()" onPress={extensionVersion}/>
+        <Button title="extensionVersion()" onPress={consentExtensionVersion}/>
         </ScrollView>
       </View>
   )
 }
 
-function extensionVersion() {
+function consentExtensionVersion() {
   AEPConsent.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPConsent version: " + version));
 }
 
