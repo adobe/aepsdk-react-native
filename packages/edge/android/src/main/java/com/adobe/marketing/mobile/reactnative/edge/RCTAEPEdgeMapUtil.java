@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class RCTAEPEdgeMapUtil {
+class RCTAEPEdgeMapUtil {
 
-    public static Map<String, Object> toMap(ReadableMap readableMap) {
+    static Map<String, Object> toMap(ReadableMap readableMap) {
         if (readableMap == null) {
             return null;
         }
@@ -60,32 +60,7 @@ public class RCTAEPEdgeMapUtil {
         return map;
     }
 
-    public static Map<String, String> toStringMap(ReadableMap readableMap) {
-        if (readableMap == null) {
-            return null;
-        }
-
-        Map<String, String> map = new HashMap<>();
-        ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
-
-        while (iterator.hasNextKey()) {
-            String key = iterator.nextKey();
-            ReadableType type = readableMap.getType(key);
-
-            switch (type) {
-                case Null:
-                    map.put(key, null);
-                    break;
-                case String:
-                    map.put(key, readableMap.getString(key));
-                    break;
-            }
-        }
-
-        return map;
-    }
-
-    public static WritableMap toWritableMap(Map<String, Object> map) {
+    static WritableMap toWritableMap(Map<String, Object> map) {
         if (map == null) {
             return null;
         }
