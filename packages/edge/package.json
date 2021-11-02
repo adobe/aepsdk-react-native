@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepedge",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Adobe Experience Platform Edge Network extension for Adobe Experience Platform Mobile SDK. Written and maintained by Adobe.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
@@ -26,7 +26,8 @@
     "name": "Adobe Experience Platform SDK Team"
   },
   "peerDependencies": {
-    "@adobe/react-native-aepcore": "^1.0.0",
+    "@adobe/react-native-aepcore": "^1.0.0-alpha",
+    "@adobe/react-native-aepedgeidentity": "^1.0.0-alpha",
     "react-native": ">=0.60.0"
   },
    "publishConfig": {

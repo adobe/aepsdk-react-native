@@ -13,65 +13,66 @@ governing permissions and limitations under the License.
 @format
 */
 
-import React, {Component} from 'react';
-import {Button, Platform, StyleSheet, Text, View, ScrollView, NativeModules} from 'react-native';
-import {AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent} from '@adobe/react-native-aepcore';
+import React from 'react';
+import { Button, Text, View, ScrollView, NativeModules } from 'react-native';
+import { AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent } from '@adobe/react-native-aepcore';
+import styles from '../styles/styles';
 
 export default Core = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-        <ScrollView contentContainerStyle={{ marginTop: 75 }}>
+      <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Core</Text>
-        <Button title="extensionVersion()" onPress={coreExtensionVersion}/>
-        <Button title="updateConfiguration" onPress={updateConfiguration}/>
-        <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn}/>
-        <Button title="getPrivacyStatus()" onPress={getPrivacyStatus}/>
-        <Button title="log(...)" onPress={log}/>
-        <Button title="setLogLevel(AEPMobileLogLevel.VERBOSE)" onPress={setLogLevel}/>
-        <Button title="getLogLevel()" onPress={getLogLevel}/>
-        <Button title="setPushIdentifier()" onPress={setPushIdentifier}/>
-        <Button title="setAdvertisingIdentifier()" onPress={setAdvertisingIdentifier}/>
-        <Button title="getSdkIdentities()" onPress={getSdkIdentities}/>
-        <Button title="collectPii()" onPress={collectPii}/>
-        <Button title="trackAction()" onPress={trackAction}/>
-        <Button title="trackState()" onPress={trackState}/>
-        <Button title="dispatchEvent()" onPress={dispatchEvent}/>
-        <Button title="dispatchEventWithResponseCallback()" onPress={dispatchEventWithResponseCallback}/>
+        <Button title="extensionVersion()" onPress={coreExtensionVersion} />
+        <Button title="updateConfiguration" onPress={updateConfiguration} />
+        <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn} />
+        <Button title="getPrivacyStatus()" onPress={getPrivacyStatus} />
+        <Button title="log(...)" onPress={log} />
+        <Button title="setLogLevel(AEPMobileLogLevel.VERBOSE)" onPress={setLogLevel} />
+        <Button title="getLogLevel()" onPress={getLogLevel} />
+        <Button title="setPushIdentifier()" onPress={setPushIdentifier} />
+        <Button title="setAdvertisingIdentifier()" onPress={setAdvertisingIdentifier} />
+        <Button title="getSdkIdentities()" onPress={getSdkIdentities} />
+        <Button title="collectPii()" onPress={collectPii} />
+        <Button title="trackAction()" onPress={trackAction} />
+        <Button title="trackState()" onPress={trackState} />
+        <Button title="dispatchEvent()" onPress={dispatchEvent} />
+        <Button title="dispatchEventWithResponseCallback()" onPress={dispatchEventWithResponseCallback} />
+        <Button title="resetIdentities()" onPress={resetIdentities} />
         <Text style={styles.welcome}>Lifecycle</Text>
-        <Button title="AEPLifecycle::extensionVersion()" onPress={lifecycleExtensionVersion}/>
+        <Button title="AEPLifecycle::extensionVersion()" onPress={lifecycleExtensionVersion} />
         <Text style={styles.welcome}>Signal</Text>
-        <Button title="AEPSignal::extensionVersion()" onPress={signalExtensionVersion}/>
-        
-        </ScrollView>
-      </View>
+        <Button title="AEPSignal::extensionVersion()" onPress={signalExtensionVersion} />
+      </ScrollView>
+    </View>
   )
 }
 
-function trackAction(){
-  AEPCore.trackAction("action name", {"key": "value"});
+function trackAction() {
+  AEPCore.trackAction("action name", { "key": "value" });
 }
 
-function trackState(){
-  AEPCore.trackState("state name", {"key": "value"});
+function trackState() {
+  AEPCore.trackState("state name", { "key": "value" });
 }
 
-function setPushIdentifier(){
+function setPushIdentifier() {
   AEPCore.setPushIdentifier("xxx");
 }
 
 function collectPii() {
-  AEPCore.collectPii({"myPii": "data"});
+  AEPCore.collectPii({ "myPii": "data" });
 }
 
 function dispatchEvent() {
-  var event = new AEPExtensionEvent("eventName", "eventType", "eventSource", {"testDataKey": "testDataValue"});
+  var event = new AEPExtensionEvent("eventName", "eventType", "eventSource", { "testDataKey": "testDataValue" });
   AEPCore.dispatchEvent(event);
 }
 
 function dispatchEventWithResponseCallback() {
-  var event = new AEPExtensionEvent("eventName", "eventType", "eventSource", {"testDataKey": "testDataValue"});
+  var event = new AEPExtensionEvent("eventName", "eventType", "eventSource", { "testDataKey": "testDataValue" });
   AEPCore.dispatchEventWithResponseCallback(event).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
 }
 
@@ -81,8 +82,8 @@ function setAdvertisingIdentifier() {
 function getSdkIdentities() {
   AEPCore.getSdkIdentities().then(identities => console.log("AdobeExperienceSDK: Identities = " + identities));
 }
-function updateConfiguration(){
-  AEPCore.updateConfiguration({"global.privacy":"optedout"});
+function updateConfiguration() {
+  AEPCore.updateConfiguration({ "global.privacy": "optedout" });
 }
 
 function getLogLevel() {
@@ -116,20 +117,11 @@ function setPrivacyOptIn() {
 function getPrivacyStatus() {
   AEPCore.getPrivacyStatus().then(status => console.log("AdobeExperienceSDK: Privacy Status = " + status));
 }
+
 function log() {
   AEPCore.log(AEPMobileLogLevel.ERROR, "React Native Tag", "React Native Message");
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 22,
-    textAlign: 'center',
-    margin: 10,
-  }
-});
+function resetIdentities() {
+  AEPCore.resetIdentities();
+}
