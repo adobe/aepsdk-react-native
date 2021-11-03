@@ -24,5 +24,5 @@ module.exports = {
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdgeConsent.extensionVersion());
-  }
+  },
 };
