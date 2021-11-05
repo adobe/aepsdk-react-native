@@ -10,6 +10,8 @@
  */
 
 #import "RCTAEPOptimize.h"
+@import AEPOptimize;
+
 
 
 @implementation RCTAEPOptimize
@@ -21,8 +23,13 @@ RCT_EXPORT_MODULE(AEPOptimize);
     return dispatch_get_main_queue();
 }
 
-//RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock) reject) {
-//    resolve([AEPMobileMessaging extensionVersion]);
-//}
+RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock) reject) {
+    resolve([AEPMobileOptimize extensionVersion]);    
+
+}
+
+RCT_EXPORT_METHOD(clearCache) {
+    [AEPMobileOptimize clearCachedPropositions];    
+}
 @end
   
