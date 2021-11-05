@@ -18,7 +18,7 @@ export class AEPIdentity{
     static removeIdentity(item: IdentityItem , namespace: string);
 };
 
-export class AEPAuthenticatedState{
+export class AEPAuthenticatedState {
     static AUTHENTICATED: string;
     static LOGGED_OUT: string;
     static AMBIGUOUS: string;
@@ -33,17 +33,7 @@ export class AEPIdentityItem {
 
 export class AEPIdentityMap {
   
-  constructor() {
-  }
+  constructor()
 
-  addItem(item: AEPIdentityItem, namespace: string){
-    console.log("add Identity Item");
-  }
-
-  removeItem(item: AEPIdentityItem, namespace: string){
-    console.log("remove Identity Item");
-  }
-
-  isEmpty() {
-  }
+  addItem(item: AEPIdentityItem, namespace: string)
 }

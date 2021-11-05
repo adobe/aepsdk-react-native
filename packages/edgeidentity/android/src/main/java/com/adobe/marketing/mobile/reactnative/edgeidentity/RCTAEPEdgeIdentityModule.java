@@ -81,7 +81,7 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void removeIdentities(final ReadableMap item, String namespace) {
+    public void removeIdentity(final ReadableMap item, String namespace) {
         IdentityItem itemobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityItem(item);
         Identity.removeIdentity(itemobj, namespace);
     }
