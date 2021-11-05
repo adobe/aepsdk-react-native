@@ -35,4 +35,4 @@ class AEPAuthenticatedState {
 
 }
 
-module.exports = AEPAuthenticateState;
+module.exports = AEPAuthenticatedState;

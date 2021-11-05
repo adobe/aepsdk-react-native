@@ -22,7 +22,7 @@ class AEPIdentityItem {
   authenticatedState: AEPAuthenticatedState;
   primary: boolean;
 
-  constructor(id: string, authenticatedState: AEPAuthenticateState.AMBIGUOUS, primary: boolean = false) {
+  constructor(id: string, authenticatedState: AEPAuthenticatedState, primary: boolean = false) {
   	this.id = id;
     this.authenticatedState = authenticatedState;
     this.primary = primary

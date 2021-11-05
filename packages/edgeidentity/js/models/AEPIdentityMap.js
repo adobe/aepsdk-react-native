@@ -47,43 +47,6 @@ class AEPIdentityMap {
       this.items[namespaces] = [item] 
     }
   }
-  
-  // /**
-  // * @brief Check the if the item is empty
-  // */
-  isEmpty() {
-     this.items.length === 0;
-  }
-  
-  /**
-  * @brief Add Items to Identity Item
-  */
-     removeItem(item: AEPIdentityItem, namespaces: string) {
-      if (item === null) {
-        console.log("removeItem - ignore to remove item, item can't be null");
-        return;
-    }
-  
-      if (namespaces === null) {
-       console.log("removeItem - ignore to remove item, namespaces can't be null");
-       return;
-    }
-  
-       // remove item to the existing namespace
-    if (this.items[namespaces] !== undefined) {
-        var list = this.items[namespaces];
-        list.slice(item);
-        //this.items[namespaces] = list;     
-    } else {
-        // creates new list with the item in it
-        this.items[namespaces] = [item] 
-      }
-      Object.keys(this.items).forEach(namespaces => {
-        var namespacesKey: Array<String> = this.items[namespaces];
-        console.log("remove namespacekey " + namespacesKey);
-        console.table(namespacesKey);
-     });
-    }
 }
 
 module.exports = AEPIdentityMap;

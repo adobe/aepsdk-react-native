@@ -15,7 +15,7 @@ export class AEPIdentity{
     static getExperienceCloudId(): Promise<string>;
     static getIdentities(): Promise<IdentityMap>;
     static updateIdentities(identityMap: Map);
-    static removeIdentities(identityItems: Array , namespace: string);
+    static removeIdentity(item: IdentityItem , namespace: string);
 };
 
 export class AEPAuthenticatedState{
@@ -32,9 +32,7 @@ export class AEPIdentityItem {
 }
 
 export class AEPIdentityMap {
-  //namespaces: string;
-  //item: AEPIdentityItem;
-
+  
   constructor() {
   }
 

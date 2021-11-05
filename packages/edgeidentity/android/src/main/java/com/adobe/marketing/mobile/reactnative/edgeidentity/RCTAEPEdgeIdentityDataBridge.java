@@ -11,6 +11,8 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
+import android.util.Log;
+
 import com.adobe.marketing.mobile.edge.identity.AuthenticatedState;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -31,10 +33,6 @@ final class RCTAEPEdgeIdentityDataBridge {
     final private static String ID_KEY = "id";
     final private static String IS_PRIMARY_KEY = "primary";
     private static final String AEP_AUTH_STATE_KEY = "authenticatedState";
-
-    //Authenticated State
-    private static final String AEP_AUTH_STATE_AUTHENTICATED = "authenticated";
-    private static final String AEP_AUTH_STATE_LOGGED_OUT = "loggedOut";
 
     static WritableMap mapFromIdentityMap(final IdentityMap map) {
         if (map == null) {
@@ -68,24 +66,7 @@ final class RCTAEPEdgeIdentityDataBridge {
         return identityMapAsWritableMap;
     }
 
-    static AuthenticatedState authenticatedStateFromString(final String authenticatedStateString) {
-        if (authenticatedStateString == null) {
-            return AuthenticatedState.AMBIGUOUS;
-        }
-
-        if (authenticatedStateString.equals(AEP_AUTH_STATE_AUTHENTICATED)) {
-            return AuthenticatedState.AUTHENTICATED;
-        } else if (authenticatedStateString.equals(AEP_AUTH_STATE_LOGGED_OUT)) {
-            return AuthenticatedState.LOGGED_OUT;
-        }
-
-        return AuthenticatedState.AMBIGUOUS;
-    }
-
     static IdentityMap mapToIdentityMap(final ReadableMap map) {
-        String idValue = "";
-        Boolean isPrimary = false;
-        AuthenticatedState authState = AuthenticatedState.AMBIGUOUS;
 
         if (map == null) {
             return null;
@@ -103,25 +84,13 @@ final class RCTAEPEdgeIdentityDataBridge {
 
             //iterate items
             for (int i = 0; i < namespaceArray.size(); i++) {
-                Map<String, Object> itemsInMap =  RCTAEPEdgeIdentityMapUtil.toMap(namespaceArray.getMap(i));
 
-                //extra id, authenticateState and isprimary values
-                for (Map.Entry<String,Object> entry : itemsInMap.entrySet()) {
-                   if (entry.getKey().equals(ID_KEY)) {
-                      idValue = (String) entry.getValue();
-                   }
-                   if (entry.getKey().equals(AEP_AUTH_STATE_KEY)) {
-                      String state = (String) entry.getValue();
-                      authState = authenticatedStateFromString(state);
-                   }
-                   if (entry.getKey().equals(IS_PRIMARY_KEY)) {
-                      String primary = (String) entry.getValue();
-                      isPrimary = Boolean.parseBoolean(primary);
-                   }
-                }
+                ReadableMap itemsAsMap = namespaceArray.getMap(i);
 
-                IdentityItem items = new IdentityItem(idValue, authState, isPrimary);
-                identityMapFromReadableMap.addItem(items, namespace);
+                IdentityItem item = mapToIdentityItem(itemsAsMap);
+                if (item != null)
+
+                identityMapFromReadableMap.addItem(item, namespace);
             }
         }
 
@@ -132,11 +101,15 @@ final class RCTAEPEdgeIdentityDataBridge {
         if (map == null) {
             return null;
         }
-
-        return new IdentityItem(getNullableString(map, ID_KEY), AuthenticatedState.fromString(AEP_AUTH_STATE_KEY), Boolean.parseBoolean(IS_PRIMARY_KEY));
+        //To Do: check the case if is_primary_key value is a String
+        return new IdentityItem(getNullableString(map, ID_KEY), getAuthenticatedState(map, AEP_AUTH_STATE_KEY), getNullableBoolean(map, IS_PRIMARY_KEY));
     }
 
     // Helper methods
+
+    private static AuthenticatedState getAuthenticatedState(final ReadableMap data, final String key) {
+        return AuthenticatedState.fromString(data.hasKey(key) ? data.getString(key) : null);
+    }
 
     private static String getNullableString(final ReadableMap data, final String key) {
         return data.hasKey(key) ? data.getString(key) : null;

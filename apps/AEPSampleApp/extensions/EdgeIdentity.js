@@ -26,10 +26,7 @@ export default EdgeIdentity = ({ navigation }) => {
         <Text style={styles.welcome}>EdgeIdentity</Text>
         <Button title="extensionVersion()" onPress={edgeIdentityExtensionVersion}/>
         <Button title="getExperienceCloudId()" onPress={getExperienceCloudId}/>
-        <Button title="getIdentity()" onPress={getIdentities}/>
-        <Button title="updateIdentity(), addItem()" onPress={updateIdentities}/>
-        <Button title="removeIdentity()" onPress={removeIdentities}/>
-        <Button title="removeItem()" onPress={removeItem}/>
+        <Button title="getIdentities()" onPress={getIdentities}/>
         </ScrollView>
       </View>
   )
@@ -47,85 +44,7 @@ function getIdentities() {
   AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
 }
 
-function updateIdentities() {
-
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-
-  var identifier2 = "2ndID";
-  var namespace2 = "2ndNameSpace"
-  var authenticatedState2 = "loggedOut";
-  var isPrimary2 = "false";
-
-  var identifier3 = "3rdID";
-  var namespace3 = "3rdNameSpace"
-  var authenticatedState3 = "unknown";
-  var isPrimary3 = "false";
-
-  var identifier4 = "4thID";
-  var authenticatedState4 = "ambiguous";
-  var isPrimary4 = "false";
-
-  var identityItems1  = new AEPIdentityItem(identifier1,authenticatedState1, isPrimary1);
-  var identityItems2  = new AEPIdentityItem(identifier2, authenticatedState2, isPrimary2);
-  var identityItems3  = new AEPIdentityItem(identifier3, authenticatedState3, isPrimary3);
-  var identityItems4  = new AEPIdentityItem(identifier4, authenticatedState4, isPrimary4);
-  var map = new AEPIdentityMap();
-  
-  //add item 1
-  map.addItem(identityItems1, namespace1);
-
-  //add item 1
-  map.addItem(identityItems2, namespace2);
-
-  //add item 3
-  map.addItem(identityItems3, namespace3);
-
-  //add item 4 has the same namespace as namespace3
-  map.addItem(identityItems4, namespace3);
-
-  console.log("sample app - update identity");
-  AEPIdentity.updateIdentities(map); 
-}
-
-function removeIdentities() {
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-
-  var identifier3 = "3rdID";
-  var namespace3 = "3rdNameSpace"
-  var authenticatedState3 = "unknown";
-  var isPrimary3 = "false";
-
-  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-  var identityItems3  = new AEPIdentityItem(identifier3);
-
-  console.log("sample app - removeIdentity");
-  AEPIdentity.removeIdentity(identityItems, namespace1);
-  AEPIdentity.removeIdentity(identityItems3, namespace3);
-}
-
-function removeItem() {
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-  var map = new AEPIdentityMap();
-
-  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-
-  console.log("sample app - removeItem");
-  map.removeItem(identityItems, namespace1); 
-  console.log("removeItem " + map)
-  AEPIdentity.updateIdentities(map); 
-}
-
-function get_ListOfItems_inNamespace() {
-}
+//TO DO: Add updateIdentities() and removeIdentities() cases
 
 const styles = StyleSheet.create({
   container: {
