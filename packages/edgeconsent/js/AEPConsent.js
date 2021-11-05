@@ -8,25 +8,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
+
+@flow
+@format
 */
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
+'use strict';
 
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPMessaging;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPEdgeConsent;
-@import AEPAssurance;
+const RCTAEPEdgeConsent = require('react-native').NativeModules.AEPEdgeConsent;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-
-@property (nonatomic, strong) UIWindow *window;
-
-@end
+module.exports = {
+  /**
+   * Returns the version of the AEPConsent extension
+   * @param {string} Promise resolves with the extension version
+   */
+  extensionVersion(): Promise<string> {
+    return Promise.resolve(RCTAEPEdgeConsent.extensionVersion());
+  },
+};
