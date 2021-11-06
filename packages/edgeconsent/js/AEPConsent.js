@@ -25,4 +25,23 @@ module.exports = {
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdgeConsent.extensionVersion());
   },
+
+  /**
+   * Merges the existing consents with the given consents. Duplicate keys will take the value of those passed in the API
+   * Input example: {"consents": {"collect": {"val": "y"}}}
+   * @param consents to be merged with the existing consents
+   */
+  update(consents: {string: any}) {
+  	RCTAEPEdgeConsent.update(consents);
+  },
+
+  /**
+   * Retrieves the current consent preferences stored in the Consent extension
+   * Output example: {"consents": {"collect": {"val": "y"}}}
+   * @param {{ string: any }} Promise resolved with the current consent preferences or rejected
+   * if an unexpected error occurs or the request timed out
+   */
+  getConsents(): Promise<{string: any}> {
+  	return Promise.resolve(RCTAEPEdgeConsent.getConsents());
+  },
 };
