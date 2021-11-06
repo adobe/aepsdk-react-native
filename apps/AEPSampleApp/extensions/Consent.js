@@ -41,6 +41,7 @@ export default Consent = ({ navigation }) => {
         <Button title="Set Collect Consent - No" onPress={updateConsentNo}/>
         <Button title="Set Default Consent - Yes" onPress={setDefaultConsentYes}/>
         <Button title="Get Consents" onPress={getConsents}/>
+        <View style={styles.breakLine}/>
         <Text style={styles.text}>{consents}</Text>
         </ScrollView>
       </View>
@@ -77,7 +78,13 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     textAlign: 'center',
+    margin: 5,
+  }, 
+  breakLine: {
+    borderWidth: 0.5,
+    borderColor: 'black',
+    margin: 10,
     marginTop: 10,
-    margin: 5
+    marginBottom: 10,
   }
 });
