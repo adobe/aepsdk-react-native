@@ -25,5 +25,16 @@ RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(R
     resolve([AEPMobileEdgeConsent extensionVersion]);
 }
 
+RCT_EXPORT_METHOD(update: (nonnull NSDictionary*)consents) {
+    [AEPMobileEdgeConsent updateWithConsents:consents];
+}
+
+RCT_EXPORT_METHOD(getConsents:(RCTPromiseResolveBlock) resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    [AEPMobileEdgeConsent getConsents:^(NSDictionary* consents, NSError* error) {
+        resolve(consents);
+    }];
+}
+
 @end
   

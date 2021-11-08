@@ -37,9 +37,9 @@ export default Consent = ({ navigation }) => {
         <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Consent v{version}</Text>
-        <Button title="Set Collect Consent - Yes" onPress={updateConsentYes}/>
-        <Button title="Set Collect Consent - No" onPress={updateConsentNo}/>
-        <Button title="Set Default Consent - Yes" onPress={setDefaultConsentYes}/>
+        <Button title="Set Collect Consent - Yes" onPress={() => updateCollectConsent(true)}/>
+        <Button title="Set Collect Consent - No" onPress={() => updateCollectConsent(false)}/>
+        <Button title="Set Default Consent - Yes" onPress={() => setDefaultConsent(true)}/>
         <Button title="Get Consents" onPress={getConsents}/>
         <View style={styles.breakLine}/>
         <Text style={styles.text}>{consents}</Text>
@@ -48,18 +48,17 @@ export default Consent = ({ navigation }) => {
   )
 }
 
-function updateConsentYes() {
-  var consents  = {"consents" : {"collect" : {"val": "y"}}};
+function updateCollectConsent(allowed: boolean) {
+  var collectConsentStatus = allowed ? {"val": "y"} : {"val": "n"};
+
+  var consents  = {"consents" : {"collect" : collectConsentStatus}};
   AEPConsent.update(consents);
+  console.log("AdobeExperienceSDK: Update consents with:  " + JSON.stringify(consents));
 }
 
-function updateConsentNo() {
-  var consents  = {"consents" : {"collect" : {"val": "n"}}};
-  AEPConsent.update(consents);
-}
-
-function setDefaultConsentYes() {
-  var defaultConsents  = {"consent.default": {"consents" : {"collect" : {"val": "y"}}}};
+function setDefaultConsent(allowed: boolean) {
+  var collectConsentStatus = allowed ? {"val": "y"} : {"val": "n"};
+  var defaultConsents  = {"consent.default": {"consents" : {"collect" : collectConsentStatus}}};
   AEPCore.updateConfiguration(defaultConsents);
 }
 
