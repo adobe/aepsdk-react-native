@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.adobe.marketing.mobile.edge.identity.AuthenticatedState;
@@ -33,6 +34,8 @@ final class RCTAEPEdgeIdentityDataBridge {
     final private static String ID_KEY = "id";
     final private static String IS_PRIMARY_KEY = "primary";
     private static final String AEP_AUTH_STATE_KEY = "authenticatedState";
+
+    private static final String TAG = "RCTAEPEdgeIdentityDataBridge";
 
     static WritableMap mapFromIdentityMap(final IdentityMap map) {
         if (map == null) {
@@ -97,11 +100,19 @@ final class RCTAEPEdgeIdentityDataBridge {
         return identityMapFromReadableMap;
     }
 
+    @SuppressLint("LongLogTag")
     static IdentityItem mapToIdentityItem(ReadableMap map) {
         if (map == null) {
             return null;
         }
-        //To Do: check the case if is_primary_key value is a String
+
+        try {
+            getNullableBoolean(map, IS_PRIMARY_KEY);
+        } catch (Exception e) {
+            Log.d(TAG, "primary requires to be a boolean type: " + e);
+            return null;
+        }
+
         return new IdentityItem(getNullableString(map, ID_KEY), getAuthenticatedState(map, AEP_AUTH_STATE_KEY), getNullableBoolean(map, IS_PRIMARY_KEY));
     }
 
