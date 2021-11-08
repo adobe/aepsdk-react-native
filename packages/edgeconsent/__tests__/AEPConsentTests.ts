@@ -23,4 +23,17 @@ describe('AEPEdgeConsent', () => {
     await AEPConsent.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
+
+  it('updateConsents is called with correct parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdgeConsent, 'update');
+    let consents = {"consents": {"collect": {"val": "y"}}};
+    await AEPConsent.update(consents);
+    expect(spy).toHaveBeenCalledWith(consents);
+  });
+
+  it('getConsents is called with correct parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdgeConsent, 'getConsents');
+    await AEPConsent.getConsents();
+    expect(spy).toHaveBeenCalled();
+  });
 });

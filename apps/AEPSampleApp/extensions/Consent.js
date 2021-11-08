@@ -51,14 +51,14 @@ export default Consent = ({ navigation }) => {
 function updateCollectConsent(allowed: boolean) {
   var collectConsentStatus = allowed ? {"val": "y"} : {"val": "n"};
 
-  var consents  = {"consents" : {"collect" : collectConsentStatus}};
+  var consents: {[keys: string]: any} = {"consents" : {"collect" : collectConsentStatus}};
   AEPConsent.update(consents);
   console.log("AdobeExperienceSDK: Update consents with:  " + JSON.stringify(consents));
 }
 
 function setDefaultConsent(allowed: boolean) {
   var collectConsentStatus = allowed ? {"val": "y"} : {"val": "n"};
-  var defaultConsents  = {"consent.default": {"consents" : {"collect" : collectConsentStatus}}};
+  var defaultConsents: {[keys: string]: any} = {"consent.default": {"consents" : {"collect" : collectConsentStatus}}};
   AEPCore.updateConfiguration(defaultConsents);
 }
 
