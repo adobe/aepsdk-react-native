@@ -14,7 +14,7 @@ export class AEPIdentity{
     static extensionVersion(): Promise<string>;
     static getExperienceCloudId(): Promise<string>;
     static getIdentities(): Promise<IdentityMap>;
-    static updateIdentities(identityMap: Map);
+    static updateIdentities(identityMap: AEPIdentityMap);
     static removeIdentity(item: IdentityItem , namespace: string);
 };
 
@@ -38,6 +38,6 @@ export class AEPIdentityMap {
   addItem(item: AEPIdentityItem, namespace: string);
   isEmpty();
   getNamespaces();
-  getIdentityItemsForNamespaces()
-  removeItem(item: AEPIdentityItem, namespace: string);
+  getIdentityItemsForNamespace(namespace: string)
+  removeIdentityItem(item: AEPIdentityItem, namespace: string);
 }
