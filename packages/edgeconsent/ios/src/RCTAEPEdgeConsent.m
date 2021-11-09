@@ -11,8 +11,11 @@
 
 #import "RCTAEPEdgeConsent.h"
 @import AEPEdgeConsent;
+@import AEPCore;
 
 @implementation RCTAEPEdgeConsent
+
+static NSString* const EXTENSION_NAME = @"AEPEdgeConsent";
 
 RCT_EXPORT_MODULE(AEPEdgeConsent);
 
@@ -32,6 +35,15 @@ RCT_EXPORT_METHOD(update: (nonnull NSDictionary*)consents) {
 RCT_EXPORT_METHOD(getConsents:(RCTPromiseResolveBlock) resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileEdgeConsent getConsents:^(NSDictionary* consents, NSError* error) {
+        if (error && error.code != AEPErrorNone) {
+            if (error.code == AEPErrorCallbackTimeout) {
+                reject(EXTENSION_NAME, [NSString stringWithFormat:@"getConsents - Request timed out"], error);
+            } else {
+                reject(EXTENSION_NAME, [NSString stringWithFormat:@"getConsents - Failed to retrieve consent"], error);
+            }
+            return;
+        }
+        
         resolve(consents);
     }];
 }
