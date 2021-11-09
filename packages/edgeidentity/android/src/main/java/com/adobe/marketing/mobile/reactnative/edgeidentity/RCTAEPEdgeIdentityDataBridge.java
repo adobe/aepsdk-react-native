@@ -31,9 +31,10 @@ import java.util.Map;
 final class RCTAEPEdgeIdentityDataBridge {
 
     //Identity Item
-    final private static String ID_KEY = "id";
-    final private static String IS_PRIMARY_KEY = "primary";
+    private static final String ID_KEY = "id";
+    private static final String IS_PRIMARY_KEY = "primary";
     private static final String AEP_AUTH_STATE_KEY = "authenticatedState";
+    private static final String ITEMS = "items";
 
     private static final String TAG = "RCTAEPEdgeIdentityDataBridge";
 
@@ -76,7 +77,7 @@ final class RCTAEPEdgeIdentityDataBridge {
         }
 
         IdentityMap identityMapFromReadableMap = new IdentityMap();
-        ReadableMap mapValue = map.getMap("items");
+        ReadableMap mapValue = map.getMap(ITEMS);
 
         ReadableMapKeySetIterator iterator =  mapValue.keySetIterator();
 

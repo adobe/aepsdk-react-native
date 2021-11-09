@@ -19,32 +19,32 @@ import AEPIdentityItem from './AEPIdentityItem';
 
 class AEPIdentityMap {
   items: {string: Array<AEPIdentityItem>} = {};
-  namespaces:string;
+  namespace:string;
 
   constructor() {}
 
   /**
    * @brief Add Items to Identity Item
   */
-  addItem(item: AEPIdentityItem, namespaces: string) {
+  addItem(item: AEPIdentityItem, namespace: string) {
     if (item === null) {
       console.log("add - ignore addItem, item can't be null");
       return;
   }
 
-    if (namespaces === null) {
+    if (namespace === null) {
      console.log("add - ignore addItem, namespaces can't be null");
      return;
   }
 
      // add item to the existing namespace
-  if (this.items[namespaces] !== undefined) {
+  if (this.items[namespace] !== undefined) {
       var list = this.items[namespaces];
       list.push(item);
-      this.items[namespaces] = list;     
+      this.items[namespace] = list;     
   } else {
       // creates new list with the item in it
-      this.items[namespaces] = [item] 
+      this.items[namespace] = [item] 
     }
   }
 }
