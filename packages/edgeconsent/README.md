@@ -13,7 +13,7 @@ The Consent for Edge Network extension has the following peer dependency, which 
 
 ## Installation
 
-See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page. 
 
 Install the `@adobe/react-native-aepedgeconsent` package:
 
@@ -24,58 +24,58 @@ npm install @adobe/react-native-aepedgeconsent
 
 ## Usage
 
-### Install and register this extension with the AEP Mobile Core
+### Installing and registering the extension with the AEP Mobile Core
 Install the Consent extension in your mobile property and configure the default consent preferences by following the steps in the [Consent for Edge Network extension documentation](https://aep-sdks.gitbook.io/docs/foundation-extensions/consent-for-edge-network).
 
 Then follow the same document for registering the Consent extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
+### Importing the extension
 In your React Native application, import the AEPConsent extension as follows:
 ```javascript
 import {AEPConsent} from '@adobe/react-native-aepedgeconsent';
 ```
 
-### API reference
+## API reference
 
-#### extensionVersion
+### extensionVersion
 Returns the version of the AEPConsent extension
 
 **Syntax**
 ```javascript
-extensionVersion(): Promise<string>
+static extensionVersion(): Promise<string>
 ```
 
 **Example**
 ```javascript
-AEPConsent.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPConsent version: " + version));
+AEPConsent.extensionVersion().then(version => console.log("AEPConsent.extensionVersion: " + version));
 ```
 
-#### getConsents
-Retrieves the current consent preferences stored in the Consent extension and resolves the promise with the current consent preferences or rejects it if an unexpected error occurs or the request timed out 
+### getConsents
+Retrieves the current consent preferences stored in the Consent extension and resolves the promise with the current consent preferences or rejects it if an unexpected error occurs or the request timed out. 
 Output example: {"consents": {"collect": {"val": "y"}}}
 
 **Syntax**
 ```javascript
-getConsents(): Promise<{string: any}>
+static getConsents(): Promise<{string: any}>
 ```
 
 **Example**
 ```javascript
-AEPConsent.getConsents().then(currentConsents => {
-  let consentsStr = JSON.stringify(currentConsents);
-  setConsents(consentsStr);
-  console.log("AdobeExperienceSDK: AEPConsent.getConsents returned current consent preferences:  " + consentsStr);
+AEPConsent.getConsents().then(consents => {
+  console.log("AEPConsent.getConsents returned current consent preferences:  " + JSON.stringify(consents));
 }).catch((error) => {
-  console.warn("AdobeExperienceSDK: AEPConsent.getConsents returned error: ", error);
+  console.warn("AEPConsent.getConsents returned error: ", error.message);
 });
 ```
 
-#### update
-Merges the existing consents with the given consents. Duplicate keys will take the value of those passed in the API
+### update
+Merges the existing consents with the given consents. Duplicate keys will take the value of those passed in the API.
 Input example: {"consents": {"collect": {"val": "y"}}}
+
 **Syntax**
 ```javascript
-update(consents: {string: any})
+static update(consents: {string: any})
 ```
 
 **Example**
