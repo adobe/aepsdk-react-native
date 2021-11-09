@@ -31,7 +31,7 @@ export default EdgeIdentity = ({ navigation }) => {
         <Button title="updateIdentities()" onPress={updateIdentities}/>
         <Button title="removeIdentity())" onPress={removeIdentity}/>
         <Button title="updateIdentitiesAddItem())" onPress={updateIdentitiesAddItem}/>
-        <Button title="removeItem()" onPress={removeItem}/>
+        <Button title="removeIdentityItem()" onPress={removeIdentityItem}/>
         <Button title="isEmpty()" onPress={isEmpty}/>
         <Button title="getNamespaces()" onPress={namespacesList}/>
         <Button title="getIdentityItemsForNameSpace()" onPress={getIdentityItemsForNameSpace}/>
@@ -88,12 +88,19 @@ function updateIdentitiesAddItem () {
   var authenticatedState1 = "unknown";
   var isPrimary1 = false;
 
+  var identifier3 = "3rdID";
+  var namespace3 = "3rdNameSpace"
+  var authenticatedState3 = "unknown";
+  var isPrimary3 = false;
+
   var identityItems1  = new AEPIdentityItem(identifier1,authenticatedState1, isPrimary1);
+  var identityItems2  = new AEPIdentityItem(identifier3,authenticatedState3, isPrimary3);
 
   var map = new AEPIdentityMap();
   
   //add item 1
-  map.addItem(identityItems1, namespace2);
+  map.addItem(identityItems1, namespace1);
+  map.addItem(identityItems2, namespace3);
 
   console.log("sample app - update identity");
   AEPIdentity.updateIdentities(map); 
@@ -118,7 +125,7 @@ function removeIdentity() {
   AEPIdentity.removeIdentity(identityItems3, namespace3);
 }
 
-function removeItem() {
+function removeIdentityItem() {
   var identifier1 = "user@example.com";
   var identifier2 = "user1@examples.com";
   var identifier3 = "user2@examples.com";
@@ -135,7 +142,7 @@ function removeItem() {
   map.addItem(identityItems2, namespace1);
   console.log("sampleAppRemoveMap add " + JSON.stringify(map))
   console.log("sample app - removeItem");
-  map.removeItem(identityItems1, namespace1); 
+  map.removeIdentityItem(identityItems1, namespace1); 
   console.log("removeItem " + JSON.stringify(map))
   AEPIdentity.updateIdentities(map); 
   console.log("sampleAppRemoveMap remove " + JSON.stringify(map))
