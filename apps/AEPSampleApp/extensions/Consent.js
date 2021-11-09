@@ -28,7 +28,9 @@ export default Consent = ({ navigation }) => {
     AEPConsent.getConsents().then(currentConsents => {
       let consentsStr = JSON.stringify(currentConsents);
       setConsents(consentsStr);
-      console.log("AdobeExperienceSDK: Current consents:  " + consentsStr);
+      console.log("AdobeExperienceSDK: AEPConsent.getConsents returned current consent preferences:  " + consentsStr);
+    }).catch((error) => {
+      console.warn("AdobeExperienceSDK: AEPConsent.getConsents returned error: ", error);
     });
   }
 
@@ -53,7 +55,7 @@ function updateCollectConsent(allowed: boolean) {
 
   var consents: {[keys: string]: any} = {"consents" : {"collect" : collectConsentStatus}};
   AEPConsent.update(consents);
-  console.log("AdobeExperienceSDK: Update consents with:  " + JSON.stringify(consents));
+  console.log("AdobeExperienceSDK: AEPConsent.update called with:  " + JSON.stringify(consents));
 }
 
 function setDefaultConsent(allowed: boolean) {
