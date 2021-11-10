@@ -39,9 +39,9 @@ export default Consent = ({ navigation }) => {
         <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Consent v{version}</Text>
+        <Button title="Set Default Consent - Yes" onPress={() => setDefaultConsent(true)}/>
         <Button title="Set Collect Consent - Yes" onPress={() => updateCollectConsent(true)}/>
         <Button title="Set Collect Consent - No" onPress={() => updateCollectConsent(false)}/>
-        <Button title="Set Default Consent - Yes" onPress={() => setDefaultConsent(true)}/>
         <Button title="Get Consents" onPress={getConsents}/>
         <View style={styles.breakLine}/>
         <Text style={styles.text}>{consents}</Text>
