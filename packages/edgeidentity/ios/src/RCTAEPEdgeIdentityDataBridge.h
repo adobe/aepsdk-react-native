@@ -15,8 +15,10 @@
 
 + (NSDictionary *_Nullable)dictionaryFromIdentityMap: (nullable AEPIdentityMap *) map;
 
-+ (AEPIdentityMap *_Nullable)dictionaryToIdentityMap: (nonnull NSDictionary *) dict;
++ (AEPIdentityMap *)dictionaryToIdentityMap: (nonnull NSDictionary *) dict;
 
-+ (AEPIdentityItem *_Nullable)dictionaryToIdentityItem: (nonnull NSDictionary *) dict;
++ (AEPIdentityItem *)dictionaryToIdentityItem: (nonnull NSDictionary *) dict;
+
++ (NSString*) stringFromAuthState: (AEPAuthenticatedState) authState
 
 @end

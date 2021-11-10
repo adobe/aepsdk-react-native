@@ -16,7 +16,10 @@
 static NSString* const ID_KEY = @"id";
 static NSString* const IS_PRIMARY_KEY = @"primary";
 static NSString* const AEP_AUTH_STATE_KEY = @"authenticatedState";
-
+static NSString* const ITEM_KEY = @"items";
+static NSString* const AUTHENTICATED = @"AUTHENTICATED";
+static NSString* const LOGGED_OUT = @"LOGGED_OUT";
+static NSString* const AMBIGUOUS = @"AMBIGUOUS";
 
 + (NSDictionary *)dictionaryFromIdentityMap: (nullable AEPIdentityMap *) idmap {
     NSMutableDictionary *mapDict = [NSMutableDictionary dictionary];
@@ -26,7 +29,7 @@ static NSString* const AEP_AUTH_STATE_KEY = @"authenticatedState";
             NSMutableDictionary *itemdict = [NSMutableDictionary dictionary];
             for (AEPIdentityItem *item in items){
               itemdict[IS_PRIMARY_KEY] = @(item.primary);
-              itemdict[AEP_AUTH_STATE_KEY] = @(item.authenticatedState);
+              itemdict[AEP_AUTH_STATE_KEY] = @(item stringFromAuthState);
               itemdict[ID_KEY] = item.id ;
             
               [mapArray addObject:itemdict];
@@ -40,26 +43,61 @@ static NSString* const AEP_AUTH_STATE_KEY = @"authenticatedState";
     }
 
 + (AEPIdentityMap *)dictionaryToIdentityMap: (nonnull NSDictionary *) dict {
-     
-    return nil;
-    
+    NSDictionary *itemsMap = [[dict objectForKey:ITEM_KEY] isKindOfClass:[NSDictionary class]] ? [dict objectForKey:ITEM_KEY] : nil;
+    NSArray <NSString*>* namespaces = [itemsMap allKeys];
+    AEPIdentityMap *identityMap = [[AEPIdentityMap alloc] init];
+    for (NSString *namespace in namespaces){
+        NSArray* items = [itemsMap objectForKey:namespace];
+        for (NSDictionary *itemMap in items){
+            AEPIdentityItem *item = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityItem:itemMap];
+            
+            if (item){
+                [identityMap addItem:item withNamespace:namespace];
+            }
+        }
+        
+    }
+    return identityMap;
   }
 
 + (AEPIdentityItem *)dictionaryToIdentityItem: (nonnull NSDictionary *) dict {
+    
+    
+    NSString *identifier = [[dict objectForKey:ID_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:ID_KEY] : nil;
+    
+    if (!identifier){
+        return nil;
+    }
+    
+    NSString *authenticatedString = [[dict objectForKey:AEP_AUTH_STATE_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:AEP_AUTH_STATE_KEY] : nil;
+    
+    AEPAuthenticatedState authenticatedState = authStateFromString (authenticatedString);
 
-//    AEPAuthenticatedState *authenticatedState = [[dict objectForKey:AEP_AUTH_STATE_KEY] isKindOfClass:[AEPAuthenticatedState class]] ? [dict objectForKey:AEP_AUTH_STATE_KEY] : nil;
-//
-//
-//    NSString *id = [[dict objectForKey:ID_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:ID_KEY] : nil;
-//
-//
-//    Boolean *primary = [[dict objectForKey:IS_PRIMARY_KEY] isKindOfClass:[bool class]] ? [dict objectForKey:IS_PRIMARY_KEY] : nil;
-//
-//    return [AEPIdentityItem :dict[PRODUCT_ID_KEY]
-//                                             categoryId:[dict[CATEGORY_ID_KEY] isEqual:[NSNull null]] ? nil : dict[CATEGORY_ID_KEY]];
-//       }
-    return nil;
+    BOOL primary = [[dict objectForKey:IS_PRIMARY_KEY] boolValue];
+
+    return [[AEPIdentityItem alloc] initWithId:identifier authenticatedState:authenticatedState primary:primary];
   }
+
+static AEPAuthenticatedState authStateFromString(NSString* authStateString) {
+    if ([authStateString isEqualToString:AUTHENTICATED]) {
+           return AEPAuthenticatedStateAuthenticated;
+       } else if ([authStateString isEqualToString:LOGGED_OUT]) {
+           return AEPAuthenticatedStateLoggedOut;
+       }
+
+    return AEPAuthenticatedStateAmbiguous;
+}
+
++ (NSString*) stringFromAuthState: (AEPAuthenticatedState) authState {
+    switch (authState) {
+        case AEPAuthenticatedStateAuthenticated:
+            return AUTHENTICATED;
+        case AEPAuthenticatedStateLoggedOut:
+            return LOGGED_OUT;
+        default:
+            return AMBIGUOUS;
+    }
+}
 
 @end
 
