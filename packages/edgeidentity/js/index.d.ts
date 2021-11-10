@@ -35,5 +35,9 @@ export class AEPIdentityMap {
   
   constructor()
 
-  addItem(item: AEPIdentityItem, namespace: string)
+  addItem(item: AEPIdentityItem, namespace: string);
+  isEmpty();
+  getNamespaces();
+  getIdentityItemsForNamespace(namespace: string)
+  removeIdentityItem(item: AEPIdentityItem, namespace: string);
 }

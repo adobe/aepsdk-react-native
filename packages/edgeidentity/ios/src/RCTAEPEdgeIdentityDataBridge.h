@@ -15,9 +15,8 @@
 
 + (NSDictionary *_Nullable)dictionaryFromIdentityMap: (nullable AEPIdentityMap *) map;
 
++ (AEPIdentityMap *_Nullable)dictionaryToIdentityMap: (nonnull NSDictionary *) dict;
 
-//+ (AEPExperienceEvent *_Nullable)experienceEventFromDictionary: (nonnull NSDictionary *) dict;
-//
-//+ (NSDictionary *_Nullable)dictionaryFromEdgeEventHandler: (NSArray<AEPEdgeEventHandle *> *_Nullable) experienceEvent;
++ (AEPIdentityItem *_Nullable)dictionaryToIdentityItem: (nonnull NSDictionary *) dict;
 
 @end

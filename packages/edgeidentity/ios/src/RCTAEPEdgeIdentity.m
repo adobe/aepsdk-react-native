@@ -53,13 +53,17 @@ RCT_EXPORT_METHOD(getIdentities:(RCTPromiseResolveBlock) resolve rejecter:(RCTPr
     }];
 }
 
-RCT_EXPORT_METHOD(updateIdentities:(AEPIdentityMap * _Nullable) map) {
-    [AEPMobileEdgeIdentity updateIdentities:(AEPIdentityMap * _Nonnull) map];
+RCT_EXPORT_METHOD(updateIdentities:(nullable NSDictionary*) map) {
+    AEPIdentityMap *convertMap = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityMap:map];
+
+    [AEPMobileEdgeIdentity updateIdentities:(AEPIdentityMap * _Nonnull) convertMap];
 }
 
 RCT_EXPORT_METHOD(removeIdentity:(nullable NSDictionary*)item
                   namespace:(NSString *)namespace) {
-    [AEPMobileEdgeIdentity removeIdentityItem:(AEPIdentityItem * _Nonnull) item withNamespace:(NSString * _Nonnull) namespace];
+    
+    AEPIdentityItem *convertItem = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityItem:item];
+    [AEPMobileEdgeIdentity removeIdentityItem:(AEPIdentityItem * _Nonnull) convertItem withNamespace:(NSString * _Nonnull) namespace];
 }
 
 #pragma mark - Helper methods

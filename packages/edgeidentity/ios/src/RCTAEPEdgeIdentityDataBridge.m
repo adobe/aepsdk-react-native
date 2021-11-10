@@ -17,19 +17,6 @@ static NSString* const ID_KEY = @"id";
 static NSString* const IS_PRIMARY_KEY = @"primary";
 static NSString* const AEP_AUTH_STATE_KEY = @"authenticatedState";
 
-//
-//
-//+ (NSArray *)dictionaryFromEdgeEventHandler: (NSArray<AEPEdgeEventHandle *> *) experienceEventHandle {
-//    NSMutableArray *experienceEventArr = [NSMutableArray array];
-//    for (AEPEdgeEventHandle *expEventHandle in experienceEventHandle) {
-//        NSMutableDictionary *experienceEventHandleDic = [NSMutableDictionary dictionary];
-//        experienceEventHandleDic[TYPE_KEY] = expEventHandle.type;
-//        experienceEventHandleDic[PAYLOAD_KEY] = expEventHandle.payload;
-//        [experienceEventArr addObject:experienceEventHandleDic];
-//    }
-//
-//    return experienceEventArr;
-//}
 
 + (NSDictionary *)dictionaryFromIdentityMap: (nullable AEPIdentityMap *) idmap {
     NSMutableDictionary *mapDict = [NSMutableDictionary dictionary];
@@ -51,31 +38,28 @@ static NSString* const AEP_AUTH_STATE_KEY = @"authenticatedState";
         }
         return mapDict;
     }
-    
-//RCT_EXPORT_METHOD(getIdentifiers:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
-//    [AEPMobileIdentity getIdentifiers:^(NSArray<id<AEPIdentifiable>> * _Nullable visitorIDs, NSError * _Nullable error) {
-//        NSMutableArray *visitorIDArr = [NSMutableArray array];
-//        for (id<AEPIdentifiable> visitorId in visitorIDs) {
-//            NSMutableDictionary *visitorIdDict = [NSMutableDictionary dictionary];
-//            visitorIdDict[VISITOR_ID_ID_ORIGIN_KEY] = visitorId.origin;
-//            visitorIdDict[VISITOR_ID_ID_TYPE_KEY] = visitorId.type;
-//            visitorIdDict[VISITOR_ID_ID_KEY] = visitorId.identifier;
-//            visitorIdDict[VISITOR_ID_AUTH_STATE_KEY] = stringFromAuthState(visitorId.authenticationState);
-//            [visitorIDArr addObject:visitorIdDict];
-//        }
-//
-//        resolve(visitorIDArr);
-//    }];
-//}
-    
-  //  NSMutableDictionary *eventDict = [NSMutableDictionary dictionary];
-    //eventDict[ID_KEY] = map.;
-//    eventDict[EVENT_TYPE_KEY] = event.type;
-//    eventDict[EVENT_SOURCE_KEY] = event.source;
-//    eventDict[EVENT_DATA_KEY] = event.data;
 
-//   return eventDict;
-//}
++ (AEPIdentityMap *)dictionaryToIdentityMap: (nonnull NSDictionary *) dict {
+     
+    return nil;
+    
+  }
+
++ (AEPIdentityItem *)dictionaryToIdentityItem: (nonnull NSDictionary *) dict {
+
+//    AEPAuthenticatedState *authenticatedState = [[dict objectForKey:AEP_AUTH_STATE_KEY] isKindOfClass:[AEPAuthenticatedState class]] ? [dict objectForKey:AEP_AUTH_STATE_KEY] : nil;
+//
+//
+//    NSString *id = [[dict objectForKey:ID_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:ID_KEY] : nil;
+//
+//
+//    Boolean *primary = [[dict objectForKey:IS_PRIMARY_KEY] isKindOfClass:[bool class]] ? [dict objectForKey:IS_PRIMARY_KEY] : nil;
+//
+//    return [AEPIdentityItem :dict[PRODUCT_ID_KEY]
+//                                             categoryId:[dict[CATEGORY_ID_KEY] isEqual:[NSNull null]] ? nil : dict[CATEGORY_ID_KEY]];
+//       }
+    return nil;
+  }
 
 @end
 
