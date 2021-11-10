@@ -47,6 +47,13 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void offerDisplayed(final ReadableMap readableMap) {
+        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        Offer offer = createOffer(offerEventData);
+        offer.displayed();
+    }
+
+    @ReactMethod
     public void extensionVersion(final Promise promise) {
         promise.resolve(Optimize.extensionVersion());
     }
@@ -102,13 +109,6 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
                 sendUpdatedPropositionsEvent(decisionScopePropositionMap);
             }
         });
-    }
-
-    @ReactMethod
-    public void offerDisplayed(final ReadableMap readableMap) {
-        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
-        Offer offer = createOffer(offerEventData);
-        offer.displayed();
     }
 
     @ReactMethod

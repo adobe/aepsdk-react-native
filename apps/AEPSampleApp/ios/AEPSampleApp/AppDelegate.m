@@ -62,10 +62,11 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"3149c49c3910/bbc75cdb7849/launch-eed4d727f440-development"];
-  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileUserProfile.class, AEPMobileEdge.class, AEPMobileEdgeIdentity.class, AEPMobileMessaging.class, AEPMobileAssurance.class] completion:^{
+  [AEPMobileCore configureWithAppId:@"3149c49c3910/1405d5d17a20/launch-cdafde27097f-development"];
+  //Register AEPAssurance
+  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileUserProfile.class, AEPMobileEdge.class, AEPMobileEdgeIdentity.class, AEPMobileMessaging.class, AEPMobileOptimize.class] completion:^{
           [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-    s[AEPMobileAssurance startSessionWithUrl:[[NSURL alloc] initWithString:@"griffonlab://?adb_validation_sessionid=18f5611d-c1bf-4c75-a7f4-4aafcbfe3bfc"]];
+//    [AEPMobileAssurance startSessionWithUrl:[[NSURL alloc] initWithString:@"griffonlab://?adb_validation_sessionid=18f5611d-c1bf-4c75-a7f4-4aafcbfe3bfc"]];
     
   }
   ];
@@ -82,7 +83,7 @@ static void InitializeFlipper(UIApplication *application) {
 }
 
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-  [AEPMobileAssurance startSessionWithUrl:url];
+//  [AEPMobileAssurance startSessionWithUrl:url];
   return true;
 }
 

@@ -1,0 +1,11 @@
+framework module AEPOptimize {
+  umbrella header "AEPOptimize.h"
+
+  export *
+  module * { export * }
+}
+
+module AEPOptimize.Swift {
+    header "AEPOptimize-Swift.h"
+    requires objc
+}

@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/adobe/aepsdk-react-native",
-    "directory": "packages/messaging"
+    "directory": "packages/optimize"
   },
   "keywords": [
     "react-native",
@@ -27,10 +27,8 @@
   "author": {
     "name": "Adobe Experience Platform SDK Team"
   },
-  "peerDependencies": {
-    "@adobe/react-native-aepcore": "^1.0.0-alpha",
-    "@adobe/react-native-aepedge": "^1.0.0-alpha",
-    "@adobe/react-native-aepedgeidentity": "^1.0.0-alpha",
+  "dependencies": {
+    "react": "17.0.2",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {

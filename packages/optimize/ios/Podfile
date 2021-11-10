@@ -1,0 +1,19 @@
+# Uncomment the next line to define a global platform for your project
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+platform :ios, '11.0'
+
+target 'RCTAEPOptimize' do
+  config = use_native_modules!
+  pod 'AEPCore'
+
+  use_react_native!(
+     :path => config[:reactNativePath],
+     :hermes_enabled => false
+   )
+
+   post_install do |installer|
+     react_native_post_install(installer)
+   end
+
+end

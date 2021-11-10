@@ -1,7 +1,4 @@
 PODS:
-  - AEPAssurance (3.0.0):
-    - AEPCore (>= 3.1.0)
-    - AEPServices (>= 3.1.0)
   - AEPCore (3.3.0):
     - AEPRulesEngine (= 1.0.1)
     - AEPServices (= 3.3.0)
@@ -19,6 +16,9 @@ PODS:
     - AEPEdge (>= 1.1.0)
     - AEPEdgeIdentity (>= 1.0.0)
     - AEPServices
+  - AEPOptimize (1.0.0):
+    - AEPCore (>= 3.2.0)
+    - AEPEdge (>= 1.1.0)
   - AEPRulesEngine (1.0.1)
   - AEPServices (3.3.0)
   - AEPSignal (3.3.0):
@@ -45,9 +45,6 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
-  - RCTAEPAssurance (3.0.0-alpha.0):
-    - AEPAssurance (~> 3.0)
-    - React
   - RCTAEPCore (1.0.0-alpha.2):
     - AEPCore (~> 3.0)
     - AEPIdentity (~> 3.0)
@@ -252,6 +249,8 @@ PODS:
   - React-jsinspector (0.64.2)
   - react-native-safe-area-context (3.3.2):
     - React-Core
+  - react-native-webview (11.14.2):
+    - React-Core
   - React-perflogger (0.64.2)
   - React-RCTActionSheet (0.64.2):
     - React-Core/RCTActionSheetHeaders (= 0.64.2)
@@ -316,11 +315,9 @@ PODS:
     - React-cxxreact (= 0.64.2)
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
-  - RNCMaskedView (0.1.11):
-    - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNReanimated (2.2.2):
+  - RNReanimated (2.2.4):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -349,18 +346,18 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.8.0):
+  - RNScreens (3.9.0):
     - React-Core
     - React-RCTImage
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - AEPOptimize (from `~/Documents/optimize/aepsdk-optimize-ios`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
-  - RCTAEPAssurance (from `../../../packages/assurance`)
   - RCTAEPCore (from `../../../packages/core`)
   - RCTAEPEdge (from `../../../packages/edge`)
   - RCTAEPEdgeIdentity (from `../../../packages/edgeidentity`)
@@ -379,6 +376,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -391,7 +389,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -399,7 +396,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - AEPAssurance
     - AEPCore
     - AEPEdge
     - AEPEdgeIdentity
@@ -413,6 +409,8 @@ SPEC REPOS:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
+  AEPOptimize:
+    :path: "~/Documents/optimize/aepsdk-optimize-ios"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -423,8 +421,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
-  RCTAEPAssurance:
-    :path: "../../../packages/assurance"
   RCTAEPCore:
     :path: "../../../packages/core"
   RCTAEPEdge:
@@ -457,6 +453,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -481,8 +479,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  RNCMaskedView:
-    :path: "../node_modules/@react-native-community/masked-view"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -493,13 +489,13 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPAssurance: 18068627111e366a851dc2166239f22b665101bd
   AEPCore: 0bd46c0a859d36099bb71294874837c31235ffe6
   AEPEdge: 4208614f134d86131df95fd3420da20530fac275
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
   AEPIdentity: ad3bc0d18db4a8a1408299e56883c1db1e874551
   AEPLifecycle: a040570f7981f3d1892b9e39f3cd7b5de5280594
   AEPMessaging: 661cc08435254f3c9cc0899785c20a7952952e95
+  AEPOptimize: d7eaacb17fbf8f5f680b4fa7a5f6d242b7c96662
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
   AEPServices: ccf8d0fdfe7a7e45303aa6b3c33af0687dd49cf1
   AEPSignal: 7eb425e33e08d2bcdb039121157f2504e82e8dad
@@ -507,10 +503,9 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: cdd6f1f8ca74a9d33e4a3727af16caa19a9fae91
+  FBReactNativeSpec: 02403654be033f905d9156b55635355f3a1cca1f
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
-  RCTAEPAssurance: 419c28c8d04829cdf40b802ed5227e7ab039c329
   RCTAEPCore: e89ca896f56ef03218b8e93a16923c4732650947
   RCTAEPEdge: 323ae50007fec0771b1a6e6e0ddc3a309f0408f3
   RCTAEPEdgeIdentity: 245c00a7c8e7b27a902b7839238aa3726366f732
@@ -527,6 +522,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-webview: cc4ac8f021a832dce2979e1f48c5595341dd2fb5
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
   React-RCTAnimation: 6a2e76ab50c6f25b428d81b76a5a45351c4d77aa
@@ -539,12 +535,11 @@ SPEC CHECKSUMS:
   React-RCTVibration: 24600e3b1aaa77126989bc58b6747509a1ba14f3
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
-  RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNReanimated: 241c586663f44f19a53883c63375fdd041253960
-  RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
+  RNReanimated: 024eff8202342abf4b24e11575a16afc441dabfe
+  RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 2a644d6b375e7638e06413c828ae75a91d8f8598
+PODFILE CHECKSUM: 2c597cf6e663d606ca2c7953a87d10e476953a5a
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
