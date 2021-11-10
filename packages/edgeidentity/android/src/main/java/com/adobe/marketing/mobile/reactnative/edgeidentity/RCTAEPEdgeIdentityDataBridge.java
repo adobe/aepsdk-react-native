@@ -56,9 +56,9 @@ final class RCTAEPEdgeIdentityDataBridge {
                 for (IdentityItem item : items) {
                     WritableMap itemAsWritableMap = new WritableNativeMap();
 
-                    itemAsWritableMap.putString(ID_KEY, item.getId());
-                    itemAsWritableMap.putString(AEP_AUTH_STATE_KEY, item.getAuthenticatedState().getName());
                     itemAsWritableMap.putBoolean(IS_PRIMARY_KEY, item.isPrimary());
+                    itemAsWritableMap.putString(AEP_AUTH_STATE_KEY, item.getAuthenticatedState().getName());
+                    itemAsWritableMap.putString(ID_KEY, item.getId());
 
                     itemsAsArray.pushMap(itemAsWritableMap);
                 }

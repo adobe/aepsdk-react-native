@@ -12,6 +12,8 @@
 #import "RCTAEPEdgeIdentity.h"
 @import AEPEdgeIdentity;
 @import AEPCore;
+#import "RCTAEPEdgeIdentityDataBridge.h"
+
 
 @implementation RCTAEPEdgeIdentity
 
@@ -37,6 +39,27 @@ RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter
               resolve(experienceCloudId);
             }
     }];
+}
+
+RCT_EXPORT_METHOD(getIdentities:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    
+    [AEPMobileEdgeIdentity getIdentities:^(AEPIdentityMap * _Nullable IdentityMap, NSError * _Nullable error) {
+        
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getIdentities"];
+        } else {
+            resolve([RCTAEPEdgeIdentityDataBridge dictionaryFromIdentityMap:IdentityMap]);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(updateIdentities:(AEPIdentityMap * _Nullable) map) {
+    [AEPMobileEdgeIdentity updateIdentities:(AEPIdentityMap * _Nonnull) map];
+}
+
+RCT_EXPORT_METHOD(removeIdentity:(nullable NSDictionary*)item
+                  namespace:(NSString *)namespace) {
+    [AEPMobileEdgeIdentity removeIdentityItem:(AEPIdentityItem * _Nonnull) item withNamespace:(NSString * _Nonnull) namespace];
 }
 
 #pragma mark - Helper methods
