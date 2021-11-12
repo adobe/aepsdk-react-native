@@ -12,4 +12,6 @@ governing permissions and limitations under the License.
 */
 export class AEPConsent{
     static extensionVersion(): Promise<string>;
+    static getConsents(): Promise<Map>;
+  	static update(consents: Map);
 };
