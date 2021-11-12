@@ -14,39 +14,53 @@ governing permissions and limitations under the License.
 @format
 */
 
-import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
+import React, {useState, Component} from 'react';
+import {Button, StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
 import {AEPIdentity, AEPIdentityItem, AEPIdentityMap, AEPAuthenticatedState} from '@adobe/react-native-aepedgeidentity';
 
 export default EdgeIdentity = ({ navigation }) => {
+  const [version, setVersion] = useState('');
+  const [identities, setIdentities] = useState('');
+  const [ecid, setECID] = useState("");
+  AEPIdentity.extensionVersion().then(version => setVersion(version));
+
+  function getIdentities() {
+    AEPIdentity.getIdentities().then(currentIdentity => {
+      let identitiesStr = JSON.stringify(currentIdentity);
+      setIdentities(identitiesStr);
+      console.log("AdobeExperienceSDK: getIdentities " + identitiesStr);
+    }).catch((error) => {
+      console.warn("AdobeExperienceSDK: getIdentities returned error: ", error);
+    });
+  }
+
+  function getExperienceCloudId() {
+  AEPIdentity.getExperienceCloudId().then(experienceCloudId => {
+    setECID(experienceCloudId);
+    console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId);
+     }).catch((error) => {
+      console.warn("AdobeExperienceSDK: ECID returned error: ", error);
+    });
+  }
+  
 
   return (
     <View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
-        <Text style={styles.welcome}>EdgeIdentity</Text>
-        <Button title="extensionVersion()" onPress={edgeIdentityExtensionVersion}/>
+        <Text style={styles.welcome}>EdgeIdentity v{version}</Text>
         <Button title="getExperienceCloudId()" onPress={getExperienceCloudId}/>
-        <Button title="getIdentities()" onPress={getIdentities}/>
         <Button title="updateIdentities()" onPress={updateIdentities}/>
-        <Button title="removeIdentity())" onPress={removeIdentity}/>
-        <Button title="updateIdentitiesAddItem())" onPress={updateIdentitiesAddItem}/>
-        <Button title="removeIdentityItem()" onPress={removeIdentityItem}/>
-        <Button title="isEmpty()" onPress={isEmpty}/>
-        <Button title="getNamespaces()" onPress={namespacesList}/>
-        <Button title="getIdentityItemsForNameSpace()" onPress={getIdentityItemsForNameSpace}/>
+        <Button title="removeIdentity()" onPress={removeIdentity}/>
+        <Button title="getIdentities()" onPress={getIdentities}/>
+        <View style={styles.breakLine}/>
+        <Text>{identities}</Text>
+        <Text>{ecid}</Text>
         </ScrollView>
       </View>
   )
 }
 
-function edgeIdentityExtensionVersion() {
-  AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
-}
-
-function getExperienceCloudId() {
-  AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
-}
 
 function getIdentities() {
   AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
@@ -54,166 +68,30 @@ function getIdentities() {
 
 function updateIdentities() {
 
-  var identifier1 = "id1";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = true;
-
-  var identifier2 = "id2";
-  var namespace2 = "2ndNameSpace"
-  var authenticatedState2 = "auth";
-  var isPrimary2 = false;
-
-  var identityItems1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-  var identityItems2  = new AEPIdentityItem(identifier2, authenticatedState2, isPrimary2);
+  var identifier = "test-id";
+  var namespace = "test-namespace"
+  
+  var identityItems  = new AEPIdentityItem(identifier);
   
   var map = new AEPIdentityMap();
   
-  //add item 1
-  map.addItem(identityItems1, namespace1);
-
-  //add item 1
-  map.addItem(identityItems2, namespace1);
-
+  //add an item
+  map.addItem(identityItems, namespace);
 
   console.log("sample app - update identity");
   AEPIdentity.updateIdentities(map); 
 }
 
-function updateIdentitiesAddItem () {
-
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var namespace2 = "2ndNameSpace"
-  var authenticatedState1 = "unknown";
-  var isPrimary1 = false;
-
-  var identityItems1  = new AEPIdentityItem(identifier1,authenticatedState1, isPrimary1);
-
-  var map = new AEPIdentityMap();
-  
-  //add item 1
-  map.addItem(identityItems1, namespace2);
-
-  console.log("sample app - update identity");
-  //AEPIdentity.updateIdentities(map); 
-}
-
 function removeIdentity() {
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = true;
+  var identifier = "test-id";
+  var namespace = "test-namespace"
 
-  var identifier3 = "3rdID";
-  var namespace3 = "3rdNameSpace"
-  var authenticatedState3 = "unknown";
-  var isPrimary3 = false;
-
-  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-  var identityItems3  = new AEPIdentityItem(identifier3);
-
+  var identityItem  = new AEPIdentityItem(identifier);
+  
   console.log("sample app - removeIdentity");
-  AEPIdentity.removeIdentity(identityItems, namespace1);
-  AEPIdentity.removeIdentity(identityItems3, namespace3);
+  AEPIdentity.removeIdentity(identityItem, namespace);
 }
 
-function removeIdentityItem() {
-  var identifier1 = "user@example.com";
-  var identifier2 = "user1@examples.com";
-  var identifier3 = "user2@examples.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = true;
-  var map = new AEPIdentityMap();
-
-  var identityItems  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-  var identityItems1  = new AEPIdentityItem(identifier2, authenticatedState1, isPrimary1);
-  var identityItems2  = new AEPIdentityItem(identifier3, authenticatedState1, isPrimary1);
-  map.addItem(identityItems, namespace1);
-  map.addItem(identityItems1, namespace1);
-  map.addItem(identityItems2, namespace1);
-  console.log("sampleAppRemoveMap add " + JSON.stringify(map))
-  console.log("sample app - removeItem");
-  map.removeIdentityItem(identityItems1, namespace1); 
-  console.log("removeItem " + JSON.stringify(map))
- // AEPIdentity.updateIdentities(map); 
-  console.log("sampleAppRemoveMap remove " + JSON.stringify(map))
-}
-
-
-function isEmpty() {
-
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-
-  var identityItems1  = new AEPIdentityItem(identifier1,authenticatedState1, isPrimary1);
-  var mapNotEmpty = new AEPIdentityMap();
-  
-  mapNotEmpty.addItem(identityItems1, namespace1);
-
-  console.log("---sample app - check non empty map---");
-  var checkItemEmptyInMap = new Boolean(mapNotEmpty.isEmpty());
-  console.log("This is a non-empty map: isEmpty() = " + checkItemEmptyInMap);
-
-  var mapEmpty = new AEPIdentityMap();
-
-  console.log("---sample app - check empty map---");
-  var checkEmptyMap = new Boolean(mapEmpty.isEmpty());
-  console.log("This is an empty map: isEmpty() = " + checkEmptyMap); 
-}
-
-function namespacesList() {
-
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-
-  var identifier2 = "identifier2@example.com";
-  var namespace2 = "2ndtNameSpace"
-  var authenticatedState2 = "authenticated";
-  var isPrimary2 = "true";
-
-  var identityItems1  = new AEPIdentityItem(identifier1,authenticatedState1, isPrimary1);
-  var identityItems2  = new AEPIdentityItem(identifier2,authenticatedState2, isPrimary2);
-  var mapNotEmpty = new AEPIdentityMap();
-  
-   mapNotEmpty.addItem(identityItems1, namespace1);
-   mapNotEmpty.addItem(identityItems2, namespace2);
-
-  var namespacecheck = mapNotEmpty.getNamespaces();
-
-
-  console.log("list of namespace" + JSON.stringify(namespacecheck));
-}
-
-function getIdentityItemsForNameSpace() {
-
-  var identifier1 = "user@example.com";
-  var namespace1 = "1stNameSpace"
-  var authenticatedState1 = "authenticated";
-  var isPrimary1 = "true";
-
-  var identifier2 = "identifier2@example.com";
-  var namespace2 = "2ndtNameSpace"
-  var authenticatedState2 = "authenticated";
-  var isPrimary2 = "true";
-
-  var identityItems1  = new AEPIdentityItem(identifier1,authenticatedState1, isPrimary1);
-  var identityItems2  = new AEPIdentityItem(identifier2,authenticatedState2, isPrimary2);
-  var mapNotEmpty = new AEPIdentityMap();
-  
-  mapNotEmpty.addItem(identityItems1, namespace1);
-  mapNotEmpty.addItem(identityItems2, namespace1);
-
-  var mamespacecheck = mapNotEmpty.getIdentityItemsForNamespace(namespace1);
-
-  console.log("---sample app - getIdentityItemsForNamespace(namespace) --- ");
-  console.log("Identity items in namespace: " + JSON.stringify(mamespacecheck));
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -226,5 +104,17 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'center',
     margin: 10,
+  },
+  text: {
+    fontSize: 15,
+    textAlign: 'center',
+    margin: 5,
+  }, 
+  breakLine: {
+    borderWidth: 0.5,
+    borderColor: 'black',
+    margin: 10,
+    marginTop: 10,
+    marginBottom: 10,
   }
 });

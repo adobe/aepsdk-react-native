@@ -17,21 +17,22 @@ static NSString* const ID_KEY = @"id";
 static NSString* const IS_PRIMARY_KEY = @"primary";
 static NSString* const AEP_AUTH_STATE_KEY = @"authenticatedState";
 static NSString* const ITEM_KEY = @"items";
-static NSString* const AUTHENTICATED = @"AUTHENTICATED";
-static NSString* const LOGGED_OUT = @"LOGGED_OUT";
-static NSString* const AMBIGUOUS = @"AMBIGUOUS";
+static NSString* const AUTHENTICATED = @"authenticated";
+static NSString* const LOGGED_OUT = @"LoggedOut";
+static NSString* const AMBIGUOUS = @"ambiguous";
 
 + (NSDictionary *)dictionaryFromIdentityMap: (nullable AEPIdentityMap *) idmap {
     NSMutableDictionary *mapDict = [NSMutableDictionary dictionary];
-    NSMutableArray *mapArray = [NSMutableArray array];
+    
         for (NSString *namespace in idmap.namespaces) {
             NSArray* items = [idmap getItemsWithNamespace:namespace];
+            NSMutableArray *mapArray = [NSMutableArray array];
             NSMutableDictionary *itemdict = [NSMutableDictionary dictionary];
             for (AEPIdentityItem *item in items){
               itemdict[IS_PRIMARY_KEY] = @(item.primary);
-              itemdict[AEP_AUTH_STATE_KEY] = @(item stringFromAuthState);
+              itemdict[AEP_AUTH_STATE_KEY] = stringFromAuthState(item.authenticatedState);
               itemdict[ID_KEY] = item.id ;
-            
+                
               [mapArray addObject:itemdict];
             }
             
@@ -39,6 +40,7 @@ static NSString* const AMBIGUOUS = @"AMBIGUOUS";
                 [mapDict setObject:mapArray forKey:namespace];
             }
         }
+      
         return mapDict;
     }
 
@@ -57,6 +59,7 @@ static NSString* const AMBIGUOUS = @"AMBIGUOUS";
         }
         
     }
+    
     return identityMap;
   }
 
@@ -88,7 +91,7 @@ static AEPAuthenticatedState authStateFromString(NSString* authStateString) {
     return AEPAuthenticatedStateAmbiguous;
 }
 
-+ (NSString*) stringFromAuthState: (AEPAuthenticatedState) authState {
+static NSString* stringFromAuthState(AEPAuthenticatedState authState) {
     switch (authState) {
         case AEPAuthenticatedStateAuthenticated:
             return AUTHENTICATED;
