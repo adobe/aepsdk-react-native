@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
-
 import android.annotation.SuppressLint;
 import android.util.Log;
 
@@ -38,7 +37,6 @@ final class RCTAEPEdgeIdentityDataBridge {
     private static final String ITEMS = "items";
 
     private static final String TAG = "RCTAEPEdgeIdentityDataBridge";
-
 
     static WritableMap mapFromIdentityMap(final IdentityMap map) {
         if (map == null) {
