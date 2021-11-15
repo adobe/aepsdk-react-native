@@ -15,9 +15,9 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const AUTHENTICATED = "AUTHENTICATED";
-const LOGGED_OUT = "LOGGED_OUT";
-const AMBIGUOUS = "AMBIGUOUS";
+const AUTHENTICATED = "AEPAuthenticatedStateAuthenticated";
+const LOGGED_OUT = "AEPAuthenticatedStateLoggedOut";
+const AMBIGUOUS = "AEPAuthenticatedStateAuthenticated.ambiguous";
 
 class AEPAuthenticatedState {
 
