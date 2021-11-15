@@ -107,6 +107,7 @@ final class RCTAEPEdgeIdentityDataBridge {
             return null;
         }
 
+        //TO DO, revisit
         try {
             getNullableBoolean(map, IS_PRIMARY_KEY);
         } catch (Exception e) {

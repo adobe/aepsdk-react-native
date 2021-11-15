@@ -87,4 +87,3 @@ RCT_EXPORT_METHOD(removeIdentity:(nullable NSDictionary*)item
 }
 
 @end
-  

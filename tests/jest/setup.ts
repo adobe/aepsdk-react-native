@@ -20,6 +20,9 @@ jest.doMock('react-native', () => {
                 AEPEdgeIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getIdentities: jest.fn(() => new Promise(resolve => resolve(''))),
+                    updateIdentities: jest.fn(),
+                    removeIdentity: jest.fn(),
                 },
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
