@@ -60,36 +60,22 @@ export default EdgeIdentity = ({ navigation }) => {
   )
 }
 
-function getIdentities() {
-  AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
-}
-
 function updateIdentities() {
-
-  let identifier = "test-id";
-  let namespace = "test-namespace"
-  let authenticatedState1 = AEPAuthenticatedState.AUTHENTICATED;
-  let isPrimary1 = true;
-  
-  let identityItems  = new AEPIdentityItem(identifier, authenticatedState1, isPrimary1);
-  
-  let map = new AEPIdentityMap();
-  
-  //add an item
-  map.addItem(identityItems, namespace);
+  let identityMap = new AEPIdentityMap();
+  let item1  = new AEPIdentityItem("id1", AEPAuthenticatedState.AUTHENTICATED, true);  
+  let namespace = "namespace1";
+  identityMap.addItem(item1, namespace);
 
   console.log("sample app - update identity");
-  AEPIdentity.updateIdentities(map); 
+  AEPIdentity.updateIdentities(identityMap); 
 }
 
 function removeIdentity() {
-  let identifier = "test-id";
-  let namespace = "test-namespace"
-
-  let identityItem  = new AEPIdentityItem(identifier);
+  let namespace = "namespace1";
+  let item1 = new AEPIdentityItem("id1");
   
   console.log("sample app - removeIdentity");
-  AEPIdentity.removeIdentity(identityItem, namespace);
+  AEPIdentity.removeIdentity(item1, namespace);
 }
 
 
