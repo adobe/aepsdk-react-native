@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
-import {AEPEdge, AEPExperienceEvent, AEPEdgeEventHandle} from '@adobe/react-native-aepedge';
+import {Edge, ExperienceEvent, EdgeEventHandle} from '@adobe/react-native-aepedge';
 
 export default Edge = ({ navigation }) => {
 
@@ -33,23 +33,23 @@ export default Edge = ({ navigation }) => {
 }
 
 function edgeExtensionVersion() {
-  AEPEdge.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdge version: " + version));
+  Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge version: " + version));
 }
 
 function sendEvent() {
   var xdmData  = {"eventType" : "SampleXDMEvent"};
   var data  = {"free": "form", "data": "example"};
-  var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
+  var experienceEvent = new ExperienceEvent(xdmData, data, "identifierValue");
  
-  AEPEdge.sendEvent(experienceEvent);
+  Edge.sendEvent(experienceEvent);
 }
 
 function sendEventWithResponseHandler() {
   var xdmData  = {"eventType" : "SampleXDMEvent"};
   var data  = {"free": "form", "data": "example"};
-  var experienceEvent = new AEPExperienceEvent(xdmData, data, "identifierValue");
+  var experienceEvent = new ExperienceEvent(xdmData, data, "identifierValue");
   
-  AEPEdge.sendEvent(experienceEvent).then(eventHandle => console.log("AdobeExperienceSDK: AEPEdgeEventHandle = " + JSON.stringify(eventHandle)));
+  Edge.sendEvent(experienceEvent).then(eventHandle => console.log("AdobeExperienceSDK: EdgeEventHandle = " + JSON.stringify(eventHandle)));
 }
 
 const styles = StyleSheet.create({

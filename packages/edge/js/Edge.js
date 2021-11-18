@@ -17,24 +17,28 @@ governing permissions and limitations under the License.
 
 const RCTAEPEdge = require('react-native').NativeModules.AEPEdge;
 
-import type {AEPExperienceEvent} from './models/AEPExperienceEvent';
-import type {AEPEdgeEventHandle} from './models/AEPEdgeEventHandle';
+import type {ExperienceEvent} from './models/ExperienceEvent';
+import type {EdgeEventHandle} from './models/EdgeEventHandle';
 
 module.exports = {
   /**
-   * Returns the version of the AEPEdge extension
-   * @param  {string} Promise a promise that resolves with the extension verison
+   * Returns the version of the Edge extension
+   * @return {string} Promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdge.extensionVersion());
   },
 
  /**
-   * Edge API to send an Experience Event
+   * Send an Experience Event to Adobe Experience Edge
    *
-   * @param experieneceEvent Event to be sent to Adobe Experience Edge
+   * @param experienceEvent Event to be sent to Adobe Experience Edge
+   * @return Promise fulfilled when the request is complete, returning the associated 
+   * response handles received from the Adobe Experience Edge or rejected 
+   * if an unexpected error occured; it may return an empty array
+   * if no handles were returned for the given experienceEvent
    */
-  sendEvent(experienceEvent: AEPExperienceEvent): Promise<Array<AEPEdgeEventHandle>> {
+  sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>> {
      return Promise.resolve(RCTAEPEdge.sendEvent(experienceEvent));
   }
 };
