@@ -13,9 +13,9 @@ governing permissions and limitations under the License.
 export class AEPIdentity{
     static extensionVersion(): Promise<string>;
     static getExperienceCloudId(): Promise<string>;
-    static getIdentities(): Promise<IdentityMap>;
+    static getIdentities(): Promise<AEPIdentityMap>;
     static updateIdentities(identityMap: AEPIdentityMap);
-    static removeIdentity(item: IdentityItem , namespace: string);
+    static removeIdentity(item: AEPIdentityItem, namespace: string);
 };
 
 export class AEPAuthenticatedState {

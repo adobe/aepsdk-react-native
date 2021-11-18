@@ -19,77 +19,84 @@ import AEPIdentityItem from './AEPIdentityItem';
 
 class AEPIdentityMap {
   items: {string: Array<AEPIdentityItem>} = {};
-  namespace:string;
 
   constructor() {}
 
   /**
-   * @brief Add Item to Identity Map
-  */
+   * Adds an `AEPIdentityItem` to this `AEPIdentityMap`
+   */
   addItem(item: AEPIdentityItem, namespace: string) {
-    if (item === null) {
+    if (item == null || !namespace) {
       return;
-  }
+    }
+    if (!item.id || item.id.length === 0) {
+      return;
+    }
 
-    if (namespace === null) {
-     return;
-  }
-
-     // add item to the existing namespace
-  if (this.items[namespace] !== undefined) {
-      var list = this.items[namespace];
-      list.push(item);
-      this.items[namespace] = list;   
-  } else {
+    let itemCopy = copyItem(item);
+    // add item to the existing namespace
+    if (this.items[namespace] !== undefined) {
+      var index = this.items[namespace].findIndex(e => equalIds(e.id, itemCopy.id));
+      if (index !== -1) {
+        this.items[namespace][index] = itemCopy;
+      } else {
+        this.items[namespace].push(itemCopy); 
+      }
+    } else {
       // creates new list with the item in it
-      this.items[namespace] = [item];
+      this.items[namespace] = [itemCopy];
     }
   }
 
-  // /**
-  // * @brief Check if IdentityMap is empty
-  // */
+  /**
+   * Checks if this `AEPIdentityMap` is empty
+   */
   isEmpty() {
     return !Object.keys(this.items).length;
   }
 
   /**
-  * @brief Get a list of namespaces
-  */
+   * Gets a list of all namespaces available in this `AEPIdentityMap`
+   */
   getNamespaces() {
     return Object.keys(this.items);
   }
 
   /**
-  * @brief Get a list of items for a given namespace
+  * Retrieves the AEPIdentityItem s for a given namespace
   */
-  getIdentityItemsForNamespace(namespace: string) {
-    var namespacesKey = Object.assign({}, this.items[namespace]);
+  getIdentityItemsForNamespace(namespace: string) : Promise<?Array<AEPIdentityItem>> {
+    var namespacesKey = Object.assign([], this.items[namespace]);
     return namespacesKey;
   }
 
   /**
-  * @brief Remove Items to Identity Item
-  */
+   * Removes the provided `AEPIdentityItem` for a namespace from the `AEPIdentityMap`
+   */
  removeItem(item: AEPIdentityItem, namespace: string) {
-  if (item === null) {
+  if (item == null || !namespace) {
     return;
   }
 
-  if (namespace === null) {
-   return;
+  if (!item.id || item.id.length === 0) {
+    return;
   }
 
   // remove item from the existing namespace
   if (this.items[namespace] !== undefined) {
-    var list = this.items[namespace].filter(e => e.id.toLowerCase() !== item.id.toLowerCase())
+    var list = this.items[namespace].filter(e => !equalIds(e.id, item.id))
     this.items[namespace] = list;  
-   
-  } else {
-     this.items[namespace] = [item] 
-     console.log("removeItem - no item is removed");
   }
- }
+ } 
+}
+
+function equalIds(id1: string, id2: string): Promise<boolean> {
+  return id1.toLowerCase() === id2.toLowerCase()
+}
+
+function copyItem(item: AEPIdentityItem) : Promise<AEPIdentityItem> {
+  var clonedItem = new AEPIdentityItem(item.id, item.authenticatedState, item.primary);
+  return clonedItem;
 }
 
 module.exports = AEPIdentityMap;

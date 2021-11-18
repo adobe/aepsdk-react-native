@@ -61,13 +61,15 @@ export default EdgeIdentity = ({ navigation }) => {
 }
 
 function updateIdentities() {
-  let identityMap = new AEPIdentityMap();
-  let item1  = new AEPIdentityItem("id1", AEPAuthenticatedState.AUTHENTICATED, true);  
-  let namespace = "namespace1";
-  identityMap.addItem(item1, namespace);
+  var namespace1 = "namespace1";
+  var item1  = new AEPIdentityItem("id1", AEPAuthenticatedState.AUTHENTICATED, false);
+  var item2  = new AEPIdentityItem("id2");
 
+  var map = new AEPIdentityMap();
+  map.addItem(item1, namespace1);
+  map.addItem(item2, namespace1);
   console.log("sample app - update identity");
-  AEPIdentity.updateIdentities(identityMap); 
+  AEPIdentity.updateIdentities(map);
 }
 
 function removeIdentity() {
