@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 */
 export class Edge{
     static extensionVersion(): Promise<string>;
-    static sendEvent(event: ExperienceEvent): Promise<EdgeEventHandle>;
+    static sendEvent(experienceEvent: ExperienceEvent): Promise<EdgeEventHandle>;
 }
 
 export class EdgeEventHandle{
