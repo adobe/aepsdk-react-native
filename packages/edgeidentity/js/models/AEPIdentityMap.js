@@ -60,14 +60,15 @@ class AEPIdentityMap {
     return Object.keys(this.items);
   }
 
-     /**
+  /**
   * @brief Get a list of items for a given namespace
   */
   getIdentityItemsForNamespace(namespace: string) {
     var namespacesKey = Object.assign({}, this.items[namespace]);
     return namespacesKey;
   }
-/**
+
+  /**
   * @brief Remove Items to Identity Item
   */
  removeItem(item: AEPIdentityItem, namespace: string) {
@@ -81,11 +82,14 @@ class AEPIdentityMap {
 
   // remove item from the existing namespace
   if (this.items[namespace] !== undefined) {
-    
-    var list = this.items[namespace].filter(e => e !== item);
+    var list = this.items[namespace].filter(e => e.id.toLowerCase() !== item.id.toLowerCase())
     this.items[namespace] = list;  
+   
+  } else {
+     this.items[namespace] = [item] 
+     console.log("removeItem - no item is removed");
   }
-}
+ }
 }
 
 module.exports = AEPIdentityMap;

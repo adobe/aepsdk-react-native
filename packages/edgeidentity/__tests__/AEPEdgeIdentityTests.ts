@@ -104,7 +104,7 @@ describe('AEPEdgeIdentity', () => {
    
     let idmap1 = new AEPIdentityMap();
 
-        let expectedidmap = {"items": { "1stNameSpace" : [{"id": identifier1, "authenticatedState": authenticatedState1, "primary": isPrimary1}], "2ndNameSpace" : [{"id": identifier3, "authenticatedState": authenticatedState3, "primary": isPrimary2}, {"id": identifier4, "authenticatedState": authenticatedState2, "primary": isPrimary2}]}}; 
+    let expectedidmap = {"items": { "1stNameSpace" : [{"id": identifier1, "authenticatedState": authenticatedState1, "primary": isPrimary1}], "2ndNameSpace" : [{"id": identifier3, "authenticatedState": authenticatedState3, "primary": isPrimary2}, {"id": identifier4, "authenticatedState": authenticatedState2, "primary": isPrimary2}]}}; 
 
     //add item 1
     idmap1.addItem(identityItems1, namespace1);
