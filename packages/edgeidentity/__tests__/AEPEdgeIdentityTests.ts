@@ -101,10 +101,10 @@ describe('AEPEdgeIdentity', () => {
     let identityItems2  = new AEPIdentityItem(identifier2, authenticatedState2, isPrimary2);
     let identityItems3  = new AEPIdentityItem(identifier3, authenticatedState3, isPrimary2);
     let identityItems4  = new AEPIdentityItem(identifier4, authenticatedState2);
-
+   
     let idmap1 = new AEPIdentityMap();
 
-        let expectedidmap = {"items": { "1stNameSpace" : [{"id": identifier1, "authenticatedState": authenticatedState1, "primary": isPrimary1}], "2ndNameSpace" : [{"id": identifier3, "authenticatedState": authenticatedState3, "primary": isPrimary2}, {"id": identifier4, "authenticatedState": authenticatedState2, "primary": isPrimary2}]}}; 
+    let expectedidmap = {"items": { "1stNameSpace" : [{"id": identifier1, "authenticatedState": authenticatedState1, "primary": isPrimary1}], "2ndNameSpace" : [{"id": identifier3, "authenticatedState": authenticatedState3, "primary": isPrimary2}, {"id": identifier4, "authenticatedState": authenticatedState2, "primary": isPrimary2}]}}; 
 
     //add item 1
     idmap1.addItem(identityItems1, namespace1);
@@ -119,7 +119,7 @@ describe('AEPEdgeIdentity', () => {
     idmap1.addItem(identityItems4, namespace2);
 
     //remove item 2
-    idmap1.removeIdentityItem(identityItems2, namespace1);
+    idmap1.removeItem(identityItems2, namespace1);
 
     let checkEmpty = idmap1.isEmpty();
     console.log("check isEmpty: (should be false) " + checkEmpty);
