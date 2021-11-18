@@ -18,7 +18,7 @@ static NSString* const IS_PRIMARY_KEY = @"primary";
 static NSString* const AEP_AUTH_STATE_KEY = @"authenticatedState";
 static NSString* const ITEM_KEY = @"items";
 static NSString* const AUTHENTICATED = @"authenticated";
-static NSString* const LOGGED_OUT = @"LoggedOut";
+static NSString* const LOGGED_OUT = @"loggedOut";
 static NSString* const AMBIGUOUS = @"ambiguous";
 
 + (NSDictionary *)dictionaryFromIdentityMap: (nullable AEPIdentityMap *) idmap {
@@ -57,14 +57,12 @@ static NSString* const AMBIGUOUS = @"ambiguous";
                 [identityMap addItem:item withNamespace:namespace];
             }
         }
-        
     }
     
     return identityMap;
   }
 
 + (AEPIdentityItem *)dictionaryToIdentityItem: (nonnull NSDictionary *) dict {
-    
     
     NSString *identifier = [[dict objectForKey:ID_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:ID_KEY] : nil;
     

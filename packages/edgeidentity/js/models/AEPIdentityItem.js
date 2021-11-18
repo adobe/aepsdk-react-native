@@ -15,14 +15,14 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-import type {AEPAuthenticatedState} from './AEPAuthenticatedState';
+import AEPAuthenticatedState from './AEPAuthenticatedState';
 
 class AEPIdentityItem {
   id: string;
   authenticatedState: AEPAuthenticatedState;
   primary: boolean;
 
-  constructor(id: string, authenticatedState: AEPAuthenticatedState, primary: boolean = false) {
+  constructor(id: string, authenticatedState: AEPAuthenticatedState = AEPAuthenticatedState.AMBIGUOUS, primary: boolean = false) {
   	this.id = id;
     this.authenticatedState = authenticatedState;
     this.primary = primary

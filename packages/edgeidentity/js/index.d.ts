@@ -39,5 +39,5 @@ export class AEPIdentityMap {
   isEmpty();
   getNamespaces();
   getIdentityItemsForNamespace(namespace: string)
-  removeIdentityItem(item: AEPIdentityItem, namespace: string);
+  removeItem(item: AEPIdentityItem, namespace: string);
 }

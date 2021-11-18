@@ -28,12 +28,10 @@ class AEPIdentityMap {
   */
   addItem(item: AEPIdentityItem, namespace: string) {
     if (item === null) {
-      console.log("add - ignore addItem, item can't be null");
       return;
   }
 
     if (namespace === null) {
-     console.log("add - ignore addItem, namespaces can't be null");
      return;
   }
 
@@ -59,50 +57,39 @@ class AEPIdentityMap {
   * @brief Get a list of namespaces
   */
   getNamespaces() {
-    var namespacesKey: Array<String>;
-    if (Object.keys(this.items).length === 0) {
-       namespacesKey = " ";
-    } else {
-      namespacesKey = Object.keys(this.items)  
-    }   
-    return namespacesKey; 
+    return Object.keys(this.items);
   }
 
-     /**
+  /**
   * @brief Get a list of items for a given namespace
   */
   getIdentityItemsForNamespace(namespace: string) {
-    var namespacesKey: Array<String>;
-        
-    namespacesKey = this.items[namespace]; 
-
-    //To Do, add log for undefined namespaces.
+    var namespacesKey = Object.assign({}, this.items[namespace]);
     return namespacesKey;
   }
-/**
+
+  /**
   * @brief Remove Items to Identity Item
   */
- removeIdentityItem(item: AEPIdentityItem, namespace: string) {
+ removeItem(item: AEPIdentityItem, namespace: string) {
   if (item === null) {
-    console.log("removeItem - ignore to remove item, item can't be null");
     return;
-}
+  }
 
   if (namespace === null) {
-   console.log("removeItem - ignore to remove item, namespaces can't be null");
    return;
   }
 
-   // remove item from the existing namespace
+  // remove item from the existing namespace
   if (this.items[namespace] !== undefined) {
-    var list = this.items[namespace].filter(e => e !== item)
+    var list = this.items[namespace].filter(e => e.id.toLowerCase() !== item.id.toLowerCase())
     this.items[namespace] = list;  
    
   } else {
      this.items[namespace] = [item] 
      console.log("removeItem - no item is removed");
   }
-}
+ }
 }
 
 module.exports = AEPIdentityMap;
