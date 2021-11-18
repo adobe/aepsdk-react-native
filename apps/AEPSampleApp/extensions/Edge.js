@@ -13,43 +13,39 @@ governing permissions and limitations under the License.
 @format
 */
 
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Edge, ExperienceEvent, EdgeEventHandle} from '@adobe/react-native-aepedge';
 
-export default Edge = ({ navigation }) => {
+export default EdgeView = ({ navigation }) => {
+  const [version, setVersion] = useState('');
+  const [eventHandles, setEventHandles] = useState('');
+
+  Edge.extensionVersion().then(version => setVersion(version));
+
+  function sendEvent(datasetId: String) {
+    var xdmData  = {"eventType" : "SampleXDMEvent"};
+    var data  = {"free": "form", "data": "example"};
+    var experienceEvent = new ExperienceEvent(xdmData, data, datasetId);
+   
+    Edge.sendEvent(experienceEvent).then(eventHandles => {
+      let eventHandlesStr = JSON.stringify(eventHandles);
+      console.log("AdobeExperienceSDK: EdgeEventHandles = " + eventHandlesStr);
+      setEventHandles(eventHandlesStr);
+    });
+  }
 
   return (
     <View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
-        <Text style={styles.welcome}>Edge</Text>
-        <Button title="extensionVersion()" onPress={edgeExtensionVersion}/>
-        <Button title="sendEvent()" onPress={sendEvent}/>
-        <Button title="sendEventWithResponseHandler()" onPress={sendEventWithResponseHandler}/>
+        <Text style={styles.welcome}>Edge v{version}</Text>
+        <Button title="sendEvent()" onPress={() => sendEvent()}/>
+        <Button title="sendEvent() to Dataset" onPress={() => sendEvent("datasetIdExample")}/>
+        <Text style={styles.text}>Response event handles: {eventHandles}</Text>
         </ScrollView>
       </View>
   )
-}
-
-function edgeExtensionVersion() {
-  Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge version: " + version));
-}
-
-function sendEvent() {
-  var xdmData  = {"eventType" : "SampleXDMEvent"};
-  var data  = {"free": "form", "data": "example"};
-  var experienceEvent = new ExperienceEvent(xdmData, data, "identifierValue");
- 
-  Edge.sendEvent(experienceEvent);
-}
-
-function sendEventWithResponseHandler() {
-  var xdmData  = {"eventType" : "SampleXDMEvent"};
-  var data  = {"free": "form", "data": "example"};
-  var experienceEvent = new ExperienceEvent(xdmData, data, "identifierValue");
-  
-  Edge.sendEvent(experienceEvent).then(eventHandle => console.log("AdobeExperienceSDK: EdgeEventHandle = " + JSON.stringify(eventHandle)));
 }
 
 const styles = StyleSheet.create({
@@ -63,5 +59,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'center',
     margin: 10,
-  }
+  }, 
+  text: {
+    fontSize: 15,
+    textAlign: 'center',
+    margin: 5,
+  },
 });

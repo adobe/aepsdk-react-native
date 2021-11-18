@@ -7,7 +7,7 @@ import Core from './extensions/Core';
 import Identity from './extensions/Identity';
 import Messaging from './extensions/Messaging';
 import EdgeIdentity from './extensions/EdgeIdentity';
-import Edge from './extensions/Edge';
+import EdgeView from './extensions/Edge';
 import Assurance from './extensions/Assurance';
 
 function HomeScreen({ navigation }) {
@@ -29,7 +29,7 @@ function HomeScreen({ navigation }) {
         onPress={() => navigation.navigate('Messaging')}
         title="Messaging"/>
       <Button
-        onPress={() => navigation.navigate('Edge')}
+        onPress={() => navigation.navigate('EdgeView')}
         title="Edge"
       />
       <Button
@@ -56,7 +56,7 @@ export default function App() {
         <Drawer.Screen name="Identity" component={Identity} />
         <Drawer.Screen name="Messaging" component={Messaging}/>
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
-        <Drawer.Screen name="Edge" component={Edge} />
+        <Drawer.Screen name="EdgeView" component={EdgeView} />
         <Drawer.Screen name="Assurance" component={Assurance} />
       </Drawer.Navigator>
     </NavigationContainer>
