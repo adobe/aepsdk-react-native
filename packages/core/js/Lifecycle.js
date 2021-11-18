@@ -9,18 +9,21 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
 @format
 */
 
-import { NativeModules } from 'react-native';
-import {AEPLifecycle} from '../';
+'use strict';
 
-describe('AEPLifecycle', () => {
+const RCTAEPLifecycle = require('react-native').NativeModules.AEPLifecycle;
 
-  it('extensionVersion is called', async () => {
-    expect(AEPLifecycle.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPLifecycle, 'extensionVersion');
-    await AEPLifecycle.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
-});
+module.exports = {
+  /**
+   * Returns the version of the Lifecycle extension
+   * @param  {string} Promise a promise that resolves with the extension verison
+   */
+  extensionVersion(): Promise<string> {
+    return Promise.resolve(RCTAEPLifecycle.extensionVersion());
+  },
+
+};

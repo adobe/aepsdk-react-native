@@ -15,18 +15,18 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
-const OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
-const UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
+const AUTHENTICATED = "AEP_VISITOR_AUTH_STATE_AUTHENTICATED";
+const LOGGED_OUT = "AEP_VISITOR_AUTH_STATE_LOGGED_OUT";
+const UNKNOWN = "AEP_VISITOR_AUTH_STATE_UNKNOWN";
 
-class AEPMobilePrivacyStatus {
+class MobileVisitorAuthenticationState {
 
-  static get OPT_IN() {
-    return OPT_IN;
+  static get AUTHENTICATED() {
+    return AUTHENTICATED;
   }
 
-  static get OPT_OUT() {
-    return OPT_OUT;
+  static get LOGGED_OUT() {
+    return LOGGED_OUT;
   }
 
   static get UNKNOWN() {
@@ -35,4 +35,4 @@ class AEPMobilePrivacyStatus {
 
 }
 
-module.exports = AEPMobilePrivacyStatus;
+module.exports = MobileVisitorAuthenticationState;

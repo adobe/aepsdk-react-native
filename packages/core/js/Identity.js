@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 const RCTAEPIdentity = require('react-native').NativeModules.AEPIdentity;
 
-import type {AEPVisitorID} from './models/AEPVisitorID';
+import type { VisitorID } from './models/VisitorID';
 
 module.exports = {
   /**
@@ -39,12 +39,12 @@ module.exports = {
    * These IDs are preserved between app upgrades, are saved and restored during the standard application backup process,
    * and are removed at uninstall.
    *
-   * If the current SDK privacy status is \ref AEPMobilePrivacyStatusOptOut, then this operation performs no action.
+   * If the current SDK privacy status is \ref PrivacyStatusOptOut, then this operation performs no action.
    *
    * @param identifiers a dictionary of customer IDs
-   * @see AEPMobilePrivacyStatus
+   * @see PrivacyStatus
    */
-  syncIdentifiers(identifiers?: {string: string}) {
+  syncIdentifiers(identifiers?: { string: string }) {
     RCTAEPIdentity.syncIdentifiers(identifiers);
   },
 
@@ -58,13 +58,13 @@ module.exports = {
    * These IDs are preserved between app upgrades, are saved and restored during the standard application backup process,
    * and are removed at uninstall.
    *
-   * If the current SDK privacy status is \ref AEPMobilePrivacyStatusOptOut, then this operation performs no action.
+   * If the current SDK privacy status is \ref PrivacyStatusOptOut, then this operation performs no action.
    *
    * @param identifiers a dictionary of customer IDs
-   * @param authenticationState a valid \ref AEPMobileVisitorAuthenticationState value.
-   * @see AEPMobilePrivacyStatus
+   * @param authenticationState a valid \ref MobileVisitorAuthenticationState value.
+   * @see PrivacyStatus
    */
-  syncIdentifiersWithAuthState(identifiers?: {string: string}, authenticationState: string) {
+  syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) {
     RCTAEPIdentity.syncIdentifiersWithAuthState(identifiers, authenticationState);
   },
 
@@ -79,12 +79,12 @@ module.exports = {
    * This ID is preserved between app upgrades, is saved and restored during the standard application backup process,
    * and is removed at uninstall.
    *
-   * If the current SDK privacy status is \ref AEPMobilePrivacyStatusOptOut, then this operation performs no action.
+   * If the current SDK privacy status is \ref PrivacyStatusOptOut, then this operation performs no action.
    *
    * @param identifierType    a unique type to identify this customer ID
    * @param identifier        the customer ID to set
-   * @param authenticationState a valid \ref AEPMobileVisitorAuthenticationState value.
-   * @see AEPMobilePrivacyStatus
+   * @param authenticationState a valid \ref MobileVisitorAuthenticationState value.
+   * @see PrivacyStatus
    */
   syncIdentifier(identifierType: String, identifier: String, authenticationState: string) {
     RCTAEPIdentity.syncIdentifier(identifierType, identifier, authenticationState);
@@ -130,7 +130,7 @@ module.exports = {
    * @see AEPIdentity::syncIdentifier:identifier:authentication:
    * @see AEPIdentity::syncIdentifiers:
    */
-  getIdentifiers(): Promise<Array<?AEPVisitorID>> {
+  getIdentifiers(): Promise<Array<?VisitorID>> {
     return RCTAEPIdentity.getIdentifiers();
   },
 

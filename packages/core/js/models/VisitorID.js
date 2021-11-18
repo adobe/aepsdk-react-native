@@ -15,24 +15,21 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const AUTHENTICATED = "AEP_VISITOR_AUTH_STATE_AUTHENTICATED";
-const LOGGED_OUT = "AEP_VISITOR_AUTH_STATE_LOGGED_OUT";
-const UNKNOWN = "AEP_VISITOR_AUTH_STATE_UNKNOWN";
+import type { MobileVisitorAuthenticationState } from './MobileVisitorAuthenticationState';
 
-class AEPMobileVisitorAuthenticationState {
+class VisitorID {
+  idOrigin: string;
+  idType: string;
+  identifier: string;
+  authenticationState: MobileVisitorAuthenticationState;
 
-  static get AUTHENTICATED() {
-    return AUTHENTICATED;
-  }
-
-  static get LOGGED_OUT() {
-    return LOGGED_OUT;
-  }
-
-  static get UNKNOWN() {
-    return UNKNOWN;
+  constructor(idOrigin?: string, idType: string, id?: string, authenticationState?: MobileVisitorAuthenticationState) {
+    this.idOrigin = idOrigin;
+    this.idType = idType;
+    this.identifier = id;
+    this.authenticationState = authenticationState;
   }
 
 }
 
-module.exports = AEPMobileVisitorAuthenticationState;
+module.exports = VisitorID;

@@ -15,15 +15,24 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const RCTAEPLifecycle = require('react-native').NativeModules.AEPLifecycle;
+const OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
+const OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
+const UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
 
-module.exports = {
-  /**
-   * Returns the version of the AEPLifecycle extension
-   * @param  {string} Promise a promise that resolves with the extension verison
-   */
-  extensionVersion(): Promise<string> {
-    return Promise.resolve(RCTAEPLifecycle.extensionVersion());
-  },
+class PrivacyStatus {
 
-};
+  static get OPT_IN() {
+    return OPT_IN;
+  }
+
+  static get OPT_OUT() {
+    return OPT_OUT;
+  }
+
+  static get UNKNOWN() {
+    return UNKNOWN;
+  }
+
+}
+
+module.exports = PrivacyStatus;

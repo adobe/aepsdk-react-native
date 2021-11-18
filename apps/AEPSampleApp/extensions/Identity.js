@@ -14,57 +14,57 @@ governing permissions and limitations under the License.
 */
 
 import React from 'react';
-import {Button, Text, View, ScrollView} from 'react-native';
-import {AEPIdentity, AEPMobileVisitorAuthenticationState} from '@adobe/react-native-aepcore';
+import { Button, Text, View, ScrollView } from 'react-native';
+import { Identity, MobileVisitorAuthenticationState } from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
 
 export default Identity = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-        <ScrollView contentContainerStyle={{ marginTop: 75 }}>
+      <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Identity</Text>
-        <Button title="extensionVersion()" onPress={identityExtensionVersion}/>
-        <Button title="syncIdentifiers()" onPress={syncIdentifiers}/>
-        <Button title="syncIdentifiersWithAuthState()" onPress={syncIdentifiersWithAuthState}/>
-        <Button title="syncIdentifier()" onPress={syncIdentifier}/>
-        <Button title="appendVisitorInfoForURL()" onPress={appendVisitorInfoForURL}/>
-        <Button title="getUrlVariables()" onPress={getUrlVariables}/>
-        <Button title="getIdentifiers()" onPress={getIdentifiers}/>
-        <Button title="getExperienceCloudId()" onPress={getExperienceCloudId}/>
-        </ScrollView>
-      </View>
+        <Button title="extensionVersion()" onPress={identityExtensionVersion} />
+        <Button title="syncIdentifiers()" onPress={syncIdentifiers} />
+        <Button title="syncIdentifiersWithAuthState()" onPress={syncIdentifiersWithAuthState} />
+        <Button title="syncIdentifier()" onPress={syncIdentifier} />
+        <Button title="appendVisitorInfoForURL()" onPress={appendVisitorInfoForURL} />
+        <Button title="getUrlVariables()" onPress={getUrlVariables} />
+        <Button title="getIdentifiers()" onPress={getIdentifiers} />
+        <Button title="getExperienceCloudId()" onPress={getExperienceCloudId} />
+      </ScrollView>
+    </View>
   )
 }
 
 function identityExtensionVersion() {
-  AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPIdentity version: " + version));
+  Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: Identity version: " + version));
 }
 function syncIdentifiers() {
-  AEPIdentity.syncIdentifiers({"id1": "identifier1"});
+  Identity.syncIdentifiers({ "id1": "identifier1" });
 }
 
 function syncIdentifiersWithAuthState() {
-  AEPIdentity.syncIdentifiersWithAuthState({"id1": "identifier1"}, "AEP_VISITOR_AUTH_STATE_AUTHENTICATED");
+  Identity.syncIdentifiersWithAuthState({ "id1": "identifier1" }, "AEP_VISITOR_AUTH_STATE_AUTHENTICATED");
 }
 
 function syncIdentifier() {
-  AEPIdentity.syncIdentifier("idType", "ID", AEPMobileVisitorAuthenticationState.AUTHENTICATED);
+  Identity.syncIdentifier("idType", "ID", MobileVisitorAuthenticationState.AUTHENTICATED);
 }
 
 function appendVisitorInfoForURL() {
-  AEPIdentity.appendVisitorInfoForURL("test.com").then(urlWithVisitorData => console.log("AdobeExperienceSDK: VisitorData = " + urlWithVisitorData));
+  Identity.appendVisitorInfoForURL("test.com").then(urlWithVisitorData => console.log("AdobeExperienceSDK: VisitorData = " + urlWithVisitorData));
 }
 
 function getUrlVariables() {
-  AEPIdentity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: UrlVariables = " + urlVariables));
+  Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: UrlVariables = " + urlVariables));
 }
 
 function getIdentifiers() {
-  AEPIdentity.getIdentifiers().then(identifiers => console.log("AdobeExperienceSDK: Identifiers = " + identifiers));
+  Identity.getIdentifiers().then(identifiers => console.log("AdobeExperienceSDK: Identifiers = " + identifiers));
 }
 
 function getExperienceCloudId() {
-  AEPIdentity.getExperienceCloudId().then(cloudId => console.log("AdobeExperienceSDK: CloudID = " + cloudId));
+  Identity.getExperienceCloudId().then(cloudId => console.log("AdobeExperienceSDK: CloudID = " + cloudId));
 }

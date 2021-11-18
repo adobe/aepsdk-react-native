@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 import React from 'react';
 import { Button, Text, View, ScrollView, NativeModules } from 'react-native';
-import { AEPCore, AEPLifecycle, AEPSignal, AEPMobileLogLevel, AEPMobilePrivacyStatus, AEPMobileVisitorAuthenticationState, AEPVisitorID, AEPExtensionEvent } from '@adobe/react-native-aepcore';
+import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, MobileVisitorAuthenticationState, VisitorID, Event } from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
 
 export default Core = ({ navigation }) => {
@@ -30,7 +30,7 @@ export default Core = ({ navigation }) => {
         <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn} />
         <Button title="getPrivacyStatus()" onPress={getPrivacyStatus} />
         <Button title="log(...)" onPress={log} />
-        <Button title="setLogLevel(AEPMobileLogLevel.VERBOSE)" onPress={setLogLevel} />
+        <Button title="setLogLevel(LogLevel.VERBOSE)" onPress={setLogLevel} />
         <Button title="getLogLevel()" onPress={getLogLevel} />
         <Button title="setPushIdentifier()" onPress={setPushIdentifier} />
         <Button title="setAdvertisingIdentifier()" onPress={setAdvertisingIdentifier} />
@@ -42,86 +42,86 @@ export default Core = ({ navigation }) => {
         <Button title="dispatchEventWithResponseCallback()" onPress={dispatchEventWithResponseCallback} />
         <Button title="resetIdentities()" onPress={resetIdentities} />
         <Text style={styles.welcome}>Lifecycle</Text>
-        <Button title="AEPLifecycle::extensionVersion()" onPress={lifecycleExtensionVersion} />
+        <Button title="Lifecycle::extensionVersion()" onPress={lifecycleExtensionVersion} />
         <Text style={styles.welcome}>Signal</Text>
-        <Button title="AEPSignal::extensionVersion()" onPress={signalExtensionVersion} />
+        <Button title="Signal::extensionVersion()" onPress={signalExtensionVersion} />
       </ScrollView>
     </View>
   )
 }
 
 function trackAction() {
-  AEPCore.trackAction("action name", { "key": "value" });
+  MobileCore.trackAction("action name", { "key": "value" });
 }
 
 function trackState() {
-  AEPCore.trackState("state name", { "key": "value" });
+  MobileCore.trackState("state name", { "key": "value" });
 }
 
 function setPushIdentifier() {
-  AEPCore.setPushIdentifier("xxx");
+  MobileCore.setPushIdentifier("xxx");
 }
 
 function collectPii() {
-  AEPCore.collectPii({ "myPii": "data" });
+  MobileCore.collectPii({ "myPii": "data" });
 }
 
 function dispatchEvent() {
-  var event = new AEPExtensionEvent("eventName", "eventType", "eventSource", { "testDataKey": "testDataValue" });
-  AEPCore.dispatchEvent(event);
+  var event = new Event("eventName", "eventType", "eventSource", { "testDataKey": "testDataValue" });
+  MobileCore.dispatchEvent(event);
 }
 
 function dispatchEventWithResponseCallback() {
-  var event = new AEPExtensionEvent("eventName", "eventType", "eventSource", { "testDataKey": "testDataValue" });
-  AEPCore.dispatchEventWithResponseCallback(event).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
+  var event = new Event("eventName", "eventType", "eventSource", { "testDataKey": "testDataValue" });
+  MobileCore.dispatchEventWithResponseCallback(event).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
 }
 
 function setAdvertisingIdentifier() {
-  AEPCore.setAdvertisingIdentifier("adID");
+  MobileCore.setAdvertisingIdentifier("adID");
 }
 function getSdkIdentities() {
-  AEPCore.getSdkIdentities().then(identities => console.log("AdobeExperienceSDK: Identities = " + identities));
+  MobileCore.getSdkIdentities().then(identities => console.log("AdobeExperienceSDK: Identities = " + identities));
 }
 function updateConfiguration() {
-  AEPCore.updateConfiguration({ "global.privacy": "optedout" });
+  MobileCore.updateConfiguration({ "global.privacy": "optedout" });
 }
 
 function getLogLevel() {
-  AEPCore.getLogLevel().then(level => console.log("AdobeExperienceSDK: Log Level = " + level));
+  MobileCore.getLogLevel().then(level => console.log("AdobeExperienceSDK: Log Level = " + level));
 }
 
 function setLogLevel() {
-  AEPCore.setLogLevel(AEPMobileLogLevel.VERBOSE);
+  MobileCore.setLogLevel(LogLevel.VERBOSE);
 }
 
 function lifecycleExtensionVersion() {
-  AEPLifecycle.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPLifecycle version: " + version));
+  Lifecycle.extensionVersion().then(version => console.log("AdobeExperienceSDK: Lifecycle version: " + version));
 }
 
 function identityExtensionVersion() {
-  AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPIdentity version: " + version));
+  Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPIdentity version: " + version));
 }
 
 function signalExtensionVersion() {
-  AEPSignal.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPSignal version: " + version));
+  Signal.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPSignal version: " + version));
 }
 
 function coreExtensionVersion() {
-  AEPCore.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPCore version: " + version));
+  MobileCore.extensionVersion().then(version => console.log("AdobeExperienceSDK: MobileCore version: " + version));
 }
 
 function setPrivacyOptIn() {
-  AEPCore.setPrivacyStatus(AEPMobilePrivacyStatus.OPT_IN);
+  MobileCore.setPrivacyStatus(PrivacyStatus.OPT_IN);
 }
 
 function getPrivacyStatus() {
-  AEPCore.getPrivacyStatus().then(status => console.log("AdobeExperienceSDK: Privacy Status = " + status));
+  MobileCore.getPrivacyStatus().then(status => console.log("AdobeExperienceSDK: Privacy Status = " + status));
 }
 
 function log() {
-  AEPCore.log(AEPMobileLogLevel.ERROR, "React Native Tag", "React Native Message");
+  MobileCore.log(LogLevel.ERROR, "React Native Tag", "React Native Message");
 }
 
 function resetIdentities() {
-  AEPCore.resetIdentities();
+  MobileCore.resetIdentities();
 }

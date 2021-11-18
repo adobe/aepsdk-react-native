@@ -13,30 +13,30 @@ governing permissions and limitations under the License.
 @format
 */
 
-import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
-import {AEPIdentity} from '@adobe/react-native-aepedgeidentity';
+import React, { Component } from 'react';
+import { Button, StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Identity } from '@adobe/react-native-aepedgeidentity';
 
 export default EdgeIdentity = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-        <ScrollView contentContainerStyle={{ marginTop: 75 }}>
+      <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>EdgeIdentity</Text>
-        <Button title="extensionVersion()" onPress={edgeIdentityExtensionVersion}/>
-        <Button title="getExperienceCloudId()" onPress={getExperienceCloudId}/>
-        </ScrollView>
-      </View>
+        <Button title="extensionVersion()" onPress={edgeIdentityExtensionVersion} />
+        <Button title="getExperienceCloudId()" onPress={getExperienceCloudId} />
+      </ScrollView>
+    </View>
   )
 }
 
 function edgeIdentityExtensionVersion() {
-  AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
+  Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
 }
 
 function getExperienceCloudId() {
-  AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
+  Identity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
 }
 
 const styles = StyleSheet.create({

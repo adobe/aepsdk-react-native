@@ -9,27 +9,20 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
-@flow
 @format
 */
 
-'use strict';
 
-import type {AEPMobileVisitorAuthenticationState} from './AEPMobileVisitorAuthenticationState';
+import { NativeModules } from 'react-native';
+import {Signal} from '../js';
 
-class AEPVisitorID {
-  idOrigin:   string;
-  idType:     string;
-  identifier: string;
-  authenticationState: AEPMobileVisitorAuthenticationState;
+describe('Signal', () => {
 
-  constructor(idOrigin?: string, idType: string, id?: string, authenticationState?: AEPMobileVisitorAuthenticationState) {
-    this.idOrigin = idOrigin;
-    this.idType = idType;
-    this.identifier = id;
-    this.authenticationState = authenticationState;
-  }
+  it('extensionVersion is called', async () => {
+    expect(Signal.extensionVersion).toBeDefined();
+    const spy = jest.spyOn(NativeModules.AEPSignal, 'extensionVersion');
+    await Signal.extensionVersion();
+    expect(spy).toHaveBeenCalled();
+  });
 
-}
-
-module.exports = AEPVisitorID;
+});
