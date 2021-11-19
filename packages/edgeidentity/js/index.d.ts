@@ -32,7 +32,6 @@ export class AEPIdentityItem {
 }
 
 export class AEPIdentityMap {
-  
   constructor()
 
   addItem(item: AEPIdentityItem, namespace: string);

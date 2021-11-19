@@ -85,7 +85,11 @@ class AEPIdentityMap {
   // remove item from the existing namespace
   if (this.items[namespace] !== undefined) {
     var list = this.items[namespace].filter(e => !equalIds(e.id, item.id))
-    this.items[namespace] = list;  
+    if (list.length == 0) {
+      delete this.items[namespace];
+    } else {
+      this.items[namespace] = list;  
+    }
   }
  } 
 }
