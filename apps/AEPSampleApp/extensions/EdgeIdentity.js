@@ -13,38 +13,73 @@ governing permissions and limitations under the License.
 @format
 */
 
-import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
+import React, {useState, Component} from 'react';
+import {Button, StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
 import {AEPIdentity, AEPIdentityItem, AEPIdentityMap, AEPAuthenticatedState} from '@adobe/react-native-aepedgeidentity';
 
 export default EdgeIdentity = ({ navigation }) => {
+  const [version, setVersion] = useState('');
+  const [identities, setIdentities] = useState('');
+  const [ecid, setECID] = useState("");
+  AEPIdentity.extensionVersion().then(version => setVersion(version));
+
+  function getIdentities() {
+    AEPIdentity.getIdentities().then(currentIdentity => {
+      let identitiesStr = JSON.stringify(currentIdentity);
+      setIdentities(identitiesStr);
+      console.log("AdobeExperienceSDK: getIdentities " + identitiesStr);
+    }).catch((error) => {
+      console.warn("AdobeExperienceSDK: getIdentities returned error: ", error);
+    });
+  }
+
+  function getExperienceCloudId() {
+  AEPIdentity.getExperienceCloudId().then(experienceCloudId => {
+    setECID(experienceCloudId);
+    console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId);
+     }).catch((error) => {
+      console.warn("AdobeExperienceSDK: ECID returned error: ", error);
+    });
+  }
+  
 
   return (
     <View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
-        <Text style={styles.welcome}>EdgeIdentity</Text>
-        <Button title="extensionVersion()" onPress={edgeIdentityExtensionVersion}/>
+        <Text style={styles.welcome}>EdgeIdentity v{version}</Text>
         <Button title="getExperienceCloudId()" onPress={getExperienceCloudId}/>
+        <Button title="updateIdentities()" onPress={updateIdentities}/>
+        <Button title="removeIdentity()" onPress={removeIdentity}/>
         <Button title="getIdentities()" onPress={getIdentities}/>
+        <View style={styles.breakLine}/>
+        <Text>{identities}</Text>
+        <Text>{ecid}</Text>
         </ScrollView>
       </View>
   )
 }
 
-function edgeIdentityExtensionVersion() {
-  AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdgeIdentity version: " + version));
+function updateIdentities() {
+  var namespace1 = "namespace1";
+  var item1  = new AEPIdentityItem("id1", AEPAuthenticatedState.AUTHENTICATED, false);
+  var item2  = new AEPIdentityItem("id2");
+
+  var map = new AEPIdentityMap();
+  map.addItem(item1, namespace1);
+  map.addItem(item2, namespace1);
+  console.log("sample app - update identity");
+  AEPIdentity.updateIdentities(map);
 }
 
-function getExperienceCloudId() {
-  AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
+function removeIdentity() {
+  let namespace = "namespace1";
+  let item1 = new AEPIdentityItem("id1");
+  
+  console.log("sample app - removeIdentity");
+  AEPIdentity.removeIdentity(item1, namespace);
 }
 
-function getIdentities() {
-  AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEPIdentity Maps = " + JSON.stringify(identities)));
-}
-
-//TO DO: Add updateIdentities() and removeIdentities() cases
 
 const styles = StyleSheet.create({
   container: {
@@ -57,5 +92,17 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'center',
     margin: 10,
+  },
+  text: {
+    fontSize: 15,
+    textAlign: 'center',
+    margin: 5,
+  }, 
+  breakLine: {
+    borderWidth: 0.5,
+    borderColor: 'black',
+    margin: 10,
+    marginTop: 10,
+    marginBottom: 10,
   }
 });

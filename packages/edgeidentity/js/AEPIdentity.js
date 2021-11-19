@@ -74,5 +74,4 @@ module.exports = {
    removeIdentity(item: AEPIdentityItem, namespace: string) {
     RCTAEPEdgeIdentity.removeIdentity(item, namespace);
   },
-
 };
