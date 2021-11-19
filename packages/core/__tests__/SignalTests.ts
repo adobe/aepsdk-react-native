@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
 
 
 import { NativeModules } from 'react-native';
-import {Signal} from '../js';
+import {Signal} from '../';
 
 describe('Signal', () => {
 

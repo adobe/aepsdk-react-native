@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import {Lifecycle} from '../js';
+import {Lifecycle} from '../';
 
 describe('Lifecycle', () => {
 

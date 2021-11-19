@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import {MobileCore, LogLevel, PrivacyStatus, Event} from '../js';
+import {MobileCore, LogLevel, PrivacyStatus, Event} from '../';
 
 describe('MobileCore', () => {
 

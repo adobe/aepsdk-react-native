@@ -3,8 +3,8 @@ import { Button, View, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import Profile from './extensions/Profile';
-import Core from './extensions/Core';
-import Identity from './extensions/Identity';
+import CoreView from './extensions/CoreView';
+import IdentityView from './extensions/IdentityView';
 import Messaging from './extensions/Messaging';
 import EdgeIdentity from './extensions/EdgeIdentity';
 import Edge from './extensions/Edge';
@@ -27,7 +27,7 @@ function HomeScreen({ navigation }) {
       />
       <Button
         onPress={() => navigation.navigate('Messaging')}
-        title="Messaging"/>
+        title="Messaging" />
       <Button
         onPress={() => navigation.navigate('Edge')}
         title="Edge"
@@ -51,10 +51,10 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Core" component={Core} />
+        <Drawer.Screen name="Core" component={CoreView} />
         <Drawer.Screen name="Profile" component={Profile} />
-        <Drawer.Screen name="Identity" component={Identity} />
-        <Drawer.Screen name="Messaging" component={Messaging}/>
+        <Drawer.Screen name="Identity" component={IdentityView} />
+        <Drawer.Screen name="Messaging" component={Messaging} />
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
         <Drawer.Screen name="Edge" component={Edge} />
         <Drawer.Screen name="Assurance" component={Assurance} />

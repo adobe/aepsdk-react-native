@@ -18,7 +18,7 @@ import { Button, Text, View, ScrollView, NativeModules } from 'react-native';
 import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, MobileVisitorAuthenticationState, VisitorID, Event } from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
 
-export default Core = ({ navigation }) => {
+export default CoreView = ({ navigation }) => {
 
   return (
     <View style={styles.container}>

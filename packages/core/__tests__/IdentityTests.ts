@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import {MobileVisitorAuthenticationState, Identity} from '../js';
+import {MobileVisitorAuthenticationState, Identity} from '../';
 
 describe('Identity', () => {
 

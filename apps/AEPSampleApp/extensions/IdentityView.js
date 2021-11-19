@@ -18,7 +18,7 @@ import { Button, Text, View, ScrollView } from 'react-native';
 import { Identity, MobileVisitorAuthenticationState } from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
 
-export default Identity = ({ navigation }) => {
+export default IdentityView = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
