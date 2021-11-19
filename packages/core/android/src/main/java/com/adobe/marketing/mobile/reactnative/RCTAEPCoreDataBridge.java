@@ -20,21 +20,21 @@ import com.facebook.react.bridge.WritableNativeMap;
 final class RCTAEPCoreDataBridge {
 
     // @{link LoggingMode}
-    final static String AEP_LOG_LEVEL_ERROR = "AEP_LOG_LEVEL_ERROR";
-    final static String AEP_LOG_LEVEL_WARNING = "AEP_LOG_LEVEL_WARNING";
-    final static String AEP_LOG_LEVEL_DEBUG = "AEP_LOG_LEVEL_DEBUG";
-    final static String AEP_LOG_LEVEL_VERBOSE = "AEP_LOG_LEVEL_VERBOSE";
+    private final static String AEP_LOG_LEVEL_ERROR = "AEP_LOG_LEVEL_ERROR";
+    private final static String AEP_LOG_LEVEL_WARNING = "AEP_LOG_LEVEL_WARNING";
+    private final static String AEP_LOG_LEVEL_DEBUG = "AEP_LOG_LEVEL_DEBUG";
+    private final static String AEP_LOG_LEVEL_VERBOSE = "AEP_LOG_LEVEL_VERBOSE";
 
     // @{link @VisitorID.AuthenticationState}
-    final static String AEP_PRIVACY_STATUS_OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
-    final static String AEP_PRIVACY_STATUS_OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
-    final static String AEP_PRIVACY_STATUS_UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
+    private final static String AEP_PRIVACY_STATUS_OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
+    private final static String AEP_PRIVACY_STATUS_OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
+    private final static String AEP_PRIVACY_STATUS_UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
 
     // Event Object Keys
-    final static String EVENT_NAME_KEY = "eventName";
-    final static String EVENT_TYPE_KEY = "eventType";
-    final static String EVENT_SOURCE_KEY = "eventSource";
-    final static String EVENT_DATA_KEY = "eventData";
+    private final static String EVENT_NAME_KEY = "eventName";
+    private final static String EVENT_TYPE_KEY = "eventType";
+    private final static String EVENT_SOURCE_KEY = "eventSource";
+    private final static String EVENT_DATA_KEY = "eventData";
 
     /**
      * Converts a {@link ReadableMap} into an {@link Event}
