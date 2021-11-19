@@ -150,4 +150,21 @@ describe('AEPIdentityMap', () => {
     let itemsForNamespace1 = idMap.getIdentityItemsForNamespace(namespace1);
     expect(itemsForNamespace1.length).toEqual(1);
  });
+
+ it('AEPIdentityMap getItemsForNamespace invalid params', async () => {
+
+    let identifier1 = "id1";
+    let namespace1 = "namespace1"
+    let authenticatedState1 = AEPAuthenticatedState.AMBIGUOUS;
+    let isPrimary1 = true;
+
+    let item1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+
+    // add items
+    let idMap = new AEPIdentityMap();
+    idMap.addItem(item1, namespace1);
+
+    expect(idMap.getIdentityItemsForNamespace("invalid").length).toEqual(0);
+    expect(idMap.getIdentityItemsForNamespace("").length).toEqual(0);
+ });
 });
