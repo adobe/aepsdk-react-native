@@ -17,24 +17,24 @@ import com.adobe.marketing.mobile.MobilePrivacyStatus;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 
-public final class RCTAEPCoreDataBridge {
+final class RCTAEPCoreDataBridge {
 
     // @{link LoggingMode}
-    public final static String AEP_LOG_LEVEL_ERROR = "AEP_LOG_LEVEL_ERROR";
-    public final static String AEP_LOG_LEVEL_WARNING = "AEP_LOG_LEVEL_WARNING";
-    public final static String AEP_LOG_LEVEL_DEBUG = "AEP_LOG_LEVEL_DEBUG";
-    public final static String AEP_LOG_LEVEL_VERBOSE = "AEP_LOG_LEVEL_VERBOSE";
+    private final static String AEP_LOG_LEVEL_ERROR = "AEP_LOG_LEVEL_ERROR";
+    private final static String AEP_LOG_LEVEL_WARNING = "AEP_LOG_LEVEL_WARNING";
+    private final static String AEP_LOG_LEVEL_DEBUG = "AEP_LOG_LEVEL_DEBUG";
+    private final static String AEP_LOG_LEVEL_VERBOSE = "AEP_LOG_LEVEL_VERBOSE";
 
     // @{link @VisitorID.AuthenticationState}
-    public final static String AEP_PRIVACY_STATUS_OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
-    public final static String AEP_PRIVACY_STATUS_OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
-    public final static String AEP_PRIVACY_STATUS_UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
+    private final static String AEP_PRIVACY_STATUS_OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
+    private final static String AEP_PRIVACY_STATUS_OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
+    private final static String AEP_PRIVACY_STATUS_UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
 
     // Event Object Keys
-    public final static String EVENT_NAME_KEY = "eventName";
-    public final static String EVENT_TYPE_KEY = "eventType";
-    public final static String EVENT_SOURCE_KEY = "eventSource";
-    public final static String EVENT_DATA_KEY = "eventData";
+    private final static String EVENT_NAME_KEY = "eventName";
+    private final static String EVENT_TYPE_KEY = "eventType";
+    private final static String EVENT_SOURCE_KEY = "eventSource";
+    private final static String EVENT_DATA_KEY = "eventData";
 
     /**
      * Converts a {@link ReadableMap} into an {@link Event}
@@ -42,7 +42,7 @@ public final class RCTAEPCoreDataBridge {
      * @param map
      * @return An {@link Event}
      */
-    public static Event eventFromReadableMap(final ReadableMap map) {
+    static Event eventFromReadableMap(final ReadableMap map) {
         if (map == null) {
             return null;
         }
@@ -53,7 +53,7 @@ public final class RCTAEPCoreDataBridge {
         return event;
     }
 
-    public static ReadableMap readableMapFromEvent(final Event event) {
+    static ReadableMap readableMapFromEvent(final Event event) {
         if (event == null) {
             return null;
         }
@@ -72,7 +72,7 @@ public final class RCTAEPCoreDataBridge {
      * @param logModeString
      * @return The @{link LoggingMode} associated with logModeString
      */
-    public static LoggingMode loggingModeFromString(final String logModeString) {
+    static LoggingMode loggingModeFromString(final String logModeString) {
         if (logModeString == null) {
             return LoggingMode.DEBUG;
         }
@@ -90,7 +90,7 @@ public final class RCTAEPCoreDataBridge {
         return LoggingMode.DEBUG;
     }
 
-    public static String stringFromLoggingMode(final LoggingMode logMode) {
+    static String stringFromLoggingMode(final LoggingMode logMode) {
         if (logMode == null) {
             return AEP_LOG_LEVEL_DEBUG;
         }
@@ -109,7 +109,7 @@ public final class RCTAEPCoreDataBridge {
         return AEP_LOG_LEVEL_DEBUG;
     }
 
-    public static MobilePrivacyStatus privacyStatusFromString(final String privacyStatusString) {
+    static MobilePrivacyStatus privacyStatusFromString(final String privacyStatusString) {
         if (privacyStatusString == null) {
             return MobilePrivacyStatus.UNKNOWN;
         }
@@ -123,7 +123,7 @@ public final class RCTAEPCoreDataBridge {
         return MobilePrivacyStatus.UNKNOWN;
     }
 
-    public static String stringFromPrivacyStatus(final MobilePrivacyStatus privacyStatus) {
+    static String stringFromPrivacyStatus(final MobilePrivacyStatus privacyStatus) {
         if (privacyStatus == null) {
             return AEP_PRIVACY_STATUS_UNKNOWN;
         }
@@ -139,7 +139,7 @@ public final class RCTAEPCoreDataBridge {
 
     // Helper methods
 
-    public static String getNullableString(final ReadableMap data, final String key) {
+    static String getNullableString(final ReadableMap data, final String key) {
         return data.hasKey(key) ? data.getString(key) : null;
     }
 
