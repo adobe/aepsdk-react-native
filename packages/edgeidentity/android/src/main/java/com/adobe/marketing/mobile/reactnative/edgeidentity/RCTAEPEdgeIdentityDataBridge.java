@@ -18,6 +18,7 @@ import com.adobe.marketing.mobile.edge.identity.AuthenticatedState;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
@@ -102,19 +103,19 @@ final class RCTAEPEdgeIdentityDataBridge {
     }
 
     @SuppressLint("LongLogTag")
+
     static IdentityItem mapToIdentityItem(ReadableMap map) {
         if (map == null) {
             return null;
         }
 
-        try {
-            getNullableBoolean(map, IS_PRIMARY_KEY);
-        } catch (Exception e) {
-            Log.d(TAG, "primary requires to be a boolean type: " + e);
+        String id = getNullableString(map, ID_KEY);
+        // verify id is not null as this is not an accepted value for ids
+        if (id == null) {
             return null;
         }
 
-        return new IdentityItem(getNullableString(map, ID_KEY), getAuthenticatedState(map, AEP_AUTH_STATE_KEY), getNullableBoolean(map, IS_PRIMARY_KEY));
+        return new IdentityItem(id, getAuthenticatedState(map, AEP_AUTH_STATE_KEY), getBooleanOrDefaultFalse(map, IS_PRIMARY_KEY));
     }
 
     // Helper methods
@@ -127,7 +128,7 @@ final class RCTAEPEdgeIdentityDataBridge {
         return data.hasKey(key) ? data.getString(key) : null;
     }
 
-    private static Boolean getNullableBoolean(final ReadableMap data, final String key) {
-        return data.hasKey(key) ? data.getBoolean(key) : null;
+    private static Boolean getBooleanOrDefaultFalse(final ReadableMap data, final String key) {
+        return data.hasKey(key) && data.getType(key) == ReadableType.Boolean && data.getBoolean(key);
     }
 }
