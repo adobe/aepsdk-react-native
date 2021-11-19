@@ -13,19 +13,17 @@ governing permissions and limitations under the License.
 @format
 */
 
-'use strict';
+export default class DecisionScope {
 
-module.exports = {
-  get AEPOptimize() {
-    return require('./AEPOptimize.js');
-  },
-  get Offer() {
-    return require('./Offer');
-  },
-  get Proposition() {
-    return require('./Proposition');
-  },
-  get DecisionScope() {
-    return require('./DecisionScope');
-  }
-};
+    name: ?string;
+    activityId: ?string;
+    placementId: ?string;
+    itemCount: ?number;
+
+    constructor(name?: string, activityId?: string, placementId?: string, itemCount?: number) {                
+        this.name = name;
+        this.activityId = activityId;        
+        this.placementId = placementId;    
+        this.itemCount = itemCount;
+    }
+}

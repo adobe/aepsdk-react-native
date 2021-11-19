@@ -2,6 +2,7 @@ package com.adobe.marketing.mobile.reactnative.optimize;
 
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.Proposition;
 import com.facebook.react.bridge.ReadableArray;
@@ -165,5 +166,19 @@ class RCTAEPOptimizeUtil {
             }
         }
         return list;
+    }
+
+    static List<DecisionScope> createDecisionScopes(ReadableArray decisionScopesArray) {
+        List<DecisionScope> decisionScopeList = new ArrayList<>();
+        for (int i = 0; i < decisionScopesArray.size(); i++) {
+            ReadableMap readableMap = decisionScopesArray.getMap(i);
+            String decisionScopeName = readableMap.getString("name");
+            if (decisionScopeName == null || decisionScopeName.isEmpty()) {
+                decisionScopeList.add(new DecisionScope(decisionScopeName));
+            } else {
+                decisionScopeList.add(new DecisionScope(readableMap.getString("activityId"), readableMap.getString("placementId"), readableMap.getInt("itemCount")));
+            }
+        }
+        return decisionScopeList;
     }
 }

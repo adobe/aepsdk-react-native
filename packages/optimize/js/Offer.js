@@ -13,19 +13,27 @@ governing permissions and limitations under the License.
 @format
 */
 
-import { NativeModules } from 'react-native';
-const RCTAEPOptimize = NativeModules.AEPOptimize;
+import { NativeModules } from "react-native";
+const { AEPOptimize } = NativeModules;
 
 export default class Offer {
 
-    constructor(data) {
-        this.id = data['id'];
-        this.etag = data['etag'];
-        this.schema = data['schema'];
-        this.type = data['type'];
-        this.language = data['language'];
-        this.content = data['content'];
-        this.characteristics = data['characteristics'];        
+    id: string;
+    etag: string;
+    schema: string;
+    type: string;
+    language: Array<string>;
+    content: string;
+    characteristics: Map<string, string>;
+
+    constructor(eventData: Object) {
+        this.id = eventData['id'];
+        this.etag = eventData['etag'];
+        this.schema = eventData['schema'];
+        this.type = eventData['type'];
+        this.language = eventData['language'];
+        this.content = eventData['content'];
+        this.characteristics = eventData['characteristics'];        
 
         this.displayed.bind(this);
         this.tapped.bind(this);
@@ -33,35 +41,14 @@ export default class Offer {
     }
 
     displayed = () => {
-        RCTAEPOptimize.offerDisplayed(this);
+        AEPOptimize.offerDisplayed(this);
     }
 
-    tapped = () => {
-        console.log("Offer is tapped:: Offer");
-        RCTAEPOptimize.offerTapped(this);
+    tapped = () => {        
+        AEPOptimize.offerTapped(this);
     }
 
     generateDisplayInteractionXdm = () => {
-        return Promise.resolve(RCTAEPOptimize.generateDisplayInteractionXdm(this));
+        return Promise.resolve(AEPOptimize.generateDisplayInteractionXdm(this));
     }
 }
-
-// -----------VARIABLES----------------
-// private String id;
-        // private String etag;
-        // private String schema;
-        // private OfferType type;
-        // private List<String> language;
-        // private String content;
-        // private Map<String, String> characteristics;
-
-// ----------------SAMPLE--------------------
-// {
-    // "characteristics":{"testing":"true"},
-// "content":"sample text offer!!",
-// "type":"text/plain",
-// "language":["en-us"],
-// "id":"xcore:personalized-offer:141c79fc913a06b9",
-// "etag":"1",
-// "schema":"https://ns.adobe.com/experience/offer-management/content-component-text"
-// }

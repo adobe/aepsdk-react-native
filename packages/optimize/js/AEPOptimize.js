@@ -17,8 +17,9 @@ governing permissions and limitations under the License.
 
 import { DeviceEventEmitter, NativeModules } from 'react-native';
 const RCTAEPOptimize = NativeModules.AEPOptimize;
-
 import Proposition from './Proposition';
+import Offer from './Offer';
+import DecisionScope from './DecisionScope';
 
 var onPropositionUpdateSubscription;
 
@@ -27,10 +28,10 @@ module.exports = {
    * Returns the version of the AEPMessaging extension
    * @param  {string} Promise a promise that resolves with the extension verison
    */
-  extensionVersion() { 
+  extensionVersion(): Promise<String> { 
     return Promise.resolve(RCTAEPOptimize.extensionVersion());
   },
-  onPropositionUpdate(onPropositionUpdateCallback) {
+  onPropositionUpdate(onPropositionUpdateCallback: Object) {
     if(onPropositionUpdateSubscription) {
       onPropositionUpdateSubscription.remove();
     }
@@ -44,17 +45,17 @@ module.exports = {
   clearCachedPropositions() {
     RCTAEPOptimize.clearCachedPropositions();
   },
-  getPropositions(decisionScopesArray) {
+  getPropositions(decisionScopes: Array<DecisionScope>): Promise<Map<DecisionScope, Proposition>> {
     return new Promise((resolve, reject) => {
-      RCTAEPOptimize.getPropositions(decisionScopesArray).then(propositions => {
+      RCTAEPOptimize.getPropositions(decisionScopes).then(propositions => {
         const keys = Object.keys(propositions);
         keys.map(key => propositions[key] = new Proposition(propositions[key]));
         resolve(propositions);
       }).catch(error => reject(error));
     });
   },
-  updatePropositions(decisionScopesArray, xdm, data) {
-    RCTAEPOptimize.updatePropositions(decisionScopesArray, xdm, data);
+  updatePropositions(decisionScopes: Array<DecisionScope>, xdm: Map<String, Object>, data: Map<String, Object>) {
+    RCTAEPOptimize.updatePropositions(decisionScopes, xdm, data);
   },
   removeOnPropositionUpdateListener() {
     onPropositionUpdateSubscription.remove();

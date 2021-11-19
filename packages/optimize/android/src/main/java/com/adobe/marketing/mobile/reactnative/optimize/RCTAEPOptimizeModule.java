@@ -65,11 +65,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data) {
-        final List<DecisionScope> decisionScopeList = new ArrayList<>();
-
-        for (int i = 0; i < decisionScopesArray.size(); i++) {
-            decisionScopeList.add(new DecisionScope(decisionScopesArray.getString(i)));
-        }
+        final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
         Map<String, Object> mapXdm = RCTAEPOptimizeUtil.convertReadableMapToMap(xdm);
         Map<String, Object> mapData = RCTAEPOptimizeUtil.convertReadableMapToMap(data);
@@ -78,11 +74,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getPropositions(final ReadableArray decisionScopesArray, final Promise promise) {
-        final List<DecisionScope> decisionScopeList = new ArrayList<>();
-
-        for (int i = 0; i < decisionScopesArray.size(); i++) {
-            decisionScopeList.add(new DecisionScope(decisionScopesArray.getString(i)));
-        }
+        final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
         Optimize.getPropositions(decisionScopeList, new AdobeCallbackWithError<Map<DecisionScope, Proposition>>() {
             @Override

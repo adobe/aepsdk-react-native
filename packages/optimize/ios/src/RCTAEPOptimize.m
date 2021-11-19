@@ -103,10 +103,15 @@ RCT_EXPORT_METHOD(generateReferenceXdm: (NSDictionary<NSString*, id>*) propositi
 
 #pragma mark - Helper methods
 
-- (NSArray<AEPDecisionScope*>*) createDecisionScopesArray: (NSArray<NSString*>*) decisionScope {
+- (NSArray<AEPDecisionScope*>*) createDecisionScopesArray: (NSArray<NSDictionary*>*) decisionScope {
   NSMutableArray<AEPDecisionScope *>* decisionScopesArray = [[NSMutableArray alloc] init];
-  for (NSString* scope in decisionScope) {
-    [decisionScopesArray addObject:[[AEPDecisionScope alloc] initWithName:scope]];
+  for (NSDictionary* scope in decisionScope) {
+    NSString* decisionScopeName = [scope objectForKey:@"name"];
+    if([decisionScopeName length] > 0) {
+      [decisionScopesArray addObject:[[AEPDecisionScope alloc] initWithName:decisionScopeName]];
+    } else {
+      [decisionScopesArray addObject:[[AEPDecisionScope alloc] initWithActivityId:[[scope objectForKey:@"activityId"] stringValue] placementId:[[scope objectForKey:@"placementId"] stringValue] itemCount:[[scope objectForKey:@"itemCount"] integerValue]]];
+    }
   }
   return decisionScopesArray;
 }
