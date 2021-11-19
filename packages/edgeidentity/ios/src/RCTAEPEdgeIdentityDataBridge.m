@@ -26,16 +26,17 @@ static NSString* const AMBIGUOUS = @"ambiguous";
     
         for (NSString *namespace in idmap.namespaces) {
             NSArray* items = [idmap getItemsWithNamespace:namespace];
+           
             NSMutableArray *mapArray = [NSMutableArray array];
-            NSMutableDictionary *itemdict = [NSMutableDictionary dictionary];
+            
             for (AEPIdentityItem *item in items){
+              NSMutableDictionary *itemdict = [NSMutableDictionary dictionary];
               itemdict[IS_PRIMARY_KEY] = @(item.primary);
               itemdict[AEP_AUTH_STATE_KEY] = stringFromAuthState(item.authenticatedState);
               itemdict[ID_KEY] = item.id ;
                 
               [mapArray addObject:itemdict];
             }
-            
             if (mapArray.count !=0) {
                 [mapDict setObject:mapArray forKey:namespace];
             }
