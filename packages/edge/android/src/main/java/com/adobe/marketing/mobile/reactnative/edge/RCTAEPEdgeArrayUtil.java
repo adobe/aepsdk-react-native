@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RCTAEPEdgeArrayUtil {
+class RCTAEPEdgeArrayUtil {
 
     public static List<String> toStringList(ReadableArray readableArray) {
         if (readableArray == null) {

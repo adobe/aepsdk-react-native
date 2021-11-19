@@ -15,22 +15,18 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-module.exports = {
-  // Native models
-  get AEPAuthenticatedState() {
-    return require('./models/AEPAuthenticatedState');
-  },
+import AEPAuthenticatedState from './AEPAuthenticatedState';
 
-  get AEPIdentityItem() {
-    return require('./models/AEPIdentityItem');
-  },
+class AEPIdentityItem {
+  id: string;
+  authenticatedState: AEPAuthenticatedState;
+  primary: boolean;
 
-  get AEPIdentityMap() {
-    return require('./models/AEPIdentityMap');
-  },
+  constructor(id: string, authenticatedState: AEPAuthenticatedState = AEPAuthenticatedState.AMBIGUOUS, primary: boolean = false) {
+  	this.id = id;
+    this.authenticatedState = authenticatedState;
+    this.primary = primary
+  }
+}
 
-  // Native modules
-  get AEPIdentity() {
-    return require('./AEPIdentity');
-  },
-};
+module.exports = AEPIdentityItem;

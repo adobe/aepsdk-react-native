@@ -62,7 +62,7 @@ function getUrlVariables() {
 }
 
 function getIdentifiers() {
-  AEPIdentity.getIdentifiers().then(identifiers => console.log("AdobeExperienceSDK: Identifiers = " + identifiers));
+  AEPIdentity.getIdentifiers().then(identifiers => console.log("AdobeExperienceSDK: Identifiers = " + JSON.stringify(identifiers)));
 }
 
 function getExperienceCloudId() {

@@ -15,22 +15,24 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-module.exports = {
-  // Native models
-  get AEPAuthenticatedState() {
-    return require('./models/AEPAuthenticatedState');
-  },
+const AUTHENTICATED = "authenticated";
+const LOGGED_OUT = "loggedOut";
+const AMBIGUOUS = "ambiguous";
 
-  get AEPIdentityItem() {
-    return require('./models/AEPIdentityItem');
-  },
+class AEPAuthenticatedState {
 
-  get AEPIdentityMap() {
-    return require('./models/AEPIdentityMap');
-  },
+  static get AUTHENTICATED() {
+    return AUTHENTICATED;
+  }
 
-  // Native modules
-  get AEPIdentity() {
-    return require('./AEPIdentity');
-  },
-};
+  static get LOGGED_OUT() {
+    return LOGGED_OUT;
+  }
+
+  static get AMBIGUOUS() {
+    return AMBIGUOUS;
+  }
+
+}
+
+module.exports = AEPAuthenticatedState;

@@ -10,17 +10,18 @@
  */
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
+
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.edge.identity.Identity;
+import com.adobe.marketing.mobile.edge.identity.IdentityItem;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-
-import java.util.Map;
+import com.adobe.marketing.mobile.edge.identity.IdentityMap;
+import com.facebook.react.bridge.WritableMap;
 
 public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
 
@@ -54,6 +55,35 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
                 promise.resolve(s);
           }
         });
+    }
+
+  @ReactMethod
+    public void getIdentities(final Promise promise) {
+        Identity.getIdentities(new AdobeCallbackWithError<IdentityMap>() {
+
+            @Override
+            public void fail(AdobeError error) {
+            handleError(promise, error, "getIdentities");
+            }
+
+            @Override
+            public void call(IdentityMap map) {
+                WritableMap identitymap = RCTAEPEdgeIdentityDataBridge.mapFromIdentityMap(map);
+                promise.resolve(identitymap);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void updateIdentities(final ReadableMap identitymap) {
+        IdentityMap mapobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityMap(identitymap);
+        Identity.updateIdentities(mapobj);
+    }
+
+    @ReactMethod
+    public void removeIdentity(final ReadableMap item, String namespace) {
+        IdentityItem itemobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityItem(item);
+        Identity.removeIdentity(itemobj, namespace);
     }
 
   // Helper method
