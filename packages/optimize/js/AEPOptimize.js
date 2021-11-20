@@ -47,7 +47,8 @@ module.exports = {
   },
   getPropositions(decisionScopes: Array<DecisionScope>): Promise<Map<DecisionScope, Proposition>> {
     return new Promise((resolve, reject) => {
-      RCTAEPOptimize.getPropositions(decisionScopes).then(propositions => {
+      var decisionScopeNames: Array<string> = decisionScopes.map((decisionScope) => decisionScope.getName());
+      RCTAEPOptimize.getPropositions(decisionScopeNames).then(propositions => {
         const keys = Object.keys(propositions);
         keys.map(key => propositions[key] = new Proposition(propositions[key]));
         resolve(propositions);
@@ -55,7 +56,8 @@ module.exports = {
     });
   },
   updatePropositions(decisionScopes: Array<DecisionScope>, xdm: Map<String, Object>, data: Map<String, Object>) {
-    RCTAEPOptimize.updatePropositions(decisionScopes, xdm, data);
+    var decisionScopeNames: Array<string> = decisionScopes.map((decisionScope) => decisionScope.getName());
+    RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data);
   },
   removeOnPropositionUpdateListener() {
     onPropositionUpdateSubscription.remove();

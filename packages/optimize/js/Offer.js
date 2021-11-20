@@ -16,7 +16,7 @@ governing permissions and limitations under the License.
 import { NativeModules } from "react-native";
 const { AEPOptimize } = NativeModules;
 
-export default class Offer {
+module.exports = class Offer {
 
     id: string;
     etag: string;
@@ -48,7 +48,7 @@ export default class Offer {
         AEPOptimize.offerTapped(this);
     }
 
-    generateDisplayInteractionXdm = () => {
+    generateDisplayInteractionXdm(): Promise<Map<string, Object>> {
         return Promise.resolve(AEPOptimize.generateDisplayInteractionXdm(this));
-    }
+    }    
 }

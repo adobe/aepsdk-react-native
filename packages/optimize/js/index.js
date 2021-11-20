@@ -15,6 +15,7 @@ governing permissions and limitations under the License.
 
 'use strict';
 
+
 module.exports = {
   get AEPOptimize() {
     return require('./AEPOptimize.js');

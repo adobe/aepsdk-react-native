@@ -171,12 +171,9 @@ class RCTAEPOptimizeUtil {
     static List<DecisionScope> createDecisionScopes(ReadableArray decisionScopesArray) {
         List<DecisionScope> decisionScopeList = new ArrayList<>();
         for (int i = 0; i < decisionScopesArray.size(); i++) {
-            ReadableMap readableMap = decisionScopesArray.getMap(i);
-            String decisionScopeName = readableMap.getString("name");
-            if (decisionScopeName == null || decisionScopeName.isEmpty()) {
+            String decisionScopeName = decisionScopesArray.getString(i);
+            if (decisionScopeName != null && !decisionScopeName.isEmpty()) {
                 decisionScopeList.add(new DecisionScope(decisionScopeName));
-            } else {
-                decisionScopeList.add(new DecisionScope(readableMap.getString("activityId"), readableMap.getString("placementId"), readableMap.getInt("itemCount")));
             }
         }
         return decisionScopeList;

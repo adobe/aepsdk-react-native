@@ -18,7 +18,7 @@ const { AEPOptimize } = NativeModules;
 import Offer from './Offer';
 
 
-export default class Proposition {
+module.exports = class Proposition {    
     id: string;
     offers: Array<Offer>;
     scope: string;
@@ -35,7 +35,7 @@ export default class Proposition {
         this.generateReferenceXdm.bind(this);
     }    
         
-    generateReferenceXdm = () => {
+    generateReferenceXdm(): Promise<Map<string, Object>> {
         return Promise.resolve(AEPOptimize.generateReferenceXdm(this));
     }
 }

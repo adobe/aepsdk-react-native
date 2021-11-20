@@ -17,6 +17,7 @@
     "@adobe/react-native-aepedgeidentity": "^1.0.0-alpha.2",
     "@adobe/react-native-aepmessaging": "^1.0.0-alpha.2",
     "@adobe/react-native-aepuserprofile": "^1.0.0-alpha.3",
+    "@adobe/react-native-aepoptimize": "1.0.0",
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/core": "^5.12.3",
     "@react-navigation/drawer": "^5.9.0",

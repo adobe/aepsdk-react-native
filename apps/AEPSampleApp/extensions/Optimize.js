@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
 
 import React, { useState } from 'react';
 import { Button, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { AEPOptimize } from '@adobe/react-native-aepoptimize';
+import { AEPOptimize, DecisionScope } from '@adobe/react-native-aepoptimize';
 import { WebView } from 'react-native-webview';
 import styles from '../styles/styles';
 
@@ -26,10 +26,10 @@ export default ({ navigation }) => {
     const [htmlOffer, setHtmlOffer] = useState('<html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><p>HTML place holder!</p></body></html>');
     const [jsonOffer, setJsonOffer] = useState('JSON Place Holder!!');
 
-    const decisionScopeText = "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9";
-    const decisionScopeImage = "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkYTliNDMwNDg5OCJ9";
-    const decisionScopeHtml = "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkOTJjNmJhZDA4NCJ9";
-    const decisionScopeJson = "eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9";
+    const decisionScopeText = new DecisionScope("eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9");
+    const decisionScopeImage = new DecisionScope("eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkYTliNDMwNDg5OCJ9");
+    const decisionScopeHtml = new DecisionScope("eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkOTJjNmJhZDA4NCJ9");
+    const decisionScopeJson = new DecisionScope("eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9");
 
     const decisionScopes = [ decisionScopeText, decisionScopeImage, decisionScopeHtml, decisionScopeJson ]
     const optimizeExtensionVersion = () => AEPOptimize.extensionVersion().then(newVersion => {
@@ -40,17 +40,17 @@ export default ({ navigation }) => {
     const getPropositions = () => AEPOptimize.getPropositions(decisionScopes).then(
         propositions => {
             console.log(`Get Proposition returned::: ${JSON.stringify(propositions)}`)
-            setTextOffer(propositions[decisionScopeText].offers[0]);
-            setImageOffer(propositions[decisionScopeImage].offers[0]);
-            setHtmlOffer(propositions[decisionScopeHtml].offers[0]);
-            setJsonOffer(propositions[decisionScopeJson].offers[0]);
+            setTextOffer(propositions[decisionScopeText.getName()].offers[0]);
+            setImageOffer(propositions[decisionScopeImage.getName()].offers[0]);
+            setHtmlOffer(propositions[decisionScopeHtml.getName()].offers[0]);
+            setJsonOffer(propositions[decisionScopeJson.getName()].offers[0]);
         });
     const clearCachedProposition = () => AEPOptimize.clearCachedPropositions();
     const onPropositionUpdate = () => AEPOptimize.onPropositionUpdate(propositions => {
-        setTextOffer(propositions[decisionScopeText].offers[0]);
-        setImageOffer(propositions[decisionScopeImage].offers[0]);
-        setHtmlOffer(propositions[decisionScopeHtml].offers[0]);
-        setJsonOffer(propositions[decisionScopeJson].offers[0]);
+        setTextOffer(propositions[decisionScopeText.getName()].offers[0]);
+        setImageOffer(propositions[decisionScopeImage.getName()].offers[0]);
+        setHtmlOffer(propositions[decisionScopeHtml.getName()].offers[0]);
+        setJsonOffer(propositions[decisionScopeJson.getName()].offers[0]);
     });
 
     return (<View style={styles.container}>

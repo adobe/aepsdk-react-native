@@ -13,17 +13,26 @@ governing permissions and limitations under the License.
 @format
 */
 
-export default class DecisionScope {
+module.exports = class DecisionScope {
 
-    name: ?string;
-    activityId: ?string;
-    placementId: ?string;
-    itemCount: ?number;
+    name: string;    
+    
+    constructor(name: string = "", activityId: string = "", placementId: string = "", itemCount: number = 1) {                
+        if(name && name.trim() !== "") {
+            this.name = name;
+        } else {            
+            var decisionScopeObject: Object = new Object();
+            decisionScopeObject['activityId'] = activityId;            
+            decisionScopeObject['placementId'] = placementId;    
+            decisionScopeObject['itemCount'] = itemCount;   
 
-    constructor(name?: string, activityId?: string, placementId?: string, itemCount?: number) {                
-        this.name = name;
-        this.activityId = activityId;        
-        this.placementId = placementId;    
-        this.itemCount = itemCount;
+            this.name = Buffer.from(JSON.stringify(decisionScopeObject)).toString("base64");
+
+            this.getName.bind(this);
+        }                
     }
-}
+
+    getName(): string {
+       return this.name; 
+    }
+};
