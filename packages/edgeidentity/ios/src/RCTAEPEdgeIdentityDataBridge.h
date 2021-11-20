@@ -9,9 +9,15 @@
  governing permissions and limitations under the License.
  */
 
- #import <React/RCTBridgeModule.h>
- #import <Foundation/Foundation.h>
+@import AEPEdgeIdentity;
 
-@interface RCTAEPEdgeIdentity : NSObject <RCTBridgeModule>
+@interface RCTAEPEdgeIdentityDataBridge : NSObject
+
++ (NSDictionary *_Nullable)dictionaryFromIdentityMap: (nullable AEPIdentityMap *) map;
+
++ (AEPIdentityMap *_Nullable)dictionaryToIdentityMap: (nonnull NSDictionary *) dict;
+
++ (AEPIdentityItem *_Nullable)dictionaryToIdentityItem: (nonnull NSDictionary *) dict;
+
 
 @end
