@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-class AEPExperienceEvent {
+class ExperienceEvent {
   xdmData: {[string]: any};
   data: {[string]: any};
   datasetIdentifier: string;
@@ -27,4 +27,4 @@ class AEPExperienceEvent {
   }
 }
 
-module.exports = AEPExperienceEvent;
+module.exports = ExperienceEvent;

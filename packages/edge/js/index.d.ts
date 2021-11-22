@@ -10,22 +10,22 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 
 */
-export class AEPEdge{
+export class Edge{
     static extensionVersion(): Promise<string>;
-    static sendEvent(event: AEPExperienceEvent): Promise<AEPExtensionEvent>;
+    static sendEvent(experienceEvent: ExperienceEvent): Promise<EdgeEventHandle>;
 }
 
-export class AEPEdgeEventHandle{
+export class EdgeEventHandle{
     type: string;
     payload: Map;
 
  constructor(type?: string, playload?: Map)
 }
 
-export class AEPExperienceEvent{
+export class ExperienceEvent{
     xdmdata: Map;
     data: Map;
     datasetIdentifier: string;
 
-  constructor(xdmdata: Map, data?: Map, datasetIdentifier?: string)
+  constructor(xdmData: Map, data?: Map, datasetIdentifier?: string)
 }
