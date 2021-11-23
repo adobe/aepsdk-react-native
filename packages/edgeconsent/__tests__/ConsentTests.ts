@@ -13,27 +13,27 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { AEPConsent } from '../';
+import { Consent } from '../';
 
-describe('AEPEdgeConsent', () => {
+describe('Consent', () => {
 
   it('extensionVersion is called', async () => {
-    expect(AEPConsent.extensionVersion).toBeDefined();
+    expect(Consent.extensionVersion).toBeDefined();
     const spy = jest.spyOn(NativeModules.AEPEdgeConsent, 'extensionVersion');
-    await AEPConsent.extensionVersion();
+    await Consent.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('updateConsents is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdgeConsent, 'update');
     let consents = {"consents": {"collect": {"val": "y"}}};
-    await AEPConsent.update(consents);
+    await Consent.update(consents);
     expect(spy).toHaveBeenCalledWith(consents);
   });
 
   it('getConsents is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdgeConsent, 'getConsents');
-    await AEPConsent.getConsents();
+    await Consent.getConsents();
     expect(spy).toHaveBeenCalled();
   });
 });

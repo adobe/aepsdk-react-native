@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 module.exports = {
   // Native modules
-  get AEPConsent() {
-    return require('./AEPConsent');
+  get Consent() {
+    return require('./Consent');
   }
 };

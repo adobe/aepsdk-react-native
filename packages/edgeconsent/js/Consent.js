@@ -19,7 +19,7 @@ const RCTAEPEdgeConsent = require('react-native').NativeModules.AEPEdgeConsent;
 
 module.exports = {
   /**
-   * Returns the version of the AEPConsent extension
+   * Returns the version of the Consent extension
    * @param {string} Promise resolves with the extension version
    */
   extensionVersion(): Promise<string> {

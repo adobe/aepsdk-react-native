@@ -31,15 +31,15 @@ Then follow the same document for registering the Consent extension with the Mob
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
 ### Importing the extension
-In your React Native application, import the AEPConsent extension as follows:
+In your React Native application, import the Consent extension as follows:
 ```javascript
-import {AEPConsent} from '@adobe/react-native-aepedgeconsent';
+import {Consent} from '@adobe/react-native-aepedgeconsent';
 ```
 
 ## API reference
 
 ### extensionVersion
-Returns the version of the AEPConsent extension
+Returns the version of the Consent extension
 
 **Syntax**
 ```javascript
@@ -48,7 +48,7 @@ static extensionVersion(): Promise<string>
 
 **Example**
 ```javascript
-AEPConsent.extensionVersion().then(version => console.log("AEPConsent.extensionVersion: " + version));
+Consent.extensionVersion().then(version => console.log("Consent.extensionVersion: " + version));
 ```
 
 ### getConsents
