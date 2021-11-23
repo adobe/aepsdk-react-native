@@ -111,7 +111,7 @@ Clears all identities stored in the Identity extension and generates a new Exper
 
 :information_source: The Identity for Edge Network extension does not read the Mobile SDK's privacy status and therefor setting the SDK's privacy status to opt-out will not clear the identities from the Identity for Edge Network extension.
 
-For more details, see the[MobileCore.resetIdentities API](https://github.com/emdobrin/aepsdk-react-native/tree/consent/packages/core#reset-identities).
+For more details, see the[MobileCore.resetIdentities API](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#reset-identities).
 
 ### updateIdentities:
 
