@@ -8,7 +8,7 @@
 
 ## Prerequisites
 
-The Adobe Experience Platform Identity for Edge Network extension has the following peer dependency, which must be installed prior to installing the messaging extension:
+The Adobe Experience Platform Identity for Edge Network extension has the following peer dependency, which must be installed prior to install the messaging extension:
 - [Core](../core/README.md)
 
 ## Installation
@@ -26,9 +26,12 @@ npm install @adobe/react-native-aepedgeidentity
 
 ### Installing and registering the extension with the AEP Mobile Core
 
+The Identity for Edge Network is required for providing the identity information to the Edge Network extension when sending Experience events.
+
 Install the Identity extension in your mobile property by following the steps in the [Identity for Edge Network extension documentation](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network).
 
-The Identity for Edge Network is required for providing the identity information to the Edge Network extension when sending Experience events. Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
+Then follow the same document for registering the Identity extension with the Mobile Core.
+Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
 :information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq#register-the-identity-and-identity-for-edge-network-extensions-with-mobile-core).
 
@@ -36,7 +39,7 @@ The Identity for Edge Network is required for providing the identity information
 ### [Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
 
 ### Importing the extension:
-In your React Native application, import the AEPEdgeIdentity extension as follows:
+In your React Native application, import the AEPIdentity extension as follows:
 ```javascript
 import {AEPIdentity} from '@adobe/react-native-aepedgeidentity';
 ```
@@ -71,7 +74,7 @@ AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeE
 ```
 
 ### getIdentities:
-Get all identities in the Identity for AEPEdgeIdentity extension, including customer identifiers which were previously added.
+Get all the identities in the Identity for Edge Network extension, including customer identifiers which were previously added.
 A promise method which will be invoked once the identities are available or rejected if an unexpected error occurred or the request timed out.
 
 **Syntax**
@@ -83,7 +86,7 @@ static getIdentities(): Promise<AEPIdentityMap>;
 AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEP Identities = " + JSON.stringify(identities)));
 ```
 
-### removeIdenitity:
+### removeIdentity:
 Remove the identity from the stored client-side IdentityMap. The Identity extension will stop sending the identifier to the Edge Network. Using this API does not remove the identifier from the server-side User Profile Graph or Identity Graph.
 
 Identities with an empty id or namespace are not allowed and are ignored.
@@ -108,7 +111,7 @@ Clears all identities stored in the Identity extension and generates a new Exper
 
 :information_source: The Identity for Edge Network extension does not read the Mobile SDK's privacy status and therefor setting the SDK's privacy status to opt-out will not clear the identities from the Identity for Edge Network extension.
 
-See [reset identities api](https://github.com/emdobrin/aepsdk-react-native/tree/consent/packages/core#reset-identities) for more details.
+For more details, see the[MobileCore.resetIdentities API](https://github.com/emdobrin/aepsdk-react-native/tree/consent/packages/core#reset-identities).
 
 ### updateIdentities:
 
@@ -234,5 +237,5 @@ The possible authenticated states are:
 
 
 ## Frequently Asked Questions (FAQ)
-For FAQ, refer to [identity-faq](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq) for more details.
+For more details, refer to the [frequently asked questions page](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq) 
 
