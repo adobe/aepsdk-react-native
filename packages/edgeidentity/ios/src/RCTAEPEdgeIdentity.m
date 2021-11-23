@@ -62,11 +62,11 @@ RCT_EXPORT_METHOD(updateIdentities:(nonnull NSDictionary*) map) {
 RCT_EXPORT_METHOD(removeIdentity:(nonnull NSDictionary*)item
                   namespace:(NSString *)namespace) {
     
-    if (!item || !namespace) {
+    AEPIdentityItem *convertItem = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityItem:item];
+    
+    if (!convertItem || !namespace) {
     return;
     }
-    
-    AEPIdentityItem *convertItem = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityItem:item];
 
     [AEPMobileEdgeIdentity removeIdentityItem:(AEPIdentityItem * _Nonnull) convertItem withNamespace:(NSString * _Nonnull) namespace];
 }
