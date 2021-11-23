@@ -7,7 +7,7 @@ import Core from './extensions/Core';
 import Identity from './extensions/Identity';
 import Messaging from './extensions/Messaging';
 import EdgeIdentity from './extensions/EdgeIdentity';
-import Consent from './extensions/Consent';
+import ConsentView from './extensions/ConsentView';
 import Edge from './extensions/Edge';
 import Assurance from './extensions/Assurance';
 
@@ -38,7 +38,7 @@ function HomeScreen({ navigation }) {
         title="EdgeIdentity"
       />
       <Button
-        onPress={() => navigation.navigate('Consent')}
+        onPress={() => navigation.navigate('ConsentView')}
         title="Consent"
       />
       <Button
@@ -62,7 +62,7 @@ export default function App() {
         <Drawer.Screen name="Messaging" component={Messaging}/>
         <Drawer.Screen name="Edge" component={Edge} />
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
-        <Drawer.Screen name="Consent" component={Consent} />
+        <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="Assurance" component={Assurance} />
       </Drawer.Navigator>
     </NavigationContainer>

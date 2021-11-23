@@ -15,22 +15,22 @@ governing permissions and limitations under the License.
 
 import React, {useState, Component} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
-import {AEPConsent} from '@adobe/react-native-aepedgeconsent';
+import {Consent} from '@adobe/react-native-aepedgeconsent';
 import {AEPCore} from '@adobe/react-native-aepcore';
 
-export default Consent = ({ navigation }) => {
+export default ConsentView = ({ navigation }) => {
   const [version, setVersion] = useState('');
   const [consents, setConsents] = useState('');
-  AEPConsent.extensionVersion().then(version => setVersion(version));
+  Consent.extensionVersion().then(version => setVersion(version));
 
   function getConsents() {
     var consents  = {"consents" : {"collect" : {"val": "n"}}};
-    AEPConsent.getConsents().then(currentConsents => {
+    Consent.getConsents().then(currentConsents => {
       let consentsStr = JSON.stringify(currentConsents);
       setConsents(consentsStr);
-      console.log("AdobeExperienceSDK: AEPConsent.getConsents returned current consent preferences:  " + consentsStr);
+      console.log("AdobeExperienceSDK: Consent.getConsents returned current consent preferences:  " + consentsStr);
     }).catch((error) => {
-      console.warn("AdobeExperienceSDK: AEPConsent.getConsents returned error: ", error);
+      console.warn("AdobeExperienceSDK: Consent.getConsents returned error: ", error);
     });
   }
 
@@ -54,8 +54,8 @@ function updateCollectConsent(allowed: boolean) {
   var collectConsentStatus = allowed ? {"val": "y"} : {"val": "n"};
 
   var consents: {[keys: string]: any} = {"consents" : {"collect" : collectConsentStatus}};
-  AEPConsent.update(consents);
-  console.log("AdobeExperienceSDK: AEPConsent.update called with:  " + JSON.stringify(consents));
+  Consent.update(consents);
+  console.log("AdobeExperienceSDK: Consent.update called with:  " + JSON.stringify(consents));
 }
 
 function setDefaultConsent(allowed: boolean) {

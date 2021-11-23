@@ -4,7 +4,7 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 Pod::Spec.new do |s|
   s.name         = "RCTAEPEdgeConsent"
   s.version      = package["version"]
-  s.summary      = "Experience Platform Consent Collection extension for Adobe Experience Platform Mobile SDK. Written and maintained by Adobe."
+  s.summary      = "Adobe Experience Platform Consent Collection extension for AEP Mobile SDK. Written and maintained by Adobe."
   s.author       = "Adobe Experience Platform SDK Team"
 
   s.homepage     = "https://github.com/adobe/aepsdk-react-native"

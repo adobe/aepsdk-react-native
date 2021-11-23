@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 
 */
-export class AEPConsent{
+export class Consent{
     static extensionVersion(): Promise<string>;
     static getConsents(): Promise<Map>;
   	static update(consents: Map);
