@@ -1,7 +1,7 @@
 {
   "name": "@adobe/react-native-aepedgeconsent",
   "version": "1.0.0-alpha.1",
-  "description": "Experience Platform Consent Collection extension for Adobe Experience Platform Mobile SDK. Written and maintained by Adobe.",
+  "description": "Adobe Experience Platform Consent Collection extension for AEP Mobile SDK. Written and maintained by Adobe.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
   "main": "./js/index.js",
