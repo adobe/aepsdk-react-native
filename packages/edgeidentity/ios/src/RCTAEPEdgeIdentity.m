@@ -53,13 +53,13 @@ RCT_EXPORT_METHOD(getIdentities:(RCTPromiseResolveBlock) resolve rejecter:(RCTPr
     }];
 }
 
-RCT_EXPORT_METHOD(updateIdentities:(nullable NSDictionary*) map) {
+RCT_EXPORT_METHOD(updateIdentities:(nonnull NSDictionary*) map) {
     AEPIdentityMap *convertMap = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityMap:map];
 
     [AEPMobileEdgeIdentity updateIdentities:(AEPIdentityMap * _Nonnull) convertMap];
 }
 
-RCT_EXPORT_METHOD(removeIdentity:(nullable NSDictionary*)item
+RCT_EXPORT_METHOD(removeIdentity:(nonnull NSDictionary*)item
                   namespace:(NSString *)namespace) {
     
     AEPIdentityItem *convertItem = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityItem:item];

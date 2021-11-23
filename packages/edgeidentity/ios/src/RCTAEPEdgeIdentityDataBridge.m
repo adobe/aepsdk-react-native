@@ -15,7 +15,7 @@
 
 static NSString* const ID_KEY = @"id";
 static NSString* const IS_PRIMARY_KEY = @"primary";
-static NSString* const AEP_AUTH_STATE_KEY = @"authenticatedState";
+static NSString* const AUTH_STATE_KEY = @"authenticatedState";
 static NSString* const ITEM_KEY = @"items";
 static NSString* const AUTHENTICATED = @"authenticated";
 static NSString* const LOGGED_OUT = @"loggedOut";
@@ -23,6 +23,10 @@ static NSString* const AMBIGUOUS = @"ambiguous";
 
 + (NSDictionary *)dictionaryFromIdentityMap: (nullable AEPIdentityMap *) idmap {
     NSMutableDictionary *mapDict = [NSMutableDictionary dictionary];
+    
+    if (!idmap){
+        return mapDict;
+    }
     
         for (NSString *namespace in idmap.namespaces) {
             NSArray* items = [idmap getItemsWithNamespace:namespace];
@@ -32,7 +36,7 @@ static NSString* const AMBIGUOUS = @"ambiguous";
             for (AEPIdentityItem *item in items){
               NSMutableDictionary *itemdict = [NSMutableDictionary dictionary];
               itemdict[IS_PRIMARY_KEY] = @(item.primary);
-              itemdict[AEP_AUTH_STATE_KEY] = stringFromAuthState(item.authenticatedState);
+              itemdict[AUTH_STATE_KEY] = [RCTAEPEdgeIdentityDataBridge stringFromAuthState:(item.authenticatedState)];
               itemdict[ID_KEY] = item.id ;
                 
               [mapArray addObject:itemdict];
@@ -45,10 +49,16 @@ static NSString* const AMBIGUOUS = @"ambiguous";
         return mapDict;
     }
 
-+ (AEPIdentityMap *)dictionaryToIdentityMap: (nonnull NSDictionary *) dict {
-    NSDictionary *itemsMap = [[dict objectForKey:ITEM_KEY] isKindOfClass:[NSDictionary class]] ? [dict objectForKey:ITEM_KEY] : nil;
-    NSArray <NSString*>* namespaces = [itemsMap allKeys];
++ (nonnull AEPIdentityMap  *)dictionaryToIdentityMap: (nonnull NSDictionary *) dict {
     AEPIdentityMap *identityMap = [[AEPIdentityMap alloc] init];
+    NSDictionary *itemsMap = [[dict objectForKey:ITEM_KEY] isKindOfClass:[NSDictionary class]] ? [dict objectForKey:ITEM_KEY] : nil;
+    
+    if (!itemsMap){
+        return identityMap;
+    }
+    
+    NSArray <NSString*>* namespaces = [itemsMap allKeys];
+   
     for (NSString *namespace in namespaces){
         NSArray* items = [itemsMap objectForKey:namespace];
         for (NSDictionary *itemMap in items){
@@ -65,23 +75,27 @@ static NSString* const AMBIGUOUS = @"ambiguous";
 
 + (AEPIdentityItem *)dictionaryToIdentityItem: (nonnull NSDictionary *) dict {
     
-    NSString *identifier = [[dict objectForKey:ID_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:ID_KEY] : nil;
-    
-    if (!identifier){
+    if (!dict) {
         return nil;
     }
     
-    NSString *authenticatedString = [[dict objectForKey:AEP_AUTH_STATE_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:AEP_AUTH_STATE_KEY] : nil;
+    NSString *identifier = [[dict objectForKey:ID_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:ID_KEY] : nil;
     
-    AEPAuthenticatedState authenticatedState = authStateFromString (authenticatedString);
-
+    NSString *authenticatedString = [[dict objectForKey:AUTH_STATE_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:AUTH_STATE_KEY] : nil;
+        
+    AEPAuthenticatedState authenticatedState = [RCTAEPEdgeIdentityDataBridge authStateFromString:(authenticatedString)];
+   
     BOOL primary = [[dict objectForKey:IS_PRIMARY_KEY] boolValue];
 
     return [[AEPIdentityItem alloc] initWithId:identifier authenticatedState:authenticatedState primary:primary];
   }
 
-static AEPAuthenticatedState authStateFromString(NSString* authStateString) {
-    if ([authStateString isEqualToString:AUTHENTICATED]) {
++ (AEPAuthenticatedState) authStateFromString: (nullable NSString *) authStateString {
+     if (!authStateString){
+        return AEPAuthenticatedStateAmbiguous;
+     }
+    
+     if ([authStateString isEqualToString:AUTHENTICATED]) {
            return AEPAuthenticatedStateAuthenticated;
        } else if ([authStateString isEqualToString:LOGGED_OUT]) {
            return AEPAuthenticatedStateLoggedOut;
@@ -90,7 +104,11 @@ static AEPAuthenticatedState authStateFromString(NSString* authStateString) {
     return AEPAuthenticatedStateAmbiguous;
 }
 
-static NSString* stringFromAuthState(AEPAuthenticatedState authState) {
++ (NSString *) stringFromAuthState: (AEPAuthenticatedState) authState {
+    if (!authState){
+       return AMBIGUOUS;
+    }
+    
     switch (authState) {
         case AEPAuthenticatedStateAuthenticated:
             return AUTHENTICATED;
