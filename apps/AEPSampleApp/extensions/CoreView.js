@@ -99,11 +99,11 @@ function lifecycleExtensionVersion() {
 }
 
 function identityExtensionVersion() {
-  Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPIdentity version: " + version));
+  Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: Identity version: " + version));
 }
 
 function signalExtensionVersion() {
-  Signal.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPSignal version: " + version));
+  Signal.extensionVersion().then(version => console.log("AdobeExperienceSDK: Signal version: " + version));
 }
 
 function coreExtensionVersion() {

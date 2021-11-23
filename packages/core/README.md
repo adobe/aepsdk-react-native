@@ -196,5 +196,5 @@ Lifecycle.extensionVersion().then(version => console.log("AdobeExperienceSDK: Li
 ### [Signal](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/signals)
 ##### Getting the extension version:
 ```javascript
-Signal.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPSignal version: " + version));
+Signal.extensionVersion().then(version => console.log("AdobeExperienceSDK: Signal version: " + version));
 ```
