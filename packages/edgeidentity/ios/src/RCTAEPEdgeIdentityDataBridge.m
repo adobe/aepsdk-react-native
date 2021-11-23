@@ -73,7 +73,7 @@ static NSString* const AMBIGUOUS = @"ambiguous";
     return identityMap;
   }
 
-+ (AEPIdentityItem *)dictionaryToIdentityItem: (nonnull NSDictionary *) dict {
++ (AEPIdentityItem *)dictionaryToIdentityItem: (nullable NSDictionary *) dict {
     
     if (!dict) {
         return nil;
