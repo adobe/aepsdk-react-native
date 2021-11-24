@@ -40,6 +40,12 @@ import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
 ## API reference
 ### extensionVersion
 
+**Syntax**
+```javascript
+static extensionVersion(): Promise<string>;
+```
+
+**Example**
 ```javascript
 Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge version: " + version));
 ```
