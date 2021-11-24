@@ -16,8 +16,8 @@ governing permissions and limitations under the License.
 'use strict';
 
 const RCTAEPEdgeIdentity = require('react-native').NativeModules.AEPEdgeIdentity;
-import type {AEPIdentityMap} from './models/AEPIdentityMap';
-import type {AEPIdentityItem} from './models/AEPIdentityItem';
+import type {IdentityMap} from './models/IdentityMap';
+import type {IdentityItem} from './models/IdentityItem';
 
 module.exports = {
   /**
@@ -47,7 +47,7 @@ module.exports = {
    * @return promise method which will be invoked once the identifiers are available or rejected if an unexpected error occurred or the request timed out.
    */
 
-   getIdentities(): Promise<AEPIdentityMap> {
+   getIdentities(): Promise<IdentityMap> {
     return RCTAEPEdgeIdentity.getIdentities();
   },
 
@@ -59,19 +59,19 @@ module.exports = {
    *
    * 
    */
-   updateIdentities(identityMap: AEPIdentityMap) {
+   updateIdentities(identityMap: IdentityMap) {
     RCTAEPEdgeIdentity.updateIdentities(identityMap);
   },
 
   /**
-   * @brief Removes the privided identity item from the stored client-side `IdentityMap`. The Identity extension will stop sending this identifier.
+   * @brief Removes the provided identity item from the stored client-side `IdentityMap`. The Identity extension will stop sending this identifier.
    *  
    * This does not clear the identifier from the User Profile Graph.
    * - Parameters:
    *  - item: The identity item to remove.
    *  - withNamespace: The namespace of the Identity to remove.
    */
-   removeIdentity(item: AEPIdentityItem, namespace: string) {
+   removeIdentity(item: IdentityItem, namespace: string) {
     RCTAEPEdgeIdentity.removeIdentity(item, namespace);
   },
 };
