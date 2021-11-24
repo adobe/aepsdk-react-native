@@ -26,9 +26,9 @@ final class RCTAEPCoreDataBridge {
     private final static String VERBOSE = "VERBOSE";
 
     // @{link @VisitorID.AuthenticationState}
-    private final static String AEP_PRIVACY_STATUS_OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
-    private final static String AEP_PRIVACY_STATUS_OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
-    private final static String AEP_PRIVACY_STATUS_UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
+    private final static String OPT_IN = "OPT_IN";
+    private final static String OPT_OUT = "OPT_OUT";
+    private final static String UNKNOWN = "UNKNOWN";
 
     // Event Object Keys
     private final static String EVENT_NAME_KEY = "eventName";
@@ -114,9 +114,9 @@ final class RCTAEPCoreDataBridge {
             return MobilePrivacyStatus.UNKNOWN;
         }
 
-        if (privacyStatusString.equals(AEP_PRIVACY_STATUS_OPT_IN)) {
+        if (privacyStatusString.equals(OPT_IN)) {
             return MobilePrivacyStatus.OPT_IN;
-        } else if (privacyStatusString.equals(AEP_PRIVACY_STATUS_OPT_OUT)) {
+        } else if (privacyStatusString.equals(OPT_OUT)) {
             return MobilePrivacyStatus.OPT_OUT;
         }
 
@@ -125,16 +125,16 @@ final class RCTAEPCoreDataBridge {
 
     static String stringFromPrivacyStatus(final MobilePrivacyStatus privacyStatus) {
         if (privacyStatus == null) {
-            return AEP_PRIVACY_STATUS_UNKNOWN;
+            return UNKNOWN;
         }
 
         if (privacyStatus == MobilePrivacyStatus.OPT_IN) {
-            return AEP_PRIVACY_STATUS_OPT_IN;
+            return OPT_IN;
         } else if (privacyStatus == MobilePrivacyStatus.OPT_OUT) {
-            return AEP_PRIVACY_STATUS_OPT_OUT;
+            return OPT_OUT;
         }
 
-        return AEP_PRIVACY_STATUS_UNKNOWN;
+        return UNKNOWN;
     }
 
     // Helper methods

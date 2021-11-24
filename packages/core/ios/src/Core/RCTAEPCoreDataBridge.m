@@ -21,9 +21,9 @@ static NSString* const DEBUG = @"DEBUG";
 static NSString* const VERBOSE = @"VERBOSE";
 
 // Privacy Status
-static NSString* const AEP_PRIVACY_STATUS_OPT_IN = @"AEP_PRIVACY_STATUS_OPT_IN";
-static NSString* const AEP_PRIVACY_STATUS_OPT_OUT = @"AEP_PRIVACY_STATUS_OPT_OUT";
-static NSString* const AEP_PRIVACY_STATUS_UNKNOWN = @"AEP_PRIVACY_STATUS_UNKNOWN";
+static NSString* const OPT_IN = @"OPT_IN";
+static NSString* const OPT_OUT = @"OPT_OUT";
+static NSString* const UNKNOWN = @"UNKNOWN";
 
 
 static NSString* const EVENT_NAME_KEY = @"eventName";
@@ -54,9 +54,9 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 }
 
 + (AEPPrivacyStatus)privacyStatusFromString: (NSString *) statusString {
-    if ([statusString isEqualToString:AEP_PRIVACY_STATUS_OPT_IN]) {
+    if ([statusString isEqualToString:OPT_IN]) {
         return AEPPrivacyStatusOptedIn;
-    } else if ([statusString isEqualToString:AEP_PRIVACY_STATUS_OPT_OUT]) {
+    } else if ([statusString isEqualToString:OPT_OUT]) {
         return AEPPrivacyStatusOptedOut;
     }
 
@@ -80,13 +80,13 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 + (NSString *)stringFromPrivacyStatus: (AEPPrivacyStatus) status {
     switch (status) {
         case AEPPrivacyStatusOptedIn:
-            return AEP_PRIVACY_STATUS_OPT_IN;
+            return OPT_IN;
             break;
         case AEPPrivacyStatusOptedOut:
-            return AEP_PRIVACY_STATUS_OPT_OUT;
+            return OPT_OUT;
             break;
         case AEPPrivacyStatusUnknown:
-            return AEP_PRIVACY_STATUS_UNKNOWN;
+            return UNKNOWN;
             break;
     }
 }

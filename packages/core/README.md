@@ -65,9 +65,9 @@ MobileCore.setPrivacyStatus(PrivacyStatus.OPT_IN);
 Note: `PrivacyStatus` contains the following getters:
 
 ```javascript
-const OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
-const OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
-const UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
+const OPT_IN = "OPT_IN";
+const OPT_OUT = "OPT_OUT";
+const UNKNOWN = "UNKNOWN";
 ```
 
 ##### Getting the SDK identities:
