@@ -39,9 +39,9 @@ Note that initializing the SDK should be done in native code, additional documen
 ### [Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
 
 ### Importing the extension:
-In your React Native application, import the AEPIdentity extension as follows:
+In your React Native application, import the Identity extension as follows:
 ```javascript
-import {AEPIdentity} from '@adobe/react-native-aepedgeidentity';
+import {Identity} from '@adobe/react-native-aepedgeidentity';
 ```
 
 ## API reference
@@ -56,7 +56,7 @@ static extensionVersion(): Promise<string>;
 **Example**
 
 ```javascript
-AEPIdentity.extensionVersion().then(version => console.log("AdobeExperienceSDK: EdgeIdentity version: " + version));
+Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: EdgeIdentity version: " + version));
 ```
 ### getExperienceCloudId:
 This API retrieves the ECID that was generated when the app was initially launched.
@@ -70,7 +70,7 @@ static getExperienceCloudId(): Promise<string>;
 
 **Example**
 ```javascript
-AEPIdentity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
+Identity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
 ```
 
 ### getIdentities:
@@ -79,7 +79,7 @@ A promise method which will be invoked once the identities are available or reje
 
 **Syntax**
 ```javascript
-static getIdentities(): Promise<AEPIdentityMap>;
+static getIdentities(): Promise<IdentityMap>;
 ```
 **Example**
 ```javascript
@@ -98,12 +98,12 @@ Removing identities using a reserved namespace is not allowed using this API. Th
 
 **Syntax**
 ```javascript
-static removeIdentity(item: AEPIdentityItem, namespace: string);
+static removeIdentity(item: IdentityItem, namespace: string);
 ```
 **Example**
 ```javascript
-let identityItem  = new AEPIdentityItem("user@example.com");
-AEPIdentity.removeIdentity(identityItem, "Email");
+let identityItem  = new IdentityItem("user@example.com");
+Identity.removeIdentity(identityItem, "Email");
 ```
 
 ### resetIdentity:
@@ -128,16 +128,16 @@ Updating identities using a reserved namespace is not allowed using this API. Th
 **Syntax**
 
 ```javascript
-static updateIdentities(identityMap: AEPIdentityMap);
+static updateIdentities(identityMap: IdentityMap);
 ```
 
 **Example**
 
 ```javascript
-let identityItem  = new AEPIdentityItem("user@example.com");
-let map = new AEPIdentityMap();
+let identityItem  = new IdentityItem("user@example.com");
+let map = new IdentityMap();
 map.addItem(identityItem, "Email");
-AEPIdentity.updateIdentities(map);
+Identity.updateIdentities(map);
 ```
 
 ## Public Classes
@@ -180,14 +180,14 @@ For more information, please read an overview of the [AEP Identity Service](http
 ```
 **Example**
 ```javascript
-let map = new AEPIdentityMap();
+let map = new IdentityMap();
 
 // Add an item
-let identityItem  = new AEPIdentityItem("user@example.com");
+let identityItem  = new IdentityItem("user@example.com");
 map.addItem(identityItem, "Email");
 
 // Remove an item
-let identityItem  = new AEPIdentityItem("user@example.com");
+let identityItem  = new IdentityItem("user@example.com");
 map.removeItem(identityItem, "Email");
 
 //Get a list of items for a given namespace
@@ -209,9 +209,9 @@ The format of the IdentityItem class is defined by the [XDM Identity Item Schema
 
 ```javascript
 // Initialize
-let item  = new AEPIdentityItem("identifier");
+let item  = new IdentityItem("identifier");
 
-let item  = new AEPIdentityItem("identifier", AEPAuthenticatedState.AUTHENTICATED, false);
+let item  = new IdentityItem("identifier", AuthenticatedState.AUTHENTICATED, false);
 
 //Getters
 let id = item.id;
