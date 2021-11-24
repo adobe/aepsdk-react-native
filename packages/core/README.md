@@ -44,10 +44,10 @@ MobileCore.log(LogLevel.ERROR, "React Native Tag", "React Native Message");
 Note: `LogLevel` contains the following getters:
 
 ```javascript
-const ERROR = "AEP_LOG_LEVEL_ERROR";
-const WARNING = "AEP_LOG_LEVEL_WARNING";
-const DEBUG = "AEP_LOG_LEVEL_DEBUG";
-const VERBOSE = "AEP_LOG_LEVEL_VERBOSE";
+const ERROR = "ERROR";
+const WARNING = "WARNING";
+const DEBUG = "DEBUG";
+const VERBOSE = "VERBOSE";
 ```
 
 ##### Getting the current privacy status:

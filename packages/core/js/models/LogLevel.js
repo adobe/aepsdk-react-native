@@ -15,10 +15,10 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const ERROR = "AEP_LOG_LEVEL_ERROR";
-const WARNING = "AEP_LOG_LEVEL_WARNING";
-const DEBUG = "AEP_LOG_LEVEL_DEBUG";
-const VERBOSE = "AEP_LOG_LEVEL_VERBOSE";
+const ERROR = "ERROR";
+const WARNING = "WARNING";
+const DEBUG = "DEBUG";
+const VERBOSE = "VERBOSE";
 
 class LogLevel {
 

@@ -15,10 +15,10 @@ governing permissions and limitations under the License.
 @implementation RCTAEPCoreDataBridge
 
 // Logging mode
-static NSString* const AEP_LOG_LEVEL_ERROR = @"AEP_LOG_LEVEL_ERROR";
-static NSString* const AEP_LOG_LEVEL_WARNING = @"AEP_LOG_LEVEL_WARNING";
-static NSString* const AEP_LOG_LEVEL_DEBUG = @"AEP_LOG_LEVEL_DEBUG";
-static NSString* const AEP_LOG_LEVEL_VERBOSE = @"AEP_LOG_LEVEL_VERBOSE";
+static NSString* const ERROR = @"ERROR";
+static NSString* const WARNING = @"WARNING";
+static NSString* const DEBUG = @"DEBUG";
+static NSString* const VERBOSE = @"VERBOSE";
 
 // Privacy Status
 static NSString* const AEP_PRIVACY_STATUS_OPT_IN = @"AEP_PRIVACY_STATUS_OPT_IN";
@@ -64,13 +64,13 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 }
 
 + (AEPLogLevel) logLevelFromString: (NSString *) logLevelString {
-    if ([logLevelString isEqualToString:AEP_LOG_LEVEL_ERROR]) {
+    if ([logLevelString isEqualToString:ERROR]) {
         return AEPLogLevelError;
-    } else if ([logLevelString isEqualToString:AEP_LOG_LEVEL_WARNING]) {
+    } else if ([logLevelString isEqualToString:WARNING]) {
         return AEPLogLevelWarning;
-    } else if ([logLevelString isEqualToString:AEP_LOG_LEVEL_DEBUG]) {
+    } else if ([logLevelString isEqualToString:DEBUG]) {
         return AEPLogLevelDebug;
-    } else if ([logLevelString isEqualToString:AEP_LOG_LEVEL_VERBOSE]) {
+    } else if ([logLevelString isEqualToString:VERBOSE]) {
         return AEPLogLevelTrace;
     }
 
@@ -94,13 +94,13 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 + (NSString *)stringFromLogLevel: (AEPLogLevel) logLevel {
     switch (logLevel) {
         case AEPLogLevelError:
-            return AEP_LOG_LEVEL_ERROR;
+            return ERROR;
         case AEPLogLevelWarning:
-            return AEP_LOG_LEVEL_WARNING;
+            return WARNING;
         case AEPLogLevelDebug:
-            return AEP_LOG_LEVEL_DEBUG;
+            return DEBUG;
         case AEPLogLevelTrace:
-            return AEP_LOG_LEVEL_VERBOSE;
+            return VERBOSE;
     }
 }
 

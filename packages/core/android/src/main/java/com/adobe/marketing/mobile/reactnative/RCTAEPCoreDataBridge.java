@@ -20,10 +20,10 @@ import com.facebook.react.bridge.WritableNativeMap;
 final class RCTAEPCoreDataBridge {
 
     // @{link LoggingMode}
-    private final static String AEP_LOG_LEVEL_ERROR = "AEP_LOG_LEVEL_ERROR";
-    private final static String AEP_LOG_LEVEL_WARNING = "AEP_LOG_LEVEL_WARNING";
-    private final static String AEP_LOG_LEVEL_DEBUG = "AEP_LOG_LEVEL_DEBUG";
-    private final static String AEP_LOG_LEVEL_VERBOSE = "AEP_LOG_LEVEL_VERBOSE";
+    private final static String ERROR = "ERROR";
+    private final static String WARNING = "WARNING";
+    private final static String DEBUG = "DEBUG";
+    private final static String VERBOSE = "VERBOSE";
 
     // @{link @VisitorID.AuthenticationState}
     private final static String AEP_PRIVACY_STATUS_OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
@@ -77,13 +77,13 @@ final class RCTAEPCoreDataBridge {
             return LoggingMode.DEBUG;
         }
 
-        if (logModeString.equals(AEP_LOG_LEVEL_ERROR)) {
+        if (logModeString.equals(ERROR)) {
             return LoggingMode.ERROR;
-        } else if (logModeString.equals(AEP_LOG_LEVEL_WARNING)) {
+        } else if (logModeString.equals(WARNING)) {
             return LoggingMode.WARNING;
-        } else if (logModeString.equals(AEP_LOG_LEVEL_DEBUG)) {
+        } else if (logModeString.equals(DEBUG)) {
             return LoggingMode.DEBUG;
-        } else if (logModeString.equals(AEP_LOG_LEVEL_VERBOSE)) {
+        } else if (logModeString.equals(VERBOSE)) {
             return LoggingMode.VERBOSE;
         }
 
@@ -92,21 +92,21 @@ final class RCTAEPCoreDataBridge {
 
     static String stringFromLoggingMode(final LoggingMode logMode) {
         if (logMode == null) {
-            return AEP_LOG_LEVEL_DEBUG;
+            return DEBUG;
         }
 
         switch (logMode) {
             case ERROR:
-                return AEP_LOG_LEVEL_ERROR;
+                return ERROR;
             case WARNING:
-                return AEP_LOG_LEVEL_WARNING;
+                return WARNING;
             case DEBUG:
-                return AEP_LOG_LEVEL_DEBUG;
+                return DEBUG;
             case VERBOSE:
-                return AEP_LOG_LEVEL_VERBOSE;
+                return VERBOSE;
         }
 
-        return AEP_LOG_LEVEL_DEBUG;
+        return DEBUG;
     }
 
     static MobilePrivacyStatus privacyStatusFromString(final String privacyStatusString) {
