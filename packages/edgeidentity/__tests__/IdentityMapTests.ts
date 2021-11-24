@@ -12,33 +12,33 @@ governing permissions and limitations under the License.
 @format
 */
 
-import { AEPAuthenticatedState, AEPIdentityItem, AEPIdentityMap } from '../';
+import { AuthenticatedState, IdentityItem, IdentityMap } from '../';
 
-describe('AEPIdentityMap', () => {
+describe('IdentityMap', () => {
 
-  it('AEPIdentityMap addItem is validated', async () => {
+  it('IdentityMap addItem is validated', async () => {
     let identifier1 = "id1";
     let namespace1 = "namespace1"
-    let authenticatedState1 = AEPAuthenticatedState.AMBIGUOUS;
+    let authenticatedState1 = AuthenticatedState.AMBIGUOUS;
     let isPrimary1 = true;
 
     let identifier2 = "id2";
     let namespace2 = "namespace2"
-    let authenticatedState2 = AEPAuthenticatedState.AUTHENTICATED;
+    let authenticatedState2 = AuthenticatedState.AUTHENTICATED;
     let isPrimary2 = false;
 
     let identifier3 = "id3";
-    let authenticatedState3 = AEPAuthenticatedState.LOGGED_OUT;
+    let authenticatedState3 = AuthenticatedState.LOGGED_OUT;
   
     let identifier4 = "id4";
 
-    let identityItems1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-    let identityItems2  = new AEPIdentityItem(identifier2, authenticatedState2, isPrimary2);
-    let identityItems3  = new AEPIdentityItem(identifier3, authenticatedState3);
-    let identityItems4  = new AEPIdentityItem(identifier4);
+    let identityItems1  = new IdentityItem(identifier1, authenticatedState1, isPrimary1);
+    let identityItems2  = new IdentityItem(identifier2, authenticatedState2, isPrimary2);
+    let identityItems3  = new IdentityItem(identifier3, authenticatedState3);
+    let identityItems4  = new IdentityItem(identifier4);
    
     // add items
-    let idMap = new AEPIdentityMap();
+    let idMap = new IdentityMap();
     idMap.addItem(identityItems1, namespace1);
     idMap.addItem(identityItems2, namespace1);
     idMap.addItem(identityItems3, namespace2);
@@ -53,20 +53,20 @@ describe('AEPIdentityMap', () => {
 
     let itemsForNamespace2 = idMap.getIdentityItemsForNamespace(namespace2);
     expect(itemsForNamespace2.length).toEqual(2);
-    expect(itemsForNamespace2).toEqual([{"id": identifier3, "authenticatedState": authenticatedState3, "primary": false}, {"id": identifier4, "authenticatedState": AEPAuthenticatedState.AMBIGUOUS, "primary": false}]);
+    expect(itemsForNamespace2).toEqual([{"id": identifier3, "authenticatedState": authenticatedState3, "primary": false}, {"id": identifier4, "authenticatedState": AuthenticatedState.AMBIGUOUS, "primary": false}]);
  });
 
- it('AEPIdentityMap addItem replaces items with same id', async () => {
+ it('IdentityMap addItem replaces items with same id', async () => {
     let identifier1 = "id1";
     let namespace1 = "namespace1"
-    let authenticatedState1 = AEPAuthenticatedState.AMBIGUOUS;
+    let authenticatedState1 = AuthenticatedState.AMBIGUOUS;
     let isPrimary1 = true;
 
-    let authenticatedState2 = AEPAuthenticatedState.AUTHENTICATED;
+    let authenticatedState2 = AuthenticatedState.AUTHENTICATED;
 
     // add same item twice
-    let idMap = new AEPIdentityMap();
-    let item1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+    let idMap = new IdentityMap();
+    let item1  = new IdentityItem(identifier1, authenticatedState1, isPrimary1);
     idMap.addItem(item1, namespace1);
     idMap.addItem(item1, namespace1); // same item, should be ignored
 
@@ -78,7 +78,7 @@ describe('AEPIdentityMap', () => {
     expect(itemsForNamespace).toEqual(expectedItems);
 
     // add item with same id, should replace existing item
-    idMap.addItem(new AEPIdentityItem(identifier1, authenticatedState2), namespace1); 
+    idMap.addItem(new IdentityItem(identifier1, authenticatedState2), namespace1); 
 
     // verify
     expect(idMap.getNamespaces().length).toEqual(1);
@@ -90,33 +90,33 @@ describe('AEPIdentityMap', () => {
     expect(itemsForNamespace).toEqual(expectedItems); 
  });
 
- it('AEPIdentityMap removeItem is validated', async () => {
+ it('IdentityMap removeItem is validated', async () => {
 
     let identifier1 = "id1";
     let namespace1 = "namespace1"
-    let authenticatedState1 = AEPAuthenticatedState.AMBIGUOUS;
+    let authenticatedState1 = AuthenticatedState.AMBIGUOUS;
     let isPrimary1 = true;
 
     let identifier2 = "id2";
     let namespace2 = "namespace2"
-    let authenticatedState2 = AEPAuthenticatedState.AUTHENTICATED;
+    let authenticatedState2 = AuthenticatedState.AUTHENTICATED;
     let isPrimary2 = false;
 
     let identifier3 = "id3";
-    let authenticatedState3 = AEPAuthenticatedState.LOGGED_OUT;
+    let authenticatedState3 = AuthenticatedState.LOGGED_OUT;
 
-    let item1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-    let item2  = new AEPIdentityItem(identifier2, authenticatedState2, isPrimary2);
-    let item3  = new AEPIdentityItem(identifier3, authenticatedState3);
+    let item1  = new IdentityItem(identifier1, authenticatedState1, isPrimary1);
+    let item2  = new IdentityItem(identifier2, authenticatedState2, isPrimary2);
+    let item3  = new IdentityItem(identifier3, authenticatedState3);
 
     // add items
-    let idMap = new AEPIdentityMap();
+    let idMap = new IdentityMap();
     idMap.addItem(item1, namespace1);
     idMap.addItem(item2, namespace2);
     idMap.addItem(item3, namespace2);
 
     idMap.removeItem(item1, namespace1);
-    idMap.removeItem(new AEPIdentityItem(identifier2), namespace2); // remove item based on id only
+    idMap.removeItem(new IdentityItem(identifier2), namespace2); // remove item based on id only
 
     expect(idMap.getNamespaces().length).toEqual(1);
     let itemsForNamespace2 = idMap.getIdentityItemsForNamespace(namespace2);
@@ -129,39 +129,39 @@ describe('AEPIdentityMap', () => {
     expect(idMap.isEmpty()).toEqual(true);
  });
 
- it('AEPIdentityMap removeItem invalid params', async () => {
+ it('IdentityMap removeItem invalid params', async () => {
 
     let identifier1 = "id1";
     let namespace1 = "namespace1"
-    let authenticatedState1 = AEPAuthenticatedState.AMBIGUOUS;
+    let authenticatedState1 = AuthenticatedState.AMBIGUOUS;
     let isPrimary1 = true;
 
-    let item1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+    let item1  = new IdentityItem(identifier1, authenticatedState1, isPrimary1);
 
     // add items
-    let idMap = new AEPIdentityMap();
+    let idMap = new IdentityMap();
     idMap.addItem(item1, namespace1);
 
     // removeItem requires valid items + namespace
     idMap.removeItem(item1, ""); // empty namespace
-    idMap.removeItem(new AEPIdentityItem("anotherId"), namespace1); // unknown id
+    idMap.removeItem(new IdentityItem("anotherId"), namespace1); // unknown id
 
     expect(idMap.getNamespaces().length).toEqual(1);
     let itemsForNamespace1 = idMap.getIdentityItemsForNamespace(namespace1);
     expect(itemsForNamespace1.length).toEqual(1);
  });
 
- it('AEPIdentityMap getItemsForNamespace invalid params', async () => {
+ it('IdentityMap getItemsForNamespace invalid params', async () => {
 
     let identifier1 = "id1";
     let namespace1 = "namespace1"
-    let authenticatedState1 = AEPAuthenticatedState.AMBIGUOUS;
+    let authenticatedState1 = AuthenticatedState.AMBIGUOUS;
     let isPrimary1 = true;
 
-    let item1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
+    let item1  = new IdentityItem(identifier1, authenticatedState1, isPrimary1);
 
     // add items
-    let idMap = new AEPIdentityMap();
+    let idMap = new IdentityMap();
     idMap.addItem(item1, namespace1);
 
     expect(idMap.getIdentityItemsForNamespace("invalid").length).toEqual(0);

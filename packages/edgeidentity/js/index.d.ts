@@ -10,33 +10,33 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 
 */
-export class AEPIdentity{
+export class Identity{
     static extensionVersion(): Promise<string>;
     static getExperienceCloudId(): Promise<string>;
-    static getIdentities(): Promise<AEPIdentityMap>;
-    static updateIdentities(identityMap: AEPIdentityMap);
-    static removeIdentity(item: AEPIdentityItem, namespace: string);
+    static getIdentities(): Promise<IdentityMap>;
+    static updateIdentities(identityMap: IdentityMap);
+    static removeIdentity(item: IdentityItem, namespace: string);
 };
 
-export class AEPAuthenticatedState {
+export class AuthenticatedState {
     static AUTHENTICATED: string;
     static LOGGED_OUT: string;
     static AMBIGUOUS: string;
 }
 
-export class AEPIdentityItem {
+export class IdentityItem {
   id: string;
-  authenticatedState: AEPAuthenticatedState;
+  authenticatedState: AuthenticatedState;
   primary: boolean;
-  constructor(id: string, authenticatedState: AEPAuthenticatedState = AEPAuthenticatedState.AMBIGUOUS, primary: boolean = false)
+  constructor(id: string, authenticatedState: AuthenticatedState = AuthenticatedState.AMBIGUOUS, primary: boolean = false)
 }
 
-export class AEPIdentityMap {
+export class IdentityMap {
   constructor()
 
-  addItem(item: AEPIdentityItem, namespace: string);
+  addItem(item: IdentityItem, namespace: string);
   isEmpty();
   getNamespaces();
   getIdentityItemsForNamespace(namespace: string)
-  removeItem(item: AEPIdentityItem, namespace: string);
+  removeItem(item: IdentityItem, namespace: string);
 }

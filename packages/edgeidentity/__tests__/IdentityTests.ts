@@ -13,30 +13,30 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { AEPIdentity, AEPAuthenticatedState, AEPIdentityItem, AEPIdentityMap } from '../';
+import { Identity, AuthenticatedState, IdentityItem, IdentityMap } from '../';
 
 afterEach(() => {    
   jest.clearAllMocks();
 });
 
-describe('AEPEdgeIdentity', () => {
+describe('Identity for Edge Network', () => {
 
   it('extensionVersion is called', async () => {
-    expect(AEPIdentity.extensionVersion).toBeDefined();
+    expect(Identity.extensionVersion).toBeDefined();
     const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'extensionVersion');
-    await AEPIdentity.extensionVersion();
+    await Identity.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('getExperienceCloudId is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'getExperienceCloudId');
-    await AEPIdentity.getExperienceCloudId();
+    await Identity.getExperienceCloudId();
     expect(spy).toHaveBeenCalled();
   });
 
   it('getIdentities is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'getIdentities');
-    await AEPIdentity.getIdentities();
+    await Identity.getIdentities();
     expect(spy).toHaveBeenCalled();
   });
 
@@ -44,18 +44,18 @@ describe('AEPEdgeIdentity', () => {
     const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'updateIdentities');
     let identifier1 = "id1";
     let namespace1 = "namespace1"
-    let authenticatedState1 = AEPAuthenticatedState.AMBIGUOUS;
+    let authenticatedState1 = AuthenticatedState.AMBIGUOUS;
     let isPrimary1 = true;
 
     let identifier2 = "id2";
     let namespace2 = "namespace2"
-    let authenticatedState2 = AEPAuthenticatedState.AUTHENTICATED;
+    let authenticatedState2 = AuthenticatedState.AUTHENTICATED;
     let isPrimary2 = false;
 
-    let identityItems1  = new AEPIdentityItem(identifier1, authenticatedState1, isPrimary1);
-    let identityItems2  = new AEPIdentityItem(identifier2, authenticatedState2, isPrimary2);
+    let identityItems1  = new IdentityItem(identifier1, authenticatedState1, isPrimary1);
+    let identityItems2  = new IdentityItem(identifier2, authenticatedState2, isPrimary2);
   
-    let idMap = new AEPIdentityMap();
+    let idMap = new IdentityMap();
 
     let expectedIdMap = {"items": { "namespace1" : [{"id": identifier1, "authenticatedState": authenticatedState1, "primary": isPrimary1}], "namespace2" : [{"id": identifier2, "authenticatedState": authenticatedState2, "primary": isPrimary2}]}};
    
@@ -65,7 +65,7 @@ describe('AEPEdgeIdentity', () => {
 
     //add item 2
     idMap.addItem(identityItems2, namespace2);
-    await AEPIdentity.updateIdentities(idMap);
+    await Identity.updateIdentities(idMap);
     expect(spy).toHaveBeenCalledWith(expectedIdMap);
   });
 
@@ -73,11 +73,11 @@ describe('AEPEdgeIdentity', () => {
     const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'removeIdentity');
     let namespace1 = "namespace1"
 
-    let identityItem1  = new AEPIdentityItem("id1", AEPAuthenticatedState.LOGGED_OUT, true);
-    let identityItem2  = new AEPIdentityItem("id2");
+    let identityItem1  = new IdentityItem("id1", AuthenticatedState.LOGGED_OUT, true);
+    let identityItem2  = new IdentityItem("id2");
 
-    await AEPIdentity.removeIdentity(identityItem1, namespace1);
-    await AEPIdentity.removeIdentity(identityItem2, namespace1);
+    await Identity.removeIdentity(identityItem1, namespace1);
+    await Identity.removeIdentity(identityItem2, namespace1);
     expect(spy).toHaveBeenCalledTimes(2);
     expect(spy).toHaveBeenNthCalledWith(1, {"id": "id1", "authenticatedState": "loggedOut", "primary": true}, namespace1);
     expect(spy).toHaveBeenNthCalledWith(2, {"id": "id2", "authenticatedState": "ambiguous", "primary": false}, namespace1);

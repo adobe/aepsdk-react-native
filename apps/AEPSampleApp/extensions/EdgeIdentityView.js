@@ -15,28 +15,28 @@ governing permissions and limitations under the License.
 
 import React, {useState, Component} from 'react';
 import {Button, StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
-import {AEPIdentity, AEPIdentityItem, AEPIdentityMap, AEPAuthenticatedState} from '@adobe/react-native-aepedgeidentity';
+import {Identity, IdentityItem, IdentityMap, AuthenticatedState} from '@adobe/react-native-aepedgeidentity';
 
-export default EdgeIdentity = ({ navigation }) => {
+export default EdgeIdentityView = ({ navigation }) => {
   const [version, setVersion] = useState('');
   const [identities, setIdentities] = useState('');
   const [ecid, setECID] = useState("");
-  AEPIdentity.extensionVersion().then(version => setVersion(version));
+  Identity.extensionVersion().then(version => setVersion(version));
 
   function getIdentities() {
-    AEPIdentity.getIdentities().then(currentIdentity => {
+    Identity.getIdentities().then(currentIdentity => {
       let identitiesStr = JSON.stringify(currentIdentity);
       setIdentities(identitiesStr);
-      console.log("AdobeExperienceSDK: getIdentities " + identitiesStr);
+      console.log("AdobeExperienceSDK: Identity.getIdentities " + identitiesStr);
     }).catch((error) => {
-      console.warn("AdobeExperienceSDK: getIdentities returned error: ", error);
+      console.warn("AdobeExperienceSDK: Identity.getIdentities returned error: ", error);
     });
   }
 
   function getExperienceCloudId() {
-  AEPIdentity.getExperienceCloudId().then(experienceCloudId => {
+  Identity.getExperienceCloudId().then(experienceCloudId => {
     setECID(experienceCloudId);
-    console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId);
+    console.log("AdobeExperienceSDK: ECID = " + experienceCloudId);
      }).catch((error) => {
       console.warn("AdobeExperienceSDK: ECID returned error: ", error);
     });
@@ -62,22 +62,22 @@ export default EdgeIdentity = ({ navigation }) => {
 
 function updateIdentities() {
   var namespace1 = "namespace1";
-  var item1  = new AEPIdentityItem("id1", AEPAuthenticatedState.AUTHENTICATED, false);
-  var item2  = new AEPIdentityItem("id2");
+  var item1  = new IdentityItem("id1", AuthenticatedState.AUTHENTICATED, false);
+  var item2  = new IdentityItem("id2");
 
-  var map = new AEPIdentityMap();
+  var map = new IdentityMap();
   map.addItem(item1, namespace1);
   map.addItem(item2, namespace1);
   console.log("sample app - update identity");
-  AEPIdentity.updateIdentities(map);
+  Identity.updateIdentities(map);
 }
 
 function removeIdentity() {
   let namespace = "namespace1";
-  let item1 = new AEPIdentityItem("id1");
+  let item1 = new IdentityItem("id1");
   
   console.log("sample app - removeIdentity");
-  AEPIdentity.removeIdentity(item1, namespace);
+  Identity.removeIdentity(item1, namespace);
 }
 
 

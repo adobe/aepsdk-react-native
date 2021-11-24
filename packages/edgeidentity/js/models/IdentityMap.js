@@ -15,17 +15,17 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-import AEPIdentityItem from './AEPIdentityItem';
+import IdentityItem from './IdentityItem';
 
-class AEPIdentityMap {
-  items: {string: Array<AEPIdentityItem>} = {};
+class IdentityMap {
+  items: {string: Array<IdentityItem>} = {};
 
   constructor() {}
 
   /**
-   * Adds an `AEPIdentityItem` to this `AEPIdentityMap`
+   * Adds an `IdentityItem` to this `IdentityMap`
    */
-  addItem(item: AEPIdentityItem, namespace: string) {
+  addItem(item: IdentityItem, namespace: string) {
     if (item == null || !namespace) {
       return;
     }
@@ -49,31 +49,31 @@ class AEPIdentityMap {
   }
 
   /**
-   * Checks if this `AEPIdentityMap` is empty
+   * Checks if this `IdentityMap` is empty
    */
   isEmpty() {
     return !Object.keys(this.items).length;
   }
 
   /**
-   * Gets a list of all namespaces available in this `AEPIdentityMap`
+   * Gets a list of all namespaces available in this `IdentityMap`
    */
   getNamespaces() {
     return Object.keys(this.items);
   }
 
   /**
-  * Retrieves the AEPIdentityItem s for a given namespace
+  * Retrieves the IdentityItem s for a given namespace
   */
-  getIdentityItemsForNamespace(namespace: string) : Promise<?Array<AEPIdentityItem>> {
+  getIdentityItemsForNamespace(namespace: string) : Promise<?Array<IdentityItem>> {
     var namespacesKey = Object.assign([], this.items[namespace]);
     return namespacesKey;
   }
 
   /**
-   * Removes the provided `AEPIdentityItem` for a namespace from the `AEPIdentityMap`
+   * Removes the provided `IdentityItem` for a namespace from the `IdentityMap`
    */
- removeItem(item: AEPIdentityItem, namespace: string) {
+ removeItem(item: IdentityItem, namespace: string) {
   if (item == null || !namespace) {
     return;
   }
@@ -98,9 +98,9 @@ function equalIds(id1: string, id2: string): Promise<boolean> {
   return id1.toLowerCase() === id2.toLowerCase()
 }
 
-function copyItem(item: AEPIdentityItem) : Promise<AEPIdentityItem> {
-  var clonedItem = new AEPIdentityItem(item.id, item.authenticatedState, item.primary);
+function copyItem(item: IdentityItem) : Promise<IdentityItem> {
+  var clonedItem = new IdentityItem(item.id, item.authenticatedState, item.primary);
   return clonedItem;
 }
 
-module.exports = AEPIdentityMap;
+module.exports = IdentityMap;
