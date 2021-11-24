@@ -8,7 +8,7 @@
 
 ## Prerequisites
 
-The Adobe Experience Platform Identity for Edge Network extension has the following peer dependency, which must be installed prior to install the messaging extension:
+The Adobe Experience Platform Identity for Edge Network extension has the following peer dependency, which must be installed prior to installing the identity extension:
 - [Core](../core/README.md)
 
 ## Installation
