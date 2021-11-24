@@ -17,20 +17,20 @@ governing permissions and limitations under the License.
 
 module.exports = {
   // Native models
-  get AEPAuthenticatedState() {
-    return require('./models/AEPAuthenticatedState');
+  get AuthenticatedState() {
+    return require('./models/AuthenticatedState');
   },
 
-  get AEPIdentityItem() {
-    return require('./models/AEPIdentityItem');
+  get IdentityItem() {
+    return require('./models/IdentityItem');
   },
 
-  get AEPIdentityMap() {
-    return require('./models/AEPIdentityMap');
+  get IdentityMap() {
+    return require('./models/IdentityMap');
   },
 
   // Native modules
-  get AEPIdentity() {
-    return require('./AEPIdentity');
+  get Identity() {
+    return require('./Identity');
   },
 };

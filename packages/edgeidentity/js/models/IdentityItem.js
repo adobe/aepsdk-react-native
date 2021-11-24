@@ -15,24 +15,18 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const AUTHENTICATED = "authenticated";
-const LOGGED_OUT = "loggedOut";
-const AMBIGUOUS = "ambiguous";
+import AuthenticatedState from './AuthenticatedState';
 
-class AEPAuthenticatedState {
+class IdentityItem {
+  id: string;
+  authenticatedState: AuthenticatedState;
+  primary: boolean;
 
-  static get AUTHENTICATED() {
-    return AUTHENTICATED;
+  constructor(id: string, authenticatedState: AuthenticatedState = AuthenticatedState.AMBIGUOUS, primary: boolean = false) {
+  	this.id = id;
+    this.authenticatedState = authenticatedState;
+    this.primary = primary
   }
-
-  static get LOGGED_OUT() {
-    return LOGGED_OUT;
-  }
-
-  static get AMBIGUOUS() {
-    return AMBIGUOUS;
-  }
-
 }
 
-module.exports = AEPAuthenticatedState;
+module.exports = IdentityItem;
