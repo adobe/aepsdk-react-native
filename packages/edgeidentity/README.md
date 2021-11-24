@@ -83,7 +83,7 @@ static getIdentities(): Promise<AEPIdentityMap>;
 ```
 **Example**
 ```javascript
-AEPIdentity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get AEP Identities = " + JSON.stringify(identities)));
+Identity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get Identities = " + JSON.stringify(identities)));
 ```
 
 ### removeIdentity:
