@@ -42,6 +42,6 @@ module.exports = {
    * if an unexpected error occurs or the request timed out
    */
   getConsents(): Promise<{string: any}> {
-  	return Promise.resolve(RCTAEPEdgeConsent.getConsents());
+  	return RCTAEPEdgeConsent.getConsents();
   },
 };
