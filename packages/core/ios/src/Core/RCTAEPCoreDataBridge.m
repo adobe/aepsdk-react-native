@@ -15,10 +15,10 @@ governing permissions and limitations under the License.
 @implementation RCTAEPCoreDataBridge
 
 // Logging mode
-static NSString* const ERROR = @"ERROR";
-static NSString* const WARNING = @"WARNING";
-static NSString* const DEBUG = @"DEBUG";
-static NSString* const VERBOSE = @"VERBOSE";
+static NSString* const ERROR_MODE = @"ERROR";
+static NSString* const WARNING_MODE = @"WARNING";
+static NSString* const DEBUG_MODE = @"DEBUG";
+static NSString* const VERBOSE_MODE = @"VERBOSE";
 
 // Privacy Status
 static NSString* const OPT_IN = @"OPT_IN";
@@ -64,13 +64,13 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 }
 
 + (AEPLogLevel) logLevelFromString: (NSString *) logLevelString {
-    if ([logLevelString isEqualToString:ERROR]) {
+    if ([logLevelString isEqualToString:ERROR_MODE]) {
         return AEPLogLevelError;
-    } else if ([logLevelString isEqualToString:WARNING]) {
+    } else if ([logLevelString isEqualToString:WARNING_MODE]) {
         return AEPLogLevelWarning;
-    } else if ([logLevelString isEqualToString:DEBUG]) {
+    } else if ([logLevelString isEqualToString:DEBUG_MODE]) {
         return AEPLogLevelDebug;
-    } else if ([logLevelString isEqualToString:VERBOSE]) {
+    } else if ([logLevelString isEqualToString:VERBOSE_MODE]) {
         return AEPLogLevelTrace;
     }
 
@@ -94,13 +94,13 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 + (NSString *)stringFromLogLevel: (AEPLogLevel) logLevel {
     switch (logLevel) {
         case AEPLogLevelError:
-            return ERROR;
+            return ERROR_MODE;
         case AEPLogLevelWarning:
-            return WARNING;
+            return WARNING_MODE;
         case AEPLogLevelDebug:
-            return DEBUG;
+            return DEBUG_MODE;
         case AEPLogLevelTrace:
-            return VERBOSE;
+            return VERBOSE_MODE;
     }
 }
 
