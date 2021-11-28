@@ -138,9 +138,9 @@ Identity.syncIdentifiersWithAuthState({"id1": "identifier1"}, MobileVisitorAuthe
 Note: `MobileVisitorAuthenticationState` contains the following getters:
 
 ```javascript
-const AUTHENTICATED = "AEP_VISITOR_AUTH_STATE_AUTHENTICATED";
-const LOGGED_OUT = "AEP_VISITOR_AUTH_STATE_LOGGED_OUT";
-const UNKNOWN = "AEP_VISITOR_AUTH_STATE_UNKNOWN";
+const AUTHENTICATED = "VISITOR_AUTH_STATE_AUTHENTICATED";
+const LOGGED_OUT = "VISITOR_AUTH_STATE_LOGGED_OUT";
+const UNKNOWN = "VISITOR_AUTH_STATE_UNKNOWN";
 ```
 
 ##### Setting the advertising identifier:

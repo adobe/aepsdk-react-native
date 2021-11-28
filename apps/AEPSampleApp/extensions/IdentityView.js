@@ -46,7 +46,7 @@ function syncIdentifiers() {
 }
 
 function syncIdentifiersWithAuthState() {
-  Identity.syncIdentifiersWithAuthState({ "id1": "identifier1" }, "AEP_VISITOR_AUTH_STATE_AUTHENTICATED");
+  Identity.syncIdentifiersWithAuthState({ "id1": "identifier1" }, MobileVisitorAuthenticationState.AUTHENTICATED);
 }
 
 function syncIdentifier() {
