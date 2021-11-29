@@ -20,15 +20,15 @@ import com.facebook.react.bridge.WritableNativeMap;
 final class RCTAEPCoreDataBridge {
 
     // @{link LoggingMode}
-    private final static String AEP_LOG_LEVEL_ERROR = "AEP_LOG_LEVEL_ERROR";
-    private final static String AEP_LOG_LEVEL_WARNING = "AEP_LOG_LEVEL_WARNING";
-    private final static String AEP_LOG_LEVEL_DEBUG = "AEP_LOG_LEVEL_DEBUG";
-    private final static String AEP_LOG_LEVEL_VERBOSE = "AEP_LOG_LEVEL_VERBOSE";
+    private final static String ERROR = "ERROR";
+    private final static String WARNING = "WARNING";
+    private final static String DEBUG = "DEBUG";
+    private final static String VERBOSE = "VERBOSE";
 
     // @{link @VisitorID.AuthenticationState}
-    private final static String AEP_PRIVACY_STATUS_OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
-    private final static String AEP_PRIVACY_STATUS_OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
-    private final static String AEP_PRIVACY_STATUS_UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
+    private final static String OPT_IN = "OPT_IN";
+    private final static String OPT_OUT = "OPT_OUT";
+    private final static String UNKNOWN = "UNKNOWN";
 
     // Event Object Keys
     private final static String EVENT_NAME_KEY = "eventName";
@@ -77,13 +77,13 @@ final class RCTAEPCoreDataBridge {
             return LoggingMode.DEBUG;
         }
 
-        if (logModeString.equals(AEP_LOG_LEVEL_ERROR)) {
+        if (logModeString.equals(ERROR)) {
             return LoggingMode.ERROR;
-        } else if (logModeString.equals(AEP_LOG_LEVEL_WARNING)) {
+        } else if (logModeString.equals(WARNING)) {
             return LoggingMode.WARNING;
-        } else if (logModeString.equals(AEP_LOG_LEVEL_DEBUG)) {
+        } else if (logModeString.equals(DEBUG)) {
             return LoggingMode.DEBUG;
-        } else if (logModeString.equals(AEP_LOG_LEVEL_VERBOSE)) {
+        } else if (logModeString.equals(VERBOSE)) {
             return LoggingMode.VERBOSE;
         }
 
@@ -92,21 +92,21 @@ final class RCTAEPCoreDataBridge {
 
     static String stringFromLoggingMode(final LoggingMode logMode) {
         if (logMode == null) {
-            return AEP_LOG_LEVEL_DEBUG;
+            return DEBUG;
         }
 
         switch (logMode) {
             case ERROR:
-                return AEP_LOG_LEVEL_ERROR;
+                return ERROR;
             case WARNING:
-                return AEP_LOG_LEVEL_WARNING;
+                return WARNING;
             case DEBUG:
-                return AEP_LOG_LEVEL_DEBUG;
+                return DEBUG;
             case VERBOSE:
-                return AEP_LOG_LEVEL_VERBOSE;
+                return VERBOSE;
         }
 
-        return AEP_LOG_LEVEL_DEBUG;
+        return DEBUG;
     }
 
     static MobilePrivacyStatus privacyStatusFromString(final String privacyStatusString) {
@@ -114,9 +114,9 @@ final class RCTAEPCoreDataBridge {
             return MobilePrivacyStatus.UNKNOWN;
         }
 
-        if (privacyStatusString.equals(AEP_PRIVACY_STATUS_OPT_IN)) {
+        if (privacyStatusString.equals(OPT_IN)) {
             return MobilePrivacyStatus.OPT_IN;
-        } else if (privacyStatusString.equals(AEP_PRIVACY_STATUS_OPT_OUT)) {
+        } else if (privacyStatusString.equals(OPT_OUT)) {
             return MobilePrivacyStatus.OPT_OUT;
         }
 
@@ -125,16 +125,16 @@ final class RCTAEPCoreDataBridge {
 
     static String stringFromPrivacyStatus(final MobilePrivacyStatus privacyStatus) {
         if (privacyStatus == null) {
-            return AEP_PRIVACY_STATUS_UNKNOWN;
+            return UNKNOWN;
         }
 
         if (privacyStatus == MobilePrivacyStatus.OPT_IN) {
-            return AEP_PRIVACY_STATUS_OPT_IN;
+            return OPT_IN;
         } else if (privacyStatus == MobilePrivacyStatus.OPT_OUT) {
-            return AEP_PRIVACY_STATUS_OPT_OUT;
+            return OPT_OUT;
         }
 
-        return AEP_PRIVACY_STATUS_UNKNOWN;
+        return UNKNOWN;
     }
 
     // Helper methods

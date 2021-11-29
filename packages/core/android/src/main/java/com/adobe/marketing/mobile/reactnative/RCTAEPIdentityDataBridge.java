@@ -19,9 +19,9 @@ import com.facebook.react.bridge.WritableNativeMap;
 final class RCTAEPIdentityDataBridge {
 
     // Visitor ID Auth State
-    private static final String AEP_VISITOR_AUTH_STATE_AUTHENTICATED = "AEP_VISITOR_AUTH_STATE_AUTHENTICATED";
-    private static final String AEP_VISITOR_AUTH_STATE_LOGGED_OUT = "AEP_VISITOR_AUTH_STATE_LOGGED_OUT";
-    private static final String AEP_VISITOR_AUTH_STATE_UNKNOWN = "AEP_VISITOR_AUTH_STATE_UNKNOWN";
+    private static final String AEP_VISITOR_AUTH_STATE_AUTHENTICATED = "VISITOR_AUTH_STATE_AUTHENTICATED";
+    private static final String AEP_VISITOR_AUTH_STATE_LOGGED_OUT = "VISITOR_AUTH_STATE_LOGGED_OUT";
+    private static final String AEP_VISITOR_AUTH_STATE_UNKNOWN = "VISITOR_AUTH_STATE_UNKNOWN";
 
     // Visitor ID
     private static final String AEP_VISITOR_ID_ORIGIN = "idOrigin";
