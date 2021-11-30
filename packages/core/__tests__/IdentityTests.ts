@@ -13,29 +13,29 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import {AEPIdentity, AEPMobileVisitorAuthenticationState} from '../';
+import {MobileVisitorAuthenticationState, Identity} from '../';
 
-describe('AEPIdentity', () => {
+describe('Identity', () => {
 
   it('extensionVersion is called', async () => {
-    expect(AEPIdentity.extensionVersion).toBeDefined();
+    expect(Identity.extensionVersion).toBeDefined();
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'extensionVersion');
-    await AEPIdentity.extensionVersion();
+    await Identity.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('syncIdentifiers is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'syncIdentifiers');
     let identifiers = {"testKey": "testValue"};
-    await AEPIdentity.syncIdentifiers(identifiers);
+    await Identity.syncIdentifiers(identifiers);
     expect(spy).toHaveBeenCalledWith(identifiers);
   });
 
   test('syncIdentifiersWithAuthState is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'syncIdentifiersWithAuthState');
     let identifiers = {"testKey": "testValue"};
-    let authState = AEPMobileVisitorAuthenticationState.LOGGED_OUT;
-    await AEPIdentity.syncIdentifiersWithAuthState(identifiers, authState);
+    let authState = MobileVisitorAuthenticationState.LOGGED_OUT;
+    await Identity.syncIdentifiersWithAuthState(identifiers, authState);
     expect(spy).toHaveBeenCalledWith(identifiers, authState);
   });
 
@@ -43,33 +43,33 @@ describe('AEPIdentity', () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'syncIdentifier');
     let identifier = "testId"
     let identifierType = "testIdType"
-    let authState = AEPMobileVisitorAuthenticationState.AUTHENTICATED;
-    await AEPIdentity.syncIdentifier(identifier, identifierType, authState);
+    let authState = MobileVisitorAuthenticationState.AUTHENTICATED;
+    await Identity.syncIdentifier(identifier, identifierType, authState);
     expect(spy).toHaveBeenCalledWith(identifier, identifierType, authState);
   });
 
   test('appendVisitorInfoForURL is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'appendVisitorInfoForURL');
     let url = "testurl.com";
-    await AEPIdentity.appendVisitorInfoForURL(url);
+    await Identity.appendVisitorInfoForURL(url);
     expect(spy).toHaveBeenCalledWith(url);
   });
 
   test('getUrlVariables is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'getUrlVariables');
-    await AEPIdentity.getUrlVariables();
+    await Identity.getUrlVariables();
     expect(spy).toHaveBeenCalled();
   });
 
   test('getIdentifiers is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'getIdentifiers');
-    await AEPIdentity.getIdentifiers();
+    await Identity.getIdentifiers();
     expect(spy).toHaveBeenCalled();
   });
 
   test('getExperienceCloudId is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'getExperienceCloudId');
-    await AEPIdentity.getExperienceCloudId();
+    await Identity.getExperienceCloudId();
     expect(spy).toHaveBeenCalled();
   });
 

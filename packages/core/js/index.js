@@ -17,33 +17,33 @@ governing permissions and limitations under the License.
 
 module.exports = {
   // Native models
-  get AEPMobilePrivacyStatus() {
-    return require('./models/AEPMobilePrivacyStatus');
+  get PrivacyStatus() {
+    return require('./models/PrivacyStatus');
   },
-  get AEPMobileLogLevel() {
-    return require('./models/AEPMobileLogLevel');
+  get LogLevel() {
+    return require('./models/LogLevel');
   },
-  get AEPMobileVisitorAuthenticationState() {
-    return require('./models/AEPMobileVisitorAuthenticationState');
+  get MobileVisitorAuthenticationState() {
+    return require('./models/MobileVisitorAuthenticationState');
   },
-  get AEPVisitorID() {
-    return require('./models/AEPVisitorID');
+  get VisitorID() {
+    return require('./models/VisitorID');
   },
-  get AEPExtensionEvent() {
-    return require('./models/AEPExtensionEvent');
+  get Event() {
+    return require('./models/Event');
   },
 
   // Native modules
-  get AEPCore() {
-    return require('./AEPCore');
+  get MobileCore() {
+    return require('./MobileCore');
   },
-  get AEPLifecycle() {
-    return require('./AEPLifecycle');
+  get Lifecycle() {
+    return require('./Lifecycle');
   },
-  get AEPIdentity() {
-    return require('./AEPIdentity');
+  get Identity() {
+    return require('./Identity');
   },
-  get AEPSignal() {
-    return require('./AEPSignal');
+  get Signal() {
+    return require('./Signal');
   },
 };

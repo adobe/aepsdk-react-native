@@ -9,30 +9,20 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
-@flow
 @format
 */
 
-'use strict';
 
-const OPT_IN = "AEP_PRIVACY_STATUS_OPT_IN";
-const OPT_OUT = "AEP_PRIVACY_STATUS_OPT_OUT";
-const UNKNOWN = "AEP_PRIVACY_STATUS_UNKNOWN";
+import { NativeModules } from 'react-native';
+import {Signal} from '../';
 
-class AEPMobilePrivacyStatus {
+describe('Signal', () => {
 
-  static get OPT_IN() {
-    return OPT_IN;
-  }
+  it('extensionVersion is called', async () => {
+    expect(Signal.extensionVersion).toBeDefined();
+    const spy = jest.spyOn(NativeModules.AEPSignal, 'extensionVersion');
+    await Signal.extensionVersion();
+    expect(spy).toHaveBeenCalled();
+  });
 
-  static get OPT_OUT() {
-    return OPT_OUT;
-  }
-
-  static get UNKNOWN() {
-    return UNKNOWN;
-  }
-
-}
-
-module.exports = AEPMobilePrivacyStatus;
+});

@@ -12,6 +12,8 @@ governing permissions and limitations under the License.
 package com.adobe.marketing.mobile.reactnative;
 
 import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.AdobeCallbackWithError;
+import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.Event;
 import com.adobe.marketing.mobile.ExtensionError;
 import com.adobe.marketing.mobile.ExtensionErrorCallback;
@@ -90,7 +92,12 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getPrivacyStatus(final Promise promise) {
-        MobileCore.getPrivacyStatus(new AdobeCallback<MobilePrivacyStatus>() {
+        MobileCore.getPrivacyStatus(new AdobeCallbackWithError<MobilePrivacyStatus>() {
+            @Override
+            public void fail(AdobeError adobeError) {
+                handleError(promise, adobeError, "getPrivacyStatus");
+            }
+
             @Override
             public void call(MobilePrivacyStatus mobilePrivacyStatus) {
                 promise.resolve(RCTAEPCoreDataBridge.stringFromPrivacyStatus(mobilePrivacyStatus));
@@ -100,7 +107,12 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getSdkIdentities(final Promise promise) {
-        MobileCore.getSdkIdentities(new AdobeCallback<String>() {
+        MobileCore.getSdkIdentities(new AdobeCallbackWithError<String>() {
+            @Override
+            public void fail(AdobeError adobeError) {
+                handleError(promise, adobeError, "getSdkIdentities");
+            }
+
             @Override
             public void call(String value) {
                 promise.resolve(value);
@@ -226,6 +238,14 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         }
 
         promise.reject(String.valueOf(error.getErrorCode()), error.getErrorName(), new RuntimeException(error.getErrorName()));
+    }
+
+    private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
+        if (error == null || promise == null) {
+            return;
+        }
+
+        promise.reject(getName(), String.format("%s returned an unexpected error: %s", errorLocation, error.getErrorName()), new Error(error.getErrorName()));
     }
 
 }
