@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 module.exports = {
   // Native modules
-  get AEPAssurance() {
+  get Assurance() {
     return require('./Assurance');
   },
 };
