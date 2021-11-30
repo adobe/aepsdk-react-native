@@ -91,8 +91,11 @@ module.exports = {
   var idMap = new IdentityMap();
 
   for (const [key, value] of Object.entries(idObj)) {
-    idMap.items[key] = value;   
+    value.forEach(function(item) {
+      var identityItem = new IdentityItem(item.id, item.authenticatedState, item.primary);
+      idMap.addItem(identityItem, key);
+    });
   }
-   
-   return idMap;
+
+  return idMap;
 }
