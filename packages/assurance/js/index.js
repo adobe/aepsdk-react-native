@@ -18,6 +18,6 @@ governing permissions and limitations under the License.
 module.exports = {
   // Native modules
   get AEPAssurance() {
-    return require('./AEPAssurance');
+    return require('./Assurance');
   },
 };

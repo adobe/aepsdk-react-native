@@ -93,6 +93,6 @@ To connect to a griffon session by scanning the QR code. Follow the [Android doc
 ##### Start Assurance session:
 
 ```javascript
-import {AEPAssurance} from '@adobe/react-native-aepassurance';
-AEPAssurance.startSession("{your-assurance-session-url}");
+import {Assurance} from '@adobe/react-native-aepassurance';
+Assurance.startSession("{your-assurance-session-url}");
 ```
