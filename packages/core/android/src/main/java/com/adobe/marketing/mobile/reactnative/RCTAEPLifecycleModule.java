@@ -12,9 +12,6 @@ governing permissions and limitations under the License.
 package com.adobe.marketing.mobile.reactnative;
 
 
-import android.util.Log;
-
-import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;

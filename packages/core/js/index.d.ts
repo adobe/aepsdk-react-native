@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 
 */
-export class AEPCore{
+export class MobileCore{
     static extensionVersion(): Promise<string>;
     static configureWithAppId(appId?: string);
     static updateConfiguration(configMap?: Map);
@@ -20,9 +20,9 @@ export class AEPCore{
     static setPrivacyStatus(privacyStatus: string);
     static getPrivacyStatus(): Promise<string>;
     static getSdkIdentities(): Promise<?string>;
-    static dispatchEvent(event: AEPExtensionEvent): Promise<boolean>;
-    static dispatchEventWithResponseCallback(event: AEPExtensionEvent): Promise<AEPExtensionEvent>;
-    static dispatchResponseEvent(responseEvent: AEPExtensionEvent, requestEvent: AEPExtensionEvent): Promise<boolean>;
+    static dispatchEvent(event: Event): Promise<boolean>;
+    static dispatchEventWithResponseCallback(event: Event): Promise<Event>;
+    static dispatchResponseEvent(responseEvent: Event, requestEvent: Event): Promise<boolean>;
     static trackAction(action?: string, contextData?: Map);
     static trackState(state?: string, contextData?: Map);
     static setAdvertisingIdentifier(advertisingIdentifier?: string);
@@ -31,48 +31,49 @@ export class AEPCore{
     static setSmallIconResourceID(resourceID: number);
     static setLargeIconResourceID(resourceID: number);
     static setAppGroup(appGroup?: string);
+    static resetIdentities();
 }
-export class AEPLifecycle{
+export class Lifecycle{
     static extensionVersion(): Promise<string>;
 }
-export class AEPIdentity{
+export class Identity{
     static extensionVersion(): Promise<string>;
     static syncIdentifiers(identifiers?: Map);
     static syncIdentifiersWithAuthState(identifiers?: Map, authenticationState: string);
     static syncIdentifier(identifierType: string, identifier: string, authenticationState: string);
     static appendVisitorInfoForURL(baseURL?: string): Promise<?string>;
     static getUrlVariables(): Promise<?string>;
-    static getIdentifiers(): Promise<Array<?AEPVisitorID>>;
+    static getIdentifiers(): Promise<Array<?VisitorID>>;
     static getExperienceCloudId(): Promise<?string>;
 }
-export class AEPSignal{
+export class Signal{
     static extensionVersion(): Promise<string>;
 }
 
-export class AEPMobilePrivacyStatus{
+export class PrivacyStatus{
     static OPT_IN: string;
     static OPT_OUT: string;
     static UNKNOWN: string;
 }
-export class AEPMobileLogLevel{
+export class LogLevel{
     static ERROR: string;
     static WARNING: string;
     static DEBUG: string;
     static VERBOSE: string;
 }
-export class AEPMobileVisitorAuthenticationState{
+export class MobileVisitorAuthenticationState{
     static AUTHENTICATED: string;
     static LOGGED_OUT: string;
     static UNKNOWN: string;
 }
-export class AEPVisitorID{
+export class VisitorID{
     idOrigin: string;
     idType: string;
     identifier: string;
-    authenticationState: AEPMobileVisitorAuthenticationState;
-    constructor(idOrigin?: string, idType: string, id?: string, authenticationState?: AEPMobileVisitorAuthenticationState);
+    authenticationState: MobileVisitorAuthenticationState;
+    constructor(idOrigin?: string, idType: string, id?: string, authenticationState?: MobileVisitorAuthenticationState);
 }
-export class AEPExtensionEvent{
+export class Event{
     eventName: string;
     eventType: string;
     eventSource: string;
