@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 import React from 'react';
 import { Button, Text, View, ScrollView, NativeModules } from 'react-native';
-import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, MobileVisitorAuthenticationState, VisitorID, Event } from '@adobe/react-native-aepcore';
+import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, Event } from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
 
 export default CoreView = ({ navigation }) => {
