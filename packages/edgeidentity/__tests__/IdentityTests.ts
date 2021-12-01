@@ -40,6 +40,113 @@ describe('Identity for Edge Network', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('getIdentities with addItem', async () => {
+
+    const currentIdentity = await Identity.getIdentities();
+    
+    let identityItems1  = new IdentityItem("id1", AuthenticatedState.LOGGED_OUT, true);
+
+    currentIdentity.addItem(identityItems1, "namespace1");
+
+    let expectedMap = {"items": { "ABC" : [{"id":"id1","authenticatedState":"ambiguous","primary":false}], "namespace1" : [{"id": "id1", "authenticatedState": "loggedOut", "primary": true}]}};
+     
+    expect(currentIdentity).toEqual(expectedMap);
+
+  });
+
+  it('getIdentities with removeItem', async () => {
+
+    const currentIdentity = await Identity.getIdentities();
+    
+    let identityItems1  = new IdentityItem("id1", AuthenticatedState.AMBIGUOUS, true);
+
+    currentIdentity.addItem(identityItems1, "namespace1");
+
+    currentIdentity.removeItem(identityItems1, "namespace1");
+
+    let expectedMap = {"items": { "ABC" : [{"id":"id1","authenticatedState":"ambiguous","primary":false}]}};
+  
+    expect(currentIdentity).toEqual(expectedMap);
+
+  });
+
+  it('getIdentities with getItemsForNamespace', async () => {
+
+    const currentIdentity = await Identity.getIdentities();
+
+    let identifier1 = "id2";
+    let authenticatedState1 = AuthenticatedState.AUTHENTICATED;
+    let isPrimary1 = false;
+
+    let item1  = new IdentityItem(identifier1, authenticatedState1, isPrimary1);
+
+    // add items
+    currentIdentity.addItem(item1, "ABC");
+
+    let expectedGetNameSpace = [{"id":"id1","authenticatedState":"ambiguous","primary":false},{"id":"id2","authenticatedState":"authenticated","primary":false}];
+
+    // verify
+    expect(currentIdentity.getIdentityItemsForNamespace("ABC").length).toEqual(2);
+    expect(currentIdentity.getIdentityItemsForNamespace("").length).toEqual(0);
+    expect(currentIdentity.getIdentityItemsForNamespace("ABC")).toEqual(expectedGetNameSpace);
+  });
+
+  it('getIdentities with getNamespaces', async () => {
+
+    const currentIdentity = await Identity.getIdentities();    
+    let identifier1 = "id1";
+    let namespace1 = "namespace1"
+    let authenticatedState1 = AuthenticatedState.AMBIGUOUS;
+    let isPrimary1 = true;
+
+    let identifier2 = "id2";
+    let namespace2 = "namespace2"
+    let authenticatedState2 = AuthenticatedState.AUTHENTICATED;
+    let isPrimary2 = false;
+
+    let identifier3 = "id3";
+    let authenticatedState3 = AuthenticatedState.LOGGED_OUT;
+  
+    let identifier4 = "id4";
+
+    let identityItems1  = new IdentityItem(identifier1, authenticatedState1, isPrimary1);
+    let identityItems2  = new IdentityItem(identifier2, authenticatedState2, isPrimary2);
+    let identityItems3  = new IdentityItem(identifier3, authenticatedState3);
+    let identityItems4  = new IdentityItem(identifier4);
+   
+    // add items
+  
+    currentIdentity.addItem(identityItems1, namespace1);
+    currentIdentity.addItem(identityItems2, namespace1);
+    currentIdentity.addItem(identityItems3, namespace2);
+    currentIdentity.addItem(identityItems4, namespace2); 
+
+     // verify
+    expect(currentIdentity.getNamespaces().length).toEqual(3);
+  });
+
+  it('getIdentities with isEmpty', async () => {
+
+    const currentIdentity = await Identity.getIdentities();    
+    let identifier1 = "id1";
+    let namespace1 = "namespace1"
+
+    let identifier2 = "id2";
+    let namespace2 = "namespace2"
+    let authenticatedState2 = AuthenticatedState.AUTHENTICATED;
+    let isPrimary2 = false;
+
+    let identityItems1  = new IdentityItem(identifier1);
+    let identityItems2  = new IdentityItem(identifier2, authenticatedState2, isPrimary2); 
+   
+    // add items
+    currentIdentity.addItem(identityItems1, namespace1);
+    currentIdentity.addItem(identityItems2, namespace2);
+ 
+    // verify map is not empty
+    expect(currentIdentity.isEmpty()).toEqual(false);
+ });
+
   it('updateIdentities is validated', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'updateIdentities');
     let identifier1 = "id1";
