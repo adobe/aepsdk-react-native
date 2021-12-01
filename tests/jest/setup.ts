@@ -21,7 +21,6 @@ jest.doMock('react-native', () => {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))),
                     getIdentities: jest.fn(() => new Promise(resolve => resolve({"ABC":[{"id":"id1","authenticatedState":"ambiguous","primary":false}]}))),
-                    //getIdentities: jest.fn(() => new Promise(resolve => resolve(""))),
                     updateIdentities: jest.fn(),
                     removeIdentity: jest.fn(),
                 },
