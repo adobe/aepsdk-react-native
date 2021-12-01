@@ -16,8 +16,8 @@ governing permissions and limitations under the License.
 'use strict';
 
 const RCTAEPEdgeIdentity = require('react-native').NativeModules.AEPEdgeIdentity;
-import type {IdentityMap} from './models/IdentityMap';
-import type {IdentityItem} from './models/IdentityItem';
+import IdentityMap from './models/IdentityMap';
+import IdentityItem from './models/IdentityItem';
 
 module.exports = {
   /**
@@ -48,7 +48,18 @@ module.exports = {
    */
 
    getIdentities(): Promise<IdentityMap> {
-    return RCTAEPEdgeIdentity.getIdentities();
+    const getIdentitiesPromise = new Promise((resolve, reject) => {
+     
+      RCTAEPEdgeIdentity.getIdentities()
+      .then(identities => {
+        let identityMap = toIdentityMap(identities) 
+        resolve(identityMap);
+      })
+      .catch((error) => {
+        reject(error);
+      });      
+  });
+     return getIdentitiesPromise;
   },
 
   /**
@@ -75,3 +86,16 @@ module.exports = {
     RCTAEPEdgeIdentity.removeIdentity(item, namespace);
   },
 };
+
+  function toIdentityMap(idObj: Object) {
+  var idMap = new IdentityMap();
+
+  for (const [key, value] of Object.entries(idObj)) {
+    value.forEach(function(item) {
+      var identityItem = new IdentityItem(item.id, item.authenticatedState, item.primary);
+      idMap.addItem(identityItem, key);
+    });
+  }
+
+  return idMap;
+}
