@@ -10,6 +10,8 @@
  */
 package com.adobe.marketing.mobile.reactnative.optimize;
 
+import android.util.Log;
+
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
@@ -29,6 +31,7 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +51,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void offerDisplayed(final ReadableMap readableMap) {
-        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        final Map<String, Object> offerEventData = readableMap.toHashMap();
         Offer offer = createOffer(offerEventData);
         offer.displayed();
     }
@@ -67,8 +70,8 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data) {
         final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
-        Map<String, Object> mapXdm = RCTAEPOptimizeUtil.convertReadableMapToMap(xdm);
-        Map<String, Object> mapData = RCTAEPOptimizeUtil.convertReadableMapToMap(data);
+        Map<String, Object> mapXdm = xdm != null ? xdm.toHashMap() : Collections.<String, Object>emptyMap();
+        Map<String, Object> mapData = data != null ? data.toHashMap(): Collections.<String, Object>emptyMap();
         Optimize.updatePropositions(decisionScopeList, mapXdm, mapData);
     }
 
@@ -105,14 +108,15 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void offerTapped(final ReadableMap readableMap) {
-        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        final Map<String, Object> offerEventData = readableMap.toHashMap();
         Offer offer = createOffer(offerEventData);
+        Log.d("OFFER TAPPED", "OFFER TAPPED");
         offer.tapped();
     }
 
     @ReactMethod
     public void generateDisplayInteractionXdm(final ReadableMap readableMap, final Promise promise){
-        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        final Map<String, Object> offerEventData = readableMap.toHashMap();
         Offer offer = createOffer(offerEventData);
         final Map<String, Object> interactionXdm = offer.generateDisplayInteractionXdm();
         final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
@@ -121,7 +125,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void generateReferenceXdm(final ReadableMap readableMap, final Promise promise) {
-        final Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+        final Map<String, Object> propositionEventData = readableMap.toHashMap();
         String id = (String) propositionEventData.get("id");
         String scope = (String) propositionEventData.get("scope");
         Map<String, Object> scopeDetails = (Map<String, Object>) propositionEventData.get("scopeDetails");
@@ -130,8 +134,6 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         for (Map<String, Object> eventData : offersMap) {
             offers.add(createOffer(eventData));
         }
-//        Proposition proposition = new Proposition(id, offers, scope, scopeDetails);
-//        Map<String, Object> referenceXdm = proposition.generateReferenceXdm();
 
     }
 
@@ -139,7 +141,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         String id = (String) offerEventData.get("id");
         String type = (String) offerEventData.get("type");
         String content = (String) offerEventData.get("content");
-        final Offer.Builder offerBuilder = new Offer.Builder(id, OfferType.valueOf(type), content);
+        final Offer.Builder offerBuilder = new Offer.Builder(id, OfferType.from(type), content);
         offerBuilder.setEtag((String) offerEventData.get("etag"));
         offerBuilder.setSchema((String) offerEventData.get("schema"));
         offerBuilder.setLanguage((List<String>) offerEventData.get("language"));

@@ -37,7 +37,7 @@ module.exports = {
     }
     onPropositionUpdateSubscription = DeviceEventEmitter.addListener("onPropositionsUpdate", propositions => {
       const keys = Object.keys(propositions);
-      keys.map(key => propositions[key] = new Proposition(propositions[key]));
+      keys.map(key => propositions[key] = new Proposition(propositions[key]));      
       onPropositionUpdateCallback(propositions);
     });
     RCTAEPOptimize.onPropositionsUpdate();        
@@ -46,11 +46,12 @@ module.exports = {
     RCTAEPOptimize.clearCachedPropositions();
   },
   getPropositions(decisionScopes: Array<DecisionScope>): Promise<Map<DecisionScope, Proposition>> {
+    console.log("getProposition::::");
     return new Promise((resolve, reject) => {
       var decisionScopeNames: Array<string> = decisionScopes.map((decisionScope) => decisionScope.getName());
       RCTAEPOptimize.getPropositions(decisionScopeNames).then(propositions => {
         const keys = Object.keys(propositions);
-        keys.map(key => propositions[key] = new Proposition(propositions[key]));
+        keys.map(key => propositions[key] = new Proposition(propositions[key]));                
         resolve(propositions);
       }).catch(error => reject(error));
     });
@@ -61,5 +62,18 @@ module.exports = {
   },
   removeOnPropositionUpdateListener() {
     onPropositionUpdateSubscription.remove();
+  },
+  offerDisplayed(offer: Offer) {
+    const entries = Object.entries(offer);
+    offer = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));
+    RCTAEPOptimize.offerDisplayed(offer);
+  },
+  offerTapped(offer: Offer) {    
+    const entries = Object.entries(offer);
+    offer = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));    
+    RCTAEPOptimize.offerTapped(offer);
+  },
+  generateDisplayInteractionXdm(offer: Offer): Promise<Map<string, Object>> {
+    return RCTAEPOptimize.generateDisplayInteractionXdm(offer);
   }
 };

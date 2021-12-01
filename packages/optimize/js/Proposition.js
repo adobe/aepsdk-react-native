@@ -18,7 +18,7 @@ const { AEPOptimize } = NativeModules;
 import Offer from './Offer';
 
 
-module.exports = class Proposition {    
+module.exports = class Proposition {
     id: string;
     offers: Array<Offer>;
     scope: string;
@@ -26,12 +26,14 @@ module.exports = class Proposition {
 
     constructor(eventData: Object) {
         this.id = eventData['id'];
-        this.offers = eventData['offers'].map(offer => {
-            return new Offer(offer);
-        });
         this.scope = eventData['scope'];
         this.scopeDetails = eventData['scopeDetails'];
-
+        if(eventData['offers']){
+            this.offers = eventData['offers'].map(offer => {
+                return new Offer(offer);
+            });                
+        }
+        
         this.generateReferenceXdm.bind(this);
     }    
         

@@ -1,5 +1,7 @@
 package com.adobe.marketing.mobile.reactnative.optimize;
 
+import android.util.Log;
+
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
@@ -49,12 +51,18 @@ class RCTAEPOptimizeUtil {
             return offerWritableMap;
         }
         offerWritableMap.putString("id", offer.getId());
-        offerWritableMap.putString("etag", offer.getEtag());
+        if (offer.getEtag() != null) {
+            offerWritableMap.putString("etag", offer.getEtag());
+        }
         offerWritableMap.putString("schema", offer.getSchema());
         offerWritableMap.putString("type", offer.getType().toString());
-        offerWritableMap.putArray("language", convertListToWritableArray(new ArrayList<Object>(offer.getLanguage())));
+        if (offer.getLanguage() != null) {
+            offerWritableMap.putArray("language", convertListToWritableArray(new ArrayList<Object>(offer.getLanguage())));
+        }
         offerWritableMap.putString("content", offer.getContent());
-        offerWritableMap.putMap("characteristics", convertMapToWritableMap(new HashMap<String, Object>(offer.getCharacteristics())));
+        if (offer.getCharacteristics() != null) {
+            offerWritableMap.putMap("characteristics", convertMapToWritableMap(new HashMap<String, Object>(offer.getCharacteristics())));
+        }
         return offerWritableMap;
     }
 
@@ -97,75 +105,6 @@ class RCTAEPOptimizeUtil {
             }
         }
         return writableMap;
-    }
-
-    static Map<String, Object> convertReadableMapToMap(final ReadableMap readableMap) {
-        if (readableMap == null) {
-            MobileCore.log(LoggingMode.DEBUG, "RCTAEPOptimize", "Unable to convert ReadableMap to Map. Passed ReadableMap is null.");
-            return null;
-        }
-        final Map<String, Object> map = new HashMap<>();
-        while (readableMap.keySetIterator().hasNextKey()) {
-            final String key = readableMap.keySetIterator().nextKey();
-            switch (readableMap.getType(key)) {
-                case Map:
-                    map.put(key, convertReadableMapToMap(readableMap.getMap(key)));
-                    break;
-                case Array:
-                    map.put(key, convertReadableArrayToList(readableMap.getArray(key)));
-                    break;
-                case Number:
-                    int value = readableMap.getInt(key);
-                    if (value == readableMap.getDouble(key)) { //Check of the Number is Double or Integer
-                        map.put(key, value);
-                    } else {
-                        map.put(key, readableMap.getDouble(key));
-                    }
-                    break;
-                case String:
-                    map.put(key, readableMap.getString(key));
-                    break;
-                case Boolean:
-                    map.put(key, readableMap.getBoolean(key));
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return map;
-    }
-
-    static List<Object> convertReadableArrayToList(final ReadableArray readableArray) {
-        final List<Object> list = new ArrayList<>();
-        if(readableArray == null){
-            MobileCore.log(LoggingMode.DEBUG, "RCTAEPOptimize", "Unable to convert ReadableArray to List. Passed ReadableArray is null.");
-            return list;
-        }
-        for (int i = 0; i < readableArray.size(); i++) {
-            switch (readableArray.getType(i)) {
-                case Array:
-                    list.add(convertReadableArrayToList(readableArray.getArray(i)));
-                    break;
-                case Map:
-                    list.add(convertReadableMapToMap(readableArray.getMap(i)));
-                    break;
-                case String:
-                    list.add(readableArray.getString(i));
-                    break;
-                case Number:
-                    int value = readableArray.getInt(i);
-                    if (value == readableArray.getDouble(i)) {
-                        list.add(Integer.valueOf(value));
-                    } else {
-                        list.add(Double.valueOf(readableArray.getDouble(i)));
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        return list;
     }
 
     static List<DecisionScope> createDecisionScopes(ReadableArray decisionScopesArray) {

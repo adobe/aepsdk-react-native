@@ -13,8 +13,8 @@ governing permissions and limitations under the License.
 @format
 */
 
-import { NativeModules } from "react-native";
-const { AEPOptimize } = NativeModules;
+const AEPOptimize = require('./index').AEPOptimize;
+// const Proposition = require('./Proposition');
 
 module.exports = class Offer {
 
@@ -24,7 +24,7 @@ module.exports = class Offer {
     type: string;
     language: Array<string>;
     content: string;
-    characteristics: Map<string, string>;
+    characteristics: Map<string, string>;        
 
     constructor(eventData: Object) {
         this.id = eventData['id'];
@@ -33,11 +33,11 @@ module.exports = class Offer {
         this.type = eventData['type'];
         this.language = eventData['language'];
         this.content = eventData['content'];
-        this.characteristics = eventData['characteristics'];        
+        this.characteristics = eventData['characteristics'];                
 
         this.displayed.bind(this);
         this.tapped.bind(this);
-        this.generateDisplayInteractionXdm.bind(this);
+        this.generateDisplayInteractionXdm.bind(this);        
     }
 
     displayed = () => {
@@ -45,10 +45,12 @@ module.exports = class Offer {
     }
 
     tapped = () => {        
+        console.log(`The offer tapped is::: ${JSON.stringify(this)}`);
+        console.log(`AEPOptimize is::: ${JSON.stringify(AEPOptimize)}`);
         AEPOptimize.offerTapped(this);
     }
 
     generateDisplayInteractionXdm(): Promise<Map<string, Object>> {
-        return Promise.resolve(AEPOptimize.generateDisplayInteractionXdm(this));
+        return AEPOptimize.generateDisplayInteractionXdm(this);
     }    
 }

@@ -20,18 +20,24 @@ import styles from '../styles/styles';
 
 export default ({ navigation }) => {
 
+    const TARGET_OFFER_TYPE_TEXT = "text/plain";
+    const TARGET_OFFER_TYPE_JSON = "application/json";
+    const TARGET_OFFER_TYPE_HTML = "text/html";
+
     const [version, setVersion] = useState('0.0.0');
     const [textOffer, setTextOffer] = useState('Placeholder Text Offer!!');
     const [imageOffer, setImageOffer] = useState('https://blog.adobe.com/en/publish/2020/05/28/media_3dfaf748ad02bf771410a771def79c9ad86b1766.jpg');
     const [htmlOffer, setHtmlOffer] = useState('<html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><p>HTML place holder!</p></body></html>');
     const [jsonOffer, setJsonOffer] = useState('JSON Place Holder!!');
+    const [targetOffer, setTargetOffer] = useState(null);
 
     const decisionScopeText = new DecisionScope("eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9");
     const decisionScopeImage = new DecisionScope("eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkYTliNDMwNDg5OCJ9");
     const decisionScopeHtml = new DecisionScope("eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkOTJjNmJhZDA4NCJ9");
     const decisionScopeJson = new DecisionScope("eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9");
+    const decisionScopeTargetMbox = new DecisionScope("demoLoc3");
 
-    const decisionScopes = [ decisionScopeText, decisionScopeImage, decisionScopeHtml, decisionScopeJson ]
+    const decisionScopes = [ decisionScopeText, decisionScopeImage, decisionScopeHtml, decisionScopeJson, decisionScopeTargetMbox ];
     const optimizeExtensionVersion = () => AEPOptimize.extensionVersion().then(newVersion => {
         console.log("AdobeExperienceSDK: AEPOptimize version: " + newVersion);
         setVersion(newVersion);
@@ -43,7 +49,8 @@ export default ({ navigation }) => {
             setTextOffer(propositions[decisionScopeText.getName()].offers[0]);
             setImageOffer(propositions[decisionScopeImage.getName()].offers[0]);
             setHtmlOffer(propositions[decisionScopeHtml.getName()].offers[0]);
-            setJsonOffer(propositions[decisionScopeJson.getName()].offers[0]);
+            setJsonOffer(propositions[decisionScopeJson.getName()].offers[0]);                        
+            setTargetOffer(propositions[decisionScopeTargetMbox.getName()].offers[0]);
         });
     const clearCachedProposition = () => AEPOptimize.clearCachedPropositions();
     const onPropositionUpdate = () => AEPOptimize.onPropositionUpdate(propositions => {
@@ -51,7 +58,33 @@ export default ({ navigation }) => {
         setImageOffer(propositions[decisionScopeImage.getName()].offers[0]);
         setHtmlOffer(propositions[decisionScopeHtml.getName()].offers[0]);
         setJsonOffer(propositions[decisionScopeJson.getName()].offers[0]);
-    });
+        setTargetOffer(propositions[decisionScopeTargetMbox.getName()].offers[0]);
+    });    
+
+    const renderTargetOffer = () => {
+        // console.log(`TARGET::::::${JSON.stringify(targetOffer)}`);
+        if(targetOffer) {
+            // JSON.stringify(`TARGET::::::${targetOffer}`);
+            if(targetOffer.type === TARGET_OFFER_TYPE_TEXT) { 
+                console.log("::TARGET_OFFER_TYPE_TEXT::");
+                return <Text style={{margin:10, fontSize:18}}>{targetOffer.content}</Text>
+            } else if(targetOffer.type === TARGET_OFFER_TYPE_JSON) {
+                console.log("::TARGET_OFFER_TYPE_JSON::");
+                return <Text style={{margin:10, fontSize:18}}>{targetOffer.content}</Text>
+            } else if(targetOffer.type === TARGET_OFFER_TYPE_HTML) {
+                console.log("::TARGET_OFFER_TYPE_HTML:: "+ targetOffer.content);                
+                return (<TouchableOpacity onPress={e => {
+                        console.log('Button is pressed');
+                        targetOffer.tapped();}}>                        
+                        <View style={{flexDirection: "row", alignItems:'center', justifyContent:'center'}}>                                
+                            <Text style={{ margin:10, fontSize:18 }}>Target offer::</Text>
+                            <WebView source={{ html: targetOffer.content }}></WebView>
+                        </View>
+                        </TouchableOpacity>);
+            }
+        } 
+        return <Text>Default Target Offer</Text>                
+    };
 
     return (<View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }} >
@@ -112,7 +145,7 @@ export default ({ navigation }) => {
                     console.log('Button is pressed');
                     imageOffer.tapped();
                 }}>
-        <Text style={{ fontSize:20, margin:10, fontSize:18 }}>HTML offer::</Text>
+        <Text style={{ margin:10, fontSize:18 }}>HTML offer::</Text>
         
             <WebView 
                 source={{ html: typeof htmlOffer === "object" ? htmlOffer.content : htmlOffer }}>
@@ -120,6 +153,7 @@ export default ({ navigation }) => {
         
         </View>
         </TouchableOpacity>
+        { renderTargetOffer() }
         </ScrollView>
     </View>
 )};
