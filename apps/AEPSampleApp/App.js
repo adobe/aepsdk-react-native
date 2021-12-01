@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, View, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import Profile from './extensions/Profile';
+import ProfileView from './extensions/ProfileView';
 import CoreView from './extensions/CoreView';
 import IdentityView from './extensions/IdentityView';
 import Messaging from './extensions/Messaging';
@@ -19,7 +19,7 @@ function HomeScreen({ navigation }) {
         title="Core/Lifecycle/Signal"
       />
       <Button
-        onPress={() => navigation.navigate('Profile')}
+        onPress={() => navigation.navigate('ProfileView')}
         title="UserProfile"
       />
       <Button
@@ -57,7 +57,7 @@ export default function App() {
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="CoreView" component={CoreView} />
-        <Drawer.Screen name="Profile" component={Profile} />
+        <Drawer.Screen name="ProfileView" component={ProfileView} />
         <Drawer.Screen name="IdentityView" component={IdentityView} />
         <Drawer.Screen name="Messaging" component={Messaging} />
         <Drawer.Screen name="Edge" component={Edge} />
