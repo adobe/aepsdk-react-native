@@ -48,7 +48,7 @@ module.exports = {
    */
 
    getIdentities(): Promise<IdentityMap> {
-    const getIdentitiesPromise = new Promise<IdentityMap>((resolve, reject) => {
+    const getIdentitiesPromise = new Promise((resolve, reject) => {
      
       RCTAEPEdgeIdentity.getIdentities()
       .then(identities => {
