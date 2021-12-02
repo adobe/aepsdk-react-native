@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 */
 export class AEPEdge{
     static extensionVersion(): Promise<string>;
-    static sendEvent(event: AEPExperienceEvent): Promise<AEPExtensionEvent>;
+    static sendEvent(event: AEPExperienceEvent): Promise<Event>;
 }
 
 export class AEPEdgeEventHandle{
