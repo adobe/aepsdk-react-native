@@ -14,8 +14,8 @@ export class MobileCore{
     static extensionVersion(): Promise<string>;
     static configureWithAppId(appId?: string);
     static updateConfiguration(configMap?: Map);
-    static setLogLevel(mode: string);
-    static getLogLevel(): Promise<string>;
+    static setLogLevel(mode: LogLevel);
+    static getLogLevel(): Promise<LogLevel>;
     static log(logLevel: string, tag: string, message: string);
     static setPrivacyStatus(privacyStatus: string);
     static getPrivacyStatus(): Promise<string>;
@@ -55,11 +55,11 @@ export class PrivacyStatus{
     static OPT_OUT: string;
     static UNKNOWN: string;
 }
-export class LogLevel{
-    static ERROR: string;
-    static WARNING: string;
-    static DEBUG: string;
-    static VERBOSE: string;
+export enum LogLevel{
+    ERROR = "ERROR",
+    WARNING = "WARNING",
+    DEBUG = "DEBUG",
+    VERBOSE = "VERBOSE",
 }
 export class MobileVisitorAuthenticationState{
     static AUTHENTICATED: string;

@@ -41,13 +41,14 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setLogLevel');
     let logLevel = LogLevel.DEBUG;
     await MobileCore.setLogLevel(logLevel);
-    expect(spy).toHaveBeenCalledWith(logLevel);
+    expect(spy).toHaveBeenCalledWith("DEBUG");
   });
 
   it('getLogLevel is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'getLogLevel');
-    await MobileCore.getLogLevel();
+    const logLevel = await MobileCore.getLogLevel();
     expect(spy).toHaveBeenCalled();
+    expect(logLevel).toEqual(LogLevel.DEBUG);
   });
 
   it('log is called with correct parameters', async () => {

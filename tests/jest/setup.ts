@@ -51,7 +51,7 @@ jest.doMock('react-native', () => {
                     configureWithAppId: jest.fn(),
                     updateConfiguration: jest.fn(),
                     setLogLevel: jest.fn(),
-                    getLogLevel: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getLogLevel: jest.fn(() => new Promise(resolve => resolve('DEBUG'))),
                     log: jest.fn(),
                     setPrivacyStatus: jest.fn(),
                     getPrivacyStatus: jest.fn(() => new Promise(resolve => resolve(''))),
