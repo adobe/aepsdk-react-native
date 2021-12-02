@@ -54,7 +54,7 @@ jest.doMock('react-native', () => {
                     getLogLevel: jest.fn(() => new Promise(resolve => resolve('DEBUG'))),
                     log: jest.fn(),
                     setPrivacyStatus: jest.fn(),
-                    getPrivacyStatus: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getPrivacyStatus: jest.fn(() => new Promise(resolve => resolve('OPT_OUT'))),
                     getSdkIdentities: jest.fn(() => new Promise(resolve => resolve(''))),
                     dispatchEvent: jest.fn(),
                     dispatchEventWithResponseCallback: jest.fn(() => new Promise(resolve => resolve(null))),

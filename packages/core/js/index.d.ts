@@ -17,8 +17,8 @@ export class MobileCore{
     static setLogLevel(mode: LogLevel);
     static getLogLevel(): Promise<LogLevel>;
     static log(logLevel: string, tag: string, message: string);
-    static setPrivacyStatus(privacyStatus: string);
-    static getPrivacyStatus(): Promise<string>;
+    static setPrivacyStatus(privacyStatus: PrivacyStatus);
+    static getPrivacyStatus(): Promise<PrivacyStatus>;
     static getSdkIdentities(): Promise<?string>;
     static dispatchEvent(event: Event): Promise<boolean>;
     static dispatchEventWithResponseCallback(event: Event): Promise<Event>;
@@ -39,8 +39,8 @@ export class Lifecycle{
 export class Identity{
     static extensionVersion(): Promise<string>;
     static syncIdentifiers(identifiers?: Map);
-    static syncIdentifiersWithAuthState(identifiers?: Map, authenticationState: string);
-    static syncIdentifier(identifierType: string, identifier: string, authenticationState: string);
+    static syncIdentifiersWithAuthState(identifiers?: Map, authenticationState: MobileVisitorAuthenticationState);
+    static syncIdentifier(identifierType: string, identifier: string, authenticationState: MobileVisitorAuthenticationState);
     static appendVisitorInfoForURL(baseURL?: string): Promise<?string>;
     static getUrlVariables(): Promise<?string>;
     static getIdentifiers(): Promise<Array<?VisitorID>>;
@@ -50,10 +50,10 @@ export class Signal{
     static extensionVersion(): Promise<string>;
 }
 
-export class PrivacyStatus{
-    static OPT_IN: string;
-    static OPT_OUT: string;
-    static UNKNOWN: string;
+export enum PrivacyStatus{
+    OPT_IN = "OPT_IN",
+    OPT_OUT = "OPT_OUT",
+    UNKNOWN = "UNKNOWN",
 }
 export enum LogLevel{
     ERROR = "ERROR",
@@ -61,10 +61,10 @@ export enum LogLevel{
     DEBUG = "DEBUG",
     VERBOSE = "VERBOSE",
 }
-export class MobileVisitorAuthenticationState{
-    static AUTHENTICATED: string;
-    static LOGGED_OUT: string;
-    static UNKNOWN: string;
+export enum MobileVisitorAuthenticationState{
+    AUTHENTICATED = "VISITOR_AUTH_STATE_AUTHENTICATED",
+    LOGGED_OUT = "VISITOR_AUTH_STATE_LOGGED_OUT",
+    UNKNOWN = "VISITOR_AUTH_STATE_UNKNOWN",
 }
 export class VisitorID{
     idOrigin: string;

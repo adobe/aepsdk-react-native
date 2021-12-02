@@ -64,13 +64,14 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setPrivacyStatus');
     let privacyStatus = PrivacyStatus.UNKNOWN;
     await MobileCore.setPrivacyStatus(privacyStatus);
-    expect(spy).toHaveBeenCalledWith(privacyStatus);
+    expect(spy).toHaveBeenCalledWith("UNKNOWN");
   });
 
   it('getPrivacyStatus is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'getPrivacyStatus');
-    await MobileCore.getPrivacyStatus();
+    const privacyStatus = await MobileCore.getPrivacyStatus();
     expect(spy).toHaveBeenCalled();
+    expect(privacyStatus).toEqual('OPT_OUT');
   });
 
   it('getSdkIdentities is called', async () => {
