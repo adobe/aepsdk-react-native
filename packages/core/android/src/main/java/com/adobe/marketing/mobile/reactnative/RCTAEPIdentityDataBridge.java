@@ -16,12 +16,12 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 
-public final class RCTAEPIdentityDataBridge {
+final class RCTAEPIdentityDataBridge {
 
     // Visitor ID Auth State
-    private static final String AEP_VISITOR_AUTH_STATE_AUTHENTICATED = "AEP_VISITOR_AUTH_STATE_AUTHENTICATED";
-    private static final String AEP_VISITOR_AUTH_STATE_LOGGED_OUT = "AEP_VISITOR_AUTH_STATE_LOGGED_OUT";
-    private static final String AEP_VISITOR_AUTH_STATE_UNKNOWN = "AEP_VISITOR_AUTH_STATE_UNKNOWN";
+    private static final String AEP_VISITOR_AUTH_STATE_AUTHENTICATED = "VISITOR_AUTH_STATE_AUTHENTICATED";
+    private static final String AEP_VISITOR_AUTH_STATE_LOGGED_OUT = "VISITOR_AUTH_STATE_LOGGED_OUT";
+    private static final String AEP_VISITOR_AUTH_STATE_UNKNOWN = "VISITOR_AUTH_STATE_UNKNOWN";
 
     // Visitor ID
     private static final String AEP_VISITOR_ID_ORIGIN = "idOrigin";
@@ -35,7 +35,7 @@ public final class RCTAEPIdentityDataBridge {
      * @param authStateString
      * @return The @{link VisitorID.AuthenticationState} authentication state
      */
-    public static VisitorID.AuthenticationState authenticationStateFromString(final String authStateString) {
+    static VisitorID.AuthenticationState authenticationStateFromString(final String authStateString) {
         if (authStateString == null) {
             return VisitorID.AuthenticationState.UNKNOWN;
         }
@@ -49,7 +49,7 @@ public final class RCTAEPIdentityDataBridge {
         return VisitorID.AuthenticationState.UNKNOWN;
     }
 
-    public static String stringFromAuthState(final VisitorID.AuthenticationState authenticationState) {
+    static String stringFromAuthState(final VisitorID.AuthenticationState authenticationState) {
         if (authenticationState == null) {
             return AEP_VISITOR_AUTH_STATE_UNKNOWN;
         }
@@ -63,7 +63,7 @@ public final class RCTAEPIdentityDataBridge {
         return AEP_VISITOR_AUTH_STATE_UNKNOWN;
     }
 
-    public static VisitorID visitorIdentifierFromReadableMap(final ReadableMap map) {
+    static VisitorID visitorIdentifierFromReadableMap(final ReadableMap map) {
         if (map == null) {
             return null;
         }
@@ -79,7 +79,7 @@ public final class RCTAEPIdentityDataBridge {
      * @param visitorID The visitorID object
      * @return A {@link WritableMap} that represents the visitorID
      */
-    public static WritableMap mapFromVisitorIdentifier(final VisitorID visitorID) {
+    static WritableMap mapFromVisitorIdentifier(final VisitorID visitorID) {
         if (visitorID == null) {
             return null;
         }

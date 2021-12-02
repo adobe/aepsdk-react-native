@@ -17,8 +17,14 @@ jest.doMock('react-native', () => {
     return Object.setPrototypeOf({
             NativeModules: {
                 ...ReactNative.NativeModules,
+                AEPEdgeConsent: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    update: jest.fn(),
+                    getConsents: jest.fn(() => new Promise(resolve => resolve(null)))
+                }, 
                 AEPEdgeIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))),
                 },
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
@@ -60,7 +66,8 @@ jest.doMock('react-native', () => {
                     collectPii: jest.fn(),
                     setSmallIconResourceID: jest.fn(),
                     setLargeIconResourceID: jest.fn(),
-                    setAppGroup: jest.fn()
+                    setAppGroup: jest.fn(),
+                    resetIdentities: jest.fn(),
                 },
                 AEPIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),

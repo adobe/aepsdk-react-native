@@ -18,9 +18,9 @@ import com.facebook.react.bridge.WritableArray;
 
 import java.util.Map;
 
-public class RCTAEPArrayUtil {
+class RCTAEPArrayUtil {
 
-    public static Object[] toObjectArray(ReadableArray readableArray) {
+    static Object[] toObjectArray(ReadableArray readableArray) {
         if (readableArray == null) {
             return null;
         }
@@ -55,7 +55,7 @@ public class RCTAEPArrayUtil {
         return array;
     }
 
-    public static WritableArray toWritableArray(Object[] array) {
+    static WritableArray toWritableArray(Object[] array) {
         if (array == null) {
             return null;
         }
