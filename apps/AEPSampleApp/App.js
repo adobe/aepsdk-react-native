@@ -2,8 +2,12 @@ import * as React from 'react';
 import { Button, View, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+<<<<<<< HEAD
 import Profile from './extensions/Profile';
 import MessagingView from './extensions/MessagingView';
+=======
+import ProfileView from './extensions/ProfileView';
+>>>>>>> 68dd6bd782b3da0952708949df7888d9873a792a
 import CoreView from './extensions/CoreView';
 import IdentityView from './extensions/IdentityView';
 import EdgeIdentity from './extensions/EdgeIdentity';
@@ -19,7 +23,7 @@ function HomeScreen({ navigation }) {
         title="Core/Lifecycle/Signal"
       />
       <Button
-        onPress={() => navigation.navigate('Profile')}
+        onPress={() => navigation.navigate('ProfileView')}
         title="UserProfile"
       />
       <Button
@@ -57,9 +61,9 @@ export default function App() {
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="CoreView" component={CoreView} />
-        <Drawer.Screen name="Profile" component={Profile} />
+        <Drawer.Screen name="ProfileView" component={ProfileView} />
+        <Drawer.Screen name="IdentityView" component={IdentityView} />
         <Drawer.Screen name="MessagingView" component={MessagingView}/>        
-        <Drawer.Screen name="IdentityView" component={IdentityView} />        
         <Drawer.Screen name="Edge" component={Edge} />
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
