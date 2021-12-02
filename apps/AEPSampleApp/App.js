@@ -2,12 +2,8 @@ import * as React from 'react';
 import { Button, View, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-<<<<<<< HEAD
-import Profile from './extensions/Profile';
-import MessagingView from './extensions/MessagingView';
-=======
 import ProfileView from './extensions/ProfileView';
->>>>>>> 68dd6bd782b3da0952708949df7888d9873a792a
+import MessagingView from './extensions/MessagingView';
 import CoreView from './extensions/CoreView';
 import IdentityView from './extensions/IdentityView';
 import EdgeIdentity from './extensions/EdgeIdentity';

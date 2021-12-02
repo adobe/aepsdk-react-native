@@ -17,7 +17,7 @@ import {Button, Text, View, ScrollView} from 'react-native';
 import { Messaging } from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 
-const messagingExtensionVersion = () => Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPMessaging version: " + version));
+const messagingExtensionVersion = () => Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: Messaging version: " + version));
 export default ({ navigation }) => (
     <View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }} >
