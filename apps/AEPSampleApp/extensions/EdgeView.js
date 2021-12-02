@@ -16,6 +16,7 @@ governing permissions and limitations under the License.
 import React, {Component, useState} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Edge, ExperienceEvent, EdgeEventHandle} from '@adobe/react-native-aepedge';
+import styles from '../styles/styles';
 
 export default EdgeView = ({ navigation }) => {
   const [version, setVersion] = useState('');
@@ -47,22 +48,3 @@ export default EdgeView = ({ navigation }) => {
       </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 22,
-    textAlign: 'center',
-    margin: 10,
-  }, 
-  text: {
-    fontSize: 15,
-    textAlign: 'center',
-    margin: 5,
-  },
-});

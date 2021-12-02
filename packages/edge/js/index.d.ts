@@ -19,7 +19,7 @@ export class EdgeEventHandle{
     type: string;
     payload: Map;
 
- constructor(type?: string, playload?: Map)
+ constructor(type?: string, payload?: Map)
 }
 
 export class ExperienceEvent{
