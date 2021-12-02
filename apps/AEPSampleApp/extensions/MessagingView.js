@@ -14,10 +14,10 @@ governing permissions and limitations under the License.
 
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
-import { AEPMessaging } from '@adobe/react-native-aepmessaging';
+import { Messaging } from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 
-const messagingExtensionVersion = () => AEPMessaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPMessaging version: " + version));
+const messagingExtensionVersion = () => Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPMessaging version: " + version));
 export default ({ navigation }) => (
     <View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }} >

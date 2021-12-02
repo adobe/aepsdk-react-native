@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Profile from './extensions/Profile';
 import Core from './extensions/Core';
 import Identity from './extensions/Identity';
-import Messaging from './extensions/Messaging';
+import MessagingView from './extensions/MessagingView';
 import EdgeIdentity from './extensions/EdgeIdentity';
 import Edge from './extensions/Edge';
 import Assurance from './extensions/Assurance';
@@ -26,7 +26,7 @@ function HomeScreen({ navigation }) {
         title="Identity"
       />
       <Button
-        onPress={() => navigation.navigate('Messaging')}
+        onPress={() => navigation.navigate('MessagingView')}
         title="Messaging"/>
       <Button
         onPress={() => navigation.navigate('Edge')}
@@ -54,7 +54,7 @@ export default function App() {
         <Drawer.Screen name="Core" component={Core} />
         <Drawer.Screen name="Profile" component={Profile} />
         <Drawer.Screen name="Identity" component={Identity} />
-        <Drawer.Screen name="Messaging" component={Messaging}/>
+        <Drawer.Screen name="MessagingView" component={MessagingView}/>
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
         <Drawer.Screen name="Edge" component={Edge} />
         <Drawer.Screen name="Assurance" component={Assurance} />
