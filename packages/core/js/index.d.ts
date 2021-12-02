@@ -22,7 +22,6 @@ export class MobileCore{
     static getSdkIdentities(): Promise<?string>;
     static dispatchEvent(event: Event): Promise<boolean>;
     static dispatchEventWithResponseCallback(event: Event): Promise<Event>;
-    static dispatchResponseEvent(responseEvent: Event, requestEvent: Event): Promise<boolean>;
     static trackAction(action?: string, contextData?: Map);
     static trackState(state?: string, contextData?: Map);
     static setAdvertisingIdentifier(advertisingIdentifier?: string);

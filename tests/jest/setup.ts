@@ -58,7 +58,6 @@ jest.doMock('react-native', () => {
                     getSdkIdentities: jest.fn(() => new Promise(resolve => resolve(''))),
                     dispatchEvent: jest.fn(),
                     dispatchEventWithResponseCallback: jest.fn(() => new Promise(resolve => resolve(null))),
-                    dispatchResponseEvent: jest.fn(() => new Promise(resolve => resolve(false))),
                     trackAction: jest.fn(),
                     trackState: jest.fn(),
                     setAdvertisingIdentifier: jest.fn(),

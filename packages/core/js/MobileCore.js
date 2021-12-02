@@ -142,34 +142,15 @@ module.exports = {
 
   /**
    * This method will be used when the provided {@code Event} is used as a trigger and a response event
-   * is expected in return. The returned event needs to be sent using
-   * {@link #dispatchResponseEvent(Event, Event, ExtensionErrorCallback)}.
+   * is expected in return. 
    * <p>
    *
    * @param event            required parameter, {@link Event} instance to be dispatched, used as a trigger
    * @param responseCallback required parameters, {@link Promise} to be called with the response event received
    *
-   * @see AEPCore#dispatchResponseEvent(Event, Event, ExtensionErrorCallback)
    */
   dispatchEventWithResponseCallback(event: Event): Promise<Event> {
     return RCTAEPCore.dispatchEventWithResponseCallback(event);
-  },
-
-  /**
-   * Android Only
-   * Dispatches a response event for a paired event that was sent to {@code dispatchEventWithResponseCallback}
-   * and received by an extension listener {@code hear} method.
-   *
-   * @param responseEvent required parameter, {@link Event} instance to be dispatched as a response for the
-   *                      event sent using {@link AEPCore#dispatchEventWithResponseCallback(Event)}
-   * @param requestEvent  required parameter, the event sent using
-   * 						{@link AEPCore#dispatchEventWithResponseCallback(Event)}
-   * @return {@code boolean} indicating if the the event dispatching operation succeeded
-   *
-   * @see AEPCore#dispatchEventWithResponseCallback(Event)
-   */
-  dispatchResponseEvent(responseEvent: Event, requestEvent: Event): Promise<boolean> {
-    return RCTAEPCore.dispatchResponseEvent(responseEvent, requestEvent);
   },
 
   /**
