@@ -9,20 +9,25 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
 @format
 */
 
+'use strict';
 
-import { NativeModules } from 'react-native';
-import {AEPSignal} from '../';
+class Event {
+  eventName: string;
+  eventType: string;
+  eventSource: string;
+  eventData: { [string]: any };
 
-describe('AEPSignal', () => {
+  constructor(eventName: string, eventType: string, eventSource: string, eventData: { [string]: any }) {
+    this.eventName = eventName;
+    this.eventType = eventType;
+    this.eventSource = eventSource;
+    this.eventData = eventData;
+  }
 
-  it('extensionVersion is called', async () => {
-    expect(AEPSignal.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPSignal, 'extensionVersion');
-    await AEPSignal.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
+}
 
-});
+module.exports = Event;
