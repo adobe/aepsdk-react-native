@@ -9,18 +9,27 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
 @format
 */
 
-import { NativeModules } from 'react-native';
-import {AEPLifecycle} from '../';
+'use strict';
 
-describe('AEPLifecycle', () => {
+import type { MobileVisitorAuthenticationState } from './MobileVisitorAuthenticationState';
 
-  it('extensionVersion is called', async () => {
-    expect(AEPLifecycle.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPLifecycle, 'extensionVersion');
-    await AEPLifecycle.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
-});
+class VisitorID {
+  idOrigin: string;
+  idType: string;
+  identifier: string;
+  authenticationState: MobileVisitorAuthenticationState;
+
+  constructor(idOrigin?: string, idType: string, id?: string, authenticationState?: MobileVisitorAuthenticationState) {
+    this.idOrigin = idOrigin;
+    this.idType = idType;
+    this.identifier = id;
+    this.authenticationState = authenticationState;
+  }
+
+}
+
+module.exports = VisitorID;

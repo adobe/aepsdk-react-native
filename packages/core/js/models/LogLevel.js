@@ -15,15 +15,29 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const RCTAEPLifecycle = require('react-native').NativeModules.AEPLifecycle;
+const ERROR = "ERROR";
+const WARNING = "WARNING";
+const DEBUG = "DEBUG";
+const VERBOSE = "VERBOSE";
 
-module.exports = {
-  /**
-   * Returns the version of the AEPLifecycle extension
-   * @param  {string} Promise a promise that resolves with the extension verison
-   */
-  extensionVersion(): Promise<string> {
-    return Promise.resolve(RCTAEPLifecycle.extensionVersion());
-  },
+class LogLevel {
 
-};
+  static get ERROR() {
+    return ERROR;
+  }
+
+  static get WARNING() {
+    return WARNING;
+  }
+
+  static get DEBUG() {
+    return DEBUG;
+  }
+
+  static get VERBOSE() {
+    return VERBOSE;
+  }
+
+}
+
+module.exports = LogLevel;

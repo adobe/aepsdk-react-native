@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 const RCTAEPCore = require('react-native').NativeModules.AEPCore;
 
-import type { AEPExtensionEvent } from './models/AEPExtensionEvent';
+import type { Event } from './models/Event';
 
 module.exports = {
 
@@ -75,26 +75,26 @@ module.exports = {
   /**
    * Set the logging level of the SDK
    *
-   * @param {AEPMobileLogLevel} mode AEPMobileLogLevel to be used by the SDK
+   * @param {LogLevel} mode LogLevel to be used by the SDK
    */
   setLogLevel(mode: string) {
     RCTAEPCore.setLogLevel(mode);
   },
 
   /**
-   * Get the {@link AEPMobileLogLevel} level for the Mobile SDK
-   * @return the set {@code AEPMobileLogLevel}
+   * Get the {@link LogLevel} level for the Mobile SDK
+   * @return the set {@code LogLevel}
    */
   getLogLevel(): Promise<string> {
     return RCTAEPCore.getLogLevel();
   },
 
   /**
-   * Sends a log message of the given {@code AEPMobileLogLevel}. If the specified {@code mode} is
-   * more verbose than the current {@link AEPMobileLogLevel} set from {@link #setLogLevel(AEPMobileLogLevel)}
+   * Sends a log message of the given {@code LogLevel}. If the specified {@code mode} is
+   * more verbose than the current {@link LogLevel} set from {@link #setLogLevel(LogLevel)}
    * then the message is not printed.
    *
-   * @param mode the {@link AEPMobileLogLevel} used to print the message
+   * @param mode the {@link LogLevel} used to print the message
    * @param tag used to identify the source of the log message
    * @param message the message to log
    */
@@ -105,7 +105,7 @@ module.exports = {
   /**
    * Set the Adobe Mobile Privacy status
    *
-   * @param {AEPMobilePrivacyStatus} privacyStatus AEPMobilePrivacyStatus to be set to the SDK
+   * @param {PrivacyStatus} privacyStatus PrivacyStatus to be set to the SDK
    */
   setPrivacyStatus(privacyStatus: string) {
     RCTAEPCore.setPrivacyStatus(privacyStatus);
@@ -114,7 +114,7 @@ module.exports = {
   /**
    * Get the current Adobe Mobile Privacy Status
    *
-   * @return {AEPMobilePrivacyStatus} the current privacy status
+   * @return {PrivacyStatus} the current privacy status
    */
   getPrivacyStatus(): Promise<string> {
     return RCTAEPCore.getPrivacyStatus();
@@ -136,22 +136,22 @@ module.exports = {
    * @param event Required parameter with {@link Event} instance to be dispatched. Should not be nil
    * @return true if the the event dispatching operation succeeded, otherwise the promise will return an error
    */
-  dispatchEvent(event: AEPExtensionEvent): Promise<boolean> {
+  dispatchEvent(event: Event): Promise<boolean> {
     return RCTAEPCore.dispatchEvent(event);
   },
 
   /**
-   * This method will be used when the provided {@code AEPExtensionEvent} is used as a trigger and a response event
+   * This method will be used when the provided {@code Event} is used as a trigger and a response event
    * is expected in return. The returned event needs to be sent using
    * {@link #dispatchResponseEvent(Event, Event, ExtensionErrorCallback)}.
    * <p>
    *
-   * @param event            required parameter, {@link AEPExtensionEvent} instance to be dispatched, used as a trigger
+   * @param event            required parameter, {@link Event} instance to be dispatched, used as a trigger
    * @param responseCallback required parameters, {@link Promise} to be called with the response event received
    *
    * @see AEPCore#dispatchResponseEvent(Event, Event, ExtensionErrorCallback)
    */
-  dispatchEventWithResponseCallback(event: AEPExtensionEvent): Promise<AEPExtensionEvent> {
+  dispatchEventWithResponseCallback(event: Event): Promise<Event> {
     return RCTAEPCore.dispatchEventWithResponseCallback(event);
   },
 
@@ -160,15 +160,15 @@ module.exports = {
    * Dispatches a response event for a paired event that was sent to {@code dispatchEventWithResponseCallback}
    * and received by an extension listener {@code hear} method.
    *
-   * @param responseEvent required parameter, {@link AEPExtensionEvent} instance to be dispatched as a response for the
-   *                      event sent using {@link AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)}
+   * @param responseEvent required parameter, {@link Event} instance to be dispatched as a response for the
+   *                      event sent using {@link AEPCore#dispatchEventWithResponseCallback(Event)}
    * @param requestEvent  required parameter, the event sent using
-   * 						{@link AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)}
+   * 						{@link AEPCore#dispatchEventWithResponseCallback(Event)}
    * @return {@code boolean} indicating if the the event dispatching operation succeeded
    *
-   * @see AEPCore#dispatchEventWithResponseCallback(AEPExtensionEvent)
+   * @see AEPCore#dispatchEventWithResponseCallback(Event)
    */
-  dispatchResponseEvent(responseEvent: AEPExtensionEvent, requestEvent: AEPExtensionEvent): Promise<boolean> {
+  dispatchResponseEvent(responseEvent: Event, requestEvent: Event): Promise<boolean> {
     return RCTAEPCore.dispatchResponseEvent(responseEvent, requestEvent);
   },
 
@@ -222,7 +222,7 @@ module.exports = {
    * Submits a generic event containing the provided push token with event type `generic.identity`.
    *
    * When using the Adobe Identity extension, the following applies:
-   *   - If the current SDK privacy status is \ref AEPMobilePrivacyStatusOptOut, then the push identifier is not set.
+   *   - If the current SDK privacy status is \ref PrivacyStatusOptOut, then the push identifier is not set.
    *
    * @param {String?} pushIdentifier the device token for push notifications
    */

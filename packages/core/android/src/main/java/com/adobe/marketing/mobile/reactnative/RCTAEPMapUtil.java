@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class RCTAEPMapUtil {
+class RCTAEPMapUtil {
 
-    public static Map<String, Object> toMap(ReadableMap readableMap) {
+    static Map<String, Object> toMap(ReadableMap readableMap) {
         if (readableMap == null) {
             return null;
         }
@@ -60,7 +60,7 @@ public class RCTAEPMapUtil {
         return map;
     }
 
-    public static Map<String, String> toStringMap(ReadableMap readableMap) {
+    static Map<String, String> toStringMap(ReadableMap readableMap) {
         if (readableMap == null) {
             return null;
         }
@@ -85,7 +85,7 @@ public class RCTAEPMapUtil {
         return map;
     }
 
-    public static WritableMap toWritableMap(Map<String, Object> map) {
+    static WritableMap toWritableMap(Map<String, Object> map) {
         if (map == null) {
             return null;
         }
