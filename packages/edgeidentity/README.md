@@ -51,7 +51,7 @@ Returns the version of the Identity for Edge Network extension
 **Syntax**
 
 ```javascript
-static extensionVersion(): Promise<string>;
+extensionVersion(): Promise<string>;
 ```
 **Example**
 
@@ -65,7 +65,7 @@ A promise method which will be invoked once the Experience Cloud ID is available
 
 **Syntax**
 ```javascript
-static getExperienceCloudId(): Promise<string>;
+getExperienceCloudId(): Promise<string>;
 ```
 
 **Example**
@@ -79,7 +79,7 @@ A promise method which will be invoked once the identities are available or reje
 
 **Syntax**
 ```javascript
-static getIdentities(): Promise<IdentityMap>;
+getIdentities(): Promise<IdentityMap>;
 ```
 **Example**
 ```javascript
@@ -98,7 +98,7 @@ Removing identities using a reserved namespace is not allowed using this API. Th
 
 **Syntax**
 ```javascript
-static removeIdentity(item: IdentityItem, namespace: string);
+removeIdentity(item: IdentityItem, namespace: string);
 ```
 **Example**
 ```javascript
@@ -128,7 +128,7 @@ Updating identities using a reserved namespace is not allowed using this API. Th
 **Syntax**
 
 ```javascript
-static updateIdentities(identityMap: IdentityMap);
+updateIdentities(identityMap: IdentityMap);
 ```
 
 **Example**
