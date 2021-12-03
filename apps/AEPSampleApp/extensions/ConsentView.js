@@ -17,6 +17,7 @@ import React, {useState, Component} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Consent} from '@adobe/react-native-aepedgeconsent';
 import {AEPCore} from '@adobe/react-native-aepcore';
+import styles from '../styles/styles';
 
 export default ConsentView = ({ navigation }) => {
   const [version, setVersion] = useState('');
@@ -63,29 +64,3 @@ function setDefaultConsent(allowed: boolean) {
   var defaultConsents: {[keys: string]: any} = {"consent.default": {"consents" : {"collect" : collectConsentStatus}}};
   AEPCore.updateConfiguration(defaultConsents);
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 22,
-    textAlign: 'center',
-    margin: 10,
-  },
-  text: {
-    fontSize: 15,
-    textAlign: 'center',
-    margin: 5,
-  }, 
-  breakLine: {
-    borderWidth: 0.5,
-    borderColor: 'black',
-    margin: 10,
-    marginTop: 10,
-    marginBottom: 10,
-  }
-});
