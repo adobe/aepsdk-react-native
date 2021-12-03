@@ -15,19 +15,15 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-class AEPExtensionEvent {
-  eventName:   string;
-  eventType:   string;
-  eventSource: string;
-  eventData:   {[string]: any};
+const RCTAEPLifecycle = require('react-native').NativeModules.AEPLifecycle;
 
-  constructor(eventName: string, eventType: string, eventSource: string, eventData: {[string]: any}) {
-    this.eventName = eventName;
-    this.eventType = eventType;
-    this.eventSource = eventSource;
-    this.eventData = eventData;
-  }
+module.exports = {
+  /**
+   * Returns the version of the Lifecycle extension
+   * @param  {string} Promise a promise that resolves with the extension verison
+   */
+  extensionVersion(): Promise<string> {
+    return Promise.resolve(RCTAEPLifecycle.extensionVersion());
+  },
 
-}
-
-module.exports = AEPExtensionEvent;
+};
