@@ -8,7 +8,7 @@
 
 ## Prerequisites
 
-The Edge Network extension has the following peer dependencies, which must be installed prior to installing the messaging extension:
+The Edge Network extension has the following peer dependencies, which must be installed prior to installing the Edge extension:
 - [Core](../core/README.md)
 - [Identity for Edge Network](../edgeidentity/README.md)
 
@@ -42,7 +42,7 @@ import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
 
 **Syntax**
 ```javascript
-static extensionVersion(): Promise<string>;
+extensionVersion(): Promise<string>;
 ```
 
 **Example**
@@ -54,7 +54,7 @@ Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge ve
 
 **Syntax**
 ```javascript
-static sendEvent(experienceEvent: ExperienceEvent): Promise<EdgeEventHandle>;
+sendEvent(experienceEvent: ExperienceEvent): Promise<EdgeEventHandle>;
 ```
 
 **Example**

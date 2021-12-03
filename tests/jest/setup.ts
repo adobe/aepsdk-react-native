@@ -28,7 +28,7 @@ jest.doMock('react-native', () => {
                 },
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
-                    sendEvent: jest.fn(() => new Promise(resolve => resolve(null))),
+                    sendEvent: jest.fn(() => new Promise(resolve => resolve(''))),
                 },
                 AEPAssurance: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
