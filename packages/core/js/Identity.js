@@ -131,7 +131,18 @@ module.exports = {
    * @see AEPIdentity::syncIdentifiers:
    */
   getIdentifiers(): Promise<Array<?VisitorID>> {
-    return RCTAEPIdentity.getIdentifiers();
+    const getIdentifiersPromise = new Promise((resolve, reject) => {
+   
+    RCTAEPIdentity.getIdentifiers()
+    .then(identifiers => {
+      let visitorIDArray = toIdentifier(identifiers) 
+      resolve(visitorIDArray);
+    })
+    .catch((error) => {
+      reject(error);
+    });      
+  });
+     return getIdentifiersPromise;
   },
 
   /**
@@ -146,5 +157,14 @@ module.exports = {
   getExperienceCloudId(): Promise<?string> {
     return RCTAEPIdentity.getExperienceCloudId();
   },
-
 };
+
+function toIdentifier(visitorIDArray: Array) {
+  let identifiersArray = [];
+  
+  for (let prop of visitorIDArray) {
+  identifiersArray.push(new VisitorID(prop.idOrigin, prop.idType, prop.id, prop.authenticationState));
+  }
+     
+  return identifiersArray;
+}
