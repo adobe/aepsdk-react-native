@@ -41,6 +41,7 @@ iOS
 @import AEPLifecycle;
 @import AEPEdge;
 @import AEPEdgeIdentity;
+@import AEPMessaging;
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -66,6 +67,7 @@ import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity;
+import com.adobe.marketing.mobile.Messaging;
   
 ...
 import android.app.Application;
