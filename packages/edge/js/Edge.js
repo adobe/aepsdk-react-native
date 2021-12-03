@@ -46,7 +46,7 @@ module.exports = {
       resolve(eventHandlesPromise);
     })
     .catch((error) => {
-      reject("Edge sendEvent: Not Able to convert EdgeEventHandle");
+      reject(error);
     });      
     });
      return(sentEventPromise);
