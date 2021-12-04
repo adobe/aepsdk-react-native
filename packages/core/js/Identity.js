@@ -162,12 +162,10 @@ module.exports = {
 function toIdentifier(visitorIDArray: Array) {
   let identifiersArray = [];
 
-  if (!visitorIDArray){
-    return [];
-  }
-  
-  for (let prop of visitorIDArray) {
-  identifiersArray.push(new VisitorID(prop.idOrigin, prop.idType, prop.id, prop.authenticationState));
+  if (visitorIDArray){
+    for (let prop of visitorIDArray) {
+    identifiersArray.push(new VisitorID(prop.idOrigin, prop.idType, prop.id, prop.authenticationState));
+   }
   }
      
   return identifiersArray;
