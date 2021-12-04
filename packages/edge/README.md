@@ -1,7 +1,7 @@
 
 # React Native Adobe Experience Platform Edge Network extension
 
-[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedge.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedge) 
+[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedge.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedge)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedge)](https://www.npmjs.com/package/@adobe/react-native-aepedge)
 
 `@adobe/react-native-aepedge` is a wrapper around the iOS and Android [Adobe Experience Platform Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension) to allow for integration with React Native applications.
@@ -14,7 +14,7 @@ The Edge Network extension has the following peer dependencies, which must be in
 
 ## Installation
 
-See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
 Install the `@adobe/react-native-aepedge` package:
 
@@ -54,7 +54,7 @@ Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge ve
 
 **Syntax**
 ```javascript
-sendEvent(experienceEvent: ExperienceEvent): Promise<EdgeEventHandle>;
+sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>;
 ```
 
 **Example**
