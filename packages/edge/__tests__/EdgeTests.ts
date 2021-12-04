@@ -97,4 +97,15 @@ describe('Edge', () => {
     await Edge.sendEvent(experienceEvent);
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
+
+  it('sendEvent returns promise with correct type Array<EdgeEventHandle>', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+    let xdmData  = {"eventType" : "SampleXDMEvent"};
+    let experienceEvent = new ExperienceEvent(xdmData);
+    let result = await Edge.sendEvent(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(result.length).toEqual(1)
+    expect(result[0].type).toEqual("example");
+    expect(result[0].payload).toEqual({"sample": "data"});
+  });
 });
