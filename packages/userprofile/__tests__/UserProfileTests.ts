@@ -13,35 +13,35 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { AEPUserProfile } from '../';
+import { UserProfile } from '../js';
 
-describe('AEPUserProfile', () => {
+describe('UserProfile', () => {
 
   it('extensionVersion is called', async () => {
-    expect(AEPUserProfile.extensionVersion).toBeDefined();
+    expect(UserProfile.extensionVersion).toBeDefined();
     const spy = jest.spyOn(NativeModules.AEPUserProfile, 'extensionVersion');
-    await AEPUserProfile.extensionVersion();
+    await UserProfile.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('removeUserAttributes is called with correct parameter', async () => {
     const spy = jest.spyOn(NativeModules.AEPUserProfile, 'removeUserAttributes');
     let attributeNames = ["attrNameTest"];
-    await AEPUserProfile.removeUserAttributes(attributeNames);
+    await UserProfile.removeUserAttributes(attributeNames);
     expect(spy).toHaveBeenCalledWith(attributeNames);
   });
 
   it('getUserAttributes is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPUserProfile, 'getUserAttributes');
     let attributeNames = ["attrNameTest"];
-    await AEPUserProfile.getUserAttributes(attributeNames);
+    await UserProfile.getUserAttributes(attributeNames);
     expect(spy).toHaveBeenCalledWith(attributeNames);
   });
 
   it('updateUserAttributes is called with correct parameter', async () => {
     const spy = jest.spyOn(NativeModules.AEPUserProfile, 'updateUserAttributes');
     let attrMap = {"mapKey": "mapValue", "mapKey1": "mapValue1"};
-    await AEPUserProfile.updateUserAttributes(attrMap);
+    await UserProfile.updateUserAttributes(attrMap);
     expect(spy).toHaveBeenCalledWith(attrMap);
   });
 
