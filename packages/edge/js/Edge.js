@@ -17,8 +17,8 @@ governing permissions and limitations under the License.
 
 const RCTAEPEdge = require('react-native').NativeModules.AEPEdge;
 
-import type {ExperienceEvent} from './models/ExperienceEvent';
-import type {EdgeEventHandle} from './models/EdgeEventHandle';
+import ExperienceEvent from './models/ExperienceEvent';
+import EdgeEventHandle from './models/EdgeEventHandle';
 
 module.exports = {
   /**
@@ -39,6 +39,30 @@ module.exports = {
    * if no handles were returned for the given experienceEvent
    */
   sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>> {
-     return Promise.resolve(RCTAEPEdge.sendEvent(experienceEvent));
-  }
+   const sentEventPromise = new Promise((resolve, reject) => {
+    RCTAEPEdge.sendEvent(experienceEvent)
+    .then(eventHandles => {
+      let eventHandlesPromise = toEventHandle(eventHandles);
+      resolve(eventHandlesPromise);
+    })
+    .catch((error) => {
+      reject(error);
+    });      
+    });
+     return(sentEventPromise);
+  },
 };
+
+
+function toEventHandle(eventArray: Array) {
+ 
+    let edgeEventArray = [];
+
+    if (eventArray) {
+    for (let prop of eventArray) {
+      edgeEventArray.push(new EdgeEventHandle(prop.type, prop.payload));
+    }
+    } 
+
+    return edgeEventArray;
+  }
