@@ -75,7 +75,7 @@ jest.doMock('react-native', () => {
                     syncIdentifier: jest.fn(),
                     appendVisitorInfoForURL: jest.fn(() => new Promise(resolve => resolve(''))),
                     getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
-                    getIdentifiers: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getIdentifiers: jest.fn(() => new Promise(resolve => resolve(null))),
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))) 
                 },
                 AEPMessaging: {
