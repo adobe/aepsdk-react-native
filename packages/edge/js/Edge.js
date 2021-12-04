@@ -58,6 +58,10 @@ function toEventHandle(eventArray: Array) {
  
     let edgeEventArray = [];
 
+    if (!eventArray) {
+      return [];
+    }
+
     for (let prop of eventArray) {
       edgeEventArray.push(new EdgeEventHandle(prop.type, prop.payload));
     }
