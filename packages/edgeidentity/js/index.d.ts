@@ -21,7 +21,7 @@ export class Identity{
 export enum AuthenticatedState {
     AUTHENTICATED: "authenticated";
     LOGGED_OUT: "loggedOut";
-    AMBIGUOUS: string: "ambiguous";
+    AMBIGUOUS: "ambiguous";
 }
 
 export class IdentityItem {
