@@ -36,7 +36,7 @@ describe('IdentityMap', () => {
     let identityItems2  = new IdentityItem(identifier2, authenticatedState2, isPrimary2);
     let identityItems3  = new IdentityItem(identifier3, authenticatedState3);
     let identityItems4  = new IdentityItem(identifier4);
-   
+  
     // add items
     let idMap = new IdentityMap();
     idMap.addItem(identityItems1, namespace1);
@@ -53,7 +53,7 @@ describe('IdentityMap', () => {
 
     let itemsForNamespace2 = idMap.getIdentityItemsForNamespace(namespace2);
     expect(itemsForNamespace2.length).toEqual(2);
-    expect(itemsForNamespace2).toEqual([{"id": identifier3, "authenticatedState": authenticatedState3, "primary": false}, {"id": identifier4, "authenticatedState": AuthenticatedState.AMBIGUOUS, "primary": false}]);
+    expect(itemsForNamespace2).toEqual([{"id": identifier3, "authenticatedState": 'loggedOut', "primary": false}, {"id": identifier4, "authenticatedState": AuthenticatedState.AMBIGUOUS, "primary": false}]);
  });
 
  it('IdentityMap addItem replaces items with same id', async () => {
