@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 module.exports = {
   // Native modules
-  get AEPUserProfile() {
-    return require('./AEPUserProfile');
+  get UserProfile() {
+    return require('./UserProfile');
   },
 };

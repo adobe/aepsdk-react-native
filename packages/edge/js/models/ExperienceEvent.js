@@ -9,17 +9,22 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
 @format
 */
 
-import { NativeModules } from 'react-native';
-import { AEPMessaging } from '../js';
+'use strict';
 
-describe('AEPMessaging', () => {
-  it('extensionVersion is called', async () => {
-    expect(AEPMessaging.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
-    await AEPMessaging.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
-});
+class ExperienceEvent {
+  xdmData: {[string]: any};
+  data: {[string]: any};
+  datasetIdentifier: string;
+ 
+  constructor(xdmData: {[string]: any}, data?: {[string]: any}, datasetIdentifier?: string) {
+  	this.xdmData = xdmData;
+    this.data = data;
+    this.datasetIdentifier = datasetIdentifier;
+  }
+}
+
+module.exports = ExperienceEvent;
