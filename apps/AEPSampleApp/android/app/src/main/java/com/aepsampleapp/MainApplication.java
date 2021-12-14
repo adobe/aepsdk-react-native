@@ -78,21 +78,22 @@ public class MainApplication extends Application implements ReactApplication {
           com.adobe.marketing.mobile.Identity.registerExtension();
           com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Lifecycle.registerExtension();
-          Signal.registerExtension();          
+          Signal.registerExtension();
           Edge.registerExtension();
           Consent.registerExtension();
           Messaging.registerExtension();
           Assurance.registerExtension();
-          MobileCore.configureWithAppID("your-app-ID");
-          MobileCore.start(new AdobeCallback() {
-              @Override
-              public void call(Object o) {
-                  MobileCore.lifecycleStart(null);
-              }
-          });
       } catch (InvalidInitException e) {
           e.printStackTrace();
       }
+
+      MobileCore.configureWithAppID("your-app-ID");
+      MobileCore.start(new AdobeCallback() {
+          @Override
+          public void call(Object o) {
+              MobileCore.lifecycleStart(null);
+          }
+      });
   }
 
   /**

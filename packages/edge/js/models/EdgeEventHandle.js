@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-class AEPEdgeEventHandle {
+class EdgeEventHandle {
   type: string;
   payload: Array<{[string]: any}>;
  
@@ -25,4 +25,4 @@ class AEPEdgeEventHandle {
   }
 }
 
-module.exports = AEPEdgeEventHandle;
+module.exports = EdgeEventHandle;

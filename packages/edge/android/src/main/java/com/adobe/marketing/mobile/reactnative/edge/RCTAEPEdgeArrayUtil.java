@@ -16,24 +16,11 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-public class RCTAEPEdgeArrayUtil {
+class RCTAEPEdgeArrayUtil {
 
-    public static List<String> toStringList(ReadableArray readableArray) {
-        if (readableArray == null) {
-            return null;
-        }
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < readableArray.size(); i++) {
-            list.add(readableArray.getString(i));
-        }
-        return list;
-    }
-
-    public static Object[] toObjectArray(ReadableArray readableArray) {
+    static Object[] toObjectArray(ReadableArray readableArray) {
         if (readableArray == null) {
             return null;
         }
@@ -68,15 +55,13 @@ public class RCTAEPEdgeArrayUtil {
         return array;
     }
 
-    public static WritableArray toWritableArray(Object[] array) {
+    static WritableArray toWritableArray(Object[] array) {
         if (array == null) {
             return null;
         }
         WritableArray writableArr = Arguments.createArray();
 
-        for (int i = 0; i < array.length; i++) {
-            Object value = array[i];
-
+        for (Object value : array) {
             if (value == null) {
                 writableArr.pushNull();
             } else if (value instanceof Boolean) {
