@@ -60,11 +60,7 @@ export default function App() {
         <Drawer.Screen name="ProfileView" component={ProfileView} />
         <Drawer.Screen name="IdentityView" component={IdentityView} />
         <Drawer.Screen name="MessagingView" component={MessagingView} />
-<<<<<<< HEAD
-        <Drawer.Screen name="Edge" component={Edge} />
-=======
         <Drawer.Screen name="EdgeView" component={EdgeView} />
->>>>>>> 1e58375ea223f08ae3fa1ac7a2adb5768ce246a6
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="Assurance" component={Assurance} />
