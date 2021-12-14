@@ -35,7 +35,7 @@ final class RCTAEPEdgeIdentityDataBridge {
     private static final String ID_KEY = "id";
     private static final String IS_PRIMARY_KEY = "primary";
     private static final String AEP_AUTH_STATE_KEY = "authenticatedState";
-    private static final String ITEMS = "items";
+    private static final String IDENTITY_MAP_KEY = "identityMap";
 
     private static final String TAG = "RCTAEPEdgeIdentityDataBridge";
 
@@ -78,7 +78,7 @@ final class RCTAEPEdgeIdentityDataBridge {
         }
 
         IdentityMap identityMapFromReadableMap = new IdentityMap();
-        ReadableMap mapValue = map.getMap(ITEMS);
+        ReadableMap mapValue = map.getMap(IDENTITY_MAP_KEY);
 
         ReadableMapKeySetIterator iterator =  mapValue.keySetIterator();
 

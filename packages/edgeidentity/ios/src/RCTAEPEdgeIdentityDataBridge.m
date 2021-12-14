@@ -16,7 +16,7 @@
 static NSString* const ID_KEY = @"id";
 static NSString* const IS_PRIMARY_KEY = @"primary";
 static NSString* const AUTH_STATE_KEY = @"authenticatedState";
-static NSString* const ITEM_KEY = @"items";
+static NSString* const IDENTITY_MAP_KEY = @"identityMap";
 static NSString* const AUTHENTICATED = @"authenticated";
 static NSString* const LOGGED_OUT = @"loggedOut";
 static NSString* const AMBIGUOUS = @"ambiguous";
@@ -51,7 +51,7 @@ static NSString* const AMBIGUOUS = @"ambiguous";
 
 + (nonnull AEPIdentityMap  *)dictionaryToIdentityMap: (nonnull NSDictionary *) dict {
     AEPIdentityMap *identityMap = [[AEPIdentityMap alloc] init];
-    NSDictionary *itemsMap = [[dict objectForKey:ITEM_KEY] isKindOfClass:[NSDictionary class]] ? [dict objectForKey:ITEM_KEY] : nil;
+    NSDictionary *itemsMap = [[dict objectForKey:IDENTITY_MAP_KEY] isKindOfClass:[NSDictionary class]] ? [dict objectForKey:IDENTITY_MAP_KEY] : nil;
     
     if (!itemsMap){
         return identityMap;

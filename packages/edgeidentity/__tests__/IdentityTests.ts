@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Identity, AuthenticatedState, IdentityItem, IdentityMap } from '../';
+import { Identity, AuthenticatedState, IdentityItem, IdentityMap} from '../';
 
 afterEach(() => {    
   jest.clearAllMocks();
@@ -48,7 +48,7 @@ describe('Identity for Edge Network', () => {
 
     currentIdentity.addItem(identityItems1, "namespace1");
 
-    let expectedMap = {"items": { "ABC" : [{"id":"id1","authenticatedState":"ambiguous","primary":false}], "namespace1" : [{"id": "id1", "authenticatedState": "loggedOut", "primary": true}]}};
+    let expectedMap = {"identityMap": { "ABC" : [{"id":"id1","authenticatedState":"ambiguous","primary":false}], "namespace1" : [{"id": "id1", "authenticatedState": "loggedOut", "primary": true}]}};
      
     expect(currentIdentity).toEqual(expectedMap);
 
@@ -64,7 +64,7 @@ describe('Identity for Edge Network', () => {
 
     currentIdentity.removeItem(identityItems1, "namespace1");
 
-    let expectedMap = {"items": { "ABC" : [{"id":"id1","authenticatedState":"ambiguous","primary":false}]}};
+    let expectedMap = {"identityMap": { "ABC" : [{"id":"id1","authenticatedState":"ambiguous","primary":false}]}};
   
     expect(currentIdentity).toEqual(expectedMap);
 
@@ -164,7 +164,7 @@ describe('Identity for Edge Network', () => {
   
     let idMap = new IdentityMap();
 
-    let expectedIdMap = {"items": { "namespace1" : [{"id": identifier1, "authenticatedState": authenticatedState1, "primary": isPrimary1}], "namespace2" : [{"id": identifier2, "authenticatedState": authenticatedState2, "primary": isPrimary2}]}};
+    let expectedIdMap = {"identityMap": { "namespace1" : [{"id": identifier1, "authenticatedState": authenticatedState1, "primary": isPrimary1}], "namespace2" : [{"id": identifier2, "authenticatedState": authenticatedState2, "primary": isPrimary2}]}};
    
 
     //add item 1
