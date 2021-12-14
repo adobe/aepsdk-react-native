@@ -18,10 +18,10 @@ export class Identity{
     static removeIdentity(item: IdentityItem, namespace: string);
 };
 
-export class AuthenticatedState {
-    static AUTHENTICATED: string;
-    static LOGGED_OUT: string;
-    static AMBIGUOUS: string;
+export enum AuthenticatedState {
+    AUTHENTICATED: "authenticated";
+    LOGGED_OUT: "loggedOut";
+    AMBIGUOUS: "ambiguous";
 }
 
 export class IdentityItem {
