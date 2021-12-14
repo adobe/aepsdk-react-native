@@ -71,7 +71,7 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'getPrivacyStatus');
     const privacyStatus = await MobileCore.getPrivacyStatus();
     expect(spy).toHaveBeenCalled();
-    expect(privacyStatus).toEqual('OPT_OUT');
+    expect(privacyStatus).toEqual(PrivacyStatus.OPT_OUT);
   });
 
   it('getSdkIdentities is called', async () => {
