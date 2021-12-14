@@ -28,7 +28,7 @@ function HomeScreen({ navigation }) {
       />
       <Button
         onPress={() => navigation.navigate('MessagingView')}
-        title="Messaging"/>
+        title="Messaging" />
       <Button
         onPress={() => navigation.navigate('EdgeView')}
         title="Edge"
@@ -64,7 +64,7 @@ export default function App() {
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="Assurance" component={Assurance} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+      </Drawer.Navigator >
+    </NavigationContainer >
   );
 }
