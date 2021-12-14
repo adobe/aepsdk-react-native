@@ -8,7 +8,7 @@ import CoreView from './extensions/CoreView';
 import IdentityView from './extensions/IdentityView';
 import EdgeIdentity from './extensions/EdgeIdentity';
 import ConsentView from './extensions/ConsentView';
-import Edge from './extensions/Edge';
+import EdgeView from './extensions/EdgeView';
 import Assurance from './extensions/Assurance';
 
 function HomeScreen({ navigation }) {
@@ -30,7 +30,7 @@ function HomeScreen({ navigation }) {
         onPress={() => navigation.navigate('MessagingView')}
         title="Messaging" />
       <Button
-        onPress={() => navigation.navigate('Edge')}
+        onPress={() => navigation.navigate('EdgeView')}
         title="Edge"
       />
       <Button
@@ -60,7 +60,11 @@ export default function App() {
         <Drawer.Screen name="ProfileView" component={ProfileView} />
         <Drawer.Screen name="IdentityView" component={IdentityView} />
         <Drawer.Screen name="MessagingView" component={MessagingView} />
+<<<<<<< HEAD
         <Drawer.Screen name="Edge" component={Edge} />
+=======
+        <Drawer.Screen name="EdgeView" component={EdgeView} />
+>>>>>>> 1e58375ea223f08ae3fa1ac7a2adb5768ce246a6
         <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="Assurance" component={Assurance} />

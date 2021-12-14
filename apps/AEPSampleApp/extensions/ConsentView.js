@@ -16,7 +16,7 @@ governing permissions and limitations under the License.
 import React, {useState, Component} from 'react';
 import {Button, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Consent} from '@adobe/react-native-aepedgeconsent';
-import {AEPCore} from '@adobe/react-native-aepcore';
+import {MobileCore} from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
 
 export default ConsentView = ({ navigation }) => {
@@ -62,5 +62,5 @@ function updateCollectConsent(allowed: boolean) {
 function setDefaultConsent(allowed: boolean) {
   var collectConsentStatus = allowed ? {"val": "y"} : {"val": "n"};
   var defaultConsents: {[keys: string]: any} = {"consent.default": {"consents" : {"collect" : collectConsentStatus}}};
-  AEPCore.updateConfiguration(defaultConsents);
+  MobileCore.updateConfiguration(defaultConsents);
 }
