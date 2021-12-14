@@ -41,13 +41,14 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setLogLevel');
     let logLevel = LogLevel.DEBUG;
     await MobileCore.setLogLevel(logLevel);
-    expect(spy).toHaveBeenCalledWith(logLevel);
+    expect(spy).toHaveBeenCalledWith("DEBUG");
   });
 
   it('getLogLevel is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'getLogLevel');
-    await MobileCore.getLogLevel();
+    const logLevel = await MobileCore.getLogLevel();
     expect(spy).toHaveBeenCalled();
+    expect(logLevel).toEqual(LogLevel.DEBUG);
   });
 
   it('log is called with correct parameters', async () => {
@@ -63,13 +64,14 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setPrivacyStatus');
     let privacyStatus = PrivacyStatus.UNKNOWN;
     await MobileCore.setPrivacyStatus(privacyStatus);
-    expect(spy).toHaveBeenCalledWith(privacyStatus);
+    expect(spy).toHaveBeenCalledWith("UNKNOWN");
   });
 
   it('getPrivacyStatus is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'getPrivacyStatus');
-    await MobileCore.getPrivacyStatus();
+    const privacyStatus = await MobileCore.getPrivacyStatus();
     expect(spy).toHaveBeenCalled();
+    expect(privacyStatus).toEqual('OPT_OUT');
   });
 
   it('getSdkIdentities is called', async () => {
