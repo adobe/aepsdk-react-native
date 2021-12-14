@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 module.exports = {
   // Native modules
-  get AEPMessaging() {
-    return require('./AEPMessaging.js');
+  get Messaging() {
+    return require('./Messaging.js');
   },
 };

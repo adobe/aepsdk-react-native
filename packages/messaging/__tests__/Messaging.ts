@@ -13,13 +13,13 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { AEPMessaging } from '../js';
+import { Messaging } from '../js';
 
-describe('AEPMessaging', () => {
+describe('Messaging', () => {
   it('extensionVersion is called', async () => {
-    expect(AEPMessaging.extensionVersion).toBeDefined();
+    expect(Messaging.extensionVersion).toBeDefined();
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
-    await AEPMessaging.extensionVersion();
+    await Messaging.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 });
