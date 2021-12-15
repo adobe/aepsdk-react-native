@@ -29,9 +29,11 @@ module.exports = {
    * @param  {string} Promise a promise that resolves with the extension verison
    */
   extensionVersion(): Promise<String> { 
+    console.log("extensionVersion API called.");
     return Promise.resolve(RCTAEPOptimize.extensionVersion());
   },
   onPropositionUpdate(onPropositionUpdateCallback: Object) {
+    console.log("onPropositionUpdate API called.");
     if(onPropositionUpdateSubscription) {
       onPropositionUpdateSubscription.remove();
     }
@@ -43,10 +45,11 @@ module.exports = {
     RCTAEPOptimize.onPropositionsUpdate();        
   }, 
   clearCachedPropositions() {
+    console.log("clearCachedPropositions API called.");
     RCTAEPOptimize.clearCachedPropositions();
   },
   getPropositions(decisionScopes: Array<DecisionScope>): Promise<Map<DecisionScope, Proposition>> {
-    console.log("getProposition::::");
+    console.log("getPropositions API called.");
     return new Promise((resolve, reject) => {
       var decisionScopeNames: Array<string> = decisionScopes.map((decisionScope) => decisionScope.getName());
       RCTAEPOptimize.getPropositions(decisionScopeNames).then(propositions => {
@@ -57,23 +60,29 @@ module.exports = {
     });
   },
   updatePropositions(decisionScopes: Array<DecisionScope>, xdm: Map<String, Object>, data: Map<String, Object>) {
+    console.log("updatePropositions API called.");
     var decisionScopeNames: Array<string> = decisionScopes.map((decisionScope) => decisionScope.getName());
     RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data);
   },
   removeOnPropositionUpdateListener() {
+    console.log("removeOnPropositionUpdateListener API called.");
     onPropositionUpdateSubscription.remove();
   },
   offerDisplayed(offer: Offer) {
+    console.log("offerDisplayed API called.");
     const entries = Object.entries(offer);
     offer = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));
     RCTAEPOptimize.offerDisplayed(offer);
   },
-  offerTapped(offer: Offer) {    
-    const entries = Object.entries(offer);
-    offer = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));    
-    RCTAEPOptimize.offerTapped(offer);
+  offerTapped(offerId: String, proposition: Proposition) {    
+    console.log("offerTapped API called.");
+    const entries = Object.entries(proposition);
+    proposition = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));    
+    // console.log(`Offer tapped is ${JSON.stringify(prop)}.`);
+    RCTAEPOptimize.offerTapped(offerId, proposition);
   },
   generateDisplayInteractionXdm(offer: Offer): Promise<Map<string, Object>> {
+    console.log("generateDisplayInteractionXdm API called.");
     return RCTAEPOptimize.generateDisplayInteractionXdm(offer);
   }
 };

@@ -9,6 +9,8 @@ import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.Proposition;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
@@ -35,12 +37,14 @@ class RCTAEPOptimizeUtil {
             return propositionWritableMap;
         }
         propositionWritableMap.putString("id", proposition.getId());
+        propositionWritableMap.putString("scope", proposition.getScope());
+        propositionWritableMap.putMap("scopeDetails", convertMapToWritableMap(proposition.getScopeDetails()));
         WritableArray offersWritableArray = new WritableNativeArray();
         for (final Offer offer : proposition.getOffers()) {
             offersWritableArray.pushMap(convertOfferToWritableMap(offer));
         }
-        propositionWritableMap.putArray("offers", offersWritableArray);
-        propositionWritableMap.putString("scope", proposition.getScope());
+        propositionWritableMap.putArray("items", offersWritableArray);
+
         return propositionWritableMap;
     }
 
@@ -55,14 +59,20 @@ class RCTAEPOptimizeUtil {
             offerWritableMap.putString("etag", offer.getEtag());
         }
         offerWritableMap.putString("schema", offer.getSchema());
-        offerWritableMap.putString("type", offer.getType().toString());
+
+        final WritableMap dataWritableMap = new WritableNativeMap();
+        dataWritableMap.putString("id", offer.getId());
+        dataWritableMap.putString("format", offer.getType().toString());
+        dataWritableMap.putString("content", offer.getContent());
         if (offer.getLanguage() != null) {
-            offerWritableMap.putArray("language", convertListToWritableArray(new ArrayList<Object>(offer.getLanguage())));
+            dataWritableMap.putArray("language", convertListToWritableArray(new ArrayList<Object>(offer.getLanguage())));
         }
-        offerWritableMap.putString("content", offer.getContent());
+
         if (offer.getCharacteristics() != null) {
-            offerWritableMap.putMap("characteristics", convertMapToWritableMap(new HashMap<String, Object>(offer.getCharacteristics())));
+            dataWritableMap.putMap("characteristics", convertMapToWritableMap(new HashMap<String, Object>(offer.getCharacteristics())));
         }
+
+        offerWritableMap.putMap("data", dataWritableMap);
         return offerWritableMap;
     }
 
@@ -116,5 +126,68 @@ class RCTAEPOptimizeUtil {
             }
         }
         return decisionScopeList;
+    }
+
+    /**
+     * Converts {@link ReadableMap} Map to {@link Map}
+     *
+     * @param readableMap instance of {@code ReadableMap}
+     * @return instance of {@code Map}
+     */
+    static Map<String, Object> convertReadableMapToMap(final ReadableMap readableMap) {
+        ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
+        Map<String, Object> map = new HashMap<>();
+        while (iterator.hasNextKey()) {
+            String key = iterator.nextKey();
+            ReadableType type = readableMap.getType(key);
+            switch (type) {
+                case Boolean:
+                    map.put(key, readableMap.getBoolean(key));
+                    break;
+                case Number:
+                    map.put(key, readableMap.getDouble(key));
+                    break;
+                case String:
+                    map.put(key, readableMap.getString(key));
+                    break;
+                case Map:
+                    map.put(key, convertReadableMapToMap(readableMap.getMap(key)));
+                    break;
+                case Array:
+                    map.put(key, convertReadableArrayToList(readableMap.getArray(key)));
+                    break;
+                default:
+                    break;
+            }
+
+        }
+        return map;
+    }
+
+    private static List<Object> convertReadableArrayToList(ReadableArray readableArray) {
+        List<Object> list = new ArrayList<>(readableArray.size());
+        for (int i = 0; i < readableArray.size(); i++) {
+            ReadableType indexType = readableArray.getType(i);
+            switch(indexType) {
+                case Boolean:
+                    list.add(i, readableArray.getBoolean(i));
+                    break;
+                case Number:
+                    list.add(i, readableArray.getDouble(i));
+                    break;
+                case String:
+                    list.add(i, readableArray.getString(i));
+                    break;
+                case Map:
+                    list.add(i, convertReadableMapToMap(readableArray.getMap(i)));
+                    break;
+                case Array:
+                    list.add(i, convertReadableArrayToList(readableArray.getArray(i)));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return list;
     }
 }

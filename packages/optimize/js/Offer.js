@@ -13,44 +13,46 @@ governing permissions and limitations under the License.
 @format
 */
 
-const AEPOptimize = require('./index').AEPOptimize;
-// const Proposition = require('./Proposition');
+const AEPOptimize = require('./AEPOptimize');
 
 module.exports = class Offer {
 
     id: string;
     etag: string;
     schema: string;
-    type: string;
-    language: Array<string>;
-    content: string;
-    characteristics: Map<string, string>;        
+    data: Object;    
 
     constructor(eventData: Object) {
         this.id = eventData['id'];
         this.etag = eventData['etag'];
         this.schema = eventData['schema'];
-        this.type = eventData['type'];
-        this.language = eventData['language'];
-        this.content = eventData['content'];
-        this.characteristics = eventData['characteristics'];                
+        this.data = eventData['data'];        
 
+        this.getContent.bind(this);
+        this.getType.bind(this);
         this.displayed.bind(this);
         this.tapped.bind(this);
         this.generateDisplayInteractionXdm.bind(this);        
     }
 
+    getContent = () => {
+        return this.data['content'];
+    };
+
+    getType = () => {
+        return this.data['format'];
+    };
+
     displayed = () => {
         AEPOptimize.offerDisplayed(this);
-    }
+    };
 
-    tapped = () => {        
-        console.log(`The offer tapped is::: ${JSON.stringify(this)}`);
-        console.log(`AEPOptimize is::: ${JSON.stringify(AEPOptimize)}`);
-        AEPOptimize.offerTapped(this);
-    }
+    tapped = (proposition) => {        
+        console.log(`The offer tapped is::: ${JSON.stringify(this)}`);        
+        AEPOptimize.offerTapped(this.id, proposition);
+    };
 
-    generateDisplayInteractionXdm(): Promise<Map<string, Object>> {
-        return AEPOptimize.generateDisplayInteractionXdm(this);
-    }    
+    generateDisplayInteractionXdm(proposition): Promise<Map<string, Object>> {
+        return AEPOptimize.generateDisplayInteractionXdm(this.id, proposition);
+    };   
 }

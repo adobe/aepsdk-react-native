@@ -20,16 +20,16 @@ import Offer from './Offer';
 
 module.exports = class Proposition {
     id: string;
-    offers: Array<Offer>;
+    items: Array<Offer>;
     scope: string;
-    scopeDetails: Map<string, Object>;
+    scopeDetails: Object;
 
     constructor(eventData: Object) {
         this.id = eventData['id'];
         this.scope = eventData['scope'];
         this.scopeDetails = eventData['scopeDetails'];
-        if(eventData['offers']){
-            this.offers = eventData['offers'].map(offer => {
+        if(eventData['items']) {
+            this.items = eventData['items'].map(offer => {
                 return new Offer(offer);
             });                
         }
