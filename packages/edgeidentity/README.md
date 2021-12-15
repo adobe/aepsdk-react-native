@@ -35,6 +35,64 @@ Note that initializing the SDK should be done in native code, additional documen
 
 :information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq#register-the-identity-and-identity-for-edge-network-extensions-with-mobile-core).
 
+Initializing Example:
+
+iOS
+```objc
+// AppDelegate.h
+@import AEPCore;
+@import AEPEdge;
+@import AEPEdgeIdentity;
+...
+@implementation AppDelegate
+
+// AppDelegate.m
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
+                                        AEPMobileEdge.class] completion:^{
+     ...  
+
+   }];
+   [AEPMobileCore configureWithAppId:@"yourAppID"];   
+ } 
+
+@end
+```
+
+Android
+```java
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.identity.Identity;  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+    MobileCore.configureWithAppID("yourAppID");
+
+    try {
+      Edge.registerExtension();
+      Identity.registerExtension();
+      MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+        
+        }});
+    } catch (InvalidInitException e) {
+      ...
+    }
+  }
+}     
+```
+
 
 ### [Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
 
