@@ -30,7 +30,7 @@ Install the Consent extension in your mobile property and configure the default 
 Then follow the same document for registering the Consent extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
-Initializing Example:
+**Initialization Example**
 
 iOS
 ```objc
@@ -49,7 +49,7 @@ iOS
     [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
                                         AEPMobileEdge.class, 
                                         AEPMobileEdgeConsent.class] completion:^{
-    [AEPMobileCore configureWithAppId:@"yourAppID"];  
+      [AEPMobileCore configureWithAppId:@"yourAppID"];  
     ...   
    }]; 
    return YES;   

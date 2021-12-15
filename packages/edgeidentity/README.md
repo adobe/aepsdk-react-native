@@ -33,9 +33,8 @@ Install the Identity extension in your mobile property by following the steps in
 Then follow the same document for registering the Identity extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
-:information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq#register-the-identity-and-identity-for-edge-network-extensions-with-mobile-core).
 
-Initializing Example:
+**Initialization Example**
 
 iOS
 ```objc
@@ -52,7 +51,7 @@ iOS
     [AEPMobileCore setWrapperType: AEPWrapperTypeReactNative];
     [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
                                         AEPMobileEdge.class] completion:^{
-    [AEPMobileCore configureWithAppId:@"yourAppID"];  
+      [AEPMobileCore configureWithAppId:@"yourAppID"];  
     ...   
    }]; 
    return YES;   
@@ -92,6 +91,8 @@ public class MainApplication extends Application implements ReactApplication {
   }
 }     
 ```
+
+:information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq#register-the-identity-and-identity-for-edge-network-extensions-with-mobile-core).
 
 
 ### [Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
