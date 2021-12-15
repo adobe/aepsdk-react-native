@@ -19,7 +19,7 @@ const RCTAEPUserProfile = require('react-native').NativeModules.AEPUserProfile;
 
 module.exports = {
   /**
-   * Returns the version of the AEPUserProfile extension
+   * Returns the version of the UserProfile extension
    * @param  {string} Promise a promise that resolves with the extension verison
    */
   extensionVersion(): Promise<string> {
@@ -43,7 +43,7 @@ module.exports = {
    * 
    * @param attributeNames Attribute keys/names which will be used to retrieve user attributes
    */
-  getUserAttributes(attributeNames: Array<string>): Promise<?{string: any}>{
+  getUserAttributes(attributeNames: Array<string>): Promise<?{ string: any }> {
     return RCTAEPUserProfile.getUserAttributes(attributeNames);
   },
 
@@ -55,7 +55,7 @@ module.exports = {
    *
    * @param attributeMap of profile attributes key-value pairs to be set.
    */
-  updateUserAttributes(attributeMap: {string: any}) {
+  updateUserAttributes(attributeMap: { string: any }) {
     RCTAEPUserProfile.updateUserAttributes(attributeMap);
   },
 

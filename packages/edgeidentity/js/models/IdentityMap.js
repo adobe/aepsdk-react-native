@@ -18,7 +18,7 @@ governing permissions and limitations under the License.
 import IdentityItem from './IdentityItem';
 
 class IdentityMap {
-  items: {string: Array<IdentityItem>} = {};
+  identityMap: {string: Array<IdentityItem>} = {};
 
   constructor() {}
 
@@ -35,16 +35,16 @@ class IdentityMap {
 
     let itemCopy = copyItem(item);
     // add item to the existing namespace
-    if (this.items[namespace] !== undefined) {
-      var index = this.items[namespace].findIndex(e => equalIds(e.id, itemCopy.id));
+    if (this.identityMap[namespace] !== undefined) {
+      var index = this.identityMap[namespace].findIndex(e => equalIds(e.id, itemCopy.id));
       if (index !== -1) {
-        this.items[namespace][index] = itemCopy;
+        this.identityMap[namespace][index] = itemCopy;
       } else {
-        this.items[namespace].push(itemCopy); 
+        this.identityMap[namespace].push(itemCopy); 
       }
     } else {
       // creates new list with the item in it
-      this.items[namespace] = [itemCopy];
+      this.identityMap[namespace] = [itemCopy];
     }
   }
 
@@ -52,21 +52,21 @@ class IdentityMap {
    * Checks if this `IdentityMap` is empty
    */
   isEmpty() {
-    return !Object.keys(this.items).length;
+    return !Object.keys(this.identityMap).length;
   }
 
   /**
    * Gets a list of all namespaces available in this `IdentityMap`
    */
   getNamespaces() {
-    return Object.keys(this.items);
+    return Object.keys(this.identityMap);
   }
 
   /**
   * Retrieves the IdentityItem s for a given namespace
   */
   getIdentityItemsForNamespace(namespace: string) : Promise<?Array<IdentityItem>> {
-    var namespacesKey = Object.assign([], this.items[namespace]);
+    var namespacesKey = Object.assign([], this.identityMap[namespace]);
     return namespacesKey;
   }
 
@@ -83,12 +83,12 @@ class IdentityMap {
   }
 
   // remove item from the existing namespace
-  if (this.items[namespace] !== undefined) {
-    var list = this.items[namespace].filter(e => !equalIds(e.id, item.id))
+  if (this.identityMap[namespace] !== undefined) {
+    var list = this.identityMap[namespace].filter(e => !equalIds(e.id, item.id))
     if (list.length == 0) {
-      delete this.items[namespace];
+      delete this.identityMap[namespace];
     } else {
-      this.items[namespace] = list;  
+      this.identityMap[namespace] = list;  
     }
   }
  } 

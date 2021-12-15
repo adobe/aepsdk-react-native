@@ -43,7 +43,7 @@ Returns the version of the Consent extension
 
 **Syntax**
 ```javascript
-static extensionVersion(): Promise<string>
+extensionVersion(): Promise<string>
 ```
 
 **Example**
@@ -57,12 +57,12 @@ Output example: {"consents": {"collect": {"val": "y"}}}
 
 **Syntax**
 ```javascript
-static getConsents(): Promise<{string: any}>
+getConsents(): Promise<{string: any}>
 ```
 
 **Example**
 ```javascript
-AEPConsent.getConsents().then(consents => {
+Consent.getConsents().then(consents => {
   console.log("AEPConsent.getConsents returned current consent preferences:  " + JSON.stringify(consents));
 }).catch((error) => {
   console.warn("AEPConsent.getConsents returned error: ", error.message);
@@ -75,11 +75,11 @@ Input example: {"consents": {"collect": {"val": "y"}}}
 
 **Syntax**
 ```javascript
-static update(consents: {string: any})
+update(consents: {string: any})
 ```
 
 **Example**
 ```javascript
 var consents: {[keys: string]: any} = {"consents" : {"collect" : {"val": "y"}}};
-AEPConsent.update(consents);
+Consent.update(consents);
 ```
