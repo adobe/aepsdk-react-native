@@ -48,12 +48,14 @@ iOS
 
 // AppDelegate.m
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+    [AEPMobileCore setWrapperType: AEPWrapperTypeReactNative];
     [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
                                         AEPMobileEdge.class] completion:^{
-     ...  
-
-   }];
-   [AEPMobileCore configureWithAppId:@"yourAppID"];   
+    [AEPMobileCore configureWithAppId:@"yourAppID"];  
+    ...   
+   }]; 
+   return YES;   
  } 
 
 @end
@@ -61,6 +63,8 @@ iOS
 
 Android
 ```java
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.WrapperType;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity.Identity;  
@@ -78,17 +82,13 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
     MobileCore.configureWithAppID("yourAppID");
 
-    try {
-      Edge.registerExtension();
-      Identity.registerExtension();
-      MobileCore.start(new AdobeCallback() {
+    Edge.registerExtension();
+    Identity.registerExtension();
+    MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {
         
-        }});
-    } catch (InvalidInitException e) {
-      ...
-    }
+    }});
   }
 }     
 ```
