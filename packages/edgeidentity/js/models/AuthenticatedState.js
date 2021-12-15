@@ -9,36 +9,30 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
 @format
 */
 
-import { StyleSheet } from 'react-native';
-export default StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-      fontSize: 22,
-      textAlign: 'center',
-      margin: 10,
-    },
-    text: {
-      fontSize: 15,
-      textAlign: 'center',
-      margin: 5,
-    }, 
-      breakLine: {
-      borderWidth: 0.5,
-      borderColor: 'black',
-      margin: 10,
-      marginTop: 10,
-      marginBottom: 10,
-    }
-  });
+'use strict';
 
+const AUTHENTICATED = "authenticated";
+const LOGGED_OUT = "loggedOut";
+const AMBIGUOUS = "ambiguous";
 
+class AuthenticatedState {
 
+  static get AUTHENTICATED() {
+    return AUTHENTICATED;
+  }
 
+  static get LOGGED_OUT() {
+    return LOGGED_OUT;
+  }
+
+  static get AMBIGUOUS() {
+    return AMBIGUOUS;
+  }
+
+}
+
+module.exports = AuthenticatedState;
