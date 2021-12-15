@@ -16,8 +16,21 @@ governing permissions and limitations under the License.
 'use strict';
 
 module.exports = {
+  // Native models
+  get AuthenticatedState() {
+    return require('./models/AuthenticatedState');
+  },
+
+  get IdentityItem() {
+    return require('./models/IdentityItem');
+  },
+
+  get IdentityMap() {
+    return require('./models/IdentityMap');
+  },
+
   // Native modules
-  get AEPIdentity() {
-    return require('./AEPIdentity');
-  }
+  get Identity() {
+    return require('./Identity');
+  },
 };
