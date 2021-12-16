@@ -12,7 +12,6 @@
       "**/react",
       "**/@react-navigation/**",
       "**/react/**",
-      "**/lodash**",
       "**/react-native",
       "**/react-native/**",
       "**/react-navigation/**",
