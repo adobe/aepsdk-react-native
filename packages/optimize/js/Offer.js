@@ -14,6 +14,7 @@ governing permissions and limitations under the License.
 */
 
 const AEPOptimize = require('./AEPOptimize');
+const Proposition = require('./Proposition');
 
 module.exports = class Offer {
 
@@ -43,16 +44,19 @@ module.exports = class Offer {
         return this.data['format'];
     };
 
-    displayed = () => {
-        AEPOptimize.offerDisplayed(this);
+    displayed = (proposition: Proposition) => {
+        AEPOptimize.offerDisplayed(this.id, proposition);
     };
 
-    tapped = (proposition) => {        
-        console.log(`The offer tapped is::: ${JSON.stringify(this)}`);        
+    tapped = (proposition: Proposition) => {                
         AEPOptimize.offerTapped(this.id, proposition);
     };
 
-    generateDisplayInteractionXdm(proposition): Promise<Map<string, Object>> {
+    generateDisplayInteractionXdm(proposition: Proposition): Promise<Object> {
         return AEPOptimize.generateDisplayInteractionXdm(this.id, proposition);
+    };   
+
+    generateTapInteractionXdm(proposition: Proposition): Promise<Object> {
+        return AEPOptimize.generateTapInteractionXdm(this.id, proposition);
     };   
 }

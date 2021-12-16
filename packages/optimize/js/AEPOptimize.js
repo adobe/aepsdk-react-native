@@ -59,7 +59,7 @@ module.exports = {
       }).catch(error => reject(error));
     });
   },
-  updatePropositions(decisionScopes: Array<DecisionScope>, xdm: Map<String, Object>, data: Map<String, Object>) {
+  updatePropositions(decisionScopes: Array<DecisionScope>, xdm: Object, data: Object) {
     console.log("updatePropositions API called.");
     var decisionScopeNames: Array<string> = decisionScopes.map((decisionScope) => decisionScope.getName());
     RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data);
@@ -68,21 +68,29 @@ module.exports = {
     console.log("removeOnPropositionUpdateListener API called.");
     onPropositionUpdateSubscription.remove();
   },
-  offerDisplayed(offer: Offer) {
+  offerDisplayed(offerId: string, proposition: Proposition) {
     console.log("offerDisplayed API called.");
-    const entries = Object.entries(offer);
-    offer = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));
-    RCTAEPOptimize.offerDisplayed(offer);
+    const entries = Object.entries(proposition);
+    proposition = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));
+    RCTAEPOptimize.offerDisplayed(offerId, proposition);
   },
-  offerTapped(offerId: String, proposition: Proposition) {    
+  offerTapped(offerId: string, proposition: Proposition) {    
     console.log("offerTapped API called.");
     const entries = Object.entries(proposition);
     proposition = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));    
     // console.log(`Offer tapped is ${JSON.stringify(prop)}.`);
     RCTAEPOptimize.offerTapped(offerId, proposition);
   },
-  generateDisplayInteractionXdm(offer: Offer): Promise<Map<string, Object>> {
+  generateDisplayInteractionXdm(offerId: string, proposition: Proposition): Promise<Object> {
     console.log("generateDisplayInteractionXdm API called.");
-    return RCTAEPOptimize.generateDisplayInteractionXdm(offer);
+    return RCTAEPOptimize.generateDisplayInteractionXdm(offerId, proposition);
+  },
+  generateTapInteractionXdm(offerId: string, proposition: Proposition): Promise<Object> {
+    console.log("generateTapInteractionXdm API called.");
+    return RCTAEPOptimize.generateTapInteractionXdm(offerId, proposition);
+  },
+  generateReferenceXdm(proposition: Proposition): Promise<Object> {
+    console.log("generateReferenceXdm API called.");
+    return RCTAEPOptimize.generateReferenceXdm(proposition);
   }
 };

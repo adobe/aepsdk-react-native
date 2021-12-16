@@ -37,7 +37,7 @@ module.exports = class Proposition {
         this.generateReferenceXdm.bind(this);
     }    
         
-    generateReferenceXdm(): Promise<Map<string, Object>> {
+    generateReferenceXdm(): Promise<Object> {
         return Promise.resolve(AEPOptimize.generateReferenceXdm(this));
-    }
+    };
 }

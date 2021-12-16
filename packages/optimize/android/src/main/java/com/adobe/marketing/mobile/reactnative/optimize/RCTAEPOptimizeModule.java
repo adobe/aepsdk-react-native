@@ -51,10 +51,16 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void offerDisplayed(final ReadableMap readableMap) {
-        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
-        Offer offer = createOffer(offerEventData);
-        offer.displayed();
+    public void offerDisplayed(final String offerId, final ReadableMap propositionMap) {
+        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
+        final Proposition proposition = Proposition.fromEventData(eventData);
+        Log.d("RCTAEPOptimize", "OFFER Displayed");
+        for (Offer offer : proposition.getOffers()) {
+            if (offer.getId().equalsIgnoreCase(offerId)) {
+                offer.displayed();
+                break;
+            }
+        }
     }
 
     @ReactMethod
@@ -72,7 +78,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
         Map<String, Object> mapXdm = xdm != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(xdm) : Collections.<String, Object>emptyMap();
-        Map<String, Object> mapData = data != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(data): Collections.<String, Object>emptyMap();
+        Map<String, Object> mapData = data != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(data) : Collections.<String, Object>emptyMap();
         Optimize.updatePropositions(decisionScopeList, mapXdm, mapData);
     }
 
@@ -108,8 +114,8 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void offerTapped(final String offerId, final ReadableMap readableMap) {
-        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
+    public void offerTapped(final String offerId, final ReadableMap propositionMap) {
+        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
         final Proposition proposition = Proposition.fromEventData(eventData);
         Log.d("OFFER TAPPED", "OFFER TAPPED");
         for (Offer offer : proposition.getOffers()) {
@@ -121,24 +127,60 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void generateDisplayInteractionXdm(final ReadableMap readableMap, final Promise promise){
-        final Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
-        Offer offer = createOffer(offerEventData);
-        final Map<String, Object> interactionXdm = offer.generateDisplayInteractionXdm();
-        final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
-        promise.resolve(writableMap);
+    public void generateDisplayInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
+        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
+        final Proposition proposition = Proposition.fromEventData(eventData);
+        Log.d("RCTAEPOptimize", "generateDisplayInteractionXdm");
+        Offer offerDisplayed = null;
+        for (Offer offer : proposition.getOffers()) {
+            if (offer.getId().equalsIgnoreCase(offerId)) {
+                offerDisplayed = offer;
+                break;
+            }
+        }
+
+        if (offerDisplayed != null) {
+            final Map<String, Object> interactionXdm = offerDisplayed.generateDisplayInteractionXdm();
+            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
+            promise.resolve(writableMap);
+        } else {
+            promise.reject("generateDisplayInteractionXdm", "Error in generating Display interaction XDM for offer with id: " + offerId);
+        }
     }
 
     @ReactMethod
-    public void generateReferenceXdm(final ReadableMap readableMap, final Promise promise) {
-        final Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(readableMap);
-        final Proposition proposition = Proposition.fromEventData(propositionEventData);
-        Map<String, Object> referenceXdm = Collections.emptyMap();
-        if (proposition != null) {
-            referenceXdm = proposition.generateReferenceXdm();
+    public void generateTapInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
+        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
+        final Proposition proposition = Proposition.fromEventData(eventData);
+        Log.d("RCTAEPOptimize", "generateTapInteractionXdm");
+        Offer offerTapped = null;
+        for (Offer offer : proposition.getOffers()) {
+            if (offer.getId().equalsIgnoreCase(offerId)) {
+                offerTapped = offer;
+                break;
+            }
         }
-        final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(referenceXdm);
-        promise.resolve(writableMap);
+
+        if (offerTapped != null) {
+            final Map<String, Object> interactionXdm = offerTapped.generateTapInteractionXdm();
+            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
+            promise.resolve(writableMap);
+        } else {
+            promise.reject("generateTapInteractionXdm", "Error in generating Tap interaction XDM for offer with id: " + offerId);
+        }
+    }
+
+    @ReactMethod
+    public void generateReferenceXdm(final ReadableMap propositionMap, final Promise promise) {
+        final Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
+        final Proposition proposition = Proposition.fromEventData(propositionEventData);
+        if (proposition != null) {
+            Map<String, Object> referenceXdm = proposition.generateReferenceXdm();
+            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(referenceXdm);
+            promise.resolve(writableMap);
+        } else {
+            promise.reject("generateReferenceXdm", "Error in generating Reference XDM.");
+        }
     }
 
     private static Offer createOffer(Map<String, Object> offerEventData) {
