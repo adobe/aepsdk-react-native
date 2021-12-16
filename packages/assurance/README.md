@@ -6,6 +6,11 @@
 
 `@adobe/react-native-aepassurance` is a wrapper around the iOS and Android [AEPAssurance SDK](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-experience-platform-assurance) to allow for integration with React Native applications. Functionality to start Assurance session is provided through JavaScript documented below.
 
+## Prerequisites
+
+The Adobe Experience Platform Identity for Edge Network extension has the following peer dependency, which must be installed prior to installing the identity extension:
+- [Core](../core/README.md)
+
 ## Installation
 
 You need to install the SDK with [npm](https://www.npmjs.com/) and configure the native Android/iOS project in your react native project. Before installing the Assurance extension it is recommended to begin by installing the [Core extension](../core/README.md).
@@ -18,7 +23,7 @@ Install the `@adobe/react-native-aepassurance` alpha package:
 
 ```bash
 cd MyReactApp
-npm install @adobe/react-native-aepassurance@3.0.0-alpha.1
+npm install @adobe/react-native-aepassurance
 ```
 
 For iOS development, after installing the plugins from npm, download the pod dependencies by running the following command:
