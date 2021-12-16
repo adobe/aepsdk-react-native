@@ -30,11 +30,7 @@
   },
   "peerDependencies": {
     "react-native": ">=0.60.0",
-<<<<<<< HEAD
-    "@adobe/react-native-aepcore": "^1.0.0-alpha"
-=======
     "@adobe/react-native-aepcore": "^1.0.0-beta"
->>>>>>> c1f1f4522144df5147e6916be062a56a95e9ed58
   },
   "publishConfig": {
     "access": "public"
