@@ -13,20 +13,20 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { AEPAssurance } from '../';
+import { Assurance } from '../js';
 
-describe('AEPAssurance', () => {
+describe('Assurance', () => {
 
   it('extensionVersion is called', async () => {
-    expect(AEPAssurance.extensionVersion).toBeDefined();
+    expect(Assurance.extensionVersion).toBeDefined();
     const spy = jest.spyOn(NativeModules.AEPAssurance, 'extensionVersion');
-    await AEPAssurance.extensionVersion();
+    await Assurance.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('startSession is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPAssurance, 'startSession');
-    await AEPAssurance.startSession('');
+    await Assurance.startSession('');
     expect(spy).toHaveBeenCalled();
   });
 });
