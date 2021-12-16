@@ -1,5 +1,5 @@
 
-# React Native AEP Assurance Extension
+# React Native Adobe Experience Platform Assurance Extension
 
 [![npm version](https://img.shields.io/npm/v/@adobe/react-native-aepassurance/alpha?color=green&label=npm%20package)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepassurance)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1)
@@ -8,28 +8,20 @@
 
 ## Prerequisites
 
-The Adobe Experience Platform Identity for Edge Network extension has the following peer dependency, which must be installed prior to installing the identity extension:
+The Adobe Experience Platform Assurance extension has the following peer dependency, which must be installed prior to installing the identity extension:
 - [Core](../core/README.md)
+
 
 ## Installation
 
-You need to install the SDK with [npm](https://www.npmjs.com/) and configure the native Android/iOS project in your react native project. Before installing the Assurance extension it is recommended to begin by installing the [Core extension](../core/README.md).
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
-### Install npm package
-
-> Requires `@adobe/react-native-aepcore` to be installed.
-
-Install the `@adobe/react-native-aepassurance` alpha package:
+Install the `@adobe/react-native-aepassurance` package:
 
 ```bash
 cd MyReactApp
 npm install @adobe/react-native-aepassurance
 ```
-
-For iOS development, after installing the plugins from npm, download the pod dependencies by running the following command:
-`cd ios && pod install && cd ..`
-To update native dependencies to latest available versions, run the following command:
-`cd ios && pod update && cd ..`
 
 ### Link
 
