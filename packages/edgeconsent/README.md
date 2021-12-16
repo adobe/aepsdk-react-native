@@ -30,6 +30,69 @@ Install the Consent extension in your mobile property and configure the default 
 Then follow the same document for registering the Consent extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
+**Initialization Example**
+
+iOS
+```objc
+// AppDelegate.h
+@import AEPCore;
+@import AEPEdge;
+@import AEPEdgeIdentity;
+@import AEPEdgeConsent;
+...
+@implementation AppDelegate
+
+// AppDelegate.m
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+    [AEPMobileCore setWrapperType: AEPWrapperTypeReactNative];
+    [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
+                                        AEPMobileEdge.class, 
+                                        AEPMobileEdgeConsent.class] completion:^{
+      [AEPMobileCore configureWithAppId:@"yourAppID"];  
+    ...   
+   }]; 
+   return YES;   
+ } 
+
+@end
+```
+
+Android
+```java
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.WrapperType;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.identity.Identity;
+import com.adobe.marketing.mobile.edge.consent.Consent;
+  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+    MobileCore.configureWithAppID("yourAppID");
+
+    Edge.registerExtension();
+    Identity.registerExtension();
+    Consent.registerExtension();
+    MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+        
+        }});
+  }
+}     
+```
+
 ### Importing the extension
 In your React Native application, import the Consent extension as follows:
 ```javascript
