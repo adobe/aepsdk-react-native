@@ -1,6 +1,6 @@
 {
   "name": "aepsampleapp",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-beta.1",
   "private": true,
   "scripts": {
     "cleanup": "rm -rf node_modules",
@@ -11,12 +11,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@adobe/react-native-aepcore": "^1.0.0-alpha.1",
-    "@adobe/react-native-aepuserprofile": "^1.0.0-alpha.2",
-    "@adobe/react-native-aepedge": "1.0.0-alpha.1",
-    "@adobe/react-native-aepedgeidentity": "^1.0.0-alpha.1",
-    "@adobe/react-native-aepmessaging": "^1.0.0-alpha.1",
-    "@adobe/react-native-aepassurance": "^3.0.0-alpha.0",
+    "@adobe/react-native-aepassurance": "^3.0.0-beta.1",
+    "@adobe/react-native-aepcore": "^1.0.0-beta.1",
+    "@adobe/react-native-aepedge": "^1.0.0-beta.1",
+    "@adobe/react-native-aepedgeconsent": "^1.0.0-beta.1",
+    "@adobe/react-native-aepedgeidentity": "^1.0.0-beta.1",
+    "@adobe/react-native-aepmessaging": "^1.0.0-beta.1",
+    "@adobe/react-native-aepuserprofile": "^1.0.0-beta.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/core": "^5.12.3",
@@ -36,4 +37,3 @@
     "react-test-renderer": "17.0.1"
   }
 }
-

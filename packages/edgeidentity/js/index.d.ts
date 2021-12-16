@@ -10,6 +10,33 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 
 */
-export class AEPIdentity{
+export class Identity{
     static extensionVersion(): Promise<string>;
+    static getExperienceCloudId(): Promise<string>;
+    static getIdentities(): Promise<IdentityMap>;
+    static updateIdentities(identityMap: IdentityMap);
+    static removeIdentity(item: IdentityItem, namespace: string);
 };
+
+export enum AuthenticatedState {
+    AUTHENTICATED: "authenticated";
+    LOGGED_OUT: "loggedOut";
+    AMBIGUOUS: "ambiguous";
+}
+
+export class IdentityItem {
+  id: string;
+  authenticatedState: AuthenticatedState;
+  primary: boolean;
+  constructor(id: string, authenticatedState: AuthenticatedState = AuthenticatedState.AMBIGUOUS, primary: boolean = false)
+}
+
+export class IdentityMap {
+  constructor()
+
+  addItem(item: IdentityItem, namespace: string);
+  isEmpty();
+  getNamespaces();
+  getIdentityItemsForNamespace(namespace: string)
+  removeItem(item: IdentityItem, namespace: string);
+}

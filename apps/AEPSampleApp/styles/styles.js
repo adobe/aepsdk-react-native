@@ -24,5 +24,21 @@ export default StyleSheet.create({
       fontSize: 22,
       textAlign: 'center',
       margin: 10,
+    },
+    text: {
+      fontSize: 15,
+      textAlign: 'center',
+      margin: 5,
+    }, 
+      breakLine: {
+      borderWidth: 0.5,
+      borderColor: 'black',
+      margin: 10,
+      marginTop: 10,
+      marginBottom: 10,
     }
   });
+
+
+
+

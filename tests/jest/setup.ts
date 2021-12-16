@@ -17,12 +17,21 @@ jest.doMock('react-native', () => {
     return Object.setPrototypeOf({
             NativeModules: {
                 ...ReactNative.NativeModules,
+                AEPEdgeConsent: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    update: jest.fn(),
+                    getConsents: jest.fn(() => new Promise(resolve => resolve(null)))
+                }, 
                 AEPEdgeIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getIdentities: jest.fn(() => new Promise(resolve => resolve({"ABC":[{"id":"id1","authenticatedState":"ambiguous","primary":false}]}))),
+                    updateIdentities: jest.fn(),
+                    removeIdentity: jest.fn(),
                 },
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
-                    sendEvent: jest.fn(() => new Promise(resolve => resolve(null))),
+                    sendEvent: jest.fn(() => new Promise(resolve => resolve([{type: "example", payload: {sample: "data"}}]))),
                 },
                 AEPAssurance: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
@@ -45,14 +54,13 @@ jest.doMock('react-native', () => {
                     configureWithAppId: jest.fn(),
                     updateConfiguration: jest.fn(),
                     setLogLevel: jest.fn(),
-                    getLogLevel: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getLogLevel: jest.fn(() => new Promise(resolve => resolve('DEBUG'))),
                     log: jest.fn(),
                     setPrivacyStatus: jest.fn(),
-                    getPrivacyStatus: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getPrivacyStatus: jest.fn(() => new Promise(resolve => resolve('OPT_OUT'))),
                     getSdkIdentities: jest.fn(() => new Promise(resolve => resolve(''))),
                     dispatchEvent: jest.fn(),
                     dispatchEventWithResponseCallback: jest.fn(() => new Promise(resolve => resolve(null))),
-                    dispatchResponseEvent: jest.fn(() => new Promise(resolve => resolve(false))),
                     trackAction: jest.fn(),
                     trackState: jest.fn(),
                     setAdvertisingIdentifier: jest.fn(),
@@ -60,7 +68,8 @@ jest.doMock('react-native', () => {
                     collectPii: jest.fn(),
                     setSmallIconResourceID: jest.fn(),
                     setLargeIconResourceID: jest.fn(),
-                    setAppGroup: jest.fn()
+                    setAppGroup: jest.fn(),
+                    resetIdentities: jest.fn(),
                 },
                 AEPIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
