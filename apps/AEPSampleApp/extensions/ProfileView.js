@@ -48,5 +48,5 @@ function removeUserAttributes() {
 }
 
 function getUserAttributes() {
-  UserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: UserProfile getUserAttributes: " + map));
+  UserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: UserProfile getUserAttributes: " + JSON.stringify(map)));
 }
