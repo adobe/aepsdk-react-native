@@ -131,9 +131,9 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
 
     try {
-          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Lifecycle.registerExtension();
           Signal.registerExtension();
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Edge.registerExtension();
           Consent.registerExtension();
           //Messaging.registerExtension();
