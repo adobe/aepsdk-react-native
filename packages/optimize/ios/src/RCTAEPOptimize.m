@@ -38,21 +38,20 @@ RCT_EXPORT_MODULE(AEPOptimize);
 }
 
 RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock) reject) {
-    resolve([AEPMobileOptimize extensionVersion]);    
-
+    resolve([AEPMobileOptimize extensionVersion]);
 }
 
 RCT_EXPORT_METHOD(clearCachedPropositions) {
     [AEPMobileOptimize clearCachedPropositions];
 }
 
-RCT_EXPORT_METHOD(updatePropositions: (NSArray*) decisionsScopes xdm: (NSDictionary*) xdm data: (NSDictionary*) data) {
+RCT_EXPORT_METHOD(updatePropositions: (NSArray<NSString*>*) decisionsScopes xdm: (NSDictionary<NSString*, id>*) xdm data: (NSDictionary<NSString*, id>*) data) {
   
   NSArray<AEPDecisionScope*>* decisionScopesArray = [self createDecisionScopesArray:decisionsScopes];
   [AEPMobileOptimize updatePropositions:decisionScopesArray withXdm:xdm andData: data];
 }
 
-RCT_EXPORT_METHOD(getPropositions: (NSArray*) decisionScopes resolver: (RCTPromiseResolveBlock) resolve rejector: (RCTPromiseRejectBlock) reject) {
+RCT_EXPORT_METHOD(getPropositions: (NSArray<NSString*>*) decisionScopes resolver: (RCTPromiseResolveBlock) resolve rejector: (RCTPromiseRejectBlock) reject) {
   
   NSArray<AEPDecisionScope*>* decisionScopesArray = [self createDecisionScopesArray:decisionScopes];
   [AEPMobileOptimize getPropositions:decisionScopesArray completion: ^(NSDictionary<AEPDecisionScope*, AEPProposition*>* decisionScopePropositionDict, NSError* error){
@@ -84,58 +83,106 @@ RCT_EXPORT_METHOD(onPropositionsUpdate) {
   }];
 }
 
-RCT_EXPORT_METHOD(offerTapped:(NSDictionary<NSString*, id>*) offerEventData) {
-  [AEPLog debugWithLabel:TAG message:@"Offer tapped"];
-//TODO: Define this function.
-  
+RCT_EXPORT_METHOD(offerTapped: (NSString*) offerId propositionDictionary: (NSDictionary<NSString*, id>*) dictionary) {
+  [AEPLog debugWithLabel:TAG message:@"Offer Tapped"];
+  AEPProposition* proposition = [AEPProposition initFromData: dictionary];
+  NSArray<AEPOffer*>* offers = [proposition offers];
+  for(AEPOffer* offer in offers) {
+    if([[offer id] isEqualToString:offerId]){
+      [offer tapped];
+      break;
+    }
+  }
 }
 
-RCT_EXPORT_METHOD(generateDisplayInteractionXdm: (NSDictionary<NSString*, id>*) offersEventData resolver: (RCTPromiseResolveBlock) resolve rejector: (RCTPromiseRejectBlock) reject){
-  [AEPLog debugWithLabel:TAG message:@"Offer generateDisplayInteractionXdm"];
-//TODO: Define this function.
-  
+RCT_EXPORT_METHOD(offerDisplayed: (NSString*) offerId propositionDictionary: (NSDictionary<NSString*, id>*) dictionary) {
+  [AEPLog debugWithLabel:TAG message:@"Offer Displayed"];
+  AEPProposition* proposition = [AEPProposition initFromData: dictionary];
+  NSArray<AEPOffer*>* offers = [proposition offers];
+  for(AEPOffer* offer in offers) {
+    if([[offer id] isEqualToString:offerId]){
+      [offer displayed];
+      break;
+    }
+  }
 }
 
-RCT_EXPORT_METHOD(generateReferenceXdm: (NSDictionary<NSString*, id>*) propositionEventData resolver: (RCTPromiseResolveBlock) resolve rejector: (RCTPromiseRejectBlock) reject){
+RCT_EXPORT_METHOD(generateReferenceXdm:(NSDictionary<NSString*, id>*) dictionary resolver: (RCTPromiseResolveBlock) resolve rejector: (RCTPromiseRejectBlock) reject){
   [AEPLog debugWithLabel:TAG message:@"Proposition generateReferenceXdm"];
-//TODO: Define this function.
+  AEPProposition* proposition = [AEPProposition initFromData: dictionary];
+  NSDictionary<NSString*, id>* referenceXDM = [proposition generateReferenceXdm];
+  resolve(referenceXDM);
+}
+
+RCT_EXPORT_METHOD(generateTapInteractionXdm: (NSString*) offerId propositionDictionary: (NSDictionary<NSString*, id>*) dictionary resolver: (RCTPromiseResolveBlock) resolve rejector: (RCTPromiseRejectBlock) reject) {
+  [AEPLog debugWithLabel:TAG message:@"generateTapInteractionXdm"];
+  AEPProposition* proposition = [AEPProposition initFromData: dictionary];
+  NSArray<AEPOffer*>* offers = [proposition offers];
+  AEPOffer* offerInteracted = nil;
+  for(AEPOffer* offer in offers) {
+    if([[offer id] isEqualToString:offerId]){
+      offerInteracted = offer;
+      break;
+    }
+  }
+  
+  if(offerInteracted != nil){
+    NSDictionary<NSString*, id>* tapInteractionXdm = [offerInteracted generateTapInteractionXdm];
+    resolve(tapInteractionXdm);
+  } else {
+    reject(@"generateTapInteractionXdm", [NSString stringWithFormat:@"Error in generating Tap interaction XDM for offer with id: %@", offerId], nil);
+  }
+}
+
+RCT_EXPORT_METHOD(generateDisplayInteractionXdm: (NSString*) offerId propositionDictionary: (NSDictionary<NSString*, id>*) dictionary resolver: (RCTPromiseResolveBlock) resolve rejector: (RCTPromiseRejectBlock) reject){
+  [AEPLog debugWithLabel:TAG message:@"generateDisplayInteractionXdm"];
+  AEPProposition* proposition = [AEPProposition initFromData: dictionary];
+  NSArray<AEPOffer*>* offers = [proposition offers];
+  AEPOffer* offerDisplayed = nil;
+  for(AEPOffer* offer in offers) {
+    if([[offer id] isEqualToString:offerId]){
+      offerDisplayed = offer;
+      break;
+    }
+  }
+  
+  if(offerDisplayed != nil){
+    NSDictionary<NSString*, id>* displayInteractionXdm = [offerDisplayed generateDisplayInteractionXdm];
+    resolve(displayInteractionXdm);
+  } else {
+    reject(@"generateDisplayInteractionXdm", [NSString stringWithFormat:@"Error in generating Display interaction XDM for offer with id: %@", offerId], nil);
+  }
+  
 }
 
 #pragma mark - Helper methods
 
-- (NSArray<AEPDecisionScope*>*) createDecisionScopesArray: (NSArray<NSDictionary*>*) decisionScope {
+- (NSArray<AEPDecisionScope*>*) createDecisionScopesArray: (NSArray<NSString*>*) decisionScopes {
   NSMutableArray<AEPDecisionScope *>* decisionScopesArray = [[NSMutableArray alloc] init];
-  for (NSDictionary* scope in decisionScope) {
-    NSString* decisionScopeName = [scope objectForKey:@"name"];
-    if([decisionScopeName length] > 0) {
+  for (NSString* decisionScopeName in decisionScopes) {
       [decisionScopesArray addObject:[[AEPDecisionScope alloc] initWithName:decisionScopeName]];
-    } else {
-      [decisionScopesArray addObject:[[AEPDecisionScope alloc] initWithActivityId:[[scope objectForKey:@"activityId"] stringValue] placementId:[[scope objectForKey:@"placementId"] stringValue] itemCount:[[scope objectForKey:@"itemCount"] integerValue]]];
-    }
   }
   return decisionScopesArray;
 }
 
 - (NSDictionary<NSString*, NSDictionary<NSString*, id>*>*) convertPropositionToDict: (AEPProposition*) proposition {
-  NSDictionary<NSString*, NSDictionary*>* propositionDict = [[NSMutableDictionary alloc] init];
+  NSDictionary<NSString*, id>* propositionDict = [[NSMutableDictionary alloc] init];
   if(!proposition){
     return propositionDict;
   }
   
   [propositionDict setValue:proposition.id forKey:@"id"];
+  [propositionDict setValue:proposition.scope forKey:@"scope"];
+  [propositionDict setValue:[proposition scopeDetails] forKey:@"scopeDetails"];
+  
   
   NSMutableArray<NSDictionary<NSString*, id>*>* offersArray = [[NSMutableArray alloc] init];
   for(AEPOffer* offer in proposition.offers){
     [offersArray addObject:[self convertOfferToDict:offer]];
   }
-  
-  [propositionDict setValue:offersArray forKey:@"offers"];
-  [propositionDict setValue:proposition.scope forKey:@"scope"];
-  
+  [propositionDict setValue:offersArray forKey:@"items"];
   return propositionDict;
 }
-
-
 
 - (NSDictionary<NSString*, id>*) convertOfferToDict: (AEPOffer*) offer {
   NSMutableDictionary<NSString*, id>* offerDict = [[NSMutableDictionary alloc] init];
@@ -144,13 +191,23 @@ RCT_EXPORT_METHOD(generateReferenceXdm: (NSDictionary<NSString*, id>*) propositi
   }
   
   [offerDict setValue:offer.id forKey:@"id"];
-  [offerDict setValue:offer.etag forKey:@"etag"];
-  [offerDict setValue:offer.schema forKey:@"schema"];
-  [offerDict setValue:[self convertOfferTypeToString:offer.type] forKey:@"type"];
-  [offerDict setValue:offer.language forKey:@"language"];
-  [offerDict setValue:offer.content forKey:@"content"];
-  [offerDict setValue:offer.characteristics forKey:@"characteristics"];
-
+  if([offer etag] != nil){
+    [offerDict setValue:[offer etag] forKey:@"etag"];
+  }
+  [offerDict setValue:[offer schema] forKey:@"schema"];
+  
+  NSDictionary<NSString*, id>* data = [[NSMutableDictionary alloc] init];
+  [data setValue:[offer id] forKey:@"id"];
+  [data setValue:[self convertOfferTypeToString:[offer type]] forKey:@"format"];
+  [data setValue:[offer content] forKey:@"content"];
+  if([offer language] != nil){
+    [data setValue:[offer language] forKey:@"language"];
+  }
+  if([offer characteristics] != nil){
+    [data setValue:[offer characteristics] forKey:@"characteristics"];
+  }
+  
+  [offerDict setValue:data forKey:@"data"];
   return offerDict;
 }
 

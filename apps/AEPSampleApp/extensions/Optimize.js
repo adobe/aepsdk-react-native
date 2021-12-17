@@ -141,8 +141,7 @@ export default ({ navigation }) => {
         <Text 
             style={{ margin:10, fontSize:18 }} 
             onPress={e => {                
-                // jsonProposition.items[0].tapped(jsonProposition);                                
-                jsonProposition.items[0].displayed(jsonProposition);                                
+                jsonProposition.items[0].tapped(jsonProposition);                                                                
             }}>
             JSON Offer:: { typeof jsonProposition === "object" ? jsonProposition.items[0].getContent() : jsonProposition }            
         </Text>

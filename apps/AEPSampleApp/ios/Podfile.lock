@@ -60,6 +60,8 @@ PODS:
   - RCTAEPMessaging (1.0.0-alpha.2):
     - AEPMessaging (~> 1.0)
     - React
+  - RCTAEPOptimize (1.0.0):
+    - React
   - RCTAEPUserProfile (1.0.0-alpha.3):
     - AEPUserProfile (~> 3.0)
     - React
@@ -362,6 +364,7 @@ DEPENDENCIES:
   - RCTAEPEdge (from `../../../packages/edge`)
   - RCTAEPEdgeIdentity (from `../../../packages/edgeidentity`)
   - RCTAEPMessaging (from `../../../packages/messaging`)
+  - RCTAEPOptimize (from `../../../packages/optimize`)
   - RCTAEPUserProfile (from `../../../packages/userprofile`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -429,6 +432,8 @@ EXTERNAL SOURCES:
     :path: "../../../packages/edgeidentity"
   RCTAEPMessaging:
     :path: "../../../packages/messaging"
+  RCTAEPOptimize:
+    :path: "../../../packages/optimize"
   RCTAEPUserProfile:
     :path: "../../../packages/userprofile"
   RCTRequired:
@@ -510,6 +515,7 @@ SPEC CHECKSUMS:
   RCTAEPEdge: 323ae50007fec0771b1a6e6e0ddc3a309f0408f3
   RCTAEPEdgeIdentity: 245c00a7c8e7b27a902b7839238aa3726366f732
   RCTAEPMessaging: 27172e5d88894eacf1f57fd3b44f9e9ea504dbd0
+  RCTAEPOptimize: c9d209fc4ba621d87f3a8a127d19f31f7b3d5342
   RCTAEPUserProfile: 4614a2995a168193d76df61c458e1ad25b282014
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
