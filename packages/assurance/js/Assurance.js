@@ -19,7 +19,7 @@ const RCTAEPAssurance = require('react-native').NativeModules.AEPAssurance;
 
 module.exports = {
   /**
-   * Returns the version of the AEPAssurance extension.
+   * Returns the version of the Assurance extension.
    * @param  {string} Promise a promise that resolves with the extension verison
    */
   extensionVersion(): Promise<string> {
@@ -27,15 +27,15 @@ module.exports = {
   },
 
   /**
-   * Starts an AEPAssurance session.
+   * Starts an Assurance session.
    * Calling this method when a session has already been started results in a no-op, otherwise it attempts
-   * to initiate a new AEPAssurance session.
+   * to initiate a new Assurance session.
    * A call to this API with an non assurance session url will be ignored
    *
-   * @param url a valid AEPAssurance URL string to start a session
+   * @param url a valid Assurance URL string to start a session
    */
-   startSession(url: string) {
-     RCTAEPAssurance.startSession(url);
-   },
+  startSession(url: string) {
+    RCTAEPAssurance.startSession(url);
+  },
 
 };
