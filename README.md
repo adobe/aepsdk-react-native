@@ -78,6 +78,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:@"yourAppID"];
+  [AEPMobileCore setWrapperType: AEPWrapperTypeReactNative];
   [AEPMobileCore registerExtensions: @[
       AEPMobileLifecycle.class,
       AEPMobileSignal.class,
