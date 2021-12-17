@@ -48,7 +48,6 @@ iOS
 // AppDelegate.m
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-    [AEPMobileCore setWrapperType: AEPWrapperTypeReactNative];
     [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
                                         AEPMobileEdge.class] completion:^{
       [AEPMobileCore configureWithAppId:@"yourAppID"];  
@@ -63,7 +62,6 @@ iOS
 Android
 ```java
 import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.WrapperType;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity.Identity;  
@@ -78,7 +76,6 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
     MobileCore.configureWithAppID("yourAppID");
 
     Edge.registerExtension();

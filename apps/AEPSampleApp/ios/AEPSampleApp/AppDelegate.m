@@ -62,7 +62,6 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore setWrapperType:AEPWrapperTypeReactNative];
   [AEPMobileCore configureWithAppId:@"your-app-ID"];
   [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class,
                                        AEPMobileLifecycle.class,
