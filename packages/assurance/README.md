@@ -23,20 +23,19 @@ cd MyReactApp
 npm install @adobe/react-native-aepassurance
 ```
 
-### Link
-
-[CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) links the module while building the app.
 
 ## Usage
 
 ### [Assurance](https://aep-sdks.gitbook.io/docs/beta/project-griffon/using-project-griffon)
 
 
-##### Registering the extension with AEPCore:
+### Initializing:
 
-Initialize the SDK via native code inside your AppDelegate and MainApplication in iOS and Android respectively.
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
-###### **iOS**
+Example:
+
+iOS
 ```objective-c
 @import AEPAssurance;
 
@@ -60,8 +59,7 @@ To connect to a griffon session by scanning the QR code. Follow [Apple developer
 }
 ```
 
-
-###### **Android:**
+Android
 ```java
 import com.adobe.marketing.mobile.Assurance;
 
