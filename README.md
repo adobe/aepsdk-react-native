@@ -66,15 +66,28 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @import AEPServices;
 @import AEPSignal;
 @import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
+@import AEPEdge;
+@import AEPEdgeIdentity;
+@import AEPEdgeConsent;
+//@import AEPMessaging;
+//@import AEPUserProfile;
+//@import AEPAssurance;
+//@import AEPIdentity;
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:@"yourAppID"];
-  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileUserProfile.class
-    // register other extensions here
+  [AEPMobileCore registerExtensions: @[
+      AEPMobileLifecycle.class,
+      AEPMobileSignal.class,
+      AEPMobileEdge.class,
+      AEPMobileEdgeIdentity.class,
+      AEPMobileEdgeConsent.class,
+      //AEPMobileIdentity.class,
+      //AEPMobileUserProfile.class,
+      //AEPMobileMessaging.class,
+      //AEPMobileAssurance.class,
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
@@ -94,13 +107,16 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 ###### **Android:**
 ```java
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Identity;
 import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.UserProfile;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.consent.Consent;
+//import com.adobe.marketing.mobile.Messaging;
+//import com.adobe.marketing.mobile.UserProfile;
+//import com.adobe.marketing.mobile.Assurance;
 ...
 import android.app.Application;
 ...
@@ -115,11 +131,15 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
 
     try {
-      UserProfile.registerExtension();
-      Identity.registerExtension();
-      Lifecycle.registerExtension();
-      Signal.registerExtension();
-      // register other extensions here
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+          Lifecycle.registerExtension();
+          Signal.registerExtension();
+          Edge.registerExtension();
+          Consent.registerExtension();
+          //Messaging.registerExtension();
+          //Assurance.registerExtension();
+          //UserProfile.registerExtension();
+          //com.adobe.marketing.mobile.Identity.registerExtension();
       MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
         @Override
