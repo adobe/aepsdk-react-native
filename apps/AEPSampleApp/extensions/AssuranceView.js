@@ -15,13 +15,13 @@ governing permissions and limitations under the License.
 
 import React, {useState,Component} from 'react';
 import {Button, StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
-import {AEPAssurance} from '@adobe/react-native-aepassurance';
+import {Assurance} from '@adobe/react-native-aepassurance';
 
-export default Assurance = ({ navigation }) => {
+export default AssuranceView = ({ navigation }) => {
  const [version, setVersion] = useState('');
  const [sessionURL, setsessionURL] = useState('your-assurance-url');
 
- AEPAssurance.extensionVersion().then(version => {
+ Assurance.extensionVersion().then(version => {
    setVersion(version)
  });
 
@@ -41,7 +41,7 @@ export default Assurance = ({ navigation }) => {
   )
 
   function startSessionClicked() {
-    AEPAssurance.startSession(sessionURL)
+    Assurance.startSession(sessionURL)
   }
 
 }
