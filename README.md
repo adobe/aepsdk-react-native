@@ -18,8 +18,9 @@ This repository is a monorepo. It contains a collection of Adobe Experience Plat
 |  [@adobe/react-native-aepuserprofile](./packages/userprofile)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepuserprofile)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile)   
 |  [@adobe/react-native-aepedge](./packages/edge)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedge.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedge) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedge)](https://www.npmjs.com/package/@adobe/react-native-aepedge) |
 |  [@adobe/react-native-aepedgeidentity](./packages/edgeidentity)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedgeidentity.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedgeidentity) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedgeidentity)](https://www.npmjs.com/package/@adobe/react-native-aepedgeidentity) |
+|  [@adobe/react-native-aepedgeconsent](./packages/edgeconsent)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedgeconsent.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedgeconsent) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedgeconsent)](https://www.npmjs.com/package/@adobe/react-native-aepedgeconsent) |
 |  [@adobe/react-native-aepmessaging](./packages/messaging)  |  [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)  |
-|  [@adobe/react-native-aepassurance (3.0.0-alpha.1)](./packages/assurance)    |  [![npm version](https://img.shields.io/npm/v/@adobe/react-native-aepassurance/alpha?color=green&label=npm%20package)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepassurance)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1)  |
+|  [@adobe/react-native-aepassurance](./packages/assurance)    |  [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepassurance.svg)](https://www.npmjs.com/package/@adobe/react-native-aepassurance) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepassurance)](https://www.npmjs.com/package/@adobe/react-native-aepassurance)  |
 
 `@adobe/react-native-aep{extension}` is a wrapper around the iOS and Android [AEP SDK](https://aep-sdks.gitbook.io/docs/) to allow for integration with React Native applications.
 
@@ -65,15 +66,28 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @import AEPServices;
 @import AEPSignal;
 @import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
+@import AEPEdge;
+@import AEPEdgeIdentity;
+@import AEPEdgeConsent;
+//@import AEPMessaging;
+//@import AEPUserProfile;
+//@import AEPAssurance;
+//@import AEPIdentity;
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:@"yourAppID"];
-  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class, AEPMobileLifecycle.class, AEPMobileSignal.class, AEPMobileUserProfile.class
-    // register other extensions here
+  [AEPMobileCore registerExtensions: @[
+      AEPMobileLifecycle.class,
+      AEPMobileSignal.class,
+      AEPMobileEdge.class,
+      AEPMobileEdgeIdentity.class,
+      AEPMobileEdgeConsent.class,
+      //AEPMobileIdentity.class,
+      //AEPMobileUserProfile.class,
+      //AEPMobileMessaging.class,
+      //AEPMobileAssurance.class,
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
@@ -93,13 +107,16 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 ###### **Android:**
 ```java
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Identity;
 import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.UserProfile;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.consent.Consent;
+//import com.adobe.marketing.mobile.Messaging;
+//import com.adobe.marketing.mobile.UserProfile;
+//import com.adobe.marketing.mobile.Assurance;
 ...
 import android.app.Application;
 ...
@@ -111,14 +128,16 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
-
     try {
-      UserProfile.registerExtension();
-      Identity.registerExtension();
-      Lifecycle.registerExtension();
-      Signal.registerExtension();
-      // register other extensions here
+          Lifecycle.registerExtension();
+          Signal.registerExtension();
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
+          Edge.registerExtension();
+          Consent.registerExtension();
+          //Messaging.registerExtension();
+          //Assurance.registerExtension();
+          //UserProfile.registerExtension();
+          //com.adobe.marketing.mobile.Identity.registerExtension();
       MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
         @Override
@@ -137,6 +156,9 @@ public class MainApplication extends Application implements ReactApplication {
 ## Development
 
 See [development.md](./docs/development.md) for development docs.
+
+## Frequently Asked Questions (FAQ)
+
 
 ## Contributing
 See [CONTRIBUTING](CONTRIBUTING.md)

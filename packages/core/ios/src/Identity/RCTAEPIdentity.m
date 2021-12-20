@@ -15,15 +15,17 @@ governing permissions and limitations under the License.
 @import AEPCore;
 
 // Visitor ID Auth State
-static NSString* const AEP_VISITOR_AUTH_STATE_AUTHENTICATED = @"AEP_VISITOR_AUTH_STATE_AUTHENTICATED";
-static NSString* const AEP_VISITOR_AUTH_STATE_LOGGED_OUT = @"AEP_VISITOR_AUTH_STATE_LOGGED_OUT";
-static NSString* const AEP_VISITOR_AUTH_STATE_UNKNOWN = @"AEP_VISITOR_AUTH_STATE_UNKNOWN";
+static NSString* const AEP_VISITOR_AUTH_STATE_AUTHENTICATED = @"VISITOR_AUTH_STATE_AUTHENTICATED";
+static NSString* const AEP_VISITOR_AUTH_STATE_LOGGED_OUT = @"VISITOR_AUTH_STATE_LOGGED_OUT";
+static NSString* const AEP_VISITOR_AUTH_STATE_UNKNOWN = @"VISITOR_AUTH_STATE_UNKNOWN";
 
 // Visitor ID
 static NSString* const VISITOR_ID_ID_ORIGIN_KEY = @"idOrigin";
 static NSString* const VISITOR_ID_ID_TYPE_KEY = @"idType";
 static NSString* const VISITOR_ID_ID_KEY = @"identifier";
 static NSString* const VISITOR_ID_AUTH_STATE_KEY = @"authenticationState";
+
+static NSString* const EXTENSION_NAME = @"AEPIdentity";
 
 @implementation RCTAEPIdentity
 
@@ -40,35 +42,51 @@ RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(R
 
 RCT_EXPORT_METHOD(appendVisitorInfoForURL:(nonnull NSString*)baseUrl resolver:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileIdentity appendToUrl:[NSURL URLWithString:baseUrl] completion:^(NSURL * _Nullable url, NSError * _Nullable error) {
-        resolve(url.absoluteString);
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"appendVisitorInfoForURL"];
+        } else {
+            resolve(url.absoluteString);
+        }
     }];
 }
 
 RCT_EXPORT_METHOD(getUrlVariables:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileIdentity getUrlVariables:^(NSString * _Nullable variables, NSError * _Nullable error) {
-        resolve(variables);
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getUrlVariables"];
+        } else {
+            resolve(variables);
+        }
     }];
 }
 
 RCT_EXPORT_METHOD(getIdentifiers:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileIdentity getIdentifiers:^(NSArray<id<AEPIdentifiable>> * _Nullable visitorIDs, NSError * _Nullable error) {
-        NSMutableArray *visitorIDArr = [NSMutableArray array];
-        for (id<AEPIdentifiable> visitorId in visitorIDs) {
-            NSMutableDictionary *visitorIdDict = [NSMutableDictionary dictionary];
-            visitorIdDict[VISITOR_ID_ID_ORIGIN_KEY] = visitorId.origin;
-            visitorIdDict[VISITOR_ID_ID_TYPE_KEY] = visitorId.type;
-            visitorIdDict[VISITOR_ID_ID_KEY] = visitorId.identifier;
-            visitorIdDict[VISITOR_ID_AUTH_STATE_KEY] = stringFromAuthState(visitorId.authenticationState);
-            [visitorIDArr addObject:visitorIdDict];
-        }
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getIdentifiers"];
+        } else {
+            NSMutableArray *visitorIDArr = [NSMutableArray array];
+            for (id<AEPIdentifiable> visitorId in visitorIDs) {
+                NSMutableDictionary *visitorIdDict = [NSMutableDictionary dictionary];
+                visitorIdDict[VISITOR_ID_ID_ORIGIN_KEY] = visitorId.origin;
+                visitorIdDict[VISITOR_ID_ID_TYPE_KEY] = visitorId.type;
+                visitorIdDict[VISITOR_ID_ID_KEY] = visitorId.identifier;
+                visitorIdDict[VISITOR_ID_AUTH_STATE_KEY] = stringFromAuthState(visitorId.authenticationState);
+                [visitorIDArr addObject:visitorIdDict];
+            }
 
-        resolve(visitorIDArr);
+            resolve(visitorIDArr);
+        }
     }];
 }
 
 RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileIdentity getExperienceCloudId:^(NSString * _Nullable experienceCloudId, NSError * _Nullable error) {
-        resolve(experienceCloudId);
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getExperienceCloudId"];
+        } else {
+            resolve(experienceCloudId);
+        }
     }];
 }
 
@@ -107,5 +125,25 @@ static NSString* stringFromAuthState(AEPMobileVisitorAuthState authState) {
             return AEP_VISITOR_AUTH_STATE_UNKNOWN;
     }
 }
+
+#pragma mark - Helper methods
+
+ - (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {
+     NSString *errorTimeOut = [NSString stringWithFormat:@"%@ call timed out", location];
+     NSString *errorUnexpected = [NSString stringWithFormat:@"%@ call returned an unexpected error", location];
+
+     if (!error || !reject) {
+         return;
+     }
+
+     if (error && error.code != AEPErrorNone) {
+        if (error.code == AEPErrorCallbackTimeout) {
+            reject(EXTENSION_NAME, errorTimeOut, error);
+        }else {
+            reject(EXTENSION_NAME, errorUnexpected, error);
+        }
+     } 
+
+ }
 
 @end

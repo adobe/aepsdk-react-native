@@ -101,7 +101,11 @@ RCT_EXPORT_METHOD(setPrivacyStatus: (NSString *) statusString) {
 
 RCT_EXPORT_METHOD(getSdkIdentities: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileCore getSdkIdentities:^(NSString * _Nullable content, NSError * _Nullable error) {
-        resolve(content);
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getSdkIdentities"];
+        } else {
+            resolve(content);
+        }
     }];
 }
 
@@ -178,6 +182,24 @@ RCT_EXPORT_METHOD(resetIdentities) {
     reject([NSString stringWithFormat: @"%lu", (long)error.code],
            errorString,
            error);
+}
+
+- (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {
+    NSString *errorTimeOut = [NSString stringWithFormat:@"%@ call timed out", location];
+    NSString *errorUnexpected = [NSString stringWithFormat:@"%@ call returned an unexpected error", location];
+
+    if (!error || !reject) {
+        return;
+    }
+
+    if (error && error.code != AEPErrorNone) {
+        if (error.code == AEPErrorCallbackTimeout) {
+        reject(EXTENSION_NAME, errorTimeOut, error);
+        }
+    } else {
+        reject(EXTENSION_NAME, errorUnexpected, error);
+    }
+
 }
 
 @end

@@ -17,16 +17,16 @@ governing permissions and limitations under the License.
 
 module.exports = {
   // Native models
-  get AEPExperienceEvent() {
-    return require('./models/AEPExperienceEvent');
+  get ExperienceEvent() {
+    return require('./models/ExperienceEvent');
   },
 
-  get AEPEdgeEventHandle() {
-    return require('./models/AEPEdgeEventHandle');
+  get EdgeEventHandle() {
+    return require('./models/EdgeEventHandle');
   },
 
   // Native modules
-  get AEPEdge() {
-    return require('./AEPEdge');
+  get Edge() {
+    return require('./Edge');
   }
 };

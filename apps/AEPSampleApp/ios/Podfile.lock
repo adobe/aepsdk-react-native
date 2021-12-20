@@ -2,27 +2,29 @@ PODS:
   - AEPAssurance (3.0.0):
     - AEPCore (>= 3.1.0)
     - AEPServices (>= 3.1.0)
-  - AEPCore (3.3.0):
+  - AEPCore (3.3.1):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.3.0)
+    - AEPServices (= 3.3.1)
   - AEPEdge (1.1.2):
     - AEPCore (>= 3.1.1)
     - AEPEdgeIdentity
+  - AEPEdgeConsent (1.0.0):
+    - AEPCore (>= 3.1.0)
   - AEPEdgeIdentity (1.0.0):
     - AEPCore (>= 3.1.1)
-  - AEPIdentity (3.3.0):
-    - AEPCore (= 3.3.0)
-  - AEPLifecycle (3.3.0):
-    - AEPCore (= 3.3.0)
+  - AEPIdentity (3.3.1):
+    - AEPCore (= 3.3.1)
+  - AEPLifecycle (3.3.1):
+    - AEPCore (= 3.3.1)
   - AEPMessaging (1.0.0):
     - AEPCore
     - AEPEdge (>= 1.1.0)
     - AEPEdgeIdentity (>= 1.0.0)
     - AEPServices
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.3.0)
-  - AEPSignal (3.3.0):
-    - AEPCore (= 3.3.0)
+  - AEPServices (3.3.1)
+  - AEPSignal (3.3.1):
+    - AEPCore (= 3.3.1)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -45,25 +47,28 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
-  - RCTAEPAssurance (3.0.0-alpha.0):
+  - RCTAEPAssurance (3.0.0-beta.1):
     - AEPAssurance (~> 3.0)
     - React
-  - RCTAEPCore (1.0.0-alpha.2):
+  - RCTAEPCore (1.0.0-beta.1):
     - AEPCore (~> 3.0)
     - AEPIdentity (~> 3.0)
     - AEPLifecycle (~> 3.0)
     - AEPSignal (~> 3.0)
     - React
-  - RCTAEPEdge (1.0.0-alpha.2):
+  - RCTAEPEdge (1.0.0-beta.1):
     - AEPEdge (~> 1.0)
     - React
-  - RCTAEPEdgeIdentity (1.0.0-alpha.2):
+  - RCTAEPEdgeConsent (1.0.0-beta.1):
+    - AEPEdgeConsent (~> 1.0)
+    - React
+  - RCTAEPEdgeIdentity (1.0.0-beta.1):
     - AEPEdgeIdentity (~> 1.0)
     - React
-  - RCTAEPMessaging (1.0.0-alpha.2):
+  - RCTAEPMessaging (1.0.0-beta.1):
     - AEPMessaging (~> 1.0)
     - React
-  - RCTAEPUserProfile (1.0.0-alpha.3):
+  - RCTAEPUserProfile (1.0.0-beta.1):
     - AEPUserProfile (~> 3.0)
     - React
   - RCTRequired (0.64.2)
@@ -320,7 +325,7 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNReanimated (2.2.2):
+  - RNReanimated (2.2.4):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -349,7 +354,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.8.0):
+  - RNScreens (3.9.0):
     - React-Core
     - React-RCTImage
   - Yoga (1.14.0)
@@ -363,6 +368,7 @@ DEPENDENCIES:
   - RCTAEPAssurance (from `../../../packages/assurance`)
   - RCTAEPCore (from `../../../packages/core`)
   - RCTAEPEdge (from `../../../packages/edge`)
+  - RCTAEPEdgeConsent (from `../../../packages/edgeconsent`)
   - RCTAEPEdgeIdentity (from `../../../packages/edgeidentity`)
   - RCTAEPMessaging (from `../../../packages/messaging`)
   - RCTAEPUserProfile (from `../../../packages/userprofile`)
@@ -402,6 +408,7 @@ SPEC REPOS:
     - AEPAssurance
     - AEPCore
     - AEPEdge
+    - AEPEdgeConsent
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
@@ -429,6 +436,8 @@ EXTERNAL SOURCES:
     :path: "../../../packages/core"
   RCTAEPEdge:
     :path: "../../../packages/edge"
+  RCTAEPEdgeConsent:
+    :path: "../../../packages/edgeconsent"
   RCTAEPEdgeIdentity:
     :path: "../../../packages/edgeidentity"
   RCTAEPMessaging:
@@ -494,15 +503,16 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AEPAssurance: 18068627111e366a851dc2166239f22b665101bd
-  AEPCore: 0bd46c0a859d36099bb71294874837c31235ffe6
+  AEPCore: fc1398728b6b2a4dcc8dc96455f69ec144e087c0
   AEPEdge: 4208614f134d86131df95fd3420da20530fac275
+  AEPEdgeConsent: dd46002b0c4bf55443f5441990e799248975713e
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
-  AEPIdentity: ad3bc0d18db4a8a1408299e56883c1db1e874551
-  AEPLifecycle: a040570f7981f3d1892b9e39f3cd7b5de5280594
+  AEPIdentity: 40aedf425fc7cc63dde579135b8c1c65497a42d2
+  AEPLifecycle: dc131d6744a55d71bc9009d65f3b3428645cbd23
   AEPMessaging: 661cc08435254f3c9cc0899785c20a7952952e95
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: ccf8d0fdfe7a7e45303aa6b3c33af0687dd49cf1
-  AEPSignal: 7eb425e33e08d2bcdb039121157f2504e82e8dad
+  AEPServices: c49e7b6ef17ec9f874b015f68ac7d2436235282f
+  AEPSignal: 2d0dd4775c95797bf118300b74a1d9efcdbf8650
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
@@ -510,12 +520,13 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: cdd6f1f8ca74a9d33e4a3727af16caa19a9fae91
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
-  RCTAEPAssurance: 419c28c8d04829cdf40b802ed5227e7ab039c329
-  RCTAEPCore: e89ca896f56ef03218b8e93a16923c4732650947
-  RCTAEPEdge: 323ae50007fec0771b1a6e6e0ddc3a309f0408f3
-  RCTAEPEdgeIdentity: 245c00a7c8e7b27a902b7839238aa3726366f732
-  RCTAEPMessaging: 27172e5d88894eacf1f57fd3b44f9e9ea504dbd0
-  RCTAEPUserProfile: 4614a2995a168193d76df61c458e1ad25b282014
+  RCTAEPAssurance: d0d67b4d25db39db7b9eb9f8afb3d49f0ca3ba2a
+  RCTAEPCore: e7b8e5f18c2096dbc67dc1ef0744bc82a01a06b4
+  RCTAEPEdge: 9a92efd1fb186f92cf58385ad4d416ebda914383
+  RCTAEPEdgeConsent: a287ceea4a39d000df1cd722d346f674ca6b8d88
+  RCTAEPEdgeIdentity: 628c05de8d7d78116f845ade80e1b59d20a5d368
+  RCTAEPMessaging: 7029d478d854d0e2deacdae3efaff0fb4975b81a
+  RCTAEPUserProfile: a3d2bb50f7638fa8b2a6fa39c4e518994fc13ce4
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
   React: bda6b6d7ae912de97d7a61aa5c160db24aa2ad69
@@ -541,10 +552,10 @@ SPEC CHECKSUMS:
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNReanimated: 241c586663f44f19a53883c63375fdd041253960
-  RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
+  RNReanimated: 024eff8202342abf4b24e11575a16afc441dabfe
+  RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 2a644d6b375e7638e06413c828ae75a91d8f8598
+PODFILE CHECKSUM: 72fa28983148c9436f08736f91f61421c635e9b6
 
 COCOAPODS: 1.10.1

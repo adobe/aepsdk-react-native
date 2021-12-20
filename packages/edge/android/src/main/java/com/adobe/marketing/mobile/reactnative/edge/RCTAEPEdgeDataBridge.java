@@ -15,33 +15,28 @@ import android.util.Log;
 
 import com.adobe.marketing.mobile.EdgeEventHandle;
 import com.adobe.marketing.mobile.ExperienceEvent;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
-import com.facebook.react.bridge.WritableArray;
 
-import java.util.List;
 import java.util.Map;
 
-public final class RCTAEPEdgeDataBridge {
-
-    public final static String XDM_DATA_KEY = "xdmData";
-    public final static String DATA_KEY = "data";
-    public final static String DATASET_IDENTIFIER_KEY = "datasetIdentifier";
-
-    public final static String TYPE_KEY = "type";
-    public final static String PAYLOAD_KEY = "payload";
+final class RCTAEPEdgeDataBridge {
+    private static final String XDM_DATA_KEY = "xdmData";
+    private static final String DATA_KEY = "data";
+    private static final String DATASET_IDENTIFIER_KEY = "datasetIdentifier";
+    private static final String TYPE_KEY = "type";
+    private static final String PAYLOAD_KEY = "payload";
     private static final String TAG = "RCTAEPEdgeDataBridge";
 
     /**
      * Converts a {@link ReadableMap} into an {@link ExperienceEvent}
      *
-     * @param map
-     * @return An {@link ExperienceEvent}
+     * @param map representing the experience event data
+     * @return an {@link ExperienceEvent}
      */
-    public static ExperienceEvent experienceEventFromReadableMap(final ReadableMap map) {
+    static ExperienceEvent experienceEventFromReadableMap(final ReadableMap map) {
         if (map == null) {
             return null;
         }
@@ -73,7 +68,7 @@ public final class RCTAEPEdgeDataBridge {
      * @param eventhandle
      * @return A {@link WritableMap} that represents the eventhandle
      */
-    public static WritableMap mapFromEdgeEventHandle(final EdgeEventHandle eventhandle) {
+    static WritableMap mapFromEdgeEventHandle(final EdgeEventHandle eventhandle) {
         if (eventhandle == null) {
             return null;
         }
