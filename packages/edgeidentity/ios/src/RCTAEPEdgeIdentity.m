@@ -83,11 +83,11 @@ RCT_EXPORT_METHOD(removeIdentity:(nonnull NSDictionary*)item
 
     if (error && error.code != AEPErrorNone) {
         if (error.code == AEPErrorCallbackTimeout) {
-        reject(EXTENSION_NAME, errorTimeOut, error);
+            reject(EXTENSION_NAME, errorTimeOut, error);
+        }else {
+            reject(EXTENSION_NAME, errorUnexpected, error);
         }
-    } else {
-        reject(EXTENSION_NAME, errorUnexpected, error);
-    }
+    } 
 
 }
 
