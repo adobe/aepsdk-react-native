@@ -2,29 +2,29 @@ PODS:
   - AEPAssurance (3.0.0):
     - AEPCore (>= 3.1.0)
     - AEPServices (>= 3.1.0)
-  - AEPCore (3.3.1):
+  - AEPCore (3.3.2):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.3.1)
-  - AEPEdge (1.1.2):
-    - AEPCore (>= 3.1.1)
+    - AEPServices (= 3.3.2)
+  - AEPEdge (1.2.0):
+    - AEPCore (>= 3.3.2)
     - AEPEdgeIdentity
   - AEPEdgeConsent (1.0.0):
     - AEPCore (>= 3.1.0)
   - AEPEdgeIdentity (1.0.0):
     - AEPCore (>= 3.1.1)
-  - AEPIdentity (3.3.1):
-    - AEPCore (= 3.3.1)
-  - AEPLifecycle (3.3.1):
-    - AEPCore (= 3.3.1)
+  - AEPIdentity (3.3.2):
+    - AEPCore (= 3.3.2)
+  - AEPLifecycle (3.3.2):
+    - AEPCore (= 3.3.2)
   - AEPMessaging (1.0.0):
     - AEPCore
     - AEPEdge (>= 1.1.0)
     - AEPEdgeIdentity (>= 1.0.0)
     - AEPServices
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.3.1)
-  - AEPSignal (3.3.1):
-    - AEPCore (= 3.3.1)
+  - AEPServices (3.3.2)
+  - AEPSignal (3.3.2):
+    - AEPCore (= 3.3.2)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -325,7 +325,7 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNReanimated (2.2.4):
+  - RNReanimated (2.3.1):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -351,10 +351,9 @@ PODS:
     - React-RCTNetwork
     - React-RCTSettings
     - React-RCTText
-    - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.9.0):
+  - RNScreens (3.10.2):
     - React-Core
     - React-RCTImage
   - Yoga (1.14.0)
@@ -503,16 +502,16 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AEPAssurance: 18068627111e366a851dc2166239f22b665101bd
-  AEPCore: fc1398728b6b2a4dcc8dc96455f69ec144e087c0
-  AEPEdge: 4208614f134d86131df95fd3420da20530fac275
+  AEPCore: 922aa0eac3fa4f0bc3fbdd3f1b9f7cb7b65e440d
+  AEPEdge: f962929299a98ca2b17958ca7c882df262d1d6ae
   AEPEdgeConsent: dd46002b0c4bf55443f5441990e799248975713e
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
-  AEPIdentity: 40aedf425fc7cc63dde579135b8c1c65497a42d2
-  AEPLifecycle: dc131d6744a55d71bc9009d65f3b3428645cbd23
+  AEPIdentity: 5f7af2b937713ff82aa0788a6ee0b7e0d8fcd86e
+  AEPLifecycle: 8200df6d8f4579d4ee1eb924d6c46247b1fe102b
   AEPMessaging: 661cc08435254f3c9cc0899785c20a7952952e95
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: c49e7b6ef17ec9f874b015f68ac7d2436235282f
-  AEPSignal: 2d0dd4775c95797bf118300b74a1d9efcdbf8650
+  AEPServices: 7ac2a251b71a422ddaee316eac39f7a66a0d3a90
+  AEPSignal: f80b7d568388ac9b6119e8396c5126ff7284dd1a
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
@@ -552,8 +551,8 @@ SPEC CHECKSUMS:
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNReanimated: 024eff8202342abf4b24e11575a16afc441dabfe
-  RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
+  RNReanimated: 7f143675d94978c3555345d5bfa8ed6ae800c5d3
+  RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
 PODFILE CHECKSUM: 72fa28983148c9436f08736f91f61421c635e9b6
