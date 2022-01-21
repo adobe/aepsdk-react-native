@@ -157,8 +157,6 @@ public class MainApplication extends Application implements ReactApplication {
 
 See [development.md](./docs/development.md) for development docs.
 
-## Frequently Asked Questions (FAQ)
-
 
 ## Contributing
 See [CONTRIBUTING](CONTRIBUTING.md)
