@@ -47,28 +47,28 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
-  - RCTAEPAssurance (3.0.0-beta.1):
+  - RCTAEPAssurance (3.0.0-beta.2):
     - AEPAssurance (~> 3.0)
     - React
-  - RCTAEPCore (1.0.0-beta.1):
+  - RCTAEPCore (1.0.0-beta.2):
     - AEPCore (~> 3.0)
     - AEPIdentity (~> 3.0)
     - AEPLifecycle (~> 3.0)
     - AEPSignal (~> 3.0)
     - React
-  - RCTAEPEdge (1.0.0-beta.1):
+  - RCTAEPEdge (1.0.0-beta.2):
     - AEPEdge (~> 1.0)
     - React
-  - RCTAEPEdgeConsent (1.0.0-beta.1):
+  - RCTAEPEdgeConsent (1.0.0-beta.2):
     - AEPEdgeConsent (~> 1.0)
     - React
-  - RCTAEPEdgeIdentity (1.0.0-beta.1):
+  - RCTAEPEdgeIdentity (1.0.0-beta.2):
     - AEPEdgeIdentity (~> 1.0)
     - React
-  - RCTAEPMessaging (1.0.0-beta.1):
+  - RCTAEPMessaging (1.0.0-beta.2):
     - AEPMessaging (~> 1.0)
     - React
-  - RCTAEPUserProfile (1.0.0-beta.1):
+  - RCTAEPUserProfile (1.0.0-beta.2):
     - AEPUserProfile (~> 3.0)
     - React
   - RCTRequired (0.64.2)
