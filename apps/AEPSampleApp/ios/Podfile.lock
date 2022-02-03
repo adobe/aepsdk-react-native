@@ -2,29 +2,29 @@ PODS:
   - AEPAssurance (3.0.0):
     - AEPCore (>= 3.1.0)
     - AEPServices (>= 3.1.0)
-  - AEPCore (3.3.1):
-    - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.3.1)
-  - AEPEdge (1.1.2):
-    - AEPCore (>= 3.1.1)
+  - AEPCore (3.4.1):
+    - AEPRulesEngine (>= 1.1.0)
+    - AEPServices (>= 3.4.1)
+  - AEPEdge (1.3.0):
+    - AEPCore (>= 3.3.2)
     - AEPEdgeIdentity
   - AEPEdgeConsent (1.0.0):
     - AEPCore (>= 3.1.0)
   - AEPEdgeIdentity (1.0.0):
     - AEPCore (>= 3.1.1)
-  - AEPIdentity (3.3.1):
-    - AEPCore (= 3.3.1)
-  - AEPLifecycle (3.3.1):
-    - AEPCore (= 3.3.1)
-  - AEPMessaging (1.0.0):
-    - AEPCore
+  - AEPIdentity (3.4.1):
+    - AEPCore (>= 3.4.1)
+  - AEPLifecycle (3.4.1):
+    - AEPCore (>= 3.4.1)
+  - AEPMessaging (1.1.0):
+    - AEPCore (>= 3.4.0)
     - AEPEdge (>= 1.1.0)
     - AEPEdgeIdentity (>= 1.0.0)
-    - AEPServices
-  - AEPRulesEngine (1.0.1)
-  - AEPServices (3.3.1)
-  - AEPSignal (3.3.1):
-    - AEPCore (= 3.3.1)
+    - AEPServices (>= 3.4.0)
+  - AEPRulesEngine (1.1.0)
+  - AEPServices (3.4.1)
+  - AEPSignal (3.4.1):
+    - AEPCore (>= 3.4.1)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -360,6 +360,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, branch `staging`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -412,7 +413,6 @@ SPEC REPOS:
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
-    - AEPMessaging
     - AEPRulesEngine
     - AEPServices
     - AEPSignal
@@ -420,6 +420,9 @@ SPEC REPOS:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
+  AEPMessaging:
+    :branch: staging
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -501,23 +504,28 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
+CHECKOUT OPTIONS:
+  AEPMessaging:
+    :commit: da3694e20d41efde0cc1656833c4cc00c4cec09f
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
+
 SPEC CHECKSUMS:
   AEPAssurance: 18068627111e366a851dc2166239f22b665101bd
-  AEPCore: fc1398728b6b2a4dcc8dc96455f69ec144e087c0
-  AEPEdge: 4208614f134d86131df95fd3420da20530fac275
+  AEPCore: cac94cc6f0b2f960397488d3d68d02e0918b75a9
+  AEPEdge: 500628aee1319ef2690dfaf5bd950badce6ec3f0
   AEPEdgeConsent: dd46002b0c4bf55443f5441990e799248975713e
   AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
-  AEPIdentity: 40aedf425fc7cc63dde579135b8c1c65497a42d2
-  AEPLifecycle: dc131d6744a55d71bc9009d65f3b3428645cbd23
-  AEPMessaging: 661cc08435254f3c9cc0899785c20a7952952e95
-  AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: c49e7b6ef17ec9f874b015f68ac7d2436235282f
-  AEPSignal: 2d0dd4775c95797bf118300b74a1d9efcdbf8650
+  AEPIdentity: 3b9e7cf6306032e2d581f623f42301aa31dfae55
+  AEPLifecycle: 30775572d127c5bf4ab2a1cb067844a1cdbeb61a
+  AEPMessaging: 29ff8bed7e624c0ea93a76f7eb3ddaab83cc94ea
+  AEPRulesEngine: bb2927ed5501ddf9754c66e97f8d2b1cf8e33b19
+  AEPServices: 01f402b120bb84d442776a2af2c6b6b12ac01572
+  AEPSignal: 02673fc1d2fd2ea154c5de77914c93bf3ea1ee26
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: cdd6f1f8ca74a9d33e4a3727af16caa19a9fae91
+  FBReactNativeSpec: 2ef3a6ab59b70019c1e323563e91dca1486a3683
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPAssurance: 419c28c8d04829cdf40b802ed5227e7ab039c329
@@ -556,6 +564,6 @@ SPEC CHECKSUMS:
   RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 72fa28983148c9436f08736f91f61421c635e9b6
+PODFILE CHECKSUM: 18e76638d1b25ad6c02b6b9e0bfacb8bcefda684
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

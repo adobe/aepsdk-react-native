@@ -60,7 +60,7 @@ static void InitializeFlipper(UIApplication *application) {
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
-  [self.window makeKeyAndVisible];
+  [self.window makeKeyAndVisible];  
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
   [AEPMobileCore configureWithAppId:@"your-app-ID"];
   [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class,

@@ -11,7 +11,8 @@
 
  #import <React/RCTBridgeModule.h>
  #import <Foundation/Foundation.h>
+@import AEPServices;
 
-@interface RCTAEPMessaging : NSObject <RCTBridgeModule>
+@interface RCTAEPMessaging : NSObject <RCTBridgeModule, AEPMessagingDelegate>
 
 @end
