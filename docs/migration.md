@@ -79,37 +79,63 @@ public class MainApplication extends Application implements ReactApplication {
   }
 }
 ```
+> Note: For iOS app, after installing the AEP-prefixed packages, please update native dependecies by running the following command: `cd ios && pod update && cd ..`
 
 ### iOS
 
 ```objectivec
-#import "ACPCore.h"
-#import "ACPUserProfile.h"
-#import "ACPIdentity.h"
-#import "ACPLifecycle.h"
-#import "ACPSignal.h"
+
+// 1. remove the following header files
+//#import "ACPCore.h"
+//#import "ACPUserProfile.h"
+//#import "ACPIdentity.h"
+//#import "ACPLifecycle.h"
+//#import "ACPSignal.h"
+
+// 2. import AEP extensions
+@import AEPCore;
+@import AEPServices;
+@import AEPSignal;
+@import AEPLifecycle;
+//  --- 2. end ----
+
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [ACPCore setLogLevel:ACPMobileLogLevelDebug];
-    [ACPCore configureWithAppId:@"<your_environment_id_from_Launch>"];
-    [ACPUserProfile registerExtension];
-    [ACPIdentity registerExtension];
-    [ACPLifecycle registerExtension];
-    [ACPSignal registerExtension];
-    
-    // remove unsupported native extensions
-    
-    //[ACPAnalytics registerExtension];
-    //[ACPCampaign registerExtension];
-    //[ACPTarget registerExtension];
+    // 3. remove the following code for initializing ACP SDKs
 
-    const UIApplicationState appState = application.applicationState;
-    [ACPCore start:^{
-      if (appState != UIApplicationStateBackground) {
-        [ACPCore lifecycleStart:nil];
-      }
-    }];
+    // [ACPCore setLogLevel:ACPMobileLogLevelDebug];
+    // [ACPCore configureWithAppId:@"yourAppID"];
+    // [ACPUserProfile registerExtension];
+    // [ACPIdentity registerExtension];
+    // [ACPLifecycle registerExtension];
+    // [ACPSignal registerExtension];
+    // [ACPAnalytics registerExtension];
+    // [ACPCampaign registerExtension];
+    // [ACPTarget registerExtension];
+
+    // const UIApplicationState appState = application.applicationState;
+    // [ACPCore start:^{
+    //   if (appState != UIApplicationStateBackground) {
+    //     [ACPCore lifecycleStart:nil];
+    //   }
+    // }];
+
+    // 4. add code to initializing AEP SDKs
+
+    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+    [AEPMobileCore configureWithAppId:@"yourAppID"];
+    [AEPMobileCore registerExtensions: @[
+        AEPMobileLifecycle.class,
+        AEPMobileSignal.class,
+        AEPMobileIdentity.class,
+        AEPMobileUserProfile.class,
+    ] completion:^{
+    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+  }
+  ];
+  //  --- 4. end ----
+
     ...
   return YES;
 }
