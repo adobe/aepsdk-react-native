@@ -38,7 +38,7 @@ The `collectPii` function lets the SDK to collect sensitive or personally identi
 **Syntax**
 
 ```javascript
-llectPii(data: { string: string })
+collectPii(data: { string: string })
 ```
 
 **Example**
