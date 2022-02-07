@@ -124,7 +124,7 @@ public class MainApplication extends Application implements ReactApplication {
 ```javascript
 ACPCore.collectPii(data: [String : String])
 ```
-- AEP (1.x)
+- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#collecting-pii)
 ```javascript
 MobileCore.collectPii(data: [String : String])
 ```
@@ -133,7 +133,7 @@ MobileCore.collectPii(data: [String : String])
 ```javascript
 ACPCore.updateConfiguration(configMap?: { string: any })
 ```
-- AEP (1.x)
+- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#updating-the-sdk-configuration)
 ```javascript
 MobileCore.updateConfiguration(configMap?: { string: any })
 ```
