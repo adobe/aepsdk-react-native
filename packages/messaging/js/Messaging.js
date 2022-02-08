@@ -84,8 +84,8 @@ module.exports = {
     RCTAEPMessaging.show(id);
   },
 
-  dismiss(id: string, suppressAutoTrack: boolean) {
-    RCTAEPMessaging.dismiss(suppressAutoTrack);
+  dismiss(id: string) {
+    RCTAEPMessaging.dismiss();
   }, 
 
   track(id: string, interaction: ?string, eventType: number) {

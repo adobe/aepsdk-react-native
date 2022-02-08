@@ -53,7 +53,7 @@ RCT_EXPORT_METHOD(show: (NSString *) messageId) {
     [message show];
 }
 
-RCT_EXPORT_METHOD(dismiss: (NSString *) messageId  withSuppressAutoTrack: (Boolean) suppressAutoTrack) {
+RCT_EXPORT_METHOD(dismiss: (NSString *) messageId) {
     AEPMessage * message = [cachedMessages objectForKey:messageId];
     [message dismiss];
 }

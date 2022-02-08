@@ -36,8 +36,8 @@ export class Message {
         Messaging.show(this.id);
     }
 
-    dismiss = (suppressAutoTrack: boolean = false) => {
-        Messaging.dismiss(this.id, suppressAutoTrack);
+    dismiss = () => {
+        Messaging.dismiss(this.id);
     }
 
     track = (interaction: ?string, eventType: number) => {
