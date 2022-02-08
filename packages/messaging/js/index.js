@@ -20,4 +20,13 @@ module.exports = {
   get Messaging() {
     return require('./Messaging.js');
   },
+
+  get MessagingDelegate() {
+    return require('./models/MessagingDelegate');
+  },
+
+  get MessagingEdgeEventType() {
+    return require('./models/MessagingEdgeEventType');
+  }
+
 };

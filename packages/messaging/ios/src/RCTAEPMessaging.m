@@ -8,27 +8,24 @@
  OF ANY KIND, either express or implied. See the License for the specific language
  governing permissions and limitations under the License.
  */
-
 #import "RCTAEPMessaging.h"
 @import AEPMessaging;
 @import AEPCore;
 @import AEPServices;
 
 @implementation RCTAEPMessaging {
-    NSMutableDictionary<NSString*, Message*> * cachedMessages;
-    BOOL shouldShowMessage;
-    RCTResponseSenderBlock dismissCallback;
-    RCTResponseSenderBlock showCallback;
-    RCTResponseSenderBlock shouldShowCallback;
-    RCTResponseSenderBlock urlLoadedCallback;
-    
+    NSMutableDictionary<NSString*, AEPMessage*> * cachedMessages;
     dispatch_semaphore_t semaphore;
+    bool shouldShowMessage;
+    bool hasListeners;
 }
 
-- (instancetype)init {
+- (instancetype) init {
     self = [super init];
     cachedMessages = [NSMutableDictionary dictionary];
     semaphore = dispatch_semaphore_create(0);
+    hasListeners = false;
+    shouldShowMessage = true;
     return self;
 }
 
@@ -52,18 +49,18 @@ RCT_EXPORT_METHOD(setMessagingDelegate) {
 }
 
 RCT_EXPORT_METHOD(show: (NSString *) messageId) {
-    Message * message = [cachedMessages objectForKey:messageId];
+    AEPMessage * message = [cachedMessages objectForKey:messageId];
     [message show];
 }
 
 RCT_EXPORT_METHOD(dismiss: (NSString *) messageId  withSuppressAutoTrack: (Boolean) suppressAutoTrack) {
-    Message * message = [cachedMessages objectForKey:messageId];
-    [message dismissWithSuppressAutoTrack: suppressAutoTrack];
+    AEPMessage * message = [cachedMessages objectForKey:messageId];
+    [message dismiss];
 }
 
 RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) interaction eventType: (int) eventTypeValue) {
-    Message * message = [cachedMessages objectForKey:messageId];
-    AEPMessagingEdgeEventType * messagingEdgeEventType;
+    AEPMessage * message = [cachedMessages objectForKey:messageId];
+    AEPMessagingEdgeEventType messagingEdgeEventType = -1;
     
     if(eventTypeValue == 0){
         messagingEdgeEventType = AEPMessagingEdgeEventTypeInappDismiss;
@@ -79,12 +76,14 @@ RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) in
         messagingEdgeEventType = AEPMessagingEdgeEventTypePushCustomAction;
     }
     
-    [message track:interaction withEdgeEventType: *messagingEdgeEventType];
+    if(messagingEdgeEventType != -1){
+        [message trackInteraction:interaction withEdgeEventType:messagingEdgeEventType];
+    }
 }
 
 RCT_EXPORT_METHOD(handleJavascriptMessage: (NSString *) messageId messageName: (NSString *) name resolver: (RCTPromiseResolveBlock) resolve rejector:(RCTPromiseRejectBlock) reject) {
     
-    Message * message = [cachedMessages objectForKey: messageId];
+    AEPMessage * message = [cachedMessages objectForKey: messageId];
     [message handleJavascriptMessage:name withHandler:^(id result) {
         if(result) {
             resolve(result);
@@ -98,54 +97,66 @@ RCT_EXPORT_METHOD(clearMessage: (NSString *) messageId) {
     [cachedMessages removeObjectForKey:messageId];
 }
 
-RCT_EXPORT_METHOD(shouldShowMessage: (BOOL) shouldShowMessage) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessage) {
     self->shouldShowMessage = shouldShowMessage;
+    NSLog(@">>>> OBJC shouldShowMessage %i", shouldShowMessage);
     dispatch_semaphore_signal(semaphore);
-}
-
-RCT_EXPORT_METHOD(setOnDismissCallback: (RCTResponseSenderBlock) dismissCallback){
-    self->dismissCallback = dismissCallback;
-}
-
-RCT_EXPORT_METHOD(setOnShowCallback: (RCTResponseSenderBlock) showCallback){
-    self->showCallback = showCallback;
-}
-
-RCT_EXPORT_METHOD(setShouldShowMessageCallback: (RCTResponseSenderBlock) shouldShowCallback){
-    self->shouldShowCallback = shouldShowCallback;
-}
-
-RCT_EXPORT_METHOD(setUrlLoadedCallback: (RCTResponseSenderBlock) urlLoadedCallback){
-    self->urlLoadedCallback = urlLoadedCallback;
+    return nil;
 }
 
 //MARK: - AEPMessagingDelegate functions.
 - (void) onDismissWithMessage:(id<AEPShowable> _Nonnull) message {
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
-    Message * messageObj = (Message *) fullscreenMessage.settings.parent;
-    self->dismissCallback(@[@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}]);
+    AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
+        if(messageObj) {
+            [self emitEventWithName:@"onDismiss"  body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}];
+        }
 }
 
 - (void) onShowWithMessage:(id<AEPShowable> _Nonnull)message {
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
-    Message * messageObj = (Message *) fullscreenMessage.settings.parent;
-    self->showCallback(@[@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true: @false}]);
+    AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
+    if(messageObj) {
+        [self emitEventWithName:@"onShow" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}];
+    }
 }
 
 - (BOOL) shouldShowMessageWithMessage:(id<AEPShowable> _Nonnull)message {
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
-    Message * messageObj = (Message *) fullscreenMessage.settings.parent;
-    self->shouldShowCallback(@[@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}]);
+    AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
+    if(messageObj) {
+        [self emitEventWithName:@"shouldShowMessage" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    }
     return shouldShowMessage;
 }
 
 - (void) urlLoaded:(NSURL *)url byMessage:(id<AEPShowable>)message {
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
-    Message * messageObj = (Message *) fullscreenMessage.settings.parent;
-    self->urlLoadedCallback(
-                            @[@{@"url":url, @"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}]
-    );
+    AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
+    if(messageObj){
+        [self emitEventWithName:@"urlLoaded" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}];
+    }
  }
 
+- (NSArray<NSString *> *) supportedEvents {
+    return @[@"onShow", @"onDismiss", @"shouldShowMessage",@"urlLoaded"];
+}
+
+- (void) startObserving {
+    hasListeners = true;
+}
+
+- (void) stopObserving {
+    hasListeners = false;
+}
+
+- (void) emitEventWithName: (NSString *) name body: (NSDictionary *) dictionary {
+    if(hasListeners){
+        [self sendEventWithName:name body:dictionary];
+    }
+}
+
 @end
+    
+    

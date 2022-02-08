@@ -15,41 +15,17 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const RCTAEPMessaging = require('react-native').NativeModules.AEPMessaging;
+import { NativeModules, NativeEventEmitter } from 'react-native';
+const RCTAEPMessaging = NativeModules.AEPMessaging;
 const MessagingEdgeEventType = require("./models/MessagingEdgeEventType");
 import { Message } from './models/Message';
 import type { MessagingDelegate } from "./models/MessagingDelegate";
 
 var messagingDelegate: MessagingDelegate
-
-const onShow = (data) => {
-  const message = new Message(data[0].id, data[0].autoTrack);
-  if(messagingDelegate){
-    messagingDelegate.onShow(message);
-  }  
-}
-
-const onDismiss = (data) => {
-  const message = new Message(data[0].id, data[0].autoTrack);
-  if(messagingDelegate){
-    messagingDelegate.onDismiss(message);
-  }
-}
-
-const shouldShowMessage = (data) => {
-  const message = new Message(data[0].id, data[0].autoTrack);
-  if(messagingDelegate){
-    var shouldShowMessage: boolean = messagingDelegate.shouldShowMessage(message);
-    RCTAEPMessaging.shouldShowMessage(shouldShowMessage);
-  }
-}
-
-const urlLoaded = (data) => {
-  const url = data[0].url;
-  if(messagingDelegate){
-    messagingDelegate.urlLoaded(url);
-  }
-}
+var eventListenerShow;
+var eventListenerDismiss;
+var eventListenerShouldShow;
+var eventListenerUrlLoaded;
 
 module.exports = {
   /**
@@ -64,13 +40,44 @@ module.exports = {
     RCTAEPMessaging.refreshInAppMessages();
   },
 
-  setMessagingDelegate(delegate: MessagingDelegate) {
+  setMessagingDelegate(delegate: MessagingDelegate) {    
     messagingDelegate = delegate;
-    RCTAEPMessaging.setMessagingDelegate();    
-    RCTAEPMessaging.setOnDismissCallback(onDismiss);
-    RCTAEPMessaging.setOnShowCallback(onShow);
-    RCTAEPMessaging.setShouldShowMessageCallback(shouldShowMessage);
-    RCTAEPMessaging.setUrlLoadedCallback(urlLoaded);
+    RCTAEPMessaging.setMessagingDelegate();        
+    // @"onShow", @"onDismiss", @"shouldShowMessage",@"urlLoaded"
+    const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
+    eventListenerShow = eventEmitter.addListener('onShow', (event) => {
+      console.log(">>>>> onShow");      
+      if(messagingDelegate){
+        const message = new Message(event.id, event.autoTrack);
+        messagingDelegate.onShow(message);
+      }  
+    });
+
+    eventListenerDismiss = eventEmitter.addListener('onDismiss', (event) => {
+      console.log(">>>>> onDismiss");      
+      if(messagingDelegate){
+        const message = new Message(event.id, event.autoTrack);
+        messagingDelegate.onDismiss(message);
+      }
+    });
+
+    eventListenerShouldShow = eventEmitter.addListener('shouldShowMessage', (event) => {      
+      console.log(">>>shouldShowMessage");
+      if(messagingDelegate){
+        const message = new Message(event.id, event.autoTrack);
+        var shouldShowMessage: boolean = messagingDelegate.shouldShowMessage(message);
+        console.log(">>>>> shouldShowMessage2");
+        RCTAEPMessaging.shouldShowMessage(shouldShowMessage);
+      }
+    });
+
+    eventListenerUrlLoaded = eventEmitter.addListener('urlLoaded', (event) => {
+      console.log(">>>>> urlLoaded");      
+      if(messagingDelegate){
+        const url = event.url;
+        messagingDelegate.urlLoaded(url);
+      }
+    });    
   },
 
   show(id: string) {

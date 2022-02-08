@@ -12,7 +12,8 @@ target 'AEPSampleApp' do
     :hermes_enabled => false
   )
 
-  pod "AEPMessaging", :git => "https://github.com/adobe/aepsdk-messaging-ios.git", :branch => "staging"
+  pod "AEPMessaging", :git => "https://github.com/sbenedicadb/aepsdk-messaging-ios.git", :branch => "staging"
+  pod "AEPCore", :git => "https://github.com/adobe/aepsdk-core-ios.git", :tag => "3.4.2"
   
   # pod 'AEPCore'
   # pod 'AEPLifecycle'
