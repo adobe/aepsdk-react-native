@@ -56,7 +56,7 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+-   MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
 
     try {
       UserProfile.registerExtension();
@@ -271,73 +271,73 @@ MobileCore.updateConfiguration(configMap?: { string: any })
 #### appendVisitorInfoForURL
 - ACP (2.x)
 ```javascript
-ACPCore.appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
+ACPIdentity.appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#appendvisitorinfoforurl)
 ```javascript
-MobileCore.appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
+Identity.appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
 ```
 
 #### extensionVersion
 - ACP (2.x)
 ```javascript
-ACPCore.extensionVersion(): Promise<string>
+ACPIdentity.extensionVersion(): Promise<string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-1)
 ```javascript
-MobileCore.extensionVersion(): Promise<string>
+Identity.extensionVersion(): Promise<string>
 ```
 
 #### getUrlVariables
 - ACP (2.x)
 ```javascript
-ACPCore.getUrlVariables(): Promise<?string>
+ACPIdentity.getUrlVariables(): Promise<?string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#geturlvariables)
 ```javascript
-MobileCore.getUrlVariables(): Promise<?string>
+Identity.getUrlVariables(): Promise<?string>
 ```
  
 #### getIdentifiers
 - ACP (2.x)
 ```javascript
-ACPCore.getIdentifiers(): Promise<Array<?ACPVisitorID>> 
+ACPIdentity.getIdentifiers(): Promise<Array<?ACPVisitorID>> 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getidentifiers)
 ```javascript
-MobileCore.getIdentifiers(): Promise<Array<?VisitorID>>
+Identity.getIdentifiers(): Promise<Array<?VisitorID>>
 ```
 
 #### getExperienceCloudId
 - ACP (2.x)
 ```javascript
-ACPCore.getExperienceCloudId(): Promise<?string>
+ACPIdentity.getExperienceCloudId(): Promise<?string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getexperiencecloudid)
 ```javascript
-MobileCore.getExperienceCloudId(): Promise<?string>
+Identity.getExperienceCloudId(): Promise<?string>
 ```
 
 
 #### syncIdentifier
 - ACP (2.x)
 ```javascript
-ACPCore.syncIdentifiers(identifiers?: { string: string })
+ACPIdentity.syncIdentifiers(identifiers?: { string: string })
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifier)
 ```javascript
-MobileCore.syncIdentifiers(identifiers?: { string: string })
+Identity.syncIdentifiers(identifiers?: { string: string })
 ```
 
 
 #### syncIdentifiersWithAuthState
 - ACP (2.x)
 ```javascript
-ACPCore.syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
+ACPIdentity.syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifierswithauthstate)
 ```javascript
-MobileCore.syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
+Identity.syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
 ```
 
 
