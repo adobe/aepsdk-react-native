@@ -29,6 +29,9 @@ npm install @adobe/react-native-aepuserprofile
 Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
 #### Importing the extension:
+
+In your React Native application, import the UserProfile extension as follows:
+
 ```javascript
 import {UserProfile} from '@adobe/react-native-aepuserprofile';
 ```

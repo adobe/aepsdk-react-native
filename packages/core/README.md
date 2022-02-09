@@ -32,7 +32,7 @@ import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, Event } from '@
 
 ### [Core](https://aep-sdks.gitbook.io/docs/foundation-extensions/mobile-core/mobile-core-api-reference)
 
-- ##### collectPii
+- #### collectPii
 The `collectPii` function lets the SDK to collect sensitive or personally identifiable information (PII).
 
 **Syntax**
@@ -47,7 +47,7 @@ collectPii(data: { string: string })
 MobileCore.collectPii({"myPii": "data"});
 ```
 
-- ##### dispatchEvent
+- #### dispatchEvent
 Dispatch an event for other extensions or the internal SDK to consume.
 
 **Syntax**
@@ -65,7 +65,7 @@ var event = new Event("eventName", "eventType", "eventSource", {"testDataKey": "
 MobileCore.dispatchEvent(event);
 ```
 
-- ##### dispatchEventWithResponseCallback
+- #### dispatchEventWithResponseCallback
 
 **Syntax**
 
@@ -82,7 +82,7 @@ var event = new Event("eventName", "eventType", "eventSource", {"testDataKey": "
 MobileCore.dispatchEventWithResponseCallback(event).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
 ```
 
-- ##### extensionVersion
+- #### extensionVersion
 Returns the version of the Core extension
 
 **Syntax**
@@ -96,7 +96,7 @@ extensionVersion(): Promise<string>
 ```javascript
 MobileCore.extensionVersion().then(version => console.log("AdobeExperienceSDK: MobileCore version: " + version));
 ```
-- ##### getLogLevel
+- #### getLogLevel
 
 This function gets the current log level being used in the SDK.
 
@@ -112,7 +112,7 @@ getLogLevel(): Promise<string>
 MobileCore.getLogLevel().then(level => console.log("AdobeExperienceSDK: Log Level = " + level));
 ```
 
-- ##### getSdkIdentities
+- #### getSdkIdentities
 
 This function gets all of the user's identities known by the SDK.
 
@@ -128,7 +128,7 @@ getSdkIdentities(): Promise<?string>
 MobileCore.getSdkIdentities().then(identities => console.log("AdobeExperienceSDK: Identities = " + identities));
 ```
 
-- ##### getPrivacyStatus
+- #### getPrivacyStatus
 
 Get the current Adobe Mobile Privacy Status
 
@@ -145,7 +145,7 @@ MobileCore.getPrivacyStatus().then(status => console.log("AdobeExperienceSDK: Pr
 ```
 
 
-- ##### log
+- #### log
 
 This is the API used to log from the SDK.
 
@@ -172,7 +172,7 @@ const DEBUG = "DEBUG";
 const VERBOSE = "VERBOSE";
 ```
 
-- ##### resetIdentities
+- #### resetIdentities
 
 The `resetIdentities` method requests that each extension resets the identities it owns and each extension responds to this request uniquely.
 
@@ -188,7 +188,7 @@ resetIdentities()
 MobileCore.resetIdentities();
 ```
 
-- ##### setPrivacyStatus
+- #### setPrivacyStatus
 
 Set the Adobe Mobile Privacy status
 
@@ -214,7 +214,7 @@ const OPT_OUT = "OPT_OUT";
 const UNKNOWN = "UNKNOWN";
 ```
 
-- ##### setLogLevel
+- #### setLogLevel
 
 Set the logging level of the SDK
 
@@ -232,7 +232,7 @@ import {LogLevel} from '@adobe/react-native-aepcore';
 MobileCore.setLogLevel(LogLevel.VERBOSE);
 ```
 
-- ##### updateConfiguration
+- #### updateConfiguration
 
 Update the configuration programmatically by passing configuration keys and values to override the existing configuration.
 
@@ -250,7 +250,7 @@ MobileCore.updateConfiguration({"yourConfigKey": "yourConfigValue"});
 
 ### [Identity](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/identity)
 
-- ##### appendVisitorInfoForURL
+- #### appendVisitorInfoForURL
 
 This function appends Adobe visitor information to the query component of the specified URL.
 
@@ -266,7 +266,7 @@ appendVisitorInfoForURL(baseURL?: String): Promise<?string>
 Identity.appendVisitorInfoForURL("test.com").then(urlWithVisitorData => console.log("AdobeExperienceSDK: VisitorData = " + urlWithVisitorData));
 ```
 
-- ##### extensionVersion
+- #### extensionVersion
 
 Returns the version of the Identity extension
 
@@ -282,7 +282,7 @@ extensionVersion(): Promise<string>
 Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: Identity version: " + version));
 ```
 
-- ##### getUrlVariables
+- #### getUrlVariables
 
 This function returns an appropriately formed string that contains the Experience Cloud Identity Service URL variables.
 
@@ -298,7 +298,7 @@ getUrlVariables(): Promise<?string>
 Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: UrlVariables = " + urlVariables));
 ```
 
-- ##### getIdentifiers
+- #### getIdentifiers
 
 This function returns all customer identifiers that were previously synced with the Adobe Experience Cloud Identity Service.
 
@@ -314,7 +314,7 @@ getIdentifiers(): Promise<Array<?VisitorID>>
 Identity.getIdentifiers().then(identifiers => console.log("AdobeExperienceSDK: Identifiers = " + identifiers));
 ```
 
-- ##### getExperienceCloudId
+- #### getExperienceCloudId
 
 This function retrieves the Adobe Experience Cloud ID (ECID) that was generated when the app was initially launched and is stored in the Adobe Experience Cloud Identity Service.
 
@@ -330,7 +330,7 @@ getExperienceCloudId(): Promise<?string>
 Identity.getExperienceCloudId().then(cloudId => console.log("AdobeExperienceSDK: CloudID = " + cloudId));
 ```
 
-- ##### syncIdentifier
+- #### syncIdentifier
 
 The `syncIdentifier`, `syncIdentifiers` and `syncIdentifiersWithAuthState` functions update the specified customer IDs with the Adobe Experience Cloud Identity Service.
 
@@ -345,7 +345,7 @@ The `syncIdentifier`, `syncIdentifiers` and `syncIdentifiersWithAuthState` funct
 Identity.syncIdentifier("identifierType", "identifier", MobileVisitorAuthenticationState.AUTHENTICATED);
 ```
 
-- ##### syncIdentifiers
+- #### syncIdentifiers
 
 **Syntax**
 
@@ -359,7 +359,7 @@ syncIdentifiers(identifiers?: { string: string })
 Identity.syncIdentifiers({"id1": "identifier1"});
 ```
 
-- ##### syncIdentifiersWithAuthState
+- #### syncIdentifiersWithAuthState
 
 **Syntax**
 
@@ -383,7 +383,7 @@ const LOGGED_OUT = "VISITOR_AUTH_STATE_LOGGED_OUT";
 const UNKNOWN = "VISITOR_AUTH_STATE_UNKNOWN";
 ```
 
-- ##### setAdvertisingIdentifier
+- #### setAdvertisingIdentifier
 
 Submits a generic event containing the provided IDFA with event type `generic.identity`.
 
@@ -399,7 +399,7 @@ setAdvertisingIdentifier(advertisingIdentifier?: String)
 MobileCore.setAdvertisingIdentifier("adID");
 ```
 
-- ##### setPushIdentifier
+- #### setPushIdentifier
 
 Submits a generic event containing the provided push token with event type `generic.identity`.
 
@@ -415,7 +415,7 @@ setPushIdentifier(pushIdentifier?: String)
 MobileCore.setPushIdentifier("pushIdentifier");
 ```
 
-- ##### VisitorID Class:
+- #### VisitorID Class:
 
 ```javascript
 import {VisitorID} from '@adobe/react-native-aepcore';
@@ -427,7 +427,7 @@ var visitorId = new VisitorID(idOrigin?: string, idType: string, id?: string, au
 
 > Note: Implementing Lifecycle via Javascript may lead to inaccurate Lifecycle metrics, therefore we recommend implementing Lifecycle in native [Android and iOS code](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/lifecycle).
 
-- ##### extensionVersion
+- #### extensionVersion
 
 Returns the version of the Lifecycle extension
 
@@ -445,7 +445,7 @@ Lifecycle.extensionVersion().then(version => console.log("AdobeExperienceSDK: Li
 
 ### [Signal](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/signals)
 
-- ##### extensionVersion
+- #### extensionVersion
 
 Returns the version of the Signal extension
 
