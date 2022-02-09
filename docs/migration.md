@@ -70,7 +70,7 @@ public class MainApplication extends Application implements ReactApplication {
       MobileCore.start(new AdobeCallback () {
           @Override
           public void call(Object o) {
-            MobileCore.configureWithAppID("<your_environment_id_from_Launch>");
+            MobileCore.configureWithAppID("yourAppID");
          }
       });
     } catch (InvalidInitException e) {
@@ -79,9 +79,9 @@ public class MainApplication extends Application implements ReactApplication {
   }
 }
 ```
-> Note: For iOS app, after installing the AEP-prefixed packages, please update native dependecies by running the following command: `cd ios && pod update && cd ..`
-
 ### iOS
+
+> Note: For iOS app, after installing the AEP-prefixed packages, please update native dependecies by running the following command: `cd ios && pod update && cd ..`
 
 ```objectivec
 
