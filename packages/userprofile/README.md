@@ -38,7 +38,7 @@ import {UserProfile} from '@adobe/react-native-aepuserprofile';
 
 ## API reference
 
-- ### extensionVersion
+### extensionVersion
 
 Returns the version of the User Profile extension
 
@@ -54,7 +54,7 @@ extensionVersion(): Promise<string>
 UserProfile.extensionVersion().then(version => console.log("AdobeExperienceSDK: UserProfile version: " + version));
 ```
 
-- ### getUserAttributes
+### getUserAttributes
 
 Gets the user profile attributes with the given keys.
 
@@ -70,7 +70,7 @@ getUserAttributes(attributeNames: Array<string>): Promise<?{ string: any }>
 UserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: UserProfile getUserAttributes: " + map));
 ```
 
-- ### removeUserAttributes
+### removeUserAttributes
 
 Removes the user profile attributes for the given keys.
 
@@ -86,7 +86,7 @@ removeUserAttributes(attributeNames: Array<string>)
 UserProfile.removeUserAttributes(["mapKey1"]);
 ```
 
-- ### updateUserAttributes
+### updateUserAttributes
 
 Sets the user profile attributes key and value.
 It allows to create/update a batch of user profile attributes.
