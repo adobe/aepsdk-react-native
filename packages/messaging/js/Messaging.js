@@ -17,7 +17,6 @@ governing permissions and limitations under the License.
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
 const RCTAEPMessaging = NativeModules.AEPMessaging;
-const MessagingEdgeEventType = require("./models/MessagingEdgeEventType");
 import { Message } from './models/Message';
 import type { MessagingDelegate } from "./models/MessagingDelegate";
 
@@ -48,7 +47,7 @@ module.exports = {
     eventListenerShow = eventEmitter.addListener('onShow', (event) => {
       console.log(">>>>> onShow");      
       if(messagingDelegate){
-        const message = new Message(event.id, event.autoTrack);
+        const message = new Message(event.id, event.autoTrack === "true" ? true: false);
         messagingDelegate.onShow(message);
       }  
     });
@@ -56,17 +55,19 @@ module.exports = {
     eventListenerDismiss = eventEmitter.addListener('onDismiss', (event) => {
       console.log(">>>>> onDismiss");      
       if(messagingDelegate){
-        const message = new Message(event.id, event.autoTrack);
+        const message = new Message(event.id, event.autoTrack === "true" ? true: false);
         messagingDelegate.onDismiss(message);
       }
     });
 
     eventListenerShouldShow = eventEmitter.addListener('shouldShowMessage', (event) => {      
-      console.log(">>>shouldShowMessage");
+      console.log(">>>> shouldShowMessage1");
       if(messagingDelegate){
-        const message = new Message(event.id, event.autoTrack);
+        console.log(`>>>> shouldShowMessage2. Message details: event: ${JSON.stringify(event)} id: ${event.id} autotrack: ${event.autoTrack}`);        
+        const message = new Message(event.id, event.autoTrack === "true" ? true: false);
+        console.log(">>>> shouldShowMessage3");
         var shouldShowMessage: boolean = messagingDelegate.shouldShowMessage(message);
-        console.log(">>>>> shouldShowMessage2");
+        console.log(">>>> shouldShowMessage4");
         RCTAEPMessaging.shouldShowMessage(shouldShowMessage);
       }
     });
@@ -81,19 +82,20 @@ module.exports = {
   },
 
   show(id: string) {
+    console.log(`>>>> show message id: ${id}`);
     RCTAEPMessaging.show(id);
   },
 
   dismiss(id: string) {
-    RCTAEPMessaging.dismiss();
+    RCTAEPMessaging.dismiss(id);
   }, 
 
   track(id: string, interaction: ?string, eventType: number) {
-    RCTAEPMessaging.track(interaction, eventType);
+    RCTAEPMessaging.track(id, interaction, eventType);
   },
 
   handleJavascriptMessage(id: string, name: string): Promise<?any> {
-    return Promise.resolve(RCTAEPMessaging.handleJavascriptMessage(name));
+    return Promise.resolve(RCTAEPMessaging.handleJavascriptMessage(id, name));
   },  
 
   clearMessage(id: string) {

@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 import React, {useState} from 'react';
 import {Button, Text, View, ScrollView, TextInput, Alert} from 'react-native';
-import { Messaging, MessagingDelegate, MessagingEdgeEventType } from '@adobe/react-native-aepmessaging';
+import { Messaging, MessagingDelegate, MessagingEdgeEventType, Message } from '@adobe/react-native-aepmessaging';
 const AEPCore = require('@adobe/react-native-aepcore');
 import styles from '../styles/styles';
 
@@ -24,54 +24,81 @@ const Event = AEPCore.Event;
 
 export default ({ navigation }) => {
 
-    const [keys, setKeys] = useState('');
-    const [values, setValues] = useState('');
+    var cachedMessage: Message;
+    const [keys, setKeys] = useState('action;');
+    const [values, setValues] = useState('testFullscreen;');
+    const [eventName, setEventName] = useState('AnalyticsTrack');
+    const [eventType, setEventType] = useState('com.adobe.eventType.generic.track');
+    const [eventSource, setEventSource] = useState('com.adobe.eventSource.requestContent');    
     const messagingExtensionVersion = () => Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: Messaging version: " + version));
     const sentTrackingEvent = () => {
+
         const keysArr = keys.split(";").map(text => text.trim());
-        const valuesArr = values.split(";").map(text => text.trim());
-        if(keysArr.length !== valuesArr.length) {
-            //Show error Alert
-            Alert.alert("Error!!", "Mismatch in Context data keys and value length", [
-                {
-                    text: "Ok"
-                }
-            ]);
-        } else {
-            var eventData: {[string]: string} = {};
-            keysArr.forEach((element, index) => {
-                if(element && valuesArr[index]){
-                    eventData[element] = valuesArr[index];
-                }                    
-            });
-            //Sent event to trigger IAM            
-            var event = new Event("test", "iamtest", "iamtest", eventData);
-            MobileCore.dispatchEvent(event);
-        }
+        const valuesArr = values.split(";").map(text => text.trim());        
+        var eventData: {[string]: any} = {};
+        keysArr.forEach((element, index) => {
+            if(element && valuesArr[index]){
+                eventData[element] = valuesArr[index];
+            }                    
+        });
+        //Sent event to trigger IAM            
+        var event = new Event(eventName, eventType, eventSource, eventData);
+        MobileCore.dispatchEvent(event);        
     }; 
 
     const setMessagingDelegate = () => {
         const messagingDelegate = {
 
             onShow(message: Message) {
-                console.log("Onshow called");
+                console.log(">>>> Onshow called");
             },
 
             onDismiss(message: Message) {
-                console.log("Ondismiss called");
+                console.log(">>>> Ondismiss called");
             },
 
             shouldShowMessage(message: Message) {
-                console.log("shouldShowMessage called");
+                console.log(">>>> shouldShowMessage called");
+                if(message){
+                    console.log(">>>> shouldShowMessage. caching the message.");
+                    cachedMessage = message;
+                }
+                
                 return true;
             },
 
             urlLoaded(url: string) {
-                console.log("urlLoaded");
+                console.log(">>>> urlLoaded");
             }
         };
         Messaging.setMessagingDelegate(messagingDelegate);
     };
+
+    const showMessage = () => {
+        console.log(">>>> showMessage1");
+        if(cachedMessage){
+            console.log(">>>> showMessage2");
+            cachedMessage.show();
+        } else {
+            console.log(">>>> showMessage. Cached message is null");
+        }        
+    };
+
+    const dismissMessage = () => {                
+        console.log(">>>> dismissMessage1");
+        if(cachedMessage){
+            console.log(">>>> dismissMessage2");
+            cachedMessage.dismiss();
+        }        
+    };
+
+    const clearMessage = () => {        
+        console.log(">>>> clearMessage1");
+        if(cachedMessage){
+            console.log(">>>> clearMessage2");
+            cachedMessage.clearMessage();
+        }
+    };    
     
     return (<View style={styles.container}>
         <ScrollView contentContainerStyle={{ marginTop: 75 }} >
@@ -80,11 +107,16 @@ export default ({ navigation }) => {
         <Button title="extensionVersion()" onPress={ messagingExtensionVersion }/>
         <Button title="refreshInAppMessages()" onPress={ Messaging.refreshInAppMessages }/>        
         <Button title="setMessagingDelegate()" onPress={setMessagingDelegate}/>
-        <Text style={{...styles.welcome, fontSize: 12}}>Context data keys as colon(;) separated values</Text>
-        <TextInput style={styles.textinput} placeholder="Context data keys" placeholderTextColor="#8e8e8e" value={keys} onChangeText={text => setKeys(text)}/>
-        <Text style={{...styles.welcome, fontSize: 12}}>Context data values as colon(;) separated values</Text>
-        <TextInput style={styles.textinput} placeholder="Context data values" placeholderTextColor="#8e8e8e" value={values} onChangeText={text => setValues(text)}/>        
-        <Button title="Track Event" onPress={sentTrackingEvent}/>
+        <Button title="show message()" onPress={showMessage}/>
+        <Button title="dismiss message()" onPress={dismissMessage}/>
+        <Button title="clear message()" onPress={clearMessage}/>
+        <Text style={{...styles.welcome, marginTop: 30}}>Event Data</Text>                
+        <TextInput style={styles.textinput} placeholder="Event name" placeholderTextColor="#8e8e8e" value={eventName} onChangeText={text => setEventName(text)}/>        
+        <TextInput style={styles.textinput} placeholder="Event type" placeholderTextColor="#8e8e8e" value={eventType} onChangeText={text => setEventType(text)}/>        
+        <TextInput style={styles.textinput} placeholder="Event source" placeholderTextColor="#8e8e8e" value={eventSource} onChangeText={text => setEventSource(text)}/>        
+        <TextInput style={styles.textinput} placeholder="Colon(;) separated Event data keys" placeholderTextColor="#8e8e8e" value={keys} onChangeText={text => setKeys(text)}/>        
+        <TextInput style={styles.textinput} placeholder="Colon(;) separated Event data values" placeholderTextColor="#8e8e8e" value={values} onChangeText={text => setValues(text)}/>        
+        <Button title="Sent Event()" onPress={sentTrackingEvent}/>
         </ScrollView>
     </View>)
 };

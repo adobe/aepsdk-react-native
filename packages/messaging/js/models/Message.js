@@ -22,7 +22,7 @@ export class Message {
     id: string;
     autoTrack: boolean;    
 
-    constructor(id: string, autoTrack: boolean = true) {
+    constructor(id: string, autoTrack: boolean) {
         this.id = id;
         this.autoTrack = autoTrack;
         this.show.bind(this);
@@ -33,6 +33,7 @@ export class Message {
     }
 
     show = () => {
+        console.log(`Inside the Message:: id is: ${this.id}`);
         Messaging.show(this.id);
     }
 
@@ -40,8 +41,8 @@ export class Message {
         Messaging.dismiss(this.id);
     }
 
-    track = (interaction: ?string, eventType: number) => {
-        Messaging.track(this.id, interaction, eventType);
+    track = (interaction: ?string, eventType: MessagingEdgeEventType) => {
+        Messaging.track(this.id, interaction, eventType.value);
     }
 
     handleJavascriptMessage = (name: string) : Promise<?any> => {

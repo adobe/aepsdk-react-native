@@ -512,7 +512,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/adobe/aepsdk-core-ios.git
     :tag: 3.4.2
   AEPMessaging:
-    :commit: b877c0a9c4884fd64f54107ea731baf1160fa5b5
+    :commit: abadc8f5c27a92d2f9af110dccd6b1522175c6ff
     :git: https://github.com/sbenedicadb/aepsdk-messaging-ios.git
 
 SPEC CHECKSUMS:

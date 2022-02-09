@@ -27,6 +27,9 @@ module.exports = {
 
   get MessagingEdgeEventType() {
     return require('./models/MessagingEdgeEventType');
-  }
+  },
 
+  get Message() {
+    return require('./models/Message');
+  }
 };

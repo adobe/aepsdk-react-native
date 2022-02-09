@@ -99,7 +99,7 @@ RCT_EXPORT_METHOD(clearMessage: (NSString *) messageId) {
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessage) {
     self->shouldShowMessage = shouldShowMessage;
-    NSLog(@">>>> OBJC shouldShowMessage %i", shouldShowMessage);
+    NSLog(@">>>> IN JS thread %i", self->shouldShowMessage);
     dispatch_semaphore_signal(semaphore);
     return nil;
 }
@@ -109,7 +109,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
         if(messageObj) {
-            [self emitEventWithName:@"onDismiss"  body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}];
+            [self emitEventWithName:@"onDismiss"  body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @"true" : @"false"}];
         }
 }
 
@@ -117,7 +117,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
     if(messageObj) {
-        [self emitEventWithName:@"onShow" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}];
+        [self emitEventWithName:@"onShow" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @"true" : @"false"}];
     }
 }
 
@@ -125,17 +125,20 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
     if(messageObj) {
-        [self emitEventWithName:@"shouldShowMessage" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}];
+        NSLog(@">>>> shouldShowMessageWithMessage Message id: %@", messageObj.id);
+        [cachedMessages setObject:messageObj forKey:messageObj.id];
+        [self emitEventWithName:@"shouldShowMessage" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @"true" : @"false"}];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     }
-    return shouldShowMessage;
+    NSLog(@">>>> From shouldShowMessageWithMessage returning %i ", self->shouldShowMessage);
+    return self->shouldShowMessage;
 }
 
 - (void) urlLoaded:(NSURL *)url byMessage:(id<AEPShowable>)message {
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
     if(messageObj){
-        [self emitEventWithName:@"urlLoaded" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @true : @false}];
+        [self emitEventWithName:@"urlLoaded" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @"true" : @"false"}];
     }
  }
 
@@ -151,7 +154,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     hasListeners = false;
 }
 
-- (void) emitEventWithName: (NSString *) name body: (NSDictionary *) dictionary {
+- (void) emitEventWithName: (NSString *) name body: (NSDictionary<NSString*, NSString*> *) dictionary {
     if(hasListeners){
         [self sendEventWithName:name body:dictionary];
     }

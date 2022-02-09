@@ -26,7 +26,7 @@ export default StyleSheet.create({
       margin: 10,
     },
     textinput: {
-      fontSize: 14,
+      fontSize: 18,
       margin: 10,      
     }
   });
