@@ -62,9 +62,9 @@ export default ({ navigation }) => {
                 if(message){
                     console.log(">>>> shouldShowMessage. caching the message.");
                     cachedMessage = message;
-                }
-                
-                return true;
+                    Messaging.saveMessage(message);
+                }                
+                return false;
             },
 
             urlLoaded(url: string) {

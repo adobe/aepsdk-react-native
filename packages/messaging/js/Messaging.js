@@ -25,6 +25,7 @@ var eventListenerShow;
 var eventListenerDismiss;
 var eventListenerShouldShow;
 var eventListenerUrlLoaded;
+var savedMessageId: ?string = null;
 
 module.exports = {
   /**
@@ -68,7 +69,8 @@ module.exports = {
         console.log(">>>> shouldShowMessage3");
         var shouldShowMessage: boolean = messagingDelegate.shouldShowMessage(message);
         console.log(">>>> shouldShowMessage4");
-        RCTAEPMessaging.shouldShowMessage(shouldShowMessage);
+        RCTAEPMessaging.shouldShowMessage(shouldShowMessage, savedMessageId ? true : false);
+        savedMessageId = null;
       }
     });
 
@@ -86,8 +88,8 @@ module.exports = {
     RCTAEPMessaging.show(id);
   },
 
-  dismiss(id: string) {
-    RCTAEPMessaging.dismiss(id);
+  dismiss(id: string, suppressAutoTrack: boolean) {
+    RCTAEPMessaging.dismiss(id, suppressAutoTrack);
   }, 
 
   track(id: string, interaction: ?string, eventType: number) {
@@ -97,6 +99,10 @@ module.exports = {
   handleJavascriptMessage(id: string, name: string): Promise<?any> {
     return Promise.resolve(RCTAEPMessaging.handleJavascriptMessage(id, name));
   },  
+
+  saveMessage(message: Message) {
+    savedMessageId = message.id;
+  },
 
   clearMessage(id: string) {
     RCTAEPMessaging.clearMessage(id);

@@ -360,8 +360,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
-  - AEPCore (from `https://github.com/adobe/aepsdk-core-ios.git`, tag `3.4.2`)
-  - AEPMessaging (from `https://github.com/sbenedicadb/aepsdk-messaging-ios.git`, branch `staging`)
+  - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, branch `staging`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -408,6 +407,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AEPAssurance
+    - AEPCore
     - AEPEdge
     - AEPEdgeConsent
     - AEPEdgeIdentity
@@ -420,12 +420,9 @@ SPEC REPOS:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
-  AEPCore:
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-    :tag: 3.4.2
   AEPMessaging:
     :branch: staging
-    :git: https://github.com/sbenedicadb/aepsdk-messaging-ios.git
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -508,12 +505,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 CHECKOUT OPTIONS:
-  AEPCore:
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-    :tag: 3.4.2
   AEPMessaging:
-    :commit: abadc8f5c27a92d2f9af110dccd6b1522175c6ff
-    :git: https://github.com/sbenedicadb/aepsdk-messaging-ios.git
+    :commit: 03547e28b23bbfb9a467169b74fcfe34b13733af
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
 
 SPEC CHECKSUMS:
   AEPAssurance: 18068627111e366a851dc2166239f22b665101bd
@@ -570,6 +564,6 @@ SPEC CHECKSUMS:
   RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 3192572bedc2118d168cc7cdb750e2deb43042c2
+PODFILE CHECKSUM: 5a41519bfb44f19c8055ecbec06a2af360867333
 
 COCOAPODS: 1.11.2

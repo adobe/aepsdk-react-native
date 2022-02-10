@@ -18,6 +18,7 @@
     dispatch_semaphore_t semaphore;
     bool shouldShowMessage;
     bool hasListeners;
+    bool shouldSaveMessage;
 }
 
 - (instancetype) init {
@@ -26,6 +27,7 @@
     semaphore = dispatch_semaphore_create(0);
     hasListeners = false;
     shouldShowMessage = true;
+    shouldSaveMessage = false;
     return self;
 }
 
@@ -50,12 +52,17 @@ RCT_EXPORT_METHOD(setMessagingDelegate) {
 
 RCT_EXPORT_METHOD(show: (NSString *) messageId) {
     AEPMessage * message = [cachedMessages objectForKey:messageId];
-    [message show];
+    if(message){
+        [message show];
+    }
 }
 
-RCT_EXPORT_METHOD(dismiss: (NSString *) messageId) {
+RCT_EXPORT_METHOD(dismiss: (NSString *) messageId suppressAutoTrack: (BOOL) suppressAutoTrack) {
     AEPMessage * message = [cachedMessages objectForKey:messageId];
-    [message dismiss];
+    if(message){
+        [message dismissSuppressingAutoTrack:suppressAutoTrack];
+    }
+    
 }
 
 RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) interaction eventType: (int) eventTypeValue) {
@@ -97,12 +104,15 @@ RCT_EXPORT_METHOD(clearMessage: (NSString *) messageId) {
     [cachedMessages removeObjectForKey:messageId];
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessage) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessage shouldSaveMessage: (BOOL) saveMessage) {
     self->shouldShowMessage = shouldShowMessage;
+    self->shouldSaveMessage = saveMessage;
     NSLog(@">>>> IN JS thread %i", self->shouldShowMessage);
     dispatch_semaphore_signal(semaphore);
     return nil;
 }
+
+//RCT_EXPORT_METHOD(saveMessage)
 
 //MARK: - AEPMessagingDelegate functions.
 - (void) onDismissWithMessage:(id<AEPShowable> _Nonnull) message {
@@ -126,9 +136,11 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
     if(messageObj) {
         NSLog(@">>>> shouldShowMessageWithMessage Message id: %@", messageObj.id);
-        [cachedMessages setObject:messageObj forKey:messageObj.id];
         [self emitEventWithName:@"shouldShowMessage" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @"true" : @"false"}];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        if(self->shouldSaveMessage){
+            [cachedMessages setObject:messageObj forKey:messageObj.id];
+        }
     }
     NSLog(@">>>> From shouldShowMessageWithMessage returning %i ", self->shouldShowMessage);
     return self->shouldShowMessage;
