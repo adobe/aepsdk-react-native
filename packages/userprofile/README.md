@@ -28,6 +28,60 @@ npm install @adobe/react-native-aepuserprofile
 
 Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
+**Initialization Example**
+
+iOS
+```objc
+// AppDelegate.h
+@import AEPCore;
+@import AEPUserProfile;
+...
+@implementation AppDelegate
+
+// AppDelegate.m
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+    // register UserProfile extension
+    [AEPMobileCore registerExtensions:@[AEPMobileUserProfile.class] completion:^{
+        [AEPMobileCore configureWithAppId:@"yourAppID"];  
+    ...   
+   }]; 
+   return YES;   
+ } 
+
+@end
+```
+
+Android
+```java
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.UserProfile;
+  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.configureWithAppID("yourAppID");
+
+    UserProfile.registerExtension();// register UserProfile extension
+
+    MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+        
+        }});
+    }
+}     
+```
+
 #### Importing the extension:
 
 In your React Native application, import the UserProfile extension as follows:
