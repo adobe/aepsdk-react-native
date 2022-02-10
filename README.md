@@ -86,7 +86,7 @@ cd ios && pod update && cd ..
 ```
 ## Initializing
 
-Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to `import` and `register` the Mobile Core, Services, Signal, Lifecycle, Edge Network, EdgeIdentity and EdgeConsent extensions. For documentation on how to initialize each extension can be found in ./packages/{extension}/README.md
+Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to `import` and `register` the Mobile Core, Signal, Lifecycle, Edge Network, EdgeIdentity and EdgeConsent extensions. For documentation on how to initialize each extension can be found in ./packages/{extension}/README.md
 
 ###### **iOS**
 ```objective-c
