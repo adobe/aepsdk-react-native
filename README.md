@@ -99,7 +99,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPEdgeConsent;
-//@import AEPMessaging; //enable this extension for using messaging functionalities
+//@import AEPMessaging; //enable this extension if you installed @adobe/react-native-aepmessaging
 //@import AEPUserProfile; //enable this extension for store user profile attributes
 //@import AEPAssurance;  //enable this extension for inspecting and validating the app
 //@import AEPIdentity; //enable for Adobe solution Identity extension 
@@ -118,7 +118,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
       AEPMobileEdge.class,
       AEPMobileEdgeIdentity.class,
       AEPMobileEdgeConsent.class,
-      //AEPMobileMessaging.class, //enable this extension for using messaging functionalities
+      //AEPMobileMessaging.class, //enable this extension if you installed @adobe/react-native-aepmessaging
       //AEPMobileUserProfile.class, //enable this extension for store user profile attributes
       //AEPMobileAssurance.class, //enable this extension for inspecting and validating the app
       //AEPMobileIdentity.class, //enable for Adobe solution Identity extension 
@@ -148,7 +148,7 @@ import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.consent.Consent;
-//import com.adobe.marketing.mobile.Messaging; //enable this extension for using messaging functionalities
+//import com.adobe.marketing.mobile.Messaging; //enable this extension if you installed @adobe/react-native-aepmessaging
 //import com.adobe.marketing.mobile.UserProfile; //enable this extension for store user profile attributes
 //import com.adobe.marketing.mobile.Assurance; //enable this extension for inspecting and validating the app
 ...
@@ -170,7 +170,7 @@ public class MainApplication extends Application implements ReactApplication {
           Edge.registerExtension();
           com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Consent.registerExtension();
-          //Messaging.registerExtension(); //enable this extension for using messaging functionalities
+          //Messaging.registerExtension(); //enable this extension if you installed @adobe/react-native-aepmessaging
           //UserProfile.registerExtension(); //enable this extension for store user profile attributes
           //Assurance.registerExtension(); //enable this extension for inspecting and validating the app
           //com.adobe.marketing.mobile.Identity.registerExtension(); //enable for Adobe solution Identity extension 
