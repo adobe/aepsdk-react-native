@@ -53,16 +53,14 @@ Include the react native packages in the dependencies of an app's package.json.
 
 The following code snippet shows for `core` and `edge` libraries as an example in package.json:
 
-```json
+```bash
 ...
-
 "dependencies": {
     "react-native": "0.64.2",
     "@adobe/react-native-aepcore": "^1.0.0",
     "@adobe/react-native-aepedge": "^1.0.0",
-    ...
+...
 },
-
 ```
 Inside of the app directory, run
 
