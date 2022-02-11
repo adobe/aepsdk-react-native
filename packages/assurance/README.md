@@ -1,45 +1,41 @@
 
-# React Native AEP Assurance Extension
+# React Native Adobe Experience Platform Assurance Extension
 
 [![npm version](https://img.shields.io/npm/v/@adobe/react-native-aepassurance/alpha?color=green&label=npm%20package)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepassurance)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1)
 
-`@adobe/react-native-aepassurance` is a wrapper around the iOS and Android [AEPAssurance SDK](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-experience-platform-assurance) to allow for integration with React Native applications. Functionality to start Assurance session is provided through JavaScript documented below.
+`@adobe/react-native-aepassurance` is a wrapper around the iOS and Android [Adobe Experience Platform Assurance](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-experience-platform-assurance) to allow for integration with React Native applications. Functionality to start Assurance session is provided through JavaScript documented below.
+
+## Prerequisites
+
+The Adobe Experience Platform Assurance extension has the following peer dependency, which must be installed prior to installing the identity extension:
+- [Core](../core/README.md)
+
 
 ## Installation
 
-You need to install the SDK with [npm](https://www.npmjs.com/) and configure the native Android/iOS project in your react native project. Before installing the Assurance extension it is recommended to begin by installing the [Core extension](../core/README.md).
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
-### Install npm package
-
-> Requires `@adobe/react-native-aepcore` to be installed.
-
-Install the `@adobe/react-native-aepassurance` alpha package:
+Install the `@adobe/react-native-aepassurance` package:
 
 ```bash
 cd MyReactApp
-npm install @adobe/react-native-aepassurance@3.0.0-alpha.1
+npm install @adobe/react-native-aepassurance
 ```
 
-For iOS development, after installing the plugins from npm, download the pod dependencies by running the following command:
-`cd ios && pod install && cd ..`
-To update native dependencies to latest available versions, run the following command:
-`cd ios && pod update && cd ..`
-
-### Link
-
-[CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) links the module while building the app.
 
 ## Usage
 
 ### [Assurance](https://aep-sdks.gitbook.io/docs/beta/project-griffon/using-project-griffon)
 
 
-##### Registering the extension with AEPCore:
+### Initializing:
 
-Initialize the SDK via native code inside your AppDelegate and MainApplication in iOS and Android respectively.
+Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
-###### **iOS**
+Example:
+
+iOS
 ```objective-c
 @import AEPAssurance;
 
@@ -63,8 +59,7 @@ To connect to a griffon session by scanning the QR code. Follow [Apple developer
 }
 ```
 
-
-###### **Android:**
+Android
 ```java
 import com.adobe.marketing.mobile.Assurance;
 
@@ -76,7 +71,6 @@ public class MainApplication extends Application implements ReactApplication {
 
     MobileCore.setApplication(this);
     try {
-        Identity.registerExtension();
         Lifecycle.registerExtension();
         Assurance.registerExtension();
         MobileCore.configureWithAppID("your-app-ID");
@@ -93,6 +87,6 @@ To connect to a griffon session by scanning the QR code. Follow the [Android doc
 ##### Start Assurance session:
 
 ```javascript
-import {AEPAssurance} from '@adobe/react-native-aepassurance';
-AEPAssurance.startSession("{your-assurance-session-url}");
+import {Assurance} from '@adobe/react-native-aepassurance';
+Assurance.startSession("{your-assurance-session-url}");
 ```

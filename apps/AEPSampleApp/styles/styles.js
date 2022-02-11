@@ -25,6 +25,18 @@ export default StyleSheet.create({
       textAlign: 'center',
       margin: 10,
     },
+    text: {
+      fontSize: 15,
+      textAlign: 'center',
+      margin: 5,
+    }, 
+    breakLine: {
+      borderWidth: 0.5,
+      borderColor: 'black',
+      margin: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
     textinput: {
       fontSize: 18,
       margin: 10,      

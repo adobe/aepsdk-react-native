@@ -15,25 +15,27 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-const RCTAEPEdgeIdentity = require('react-native').NativeModules.AEPEdgeIdentity;
+const RCTAEPAssurance = require('react-native').NativeModules.AEPAssurance;
 
 module.exports = {
   /**
-   * Returns the version of the AEPEdgeIdentity extension
+   * Returns the version of the Assurance extension.
    * @param  {string} Promise a promise that resolves with the extension verison
    */
   extensionVersion(): Promise<string> {
-    return Promise.resolve(RCTAEPEdgeIdentity.extensionVersion());
+    return Promise.resolve(RCTAEPAssurance.extensionVersion());
   },
 
-   /**
-   * @brief Returns the Experience Cloud ID.
+  /**
+   * Starts an Assurance session.
+   * Calling this method when a session has already been started results in a no-op, otherwise it attempts
+   * to initiate a new Assurance session.
+   * A call to this API with an non assurance session url will be ignored
    *
-   * Returns the Experience Cloud ID. An empty string is returned if the Experience Cloud ID was previously cleared.
-   *
-   * @param promise method which will be invoked once the Experience Cloud ID is available.
+   * @param url a valid Assurance URL string to start a session
    */
-  getExperienceCloudId(): Promise<?string> {
-    return RCTAEPEdgeIdentity.getExperienceCloudId();
+  startSession(url: string) {
+    RCTAEPAssurance.startSession(url);
   },
+
 };

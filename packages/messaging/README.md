@@ -88,8 +88,6 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
-
     try {
       Edge.registerExtension();
       Identity.registerExtension();

@@ -6,10 +6,10 @@ import ProfileView from './extensions/ProfileView';
 import MessagingView from './extensions/MessagingView';
 import CoreView from './extensions/CoreView';
 import IdentityView from './extensions/IdentityView';
-import EdgeIdentity from './extensions/EdgeIdentity';
+import EdgeIdentity from './extensions/EdgeIdentityView';
 import ConsentView from './extensions/ConsentView';
-import Edge from './extensions/Edge';
-import Assurance from './extensions/Assurance';
+import EdgeView from './extensions/EdgeView';
+import AssuranceView from './extensions/AssuranceView';
 
 function HomeScreen({ navigation }) {
   return (
@@ -28,13 +28,13 @@ function HomeScreen({ navigation }) {
       />
       <Button
         onPress={() => navigation.navigate('MessagingView')}
-        title="Messaging"/>
+        title="Messaging" />
       <Button
-        onPress={() => navigation.navigate('Edge')}
+        onPress={() => navigation.navigate('EdgeView')}
         title="Edge"
       />
       <Button
-        onPress={() => navigation.navigate('EdgeIdentity')}
+        onPress={() => navigation.navigate('EdgeIdentityView')}
         title="EdgeIdentity"
       />
       <Button
@@ -42,7 +42,7 @@ function HomeScreen({ navigation }) {
         title="Consent"
       />
       <Button
-        onPress={() => navigation.navigate('Assurance')}
+        onPress={() => navigation.navigate('AssuranceView')}
         title="Assurance"
       />
     </View>
@@ -59,12 +59,12 @@ export default function App() {
         <Drawer.Screen name="CoreView" component={CoreView} />
         <Drawer.Screen name="ProfileView" component={ProfileView} />
         <Drawer.Screen name="IdentityView" component={IdentityView} />
-        <Drawer.Screen name="MessagingView" component={MessagingView}/>        
-        <Drawer.Screen name="Edge" component={Edge} />
-        <Drawer.Screen name="EdgeIdentity" component={EdgeIdentity} />
+        <Drawer.Screen name="MessagingView" component={MessagingView} />
+        <Drawer.Screen name="EdgeView" component={EdgeView} />
+        <Drawer.Screen name="EdgeIdentityView" component={EdgeIdentityView} />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
-        <Drawer.Screen name="Assurance" component={Assurance} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+        <Drawer.Screen name="AssuranceView" component={AssuranceView} />
+      </Drawer.Navigator >
+    </NavigationContainer >
   );
 }

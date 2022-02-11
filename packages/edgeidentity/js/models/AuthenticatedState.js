@@ -9,24 +9,30 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
 @format
 */
 
-import { NativeModules } from 'react-native';
-import { AEPAssurance } from '../';
+'use strict';
 
-describe('AEPAssurance', () => {
+const AUTHENTICATED = "authenticated";
+const LOGGED_OUT = "loggedOut";
+const AMBIGUOUS = "ambiguous";
 
-  it('extensionVersion is called', async () => {
-    expect(AEPAssurance.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPAssurance, 'extensionVersion');
-    await AEPAssurance.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
+class AuthenticatedState {
 
-  it('startSession is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPAssurance, 'startSession');
-    await AEPAssurance.startSession('');
-    expect(spy).toHaveBeenCalled();
-  });
-});
+  static get AUTHENTICATED() {
+    return AUTHENTICATED;
+  }
+
+  static get LOGGED_OUT() {
+    return LOGGED_OUT;
+  }
+
+  static get AMBIGUOUS() {
+    return AMBIGUOUS;
+  }
+
+}
+
+module.exports = AuthenticatedState;

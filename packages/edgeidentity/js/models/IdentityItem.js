@@ -15,9 +15,18 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-module.exports = {
-  // Native modules
-  get Assurance() {
-    return require('./Assurance');
-  },
-};
+import AuthenticatedState from './AuthenticatedState';
+
+class IdentityItem {
+  id: string;
+  authenticatedState: AuthenticatedState;
+  primary: boolean;
+
+  constructor(id: string, authenticatedState: AuthenticatedState = AuthenticatedState.AMBIGUOUS, primary: boolean = false) {
+  	this.id = id;
+    this.authenticatedState = authenticatedState;
+    this.primary = primary
+  }
+}
+
+module.exports = IdentityItem;

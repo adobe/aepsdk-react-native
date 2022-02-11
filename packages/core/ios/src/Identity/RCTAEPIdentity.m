@@ -137,12 +137,12 @@ static NSString* stringFromAuthState(AEPMobileVisitorAuthState authState) {
      }
 
      if (error && error.code != AEPErrorNone) {
-         if (error.code == AEPErrorCallbackTimeout) {
-         reject(EXTENSION_NAME, errorTimeOut, error);
-         }
-     } else {
-         reject(EXTENSION_NAME, errorUnexpected, error);
-     }
+        if (error.code == AEPErrorCallbackTimeout) {
+            reject(EXTENSION_NAME, errorTimeOut, error);
+        }else {
+            reject(EXTENSION_NAME, errorUnexpected, error);
+        }
+     } 
 
  }
 

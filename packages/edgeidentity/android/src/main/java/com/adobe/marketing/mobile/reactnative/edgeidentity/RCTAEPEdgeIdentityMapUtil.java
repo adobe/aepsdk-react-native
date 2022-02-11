@@ -3,13 +3,12 @@ Copyright 2021 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software distributed under
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-package com.adobe.marketing.mobile.reactnative.edge;
+package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -21,7 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-class RCTAEPEdgeMapUtil {
+class RCTAEPEdgeIdentityMapUtil {
 
     static Map<String, Object> toMap(ReadableMap readableMap) {
         if (readableMap == null) {
@@ -49,10 +48,10 @@ class RCTAEPEdgeMapUtil {
                     map.put(key, readableMap.getString(key));
                     break;
                 case Map:
-                    map.put(key, RCTAEPEdgeMapUtil.toMap(readableMap.getMap(key)));
+                    map.put(key, RCTAEPEdgeIdentityMapUtil.toMap(readableMap.getMap(key)));
                     break;
                 case Array:
-                    map.put(key, RCTAEPEdgeArrayUtil.toObjectArray(readableMap.getArray(key)));
+                    map.put(key, RCTAEPEdgeIdentityArrayUtil.toObjectArray(readableMap.getArray(key)));
                     break;
             }
         }
@@ -83,9 +82,9 @@ class RCTAEPEdgeMapUtil {
             } else if (value instanceof String) {
                 writableMap.putString((String) pair.getKey(), (String) value);
             } else if (value instanceof Map) {
-                writableMap.putMap((String) pair.getKey(), RCTAEPEdgeMapUtil.toWritableMap((Map<String, Object>) value));
+                writableMap.putMap((String) pair.getKey(), RCTAEPEdgeIdentityMapUtil.toWritableMap((Map<String, Object>) value));
             } else if (value.getClass() != null && value.getClass().isArray()) {
-                writableMap.putArray((String) pair.getKey(), RCTAEPEdgeArrayUtil.toWritableArray((Object[]) value));
+                writableMap.putArray((String) pair.getKey(), RCTAEPEdgeIdentityArrayUtil.toWritableArray((Object[]) value));
             }
 
             iterator.remove();

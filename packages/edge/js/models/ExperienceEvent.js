@@ -15,9 +15,16 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-module.exports = {
-  // Native modules
-  get Assurance() {
-    return require('./Assurance');
-  },
-};
+class ExperienceEvent {
+  xdmData: {[string]: any};
+  data: {[string]: any};
+  datasetIdentifier: string;
+ 
+  constructor(xdmData: {[string]: any}, data?: {[string]: any}, datasetIdentifier?: string) {
+  	this.xdmData = xdmData;
+    this.data = data;
+    this.datasetIdentifier = datasetIdentifier;
+  }
+}
+
+module.exports = ExperienceEvent;
