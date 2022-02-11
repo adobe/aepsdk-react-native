@@ -45,6 +45,7 @@ RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(R
 }
 
 RCT_EXPORT_METHOD(refreshInAppMessages) {
+    [AEPLog traceWithLabel:TAG message:@"refreshInAppMessages is called."];
     [AEPMobileMessaging refreshInAppMessages];
 }
 
@@ -62,7 +63,7 @@ RCT_EXPORT_METHOD(show: (NSString *) messageId) {
 }
 
 RCT_EXPORT_METHOD(dismiss: (NSString *) messageId suppressAutoTrack: (BOOL) suppressAutoTrack) {
-    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"dismiss is called with message id: %@", messageId]];
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"dismiss is called with message id: %@ and suppressAutoTrack: %i", messageId, suppressAutoTrack]];
     AEPMessage * message = [cachedMessages objectForKey:messageId];
     if(message){
         [message dismissSuppressingAutoTrack:suppressAutoTrack];
@@ -71,7 +72,7 @@ RCT_EXPORT_METHOD(dismiss: (NSString *) messageId suppressAutoTrack: (BOOL) supp
 }
 
 RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) interaction eventType: (int) eventTypeValue) {
-    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"track is called with message id: %@", messageId]];
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"track is called with message id: %@, withInteraction: %@ and eventType: %i", messageId, interaction, eventTypeValue]];
     AEPMessage * message = [cachedMessages objectForKey:messageId];
     AEPMessagingEdgeEventType messagingEdgeEventType = -1;
     
@@ -96,7 +97,7 @@ RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) in
 
 RCT_EXPORT_METHOD(handleJavascriptMessage: (NSString *) messageId
                   messageName: (NSString *) name resolver: (RCTPromiseResolveBlock) resolve rejector:(RCTPromiseRejectBlock) reject) {
-    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"handleJavascriptMessage is called with message id: %@", messageId]];
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"handleJavascriptMessage is called with message id: %@ and messageName: %@", messageId, name]];
     AEPMessage * message = [cachedMessages objectForKey: messageId];
     [message handleJavascriptMessage:name withHandler:^(id result) {
         if(result) {
@@ -113,6 +114,7 @@ RCT_EXPORT_METHOD(clearMessage: (NSString *) messageId) {
 }
 
 RCT_EXPORT_METHOD(setAutoTrack: (NSString *) messageId autoTrack: (BOOL) autoTrack) {
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"setAutoTrack called for messageId: %@ and autoTrack value: %i", messageId, autoTrack]];
     AEPMessage * messageObj = [cachedMessages objectForKey:messageId];
     if(messageObj) {
         messageObj.autoTrack = autoTrack;

@@ -82,7 +82,8 @@ export class Message {
 
     /**
     * Clears the reference to the Message object. 
-    * This function must be called if Mesage was saved by calling "Messaging.saveMessage" but no longer needed to prevent memory leaks.
+    * This function must be called if Mesage was saved by calling "Messaging.saveMessage" but no longer needed. 
+    * Failure to call this function leads to memory leaks.
      */
     clearMessage = () => {
         RCTAEPMessaging.clearMessage(this.id);

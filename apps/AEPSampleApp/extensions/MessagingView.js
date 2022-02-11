@@ -32,7 +32,7 @@ export default ({ navigation }) => {
     const [eventName, setEventName] = useState('');
     const [eventType, setEventType] = useState('');
     const [eventSource, setEventSource] = useState('');    
-    const [action, setAction] = useState('testFullscreen');
+    const [action, setAction] = useState('');
 
     const messagingExtensionVersion = () => Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: Messaging version: " + version));
 
@@ -62,13 +62,14 @@ export default ({ navigation }) => {
                 //Handle onshow callback of MessageDelegate
             },
 
-            onDismiss(message: Message) {
+            onDismiss(message: Message) {                
                 //Handle onDismiss callback of MessageDelegate
             },
 
             shouldShowMessage(message: Message) {                  
                 cachedMessage = message;
-                return true; //Return true if want to show the Message else return false
+                Messaging.saveMessage(message);
+                return false; //Return true if want to show the Message else return false
             },
 
             urlLoaded(url: string, message: Message) {}
@@ -81,7 +82,8 @@ export default ({ navigation }) => {
     };
 
     const dismissMessage = () => {                
-        cachedMessage.dismiss();
+        cachedMessage.dismiss();                
+        clearMessage();        
     };
 
     const clearMessage = () => {                
