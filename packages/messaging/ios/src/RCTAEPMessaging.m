@@ -167,7 +167,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
     if(messageObj){
-        [self emitEventWithName:@"urlLoaded" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @"true" : @"false"}];
+        [self emitEventWithName:@"urlLoaded" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @"true" : @"false", @"url":url.absoluteString}];
     }
  }
 

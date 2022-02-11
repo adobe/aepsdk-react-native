@@ -71,7 +71,7 @@ export default ({ navigation }) => {
                 return true; //Return true if want to show the Message else return false
             },
 
-            urlLoaded(url: string) {}
+            urlLoaded(url: string, message: Message) {}
         };
         Messaging.setMessagingDelegate(messagingDelegate);
     };

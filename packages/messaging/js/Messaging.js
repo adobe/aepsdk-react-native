@@ -78,7 +78,8 @@ module.exports = {
     eventListenerUrlLoaded = eventEmitter.addListener('urlLoaded', (event) => {      
       if(messagingDelegate){
         const url = event.url;
-        messagingDelegate.urlLoaded(url);
+        const message = new Message(event.id, event.autoTrack === "true" ? true: false);        
+        messagingDelegate.urlLoaded(url, message);
       }
     });    
   },
