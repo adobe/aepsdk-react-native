@@ -22,15 +22,20 @@ import styles from '../styles/styles';
 const MobileCore = AEPCore.MobileCore;
 const Event = AEPCore.Event;
 
+var i = 1;
+
 export default ({ navigation }) => {
 
     var cachedMessage: Message;
-    const [keys, setKeys] = useState('action;');
-    const [values, setValues] = useState('testFullscreen;');
-    const [eventName, setEventName] = useState('AnalyticsTrack');
-    const [eventType, setEventType] = useState('com.adobe.eventType.generic.track');
-    const [eventSource, setEventSource] = useState('com.adobe.eventSource.requestContent');    
+    const [keys, setKeys] = useState('');
+    const [values, setValues] = useState('');
+    const [eventName, setEventName] = useState('');
+    const [eventType, setEventType] = useState('');
+    const [eventSource, setEventSource] = useState('');    
+    const [action, setAction] = useState('testFullscreen');
+
     const messagingExtensionVersion = () => Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: Messaging version: " + version));
+
     const sentTrackingEvent = () => {
 
         const keysArr = keys.split(";").map(text => text.trim());
@@ -46,58 +51,41 @@ export default ({ navigation }) => {
         MobileCore.dispatchEvent(event);        
     }; 
 
+    const trackAction = () => {
+        MobileCore.trackAction(action, null);
+    };
+
     const setMessagingDelegate = () => {
         const messagingDelegate = {
 
             onShow(message: Message) {
-                console.log(">>>> Onshow called");
+                //Handle onshow callback of MessageDelegate
             },
 
             onDismiss(message: Message) {
-                console.log(">>>> Ondismiss called");
+                //Handle onDismiss callback of MessageDelegate
             },
 
-            shouldShowMessage(message: Message) {
-                console.log(">>>> shouldShowMessage called");
-                if(message){
-                    console.log(">>>> shouldShowMessage. caching the message.");
-                    cachedMessage = message;
-                    Messaging.saveMessage(message);
-                }                
-                return false;
+            shouldShowMessage(message: Message) {                  
+                cachedMessage = message;
+                return true; //Return true if want to show the Message else return false
             },
 
-            urlLoaded(url: string) {
-                console.log(">>>> urlLoaded");
-            }
+            urlLoaded(url: string) {}
         };
         Messaging.setMessagingDelegate(messagingDelegate);
     };
 
-    const showMessage = () => {
-        console.log(">>>> showMessage1");
-        if(cachedMessage){
-            console.log(">>>> showMessage2");
-            cachedMessage.show();
-        } else {
-            console.log(">>>> showMessage. Cached message is null");
-        }        
+    const showMessage = () => {                
+        cachedMessage.show();         
     };
 
     const dismissMessage = () => {                
-        console.log(">>>> dismissMessage1");
-        if(cachedMessage){
-            console.log(">>>> dismissMessage2");
-            cachedMessage.dismiss();
-        }        
+        cachedMessage.dismiss();
     };
 
-    const clearMessage = () => {        
-        console.log(">>>> clearMessage1");
-        if(cachedMessage){
-            console.log(">>>> clearMessage2");
-            cachedMessage.clearMessage();
-        }
+    const clearMessage = () => {                
+        cachedMessage.clearMessage();        
     };    
     
     return (<View style={styles.container}>
@@ -110,13 +98,16 @@ export default ({ navigation }) => {
         <Button title="show message()" onPress={showMessage}/>
         <Button title="dismiss message()" onPress={dismissMessage}/>
         <Button title="clear message()" onPress={clearMessage}/>
-        <Text style={{...styles.welcome, marginTop: 30}}>Event Data</Text>                
+        <Text style={{...styles.welcome, marginTop: 20}}>Event Data</Text>                
         <TextInput style={styles.textinput} placeholder="Event name" placeholderTextColor="#8e8e8e" value={eventName} onChangeText={text => setEventName(text)}/>        
         <TextInput style={styles.textinput} placeholder="Event type" placeholderTextColor="#8e8e8e" value={eventType} onChangeText={text => setEventType(text)}/>        
         <TextInput style={styles.textinput} placeholder="Event source" placeholderTextColor="#8e8e8e" value={eventSource} onChangeText={text => setEventSource(text)}/>        
         <TextInput style={styles.textinput} placeholder="Colon(;) separated Event data keys" placeholderTextColor="#8e8e8e" value={keys} onChangeText={text => setKeys(text)}/>        
         <TextInput style={styles.textinput} placeholder="Colon(;) separated Event data values" placeholderTextColor="#8e8e8e" value={values} onChangeText={text => setValues(text)}/>        
         <Button title="Sent Event()" onPress={sentTrackingEvent}/>
+        <Text style={{...styles.welcome, marginTop: 20}}>Track Action</Text>                
+        <TextInput style={styles.textinput} placeholder="Action name" placeholderTextColor="#8e8e8e" value={action} onChangeText={text => setAction(text)}/>        
+        <Button title="Track Action()" onPress={trackAction}/>
         </ScrollView>
     </View>)
 };

@@ -14,7 +14,8 @@ governing permissions and limitations under the License.
 */
 
 'use strict';
-
+import { NativeModules } from 'react-native';
+const RCTAEPMessaging = NativeModules.AEPMessaging;
 const MessagingEdgeEventType = require("./MessagingEdgeEventType");
 const Messaging = require("../Messaging");
 
@@ -32,24 +33,58 @@ export class Message {
         this.clearMessage.bind(this);
     }
 
-    show = () => {
-        console.log(`Inside the Message:: id is: ${this.id}`);
-        Messaging.show(this.id);
-    }
+    /** 
+    * Update the value of property "autoTrack"
+    * This funtion works only for the Message objects that were saved by calling "Messaging.saveMessage"
+    * @param {boolean} autoTrack: New value of property autoTrack.
+     */
+    setAutoTrack = (autoTrack: boolean) => {
+        this.autoTrack = autoTrack;
+        RCTAEPMessaging.setAutoTrack(this.id, autoTrack);
+    };
 
-    dismiss = (suppressAutoTrack: boolean = false) => {
-        Messaging.dismiss(this.id, suppressAutoTrack);
-    }
+    /**
+    * Signals to the UIServices that the message should be shown.
+    * If autoTrack is true, calling this method will result in an "inapp.display" Edge Event being dispatched.
+    */
+    show = () => {        
+        RCTAEPMessaging.show(this.id);
+    };
 
+    /**
+    * Signals to the UIServices that the message should be dismissed.
+    * If `autoTrack` is true, calling this method will result in an "inapp.dismiss" Edge Event being dispatched.
+    * @param {?boolean} suppressAutoTrack: if set to true, the inapp.dismiss Edge Event will not be sent regardless
+    * of the autoTrack setting.
+    */
+    dismiss = (suppressAutoTrack: ?boolean = false) => {
+        RCTAEPMessaging.dismiss(this.id, suppressAutoTrack);
+    };
+
+    /**
+    * Generates an Edge Event for the provided interaction and eventType.        
+    * @param {string?} interaction: a custom String value to be recorded in the interaction
+    * @param {MessagingEdgeEventType} eventType: the MessagingEdgeEventType to be used for the ensuing Edge Event
+     */
     track = (interaction: ?string, eventType: MessagingEdgeEventType) => {
-        Messaging.track(this.id, interaction, eventType.value);
-    }
+        RCTAEPMessaging.track(this.id, interaction, eventType.value);
+    };
 
+    /**
+    * Adds a handler for Javascript messages sent from the message's webview.    
+    * The parameter passed to `handler` will contain the body of the message passed from the webview's Javascript.        
+    * @param {string} name: the name of the message that should be handled by `handler`
+    * @return {Promise<any?>}: the Promise to be resolved with the body of the message passed by the Javascript message in the WebView
+    */
     handleJavascriptMessage = (name: string) : Promise<?any> => {
-        return Messaging.handleJavascriptMessage(this.id, name);
-    }
+        return Promise.resolve(RCTAEPMessaging.handleJavascriptMessage(this.id, name));
+    };
 
+    /**
+    * Clears the reference to the Message object. 
+    * This function must be called if Mesage was saved by calling "Messaging.saveMessage" but no longer needed to prevent memory leaks.
+     */
     clearMessage = () => {
-        Messaging.clearMessage(this.id);
-    }
+        RCTAEPMessaging.clearMessage(this.id);
+    };    
 }

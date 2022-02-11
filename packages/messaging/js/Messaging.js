@@ -27,55 +27,55 @@ var eventListenerShouldShow;
 var eventListenerUrlLoaded;
 var savedMessageId: ?string = null;
 
+const TAG: string = "JS RCTAEPMessaging";
+
 module.exports = {
   /**
    * Returns the version of the AEPMessaging extension
-   * @param  {string} Promise a promise that resolves with the extension verison
+   * @returns {string} Promise a promise that resolves with the extension verison
    */
-  extensionVersion(): Promise<string> {
+  extensionVersion(): Promise<string> {    
     return Promise.resolve(RCTAEPMessaging.extensionVersion());
   },
 
+  /**
+  * Initiates a network call to retrieve remote In-App Message definitions.
+  */
   refreshInAppMessages() {
     RCTAEPMessaging.refreshInAppMessages();
   },
 
+  /**
+  * Function to set the UI Message delegate to listen the Message lifecycle events.
+  */
   setMessagingDelegate(delegate: MessagingDelegate) {    
     messagingDelegate = delegate;
-    RCTAEPMessaging.setMessagingDelegate();        
-    // @"onShow", @"onDismiss", @"shouldShowMessage",@"urlLoaded"
+    RCTAEPMessaging.setMessagingDelegate();            
     const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
-    eventListenerShow = eventEmitter.addListener('onShow', (event) => {
-      console.log(">>>>> onShow");      
+    eventListenerShow = eventEmitter.addListener('onShow', (event) => {      
       if(messagingDelegate){
         const message = new Message(event.id, event.autoTrack === "true" ? true: false);
         messagingDelegate.onShow(message);
       }  
     });
 
-    eventListenerDismiss = eventEmitter.addListener('onDismiss', (event) => {
-      console.log(">>>>> onDismiss");      
+    eventListenerDismiss = eventEmitter.addListener('onDismiss', (event) => {      
       if(messagingDelegate){
         const message = new Message(event.id, event.autoTrack === "true" ? true: false);
         messagingDelegate.onDismiss(message);
       }
     });
 
-    eventListenerShouldShow = eventEmitter.addListener('shouldShowMessage', (event) => {      
-      console.log(">>>> shouldShowMessage1");
-      if(messagingDelegate){
-        console.log(`>>>> shouldShowMessage2. Message details: event: ${JSON.stringify(event)} id: ${event.id} autotrack: ${event.autoTrack}`);        
-        const message = new Message(event.id, event.autoTrack === "true" ? true: false);
-        console.log(">>>> shouldShowMessage3");
-        var shouldShowMessage: boolean = messagingDelegate.shouldShowMessage(message);
-        console.log(">>>> shouldShowMessage4");
+    eventListenerShouldShow = eventEmitter.addListener('shouldShowMessage', (event) => {            
+      if(messagingDelegate){        
+        const message = new Message(event.id, event.autoTrack === "true" ? true: false);        
+        var shouldShowMessage: boolean = messagingDelegate.shouldShowMessage(message);        
         RCTAEPMessaging.shouldShowMessage(shouldShowMessage, savedMessageId ? true : false);
         savedMessageId = null;
       }
     });
 
-    eventListenerUrlLoaded = eventEmitter.addListener('urlLoaded', (event) => {
-      console.log(">>>>> urlLoaded");      
+    eventListenerUrlLoaded = eventEmitter.addListener('urlLoaded', (event) => {      
       if(messagingDelegate){
         const url = event.url;
         messagingDelegate.urlLoaded(url);
@@ -83,28 +83,13 @@ module.exports = {
     });    
   },
 
-  show(id: string) {
-    console.log(`>>>> show message id: ${id}`);
-    RCTAEPMessaging.show(id);
-  },
-
-  dismiss(id: string, suppressAutoTrack: boolean) {
-    RCTAEPMessaging.dismiss(id, suppressAutoTrack);
-  }, 
-
-  track(id: string, interaction: ?string, eventType: number) {
-    RCTAEPMessaging.track(id, interaction, eventType);
-  },
-
-  handleJavascriptMessage(id: string, name: string): Promise<?any> {
-    return Promise.resolve(RCTAEPMessaging.handleJavascriptMessage(id, name));
-  },  
-
+  /**
+  * Cache the Message object in-memory to use later. 
+  * If there is a requirement to call the Message functions like show, dismiss etc. The Message object should be saved first before calling it's functions.
+  * If the Message is saved using this API then it is responsibility of App to free it after using.
+  * To remove the Message from memory call clearMessage function of Message. Failure to call clearMessage will cause the Memory leak of Message object.
+  */
   saveMessage(message: Message) {
     savedMessageId = message.id;
-  },
-
-  clearMessage(id: string) {
-    RCTAEPMessaging.clearMessage(id);
-  }
+  },  
 };

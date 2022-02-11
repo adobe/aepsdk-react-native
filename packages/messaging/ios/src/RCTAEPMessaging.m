@@ -13,6 +13,8 @@
 @import AEPCore;
 @import AEPServices;
 
+static NSString* const TAG = @"RCTAEPMessaging";
+
 @implementation RCTAEPMessaging {
     NSMutableDictionary<NSString*, AEPMessage*> * cachedMessages;
     dispatch_semaphore_t semaphore;
@@ -47,10 +49,12 @@ RCT_EXPORT_METHOD(refreshInAppMessages) {
 }
 
 RCT_EXPORT_METHOD(setMessagingDelegate) {
+    [AEPLog traceWithLabel:TAG message:@"Messaging Delegate is set."];
     [AEPMobileCore setMessagingDelegate: self];
 }
 
 RCT_EXPORT_METHOD(show: (NSString *) messageId) {
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"show is called with message id: %@", messageId]];
     AEPMessage * message = [cachedMessages objectForKey:messageId];
     if(message){
         [message show];
@@ -58,6 +62,7 @@ RCT_EXPORT_METHOD(show: (NSString *) messageId) {
 }
 
 RCT_EXPORT_METHOD(dismiss: (NSString *) messageId suppressAutoTrack: (BOOL) suppressAutoTrack) {
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"dismiss is called with message id: %@", messageId]];
     AEPMessage * message = [cachedMessages objectForKey:messageId];
     if(message){
         [message dismissSuppressingAutoTrack:suppressAutoTrack];
@@ -66,6 +71,7 @@ RCT_EXPORT_METHOD(dismiss: (NSString *) messageId suppressAutoTrack: (BOOL) supp
 }
 
 RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) interaction eventType: (int) eventTypeValue) {
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"track is called with message id: %@", messageId]];
     AEPMessage * message = [cachedMessages objectForKey:messageId];
     AEPMessagingEdgeEventType messagingEdgeEventType = -1;
     
@@ -88,8 +94,9 @@ RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) in
     }
 }
 
-RCT_EXPORT_METHOD(handleJavascriptMessage: (NSString *) messageId messageName: (NSString *) name resolver: (RCTPromiseResolveBlock) resolve rejector:(RCTPromiseRejectBlock) reject) {
-    
+RCT_EXPORT_METHOD(handleJavascriptMessage: (NSString *) messageId
+                  messageName: (NSString *) name resolver: (RCTPromiseResolveBlock) resolve rejector:(RCTPromiseRejectBlock) reject) {
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"handleJavascriptMessage is called with message id: %@", messageId]];
     AEPMessage * message = [cachedMessages objectForKey: messageId];
     [message handleJavascriptMessage:name withHandler:^(id result) {
         if(result) {
@@ -101,13 +108,21 @@ RCT_EXPORT_METHOD(handleJavascriptMessage: (NSString *) messageId messageName: (
 }
 
 RCT_EXPORT_METHOD(clearMessage: (NSString *) messageId) {
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"clearMessage is called with message id: %@", messageId]];
     [cachedMessages removeObjectForKey:messageId];
 }
 
+RCT_EXPORT_METHOD(setAutoTrack: (NSString *) messageId autoTrack: (BOOL) autoTrack) {
+    AEPMessage * messageObj = [cachedMessages objectForKey:messageId];
+    if(messageObj) {
+        messageObj.autoTrack = autoTrack;
+    }
+}
+
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessage shouldSaveMessage: (BOOL) saveMessage) {
+    [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"shouldShowMessage is called with values (shouldShowMessage: %i) and (shouldSaveMessage: %i)", shouldShowMessage, shouldSaveMessage]];
     self->shouldShowMessage = shouldShowMessage;
     self->shouldSaveMessage = saveMessage;
-    NSLog(@">>>> IN JS thread %i", self->shouldShowMessage);
     dispatch_semaphore_signal(semaphore);
     return nil;
 }
@@ -135,14 +150,16 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
     if(messageObj) {
-        NSLog(@">>>> shouldShowMessageWithMessage Message id: %@", messageObj.id);
         [self emitEventWithName:@"shouldShowMessage" body:@{@"id":messageObj.id, @"autoTrack":messageObj.autoTrack ? @"true" : @"false"}];
+    //Semaphore stops the thread until the value to be returned from this function is received from the JS side on thread dedicated to run JS code. The function called from JS that unlock the Semaphore is "shouldShowMessage".
+        [AEPLog traceWithLabel:TAG message:@"Semaphore lock initiated."];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        if(self->shouldSaveMessage){
+        [AEPLog traceWithLabel:TAG message:@"Semaphore lock removed."];
+        if(self->shouldSaveMessage) {
+            [AEPLog traceWithLabel:TAG message:[[NSString alloc] initWithFormat:@"Message is saved with id: %@", messageObj.id]];
             [cachedMessages setObject:messageObj forKey:messageObj.id];
         }
     }
-    NSLog(@">>>> From shouldShowMessageWithMessage returning %i ", self->shouldShowMessage);
     return self->shouldShowMessage;
 }
 
@@ -168,6 +185,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
 
 - (void) emitEventWithName: (NSString *) name body: (NSDictionary<NSString*, NSString*> *) dictionary {
     if(hasListeners){
+        [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"Event emitted with name: %@ and body: %@", name, dictionary]];
         [self sendEventWithName:name body:dictionary];
     }
 }
