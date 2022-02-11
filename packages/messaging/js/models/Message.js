@@ -30,7 +30,7 @@ export class Message {
         this.dismiss.bind(this);
         this.track.bind(this);
         this.handleJavascriptMessage.bind(this);
-        this.clearMessage.bind(this);
+        this.clear.bind(this);
     }
 
     /** 
@@ -85,7 +85,7 @@ export class Message {
     * This function must be called if Mesage was saved by calling "Messaging.saveMessage" but no longer needed. 
     * Failure to call this function leads to memory leaks.
      */
-    clearMessage = () => {
-        RCTAEPMessaging.clearMessage(this.id);
+    clear = () => {
+        RCTAEPMessaging.clear(this.id);
     };    
 }

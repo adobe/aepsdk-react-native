@@ -69,7 +69,7 @@ export default ({ navigation }) => {
             shouldShowMessage(message: Message) {                  
                 cachedMessage = message;
                 Messaging.saveMessage(message);
-                return false; //Return true if want to show the Message else return false
+                return true; //Return true if want to show the Message else return false
             },
 
             urlLoaded(url: string, message: Message) {}
@@ -87,7 +87,7 @@ export default ({ navigation }) => {
     };
 
     const clearMessage = () => {                
-        cachedMessage.clearMessage();        
+        cachedMessage.clear();        
     };    
     
     return (<View style={styles.container}>

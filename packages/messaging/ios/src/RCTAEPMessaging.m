@@ -108,7 +108,7 @@ RCT_EXPORT_METHOD(handleJavascriptMessage: (NSString *) messageId
     }];
 }
 
-RCT_EXPORT_METHOD(clearMessage: (NSString *) messageId) {
+RCT_EXPORT_METHOD(clear: (NSString *) messageId) {
     [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"clearMessage is called with message id: %@", messageId]];
     [cachedMessages removeObjectForKey:messageId];
 }
@@ -187,7 +187,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
 
 - (void) emitEventWithName: (NSString *) name body: (NSDictionary<NSString*, NSString*> *) dictionary {
     if(hasListeners){
-        [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"Event emitted with name: %@ and body: %@", name, dictionary]];
+        [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"Event emitted with name: %@", name]];
         [self sendEventWithName:name body:dictionary];
     }
 }

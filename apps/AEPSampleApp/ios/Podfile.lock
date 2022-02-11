@@ -65,7 +65,7 @@ PODS:
   - RCTAEPEdgeIdentity (1.0.0-beta.1):
     - AEPEdgeIdentity (~> 1.0)
     - React
-  - RCTAEPMessaging (1.0.0-beta.1):
+  - RCTAEPMessaging (1.0.0-beta.2):
     - AEPMessaging (~> 1.0)
     - React
   - RCTAEPUserProfile (1.0.0-beta.1):
@@ -533,7 +533,7 @@ SPEC CHECKSUMS:
   RCTAEPEdge: 9a92efd1fb186f92cf58385ad4d416ebda914383
   RCTAEPEdgeConsent: a287ceea4a39d000df1cd722d346f674ca6b8d88
   RCTAEPEdgeIdentity: 628c05de8d7d78116f845ade80e1b59d20a5d368
-  RCTAEPMessaging: 7029d478d854d0e2deacdae3efaff0fb4975b81a
+  RCTAEPMessaging: 5ff246c624ceb253f93dbb1ae96af4ec898c91af
   RCTAEPUserProfile: a3d2bb50f7638fa8b2a6fa39c4e518994fc13ce4
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
@@ -564,6 +564,6 @@ SPEC CHECKSUMS:
   RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 5a41519bfb44f19c8055ecbec06a2af360867333
+PODFILE CHECKSUM: 18e76638d1b25ad6c02b6b9e0bfacb8bcefda684
 
 COCOAPODS: 1.11.2
