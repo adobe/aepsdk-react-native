@@ -5,7 +5,7 @@
 
 ## About this project
 
-This repository is a monorepo. It contains a collection of Adobe Experience Platform Mobile SDK React Native modules listed below. These modules can be found in the [packages](./packages) directory.
+This repository is a monorepo and contains a collection of React Native modules for Adobe Experience Platform Mobile SDK as listed below. These modules can be found in the [packages](./packages) directory.
 | Package Name | Latest Version |
 | ---- | ---- |
 |  [@adobe/react-native-aepcore (required)](./packages/core)    |   [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcore.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcore) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcore)](https://www.npmjs.com/package/@adobe/react-native-aepcore) |
@@ -16,13 +16,13 @@ This repository is a monorepo. It contains a collection of Adobe Experience Plat
 |  [@adobe/react-native-aepmessaging](./packages/messaging)  |  [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)  |
 |  [@adobe/react-native-aepassurance](./packages/assurance)    |  [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepassurance.svg)](https://www.npmjs.com/package/@adobe/react-native-aepassurance) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepassurance)](https://www.npmjs.com/package/@adobe/react-native-aepassurance)  |
 
-@adobe/react-native-aep{extension} is the wrapper around the iOS and Android [Adobe Experience Platform Mobile SDK](https://aep-sdks.gitbook.io/docs/) to allow for integration with React Native applications.
-
 > Note: @adobe/react-native-aepassurance <=2.0 is not compatible with  @adobe/react-native-aepcore. Please use @adobe/react-native-aepassurance [3.x or above](./packages/assurance#install-npm-package).
 
 ## Requirements
 
 Requires React Native >= v0.60.0
+
+> React Native v0.60.0 and above supports [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) links the module while building the app.
 
 ## Installation
 
@@ -41,7 +41,6 @@ Install the `@adobe/react-native-aep{extension}` package:
 cd MyReactApp
 npm install @adobe/react-native-aep{extension}
 ```
-> React Native v0.60.0 and above supports [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) links the module while building the app.
 
 See [note](#ios-development) for iOS development.
 
@@ -51,14 +50,17 @@ Adobe Experience Platform Mobile SDK packages can be installed with app's packag
 Include the react native packages in the dependencies of an app's package.json.
 > Note: `@adobe/react-native-aepcore` is required.
 
-The following code snippet shows for `core` and `edge` libraries as an example in package.json:
+The following code snippet shows for `core`, `edge`, `edgeidentity`, `edgeconsent` and  `userprofile`libraries as an example in package.json:
 
 ```bash
 ...
 "dependencies": {
     "react-native": "0.64.2",
-    "@adobe/react-native-aepcore": "^1.0.0",
+    "@adobe/react-native-aepcore": "^1.0.0", //includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
     "@adobe/react-native-aepedge": "^1.0.0",
+    "@adobe/react-native-aepedgeidentity": "^1.0.0",
+    "@adobe/react-native-aepedgeconsent": "^1.0.0",
+    "@adobe/react-native-aepuserprofile": "^1.0.0",
 ...
 },
 ```
@@ -95,10 +97,10 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @import AEPCore;
 @import AEPServices;
 @import AEPSignal;
-@import AEPLifecycle;
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPEdgeConsent;
+//@import AEPLifecycle; //enable this extension for lifecycle tracking
 //@import AEPMessaging; //enable this extension if you installed @adobe/react-native-aepmessaging
 //@import AEPUserProfile; //enable this extension for store user profile attributes
 //@import AEPAssurance;  //enable this extension for inspecting and validating the app
@@ -111,21 +113,19 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"yourAppID"];
   [AEPMobileCore registerExtensions: @[
-      AEPMobileLifecycle.class,
       AEPMobileSignal.class,
       AEPMobileEdge.class,
       AEPMobileEdgeIdentity.class,
       AEPMobileEdgeConsent.class,
+      //AEPMobileLifecycle.class, //enable this extension for lifecycle tracking
       //AEPMobileMessaging.class, //enable this extension if you installed @adobe/react-native-aepmessaging
       //AEPMobileUserProfile.class, //enable this extension for store user profile attributes
       //AEPMobileAssurance.class, //enable this extension for inspecting and validating the app
       //AEPMobileIdentity.class, //enable for Adobe solution Identity extension 
     ] completion:^{
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
-  ];
+      [AEPMobileCore configureWithAppId:@"yourAppID"];
+  }];
 
   return YES;
 }
@@ -145,7 +145,6 @@ import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.consent.Consent;
 //import com.adobe.marketing.mobile.Messaging; //enable this extension if you installed @adobe/react-native-aepmessaging
@@ -166,20 +165,18 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
     try {
           Signal.registerExtension();
-          Lifecycle.registerExtension();
           Edge.registerExtension();
           com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Consent.registerExtension();
+          //Lifecycle.registerExtension(); //enable this extension for lifecycle tracking
           //Messaging.registerExtension(); //enable this extension if you installed @adobe/react-native-aepmessaging
           //UserProfile.registerExtension(); //enable this extension for store user profile attributes
           //Assurance.registerExtension(); //enable this extension for inspecting and validating the app
           //com.adobe.marketing.mobile.Identity.registerExtension(); //enable for Adobe solution Identity extension 
-
-      MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {
-          MobileCore.lifecycleStart(null);
+           MobileCore.configureWithAppID("yourAppID");
         }
       });
     } catch (InvalidInitException e) {
@@ -188,16 +185,12 @@ public class MainApplication extends Application implements ReactApplication {
   }
 }   
 ```
-## Development
-
-See [development.md](./docs/development.md) for development docs.
-
 ## Migration guide
 
-See [migration.md](./docs/migration.md) for migrating from older version of React Native libraries.
+See [migration.md](./docs/migration.md) for guidance on migrating from ACP React Native libraries.
 
 ## Contributing
-See [CONTRIBUTING](CONTRIBUTING.md)
+Contributions  are welcomed! See [CONTRIBUTING](CONTRIBUTING.md) and [development.md](./docs/development.md) guides  for more information.
 
-## License
-See [LICENSE](LICENSE)
+## Licensing
+This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
