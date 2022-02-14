@@ -50,7 +50,7 @@ Adobe Experience Platform Mobile SDK packages can be installed with app's packag
 Include the react native packages in the dependencies of an app's package.json.
 > Note: `@adobe/react-native-aepcore` is required.
 
-The following code snippet shows for `core`, `edge`, `edgeidentity`, `edgeconsent` and  `userprofile`libraries as an example in package.json:
+The following code snippet shows an example of adding libraries in package.json, only include the libraries you need for the app.
 
 ```bash
 ...
@@ -61,6 +61,8 @@ The following code snippet shows for `core`, `edge`, `edgeidentity`, `edgeconsen
     "@adobe/react-native-aepedgeidentity": "^1.0.0", //or replace  with the latest extension version
     "@adobe/react-native-aepedgeconsent": "^1.0.0", //or replace  with the latest extension version
     "@adobe/react-native-aepuserprofile": "^1.0.0", //or replace  with the latest extension version
+    "@adobe/react-native-aepassurance": "^3.0.0", //or replace  with the latest extension 
+    "@adobe/react-native-aepmessaging": "^1.0.0-beta.1", //or replace  with the latest extension version
 ...
 },
 ```
@@ -100,7 +102,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPEdgeConsent;
-//@import AEPLifecycle; //enable this extension for lifecycle tracking
+@import AEPLifecycle; 
 //@import AEPMessaging; //enable this extension if you installed @adobe/react-native-aepmessaging
 //@import AEPUserProfile; //enable this extension for store user profile attributes
 //@import AEPAssurance;  //enable this extension for inspecting and validating the app
@@ -113,19 +115,22 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
   [AEPMobileCore registerExtensions: @[
+      AEPMobileLifecycle.class,
       AEPMobileSignal.class,
       AEPMobileEdge.class,
       AEPMobileEdgeIdentity.class,
       AEPMobileEdgeConsent.class,
-      //AEPMobileLifecycle.class, //enable this extension for lifecycle tracking
-      //AEPMobileMessaging.class, //enable this extension if you installed @adobe/react-native-aepmessaging
+      //AEPMobileMessaging.class, //enable this extension for using messaging functionalities
       //AEPMobileUserProfile.class, //enable this extension for store user profile attributes
       //AEPMobileAssurance.class, //enable this extension for inspecting and validating the app
       //AEPMobileIdentity.class, //enable for Adobe solution Identity extension 
     ] completion:^{
-      [AEPMobileCore configureWithAppId:@"yourAppID"];
-  }];
+    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}]; 
+    //enable this for Lifecycle. See Note for getting Lifecycle metrics.
+  }
+  ];
 
   return YES;
 }
@@ -133,7 +138,9 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @end
 
 ```
-> Note : While running iOS application after Adobe Experience Platform SDK installation. If you have build error that states:
+> Note: For getting Lifecycle metrics, enable Lifecycle with [native platforms code](https://github.com/cacheung/aepsdk-react-native/tree/readme/packages/core#lifecycle)
+
+> Hint : While running iOS application after Adobe Experience Platform SDK installation. If you have build error that states:
 >  "ld: warning: Could not find or use auto-linked library 'swiftCoreFoundation'"
 > This is because Adobe Experience Platform SDK now requires the app uses swift interfaces. Add a dummy .swift file to your project to embed the swift standard libs. See the SampleApp presented in this repo for example.
 
@@ -163,20 +170,23 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    try {
+   try {
           Signal.registerExtension();
+          Lifecycle.registerExtension();
           Edge.registerExtension();
           com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Consent.registerExtension();
-          //Lifecycle.registerExtension(); //enable this extension for lifecycle tracking
-          //Messaging.registerExtension(); //enable this extension if you installed @adobe/react-native-aepmessaging
+          //Messaging.registerExtension(); //enable this extension for using messaging functionalities
           //UserProfile.registerExtension(); //enable this extension for store user profile attributes
           //Assurance.registerExtension(); //enable this extension for inspecting and validating the app
           //com.adobe.marketing.mobile.Identity.registerExtension(); //enable for Adobe solution Identity extension 
+
+      MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {
-           MobileCore.configureWithAppID("yourAppID");
+          MobileCore.lifecycleStart(null);
+          //enable this for Lifecycle. See Note for getting Lifecycle metrics.
         }
       });
     } catch (InvalidInitException e) {
@@ -185,6 +195,8 @@ public class MainApplication extends Application implements ReactApplication {
   }
 }   
 ```
+> Note: For getting Lifecycle metrics, enable Lifecycle with [native platforms code](https://github.com/cacheung/aepsdk-react-native/tree/readme/packages/core#lifecycle)
+
 ## Migration guide
 
 See [migration.md](./docs/migration.md) for guidance on migrating from ACP React Native libraries.
