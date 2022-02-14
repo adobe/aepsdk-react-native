@@ -57,10 +57,10 @@ The following code snippet shows for `core`, `edge`, `edgeidentity`, `edgeconsen
 "dependencies": {
     "react-native": "0.64.2",
     "@adobe/react-native-aepcore": "^1.0.0", //includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
-    "@adobe/react-native-aepedge": "^1.0.0",
-    "@adobe/react-native-aepedgeidentity": "^1.0.0",
-    "@adobe/react-native-aepedgeconsent": "^1.0.0",
-    "@adobe/react-native-aepuserprofile": "^1.0.0",
+    "@adobe/react-native-aepedge": "^1.0.0", //or replace  with the latest extension version
+    "@adobe/react-native-aepedgeidentity": "^1.0.0", //or replace  with the latest extension version
+    "@adobe/react-native-aepedgeconsent": "^1.0.0", //or replace  with the latest extension version
+    "@adobe/react-native-aepuserprofile": "^1.0.0", //or replace  with the latest extension version
 ...
 },
 ```
