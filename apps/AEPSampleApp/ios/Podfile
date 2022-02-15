@@ -4,7 +4,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '11.0'
 target 'AEPSampleApp' do
   config = use_native_modules!
-  pod 'AEPOptimize', :path => '~/Documents/optimize/aepsdk-optimize-ios'
+  pod 'AEPOptimize', :path => '../../../../../optimize/aepsdk-optimize-ios'
 
   use_react_native!(
     :path => config[:reactNativePath],

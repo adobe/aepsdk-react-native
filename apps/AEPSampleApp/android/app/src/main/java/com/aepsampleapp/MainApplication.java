@@ -68,7 +68,6 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-//    initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
       try {
@@ -79,11 +78,9 @@ public class MainApplication extends Application implements ReactApplication {
           Identity.registerExtension();
           Messaging.registerExtension();
           Optimize.registerExtension();
-//          Assurance.registerExtension();
           MobileCore.configureWithAppID("3149c49c3910/1405d5d17a20/launch-cdafde27097f-development");
           MobileCore.start(o -> {
               MobileCore.lifecycleStart(null);
-//                  Assurance.startSession("griffonlab://?adb_validation_sessionid=18f5611d-c1bf-4c75-a7f4-4aafcbfe3bfc");
           });
       } catch (InvalidInitException e) {
           e.printStackTrace();

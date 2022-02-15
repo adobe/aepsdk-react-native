@@ -22,8 +22,6 @@ governing permissions and limitations under the License.
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPOptimize;
-//@import AEPOptimize;
-//@import AEPAssurance;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 

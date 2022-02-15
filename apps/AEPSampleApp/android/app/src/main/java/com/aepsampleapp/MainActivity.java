@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 */
 package com.aepsampleapp;
 
-
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
