@@ -29,11 +29,11 @@ Requires React Native >= v0.60.0
 
 ## Installation
 
-You need to install Adobe Experience Platform Mobile SDK with [npm](#install-npm-package) command or as [dependencies in package.json](#install-as-dependencies-in-packagejson), and configure the native Android/iOS project in your React Native project.
+You need to install Adobe Experience Platform Mobile SDK with [npm](https://www.npmjs.com/) packages and configure the native Android/iOS project in your React Native project.
 
 > Note: If you are new to React Native, we suggest you follow the [React Native Getting Started](<https://reactnative.dev>) page before continuing.
 
-### Install npm package
+### Install AEP npm packages
 Adobe Experience Platform Mobile SDK packages can be installed from [npm](https://www.npmjs.com/) command.
 
 > Note: `@adobe/react-native-aepcore` is required to be installed.
@@ -44,28 +44,20 @@ Install the `@adobe/react-native-aep{extension}` package:
 cd MyReactApp
 npm install @adobe/react-native-aep{extension}
 ```
-
 See [note](#ios-development) for iOS development.
 
-### Install as dependencies in package.json
-Adobe Experience Platform Mobile SDK packages can be installed with app's package.json.
+Alternatively, include the Adobe Experience Platform npm packages as dependencies in the app’s package.json.
 
-Include the react native packages in the dependencies of an app's package.json.
-> Note: `@adobe/react-native-aepcore` is required.
-
-The following code snippet shows an example of adding libraries in package.json, only include the libraries you need for the app.
+The following code snippet shows for Mobile Core and Edge Network extensions as an example in package.json:
 
 ```bash
 ...
 "dependencies": {
     "react-native": "0.64.2",
-    "@adobe/react-native-aepcore": "^1.0.0", //includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
+    "@adobe/react-native-aepcore": "^1.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
     "@adobe/react-native-aepedge": "^1.0.0",
     "@adobe/react-native-aepedgeidentity": "^1.0.0",
     "@adobe/react-native-aepedgeconsent": "^1.0.0", 
-    "@adobe/react-native-aepuserprofile": "^1.0.0",
-    "@adobe/react-native-aepassurance": "^3.0.0",
-    "@adobe/react-native-aepmessaging": "^1.0.0-beta.1", //aepmessaging is in beta
 ...
 },
 ```
@@ -93,23 +85,18 @@ cd ios && pod update && cd ..
 ```
 ## Initializing
 
-Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to `import` and `register` the Mobile Core, Signal, Lifecycle, Edge Network, EdgeIdentity and EdgeConsent extensions. For documentation on how to initialize each extension can be found in ./packages/{extension}/README.md
+Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. For documentation on how to initialize each extension can be found in *./packages/{extension}/README.md*.
 
 ###### **iOS**
 ```objective-c
 //AppDelegate.h
-// must import AEPCore
-@import AEPCore; //core extension is required 
-@import AEPServices; //this is a collection of utility classes and public services
-@import AEPLifecycle; //enable this extension for collecting Lifecycle metrics.
-@import AEPSignal; //enable this extension allows marketers to send a "signal" to the app
-@import AEPEdge; //this extension allows for sending XDM formatted data to Adobe Experience Platform
-@import AEPEdgeIdentity; //this extension enables identity management with Edge Network from the mobile app
-@import AEPEdgeConsent; //this extension enables consent preferences collection from the app
-//@import AEPMessaging; //enable this extension if you installed @adobe/react-native-aepmessaging
-//@import AEPUserProfile; //enable this extension for store user profile attributes
-//@import AEPAssurance;  //enable this extension for inspecting and validating the app
-//@import AEPIdentity; //enable for Adobe solution Identity extension 
+@import AEPCore;
+@import AEPServices;
+@import AEPLifecycle; 
+@import AEPSignal; 
+@import AEPEdge; 
+@import AEPEdgeIdentity; 
+@import AEPEdgeConsent; 
 ...
 ```
 ```objective-c
@@ -120,15 +107,11 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:@"yourAppID"];
   [AEPMobileCore registerExtensions: @[
-      AEPMobileLifecycle.class, //enable this extension for collecting Lifecycle metrics.
-      AEPMobileSignal.class, //enable this extension allows marketers to send a "signal" to the app
-      AEPMobileEdge.class, //this extension allows for sending XDM formatted data to Adobe Experience Platform
-      AEPMobileEdgeIdentity.class, //this extension enables identity management with Edge Network from the mobile app
-      AEPMobileEdgeConsent.class, //this extension enables consent preferences collection from the app
-      //AEPMobileMessaging.class, //enable this extension if you installed @adobe/react-native-aepmessaging
-      //AEPMobileUserProfile.class, //enable this extension for store user profile attributes
-      //AEPMobileAssurance.class, //enable this extension for inspecting and validating the app
-      //AEPMobileIdentity.class, //enable for Adobe solution Identity extension 
+      AEPMobileLifecycle.class, 
+      AEPMobileSignal.class, 
+      AEPMobileEdge.class, 
+      AEPMobileEdgeIdentity.class,
+      AEPMobileEdgeConsent.class, 
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}]; 
     //enable this for Lifecycle. See Note for collecting Lifecycle metrics.
@@ -153,14 +136,11 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 import com.adobe.marketing.mobile.AdobeCallback; 
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore; //core extension is required 
-import com.adobe.marketing.mobile.Lifecycle; //enable this extension for collecting Lifecycle metrics.
-import com.adobe.marketing.mobile.Signal; //enable this extension allows marketers to send a "signal" to the app
-import com.adobe.marketing.mobile.Edge; //this extension allows for sending XDM formatted data to Adobe Experience Platform
-import com.adobe.marketing.mobile.edge.consent.Consent; //this extension enables consent preferences collection from the app
-//import com.adobe.marketing.mobile.Messaging; //enable this extension if you installed @adobe/react-native-aepmessaging
-//import com.adobe.marketing.mobile.UserProfile; //enable this extension for store user profile attributes
-//import com.adobe.marketing.mobile.Assurance; //enable this extension for inspecting and validating the app
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.Signal; 
+import com.adobe.marketing.mobile.Edge; 
+import com.adobe.marketing.mobile.edge.consent.Consent; 
 ...
 import android.app.Application;
 ```
@@ -175,15 +155,11 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
    try {
-          Lifecycle.registerExtension(); //enable this extension for collecting Lifecycle metrics.
-          Signal.registerExtension(); //enable this extension allows marketers to send a "signal" to the app
-          Edge.registerExtension(); //this extension allows for sending XDM formatted data to Adobe Experience Platform
-          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension(); //this extension enables identity management with Edge Network from the mobile app
-          Consent.registerExtension(); //this extension enables consent preferences collection from the app
-          //Messaging.registerExtension(); //enable this extension for using messaging functionalities
-          //UserProfile.registerExtension(); //enable this extension for store user profile attributes
-          //Assurance.registerExtension(); //enable this extension for inspecting and validating the app
-          //com.adobe.marketing.mobile.Identity.registerExtension(); //enable for Adobe solution Identity extension 
+          Lifecycle.registerExtension(); 
+          Signal.registerExtension();
+          Edge.registerExtension();
+          com.adobe.marketing.mobile.edge.identity.Identity.registerExtension(); 
+          Consent.registerExtension(); 
 
       MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
