@@ -27,13 +27,14 @@ import java.util.Map;
 
 class RCTAEPOptimizeUtil {
 
-    private RCTAEPOptimizeUtil() {
-    }
+    private static final String TAG = "RCTAEPOptimize";
+
+    private RCTAEPOptimizeUtil() {}
 
     static WritableMap convertPropositionToWritableMap(final Proposition proposition) {
         final WritableMap propositionWritableMap = new WritableNativeMap();
         if (proposition == null) {
-            MobileCore.log(LoggingMode.DEBUG, "RCTAEPOptimize", "Unable to convert Proposition to WritableMap. Passed Proposition is null.");
+            MobileCore.log(LoggingMode.DEBUG, TAG, "Unable to convert Proposition to WritableMap. Passed Proposition is null.");
             return propositionWritableMap;
         }
         propositionWritableMap.putString("id", proposition.getId());
@@ -51,7 +52,7 @@ class RCTAEPOptimizeUtil {
     static WritableMap convertOfferToWritableMap(final Offer offer) {
         final WritableMap offerWritableMap = new WritableNativeMap();
         if (offer == null) {
-            MobileCore.log(LoggingMode.DEBUG, "RCTAEPOptimize", "Unable to convert Offer to WritableMap. Passed Offer is null.");
+            MobileCore.log(LoggingMode.DEBUG, TAG, "Unable to convert Offer to WritableMap. Passed Offer is null.");
             return offerWritableMap;
         }
         offerWritableMap.putString("id", offer.getId());
@@ -97,7 +98,7 @@ class RCTAEPOptimizeUtil {
     }
 
     static WritableMap convertMapToWritableMap(final Map<String, Object> map) {
-        WritableMap writableMap = new WritableNativeMap();
+        final WritableMap writableMap = new WritableNativeMap();
         for (final Map.Entry<String, Object> entry : map.entrySet()) {
             final Object value = entry.getValue();
             if (value instanceof Map) {
@@ -117,8 +118,8 @@ class RCTAEPOptimizeUtil {
         return writableMap;
     }
 
-    static List<DecisionScope> createDecisionScopes(ReadableArray decisionScopesArray) {
-        List<DecisionScope> decisionScopeList = new ArrayList<>();
+    static List<DecisionScope> createDecisionScopes(final ReadableArray decisionScopesArray) {
+        final List<DecisionScope> decisionScopeList = new ArrayList<>(decisionScopesArray.size());
         for (int i = 0; i < decisionScopesArray.size(); i++) {
             String decisionScopeName = decisionScopesArray.getString(i);
             if (decisionScopeName != null && !decisionScopeName.isEmpty()) {
@@ -164,8 +165,8 @@ class RCTAEPOptimizeUtil {
         return map;
     }
 
-    private static List<Object> convertReadableArrayToList(ReadableArray readableArray) {
-        List<Object> list = new ArrayList<>(readableArray.size());
+    private static List<Object> convertReadableArrayToList(final ReadableArray readableArray) {
+        final List<Object> list = new ArrayList<>(readableArray.size());
         for (int i = 0; i < readableArray.size(); i++) {
             ReadableType indexType = readableArray.getType(i);
             switch(indexType) {

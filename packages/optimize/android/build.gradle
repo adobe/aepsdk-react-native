@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -12,12 +12,12 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
 //    buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -29,7 +29,6 @@ android {
 repositories {
     google()
     mavenCentral()
-    jcenter()    
 }
 
 dependencies {

@@ -13,13 +13,13 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { AEPMessaging } from '../js';
+import { AEPOptimize } from '../js/AEPOptimize';
 
-describe('AEPMessaging', () => {
+describe('AEPOptimize', () => {
   it('extensionVersion is called', async () => {
-    expect(AEPMessaging.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
-    await AEPMessaging.extensionVersion();
+    expect(AEPOptimize.extensionVersion).toBeDefined();
+    const spy = jest.spyOn(NativeModules.AEPOptimize, 'extensionVersion');
+    await AEPOptimize.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 });

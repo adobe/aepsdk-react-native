@@ -88,7 +88,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
         Optimize.getPropositions(decisionScopeList, new AdobeCallbackWithError<Map<DecisionScope, Proposition>>() {
             @Override
-            public void fail(AdobeError adobeError) {
+            public void fail(final AdobeError adobeError) {
                 promise.reject(String.valueOf(adobeError.getErrorCode()), adobeError.getErrorName());
             }
 

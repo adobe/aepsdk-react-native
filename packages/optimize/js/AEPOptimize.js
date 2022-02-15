@@ -25,7 +25,7 @@ var onPropositionUpdateSubscription;
 
 module.exports = {
   /**
-   * Returns the version of the AEPMessaging extension
+   * Returns the version of the AEPOptimize extension
    * @param  {string} Promise a promise that resolves with the extension verison
    */
   extensionVersion(): Promise<String> { 
