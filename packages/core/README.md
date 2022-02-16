@@ -427,7 +427,7 @@ var visitorId = new VisitorID(idOrigin?: string, idType: string, id?: string, au
 
 > Note: Implementing Lifecycle via Javascript may lead to inaccurate Lifecycle metrics, therefore we recommend implementing Lifecycle in native [Android and iOS code](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/lifecycle).
 
-> See (Lifecycle for Edge Network) (https://aep-sdks.gitbook.io/docs/foundation-extensions/lifecycle-for-edge-network) for enabling Lifecycle metrics.
+> To enable Lifecycle metrics for the Edge workflows, see (Lifecycle for Edge Network) (https://aep-sdks.gitbook.io/docs/foundation-extensions/lifecycle-for-edge-network).
 
 - #### extensionVersion
 

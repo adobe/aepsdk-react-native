@@ -25,7 +25,7 @@ This repository is a monorepo and contains a collection of React Native modules 
 
 Requires React Native >= v0.60.0
 
-> React Native v0.60.0 and above supports [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) links the module while building the app.
+> React Native v0.60.0 and above supports [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) which links the module while building the app.
 
 ## Installation
 
@@ -44,7 +44,6 @@ Install the `@adobe/react-native-aep{extension}` package:
 cd MyReactApp
 npm install @adobe/react-native-aep{extension}
 ```
-See [note](#ios-development) for iOS development.
 
 Alternatively, include the Adobe Experience Platform npm packages as dependencies in the app’s package.json.
 
@@ -85,7 +84,7 @@ cd ios && pod update && cd ..
 ```
 ## Initializing
 
-Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. For documentation on how to initialize each extension can be found in *./packages/{extension}/README.md*.
+Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. Documentation on how to initialize each extension can be found in *./packages/{extension}/README.md*.
 
 ###### **iOS**
 ```objective-c
@@ -124,7 +123,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 @end
 
 ```
-> Note: For getting Lifecycle metrics, enable Lifecycle with [native platforms code](https://github.com/cacheung/aepsdk-react-native/tree/readme/packages/core#lifecycle)
+> To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
 
 > Hint : While running iOS application after Adobe Experience Platform SDK installation. If you have build error that states:
 >  "ld: warning: Could not find or use auto-linked library 'swiftCoreFoundation'"
@@ -175,14 +174,14 @@ public class MainApplication extends Application implements ReactApplication {
   }
 }   
 ```
-> Note: For getting Lifecycle metrics, enable Lifecycle with [native platforms code](https://github.com/cacheung/aepsdk-react-native/tree/readme/packages/core#lifecycle)
+> To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
 
 ## Migration guide
 
 See [migration.md](./docs/migration.md) for guidance on migrating from ACP React Native libraries.
 
 ## Contributing
-Contributions  are welcomed! See [CONTRIBUTING](CONTRIBUTING.md) and [development.md](./docs/development.md) guides  for more information.
+Contributions  are welcomed! See [CONTRIBUTING](CONTRIBUTING.md) and [development.md](./docs/development.md) guides for more information.
 
 ## Licensing
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
