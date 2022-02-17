@@ -10,11 +10,11 @@
  */
 package com.adobe.marketing.mobile.reactnative.optimize;
 
-import android.util.Log;
-
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OfferType;
@@ -30,14 +30,13 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
+    private static final String TAG = "RCTAEPOptimizeModule";
     private final ReactApplicationContext reactContext;
 
     public RCTAEPOptimizeModule(ReactApplicationContext reactContext) {
@@ -54,7 +53,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     public void offerDisplayed(final String offerId, final ReadableMap propositionMap) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
         final Proposition proposition = Proposition.fromEventData(eventData);
-        Log.d("RCTAEPOptimize", "OFFER Displayed");
+        MobileCore.log(LoggingMode.VERBOSE, TAG, "OFFER Displayed");
         for (Offer offer : proposition.getOffers()) {
             if (offer.getId().equalsIgnoreCase(offerId)) {
                 offer.displayed();
@@ -117,7 +116,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     public void offerTapped(final String offerId, final ReadableMap propositionMap) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
         final Proposition proposition = Proposition.fromEventData(eventData);
-        Log.d("OFFER TAPPED", "OFFER TAPPED");
+        MobileCore.log(LoggingMode.VERBOSE, TAG, "OFFER TAPPED");
         for (Offer offer : proposition.getOffers()) {
             if (offer.getId().equalsIgnoreCase(offerId)) {
                 offer.tapped();
@@ -130,7 +129,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     public void generateDisplayInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
         final Proposition proposition = Proposition.fromEventData(eventData);
-        Log.d("RCTAEPOptimize", "generateDisplayInteractionXdm");
+        MobileCore.log(LoggingMode.VERBOSE, TAG, "generateDisplayInteractionXdm");
         Offer offerDisplayed = null;
         for (Offer offer : proposition.getOffers()) {
             if (offer.getId().equalsIgnoreCase(offerId)) {
@@ -152,7 +151,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     public void generateTapInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
         final Proposition proposition = Proposition.fromEventData(eventData);
-        Log.d("RCTAEPOptimize", "generateTapInteractionXdm");
+        MobileCore.log(LoggingMode.VERBOSE, TAG, "generateTapInteractionXdm");
         Offer offerTapped = null;
         for (Offer offer : proposition.getOffers()) {
             if (offer.getId().equalsIgnoreCase(offerId)) {

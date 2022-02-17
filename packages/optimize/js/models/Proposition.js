@@ -14,11 +14,11 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-const { AEPOptimize } = NativeModules;
+const RCTAEPOptimize = NativeModules.AEPOptimize;
 import Offer from './Offer';
 
 
-module.exports = class Proposition {
+export default class Proposition {
     id: string;
     items: Array<Offer>;
     scope: string;
@@ -29,15 +29,18 @@ module.exports = class Proposition {
         this.scope = eventData['scope'];
         this.scopeDetails = eventData['scopeDetails'];
         if(eventData['items']) {
-            this.items = eventData['items'].map(offer => {
-                return new Offer(offer);
-            });                
-        }
-        
-        this.generateReferenceXdm.bind(this);
+            this.items = eventData['items'].map(offer => new Offer(offer, this));                
+        }                
     }    
         
-    generateReferenceXdm(): Promise<Object> {
-        return Promise.resolve(AEPOptimize.generateReferenceXdm(this));
+    /**
+    * Generates a map containing XDM formatted data for {Experience Event - Proposition Reference} field group from proposition arguement.
+    * The returned XDM data does not contain eventType for the Experience Event.     
+    * @return {Promise<Map<string, any>>} a promise that resolves to xdm data map
+    */
+    generateReferenceXdm(): Promise<Map<string, any>> {
+        const entries = Object.entries(this).filter(([key, value]) => typeof(value) !== "function");
+        const proposition = Object.fromEntries(entries);    
+        return Promise.resolve(RCTAEPOptimize.generateReferenceXdm(proposition));
     };
 }

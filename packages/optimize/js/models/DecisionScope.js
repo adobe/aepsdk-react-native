@@ -13,25 +13,28 @@ governing permissions and limitations under the License.
 @format
 */
 
-module.exports = class DecisionScope {
+/**
+* class represents a scope used to fetch personalized offers from the Experience Edge network.
+*/
+export default class DecisionScope {
+    name: string;        
 
-    name: string;    
-    
-    constructor(name: string = "", activityId: string = "", placementId: string = "", itemCount: number = 1) {                
-        if(name && name.trim() !== "") {
+    constructor(name: ?string, activityId: ?string, placementId: ?string, itemCount: ?number) {                
+        if(name && name.trim()) {
             this.name = name;
         } else {            
-            var decisionScopeObject: Object = new Object();
+            const decisionScopeObject = {};
             decisionScopeObject['activityId'] = activityId;            
             decisionScopeObject['placementId'] = placementId;    
             decisionScopeObject['itemCount'] = itemCount;   
-
-            this.name = Buffer.from(JSON.stringify(decisionScopeObject)).toString("base64");
-
-            this.getName.bind(this);
+            this.name = Buffer.from(JSON.stringify(decisionScopeObject)).toString("base64");            
         }                
     }
 
+    /**
+    * Gets the name of this scope
+    * @return {string} - The name of the scope
+    */
     getName(): string {
        return this.name; 
     }

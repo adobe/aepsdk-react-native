@@ -15,18 +15,16 @@
 @import AEPServices;
 @import Foundation;
 
-@implementation RCTAEPOptimize
+static NSString * const TAG = @"RCTAEPOptimize";
 
-
-static NSString* const TAG = @"RCTAEPOptimize";
-RCTEventEmitter* eventEmitter;
+@implementation RCTAEPOptimize {
+    bool hasListeners;
+}
 
 - (instancetype)init
 {
   self = [super init];
-  if (self) {
-    eventEmitter = [[RCTEventEmitter alloc] init];
-  }
+  hasListeners = false;
   return self;
 }
 
@@ -79,7 +77,7 @@ RCT_EXPORT_METHOD(onPropositionsUpdate) {
       [propositionDictionary setValue:[self convertPropositionToDict:proposition] forKey:key.name];
     }
         
-    [eventEmitter sendEventWithName:@"onPropositionsUpdate" body:propositionDictionary];
+    [self sendEventWithName:@"onPropositionsUpdate" body: propositionDictionary];
   }];
 }
 
@@ -237,6 +235,20 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm: (NSString*) offerId proposition
     reject([NSString stringWithFormat: @"%lu", (long)error.code],
            errorString,
            error);
+}
+
+#pragma mark - RCTEventEmitter functions
+
+- (NSArray<NSString *> *) supportedEvents {
+    return @[@"onPropositionsUpdate"];
+}
+
+- (void)startObserving{
+    hasListeners = true;
+}
+
+- (void)stopObserving{
+    hasListeners = false;
 }
 
 @end

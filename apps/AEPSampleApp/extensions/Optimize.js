@@ -44,23 +44,24 @@ export default ({ navigation }) => {
     });
     const updatePropositions = () => AEPOptimize.updatePropositions(decisionScopes, null, null);
     const getPropositions = () => AEPOptimize.getPropositions(decisionScopes).then(
-        propositions => {
+        (propositions: Map<string, typeof Proposition>) => {
             console.log(`Get Proposition returned::: ${JSON.stringify(propositions)}`)
-            setTextProposition(propositions[decisionScopeText.getName()]);
-            setImageProposition(propositions[decisionScopeImage.getName()]);
-            setHtmlProposition(propositions[decisionScopeHtml.getName()]);
-            setJsonProposition(propositions[decisionScopeJson.getName()]);                        
-            setTargetProposition(propositions[decisionScopeTargetMbox.getName()]);
+            setTextProposition(propositions.get(decisionScopeText.getName()));
+            setImageProposition(propositions.get(decisionScopeImage.getName()));
+            setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
+            setJsonProposition(propositions.get(decisionScopeJson.getName()));
+            setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
         });
     const clearCachedProposition = () => AEPOptimize.clearCachedPropositions();
-    const onPropositionUpdate = () => AEPOptimize.onPropositionUpdate(propositions => {
-        setTextProposition(propositions[decisionScopeText.getName()]);
-        setImageProposition(propositions[decisionScopeImage.getName()]);
-        setHtmlProposition(propositions[decisionScopeHtml.getName()]);
-        setJsonProposition(propositions[decisionScopeJson.getName()]);
-        setTargetProposition(propositions[decisionScopeTargetMbox.getName()]);
-    });    
-    const unsubscribeFromPropositionUpdate = () => AEPOptimize.removeOnPropositionUpdateListener();    
+    const onPropositionUpdate = () => AEPOptimize.onPropositionUpdate({
+        call(proposition: Map<String, typeof Proposition>) {
+            setTextProposition(propositions.get(decisionScopeText.getName()));
+            setImageProposition(propositions.get(decisionScopeImage.getName()));
+            setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
+            setJsonProposition(propositions.get(decisionScopeJson.getName()));
+            setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+        }
+    });        
 
     const renderTargetOffer = () => {
         // console.log(`TARGET::::::${JSON.stringify(targetOffer)}`);
@@ -109,10 +110,7 @@ export default ({ navigation }) => {
         </View>
         <View style={{margin:5}}>
             <Button title="Subscribe to Proposition Update" onPress={onPropositionUpdate}/>
-        </View>
-        <View style={{margin:5}}>
-            <Button title="Unsubscribe from Proposition Update" onPress={unsubscribeFromPropositionUpdate}/>
-        </View>
+        </View>        
         <Text 
             style={{...styles.welcome, fontSize:20}}>
             SDK Version:: { version }

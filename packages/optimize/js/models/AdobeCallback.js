@@ -15,20 +15,12 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-module.exports = {
-  get AEPOptimize() {
-    return require('./AEPOptimize.js');
-  },
-  get Offer() {
-    return require('./models/Offer');
-  },
-  get Proposition() {
-    return require('./models/Proposition');
-  },
-  get DecisionScope() {
-    return require('./models/DecisionScope');
-  },
-  get AdobeCallback() {
-    return require('./models/AdobeCallback');
-  }
+import type Proposition from "./Proposition";
+
+/**
+* A Type with callback function that gets called with a Map of decision scope names and Propositions.
+* This is a type for listener used for receiving Proposition updates.
+*/
+export type AdobeCallback = {    
+    call(propositionMap: Map<string, Proposition>): void;
 };

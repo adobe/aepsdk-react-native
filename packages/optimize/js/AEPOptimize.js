@@ -15,82 +15,81 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-import { DeviceEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 const RCTAEPOptimize = NativeModules.AEPOptimize;
-import Proposition from './Proposition';
-import Offer from './Offer';
-import DecisionScope from './DecisionScope';
+import Proposition from './models/Proposition';
+import Offer from './models/Offer';
+import DecisionScope from './models/DecisionScope';
+import type { AdobeCallback }  from './models/AdobeCallback';
 
 var onPropositionUpdateSubscription;
 
+/**
+* Public APIs for Optimize extension
+*/
 module.exports = {
   /**
    * Returns the version of the AEPOptimize extension
-   * @param  {string} Promise a promise that resolves with the extension verison
+   * @return {string} - Promise a promise that resolves with the extension verison
    */
-  extensionVersion(): Promise<String> { 
-    console.log("extensionVersion API called.");
+  extensionVersion(): Promise<string> {     
     return Promise.resolve(RCTAEPOptimize.extensionVersion());
   },
-  onPropositionUpdate(onPropositionUpdateCallback: Object) {
-    console.log("onPropositionUpdate API called.");
+
+  /**
+   * This API registers a permanent callback which is invoked whenever the Edge extension dispatches a response Event received from the Experience Edge Network upon a personalization query.
+   * @param {Object} onPropositionUpdateCallback - the callback that will be called with the updated Propositions.
+   */
+  onPropositionUpdate(adobeCallback: AdobeCallback) {    
     if(onPropositionUpdateSubscription) {
       onPropositionUpdateSubscription.remove();
     }
-    onPropositionUpdateSubscription = DeviceEventEmitter.addListener("onPropositionsUpdate", propositions => {
-      const keys = Object.keys(propositions);
-      keys.map(key => propositions[key] = new Proposition(propositions[key]));      
-      onPropositionUpdateCallback(propositions);
+
+    const eventEmitter = new NativeEventEmitter(RCTAEPOptimize);    
+    onPropositionUpdateSubscription = eventEmitter.addListener("onPropositionsUpdate", propositions => {      
+      const map = new Map<string, Proposition>();
+      for (const [key, value] of Object.entries(propositions)) {
+        map.set(key, new Proposition(value));  
+      }      
+      adobeCallback.call(map);
     });
     RCTAEPOptimize.onPropositionsUpdate();        
   }, 
-  clearCachedPropositions() {
-    console.log("clearCachedPropositions API called.");
+
+  /**
+  * Clears the client-side in-memory propositions cache.
+  */
+  clearCachedPropositions() {    
     RCTAEPOptimize.clearCachedPropositions();
   },
-  getPropositions(decisionScopes: Array<DecisionScope>): Promise<Map<DecisionScope, Proposition>> {
-    console.log("getPropositions API called.");
-    return new Promise((resolve, reject) => {
-      var decisionScopeNames: Array<string> = decisionScopes.map((decisionScope) => decisionScope.getName());
+
+ /**
+ * This API retrieves the previously fetched propositions, for the provided decision scopes, from the in-memory extension's propositions cache.
+ * @param {Array<DecisionScope>} decisionScopes - an array of decision scopes for which Offers needs to be requested
+ * @returns {Promise<Map<string, Proposition>>} - a Promise that resolves with the Map of decision scope string and Propositions
+ */
+  getPropositions(decisionScopes: Array<DecisionScope>): Promise<Map<string, Proposition>> {    
+    var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
+    return new Promise((resolve, reject) => {      
       RCTAEPOptimize.getPropositions(decisionScopeNames).then(propositions => {
-        const keys = Object.keys(propositions);
-        keys.map(key => propositions[key] = new Proposition(propositions[key]));                
-        resolve(propositions);
+        const map = new Map<string, Proposition>();
+        for (const [key, value] of Object.entries(propositions)) {
+          map.set(key, new Proposition(value));  
+        }      
+        resolve(map);
       }).catch(error => reject(error));
     });
   },
-  updatePropositions(decisionScopes: Array<DecisionScope>, xdm: Object, data: Object) {
-    console.log("updatePropositions API called.");
-    var decisionScopeNames: Array<string> = decisionScopes.map((decisionScope) => decisionScope.getName());
+
+/**
+* This API dispatches an Event for the Edge network extension to fetch decision propositions, for the provided decision scopes list, from the decisioning services enabled in the Experience Edge network.
+* The returned decision propositions are cached in-memory in the Optimize SDK extension and can be retrieved using getPropositions API.
+* @param {Array<DecisionScope>} decisionScopes - containing scopes for which offers need to be updated
+* @param {Map<string, any>} xdm - containing additional XDM-formatted data to be sent in the personalization query request. 
+* @param {Map<string, any>} data - containing additional free-form data to be sent in the personalization query request
+*/
+  updatePropositions(decisionScopes: Array<DecisionScope>, xdm: ?Map<string, any>, data: ?Map<string, any>) {    
+    var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
     RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data);
-  },
-  removeOnPropositionUpdateListener() {
-    console.log("removeOnPropositionUpdateListener API called.");
-    onPropositionUpdateSubscription.remove();
-  },
-  offerDisplayed(offerId: string, proposition: Proposition) {
-    console.log("offerDisplayed API called.");
-    const entries = Object.entries(proposition);
-    proposition = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));
-    RCTAEPOptimize.offerDisplayed(offerId, proposition);
-  },
-  offerTapped(offerId: string, proposition: Proposition) {    
-    console.log("offerTapped API called.");
-    const entries = Object.entries(proposition);
-    proposition = Object.fromEntries(entries.filter(([key, value]) => typeof(value) !== "function"));    
-    // console.log(`Offer tapped is ${JSON.stringify(prop)}.`);
-    RCTAEPOptimize.offerTapped(offerId, proposition);
-  },
-  generateDisplayInteractionXdm(offerId: string, proposition: Proposition): Promise<Object> {
-    console.log("generateDisplayInteractionXdm API called.");
-    return RCTAEPOptimize.generateDisplayInteractionXdm(offerId, proposition);
-  },
-  generateTapInteractionXdm(offerId: string, proposition: Proposition): Promise<Object> {
-    console.log("generateTapInteractionXdm API called.");
-    return RCTAEPOptimize.generateTapInteractionXdm(offerId, proposition);
-  },
-  generateReferenceXdm(proposition: Proposition): Promise<Object> {
-    console.log("generateReferenceXdm API called.");
-    return RCTAEPOptimize.generateReferenceXdm(proposition);
-  }
+  }  
 };
