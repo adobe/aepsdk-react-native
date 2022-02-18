@@ -42,7 +42,7 @@ jobs:
           
   build-sample-app-ios:
     macos:
-      xcode: "13.0"
+      xcode: "12.0.1"
 
     steps:
       - checkout
