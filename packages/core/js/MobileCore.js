@@ -207,7 +207,7 @@ module.exports = {
    *
    * @param {String?} pushIdentifier the device token for push notifications
    */
-  setPushIdentifier(pushIdentifier?: String) {
+  setPushIdentifier(pushIdentifier?: string) {
     RCTAEPCore.setPushIdentifier(pushIdentifier);
   },
 
