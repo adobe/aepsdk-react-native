@@ -21,16 +21,20 @@
 <PROJECT_ROOT>/node_modules/react-native/.*
 
 ; Ignore Example
-<PROJECT_ROOT>/sample/*
-
+<PROJECT_ROOT>/docs/*
+<PROJECT_ROOT>/tests/*
+.*/*.ts
+<PROJECT_ROOT>/packages/
 
 [include]
 <PROJECT_ROOT>/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes
+<PROJECT_ROOT>/apps/AEPSampleApp/extensions/
 
 [libs]
-node_modules/react-native/Libraries/react-native/react-native-interface.js
-node_modules/react-native/flow
+./apps/AEPSampleApp/node_modules/react-native/Libraries/react-native/react-native-interface.js
+./apps/AEPSampleApp/node_modules/react-native/flow
 flow-typed/
+
 
 [options]
 module.system=haste
