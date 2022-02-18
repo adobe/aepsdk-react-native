@@ -13,20 +13,20 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { AEPIdentity } from '../';
+import { Assurance } from '../js';
 
-describe('AEPEdgeIdentity', () => {
+describe('Assurance', () => {
 
   it('extensionVersion is called', async () => {
-    expect(AEPIdentity.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'extensionVersion');
-    await AEPIdentity.extensionVersion();
+    expect(Assurance.extensionVersion).toBeDefined();
+    const spy = jest.spyOn(NativeModules.AEPAssurance, 'extensionVersion');
+    await Assurance.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('getExperienceCloudId is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'getExperienceCloudId');
-    await AEPIdentity.getExperienceCloudId();
+  it('startSession is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPAssurance, 'startSession');
+    await Assurance.startSession('');
     expect(spy).toHaveBeenCalled();
   });
 });

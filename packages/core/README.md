@@ -91,15 +91,6 @@ var event = new Event("eventName", "eventType", "eventSource", {"testDataKey": "
 MobileCore.dispatchEventWithResponseCallback(event).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
 ```
 
-##### Dispatching an Event Hub response event (Android Only): 
-```javascript
-import {Event} from '@adobe/react-native-aepcore';
-
-var responseEvent = new Event("responseEvent", "eventType", "eventSource", {"testDataKey": "testDataValue"});
-var requestEvent = new Event("requestEvent", "eventType", "eventSource", {"testDataKey": "testDataValue"});
-MobileCore.dispatchResponseEvent(responseEvent, requestEvent);
-```
-
 ##### Collecting PII:
 ```javascript
 MobileCore.collectPii({"myPii": "data"});

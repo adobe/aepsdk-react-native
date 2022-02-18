@@ -36,7 +36,7 @@ describe('Identity', () => {
     let identifiers = {"testKey": "testValue"};
     let authState = MobileVisitorAuthenticationState.LOGGED_OUT;
     await Identity.syncIdentifiersWithAuthState(identifiers, authState);
-    expect(spy).toHaveBeenCalledWith(identifiers, authState);
+    expect(spy).toHaveBeenCalledWith(identifiers, 'VISITOR_AUTH_STATE_LOGGED_OUT');
   });
 
   test('syncIdentifier is called with correct parameters', async () => {
@@ -45,7 +45,7 @@ describe('Identity', () => {
     let identifierType = "testIdType"
     let authState = MobileVisitorAuthenticationState.AUTHENTICATED;
     await Identity.syncIdentifier(identifier, identifierType, authState);
-    expect(spy).toHaveBeenCalledWith(identifier, identifierType, authState);
+    expect(spy).toHaveBeenCalledWith(identifier, identifierType, 'VISITOR_AUTH_STATE_AUTHENTICATED');
   });
 
   test('appendVisitorInfoForURL is called with correct parameters', async () => {

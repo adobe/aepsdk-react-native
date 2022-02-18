@@ -41,13 +41,14 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setLogLevel');
     let logLevel = LogLevel.DEBUG;
     await MobileCore.setLogLevel(logLevel);
-    expect(spy).toHaveBeenCalledWith(logLevel);
+    expect(spy).toHaveBeenCalledWith("DEBUG");
   });
 
   it('getLogLevel is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'getLogLevel');
-    await MobileCore.getLogLevel();
+    const logLevel = await MobileCore.getLogLevel();
     expect(spy).toHaveBeenCalled();
+    expect(logLevel).toEqual(LogLevel.DEBUG);
   });
 
   it('log is called with correct parameters', async () => {
@@ -63,13 +64,14 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setPrivacyStatus');
     let privacyStatus = PrivacyStatus.UNKNOWN;
     await MobileCore.setPrivacyStatus(privacyStatus);
-    expect(spy).toHaveBeenCalledWith(privacyStatus);
+    expect(spy).toHaveBeenCalledWith("UNKNOWN");
   });
 
   it('getPrivacyStatus is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'getPrivacyStatus');
-    await MobileCore.getPrivacyStatus();
+    const privacyStatus = await MobileCore.getPrivacyStatus();
     expect(spy).toHaveBeenCalled();
+    expect(privacyStatus).toEqual(PrivacyStatus.OPT_OUT);
   });
 
   it('getSdkIdentities is called', async () => {
@@ -90,14 +92,6 @@ describe('MobileCore', () => {
     let testEvent = new Event("eventName", "eventType", "eventSource", {"testDataKey": "testDataValue"});
     await MobileCore.dispatchEventWithResponseCallback(testEvent);
     expect(spy).toHaveBeenCalledWith(testEvent);
-  });
-
-  it('dispatchResponseEvent is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'dispatchResponseEvent');
-    let testEvent = new Event("eventName", "eventType", "eventSource", {"testDataKey": "testDataValue"});
-    let testEvent1 = new Event("eventName1", "eventType1", "eventSource1", {"testDataKey1": "testDataValue1"});
-    await MobileCore.dispatchResponseEvent(testEvent, testEvent1);
-    expect(spy).toHaveBeenCalledWith(testEvent, testEvent1);
   });
 
   it('trackAction is called with correct parameters', async () => {
