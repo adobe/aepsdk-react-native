@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 class RCTAEPEdgeArrayUtil {
@@ -56,6 +57,33 @@ class RCTAEPEdgeArrayUtil {
     }
 
     static WritableArray toWritableArray(Object[] array) {
+        if (array == null) {
+            return null;
+        }
+        WritableArray writableArr = Arguments.createArray();
+
+        for (Object value : array) {
+            if (value == null) {
+                writableArr.pushNull();
+            } else if (value instanceof Boolean) {
+                writableArr.pushBoolean((Boolean) value);
+            } else if (value instanceof Double) {
+                writableArr.pushDouble((Double) value);
+            } else if (value instanceof Integer) {
+                writableArr.pushInt((Integer) value);
+            } else if (value instanceof String) {
+                writableArr.pushString((String) value);
+            } else if (value instanceof Map) {
+                writableArr.pushMap(RCTAEPEdgeMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value.getClass().isArray()) {
+                writableArr.pushArray(RCTAEPEdgeArrayUtil.toWritableArray((Object[]) value));
+            }
+        }
+
+        return writableArr;
+    }
+
+    static WritableArray toWritableArray(ArrayList<?> array) {
         if (array == null) {
             return null;
         }
