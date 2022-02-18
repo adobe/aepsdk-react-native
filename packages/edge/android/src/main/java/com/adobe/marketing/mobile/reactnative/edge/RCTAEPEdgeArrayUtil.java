@@ -75,6 +75,8 @@ class RCTAEPEdgeArrayUtil {
                 writableArr.pushString((String) value);
             } else if (value instanceof Map) {
                 writableArr.pushMap(RCTAEPEdgeMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof ArrayList) {
+                writableArr.pushArray(RCTAEPEdgeArrayUtil.toWritableArray((ArrayList<?>) value));
             } else if (value.getClass().isArray()) {
                 writableArr.pushArray(RCTAEPEdgeArrayUtil.toWritableArray((Object[]) value));
             }
@@ -102,6 +104,8 @@ class RCTAEPEdgeArrayUtil {
                 writableArr.pushString((String) value);
             } else if (value instanceof Map) {
                 writableArr.pushMap(RCTAEPEdgeMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof ArrayList) {
+                writableArr.pushArray(RCTAEPEdgeArrayUtil.toWritableArray((ArrayList<?>) value));
             } else if (value.getClass().isArray()) {
                 writableArr.pushArray(RCTAEPEdgeArrayUtil.toWritableArray((Object[]) value));
             }
