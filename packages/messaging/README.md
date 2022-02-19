@@ -24,8 +24,19 @@ cd MyReactApp
 npm install @adobe/react-native-aepmessaging
 ```
 
+**Installation instructions for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**  
+Download the node package `adobe-react-native-aepmessaging-1.0.0-beta.2.tgz` from [github release](https://github.com/adobe/aepsdk-react-native/releases/tag/%40adobe%2Freact-native-aepmessaging%401.0.0-beta.2) and save it in a folder.  
+Install the `@adobe/react-native-aepmessaging` package:
+
+```bash
+cd MyReactApp
+npm install {path to node package file}
+```
+
+
+
 **Podfile setup**  
-The In app Message APIs dependes on the AEP Messaging 1.1.0. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target. 
+The In app Message APIs depends on the AEP Messaging, v1.1.0. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target. 
 
 ```Ruby
 target 'AEPSampleApp' do
@@ -134,17 +145,17 @@ Handling push notifications must be done in native (Android/iOS) code for the Re
 - [Apple - iOS push notification setup](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns)  
 - [Google - Android push notification setup](https://firebase.google.com/docs/cloud-messaging/android/client)
 
-## Push Message API usage
-Push Mesage related APIs in the Messaging SDK must be called from the native Android/iOS project of React Native app.  
+## Push Messaging APIs usage
+Push messaging APIs in the SDK must be called from the native Android/iOS project of React Native app.  
 
 ###### [iOS API usage](https://github.com/adobe/aepsdk-messaging-ios/blob/main/Documentation/APIUsage.md)  
 
 ##### [Android API usage](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/APIUsage.md)
 In Android, [MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/push/MessagingPushPayload.md#messagingpushpayload-usage) can be used for getting the notification attributes like title, body, and action. These are useful for push notification creation.
 
-## In App Messages API reference
+## In-app messages API reference
 ### refreshInAppMessages
-Initiates a network call to retrieve remote In-App Message definitions.
+Initiates a network call to retrieve remote in-app message definitions.
 
 **Syntax**
 ```javascript
@@ -157,7 +168,7 @@ Messaging.refreshInAppMessages();
 ```
 
 ### setMessagingDelegate
-Sets the UI Message delegate to listen the Message lifecycle events.
+Sets the MessagingDelegate in AEPCore to listen the Message lifecycle events.
 
 **Syntax**
 ```javascript
@@ -189,7 +200,7 @@ const messagingDelegate = {
 ```
 
 ### saveMessage
-Call to the saveMessage leads to in-memory caching of the Message object. Cached Message object can be later use to show message. This function should be called from **shouldShowMessage** of MessagingDelegate.
+Natively caches the provided Message object in-memory. Cached Message object can be later use to show message or perform other actions on the Message object. This function should be called from **shouldShowMessage** of MessagingDelegate.
 
 **Syntax**
 ```javascript
@@ -276,19 +287,19 @@ var message: Message;
 message.setAutoTrack(true);
 ```
 
-### clearMessage
+### clear
 Clears the reference to the in-memory cached Message object. This function must be called if a Message was saved by calling "Messaging.saveMessage" but no longer needed. Failure to call this function leads to memory leaks.
 
 
 **Syntax**
 ```javascript
-clearMessage();
+clear();
 ```
 
 **Example**
 ```javascript
 var message: Message;
-message.clearMessage();
+message.clear();
 ```
 
 ## Programatically control the display of in-app messages
@@ -307,7 +318,7 @@ type MessagingDelegate = {
     urlLoaded(url: string, message: Message): void;
 };
 ```
-Object of type MessagingDelegate can be create as shown below:
+Objects of type MessagingDelegate can be created as shown below:
 ```javascript
 const messagingDelegate = {
 
@@ -343,22 +354,22 @@ function shouldShowMessage(message: Message): boolean {
 }
 ```
 
-Another option for the developer is to store a reference to the Message object, and call the show() method on it at a later time. App developer also have to call _Messaging.saveMessage(message)_ from _shouldShowMessage_ for caching the Message on the native side of the RN package.
+Another option for the developer is to store a reference to the Message object, and call the show() function on it at a later time. App developer also have to call _Messaging.saveMessage(message)_ from _shouldShowMessage_ of MessagingDelegate for caching the Message on the native side of the RN AEPMessaging package.
 Continuing with the above example, the developer has stored the message that was triggered initially, and chooses to show it upon completion of the other workflow:
 
 ```javascript
-var currentMessage: Message;
+var cachedMessage: Message;
 
 function otherWorkflowFinished() {
     anotherWorkflowStatus = "complete";
-    currentMessage.show();
+    cachedMessage.show();
 }
 
 function shouldShowMessage(message: Message): boolean {
-    if(someOtherWorkflowStatus == "inProgress") {                
+    if(anotherWorkflowStatus === "inProgress") {                
         // store the current message for later use
         Messaging.saveMessage(message);
-        currentMessage = message;
+        cachedMessage = message;
         return false
     }
 
