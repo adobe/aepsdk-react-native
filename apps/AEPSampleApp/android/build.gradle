@@ -35,5 +35,9 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
         mavenCentral()
         jcenter()
+        flatDir {
+            dirs project(':adobe_react-native-aepmessaging').file('libs')
+//            dirs '../node_modules/@adobe/react-native-aepmessaging/android/libs'
+        }
     }
 }

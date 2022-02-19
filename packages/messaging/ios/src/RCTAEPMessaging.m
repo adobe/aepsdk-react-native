@@ -68,7 +68,6 @@ RCT_EXPORT_METHOD(dismiss: (NSString *) messageId suppressAutoTrack: (BOOL) supp
     if(message){
         [message dismissSuppressingAutoTrack:suppressAutoTrack];
     }
-    
 }
 
 RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) interaction eventType: (int) eventTypeValue) {
@@ -128,8 +127,6 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     dispatch_semaphore_signal(semaphore);
     return nil;
 }
-
-//RCT_EXPORT_METHOD(saveMessage)
 
 //MARK: - AEPMessagingDelegate functions.
 - (void) onDismissWithMessage:(id<AEPShowable> _Nonnull) message {

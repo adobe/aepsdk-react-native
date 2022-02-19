@@ -506,7 +506,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   AEPMessaging:
-    :commit: 03547e28b23bbfb9a467169b74fcfe34b13733af
+    :commit: 6789761e59269ddfe340ff8e2a94c441d4fbf1a2
     :git: https://github.com/adobe/aepsdk-messaging-ios.git
 
 SPEC CHECKSUMS:

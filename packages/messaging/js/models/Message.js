@@ -25,12 +25,7 @@ export class Message {
 
     constructor(id: string, autoTrack: boolean) {
         this.id = id;
-        this.autoTrack = autoTrack;
-        this.show.bind(this);
-        this.dismiss.bind(this);
-        this.track.bind(this);
-        this.handleJavascriptMessage.bind(this);
-        this.clear.bind(this);
+        this.autoTrack = autoTrack;                
     }
 
     /** 
@@ -38,7 +33,7 @@ export class Message {
     * This funtion works only for the Message objects that were saved by calling "Messaging.saveMessage"
     * @param {boolean} autoTrack: New value of property autoTrack.
      */
-    setAutoTrack = (autoTrack: boolean) => {
+    setAutoTrack(autoTrack: boolean) {
         this.autoTrack = autoTrack;
         RCTAEPMessaging.setAutoTrack(this.id, autoTrack);
     };
@@ -47,7 +42,7 @@ export class Message {
     * Signals to the UIServices that the message should be shown.
     * If autoTrack is true, calling this method will result in an "inapp.display" Edge Event being dispatched.
     */
-    show = () => {        
+    show() {        
         RCTAEPMessaging.show(this.id);
     };
 
@@ -57,7 +52,7 @@ export class Message {
     * @param {?boolean} suppressAutoTrack: if set to true, the inapp.dismiss Edge Event will not be sent regardless
     * of the autoTrack setting.
     */
-    dismiss = (suppressAutoTrack: ?boolean = false) => {
+    dismiss(suppressAutoTrack: ?boolean = false) {
         RCTAEPMessaging.dismiss(this.id, suppressAutoTrack);
     };
 
@@ -66,7 +61,7 @@ export class Message {
     * @param {string?} interaction: a custom String value to be recorded in the interaction
     * @param {MessagingEdgeEventType} eventType: the MessagingEdgeEventType to be used for the ensuing Edge Event
      */
-    track = (interaction: ?string, eventType: MessagingEdgeEventType) => {
+    track(interaction: ?string, eventType: MessagingEdgeEventType) {
         RCTAEPMessaging.track(this.id, interaction, eventType.value);
     };
 
@@ -76,7 +71,7 @@ export class Message {
     * @param {string} name: the name of the message that should be handled by `handler`
     * @return {Promise<any?>}: the Promise to be resolved with the body of the message passed by the Javascript message in the WebView
     */
-    handleJavascriptMessage = (name: string) : Promise<?any> => {
+    handleJavascriptMessage(name: string) : Promise<?any> {
         return Promise.resolve(RCTAEPMessaging.handleJavascriptMessage(this.id, name));
     };
 
@@ -85,7 +80,7 @@ export class Message {
     * This function must be called if Mesage was saved by calling "Messaging.saveMessage" but no longer needed. 
     * Failure to call this function leads to memory leaks.
      */
-    clear = () => {
+    clear() {
         RCTAEPMessaging.clear(this.id);
     };    
 }
