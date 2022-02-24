@@ -1,13 +1,13 @@
 {
   "name": "@adobe/react-native-aepassurance",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "main": "./js/index.js",
   "types": "./js/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
-    "flow": "flow"
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",

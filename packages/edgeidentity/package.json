@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepedgeidentity",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Adobe Experience Platform Identity for Edge Network extension for Adobe Experience Platform Mobile SDK. Written and maintained by Adobe.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
   "types": "./js/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
-    "flow": "flow"
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
