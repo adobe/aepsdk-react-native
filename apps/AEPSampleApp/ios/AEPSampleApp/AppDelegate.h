@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 
 #import <React/RCTBridgeDelegate.h>
 #import <UIKit/UIKit.h>
+
 @import AEPCore;
 @import AEPServices;
 @import AEPSignal;
@@ -21,7 +22,12 @@ governing permissions and limitations under the License.
 @import AEPMessaging;
 @import AEPEdge;
 @import AEPEdgeIdentity;
+<<<<<<< HEAD
 @import AEPOptimize;
+=======
+@import AEPEdgeConsent;
+@import AEPAssurance;
+>>>>>>> 4090b71f6de68319291395c6625bdbead2054a7a
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 

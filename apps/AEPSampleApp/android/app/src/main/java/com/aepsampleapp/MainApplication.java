@@ -14,13 +14,15 @@ package com.aepsampleapp;
 
 import android.app.Application;
 import android.content.Context;
-
-import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.consent.Consent;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
 import com.adobe.marketing.mobile.edge.identity.Identity;
@@ -82,9 +84,18 @@ public class MainApplication extends Application implements ReactApplication {
           MobileCore.start(o -> {
               MobileCore.lifecycleStart(null);
           });
+          Consent.registerExtension();                    
       } catch (InvalidInitException e) {
           e.printStackTrace();
       }
+
+      MobileCore.configureWithAppID("your-app-ID");
+      MobileCore.start(new AdobeCallback() {
+          @Override
+          public void call(Object o) {
+              MobileCore.lifecycleStart(null);
+          }
+      });
   }
 
   /**

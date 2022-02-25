@@ -23,30 +23,30 @@ Initializing the SDK should be done in native code, documentation on how to init
 
 #### Importing the extension:
 ```javascript
-import {AEPUserProfile} from '@adobe/react-native-aepuserprofile';
+import {UserProfile} from '@adobe/react-native-aepuserprofile';
 ```
 
 #### Getting the extension version:
 
 ```javascript
-AEPUserProfile.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPUserProfile version: " + version));
+UserProfile.extensionVersion().then(version => console.log("AdobeExperienceSDK: UserProfile version: " + version));
 ```
 
 #### Update user attributes:
 
 ```javascript
 let attrMap = {"mapKey": "mapValue", "mapKey1": "mapValue1"};
-AEPUserProfile.updateUserAttributes(attrMap);
+UserProfile.updateUserAttributes(attrMap);
 ```
 
 #### Remove user attributes:
 
 ```javascript
-AEPUserProfile.removeUserAttributes(["mapKey1"]);
+UserProfile.removeUserAttributes(["mapKey1"]);
 ```
 
 #### Get user attributes:
 
 ```javascript
-AEPUserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: AEPUserProfile getUserAttributes: " + map));
+UserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: UserProfile getUserAttributes: " + map));
 ```
