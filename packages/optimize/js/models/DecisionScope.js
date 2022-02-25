@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
 */
 
 /**
-* class represents a scope used to fetch personalized offers from the Experience Edge network.
+* class represents a decision scope used to fetch personalized offers from the Experience Edge network.
 */
 export default class DecisionScope {
     name: string;        
