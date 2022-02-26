@@ -4,16 +4,13 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '10.0'
 target 'AEPSampleApp' do
   config = use_native_modules!
-  pod 'AEPOptimize', :path => '../../../../../optimize/aepsdk-optimize-ios'
+  pod 'AEPOptimize', :path => '../../../../optimize/aepsdk-optimize-ios'
 
   use_react_native!(
     :path => config[:reactNativePath],
     #to enable hermes on iOS, change `false` to `true` and then install pods
     :hermes_enabled => false
   )
-<<<<<<< HEAD
-
-=======
   
   # pod 'AEPCore'
   # pod 'AEPLifecycle'
@@ -22,7 +19,6 @@ target 'AEPSampleApp' do
   # pod 'AEPEdge'
   # pod 'AEPEdgeIdentity'
   # pod 'AEPEdgeConsent'
->>>>>>> 4090b71f6de68319291395c6625bdbead2054a7a
   
   target 'AEPSampleAppTests' do
     inherit! :complete
