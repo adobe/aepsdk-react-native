@@ -18,12 +18,18 @@ export default StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#F5FCFF',
+      backgroundColor: '#F5FCFF',      
     },
     welcome: {
       fontSize: 22,
       textAlign: 'center',
       margin: 10,
+    },
+    header: {
+      fontSize: 18,
+      textAlign: 'center',
+      margin: 5,
+      backgroundColor: '#C1B7B5'
     },
     text: {
       fontSize: 15,

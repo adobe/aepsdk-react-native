@@ -16,7 +16,7 @@ governing permissions and limitations under the License.
 /**
 * class represents a decision scope used to fetch personalized offers from the Experience Edge network.
 */
-export default class DecisionScope {
+module.exports = class DecisionScope {
     name: string;        
 
     constructor(name: ?string, activityId: ?string, placementId: ?string, itemCount: ?number) {                

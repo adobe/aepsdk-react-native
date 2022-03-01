@@ -30,10 +30,12 @@
     "react": "17.0.1",
     "react-native": "0.64.2",
     "react-native-gesture-handler": "^1.10.3",
-    "react-native-reanimated": "^2.2.0",
+    "react-native-reanimated": "2.2.4",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.4.0",
-    "react-native-webview": "^11.14.1"
+    "react-native-webview": "^11.14.1",
+    "recyclerlistview": "^3.0.5",
+    "ts-object-utils":"0.0.5"
   },
   "devDependencies": {
     "metro-react-native-babel-preset": "^0.66.2",

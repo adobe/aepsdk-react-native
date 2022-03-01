@@ -11,6 +11,7 @@ import EdgeIdentity from './extensions/EdgeIdentityView';
 import ConsentView from './extensions/ConsentView';
 import EdgeView from './extensions/EdgeView';
 import AssuranceView from './extensions/AssuranceView';
+import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 
 function HomeScreen({ navigation }) {
   return (

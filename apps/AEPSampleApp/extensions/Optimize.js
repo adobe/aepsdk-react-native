@@ -9,21 +9,39 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 
+@flow
 @format
 */
 
-import React, { useState } from 'react';
-import { Button, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { AEPOptimize, DecisionScope } from '@adobe/react-native-aepoptimize';
+import React, {Component, useState } from 'react';
+import {
+    AEPOptimize, 
+    DecisionScope } from '@adobe/react-native-aepoptimize';
 import { WebView } from 'react-native-webview';
 import styles from '../styles/styles';
+import { 
+    Button, 
+    Text, 
+    View, 
+    ScrollView, 
+    Image, 
+    TouchableOpacity,
+    Dimensions } from 'react-native';
+import { 
+  RecyclerListView, 
+  DataProvider, 
+  LayoutProvider } from "recyclerlistview";
+
+  const ViewTypes = {
+      header: 0,
+      content: 1
+  };
+
+  const TARGET_OFFER_TYPE_TEXT = "text/plain";
+  const TARGET_OFFER_TYPE_JSON = "application/json";
+  const TARGET_OFFER_TYPE_HTML = "text/html";
 
 export default ({ navigation }) => {
-    
-    const TARGET_OFFER_TYPE_TEXT = "text/plain";
-    const TARGET_OFFER_TYPE_JSON = "application/json";
-    const TARGET_OFFER_TYPE_HTML = "text/html";
-
     const [version, setVersion] = useState('0.0.0');
     const [textProposition, setTextProposition] = useState('Placeholder Text Offer!!');
     const [imageProposition, setImageProposition] = useState('https://blog.adobe.com/en/publish/2020/05/28/media_3dfaf748ad02bf771410a771def79c9ad86b1766.jpg');
@@ -44,8 +62,7 @@ export default ({ navigation }) => {
     });
     const updatePropositions = () => AEPOptimize.updatePropositions(decisionScopes, null, null);
     const getPropositions = () => AEPOptimize.getPropositions(decisionScopes).then(
-        (propositions: Map<string, typeof Proposition>) => {
-            console.log(`Get Proposition returned::: ${JSON.stringify(propositions)}`)
+        (propositions: Map<string, typeof Proposition>) => {            
             setTextProposition(propositions.get(decisionScopeText.getName()));
             setImageProposition(propositions.get(decisionScopeImage.getName()));
             setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
@@ -63,38 +80,143 @@ export default ({ navigation }) => {
         }
     });        
 
-    const renderTargetOffer = () => {
-        // console.log(`TARGET::::::${JSON.stringify(targetOffer)}`);
-        if(targetProposition) {
-            // JSON.stringify(`TARGET::::::${targetOffer}`);
-            if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_TEXT) { 
-                console.log("::TARGET_OFFER_TYPE_TEXT::");
+    const renderTargetOffer = () => {        
+        if(targetProposition) {            
+            if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_TEXT) {                 
                 return <Text style={{margin:10, fontSize:18}} onPress={() => {
-                    targetProposition.items[0].tapped(targetProposition);
+                    targetProposition.items[0].tapped();
                 }}>{targetProposition.items[0].getContent()}</Text>
-            } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_JSON) {
-                console.log("::TARGET_OFFER_TYPE_JSON::");
+            } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_JSON) {                
                 return <Text style={{margin:10, fontSize:18}} onPress={() => {
-                    targetProposition.items[0].tapped(targetProposition);
+                    targetProposition.items[0].tapped();
                 }}>{targetProposition.items[0].getContent()}</Text>
-            } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_HTML) {
-                console.log("::TARGET_OFFER_TYPE_HTML:: "+ targetProposition.items[0].getContent());                
-                return (<TouchableOpacity onPress={e => {
-                        console.log('Button is pressed');
-                        targetProposition.items[0].tapped(targetProposition);}}>                        
-                        <View style={{flexDirection: "row", alignItems:'center', justifyContent:'center'}}>                                
-                            <Text style={{ margin:10, fontSize:18 }}>Target offer::</Text>
+            } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_HTML) {                
+                return (<TouchableOpacity onPress={e => {                        
+                        targetProposition.items[0].tapped();}}>                        
+                        <View style={{flexDirection: "row", alignItems:'center', justifyContent:'center'}}>                                                            
                             <WebView source={{ html: targetProposition.items[0].getContent() }}></WebView>
                         </View>
                         </TouchableOpacity>);
             }
         } 
-        return <Text>Default Target Offer</Text>                
+        return <Text>Default Target Offer</Text>;                
     };
 
-    return (<View style={styles.container}>
-        <ScrollView contentContainerStyle={{ marginTop: 75 }} >
-        <Button onPress={() => navigation.goBack()} title="Go to main page" />
+    let dataProvider = new DataProvider((data1, data2) => {
+        return data1 !== data2;
+    });
+
+    var { width } = Dimensions.get("window");
+
+    let layoutProvider = new LayoutProvider(index => {
+        if(index % 2 === 0){ //View type is for header
+            return ViewTypes.header;
+        } else { //View type is for Content
+            return ViewTypes.content;
+        }
+    },
+    (type, dimen) => {
+        switch (type) {
+            case ViewTypes.header:                                
+                dimen.width = width;
+                dimen.height = 50;
+                break;
+
+            case ViewTypes.content:                
+                dimen.width = width;
+                dimen.height = 200;
+                break;    
+        
+            default:                
+                dimen.width = 0;
+                dimen.height = 0;
+                break;
+        }
+    });    
+        
+    let rowRenderer = (type, data) => {
+        switch(type) {
+            case ViewTypes.header:            
+                return (
+                    <View>
+                        <Text style={styles.header}>{data}</Text>
+                    </View>    
+                );
+
+            case ViewTypes.content:            
+                if(data === textProposition){
+                    return (
+                        <View>
+                            <Text style={{ margin:10, fontSize:18 }} onPress={e => {
+                                console.log('Button is pressed');
+                                textProposition.items[0].tapped();
+                            }}>
+                                { typeof textProposition === "object" ? textProposition.items[0].getContent() : textProposition }
+                            </Text>
+                        </View>    
+                    );    
+                } else if(data === imageProposition) {
+                    return (
+                        <View style={{flexDirection: "row", alignItems: 'center'}}>                            
+                            <TouchableOpacity onPress={e => {                                
+                                imageProposition.items[0].tapped();}}>
+                            <Image style={{width:100, height:100, margin:10}} 
+                                source={{ uri: typeof imageProposition === "object" ? imageProposition.items[0].getContent() : imageProposition }}>                
+                            </Image>
+                        </TouchableOpacity >
+                    </View>    
+                    );    
+                } else if(data === jsonProposition) {
+                    return (
+                        <Text style={{ margin:10, fontSize:18 }} onPress={e => {                
+                            jsonProposition.items[0].tapped();
+                        }}>
+                            { typeof jsonProposition === "object" ? jsonProposition.items[0].getContent() : jsonProposition }            
+                        </Text>);    
+                } else if(data === htmlProposition) {
+                    return (
+                            <TouchableOpacity onPress={e => {
+                            console.log('Button is pressed');
+                            htmlProposition.items[0].tapped();}}>
+                            <View style={{flexDirection: "row", alignItems:'center', justifyContent:'center'}} onPress={e => {
+                            console.log('Button is pressed');
+                            imageProposition.items[0].tapped();
+                            }}>                                        
+                            <WebView 
+                                source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].getContent() : htmlProposition }}>
+                            </WebView>        
+                            </View>
+                            </TouchableOpacity>
+                    );    
+                } else if(data === targetProposition) {
+                    return renderTargetOffer();                        
+                }
+                return (
+                        <View>
+                            <Text style={styles.text}>Offer type didn't match</Text> 
+                        </View>);                      
+            default:                
+                return null;     
+        }
+    };    
+
+    let getContent = () => {
+        let data = new Array();
+        data.push("Text Offer");
+        data.push(textProposition);
+        data.push("Image Offer");
+        data.push(imageProposition);
+        data.push("JSON Offer");
+        data.push(jsonProposition);
+        data.push("HTML Offer");
+        data.push(htmlProposition);
+        data.push("Target Mbox Offer");             
+        data.push(targetProposition);
+        return dataProvider.cloneWithRows(data);
+    }
+
+    return (<View style={{...styles.container, marginTop: 30}}>
+        <Button onPress={() => navigation.goBack()} title="Go to main page"/>
         <Text style={styles.welcome}>Optimize</Text>
         <View style={{margin:5}}>
             <Button title="Extension Version" onPress={optimizeExtensionVersion}/>
@@ -115,50 +237,7 @@ export default ({ navigation }) => {
             style={{...styles.welcome, fontSize:20}}>
             SDK Version:: { version }
         </Text>
-        <Text 
-            style={{ margin:10, fontSize:18 }}
-            onPress={e => {
-                console.log('Button is pressed');
-                textProposition.items[0].tapped(textProposition);
-            }}
-            >
-            Text Offer:: { typeof textProposition === "object" ? textProposition.items[0].getContent() : textProposition }
-        </Text>
-        <View style={{flexDirection: "row", alignItems: 'center'}}>
-            <Text style={{ fontSize:20, margin:10, fontSize:18 }}>Image offer</Text>
-            <TouchableOpacity onPress={e => {
-                    console.log('Button is pressed');
-                    imageProposition.items[0].tapped(imageProposition);
-                }}>
-            <Image 
-                style={{width:100, height:100, margin:10}} 
-                source={{ uri: typeof imageProposition === "object" ? imageProposition.items[0].getContent() : imageProposition }}>                
-            </Image>
-            </TouchableOpacity >
-        </View>
-        <Text 
-            style={{ margin:10, fontSize:18 }} 
-            onPress={e => {                
-                jsonProposition.items[0].tapped(jsonProposition);                                                                
-            }}>
-            JSON Offer:: { typeof jsonProposition === "object" ? jsonProposition.items[0].getContent() : jsonProposition }            
-        </Text>
-        <TouchableOpacity onPress={e => {
-                    console.log('Button is pressed');
-                    htmlProposition.items[0].tapped(htmlProposition);}}>
-        <View style={{flexDirection: "row", alignItems:'center', justifyContent:'center'}} onPress={e => {
-                    console.log('Button is pressed');
-                    imageProposition.items[0].tapped(imageProposition);
-                }}>
-        <Text style={{ margin:10, fontSize:18 }}>HTML offer::</Text>
-        
-            <WebView 
-                source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].getContent() : htmlProposition }}>
-            </WebView>
-        
-        </View>
-        </TouchableOpacity>
-        { renderTargetOffer() }
-        </ScrollView>
+        <Text style={styles.welcome}>Personalized Offers</Text>
+        <RecyclerListView style={{ width: width }} layoutProvider={layoutProvider} dataProvider={getContent()} rowRenderer={rowRenderer} />        
     </View>
 )};
