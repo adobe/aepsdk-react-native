@@ -84,19 +84,24 @@ export default ({ navigation }) => {
         if(targetProposition) {            
             if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_TEXT) {                 
                 return <Text style={{margin:10, fontSize:18}} onPress={() => {
-                    targetProposition.items[0].tapped();
+                    targetProposition.items && targetProposition.items[0].tapped(targetProposition);
                 }}>{targetProposition.items[0].getContent()}</Text>
             } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_JSON) {                
                 return <Text style={{margin:10, fontSize:18}} onPress={() => {
-                    targetProposition.items[0].tapped();
+                    targetProposition.items && targetProposition.items[0].tapped(targetProposition);
                 }}>{targetProposition.items[0].getContent()}</Text>
             } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_HTML) {                
-                return (<TouchableOpacity onPress={e => {                        
-                        targetProposition.items[0].tapped();}}>                        
-                        <View style={{flexDirection: "row", alignItems:'center', justifyContent:'center'}}>                                                            
-                            <WebView source={{ html: targetProposition.items[0].getContent() }}></WebView>
-                        </View>
-                        </TouchableOpacity>);
+                return (                        
+                            <TouchableOpacity onPress={e => {                            
+                                targetProposition.items && targetProposition.items[0].tapped(targetProposition);}}>                                
+                                <View style={{width: width, height: 150}}>
+                                    <WebView 
+                                    textZoom={100}
+                                    originWhitelist={['*']}
+                                    source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].getContent() : htmlProposition }}/>                                                                    
+                                </View>    
+                            </TouchableOpacity>
+                    );    
             }
         } 
         return <Text>Default Target Offer</Text>;                
@@ -108,7 +113,7 @@ export default ({ navigation }) => {
 
     var { width } = Dimensions.get("window");
 
-    let layoutProvider = new LayoutProvider(index => {
+    let layoutProvider = new LayoutProvider(index => {        
         if(index % 2 === 0){ //View type is for header
             return ViewTypes.header;
         } else { //View type is for Content
@@ -143,13 +148,12 @@ export default ({ navigation }) => {
                     </View>    
                 );
 
-            case ViewTypes.content:            
-                if(data === textProposition){
+            case ViewTypes.content:                            
+                if(data === textProposition){                    
                     return (
                         <View>
-                            <Text style={{ margin:10, fontSize:18 }} onPress={e => {
-                                console.log('Button is pressed');
-                                textProposition.items[0].tapped();
+                            <Text style={{ margin:10, fontSize:18 }} onPress={e => {                                                                
+                                textProposition.items && textProposition.items[0].tapped(textProposition);
                             }}>
                                 { typeof textProposition === "object" ? textProposition.items[0].getContent() : textProposition }
                             </Text>
@@ -159,7 +163,7 @@ export default ({ navigation }) => {
                     return (
                         <View style={{flexDirection: "row", alignItems: 'center'}}>                            
                             <TouchableOpacity onPress={e => {                                
-                                imageProposition.items[0].tapped();}}>
+                                imageProposition.items && imageProposition.items[0].tapped(imageProposition);}}>
                             <Image style={{width:100, height:100, margin:10}} 
                                 source={{ uri: typeof imageProposition === "object" ? imageProposition.items[0].getContent() : imageProposition }}>                
                             </Image>
@@ -168,24 +172,21 @@ export default ({ navigation }) => {
                     );    
                 } else if(data === jsonProposition) {
                     return (
-                        <Text style={{ margin:10, fontSize:18 }} onPress={e => {                
-                            jsonProposition.items[0].tapped();
-                        }}>
-                            { typeof jsonProposition === "object" ? jsonProposition.items[0].getContent() : jsonProposition }            
-                        </Text>);    
-                } else if(data === htmlProposition) {
-                    return (
-                            <TouchableOpacity onPress={e => {
-                            console.log('Button is pressed');
-                            htmlProposition.items[0].tapped();}}>
-                            <View style={{flexDirection: "row", alignItems:'center', justifyContent:'center'}} onPress={e => {
-                            console.log('Button is pressed');
-                            imageProposition.items[0].tapped();
-                            }}>                                        
-                            <WebView 
-                                source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].getContent() : htmlProposition }}>
-                            </WebView>        
-                            </View>
+                            <Text style={{ margin:10, fontSize:18 }} onPress={e => {                
+                                jsonProposition.items && jsonProposition.items[0].tapped(jsonProposition);
+                            }}> { typeof jsonProposition === "object" ? jsonProposition.items[0].getContent() : jsonProposition }            
+                            </Text>
+                    );    
+                } else if(data === htmlProposition) {                    
+                    return (                        
+                            <TouchableOpacity onPress={e => {                            
+                                htmlProposition.items && htmlProposition.items[0].tapped(htmlProposition);}}>                                
+                                <View style={{width: width, height: 150}}>
+                                    <WebView                                                                         
+                                    textZoom={100}
+                                    originWhitelist={['*']}
+                                    source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].getContent() : htmlProposition }}/>                                                                    
+                                </View>    
                             </TouchableOpacity>
                     );    
                 } else if(data === targetProposition) {
@@ -200,8 +201,9 @@ export default ({ navigation }) => {
         }
     };    
 
+    var data;
     let getContent = () => {
-        let data = new Array();
+        data = new Array();
         data.push("Text Offer");
         data.push(textProposition);
         data.push("Image Offer");
@@ -213,7 +215,27 @@ export default ({ navigation }) => {
         data.push("Target Mbox Offer");             
         data.push(targetProposition);
         return dataProvider.cloneWithRows(data);
-    }
+    };
+
+    let hasBegunScrolling = true;
+    let indicesWithData = [1,3,5,7,9];
+
+    let indicesChangeHandler = (all, now, notNow) => {                        
+        if(hasBegunScrolling && notNow && notNow[0] && notNow[0] === 0) {
+            for(const i in all) {            
+                if(indicesWithData.includes(i) && typeof data[i] === "object"){
+                    const offer = data[i].items[0];
+                    const proposition = data;                    
+                    offer.displayed(proposition);
+                }                
+            }
+            hasBegunScrolling = false;
+        } else if(now && indicesWithData.includes(now[0]) && typeof data[now[0]] === "object") {            
+            const offer = data[now[0]].items[0];
+            const proposition = data;            
+            offer.displayed(proposition);
+        }        
+    };
 
     return (<View style={{...styles.container, marginTop: 30}}>
         <Button onPress={() => navigation.goBack()} title="Go to main page"/>
@@ -238,6 +260,11 @@ export default ({ navigation }) => {
             SDK Version:: { version }
         </Text>
         <Text style={styles.welcome}>Personalized Offers</Text>
-        <RecyclerListView style={{ width: width }} layoutProvider={layoutProvider} dataProvider={getContent()} rowRenderer={rowRenderer} />        
+        <RecyclerListView 
+            style={{ width: width }} 
+            layoutProvider={layoutProvider} 
+            dataProvider={getContent()} 
+            rowRenderer={rowRenderer}
+            onVisibleIndicesChanged={indicesChangeHandler} />        
     </View>
 )};
