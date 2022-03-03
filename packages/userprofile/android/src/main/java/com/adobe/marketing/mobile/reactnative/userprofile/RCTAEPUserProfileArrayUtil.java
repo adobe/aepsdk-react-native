@@ -89,6 +89,37 @@ public class RCTAEPUserProfileArrayUtil {
                 writableArr.pushString((String) value);
             } else if (value instanceof Map) {
                 writableArr.pushMap(RCTAEPUserProfileMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((List) value));
+            } else if (value.getClass().isArray()) {
+                writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((Object[]) value));
+            }
+        }
+
+        return writableArr;
+    }
+
+    public static WritableArray toWritableArray(List array) {
+        if (array == null) {
+            return null;
+        }
+        WritableArray writableArr = Arguments.createArray();
+
+        for (Object value : array) {
+            if (value == null) {
+                writableArr.pushNull();
+            } else if (value instanceof Boolean) {
+                writableArr.pushBoolean((Boolean) value);
+            } else if (value instanceof Double) {
+                writableArr.pushDouble((Double) value);
+            } else if (value instanceof Integer) {
+                writableArr.pushInt((Integer) value);
+            } else if (value instanceof String) {
+                writableArr.pushString((String) value);
+            } else if (value instanceof Map) {
+                writableArr.pushMap(RCTAEPUserProfileMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((List) value));
             } else if (value.getClass().isArray()) {
                 writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((Object[]) value));
             }

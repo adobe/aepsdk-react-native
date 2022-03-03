@@ -18,6 +18,7 @@ import com.facebook.react.bridge.WritableMap;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 class RCTAEPEdgeIdentityMapUtil {
@@ -83,6 +84,8 @@ class RCTAEPEdgeIdentityMapUtil {
                 writableMap.putString((String) pair.getKey(), (String) value);
             } else if (value instanceof Map) {
                 writableMap.putMap((String) pair.getKey(), RCTAEPEdgeIdentityMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableMap.putArray((String) pair.getKey(), RCTAEPEdgeIdentityArrayUtil.toWritableArray((List) value));
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), RCTAEPEdgeIdentityArrayUtil.toWritableArray((Object[]) value));
             }
