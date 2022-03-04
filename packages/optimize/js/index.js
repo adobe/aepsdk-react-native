@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 module.exports = {
   get AEPOptimize() {
-    return require('./AEPOptimize.js');
+    return require('./AEPOptimize');
   },
   get Offer() {
     return require('./models/Offer');

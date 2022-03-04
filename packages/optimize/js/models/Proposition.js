@@ -13,23 +13,23 @@ governing permissions and limitations under the License.
 @format
 */
 
-import { NativeModules } from 'react-native';
-const RCTAEPOptimize = NativeModules.AEPOptimize;
+'use strict';
+
+const RCTAEPOptimize = require('react-native').NativeModules.AEPOptimize;
 import Offer from './Offer';
 
-
-export default class Proposition {
+module.exports = class Proposition {
     id: string;
     items: Array<Offer>;
     scope: string;
-    scopeDetails: Object;
+    scopeDetails: Map<string, any>;
 
-    constructor(eventData: Object) {
+    constructor(eventData: any) {
         this.id = eventData['id'];
         this.scope = eventData['scope'];
         this.scopeDetails = eventData['scopeDetails'];
         if(eventData['items']) {
-            this.items = eventData['items'].map(offer => new Offer(offer, this));                
+            this.items = eventData['items'].map(offer => new Offer(offer));                
         }                
     }    
         

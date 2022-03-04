@@ -12,40 +12,63 @@ governing permissions and limitations under the License.
 @flow
 @format
 */
+'use strict';
 
-import { NativeModules } from 'react-native';
-const RCTAEPOptimize = NativeModules.AEPOptimize;
+const RCTAEPOptimize = require('react-native').NativeModules.AEPOptimize;
 import Proposition from'./Proposition';
 
-export default class Offer {
+module.exports = class Offer {
     id: string;
     etag: string;
     schema: string;
-    data: Object;    
-    proposition: Proposition;
+    content:? string;
+    format:? string; 
+    language:? Array<string>;
+    characteristics:? Map<string, any>;
 
-    constructor(eventData: Object, proposition: Proposition) {
+    constructor(eventData: any) {
         this.id = eventData['id'];
         this.etag = eventData['etag'];
         this.schema = eventData['schema'];
-        this.data = eventData['data'];                
-        this.proposition = proposition;
+        let data = eventData['data'];
+        if(data) {            
+            this.content = data['content'];
+            this.format = data['format'];
+            this.language = data['language'];
+            this.characteristics = data['characteristics'];
+        }                
     }
 
     /**
      * Gets the content of the Offer
      * @returns {string} - content of this Offer
      */
-    getContent(): string {
-        return this.data['content'];
+    getContent(): ?string {
+        return this.content;
     };
 
     /**
      * Gets the type of the Offer
      * @returns {string} - type of this Offer
      */
-    getType(): string {
-        return this.data['format'];
+    getType(): ?string {
+        return this.format;
+    };
+
+    /**
+     * Gets the languages of the Offer content
+     * @returns {Array<string>} - Array of languages of the Offers content
+     */
+    getLanguage(): ?Array<string> {
+        return this.language;
+    };
+
+    /**
+     * Gets the characteristics of the Offer content
+     * @returns {Map<string, any>} - Map containing the characteristics of the Offer
+     */
+    getCharacteristics(): ?Map<string, any> {
+        return this.characteristics;
     };
 
     /**
@@ -53,8 +76,8 @@ export default class Offer {
     * given Proposition offer.
     * @param {Proposition} proposition - the proposition this Offer belongs to
     */
-    displayed(): void {
-        const entries = Object.entries(this.proposition).filter(([key, value]) => typeof(value) !== "function");        
+    displayed(proposition: Proposition): void {
+        const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");        
         const cleanedProposition = Object.fromEntries(entries);
         RCTAEPOptimize.offerDisplayed(this.id, cleanedProposition);
     };
@@ -64,8 +87,9 @@ export default class Offer {
     * given Proposition offer.
     * @param {Proposition} proposition - the proposition this Offer belongs to
     */
-    tapped(): void {                
-        const entries = Object.entries(this.proposition).filter(([key, value]) => typeof(value) !== "function");
+    tapped(proposition: Proposition): void {                
+        console.log("Offer is tapped");
+        const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");
         const cleanedProposition = Object.fromEntries(entries);
         RCTAEPOptimize.offerTapped(this.id, cleanedProposition);
     };
@@ -78,8 +102,8 @@ export default class Offer {
     * @param {Proposition} proposition - the proposition this Offer belongs to
     * @return {Promise<Map<string, any>>} - a promise that resolves to xdm map
     */
-    generateDisplayInteractionXdm(): Promise<Map<string, any>> {        
-        const entries = Object.entries(this.proposition).filter(([key, value]) => typeof(value) !== "function");
+    generateDisplayInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {        
+        const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");
         const cleanedProposition = Object.fromEntries(entries);
         return Promise.resolve(RCTAEPOptimize.generateDisplayInteractionXdm(this.id, cleanedProposition));        
     };   
@@ -92,9 +116,9 @@ export default class Offer {
     * @param {Proposition} proposition - proposition this Offer belongs to
     * @return {Promise<Map<string, any>>} a promise that resolves to xdm map
     */
-    generateTapInteractionXdm(): Promise<Map<string, any>> {
-        const entries = Object.entries(this.proposition).filter(([key, value]) => typeof(value) !== "function");
+    generateTapInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {
+        const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");
         const cleanedProposition = Object.fromEntries(entries);
         return Promise.resolve(RCTAEPOptimize.generateTapInteractionXdm(this.id, cleanedProposition));
     };   
-}
+};

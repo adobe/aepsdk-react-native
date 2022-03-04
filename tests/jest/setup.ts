@@ -83,8 +83,28 @@ jest.doMock('react-native', () => {
                 },
                 AEPMessaging: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
+                },
+                AEPOptimize: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    onPropositionsUpdate: jest.fn(),                    
+                    clearCachedPropositions: jest.fn(),
+                    getPropositions: jest.fn(() => new Promise(resolve => {
+                        let map = new Map();
+                        resolve(map);
+                    })),
+                    updatePropositions: jest.fn(),
+                    offerDisplayed: jest.fn(),
+                    offerTapped: jest.fn(),
+                    generateDisplayInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
+                    generateTapInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
+                    generateReferenceXdm: jest.fn(() => new Promise(resolve => resolve(new Map())))
+                },                     
+            },            
+            NativeEventEmitter: class {
+                addListener() {
+
                 }
-            },
+            }
         },
         ReactNative,
     );

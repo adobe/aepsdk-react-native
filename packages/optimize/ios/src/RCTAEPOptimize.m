@@ -83,7 +83,7 @@ RCT_EXPORT_METHOD(onPropositionsUpdate) {
 
 RCT_EXPORT_METHOD(offerTapped: (NSString*) offerId propositionDictionary: (NSDictionary<NSString*, id>*) dictionary) {
   [AEPLog debugWithLabel:TAG message:@"Offer Tapped"];
-  AEPProposition* proposition = [AEPProposition initFromData: dictionary];
+  AEPProposition* proposition = [AEPProposition initFromData: dictionary];    
   NSArray<AEPOffer*>* offers = [proposition offers];
   for(AEPOffer* offer in offers) {
     if([[offer id] isEqualToString:offerId]){

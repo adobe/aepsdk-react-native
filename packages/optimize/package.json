@@ -26,9 +26,11 @@
   ],
   "author": {
     "name": "Adobe Experience Platform SDK Team"
-  },
-  "dependencies": {
-    "react": "17.0.2",
+  },  
+  "peerDependencies": {
+    "@adobe/react-native-aepcore": "^1.0.0-beta",
+    "@adobe/react-native-aepedge": "^1.0.0-beta",
+    "@adobe/react-native-aepedgeidentity": "^1.0.0-beta",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {

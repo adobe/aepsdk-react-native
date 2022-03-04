@@ -15,8 +15,9 @@ governing permissions and limitations under the License.
 
 'use strict';
 
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeModules } from 'react-native';
 const RCTAEPOptimize = NativeModules.AEPOptimize;
+import { NativeEventEmitter } from 'react-native';
 import Proposition from './models/Proposition';
 import Offer from './models/Offer';
 import DecisionScope from './models/DecisionScope';
@@ -40,19 +41,19 @@ module.exports = {
    * This API registers a permanent callback which is invoked whenever the Edge extension dispatches a response Event received from the Experience Edge Network upon a personalization query.
    * @param {Object} onPropositionUpdateCallback - the callback that will be called with the updated Propositions.
    */
-  onPropositionUpdate(adobeCallback: AdobeCallback) {    
+  onPropositionUpdate(adobeCallback: AdobeCallback) {        
     if(onPropositionUpdateSubscription) {
       onPropositionUpdateSubscription.remove();
     }
 
-    const eventEmitter = new NativeEventEmitter(RCTAEPOptimize);    
+    const eventEmitter = new NativeEventEmitter(RCTAEPOptimize);        
     onPropositionUpdateSubscription = eventEmitter.addListener("onPropositionsUpdate", propositions => {      
       const map = new Map<string, Proposition>();
       for (const [key, value] of Object.entries(propositions)) {
         map.set(key, new Proposition(value));  
       }      
       adobeCallback.call(map);
-    });
+    });    
     RCTAEPOptimize.onPropositionsUpdate();        
   }, 
 
