@@ -19,7 +19,7 @@ const RCTAEPMessaging = NativeModules.AEPMessaging;
 const MessagingEdgeEventType = require("./MessagingEdgeEventType");
 const Messaging = require("../Messaging");
 
-export class Message {    
+module.exports = class Message {    
     id: string;
     autoTrack: boolean;    
 
@@ -52,8 +52,8 @@ export class Message {
     * @param {?boolean} suppressAutoTrack: if set to true, the inapp.dismiss Edge Event will not be sent regardless
     * of the autoTrack setting.
     */
-    dismiss(suppressAutoTrack: ?boolean = false) {
-        RCTAEPMessaging.dismiss(this.id, suppressAutoTrack);
+    dismiss(suppressAutoTrack: ?boolean) {
+        RCTAEPMessaging.dismiss(this.id, suppressAutoTrack ? true : false);
     };
 
     /**
@@ -61,8 +61,8 @@ export class Message {
     * @param {string?} interaction: a custom String value to be recorded in the interaction
     * @param {MessagingEdgeEventType} eventType: the MessagingEdgeEventType to be used for the ensuing Edge Event
      */
-    track(interaction: ?string, eventType: MessagingEdgeEventType) {
-        RCTAEPMessaging.track(this.id, interaction, eventType.value);
+    track(interaction: ?string, eventType: number) {
+        RCTAEPMessaging.track(this.id, interaction, eventType);
     };
 
     /**
@@ -83,4 +83,4 @@ export class Message {
     clear() {
         RCTAEPMessaging.clear(this.id);
     };    
-}
+};

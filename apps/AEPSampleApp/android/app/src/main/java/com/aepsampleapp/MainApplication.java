@@ -13,6 +13,7 @@ governing permissions and limitations under the License.
 package com.aepsampleapp;
 
 import android.app.Application;
+import android.app.PendingIntent;
 
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.LoggingMode;
@@ -68,6 +69,8 @@ public class MainApplication extends Application implements ReactApplication {
     Identity.registerExtension();
     Messaging.registerExtension();
     Optimize.registerExtension();
+
+      PendingIntent.getBroadcast()
 
     MobileCore.configureWithAppID("3149c49c3910/aaaac75639c6/launch-813b9d67d95e-development");
     MobileCore.start(o -> MobileCore.lifecycleStart(null));

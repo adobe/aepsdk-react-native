@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 
 import React, {useState} from 'react';
 import {Button, Text, View, ScrollView, TextInput, Alert} from 'react-native';
-import { Messaging, MessagingDelegate, MessagingEdgeEventType, Message } from '@adobe/react-native-aepmessaging';
+import { Messaging, MessagingDelegate, Message } from '@adobe/react-native-aepmessaging';
 const AEPCore = require('@adobe/react-native-aepcore');
 import styles from '../styles/styles';
 

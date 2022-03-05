@@ -51,7 +51,7 @@ module.exports = {
   setMessagingDelegate(delegate: MessagingDelegate) {    
     messagingDelegate = delegate;
     RCTAEPMessaging.setMessagingDelegate();            
-    const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
+    const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);    
     eventListenerShow = eventEmitter.addListener('onShow', (event) => {      
       if(messagingDelegate){
         const message = new Message(event.id, event.autoTrack === "true" ? true: false);

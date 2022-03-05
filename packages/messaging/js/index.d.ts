@@ -12,4 +12,36 @@ governing permissions and limitations under the License.
 */
 export class Messaging {
     static extensionVersion(): Promise<string>;
+    static setMessagingDelegate(delegate: MessagingDelegate);
+    static refreshInAppMessages();
+    static saveMessage(message: Message);
+};
+
+export class Message {
+    id: string;
+    autoTrack: boolean;    
+
+    constructor(id: string, autoTrack: boolean);
+    setAutoTrack(autoTrack: boolean);    
+    show();
+    dismiss(suppressAutoTrack: ?boolean = false);
+    track(interaction: ?string, eventType: MessagingEdgeEventType);
+    handleJavascriptMessage(name: string) : Promise<?any>;
+    clear();
+};
+
+export type MessagingDelegate = {        
+    onShow(message: Message);
+    onDismiss(message: Message);
+    shouldShowMessage(message: Message): boolean;
+    urlLoaded(url: string, message: Message);
+};
+
+export enum MessagingEdgeEventType {
+    IN_APP_DISMISS = 0,
+    IN_APP_INTERACT = 1,
+    IN_APP_TRIGGER = 2,
+    IN_APP_DISPLAY = 3,
+    PUSH_APPLICATION_OPENED = 4,
+    PUSH_CUSTOM_ACTION = 5    
 };
