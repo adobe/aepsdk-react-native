@@ -22,6 +22,7 @@ import com.facebook.react.bridge.WritableMap;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 class RCTAEPEdgeConsentUtils {
@@ -87,6 +88,8 @@ class RCTAEPEdgeConsentUtils {
                 writableMap.putString((String) pair.getKey(), (String) value);
             } else if (value instanceof Map) {
                 writableMap.putMap((String) pair.getKey(), toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableMap.putArray((String) pair.getKey(), toWritableArray((List) value));
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), toWritableArray((Object[]) value));
             }
@@ -152,6 +155,37 @@ class RCTAEPEdgeConsentUtils {
                 writableArr.pushString((String) value);
             } else if (value instanceof Map) {
                 writableArr.pushMap(toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(toWritableArray((List) value));
+            } else if (value.getClass().isArray()) {
+                writableArr.pushArray(toWritableArray((Object[]) value));
+            }
+        }
+
+        return writableArr;
+    }
+
+    public static WritableArray toWritableArray(List array) {
+        if (array == null) {
+            return null;
+        }
+        WritableArray writableArr = Arguments.createArray();
+
+        for (Object value : array) {
+            if (value == null) {
+                writableArr.pushNull();
+            } else if (value instanceof Boolean) {
+                writableArr.pushBoolean((Boolean) value);
+            } else if (value instanceof Double) {
+                writableArr.pushDouble((Double) value);
+            } else if (value instanceof Integer) {
+                writableArr.pushInt((Integer) value);
+            } else if (value instanceof String) {
+                writableArr.pushString((String) value);
+            } else if (value instanceof Map) {
+                writableArr.pushMap(toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(toWritableArray((List) value));
             } else if (value.getClass().isArray()) {
                 writableArr.pushArray(toWritableArray((Object[]) value));
             }
