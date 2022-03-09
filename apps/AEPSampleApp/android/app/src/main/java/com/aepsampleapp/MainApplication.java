@@ -15,6 +15,7 @@ package com.aepsampleapp;
 import android.app.Application;
 import android.app.PendingIntent;
 
+import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Messaging;
@@ -64,15 +65,17 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.setLogLevel(LoggingMode.VERBOSE);
     Edge.registerExtension();
     Identity.registerExtension();
     Messaging.registerExtension();
     Optimize.registerExtension();
-
-      PendingIntent.getBroadcast()
-
     MobileCore.configureWithAppID("3149c49c3910/aaaac75639c6/launch-813b9d67d95e-development");
-    MobileCore.start(o -> MobileCore.lifecycleStart(null));
+    MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+            MobileCore.lifecycleStart(null);
+        }
+    });
   }
 }

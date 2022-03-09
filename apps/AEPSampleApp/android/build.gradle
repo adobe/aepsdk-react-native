@@ -37,7 +37,6 @@ allprojects {
         jcenter()
         flatDir {
             dirs project(':adobe_react-native-aepmessaging').file('libs')
-//            dirs '../node_modules/@adobe/react-native-aepmessaging/android/libs'
         }
     }
 }

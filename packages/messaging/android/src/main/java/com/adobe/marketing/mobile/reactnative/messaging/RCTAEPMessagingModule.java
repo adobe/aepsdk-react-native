@@ -11,6 +11,9 @@
 package com.adobe.marketing.mobile.reactnative.messaging;
 
 import com.adobe.marketing.mobile.LoggingMode;
+
+import static com.adobe.marketing.mobile.LoggingMode.VERBOSE;
+
 import com.adobe.marketing.mobile.Message;
 import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MobileCore;
@@ -53,26 +56,26 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
 
     @ReactMethod
     public void extensionVersion(final Promise promise) {
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "extensionVersion is called");
+        MobileCore.log(VERBOSE, TAG, "extensionVersion is called");
         promise.resolve(Messaging.extensionVersion());
     }
 
     @ReactMethod
     public void refreshInAppMessages() {
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "refreshInAppMessages is called");
+        MobileCore.log(VERBOSE, TAG, "refreshInAppMessages is called");
         Messaging.refreshInAppMessages();
     }
 
     @ReactMethod
     public void setMessagingDelegate() {
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "setMessagingDelegate is called");
+        MobileCore.log(VERBOSE, TAG, "setMessagingDelegate is called");
         ServiceProvider.getInstance().setMessageDelegate(this);
     }
 
     @ReactMethod
     public void show(final String messageId) {
         if (messageId != null && messageCache.get(messageId) != null) {
-            MobileCore.log(LoggingMode.VERBOSE, TAG, String.format("show is called with message id: %s", messageId));
+            MobileCore.log(VERBOSE, TAG, String.format("show is called with message id: %s", messageId));
             messageCache.get(messageId).show();
         }
     }
@@ -80,34 +83,31 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
     @ReactMethod
     public void dismiss(final String messageId, final boolean suppressAutoTrack) {
         if (messageId != null && messageCache.get(messageId) != null) {
-            MobileCore.log(LoggingMode.VERBOSE, TAG, String.format("dismiss is called with message id: %s and suppressAutoTrack: %b", messageId, suppressAutoTrack));
-            messageCache.get(messageId).show();
+            MobileCore.log(VERBOSE, TAG, String.format("dismiss is called with message id: %s and suppressAutoTrack: %b", messageId, suppressAutoTrack));
+            messageCache.get(messageId).dismiss();
         }
     }
 
     @ReactMethod
     public void track(final String messageId, final String interaction, final int eventType) {
         if (messageId != null && messageCache.get(messageId) != null) {
-            MobileCore.log(LoggingMode.VERBOSE, TAG, String.format("track is called with message id: %s, interaction: %s and eventType: %d", messageId, interaction, eventType));
-            //TODO: Complete the track call.
-//      messageCache.get(messageId).track();
+            MobileCore.log(VERBOSE, TAG, String.format("track is called with message id: %s, interaction: %s and eventType: %d", messageId, interaction, eventType));
+            messageCache.get(messageId).track(String.valueOf(eventType));
         }
     }
 
     @ReactMethod
     public void handleJavascriptMessage(final String messageId, final String messageName, Promise promise) {
         if (messageId != null && messageCache.get(messageId) != null) {
-            MobileCore.log(LoggingMode.VERBOSE, TAG, String.format("handleJavascriptMessage is called with message id: %s and messageName: %s", messageId, messageName));
-            //TODO call function handleJavascriptMessage
-//      messageCache.get(messageId).handleJavascriptMessage();
-//      promise.resolve(); || promise.reject();
+            MobileCore.log(VERBOSE, TAG, String.format("handleJavascriptMessage is called with message id: %s and messageName: %s", messageId, messageName));
+            promise.resolve("");
         }
     }
 
     @ReactMethod
     public void clear(final String messageId) {
         if (messageId != null) {
-            MobileCore.log(LoggingMode.VERBOSE, TAG, String.format("clear is called with message id: %s", messageId));
+            MobileCore.log(VERBOSE, TAG, String.format("clear is called with message id: %s", messageId));
             messageCache.remove(messageId);
         }
     }
@@ -115,60 +115,61 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
     @ReactMethod
     public void setAutoTrack(final String messageId, final boolean autoTrack) {
         if (messageId != null && messageCache.get(messageId) != null) {
-            MobileCore.log(LoggingMode.VERBOSE, TAG, String.format("setAutoTrack is called with message id: %s and autoTrack: %b", messageId, autoTrack));
+            MobileCore.log(VERBOSE, TAG, String.format("setAutoTrack is called with message id: %s and autoTrack: %b", messageId, autoTrack));
             messageCache.get(messageId).autoTrack = autoTrack;
         }
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
     public void shouldShowMessage(final boolean shouldShowMessage, final boolean shouldSaveMessage) {
-        MobileCore.log(LoggingMode.VERBOSE, TAG, String.format("shouldShowMessage is called with message id: %b and shouldSaveMessage: %b", shouldShowMessage, shouldSaveMessage));
+        MobileCore.log(VERBOSE, TAG, String.format("shouldShowMessage is called with message id: %b and shouldSaveMessage: %b", shouldShowMessage, shouldSaveMessage));
         this.shouldShowMessage = shouldShowMessage;
         this.shouldSaveMessage = shouldSaveMessage;
+        latch.countDown();
     }
 
     //Messaging Delegate functions
     @Override
     public void onShow(final FullscreenMessage fullscreenMessage) {
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "onShow is called");
+        MobileCore.log(VERBOSE, TAG, "onShow is called");
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
             data.put("id", message.messageId);
-            data.put("autoTrack", message.autoTrack ? "true" : "false");
+            data.put("autoTrack", String.valueOf(message.autoTrack));
             emitEvent("onShow", data);
         }
     }
 
     @Override
-    public void onDismiss(FullscreenMessage fullscreenMessage) {
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "onDismiss is called");
+    public void onDismiss(final FullscreenMessage fullscreenMessage) {
+        MobileCore.log(VERBOSE, TAG, "onDismiss is called");
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
             data.put("id", message.messageId);
-            data.put("autoTrack", message.autoTrack ? "true" : "false");
+            data.put("autoTrack", String.valueOf(message.autoTrack));
             emitEvent("onDismiss", data);
         }
     }
 
     @Override
-    public boolean shouldShowMessage(FullscreenMessage fullscreenMessage) {
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "shouldShowMessage is called");
+    public boolean shouldShowMessage(final FullscreenMessage fullscreenMessage) {
+        MobileCore.log(VERBOSE, TAG, "shouldShowMessage is called");
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
             data.put("id", message.messageId);
-            data.put("autoTrack", message.autoTrack ? "true" : "false");
+            data.put("autoTrack", String.valueOf(message.autoTrack));
             emitEvent("shouldShowMessage", data);
             //Latch stops the thread until the shouldShowMessage value is received from the JS side on thread dedicated to run JS code. The function called from JS that resumes the thread is "shouldShowMessage".
-            MobileCore.log(LoggingMode.VERBOSE, TAG, "shouldShowMessage: Thread is locked.");
+            MobileCore.log(VERBOSE, TAG, "shouldShowMessage: Thread is locked.");
             try {
                 latch.await();
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 MobileCore.log(LoggingMode.ERROR, TAG, String.format("CountDownLatch await Interrupted: (%s)", e.getLocalizedMessage()));
             }
-            MobileCore.log(LoggingMode.VERBOSE, TAG, "shouldShowMessage: Thread is resumed.");
+            MobileCore.log(VERBOSE, TAG, "shouldShowMessage: Thread is resumed.");
             if (shouldSaveMessage) {
                 messageCache.put(message.messageId, message);
             }
@@ -178,11 +179,22 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
 
     @Override
     public boolean overrideUrlLoad(FullscreenMessage fullscreenMessage, String s) {
-        return false;
+        MobileCore.log(VERBOSE, TAG, String.format("overrideUrlLoad is called with url: (%s)", s));
+        final Message message = (Message) fullscreenMessage.getParent();
+        if (message != null) {
+            Map<String, String> data = new HashMap<>();
+            data.put("id", message.messageId);
+            data.put("autoTrack", String.valueOf(message.autoTrack));
+            data.put("url", s);
+            emitEvent("shouldShowMessage", data);
+            emitEvent("urlLoaded", data);
+        }
+        return true;
     }
 
     @Override
     public void onShowFailure() {
+        MobileCore.log(VERBOSE, TAG, "onShowFailure is called.");
     }
 
     /**

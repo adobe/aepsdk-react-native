@@ -91,7 +91,7 @@ export default ({ navigation }) => {
     };    
     
     return (<View style={styles.container}>
-        <ScrollView contentContainerStyle={{ marginTop: 75 }} >
+        <ScrollView contentContainerStyle={{ marginTop: 25 }} >
         <Button title="Go to main page" onPress={() => navigation.goBack()} />
         <Text style={styles.welcome}>Messaging</Text>
         <Button title="extensionVersion()" onPress={ messagingExtensionVersion }/>
