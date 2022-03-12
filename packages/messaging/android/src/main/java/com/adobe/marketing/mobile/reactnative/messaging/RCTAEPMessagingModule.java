@@ -10,12 +10,17 @@
  */
 package com.adobe.marketing.mobile.reactnative.messaging;
 
+import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.LoggingMode;
 
+import static com.adobe.marketing.mobile.LoggingMode.DEBUG;
 import static com.adobe.marketing.mobile.LoggingMode.VERBOSE;
+
+import android.util.Log;
 
 import com.adobe.marketing.mobile.Message;
 import com.adobe.marketing.mobile.Messaging;
+import com.adobe.marketing.mobile.MessagingEdgeEventType;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.services.ServiceProvider;
 import com.adobe.marketing.mobile.services.ui.FullscreenMessage;
@@ -92,15 +97,51 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
     public void track(final String messageId, final String interaction, final int eventType) {
         if (messageId != null && messageCache.get(messageId) != null) {
             MobileCore.log(VERBOSE, TAG, String.format("track is called with message id: %s, interaction: %s and eventType: %d", messageId, interaction, eventType));
-            messageCache.get(messageId).track(String.valueOf(eventType));
+            MessagingEdgeEventType edgeEventType = null;
+            switch (eventType) {
+                case 0:
+                    edgeEventType = MessagingEdgeEventType.IN_APP_DISMISS;
+                    break;
+                case 1:
+                    edgeEventType = MessagingEdgeEventType.IN_APP_INTERACT;
+                    break;
+                case 2:
+                    edgeEventType = MessagingEdgeEventType.IN_APP_TRIGGER;
+                    break;
+                case 3:
+                    edgeEventType = MessagingEdgeEventType.IN_APP_DISPLAY;
+                    break;
+                case 4:
+                    edgeEventType = MessagingEdgeEventType.PUSH_APPLICATION_OPENED;
+                    break;
+                case 5:
+                    edgeEventType = MessagingEdgeEventType.PUSH_CUSTOM_ACTION;
+                    break;
+                default:
+                    break;
+            }
+            if (edgeEventType != null) {
+                messageCache.get(messageId).track(interaction, edgeEventType);
+            } else {
+                MobileCore.log(DEBUG, TAG, String.format("Unable to track interaction (%s) because edgeEventType (%d) is invalid ", interaction, eventType));
+            }
         }
     }
 
     @ReactMethod
-    public void handleJavascriptMessage(final String messageId, final String messageName, Promise promise) {
+    public void handleJavascriptMessage(final String messageId, final String messageName, final Promise promise) {
         if (messageId != null && messageCache.get(messageId) != null) {
             MobileCore.log(VERBOSE, TAG, String.format("handleJavascriptMessage is called with message id: %s and messageName: %s", messageId, messageName));
-            promise.resolve("");
+            messageCache.get(messageId).handleJavascriptMessage(messageName, new AdobeCallback<String>() {
+                @Override
+                public void call(final String s) {
+                    if (s != null) {
+                        promise.resolve(s);
+                    } else {
+                        promise.reject("error", "error in handling javascriptMessage " + messageName);
+                    }
+                }
+            });
         }
     }
 
