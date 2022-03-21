@@ -4,8 +4,7 @@
   "description": "Adobe Experience Platform Edge Network extension for Adobe Experience Platform Mobile SDK. Written and maintained by Adobe.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
-  "main": "./js/index.js",
-  "types": "./js/index.d.ts",
+  "main": "./ts/index.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "tsc": "tsc"
