@@ -1,5 +1,5 @@
 PODS:
-  - AEPAssurance (3.0.0):
+  - AEPAssurance (3.0.1):
     - AEPCore (>= 3.1.0)
     - AEPServices (>= 3.1.0)
   - AEPCore (3.4.2):
@@ -56,7 +56,7 @@ PODS:
     - AEPLifecycle (~> 3.0)
     - AEPSignal (~> 3.0)
     - React
-  - RCTAEPEdge (1.0.0-beta.2):
+  - RCTAEPEdge (1.0.0-beta.3):
     - AEPEdge (~> 1.0)
     - React
   - RCTAEPEdgeConsent (1.0.0-beta.2):
@@ -502,7 +502,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPAssurance: 18068627111e366a851dc2166239f22b665101bd
+  AEPAssurance: b25880cd4b14f22c61a1dce19807bd0ca0fe9b17
   AEPCore: b01856bf24972e4720cb0511a358d1e68067252a
   AEPEdge: 500628aee1319ef2690dfaf5bd950badce6ec3f0
   AEPEdgeConsent: dd46002b0c4bf55443f5441990e799248975713e
@@ -517,12 +517,12 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: 8079de7dfa4fd4aab0e97969116b246069f7ec3e
+  FBReactNativeSpec: a2f531d996fa0cfec14dc62700efc19d68982a65
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPAssurance: 94562ecc3e0a741aa262daee2cae4a1fc93ed6b3
   RCTAEPCore: 8c04356c2651dac760b3a922c217da5cd729e498
-  RCTAEPEdge: 000abd4e9ea531a6cc2058b647f91b637ebf3977
+  RCTAEPEdge: 308c26f53c329ed30d01f21746563c114a808ce2
   RCTAEPEdgeConsent: c493ca5e10156ff42899786d323cfacdbc55c661
   RCTAEPEdgeIdentity: 063277b28ec5197ca61a0c28926ad5091c081856
   RCTAEPMessaging: 5ff246c624ceb253f93dbb1ae96af4ec898c91af
@@ -558,4 +558,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 72fa28983148c9436f08736f91f61421c635e9b6
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.1
