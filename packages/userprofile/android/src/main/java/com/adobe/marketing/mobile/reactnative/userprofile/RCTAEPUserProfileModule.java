@@ -50,7 +50,8 @@ public class RCTAEPUserProfileModule extends ReactContextBaseJavaModule {
     UserProfile.getUserAttributes(RCTAEPUserProfileArrayUtil.toStringList(attributeNames), new AdobeCallback<Map<String, Object>>() {
       @Override
       public void call(Map<String, Object> stringObjectMap) {
-        promise.resolve(stringObjectMap);
+        promise.resolve(RCTAEPUserProfileMapUtil.toWritableMap(stringObjectMap));
+
       }
     });
   }

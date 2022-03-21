@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 
+import java.util.List;
 import java.util.Map;
 
 class RCTAEPArrayUtil {
@@ -76,6 +77,8 @@ class RCTAEPArrayUtil {
                 writableArr.pushString((String) value);
             } else if (value instanceof Map) {
                 writableArr.pushMap(RCTAEPMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(RCTAEPArrayUtil.toWritableArray((List) value));
             } else if (value.getClass().isArray()) {
                 writableArr.pushArray(RCTAEPArrayUtil.toWritableArray((Object[]) value));
             }
@@ -84,4 +87,32 @@ class RCTAEPArrayUtil {
         return writableArr;
     }
 
+    static WritableArray toWritableArray(List array) {
+        if (array == null) {
+            return null;
+        }
+        WritableArray writableArr = Arguments.createArray();
+
+        for (Object value : array) {
+            if (value == null) {
+                writableArr.pushNull();
+            } else if (value instanceof Boolean) {
+                writableArr.pushBoolean((Boolean) value);
+            } else if (value instanceof Double) {
+                writableArr.pushDouble((Double) value);
+            } else if (value instanceof Integer) {
+                writableArr.pushInt((Integer) value);
+            } else if (value instanceof String) {
+                writableArr.pushString((String) value);
+            } else if (value instanceof Map) {
+                writableArr.pushMap(RCTAEPMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(RCTAEPArrayUtil.toWritableArray((List) value));
+            } else if (value.getClass().isArray()) {
+                writableArr.pushArray(RCTAEPArrayUtil.toWritableArray((Object[]) value));
+            }
+        }
+
+        return writableArr;
+    }
 }
