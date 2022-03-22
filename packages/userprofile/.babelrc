@@ -1,5 +1,5 @@
 {
-  "presets": ["@babel/preset-flow", "react-native"],
+  "presets": ["@babel/preset-typescript", "react-native"],
     "plugins": [
       ["module-resolver", {
         "root": [ "./js/" ]
