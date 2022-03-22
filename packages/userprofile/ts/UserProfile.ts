@@ -26,7 +26,7 @@ const RCTAEPUserProfile: IUserProfile = NativeModules.AEPUserProfile;
 const UserProfile: IUserProfile = {
   /**
    * Returns the version of the UserProfile extension
-   * @param  {string} Promise a promise that resolves with the extension version
+   * @return  {string} Promise a promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPUserProfile.extensionVersion());
