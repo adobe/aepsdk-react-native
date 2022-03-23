@@ -63,20 +63,24 @@ export default ({ navigation }) => {
     const updatePropositions = () => AEPOptimize.updatePropositions(decisionScopes, null, null);
     const getPropositions = () => AEPOptimize.getPropositions(decisionScopes).then(
         (propositions: Map<string, typeof Proposition>) => {            
+            if(propositions) {
             setTextProposition(propositions.get(decisionScopeText.getName()));
             setImageProposition(propositions.get(decisionScopeImage.getName()));
             setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
             setJsonProposition(propositions.get(decisionScopeJson.getName()));
             setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+            }
         });
     const clearCachedProposition = () => AEPOptimize.clearCachedPropositions();
     const onPropositionUpdate = () => AEPOptimize.onPropositionUpdate({
-        call(proposition: Map<String, typeof Proposition>) {
-            setTextProposition(propositions.get(decisionScopeText.getName()));
-            setImageProposition(propositions.get(decisionScopeImage.getName()));
-            setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
-            setJsonProposition(propositions.get(decisionScopeJson.getName()));
-            setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+        call(propositions: Map<String, typeof Proposition>) {
+            if(propositions) {
+                setTextProposition(propositions.get(decisionScopeText.getName()));
+                setImageProposition(propositions.get(decisionScopeImage.getName()));
+                setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
+                setJsonProposition(propositions.get(decisionScopeJson.getName()));
+                setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+            }
         }
     });        
 
@@ -85,11 +89,11 @@ export default ({ navigation }) => {
             if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_TEXT) {                 
                 return <Text style={{margin:10, fontSize:18}} onPress={() => {
                     targetProposition.items && targetProposition.items[0].tapped(targetProposition);
-                }}>{targetProposition.items[0].getContent()}</Text>
+                }}>{targetProposition.items[0].content}</Text>
             } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_JSON) {                
                 return <Text style={{margin:10, fontSize:18}} onPress={() => {
                     targetProposition.items && targetProposition.items[0].tapped(targetProposition);
-                }}>{targetProposition.items[0].getContent()}</Text>
+                }}>{targetProposition.items[0].content}</Text>
             } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_HTML) {                
                 return (                        
                             <TouchableOpacity onPress={e => {                            
@@ -98,7 +102,7 @@ export default ({ navigation }) => {
                                     <WebView 
                                     textZoom={100}
                                     originWhitelist={['*']}
-                                    source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].getContent() : htmlProposition }}/>                                                                    
+                                    source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].content : htmlProposition }}/>                                                                    
                                 </View>    
                             </TouchableOpacity>
                     );    
@@ -155,7 +159,7 @@ export default ({ navigation }) => {
                             <Text style={{ margin:10, fontSize:18 }} onPress={e => {                                                                
                                 textProposition.items && textProposition.items[0].tapped(textProposition);
                             }}>
-                                { typeof textProposition === "object" ? textProposition.items[0].getContent() : textProposition }
+                                { typeof textProposition === "object" ? textProposition.items[0].content : textProposition }
                             </Text>
                         </View>    
                     );    
@@ -165,7 +169,7 @@ export default ({ navigation }) => {
                             <TouchableOpacity onPress={e => {                                
                                 imageProposition.items && imageProposition.items[0].tapped(imageProposition);}}>
                             <Image style={{width:100, height:100, margin:10}} 
-                                source={{ uri: typeof imageProposition === "object" ? imageProposition.items[0].getContent() : imageProposition }}>                
+                                source={{ uri: typeof imageProposition === "object" ? imageProposition.items[0].content : imageProposition }}>                
                             </Image>
                         </TouchableOpacity >
                     </View>    
@@ -174,7 +178,7 @@ export default ({ navigation }) => {
                     return (
                             <Text style={{ margin:10, fontSize:18 }} onPress={e => {                
                                 jsonProposition.items && jsonProposition.items[0].tapped(jsonProposition);
-                            }}> { typeof jsonProposition === "object" ? jsonProposition.items[0].getContent() : jsonProposition }            
+                            }}> { typeof jsonProposition === "object" ? jsonProposition.items[0].content : jsonProposition }            
                             </Text>
                     );    
                 } else if(data === htmlProposition) {                    
@@ -185,7 +189,7 @@ export default ({ navigation }) => {
                                     <WebView                                                                         
                                     textZoom={100}
                                     originWhitelist={['*']}
-                                    source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].getContent() : htmlProposition }}/>                                                                    
+                                    source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].content : htmlProposition }}/>                                                                    
                                 </View>    
                             </TouchableOpacity>
                     );    
@@ -223,16 +227,16 @@ export default ({ navigation }) => {
     let indicesChangeHandler = (all, now, notNow) => {                        
         if(hasBegunScrolling && notNow && notNow[0] && notNow[0] === 0) {
             for(const i in all) {            
-                if(indicesWithData.includes(i) && typeof data[i] === "object"){
+                if(indicesWithData.includes(i) && typeof data[i] === "object" && data[i].items){
                     const offer = data[i].items[0];
-                    const proposition = data;                    
+                    const proposition = data[i];                    
                     offer.displayed(proposition);
                 }                
             }
             hasBegunScrolling = false;
-        } else if(now && indicesWithData.includes(now[0]) && typeof data[now[0]] === "object") {            
+        } else if(now && indicesWithData.includes(now[0]) && data[now[0]] && typeof data[now[0]] === "object" && data[now[0]].items) {            
             const offer = data[now[0]].items[0];
-            const proposition = data;            
+            const proposition = data[now[0]];            
             offer.displayed(proposition);
         }        
     };
@@ -258,7 +262,7 @@ export default ({ navigation }) => {
         <Text 
             style={{...styles.welcome, fontSize:20}}>
             SDK Version:: { version }
-        </Text>
+        </Text>        
         <Text style={styles.welcome}>Personalized Offers</Text>
         <RecyclerListView 
             style={{ width: width }} 

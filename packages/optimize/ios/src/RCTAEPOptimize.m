@@ -36,21 +36,25 @@ RCT_EXPORT_MODULE(AEPOptimize);
 }
 
 RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock) reject) {
+    [AEPLog traceWithLabel:TAG message:@"extensionVersion is called."];
     resolve([AEPMobileOptimize extensionVersion]);
 }
 
 RCT_EXPORT_METHOD(clearCachedPropositions) {
+    [AEPLog traceWithLabel:TAG message:@"clearCachedPropositions is called."];
     [AEPMobileOptimize clearCachedPropositions];
 }
 
 RCT_EXPORT_METHOD(updatePropositions: (NSArray<NSString*>*) decisionsScopes xdm: (NSDictionary<NSString*, id>*) xdm data: (NSDictionary<NSString*, id>*) data) {
   
+    [AEPLog traceWithLabel:TAG message:@"updatePropositions is called."];
   NSArray<AEPDecisionScope*>* decisionScopesArray = [self createDecisionScopesArray:decisionsScopes];
   [AEPMobileOptimize updatePropositions:decisionScopesArray withXdm:xdm andData: data];
 }
 
 RCT_EXPORT_METHOD(getPropositions: (NSArray<NSString*>*) decisionScopes resolver: (RCTPromiseResolveBlock) resolve rejector: (RCTPromiseRejectBlock) reject) {
   
+    [AEPLog traceWithLabel:TAG message:@"getPropositions is called."];
   NSArray<AEPDecisionScope*>* decisionScopesArray = [self createDecisionScopesArray:decisionScopes];
   [AEPMobileOptimize getPropositions:decisionScopesArray completion: ^(NSDictionary<AEPDecisionScope*, AEPProposition*>* decisionScopePropositionDict, NSError* error){
     
@@ -69,6 +73,7 @@ RCT_EXPORT_METHOD(getPropositions: (NSArray<NSString*>*) decisionScopes resolver
 }
 
 RCT_EXPORT_METHOD(onPropositionsUpdate) {
+    [AEPLog traceWithLabel:TAG message:@"onPropositionsUpdate is called."];
   [AEPMobileOptimize onPropositionsUpdate: ^(NSDictionary<AEPDecisionScope*, AEPProposition*>* decisionScopePropositionDict) {
     NSDictionary<NSString*, NSDictionary<NSString*, id>*>* propositionDictionary = [[NSMutableDictionary alloc] init];
     

@@ -21,55 +21,30 @@ module.exports = class Offer {
     id: string;
     etag: string;
     schema: string;
-    content:? string;
-    format:? string; 
-    language:? Array<string>;
-    characteristics:? Map<string, any>;
+    data: {string: any};    
+
+    get content(): ?string {
+        return this.data["content"];
+    }
+
+    get format(): ?string {
+        return this.data["format"];
+    }
+
+    get language(): ?Array<string> {
+        return this.data["language"];
+    }
+
+    get characteristics(): ?Map<string, any> {
+        return this.data["characteristics"];
+    }    
 
     constructor(eventData: any) {
         this.id = eventData['id'];
         this.etag = eventData['etag'];
-        this.schema = eventData['schema'];
-        let data = eventData['data'];
-        if(data) {            
-            this.content = data['content'];
-            this.format = data['format'];
-            this.language = data['language'];
-            this.characteristics = data['characteristics'];
-        }                
+        this.schema = eventData['schema'];        
+        this.data = eventData['data'];
     }
-
-    /**
-     * Gets the content of the Offer
-     * @returns {string} - content of this Offer
-     */
-    getContent(): ?string {
-        return this.content;
-    };
-
-    /**
-     * Gets the type of the Offer
-     * @returns {string} - type of this Offer
-     */
-    getType(): ?string {
-        return this.format;
-    };
-
-    /**
-     * Gets the languages of the Offer content
-     * @returns {Array<string>} - Array of languages of the Offers content
-     */
-    getLanguage(): ?Array<string> {
-        return this.language;
-    };
-
-    /**
-     * Gets the characteristics of the Offer content
-     * @returns {Map<string, any>} - Map containing the characteristics of the Offer
-     */
-    getCharacteristics(): ?Map<string, any> {
-        return this.characteristics;
-    };
 
     /**
     * Dispatches an event for the Edge network extension to send an Experience Event to the Edge network with the display interaction data for the
@@ -78,7 +53,7 @@ module.exports = class Offer {
     */
     displayed(proposition: Proposition): void {
         const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");        
-        const cleanedProposition = Object.fromEntries(entries);
+        const cleanedProposition = Object.fromEntries(entries);        
         RCTAEPOptimize.offerDisplayed(this.id, cleanedProposition);
     };
 
@@ -90,7 +65,7 @@ module.exports = class Offer {
     tapped(proposition: Proposition): void {                
         console.log("Offer is tapped");
         const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");
-        const cleanedProposition = Object.fromEntries(entries);
+        const cleanedProposition = Object.fromEntries(entries);        
         RCTAEPOptimize.offerTapped(this.id, cleanedProposition);
     };
 
