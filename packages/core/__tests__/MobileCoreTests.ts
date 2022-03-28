@@ -23,21 +23,21 @@ describe('MobileCore', () => {
   it('configureWithAppId is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'configureWithAppId');
     let appId = 'testAppId';
-    await MobileCore.configureWithAppId(appId);
+    MobileCore.configureWithAppId(appId);
     expect(spy).toHaveBeenCalledWith(appId);
   });
 
   it('updateConfiguration is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'updateConfiguration');
     let config = { ssl: 'false' };
-    await MobileCore.updateConfiguration(config);
+    MobileCore.updateConfiguration(config);
     expect(spy).toHaveBeenCalledWith(config);
   });
 
   it('setLogLevel is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setLogLevel');
     let logLevel = LogLevel.DEBUG;
-    await MobileCore.setLogLevel(logLevel);
+    MobileCore.setLogLevel(logLevel);
     expect(spy).toHaveBeenCalledWith('DEBUG');
   });
 
@@ -53,14 +53,14 @@ describe('MobileCore', () => {
     let logLevel = LogLevel.DEBUG;
     let tag = 'MobileCoreTests';
     let message = 'Hello from jest tests!';
-    await MobileCore.log(logLevel, tag, message);
+    MobileCore.log(logLevel, tag, message);
     expect(spy).toHaveBeenCalledWith(logLevel, tag, message);
   });
 
   it('setPrivacyStatus is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setPrivacyStatus');
     let privacyStatus = PrivacyStatus.UNKNOWN;
-    await MobileCore.setPrivacyStatus(privacyStatus);
+    MobileCore.setPrivacyStatus(privacyStatus);
     expect(spy).toHaveBeenCalledWith('UNKNOWN');
   });
 
@@ -102,7 +102,7 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'trackAction');
     let actionName = 'testAction';
     let contextData = { testKey: 'testValue' };
-    await MobileCore.trackAction(actionName, contextData);
+    MobileCore.trackAction(actionName, contextData);
     expect(spy).toHaveBeenCalledWith(actionName, contextData);
   });
 
@@ -110,55 +110,55 @@ describe('MobileCore', () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'trackState');
     let stateName = 'testState';
     let contextData = { testKey: 'testValue' };
-    await MobileCore.trackState(stateName, contextData);
+    MobileCore.trackState(stateName, contextData);
     expect(spy).toHaveBeenCalledWith(stateName, contextData);
   });
 
   it('setAdvertisingIdentifier is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setAdvertisingIdentifier');
     let adId = 'testAdId';
-    await MobileCore.setAdvertisingIdentifier(adId);
+    MobileCore.setAdvertisingIdentifier(adId);
     expect(spy).toHaveBeenCalledWith(adId);
   });
 
   it('setPushIdentifier is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setPushIdentifier');
     let pushIdentifier = 'testPushId';
-    await MobileCore.setPushIdentifier(pushIdentifier);
+    MobileCore.setPushIdentifier(pushIdentifier);
     expect(spy).toHaveBeenCalledWith(pushIdentifier);
   });
 
   it('collectPii is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'collectPii');
     let contextData = { testKey: 'testValue' };
-    await MobileCore.collectPii(contextData);
+    MobileCore.collectPii(contextData);
     expect(spy).toHaveBeenCalledWith(contextData);
   });
 
   it('setSmallIconResourceID is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setSmallIconResourceID');
     let resourceID = 1;
-    await MobileCore.setSmallIconResourceID(resourceID);
+    MobileCore.setSmallIconResourceID(resourceID);
     expect(spy).toHaveBeenCalledWith(resourceID);
   });
 
   it('setLargeIconResourceID is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setLargeIconResourceID');
     let resourceID = 1;
-    await MobileCore.setLargeIconResourceID(resourceID);
+    MobileCore.setLargeIconResourceID(resourceID);
     expect(spy).toHaveBeenCalledWith(resourceID);
   });
 
   it('setAppGroup is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setAppGroup');
     let appGroup = 'testAppGroup';
-    await MobileCore.setAppGroup(appGroup);
+    MobileCore.setAppGroup(appGroup);
     expect(spy).toHaveBeenCalledWith(appGroup);
   });
 
   it('resetIdentities is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'resetIdentities');
-    await MobileCore.resetIdentities();
+    MobileCore.resetIdentities();
     expect(spy).toHaveBeenCalled();
   });
 });
