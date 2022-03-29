@@ -24,7 +24,7 @@ import { NavigationProps } from '../types/props';
 
 const AssuranceView = ({navigation}: NavigationProps) => {
   const [version, setVersion] = useState('');
-  const [sessionURL, setsessionURL] = useState('assurance://?adb_validation_sessionid=97c87f13-645b-49a4-8424-94a7a3d74131');
+  const [sessionURL, setsessionURL] = useState('your-assurance-url');
 
   Assurance.extensionVersion().then(version => {
     setVersion(version);
