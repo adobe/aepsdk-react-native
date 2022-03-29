@@ -126,7 +126,7 @@ const MobileCore: IMobileCore = {
   /**
    * Set the Adobe Mobile Privacy status
    *
-   * @param {PrivacyStatus} privacyStatus PrivacyStatus to be set to the SDK
+   * @param privacyStatus {@linkPrivacyStatus} to be set to the SDK
    */
   setPrivacyStatus(privacyStatus: PrivacyStatus) {
     RCTAEPCore.setPrivacyStatus(privacyStatus);
@@ -166,8 +166,8 @@ const MobileCore: IMobileCore = {
    * is expected in return.
    * <p>
    *
-   * @param event            required parameter, {@link Event} instance to be dispatched, used as a trigger
-   * @return Promise         a promise that resolves with {@link Event}
+   * @param event required parameter, {@link Event} instance to be dispatched, used as a trigger
+   * @return Promise a promise that resolves with {@link Event}
    *
    */
   dispatchEventWithResponseCallback(event: Event): Promise<Event> {
@@ -183,7 +183,7 @@ const MobileCore: IMobileCore = {
    *
    *  note: when using the Adobe Analytics extension, calling this API will increment page views
    * @param  {String?} action containing the name of the action to track
-   * @param  {{ string: string }?} contextData containing context data to attach on this hit
+   * @param  {Record<string, string>} contextData containing context data to attach on this hit
    */
   trackAction(action?: string, contextData?: Record<string, string>) {
     RCTAEPCore.trackAction(action, contextData);
