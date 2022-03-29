@@ -86,7 +86,7 @@ public class MainApplication extends Application implements ReactApplication {
           e.printStackTrace();
       }
 
-      MobileCore.configureWithAppID("your-app-ID");
+      MobileCore.configureWithAppID("3805cb8645dd/c03dd4785f89/launch-f9b5643dee2d-development\n");
       MobileCore.start(new AdobeCallback() {
           @Override
           public void call(Object o) {
