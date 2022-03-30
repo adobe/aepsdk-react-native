@@ -219,7 +219,7 @@ This class represents the decision scope which is used to fetch the decision pro
 /**
 * class represents a decision scope used to fetch personalized offers from the Experience Edge network.
 */
-export default class DecisionScope {
+module.exports = class DecisionScope {
     name: string;        
 
     constructor(name: ?string, activityId: ?string, placementId: ?string, itemCount: ?number) {                
@@ -248,18 +248,18 @@ export default class DecisionScope {
 This class represents the decision propositions received from the decisioning services, upon a personalization query request to the Experience Edge network.
 
 ```javascript
-export default class Proposition {
+module.exports = class Proposition {
     id: string;
     items: Array<Offer>;
     scope: string;
-    scopeDetails: Object;
+    scopeDetails: Map<string, any>;
 
-    constructor(eventData: Object) {
+    constructor(eventData: any) {
         this.id = eventData['id'];
         this.scope = eventData['scope'];
         this.scopeDetails = eventData['scopeDetails'];
         if(eventData['items']) {
-            this.items = eventData['items'].map(offer => new Offer(offer, this));                
+            this.items = eventData['items'].map(offer => new Offer(offer));                
         }                
     }    
         
@@ -280,45 +280,43 @@ export default class Proposition {
 This class represents the proposition option received from the decisioning services, upon a personalization query to the Experience Edge network.
 
 ```javascript
-export default class Offer {
+module.exports = class Offer {
     id: string;
     etag: string;
     schema: string;
-    data: Object;    
-    proposition: Proposition;
+    data: {string: any};    
 
-    constructor(eventData: Object, proposition: Proposition) {
-        this.id = eventData['id'];
-        this.etag = eventData['etag'];
-        this.schema = eventData['schema'];
-        this.data = eventData['data'];                
-        this.proposition = proposition;
+    get content(): ?string {
+        return this.data["content"];
     }
 
-    /**
-     * Gets the content of the Offer
-     * @returns {string} - content of this Offer
-     */
-    getContent(): string {
-        return this.data['content'];
-    };
+    get format(): ?string {
+        return this.data["format"];
+    }
 
-    /**
-     * Gets the type of the Offer
-     * @returns {string} - type of this Offer
-     */
-    getType(): string {
-        return this.data['format'];
-    };
+    get language(): ?Array<string> {
+        return this.data["language"];
+    }
+
+    get characteristics(): ?Map<string, any> {
+        return this.data["characteristics"];
+    }    
+
+    constructor(eventData: any) {
+        this.id = eventData['id'];
+        this.etag = eventData['etag'];
+        this.schema = eventData['schema'];        
+        this.data = eventData['data'];
+    }
 
     /**
     * Dispatches an event for the Edge network extension to send an Experience Event to the Edge network with the display interaction data for the
     * given Proposition offer.
     * @param {Proposition} proposition - the proposition this Offer belongs to
     */
-    displayed(): void {
-        const entries = Object.entries(this.proposition).filter(([key, value]) => typeof(value) !== "function");        
-        const cleanedProposition = Object.fromEntries(entries);
+    displayed(proposition: Proposition): void {
+        const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");        
+        const cleanedProposition = Object.fromEntries(entries);        
         RCTAEPOptimize.offerDisplayed(this.id, cleanedProposition);
     };
 
@@ -327,9 +325,10 @@ export default class Offer {
     * given Proposition offer.
     * @param {Proposition} proposition - the proposition this Offer belongs to
     */
-    tapped(): void {                
-        const entries = Object.entries(this.proposition).filter(([key, value]) => typeof(value) !== "function");
-        const cleanedProposition = Object.fromEntries(entries);
+    tapped(proposition: Proposition): void {                
+        console.log("Offer is tapped");
+        const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");
+        const cleanedProposition = Object.fromEntries(entries);        
         RCTAEPOptimize.offerTapped(this.id, cleanedProposition);
     };
 
@@ -341,8 +340,8 @@ export default class Offer {
     * @param {Proposition} proposition - the proposition this Offer belongs to
     * @return {Promise<Map<string, any>>} - a promise that resolves to xdm map
     */
-    generateDisplayInteractionXdm(): Promise<Map<string, any>> {        
-        const entries = Object.entries(this.proposition).filter(([key, value]) => typeof(value) !== "function");
+    generateDisplayInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {        
+        const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");
         const cleanedProposition = Object.fromEntries(entries);
         return Promise.resolve(RCTAEPOptimize.generateDisplayInteractionXdm(this.id, cleanedProposition));        
     };   
@@ -355,12 +354,12 @@ export default class Offer {
     * @param {Proposition} proposition - proposition this Offer belongs to
     * @return {Promise<Map<string, any>>} a promise that resolves to xdm map
     */
-    generateTapInteractionXdm(): Promise<Map<string, any>> {
-        const entries = Object.entries(this.proposition).filter(([key, value]) => typeof(value) !== "function");
+    generateTapInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {
+        const entries = Object.entries(proposition).filter(([key, value]) => typeof(value) !== "function");
         const cleanedProposition = Object.fromEntries(entries);
         return Promise.resolve(RCTAEPOptimize.generateTapInteractionXdm(this.id, cleanedProposition));
     };   
-}
+};
 ```
 
 
