@@ -64,11 +64,11 @@ export default ({ navigation }) => {
     const getPropositions = () => AEPOptimize.getPropositions(decisionScopes).then(
         (propositions: Map<string, typeof Proposition>) => {            
             if(propositions) {
-            setTextProposition(propositions.get(decisionScopeText.getName()));
-            setImageProposition(propositions.get(decisionScopeImage.getName()));
-            setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
-            setJsonProposition(propositions.get(decisionScopeJson.getName()));
-            setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+                setTextProposition(propositions.get(decisionScopeText.getName()));
+                setImageProposition(propositions.get(decisionScopeImage.getName()));
+                setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
+                setJsonProposition(propositions.get(decisionScopeJson.getName()));
+                setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
             }
         });
     const clearCachedProposition = () => AEPOptimize.clearCachedPropositions();
@@ -85,16 +85,16 @@ export default ({ navigation }) => {
     });        
 
     const renderTargetOffer = () => {        
-        if(targetProposition) {            
-            if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_TEXT) {                 
-                return <Text style={{margin:10, fontSize:18}} onPress={() => {
+        if(targetProposition && targetProposition.items) {            
+            if(targetProposition.items[0].format === TARGET_OFFER_TYPE_TEXT) {                 
+                return (<Text style={{margin:10, fontSize:18}} onPress={() => {
                     targetProposition.items && targetProposition.items[0].tapped(targetProposition);
-                }}>{targetProposition.items[0].content}</Text>
-            } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_JSON) {                
-                return <Text style={{margin:10, fontSize:18}} onPress={() => {
+                }}>{targetProposition.items[0].content}</Text>)
+            } else if(targetProposition.items[0].format === TARGET_OFFER_TYPE_JSON) {                
+                return (<Text style={{margin:10, fontSize:18}} onPress={() => {
                     targetProposition.items && targetProposition.items[0].tapped(targetProposition);
-                }}>{targetProposition.items[0].content}</Text>
-            } else if(targetProposition.items[0].getType() === TARGET_OFFER_TYPE_HTML) {                
+                }}>{targetProposition.items[0].content}</Text>)
+            } else if(targetProposition.items[0].format === TARGET_OFFER_TYPE_HTML) {                
                 return (                        
                             <TouchableOpacity onPress={e => {                            
                                 targetProposition.items && targetProposition.items[0].tapped(targetProposition);}}>                                
@@ -102,13 +102,13 @@ export default ({ navigation }) => {
                                     <WebView 
                                     textZoom={100}
                                     originWhitelist={['*']}
-                                    source={{ html: typeof htmlProposition === "object" ? htmlProposition.items[0].content : htmlProposition }}/>                                                                    
+                                    source={{ html: targetProposition.items[0].content }}/>                                                                    
                                 </View>    
                             </TouchableOpacity>
                     );    
             }
         } 
-        return <Text>Default Target Offer</Text>;                
+        return (<Text>Default Target Offer</Text>);                
     };
 
     let dataProvider = new DataProvider((data1, data2) => {
