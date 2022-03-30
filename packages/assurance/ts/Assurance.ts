@@ -22,7 +22,7 @@ const RCTAEPAssurance: IAssurance = NativeModules.AEPAssurance;
 const Assurance: IAssurance = {
   /**
    * Returns the version of the Assurance extension.
-   * @param  {string} Promise a promise that resolves with the extension version
+   * @return  {string} Promise a promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPAssurance.extensionVersion());
