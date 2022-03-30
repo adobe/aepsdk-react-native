@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -137,12 +137,12 @@ static NSString* stringFromAuthState(AEPMobileVisitorAuthState authState) {
      }
 
      if (error && error.code != AEPErrorNone) {
-         if (error.code == AEPErrorCallbackTimeout) {
-         reject(EXTENSION_NAME, errorTimeOut, error);
-         }
-     } else {
-         reject(EXTENSION_NAME, errorUnexpected, error);
-     }
+        if (error.code == AEPErrorCallbackTimeout) {
+            reject(EXTENSION_NAME, errorTimeOut, error);
+        }else {
+            reject(EXTENSION_NAME, errorUnexpected, error);
+        }
+     } 
 
  }
 

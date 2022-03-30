@@ -33,6 +33,62 @@ Install the Identity extension in your mobile property by following the steps in
 Then follow the same document for registering the Identity extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
+
+**Initialization Example**
+
+iOS
+```objc
+// AppDelegate.h
+@import AEPCore;
+@import AEPEdge;
+@import AEPEdgeIdentity;
+...
+@implementation AppDelegate
+
+// AppDelegate.m
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+    [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
+                                        AEPMobileEdge.class] completion:^{
+      [AEPMobileCore configureWithAppId:@"yourAppID"];  
+    ...   
+   }]; 
+   return YES;   
+ } 
+
+@end
+```
+
+Android
+```java
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.identity.Identity;  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.configureWithAppID("yourAppID");
+
+    Edge.registerExtension();
+    Identity.registerExtension();
+    MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+        
+    }});
+  }
+}     
+```
+
 :information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq#register-the-identity-and-identity-for-edge-network-extensions-with-mobile-core).
 
 
@@ -40,7 +96,7 @@ Note that initializing the SDK should be done in native code, additional documen
 
 ### Importing the extension:
 In your React Native application, import the Identity extension as follows:
-```javascript
+```typescript
 import {Identity} from '@adobe/react-native-aepedgeidentity';
 ```
 
@@ -50,12 +106,12 @@ Returns the version of the Identity for Edge Network extension
 
 **Syntax**
 
-```javascript
+```typescript
 extensionVersion(): Promise<string>;
 ```
 **Example**
 
-```javascript
+```typescript
 Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: EdgeIdentity version: " + version));
 ```
 ### getExperienceCloudId:
@@ -64,12 +120,12 @@ This ID is preserved between app upgrades, is saved and restored during the stan
 A promise method which will be invoked once the Experience Cloud ID is available or rejected if an unexpected error occurred or the request timed out.
 
 **Syntax**
-```javascript
+```typescript
 getExperienceCloudId(): Promise<string>;
 ```
 
 **Example**
-```javascript
+```typescript
 Identity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
 ```
 
@@ -78,11 +134,11 @@ Get all the identities in the Identity for Edge Network extension, including cus
 A promise method which will be invoked once the identities are available or rejected if an unexpected error occurred or the request timed out.
 
 **Syntax**
-```javascript
+```typescript
 getIdentities(): Promise<IdentityMap>;
 ```
 **Example**
-```javascript
+```typescript
 Identity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get Identities = " + JSON.stringify(identities)));
 ```
 
@@ -97,11 +153,11 @@ Removing identities using a reserved namespace is not allowed using this API. Th
 * GAID
 
 **Syntax**
-```javascript
+```typescript
 removeIdentity(item: IdentityItem, namespace: string);
 ```
 **Example**
-```javascript
+```typescript
 let identityItem  = new IdentityItem("user@example.com");
 Identity.removeIdentity(identityItem, "Email");
 ```
@@ -127,13 +183,13 @@ Updating identities using a reserved namespace is not allowed using this API. Th
 
 **Syntax**
 
-```javascript
+```typescript
 updateIdentities(identityMap: IdentityMap);
 ```
 
 **Example**
 
-```javascript
+```typescript
 let identityItem  = new IdentityItem("user@example.com");
 let map = new IdentityMap();
 map.addItem(identityItem, "Email");
@@ -179,7 +235,7 @@ For more information, please read an overview of the [AEP Identity Service](http
   }
 ```
 **Example**
-```javascript
+```typescript
 let map = new IdentityMap();
 
 // Add an item
@@ -207,7 +263,7 @@ The format of the IdentityItem class is defined by the [XDM Identity Item Schema
 
 **Example**
 
-```javascript
+```typescript
 // Initialize
 let item  = new IdentityItem("identifier");
 
@@ -229,10 +285,12 @@ The possible authenticated states are:
 
 **Syntax**
 
-```javascript
- static AUTHENTICATED: string;
- static LOGGED_OUT: string;
- static AMBIGUOUS: string;
+```typescript
+ export enum AuthenticatedState {
+   AUTHENTICATED = 'authenticated',
+   LOGGED_OUT = 'loggedOut',
+   AMBIGUOUS = 'ambiguous'
+ }
 ```
 
 
