@@ -27,7 +27,7 @@ const RCTAEPEdgeIdentity: IIdentity = NativeModules.AEPEdgeIdentity;
 const Identity: IIdentity = {
   /**
    * Returns the version of the Identity extension
-   * @param  {string} Promise a promise that resolves with the extension version
+   * @return  {string} Promise a promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdgeIdentity.extensionVersion());
