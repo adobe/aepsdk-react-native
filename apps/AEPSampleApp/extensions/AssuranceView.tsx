@@ -38,7 +38,7 @@ const AssuranceView = ({navigation}: NavigationProps) => {
         <Button title="Start Session" onPress={startSessionClicked} />
         <TextInput
           style={{height: 40, margin: 10}}
-          placeholder="Paste your Assurance Session URL"
+          placeholder="assurance://"
           onChangeText={val => setsessionURL(val)}
         />
       </ScrollView>
