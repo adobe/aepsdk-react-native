@@ -1,10 +1,10 @@
 
-# React Native AEPMessaging Extension
+# React Native Adobe Experience Platform Messaging Extension
 
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging) 
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 
-`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [AEPMessaging SDK](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer) to allow for integration with React Native applications.
+`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [Adobe Journey Optimizer Messaging](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer) to allow for integration with React Native applications.
 
 ## Prerequisites
 
@@ -15,14 +15,23 @@ The messaging extension has the following peer dependenices, which must be insta
 
 ## Installation
 
-See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native/tree/messaging#requirements) instructions on the main page 
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
+
+Install the `@adobe/react-native-aepmessaging` package:
+
+```bash
+cd MyReactApp
+npm install @adobe/react-native-aepmessaging
+```
 
 ## Usage
 
 ### [Messaging](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer)
 
+### Installing and registering the extension with the AEP Mobile Core
+
 ### Initialization  
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).  
+Initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).  
 
 Example:  
 
@@ -32,6 +41,7 @@ iOS
 @import AEPLifecycle;
 @import AEPEdge;
 @import AEPEdgeIdentity;
+@import AEPMessaging;
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -57,6 +67,7 @@ import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity;
+import com.adobe.marketing.mobile.Messaging;
   
 ...
 import android.app.Application;
@@ -69,8 +80,6 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
-
     try {
       Edge.registerExtension();
       Identity.registerExtension();
@@ -95,9 +104,17 @@ public class MainApplication extends Application implements ReactApplication {
 import {AEPMessaging} from '@adobe/react-native-aepmessaging';
 ```
 
-##### Getting the extension version:
+## API reference
+### extensionVersion
+
+**Syntax**
 ```javascript
-AEPMessaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPMessaging version: " + version));
+extensionVersion(): Promise<string>;
+```
+
+**Example**
+```javascript
+Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: Messaging version: " + version));
 ```
 
 ## Configure Adobe Journey Optimizer 

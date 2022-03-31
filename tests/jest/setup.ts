@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -8,9 +8,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
-
-@format
 */
+
 import * as ReactNative from 'react-native';
 
 jest.doMock('react-native', () => {
@@ -25,10 +24,13 @@ jest.doMock('react-native', () => {
                 AEPEdgeIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getIdentities: jest.fn(() => new Promise(resolve => resolve({"ABC":[{"id":"id1","authenticatedState":"ambiguous","primary":false}]}))),
+                    updateIdentities: jest.fn(),
+                    removeIdentity: jest.fn(),
                 },
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
-                    sendEvent: jest.fn(() => new Promise(resolve => resolve(null))),
+                    sendEvent: jest.fn(() => new Promise(resolve => resolve([{type: "example", payload: {sample: "data"}}]))),
                 },
                 AEPAssurance: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
@@ -51,14 +53,13 @@ jest.doMock('react-native', () => {
                     configureWithAppId: jest.fn(),
                     updateConfiguration: jest.fn(),
                     setLogLevel: jest.fn(),
-                    getLogLevel: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getLogLevel: jest.fn(() => new Promise(resolve => resolve('DEBUG'))),
                     log: jest.fn(),
                     setPrivacyStatus: jest.fn(),
-                    getPrivacyStatus: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getPrivacyStatus: jest.fn(() => new Promise(resolve => resolve('OPT_OUT'))),
                     getSdkIdentities: jest.fn(() => new Promise(resolve => resolve(''))),
                     dispatchEvent: jest.fn(),
                     dispatchEventWithResponseCallback: jest.fn(() => new Promise(resolve => resolve(null))),
-                    dispatchResponseEvent: jest.fn(() => new Promise(resolve => resolve(false))),
                     trackAction: jest.fn(),
                     trackState: jest.fn(),
                     setAdvertisingIdentifier: jest.fn(),

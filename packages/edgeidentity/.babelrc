@@ -1,8 +1,0 @@
-{
-  "presets": ["@babel/preset-flow", "react-native"],
-    "plugins": [
-      ["module-resolver", {
-        "root": [ "./js/" ]
-      }]
-    ]
-}

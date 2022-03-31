@@ -30,9 +30,69 @@ Install the Consent extension in your mobile property and configure the default 
 Then follow the same document for registering the Consent extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
+**Initialization Example**
+
+iOS
+```objc
+// AppDelegate.h
+@import AEPCore;
+@import AEPEdge;
+@import AEPEdgeIdentity;
+@import AEPEdgeConsent;
+...
+@implementation AppDelegate
+
+// AppDelegate.m
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+    [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
+                                        AEPMobileEdge.class, 
+                                        AEPMobileEdgeConsent.class] completion:^{
+      [AEPMobileCore configureWithAppId:@"yourAppID"];  
+    ...   
+   }]; 
+   return YES;   
+ } 
+
+@end
+```
+
+Android
+```java
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.identity.Identity;
+import com.adobe.marketing.mobile.edge.consent.Consent;
+  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.configureWithAppID("yourAppID");
+
+    Edge.registerExtension();
+    Identity.registerExtension();
+    Consent.registerExtension();
+    MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+        
+        }});
+  }
+}     
+```
+
 ### Importing the extension
 In your React Native application, import the Consent extension as follows:
-```javascript
+```typescript
 import {Consent} from '@adobe/react-native-aepedgeconsent';
 ```
 
@@ -42,12 +102,12 @@ import {Consent} from '@adobe/react-native-aepedgeconsent';
 Returns the version of the Consent extension
 
 **Syntax**
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
-```javascript
+```typescript
 Consent.extensionVersion().then(version => console.log("Consent.extensionVersion: " + version));
 ```
 
@@ -56,12 +116,12 @@ Retrieves the current consent preferences stored in the Consent extension and re
 Output example: {"consents": {"collect": {"val": "y"}}}
 
 **Syntax**
-```javascript
-getConsents(): Promise<{string: any}>
+```typescript
+getConsents(): Promise<Record<string, any>>
 ```
 
 **Example**
-```javascript
+```typescript
 Consent.getConsents().then(consents => {
   console.log("AEPConsent.getConsents returned current consent preferences:  " + JSON.stringify(consents));
 }).catch((error) => {
@@ -74,12 +134,12 @@ Merges the existing consents with the given consents. Duplicate keys will take t
 Input example: {"consents": {"collect": {"val": "y"}}}
 
 **Syntax**
-```javascript
-update(consents: {string: any})
+```typescript
+update(consents: Record<string, any>) 
 ```
 
 **Example**
-```javascript
+```typescript
 var consents: {[keys: string]: any} = {"consents" : {"collect" : {"val": "y"}}};
 Consent.update(consents);
 ```

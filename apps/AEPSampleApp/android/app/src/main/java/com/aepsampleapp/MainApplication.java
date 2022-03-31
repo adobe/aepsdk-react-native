@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +17,6 @@ import android.content.Context;
 
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.Assurance;
-import com.adobe.marketing.mobile.Identity;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
@@ -78,21 +77,22 @@ public class MainApplication extends Application implements ReactApplication {
           com.adobe.marketing.mobile.Identity.registerExtension();
           com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
           Lifecycle.registerExtension();
-          Signal.registerExtension();          
+          Signal.registerExtension();
           Edge.registerExtension();
           Consent.registerExtension();
           Messaging.registerExtension();
           Assurance.registerExtension();
-          MobileCore.configureWithAppID("your-app-ID");
-          MobileCore.start(new AdobeCallback() {
-              @Override
-              public void call(Object o) {
-                  MobileCore.lifecycleStart(null);
-              }
-          });
       } catch (InvalidInitException e) {
           e.printStackTrace();
       }
+
+      MobileCore.configureWithAppID("your-app-ID");
+      MobileCore.start(new AdobeCallback() {
+          @Override
+          public void call(Object o) {
+              MobileCore.lifecycleStart(null);
+          }
+      });
   }
 
   /**
