@@ -86,7 +86,7 @@ public class MainApplication extends Application implements ReactApplication {
 
 In your React Native application, import the UserProfile extension as follows:
 
-```javascript
+```typescript
 import {UserProfile} from '@adobe/react-native-aepuserprofile';
 ```
 
@@ -98,13 +98,13 @@ Returns the version of the User Profile extension
 
 **Syntax**
 
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 UserProfile.extensionVersion().then(version => console.log("AdobeExperienceSDK: UserProfile version: " + version));
 ```
 
@@ -114,13 +114,13 @@ Gets the user profile attributes with the given keys.
 
 **Syntax**
 
-```javascript
-getUserAttributes(attributeNames: Array<string>): Promise<?{ string: any }> 
+```typescript
+getUserAttributes(attributeNames: Array<string>): Promise<Record<string, any>>
 ```
 
 **Example**
 
-```javascript
+```typescript
 UserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: UserProfile getUserAttributes: " + map));
 ```
 
@@ -130,13 +130,13 @@ Removes the user profile attributes for the given keys.
 
 **Syntax**
 
-```javascript
+```typescript
 removeUserAttributes(attributeNames: Array<string>)
 ```
 
 **Example**
 
-```javascript
+```typescript
 UserProfile.removeUserAttributes(["mapKey1"]);
 ```
 
@@ -147,13 +147,13 @@ It allows to create/update a batch of user profile attributes.
 
 **Syntax**
 
-```javascript
-updateUserAttributes(attributeMap: { string: any })
+```typescript
+updateUserAttributes(attributeMap: Record<string, any>)
 ```
 
 **Example**
 
-```javascript
+```typescript
 let attrMap = {"mapKey": "mapValue", "mapKey1": "mapValue1"};
 UserProfile.updateUserAttributes(attrMap);
 ```

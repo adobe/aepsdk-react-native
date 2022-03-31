@@ -96,7 +96,7 @@ public class MainApplication extends Application implements ReactApplication {
 
 ### Importing the extension:
 In your React Native application, import the Identity extension as follows:
-```javascript
+```typescript
 import {Identity} from '@adobe/react-native-aepedgeidentity';
 ```
 
@@ -106,12 +106,12 @@ Returns the version of the Identity for Edge Network extension
 
 **Syntax**
 
-```javascript
+```typescript
 extensionVersion(): Promise<string>;
 ```
 **Example**
 
-```javascript
+```typescript
 Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: EdgeIdentity version: " + version));
 ```
 ### getExperienceCloudId:
@@ -120,12 +120,12 @@ This ID is preserved between app upgrades, is saved and restored during the stan
 A promise method which will be invoked once the Experience Cloud ID is available or rejected if an unexpected error occurred or the request timed out.
 
 **Syntax**
-```javascript
+```typescript
 getExperienceCloudId(): Promise<string>;
 ```
 
 **Example**
-```javascript
+```typescript
 Identity.getExperienceCloudId().then(experienceCloudId => console.log("AdobeExperienceSDK: Experience Cloud Id = " + experienceCloudId));
 ```
 
@@ -134,11 +134,11 @@ Get all the identities in the Identity for Edge Network extension, including cus
 A promise method which will be invoked once the identities are available or rejected if an unexpected error occurred or the request timed out.
 
 **Syntax**
-```javascript
+```typescript
 getIdentities(): Promise<IdentityMap>;
 ```
 **Example**
-```javascript
+```typescript
 Identity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get Identities = " + JSON.stringify(identities)));
 ```
 
@@ -153,11 +153,11 @@ Removing identities using a reserved namespace is not allowed using this API. Th
 * GAID
 
 **Syntax**
-```javascript
+```typescript
 removeIdentity(item: IdentityItem, namespace: string);
 ```
 **Example**
-```javascript
+```typescript
 let identityItem  = new IdentityItem("user@example.com");
 Identity.removeIdentity(identityItem, "Email");
 ```
@@ -183,13 +183,13 @@ Updating identities using a reserved namespace is not allowed using this API. Th
 
 **Syntax**
 
-```javascript
+```typescript
 updateIdentities(identityMap: IdentityMap);
 ```
 
 **Example**
 
-```javascript
+```typescript
 let identityItem  = new IdentityItem("user@example.com");
 let map = new IdentityMap();
 map.addItem(identityItem, "Email");
@@ -235,7 +235,7 @@ For more information, please read an overview of the [AEP Identity Service](http
   }
 ```
 **Example**
-```javascript
+```typescript
 let map = new IdentityMap();
 
 // Add an item
@@ -263,7 +263,7 @@ The format of the IdentityItem class is defined by the [XDM Identity Item Schema
 
 **Example**
 
-```javascript
+```typescript
 // Initialize
 let item  = new IdentityItem("identifier");
 
@@ -285,10 +285,12 @@ The possible authenticated states are:
 
 **Syntax**
 
-```javascript
- static AUTHENTICATED: string;
- static LOGGED_OUT: string;
- static AMBIGUOUS: string;
+```typescript
+ export enum AuthenticatedState {
+   AUTHENTICATED = 'authenticated',
+   LOGGED_OUT = 'loggedOut',
+   AMBIGUOUS = 'ambiguous'
+ }
 ```
 
 
