@@ -14,7 +14,7 @@ The Adobe Experience Platform Optimize extension has the following peer dependen
 
 See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
 
-Download the `@adobe/react-native-aepoptimize` node package from the github pre-release and save it to a folder.
+Download the `@adobe/react-native-aepoptimize` node package from the [One Drive url](https://adobe-my.sharepoint.com/:u:/p/shtomar/EfdVTaUkBnFNnwbfBVISCuIBbA9WU4SfXNFzT05UH8iSog?e=24eG1j) and save it to a folder.
 Install the `@adobe/react-native-aepoptimize` package:
 
 ```bash
@@ -22,20 +22,16 @@ cd MyReactApp
 npm install {path to the node package}
 ```
 
-Optimize native packages are not yet released. Additional setup needs to be done in Podfile and build.gradle for integrating RN Optimize package in your RN application.
+Optimize native packages are not yet released and their github repo is private. Additional setup needs to be done in Podfile and build.gradle for integrating RN Optimize package in your RN application.
 
 **Podfile Setup**
-The RN Optimize package depends on the AEPOptimize v1.0.0, which is not yet released. Clone AEPOptimize code from the [github repo]() in a folder.
-
-```shell
-git clone https://github.com/adobe/aepsdk-optimize-ios.git
-```
+The RN Optimize package depends on the AEPOptimize v1.0.0, which is not yet released and their github repo is private. Download the AEPOptimize source code from the [One Drive URL](https://adobe-my.sharepoint.com/:u:/p/shtomar/EXzEX5v9fWBOjYYoWvy9H58BcA8fsGwF0hpdP8pBlfIePA?e=CEreTJ) and unzip in a folder.
 
 Add the following pod dependency in your iOS project Podfile under the application target.
 
-```
+```Ruby
 target 'MyReactApp' do  
-pod 'AEPOptimize', :path => '{path to folder where AEPOptimize code was cloned}'
+pod 'AEPOptimize', :path => '{path to the folder where AEPOptimize code was unzipped}'
 end
 ```
 
