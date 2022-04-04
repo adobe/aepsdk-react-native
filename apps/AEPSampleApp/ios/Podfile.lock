@@ -10,7 +10,7 @@ PODS:
     - AEPEdgeIdentity
   - AEPEdgeConsent (1.0.0):
     - AEPCore (>= 3.1.0)
-  - AEPEdgeIdentity (1.0.0):
+  - AEPEdgeIdentity (1.0.1):
     - AEPCore (>= 3.1.1)
   - AEPIdentity (3.4.2):
     - AEPCore (>= 3.4.2)
@@ -506,7 +506,7 @@ SPEC CHECKSUMS:
   AEPCore: b01856bf24972e4720cb0511a358d1e68067252a
   AEPEdge: 500628aee1319ef2690dfaf5bd950badce6ec3f0
   AEPEdgeConsent: dd46002b0c4bf55443f5441990e799248975713e
-  AEPEdgeIdentity: 40d312b4434b710a46c1738ab2a221dda4cfd67e
+  AEPEdgeIdentity: 5c42cef81835851232136a9e1fbbbe33b204ee11
   AEPIdentity: fbf755560afcbb0acd66cd5b6a1c147530fca5f6
   AEPLifecycle: 1e0e843465fb143f8d8949dcf06de169d5c26f62
   AEPMessaging: 661cc08435254f3c9cc0899785c20a7952952e95
