@@ -248,6 +248,22 @@ updateConfiguration(configMap?: { string: any })
 MobileCore.updateConfiguration({"yourConfigKey": "yourConfigValue"});
 ```
 
+- #### clearUpdatedConfiguration
+
+You can clear any programmatic updates made to the configuration via the `clearUpdatedConfiguration` API.
+
+**Syntax**
+
+```typescript
+clearUpdatedConfiguration()
+```
+
+**Example**
+
+```typescript
+MobileCore.clearUpdatedConfiguration();
+```
+
 ### [Identity](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/identity)
 
 - #### appendVisitorInfoForURL
