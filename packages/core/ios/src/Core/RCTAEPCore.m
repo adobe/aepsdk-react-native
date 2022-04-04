@@ -60,6 +60,10 @@ RCT_EXPORT_METHOD(updateConfiguration: (NSDictionary* __nullable) config) {
     [AEPMobileCore updateConfiguration:config];
 }
 
+RCT_EXPORT_METHOD(clearUpdatedConfiguration) {
+     [AEPMobileCore clearUpdatedConfiguration];
+}
+
 RCT_EXPORT_METHOD(setLogLevel: (NSString *) logLevelString) {
     [AEPMobileCore setLogLevel:[RCTAEPCoreDataBridge logLevelFromString:logLevelString]];
 }

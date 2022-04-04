@@ -36,6 +36,7 @@ interface IMobileCore {
   setLargeIconResourceID: (resourceID: number) => void;
   setAppGroup: (appGroup?: string) => void;
   resetIdentities: () => void;
+  clearUpdatedConfiguration: () => void;
 }
 
 const RCTAEPCore: IMobileCore = NativeModules.AEPCore;
@@ -74,6 +75,15 @@ const MobileCore: IMobileCore = {
    */
   configureWithAppId(appId?: String) {
     RCTAEPCore.configureWithAppId(appId);
+  },
+
+  /**
+   *
+   * @brief You can clear any programmatic updates made to the configuration via this API. 
+   *
+   */
+   clearUpdatedConfiguration() {
+    RCTAEPCore.clearUpdatedConfiguration();
   },
 
   /**
