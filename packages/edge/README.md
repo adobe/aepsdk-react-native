@@ -88,7 +88,7 @@ public class MainApplication extends Application implements ReactApplication {
 
 ### Importing the extension
 In your React Native application, import the Edge extension as follows:
-```javascript
+```typescript
 import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
 ```
 
@@ -96,24 +96,24 @@ import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
 ### extensionVersion
 
 **Syntax**
-```javascript
+```typescript
 extensionVersion(): Promise<string>;
 ```
 
 **Example**
-```javascript
+```typescript
 Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge version: " + version));
 ```
 
 ### sendEvent
 
 **Syntax**
-```javascript
+```typescript
 sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>;
 ```
 
 **Example**
-```javascript
+```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"free": "form", "data": "example"};
 let experienceEvent = new ExperienceEvent(xdmData, data);
@@ -130,14 +130,14 @@ Edge.sendEvent(experienceEvent).then(eventHandles => console.log("Edge.sentEvent
 
 ##### Create Experience Event from Dictionary:
 
-```javascript
+```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 let experienceEvent = new ExperienceEvent(xdmData);
 ```
 
 ##### Add free form data to the Experience event:
 
-```javascript
+```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"free": "form", "data": "example"};
 let experienceEvent = new ExperienceEvent(xdmData, data);
@@ -145,14 +145,14 @@ let experienceEvent = new ExperienceEvent(xdmData, data);
 
 ##### Set the destination Dataset identifier to the current Experience event:
 
-```javascript
+```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 let experienceEvent = new ExperienceEvent(xdmData, null, "datasetIdExample")
 ```
 
 ##### Create Experience Event with xdmdata, free form data and the destination Dataset identifier:
 
-```javascript
+```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"dataKey" : "dataValue"};
 let experienceEvent = new ExperienceEvent(xdmData, data, "datasetIdExample")

@@ -23,7 +23,7 @@ const RCTAEPEdgeConsent: IConsent = NativeModules.AEPEdgeConsent;
 const Consent: IConsent = {
   /**
    * Returns the version of the Consent extension
-   * @param {string} Promise resolves with the extension version
+   * @return {string} Promise resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdgeConsent.extensionVersion());
@@ -32,7 +32,7 @@ const Consent: IConsent = {
   /**
    * Merges the existing consents with the given consents. Duplicate keys will take the value of those passed in the API
    * Input example: {"consents": {"collect": {"val": "y"}}}
-   * @param consents to be merged with the existing consents
+   * @param {Record<string, any>} consents to be merged with the existing consents
    */
   update(consents: Record<string, any>) {
     RCTAEPEdgeConsent.update(consents);
@@ -41,7 +41,7 @@ const Consent: IConsent = {
   /**
    * Retrieves the current consent preferences stored in the Consent extension
    * Output example: {"consents": {"collect": {"val": "y"}}}
-   * @param {{ string: any }} Promise resolved with the current consent preferences or rejected
+   * @return {{Promise<Record<string, any>>}} Promise resolved with the current consent preferences or rejected
    * if an unexpected error occurs or the request timed out
    */
   getConsents(): Promise<Record<string, any>> {
