@@ -29,7 +29,7 @@ At this time, the following ACP-prefix libraries can be switched out with their 
 | @adobe/react-native-acpaudience | NA |
 | @adobe/react-native-acptarget | NA |
 | @adobe/react-native-acpcampaign | NA |
-| @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/@adobe/react-native-aepassurance:3.x (compatible with AEP libraries)|
+| @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/react-native-aepassurance:3.x (compatible with AEP libraries)|
 
 <!--- TODO: add more descritions for Assurance library?? --->
 
@@ -348,7 +348,7 @@ ACPCore.setAdvertisingIdentifier(advertisingIdentifier?: String)
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setadvertisingidentifier)
 ```typescript
-MobileCore.setAdvertisingIdentifier(advertisingIdentifier?: String)
+MobileCore.setAdvertisingIdentifier(advertisingIdentifier?: string)
 ```
 
 #### setPushIdentifier
@@ -358,7 +358,7 @@ ACPCore.setPushIdentifier(pushIdentifier?: String)
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setpushidentifier)
 ```typescript
-MobileCore.setPushIdentifier(pushIdentifier?: String) 
+MobileCore.setPushIdentifier(pushIdentifier?: string) 
 ```
 
 ### Lifecycle

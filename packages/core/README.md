@@ -239,7 +239,7 @@ Update the configuration programmatically by passing configuration keys and valu
 **Syntax**
 
 ```typescript
-updateConfiguration(configMap?: { string: any })
+updateConfiguration(configMap?: Record<string, any>)
 ```
 
 **Example**
@@ -350,7 +350,7 @@ Identity.syncIdentifier("identifierType", "identifier", MobileVisitorAuthenticat
 **Syntax**
 
 ```typescript
-syncIdentifiers(identifiers?: { string: string })
+syncIdentifiers(identifiers?: Record<string, string>)
 ```
 
 **Example**
