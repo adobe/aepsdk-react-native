@@ -29,7 +29,7 @@ At this time, the following ACP-prefix libraries can be switched out with their 
 | @adobe/react-native-acpaudience | NA |
 | @adobe/react-native-acptarget | NA |
 | @adobe/react-native-acpcampaign | NA |
-| @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/@adobe/react-native-aepassurance:3.x (compatible with AEP libraries)|
+| @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/react-native-aepassurance:3.x (compatible with AEP libraries)|
 
 <!--- TODO: add more descritions for Assurance library?? --->
 
@@ -152,8 +152,8 @@ public class MainApplication extends Application implements ReactApplication {
 ACPCore.collectPii(data: [String : String])
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#collecting-pii)
-```javascript
-MobileCore.collectPii(data: [String : String])
+```typescript
+MobileCore.collectPii(data: Record<string, string>)
 ```
 
 #### dispatchEvent
@@ -162,7 +162,7 @@ MobileCore.collectPii(data: [String : String])
 ACPCore.dispatchEvent(event: ACPExtensionEvent): Promise<boolean>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#dispatchevent)
-```javascript
+```typescript
 MobileCore.dispatchEvent(event: Event): Promise<boolean>
 ```
 
@@ -172,7 +172,7 @@ MobileCore.dispatchEvent(event: Event): Promise<boolean>
 ACPCore.dispatchEventWithResponseCallback(event: ACPExtensionEvent): Promise<ACPExtensionEvent>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#dispatcheventwithresponsecallback)
-```javascript
+```typescript
 MobileCore.dispatchEventWithResponseCallback(event: Event): Promise<Event>
 ```
 
@@ -182,7 +182,7 @@ MobileCore.dispatchEventWithResponseCallback(event: Event): Promise<Event>
 ACPCore.extensionVersion(): Promise<string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion)
-```javascript
+```typescript
 MobileCore.extensionVersion(): Promise<string>
 ```
 
@@ -192,8 +192,8 @@ MobileCore.extensionVersion(): Promise<string>
 ACPCore.getLogLevel(): Promise<string> 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getloglevel)
-```javascript
-MobileCore.getLogLevel(): Promise<string> 
+```typescript
+MobileCore.getLogLevel(): Promise<LogLevel>
 ```
 
 #### getSdkIdentities
@@ -202,8 +202,8 @@ MobileCore.getLogLevel(): Promise<string>
 ACPCore.getSdkIdentities(): Promise<?string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getsdkidentities)
-```javascript
-MobileCore.getSdkIdentities(): Promise<?string>
+```typescript
+MobileCore.getSdkIdentities(): Promise<string>
 ```
 
 #### getPrivacyStatus
@@ -212,7 +212,7 @@ MobileCore.getSdkIdentities(): Promise<?string>
 ACPCore.getPrivacyStatus(): Promise<string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getprivacystatus)
-```javascript
+```typescript
 MobileCore.getPrivacyStatus(): Promise<string>
 ```
 
@@ -222,8 +222,8 @@ MobileCore.getPrivacyStatus(): Promise<string>
 ACPCore.log(logLevel: string, tag: string, message: string)
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#log)
-```javascript
-MobileCore.log(logLevel: string, tag: string, message: string)
+```typescript
+MobileCore.log(logLevel: LogLevel, tag: string, message: string)
 ```
 
 #### resetIdentities
@@ -232,7 +232,7 @@ MobileCore.log(logLevel: string, tag: string, message: string)
 ACPCore.resetIdentities()
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#resetidentities)
-```javascript
+```typescript
 MobileCore.resetIdentities()
 ```
 
@@ -242,7 +242,7 @@ MobileCore.resetIdentities()
 ACPCore.setPrivacyStatus(privacyStatus: string) 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setprivacystatus)
-```javascript
+```typescript
 MobileCore.setPrivacyStatus(privacyStatus: string) 
 ```
 
@@ -252,8 +252,8 @@ MobileCore.setPrivacyStatus(privacyStatus: string)
 ACPCore.setLogLevel(mode: string)
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setloglevel)
-```javascript
-MobileCore.setLogLevel(mode: string)
+```typescript
+MobileCore.setLogLevel(mode: LogLevel)
 ```
 
 #### updateConfiguration
@@ -262,8 +262,8 @@ MobileCore.setLogLevel(mode: string)
 ACPCore.updateConfiguration(configMap?: { string: any })
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#updateconfiguration)
-```javascript
-MobileCore.updateConfiguration(configMap?: { string: any })
+```typescript
+MobileCore.updateConfiguration(configMap?: Record<string, any>)
 ```
 
 ### Identity
@@ -274,8 +274,8 @@ MobileCore.updateConfiguration(configMap?: { string: any })
 ACPIdentity.appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#appendvisitorinfoforurl)
-```javascript
-Identity.appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
+```typescript
+Identity.appendVisitorInfoForURL(baseURL?: String): Promise<string>
 ```
 
 #### extensionVersion
@@ -284,7 +284,7 @@ Identity.appendVisitorInfoForURL(baseURL?: String): Promise<?string>
 ACPIdentity.extensionVersion(): Promise<string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-1)
-```javascript
+```typescript
 Identity.extensionVersion(): Promise<string>
 ```
 
@@ -294,8 +294,8 @@ Identity.extensionVersion(): Promise<string>
 ACPIdentity.getUrlVariables(): Promise<?string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#geturlvariables)
-```javascript
-Identity.getUrlVariables(): Promise<?string>
+```typescript
+Identity.getUrlVariables(): Promise<string>
 ```
  
 #### getIdentifiers
@@ -304,8 +304,8 @@ Identity.getUrlVariables(): Promise<?string>
 ACPIdentity.getIdentifiers(): Promise<Array<?ACPVisitorID>> 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getidentifiers)
-```javascript
-Identity.getIdentifiers(): Promise<Array<?VisitorID>>
+```typescript
+Identity.getIdentifiers(): Promise<Array<VisitorID>>
 ```
 
 #### getExperienceCloudId
@@ -314,8 +314,8 @@ Identity.getIdentifiers(): Promise<Array<?VisitorID>>
 ACPIdentity.getExperienceCloudId(): Promise<?string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getexperiencecloudid)
-```javascript
-Identity.getExperienceCloudId(): Promise<?string>
+```typescript
+Identity.getExperienceCloudId(): Promise<string>
 ```
 
 
@@ -325,8 +325,8 @@ Identity.getExperienceCloudId(): Promise<?string>
 ACPIdentity.syncIdentifiers(identifiers?: { string: string })
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifier)
-```javascript
-Identity.syncIdentifiers(identifiers?: { string: string })
+```typescript
+Identity.syncIdentifiers(identifiers?: Record<string, string>)
 ```
 
 
@@ -336,8 +336,8 @@ Identity.syncIdentifiers(identifiers?: { string: string })
 ACPIdentity.syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifierswithauthstate)
-```javascript
-Identity.syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
+```typescript
+Identity.syncIdentifiersWithAuthState(identifiers: Record<string, string> | null, authenticationState: MobileVisitorAuthenticationState)
 ```
 
 
@@ -347,8 +347,8 @@ Identity.syncIdentifiersWithAuthState(identifiers?: { string: string }, authenti
 ACPCore.setAdvertisingIdentifier(advertisingIdentifier?: String)
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setadvertisingidentifier)
-```javascript
-MobileCore.setAdvertisingIdentifier(advertisingIdentifier?: String)
+```typescript
+MobileCore.setAdvertisingIdentifier(advertisingIdentifier?: string)
 ```
 
 #### setPushIdentifier
@@ -357,8 +357,8 @@ MobileCore.setAdvertisingIdentifier(advertisingIdentifier?: String)
 ACPCore.setPushIdentifier(pushIdentifier?: String) 
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setpushidentifier)
-```javascript
-MobileCore.setPushIdentifier(pushIdentifier?: String) 
+```typescript
+MobileCore.setPushIdentifier(pushIdentifier?: string) 
 ```
 
 ### Lifecycle
@@ -369,7 +369,7 @@ MobileCore.setPushIdentifier(pushIdentifier?: String)
 ACPLifecycle.extensionVersion(): Promise<string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-2)
-```javascript
+```typescript
 Lifecycle.extensionVersion(): Promise<string>
 ```
 
@@ -381,7 +381,7 @@ Lifecycle.extensionVersion(): Promise<string>
 ACPSignal.extensionVersion(): Promise<string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-3)
-```javascript
+```typescript
 Signal.extensionVersion(): Promise<string>
 ```
 
@@ -393,7 +393,7 @@ Signal.extensionVersion(): Promise<string>
 ACPUserProfile.extensionVersion(): Promise<string>
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#extensionversion)
-```javascript
+```typescript
 UserProfile.extensionVersion(): Promise<string>
 ```
 
@@ -403,7 +403,7 @@ UserProfile.extensionVersion(): Promise<string>
 ACPUserProfile.removeUserAttribute(attributeName: string)
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#removeuserattributes)
-```javascript
+```typescript
 UserProfile.removeUserAttributes(attributeNames: Array<string>)
 ```
 
@@ -416,6 +416,6 @@ ACPUserProfile.updateUserAttributes(attributeMap: { string: any })
 ACPUserProfile.updateUserAttribute(attributeName: string, attributeValue: string)
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#updateuserattributes)
-```javascript
-UserProfile.updateUserAttributes(attributeMap: { string: any })
+```typescript
+UserProfile.updateUserAttributes(attributeMap: Record<string, any>)
 ```

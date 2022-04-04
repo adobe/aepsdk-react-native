@@ -103,7 +103,7 @@ This function gets the current log level being used in the SDK.
 **Syntax**
 
 ```typescript
-getLogLevel(): Promise<string> 
+getLogLevel(): Promise<LogLevel>
 ```
 
 **Example**
@@ -119,7 +119,7 @@ This function gets all of the user's identities known by the SDK.
 **Syntax**
 
 ```typescript
-getSdkIdentities(): Promise<?string>
+getSdkIdentities(): Promise<string>
 ```
 
 **Example**
@@ -152,7 +152,7 @@ This is the API used to log from the SDK.
 **Syntax**
 
 ```typescript
-log(logLevel: string, tag: string, message: string)
+log(logLevel: LogLevel, tag: string, message: string)
 ```
 
 **Example**
@@ -221,7 +221,7 @@ Set the logging level of the SDK
 **Syntax**
 
 ```typescript
-setLogLevel(mode: string)
+setLogLevel(mode: LogLevel)
 ```
 
 **Example**
@@ -239,7 +239,7 @@ Update the configuration programmatically by passing configuration keys and valu
 **Syntax**
 
 ```typescript
-updateConfiguration(configMap?: { string: any })
+updateConfiguration(configMap?: Record<string, any>)
 ```
 
 **Example**
@@ -350,7 +350,7 @@ Identity.syncIdentifier("identifierType", "identifier", MobileVisitorAuthenticat
 **Syntax**
 
 ```typescript
-syncIdentifiers(identifiers?: { string: string })
+syncIdentifiers(identifiers?: Record<string, string>)
 ```
 
 **Example**
@@ -364,7 +364,7 @@ Identity.syncIdentifiers({"id1": "identifier1"});
 **Syntax**
 
 ```typescript
-syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
+syncIdentifiersWithAuthState(identifiers: Record<string, string> | null, authenticationState: MobileVisitorAuthenticationState)
 ```
 
 **Example**
