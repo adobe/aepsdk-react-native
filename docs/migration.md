@@ -322,12 +322,10 @@ Identity.getExperienceCloudId(): Promise<string>
 #### syncIdentifier
 - ACP (2.x)
 ```javascript
-ACPIdentity.syncIdentifiers(identifiers?: { string: string })
 ACPIdentity.syncIdentifier(identifierType: String, identifier: String, authenticationState: string)
 ```
 - [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifier)
 ```typescript
-Identity.syncIdentifiers(identifiers?: Record<string, string>)
 Identity.syncIdentifier(identifierType: String, identifier: String, authenticationState: MobileVisitorAuthenticationState) 
 ```
 
