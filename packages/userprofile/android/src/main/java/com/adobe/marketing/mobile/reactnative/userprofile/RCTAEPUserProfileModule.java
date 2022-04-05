@@ -1,5 +1,5 @@
 /*
- Copyright 2021 Adobe. All rights reserved.
+ Copyright 2022 Adobe. All rights reserved.
  This file is licensed to you under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -50,7 +50,8 @@ public class RCTAEPUserProfileModule extends ReactContextBaseJavaModule {
     UserProfile.getUserAttributes(RCTAEPUserProfileArrayUtil.toStringList(attributeNames), new AdobeCallback<Map<String, Object>>() {
       @Override
       public void call(Map<String, Object> stringObjectMap) {
-        promise.resolve(stringObjectMap);
+        promise.resolve(RCTAEPUserProfileMapUtil.toWritableMap(stringObjectMap));
+
       }
     });
   }

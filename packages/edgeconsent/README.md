@@ -92,7 +92,7 @@ public class MainApplication extends Application implements ReactApplication {
 
 ### Importing the extension
 In your React Native application, import the Consent extension as follows:
-```javascript
+```typescript
 import {Consent} from '@adobe/react-native-aepedgeconsent';
 ```
 
@@ -102,12 +102,12 @@ import {Consent} from '@adobe/react-native-aepedgeconsent';
 Returns the version of the Consent extension
 
 **Syntax**
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
-```javascript
+```typescript
 Consent.extensionVersion().then(version => console.log("Consent.extensionVersion: " + version));
 ```
 
@@ -116,12 +116,12 @@ Retrieves the current consent preferences stored in the Consent extension and re
 Output example: {"consents": {"collect": {"val": "y"}}}
 
 **Syntax**
-```javascript
-getConsents(): Promise<{string: any}>
+```typescript
+getConsents(): Promise<Record<string, any>>
 ```
 
 **Example**
-```javascript
+```typescript
 Consent.getConsents().then(consents => {
   console.log("AEPConsent.getConsents returned current consent preferences:  " + JSON.stringify(consents));
 }).catch((error) => {
@@ -134,12 +134,12 @@ Merges the existing consents with the given consents. Duplicate keys will take t
 Input example: {"consents": {"collect": {"val": "y"}}}
 
 **Syntax**
-```javascript
-update(consents: {string: any})
+```typescript
+update(consents: Record<string, any>) 
 ```
 
 **Example**
-```javascript
+```typescript
 var consents: {[keys: string]: any} = {"consents" : {"collect" : {"val": "y"}}};
 Consent.update(consents);
 ```

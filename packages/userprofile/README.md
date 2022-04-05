@@ -28,78 +28,132 @@ npm install @adobe/react-native-aepuserprofile
 
 Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
+**Initialization Example**
+
+iOS
+```objc
+// AppDelegate.h
+@import AEPCore;
+@import AEPUserProfile;
+...
+@implementation AppDelegate
+
+// AppDelegate.m
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+    // register UserProfile extension
+    [AEPMobileCore registerExtensions:@[AEPMobileUserProfile.class] completion:^{
+        [AEPMobileCore configureWithAppId:@"yourAppID"];  
+    ...   
+   }]; 
+   return YES;   
+ } 
+
+@end
+```
+
+Android
+```java
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.UserProfile;
+  
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    MobileCore.configureWithAppID("yourAppID");
+
+    UserProfile.registerExtension();// register UserProfile extension
+
+    MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+        
+        }});
+    }
+}     
+```
+
 #### Importing the extension:
 
 In your React Native application, import the UserProfile extension as follows:
 
-```javascript
+```typescript
 import {UserProfile} from '@adobe/react-native-aepuserprofile';
 ```
 
 ## API reference
 
-- ### extensionVersion
+### extensionVersion
 
 Returns the version of the User Profile extension
 
 **Syntax**
 
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 UserProfile.extensionVersion().then(version => console.log("AdobeExperienceSDK: UserProfile version: " + version));
 ```
 
-- ### getUserAttributes
+### getUserAttributes
 
 Gets the user profile attributes with the given keys.
 
 **Syntax**
 
-```javascript
-getUserAttributes(attributeNames: Array<string>): Promise<?{ string: any }> 
+```typescript
+getUserAttributes(attributeNames: Array<string>): Promise<Record<string, any>>
 ```
 
 **Example**
 
-```javascript
+```typescript
 UserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: UserProfile getUserAttributes: " + map));
 ```
 
-- ### removeUserAttributes
+### removeUserAttributes
 
 Removes the user profile attributes for the given keys.
 
 **Syntax**
 
-```javascript
+```typescript
 removeUserAttributes(attributeNames: Array<string>)
 ```
 
 **Example**
 
-```javascript
+```typescript
 UserProfile.removeUserAttributes(["mapKey1"]);
 ```
 
-- ### updateUserAttributes
+### updateUserAttributes
 
 Sets the user profile attributes key and value.
 It allows to create/update a batch of user profile attributes.
 
 **Syntax**
 
-```javascript
-updateUserAttributes(attributeMap: { string: any })
+```typescript
+updateUserAttributes(attributeMap: Record<string, any>)
 ```
 
 **Example**
 
-```javascript
+```typescript
 let attrMap = {"mapKey": "mapValue", "mapKey1": "mapValue1"};
 UserProfile.updateUserAttributes(attrMap);
 ```

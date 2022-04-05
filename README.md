@@ -16,9 +16,6 @@ This repository is a monorepo and contains a collection of React Native modules 
 |  [@adobe/react-native-aepmessaging](./packages/messaging)  |  [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)  | [Messaging]()
 |  [@adobe/react-native-aepassurance](./packages/assurance)    |  [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepassurance.svg)](https://www.npmjs.com/package/@adobe/react-native-aepassurance) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepassurance)](https://www.npmjs.com/package/@adobe/react-native-aepassurance)  | [Assurance](https://aep-sdks.gitbook.io/docs/foundation-extensions/adobe-experience-platform-assurance)
 
-
-
-
 > Note: @adobe/react-native-aepassurance <=2.0 is not compatible with  @adobe/react-native-aepcore. Please use @adobe/react-native-aepassurance [3.x or above](./packages/assurance#install-npm-package).
 
 ## Requirements
@@ -31,7 +28,7 @@ Requires React Native >= v0.60.0
 
 You need to install Adobe Experience Platform Mobile SDK with [npm](https://www.npmjs.com/) packages and configure the native Android/iOS project in your React Native project.
 
-> Note: If you are new to React Native, we suggest you follow the [React Native Getting Started](<https://reactnative.dev>) page before continuing.
+> Note: If you are new to React Native, we suggest you follow the [React Native Getting Started](https://reactnative.dev) page before continuing.
 
 ### Install AEP npm packages
 Adobe Experience Platform Mobile SDK packages can be installed from [npm](https://www.npmjs.com/) command.
@@ -87,6 +84,7 @@ cd ios && pod update && cd ..
 Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. Documentation on how to initialize each extension can be found in *./packages/{extension}/README.md*.
 
 ###### **iOS**
+
 ```objective-c
 //AppDelegate.h
 @import AEPCore;
@@ -130,6 +128,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 > This is because Adobe Experience Platform SDK now requires the app uses swift interfaces. Add a dummy .swift file to your project to embed the swift standard libs. See the SampleApp presented in this repo for example.
 
 ###### **Android:**
+
 ```java
 //MainApplication.java
 import com.adobe.marketing.mobile.AdobeCallback; 
@@ -172,16 +171,19 @@ public class MainApplication extends Application implements ReactApplication {
       ...
     }
   }
-}   
+}
 ```
 > To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
+
 
 ## Migration guide
 
 See [migration.md](./docs/migration.md) for guidance on migrating from ACP React Native libraries.
 
 ## Contributing
+
 Contributions  are welcomed! See [CONTRIBUTING](CONTRIBUTING.md) and [development.md](./docs/development.md) guides for more information.
 
 ## Licensing
+
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.

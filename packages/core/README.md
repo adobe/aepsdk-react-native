@@ -24,7 +24,7 @@ Initializing the SDK should be done in native code, documentation on how to init
 
 ### Importing the Mobile Core package:
 In your React Native application, import the core/lifecycle/signal/identity extension as follows:
-```javascript
+```typescript
 import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, Event } from '@adobe/react-native-aepcore'
 ```
 
@@ -37,13 +37,13 @@ The `collectPii` function lets the SDK to collect sensitive or personally identi
 
 **Syntax**
 
-```javascript
-collectPii(data: { string: string })
+```typescript
+collectPii(data: Record<string, string>)
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.collectPii({"myPii": "data"});
 ```
 
@@ -52,13 +52,13 @@ Dispatch an event for other extensions or the internal SDK to consume.
 
 **Syntax**
 
-```javascript
+```typescript
 dispatchEvent(event: Event): Promise<boolean>
 ```
 
 **Example**
 
-```javascript
+```typescript
 import {Event} from '@adobe/react-native-aepcore';
 
 var event = new Event("eventName", "eventType", "eventSource", {"testDataKey": "testDataValue"});
@@ -69,13 +69,13 @@ MobileCore.dispatchEvent(event);
 
 **Syntax**
 
-```javascript
+```typescript
 dispatchEventWithResponseCallback(event: Event): Promise<Event>
 ```
 
 **Example**
 
-```javascript
+```typescript
 import {Event} from '@adobe/react-native-aepcore';
 
 var event = new Event("eventName", "eventType", "eventSource", {"testDataKey": "testDataValue"});
@@ -87,13 +87,13 @@ Returns the version of the Core extension
 
 **Syntax**
 
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.extensionVersion().then(version => console.log("AdobeExperienceSDK: MobileCore version: " + version));
 ```
 - #### getLogLevel
@@ -102,13 +102,13 @@ This function gets the current log level being used in the SDK.
 
 **Syntax**
 
-```javascript
-getLogLevel(): Promise<string> 
+```typescript
+getLogLevel(): Promise<LogLevel>
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.getLogLevel().then(level => console.log("AdobeExperienceSDK: Log Level = " + level));
 ```
 
@@ -118,13 +118,13 @@ This function gets all of the user's identities known by the SDK.
 
 **Syntax**
 
-```javascript
-getSdkIdentities(): Promise<?string>
+```typescript
+getSdkIdentities(): Promise<string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.getSdkIdentities().then(identities => console.log("AdobeExperienceSDK: Identities = " + identities));
 ```
 
@@ -134,13 +134,13 @@ Get the current Adobe Mobile Privacy Status
 
 **Syntax**
 
-```javascript
+```typescript
 getPrivacyStatus(): Promise<string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.getPrivacyStatus().then(status => console.log("AdobeExperienceSDK: Privacy Status = " + status));
 ```
 
@@ -151,13 +151,13 @@ This is the API used to log from the SDK.
 
 **Syntax**
 
-```javascript
-log(logLevel: string, tag: string, message: string)
+```typescript
+log(logLevel: LogLevel, tag: string, message: string)
 ```
 
 **Example**
 
-```javascript
+```typescript
 import {LogLevel} from '@adobe/react-native-aepcore';
 
 MobileCore.log(LogLevel.ERROR, "React Native Tag", "React Native Message");
@@ -165,7 +165,7 @@ MobileCore.log(LogLevel.ERROR, "React Native Tag", "React Native Message");
 
 Note: `LogLevel` contains the following getters:
 
-```javascript
+```typescript
 const ERROR = "ERROR";
 const WARNING = "WARNING";
 const DEBUG = "DEBUG";
@@ -178,13 +178,13 @@ The `resetIdentities` method requests that each extension resets the identities 
 
 **Syntax**
 
-```javascript
+```typescript
 resetIdentities()
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.resetIdentities();
 ```
 
@@ -194,13 +194,13 @@ Set the Adobe Mobile Privacy status
 
 **Syntax**
 
-```javascript
+```typescript
 setPrivacyStatus(privacyStatus: string) 
 ```
 
 **Example**
 
-```javascript
+```typescript
 import {PrivacyStatus} from '@adobe/react-native-aepcore';
 
 MobileCore.setPrivacyStatus(PrivacyStatus.OPT_IN);
@@ -208,7 +208,7 @@ MobileCore.setPrivacyStatus(PrivacyStatus.OPT_IN);
 
 Note: `PrivacyStatus` contains the following getters:
 
-```javascript
+```typescript
 const OPT_IN = "OPT_IN";
 const OPT_OUT = "OPT_OUT";
 const UNKNOWN = "UNKNOWN";
@@ -220,13 +220,13 @@ Set the logging level of the SDK
 
 **Syntax**
 
-```javascript
-setLogLevel(mode: string)
+```typescript
+setLogLevel(mode: LogLevel)
 ```
 
 **Example**
 
-```javascript
+```typescript
 import {LogLevel} from '@adobe/react-native-aepcore';
 
 MobileCore.setLogLevel(LogLevel.VERBOSE);
@@ -238,14 +238,30 @@ Update the configuration programmatically by passing configuration keys and valu
 
 **Syntax**
 
-```javascript
-updateConfiguration(configMap?: { string: any })
+```typescript
+updateConfiguration(configMap?: Record<string, any>)
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.updateConfiguration({"yourConfigKey": "yourConfigValue"});
+```
+
+- #### clearUpdatedConfiguration
+
+You can clear any programmatic updates made to the configuration via the `clearUpdatedConfiguration` API.
+
+**Syntax**
+
+```typescript
+clearUpdatedConfiguration()
+```
+
+**Example**
+
+```typescript
+MobileCore.clearUpdatedConfiguration();
 ```
 
 ### [Identity](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/identity)
@@ -256,13 +272,13 @@ This function appends Adobe visitor information to the query component of the sp
 
 **Syntax**
 
-```javascript
+```typescript
 appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
 ```
 
 **Example**
 
-```javascript
+```typescript
 Identity.appendVisitorInfoForURL("test.com").then(urlWithVisitorData => console.log("AdobeExperienceSDK: VisitorData = " + urlWithVisitorData));
 ```
 
@@ -272,13 +288,13 @@ Returns the version of the Identity extension
 
 **Syntax**
 
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 Identity.extensionVersion().then(version => console.log("AdobeExperienceSDK: Identity version: " + version));
 ```
 
@@ -288,13 +304,13 @@ This function returns an appropriately formed string that contains the Experienc
 
 **Syntax**
 
-```javascript
+```typescript
 getUrlVariables(): Promise<?string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: UrlVariables = " + urlVariables));
 ```
 
@@ -304,13 +320,13 @@ This function returns all customer identifiers that were previously synced with 
 
 **Syntax**
 
-```javascript
+```typescript
 getIdentifiers(): Promise<Array<?VisitorID>>
 ```
 
 **Example**
 
-```javascript
+```typescript
 Identity.getIdentifiers().then(identifiers => console.log("AdobeExperienceSDK: Identifiers = " + identifiers));
 ```
 
@@ -320,13 +336,13 @@ This function retrieves the Adobe Experience Cloud ID (ECID) that was generated 
 
 **Syntax**
 
-```javascript
+```typescript
 getExperienceCloudId(): Promise<?string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 Identity.getExperienceCloudId().then(cloudId => console.log("AdobeExperienceSDK: CloudID = " + cloudId));
 ```
 
@@ -336,12 +352,12 @@ The `syncIdentifier`, `syncIdentifiers` and `syncIdentifiersWithAuthState` funct
 
 **Syntax**
 
-```javascript
+```typescript
  syncIdentifier(identifierType: String, identifier: String, authenticationState: string) 
 ```
 
 **Example**
-```javascript
+```typescript
 Identity.syncIdentifier("identifierType", "identifier", MobileVisitorAuthenticationState.AUTHENTICATED);
 ```
 
@@ -349,13 +365,13 @@ Identity.syncIdentifier("identifierType", "identifier", MobileVisitorAuthenticat
 
 **Syntax**
 
-```javascript
-syncIdentifiers(identifiers?: { string: string })
+```typescript
+syncIdentifiers(identifiers?: Record<string, string>)
 ```
 
 **Example**
 
-```javascript
+```typescript
 Identity.syncIdentifiers({"id1": "identifier1"});
 ```
 
@@ -363,13 +379,13 @@ Identity.syncIdentifiers({"id1": "identifier1"});
 
 **Syntax**
 
-```javascript
-syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
+```typescript
+syncIdentifiersWithAuthState(identifiers: Record<string, string> | null, authenticationState: MobileVisitorAuthenticationState)
 ```
 
 **Example**
 
-```javascript
+```typescript
 import {MobileVisitorAuthenticationState} from '@adobe/react-native-aepcore';
 
 Identity.syncIdentifiersWithAuthState({"id1": "identifier1"}, MobileVisitorAuthenticationState.UNKNOWN);
@@ -377,7 +393,7 @@ Identity.syncIdentifiersWithAuthState({"id1": "identifier1"}, MobileVisitorAuthe
 
 Note: `MobileVisitorAuthenticationState` contains the following getters:
 
-```javascript
+```typescript
 const AUTHENTICATED = "VISITOR_AUTH_STATE_AUTHENTICATED";
 const LOGGED_OUT = "VISITOR_AUTH_STATE_LOGGED_OUT";
 const UNKNOWN = "VISITOR_AUTH_STATE_UNKNOWN";
@@ -389,13 +405,13 @@ Submits a generic event containing the provided IDFA with event type `generic.id
 
 **Syntax**
 
-```javascript
+```typescript
 setAdvertisingIdentifier(advertisingIdentifier?: String)
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.setAdvertisingIdentifier("adID");
 ```
 
@@ -405,19 +421,19 @@ Submits a generic event containing the provided push token with event type `gene
 
 **Syntax**
 
-```javascript
+```typescript
 setPushIdentifier(pushIdentifier?: String) 
 ```
 
 **Example**
 
-```javascript
+```typescript
 MobileCore.setPushIdentifier("pushIdentifier");
 ```
 
 - #### VisitorID Class:
 
-```javascript
+```typescript
 import {VisitorID} from '@adobe/react-native-aepcore';
 
 var visitorId = new VisitorID(idOrigin?: string, idType: string, id?: string, authenticationState?: MobileVisitorAuthenticationState)
@@ -435,13 +451,13 @@ Returns the version of the Lifecycle extension
 
 **Syntax**
 
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 Lifecycle.extensionVersion().then(version => console.log("AdobeExperienceSDK: Lifecycle version: " + version));
 ```
 
@@ -453,12 +469,12 @@ Returns the version of the Signal extension
 
 **Syntax**
 
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
 
-```javascript
+```typescript
 Signal.extensionVersion().then(version => console.log("AdobeExperienceSDK: Signal version: " + version));
 ```
