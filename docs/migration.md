@@ -318,17 +318,25 @@ ACPIdentity.getExperienceCloudId(): Promise<?string>
 Identity.getExperienceCloudId(): Promise<string>
 ```
 
-
 #### syncIdentifier
+- ACP (2.x)
+```javascript
+ACPIdentity.syncIdentifier(identifierType: String, identifier: String, authenticationState: string)
+```
+- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifier)
+```typescript
+Identity.syncIdentifier(identifierType: String, identifier: String, authenticationState: MobileVisitorAuthenticationState) 
+```
+
+#### syncIdentifiers
 - ACP (2.x)
 ```javascript
 ACPIdentity.syncIdentifiers(identifiers?: { string: string })
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifier)
+- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifiers)
 ```typescript
 Identity.syncIdentifiers(identifiers?: Record<string, string>)
 ```
-
 
 #### syncIdentifiersWithAuthState
 - ACP (2.x)
@@ -339,7 +347,6 @@ ACPIdentity.syncIdentifiersWithAuthState(identifiers?: { string: string }, authe
 ```typescript
 Identity.syncIdentifiersWithAuthState(identifiers: Record<string, string> | null, authenticationState: MobileVisitorAuthenticationState)
 ```
-
 
 #### setAdvertisingIdentifier
 - ACP (2.x)
