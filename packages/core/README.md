@@ -273,7 +273,7 @@ This function appends Adobe visitor information to the query component of the sp
 **Syntax**
 
 ```typescript
-appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
+appendVisitorInfoForURL(baseURL?: String): Promise<string> 
 ```
 
 **Example**
@@ -305,7 +305,7 @@ This function returns an appropriately formed string that contains the Experienc
 **Syntax**
 
 ```typescript
-getUrlVariables(): Promise<?string>
+getUrlVariables(): Promise<string>
 ```
 
 **Example**
@@ -321,7 +321,7 @@ This function returns all customer identifiers that were previously synced with 
 **Syntax**
 
 ```typescript
-getIdentifiers(): Promise<Array<?VisitorID>>
+getIdentifiers(): Promise<Array<VisitorID>>
 ```
 
 **Example**
@@ -337,7 +337,7 @@ This function retrieves the Adobe Experience Cloud ID (ECID) that was generated 
 **Syntax**
 
 ```typescript
-getExperienceCloudId(): Promise<?string>
+getExperienceCloudId(): Promise<string>
 ```
 
 **Example**
@@ -353,7 +353,7 @@ The `syncIdentifier`, `syncIdentifiers` and `syncIdentifiersWithAuthState` funct
 **Syntax**
 
 ```typescript
- syncIdentifier(identifierType: String, identifier: String, authenticationState: string) 
+ syncIdentifier(identifierType: String, identifier: String, authenticationState: MobileVisitorAuthenticationState) 
 ```
 
 **Example**
@@ -406,7 +406,7 @@ Submits a generic event containing the provided IDFA with event type `generic.id
 **Syntax**
 
 ```typescript
-setAdvertisingIdentifier(advertisingIdentifier?: String)
+setAdvertisingIdentifier(advertisingIdentifier?: string)
 ```
 
 **Example**
@@ -422,7 +422,7 @@ Submits a generic event containing the provided push token with event type `gene
 **Syntax**
 
 ```typescript
-setPushIdentifier(pushIdentifier?: String) 
+setPushIdentifier(pushIdentifier?: string) 
 ```
 
 **Example**
