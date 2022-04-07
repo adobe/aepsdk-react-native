@@ -47,28 +47,28 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
-  - RCTAEPAssurance (3.0.0-beta.2):
+  - RCTAEPAssurance (3.0.0):
     - AEPAssurance (~> 3.0)
     - React
-  - RCTAEPCore (1.0.0-beta.2):
+  - RCTAEPCore (1.0.0):
     - AEPCore (~> 3.0)
     - AEPIdentity (~> 3.0)
     - AEPLifecycle (~> 3.0)
     - AEPSignal (~> 3.0)
     - React
-  - RCTAEPEdge (1.0.0-beta.3):
+  - RCTAEPEdge (1.0.0):
     - AEPEdge (~> 1.0)
     - React
-  - RCTAEPEdgeConsent (1.0.0-beta.2):
+  - RCTAEPEdgeConsent (1.0.0):
     - AEPEdgeConsent (~> 1.0)
     - React
-  - RCTAEPEdgeIdentity (1.0.0-beta.2):
+  - RCTAEPEdgeIdentity (1.0.0):
     - AEPEdgeIdentity (~> 1.0)
     - React
   - RCTAEPMessaging (1.0.0-beta.2):
     - AEPMessaging (~> 1.0)
     - React
-  - RCTAEPUserProfile (1.0.0-beta.2):
+  - RCTAEPUserProfile (1.0.0):
     - AEPUserProfile (~> 3.0)
     - React
   - RCTRequired (0.64.2)
@@ -520,13 +520,13 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: a2f531d996fa0cfec14dc62700efc19d68982a65
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
-  RCTAEPAssurance: 94562ecc3e0a741aa262daee2cae4a1fc93ed6b3
-  RCTAEPCore: 8c04356c2651dac760b3a922c217da5cd729e498
-  RCTAEPEdge: 308c26f53c329ed30d01f21746563c114a808ce2
-  RCTAEPEdgeConsent: c493ca5e10156ff42899786d323cfacdbc55c661
-  RCTAEPEdgeIdentity: 063277b28ec5197ca61a0c28926ad5091c081856
+  RCTAEPAssurance: 9f51b9b5da17f9b98a41ce29e4f3e3b67ea36c17
+  RCTAEPCore: d0f44837067a3804608287e62c3e309a8ae7d1d0
+  RCTAEPEdge: 9938932e89a90adf5cd30250b46cc67fbe35dd06
+  RCTAEPEdgeConsent: b998b2d08f254635ef01263fea186d7262f2d242
+  RCTAEPEdgeIdentity: 7f1cd37ab633945599fbe23d41db22a1176f3726
   RCTAEPMessaging: 5ff246c624ceb253f93dbb1ae96af4ec898c91af
-  RCTAEPUserProfile: 69a8216caebdeff2c88f011c166730e202076d63
+  RCTAEPUserProfile: 341c77e0d18d69872c81e425a2e9cae37fe82045
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
   React: bda6b6d7ae912de97d7a61aa5c160db24aa2ad69
