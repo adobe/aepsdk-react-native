@@ -103,7 +103,7 @@ This function gets the current log level being used in the SDK.
 **Syntax**
 
 ```typescript
-getLogLevel(): Promise<string> 
+getLogLevel(): Promise<LogLevel>
 ```
 
 **Example**
@@ -119,7 +119,7 @@ This function gets all of the user's identities known by the SDK.
 **Syntax**
 
 ```typescript
-getSdkIdentities(): Promise<?string>
+getSdkIdentities(): Promise<string>
 ```
 
 **Example**
@@ -152,7 +152,7 @@ This is the API used to log from the SDK.
 **Syntax**
 
 ```typescript
-log(logLevel: string, tag: string, message: string)
+log(logLevel: LogLevel, tag: string, message: string)
 ```
 
 **Example**
@@ -221,7 +221,7 @@ Set the logging level of the SDK
 **Syntax**
 
 ```typescript
-setLogLevel(mode: string)
+setLogLevel(mode: LogLevel)
 ```
 
 **Example**
@@ -239,13 +239,29 @@ Update the configuration programmatically by passing configuration keys and valu
 **Syntax**
 
 ```typescript
-updateConfiguration(configMap?: { string: any })
+updateConfiguration(configMap?: Record<string, any>)
 ```
 
 **Example**
 
 ```typescript
 MobileCore.updateConfiguration({"yourConfigKey": "yourConfigValue"});
+```
+
+- #### clearUpdatedConfiguration
+
+You can clear any programmatic updates made to the configuration via the `clearUpdatedConfiguration` API.
+
+**Syntax**
+
+```typescript
+clearUpdatedConfiguration()
+```
+
+**Example**
+
+```typescript
+MobileCore.clearUpdatedConfiguration();
 ```
 
 ### [Identity](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/identity)
@@ -257,7 +273,7 @@ This function appends Adobe visitor information to the query component of the sp
 **Syntax**
 
 ```typescript
-appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
+appendVisitorInfoForURL(baseURL?: String): Promise<string> 
 ```
 
 **Example**
@@ -289,7 +305,7 @@ This function returns an appropriately formed string that contains the Experienc
 **Syntax**
 
 ```typescript
-getUrlVariables(): Promise<?string>
+getUrlVariables(): Promise<string>
 ```
 
 **Example**
@@ -305,7 +321,7 @@ This function returns all customer identifiers that were previously synced with 
 **Syntax**
 
 ```typescript
-getIdentifiers(): Promise<Array<?VisitorID>>
+getIdentifiers(): Promise<Array<VisitorID>>
 ```
 
 **Example**
@@ -321,7 +337,7 @@ This function retrieves the Adobe Experience Cloud ID (ECID) that was generated 
 **Syntax**
 
 ```typescript
-getExperienceCloudId(): Promise<?string>
+getExperienceCloudId(): Promise<string>
 ```
 
 **Example**
@@ -337,7 +353,7 @@ The `syncIdentifier`, `syncIdentifiers` and `syncIdentifiersWithAuthState` funct
 **Syntax**
 
 ```typescript
- syncIdentifier(identifierType: String, identifier: String, authenticationState: string) 
+ syncIdentifier(identifierType: String, identifier: String, authenticationState: MobileVisitorAuthenticationState) 
 ```
 
 **Example**
@@ -350,7 +366,7 @@ Identity.syncIdentifier("identifierType", "identifier", MobileVisitorAuthenticat
 **Syntax**
 
 ```typescript
-syncIdentifiers(identifiers?: { string: string })
+syncIdentifiers(identifiers?: Record<string, string>)
 ```
 
 **Example**
@@ -364,7 +380,7 @@ Identity.syncIdentifiers({"id1": "identifier1"});
 **Syntax**
 
 ```typescript
-syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
+syncIdentifiersWithAuthState(identifiers: Record<string, string> | null, authenticationState: MobileVisitorAuthenticationState)
 ```
 
 **Example**
@@ -390,7 +406,7 @@ Submits a generic event containing the provided IDFA with event type `generic.id
 **Syntax**
 
 ```typescript
-setAdvertisingIdentifier(advertisingIdentifier?: String)
+setAdvertisingIdentifier(advertisingIdentifier?: string)
 ```
 
 **Example**
@@ -406,7 +422,7 @@ Submits a generic event containing the provided push token with event type `gene
 **Syntax**
 
 ```typescript
-setPushIdentifier(pushIdentifier?: String) 
+setPushIdentifier(pushIdentifier?: string) 
 ```
 
 **Example**
@@ -426,6 +442,8 @@ var visitorId = new VisitorID(idOrigin?: string, idType: string, id?: string, au
 ### [Lifecycle](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/lifecycle)
 
 > Note: Implementing Lifecycle via Javascript may lead to inaccurate Lifecycle metrics, therefore we recommend implementing Lifecycle in native [Android and iOS code](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/lifecycle).
+
+> To enable Lifecycle metrics for the Edge workflows, see (Lifecycle for Edge Network) (https://aep-sdks.gitbook.io/docs/foundation-extensions/lifecycle-for-edge-network).
 
 - #### extensionVersion
 

@@ -64,6 +64,11 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void clearUpdatedConfiguration() {
+        MobileCore.clearUpdatedConfiguration();
+    }
+
+    @ReactMethod
     public void updateConfiguration(final ReadableMap configMap) {
         MobileCore.updateConfiguration(RCTAEPMapUtil.toMap(configMap));
     }
