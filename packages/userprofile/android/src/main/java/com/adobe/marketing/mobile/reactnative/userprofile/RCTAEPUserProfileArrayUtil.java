@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -89,6 +89,37 @@ public class RCTAEPUserProfileArrayUtil {
                 writableArr.pushString((String) value);
             } else if (value instanceof Map) {
                 writableArr.pushMap(RCTAEPUserProfileMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((List) value));
+            } else if (value.getClass().isArray()) {
+                writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((Object[]) value));
+            }
+        }
+
+        return writableArr;
+    }
+
+    public static WritableArray toWritableArray(List array) {
+        if (array == null) {
+            return null;
+        }
+        WritableArray writableArr = Arguments.createArray();
+
+        for (Object value : array) {
+            if (value == null) {
+                writableArr.pushNull();
+            } else if (value instanceof Boolean) {
+                writableArr.pushBoolean((Boolean) value);
+            } else if (value instanceof Double) {
+                writableArr.pushDouble((Double) value);
+            } else if (value instanceof Integer) {
+                writableArr.pushInt((Integer) value);
+            } else if (value instanceof String) {
+                writableArr.pushString((String) value);
+            } else if (value instanceof Map) {
+                writableArr.pushMap(RCTAEPUserProfileMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((List) value));
             } else if (value.getClass().isArray()) {
                 writableArr.pushArray(RCTAEPUserProfileArrayUtil.toWritableArray((Object[]) value));
             }

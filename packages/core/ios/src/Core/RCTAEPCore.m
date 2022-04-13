@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -58,6 +58,10 @@ RCT_EXPORT_METHOD(configureWithAppId:(NSString* __nullable) appId) {
 
 RCT_EXPORT_METHOD(updateConfiguration: (NSDictionary* __nullable) config) {
     [AEPMobileCore updateConfiguration:config];
+}
+
+RCT_EXPORT_METHOD(clearUpdatedConfiguration) {
+     [AEPMobileCore clearUpdatedConfiguration];
 }
 
 RCT_EXPORT_METHOD(setLogLevel: (NSString *) logLevelString) {
