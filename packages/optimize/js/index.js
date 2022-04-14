@@ -1,3 +1,4 @@
+"use strict";
 /*
 Copyright 2021 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -8,27 +9,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
-
-@flow
-@format
 */
-
-'use strict';
-
-module.exports = {
-  get AEPOptimize() {
-    return require('./AEPOptimize');
-  },
-  get Offer() {
-    return require('./models/Offer');
-  },
-  get Proposition() {
-    return require('./models/Proposition');
-  },
-  get DecisionScope() {
-    return require('./models/DecisionScope');
-  },
-  get AdobeCallback() {
-    return require('./models/AdobeCallback');
-  }
-};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Proposition = exports.Offer = exports.DecisionScope = exports.AEPOptimize = void 0;
+const tslib_1 = require("tslib");
+const AEPOptimize_1 = tslib_1.__importDefault(require("./AEPOptimize"));
+exports.AEPOptimize = AEPOptimize_1.default;
+const DecisionScope_1 = tslib_1.__importDefault(require("./models/DecisionScope"));
+exports.DecisionScope = DecisionScope_1.default;
+const Offer_1 = tslib_1.__importDefault(require("./models/Offer"));
+exports.Offer = Offer_1.default;
+const Proposition_1 = tslib_1.__importDefault(require("./models/Proposition"));
+exports.Proposition = Proposition_1.default;
+//# sourceMappingURL=index.js.map
