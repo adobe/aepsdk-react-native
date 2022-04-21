@@ -18,8 +18,13 @@ import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Messaging;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.UserProfile;
 import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.edge.identity.Identity;
+import com.adobe.marketing.mobile.edge.consent.Consent;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -68,7 +73,12 @@ public class MainApplication extends Application implements ReactApplication {
     Identity.registerExtension();
     Optimize.registerExtension();
     Messaging.registerExtension();
-    MobileCore.configureWithAppID("3149c49c3910/aaaac75639c6/launch-813b9d67d95e-development");
+    UserProfile.registerExtension();
+    Lifecycle.registerExtension();
+    Signal.registerExtension();
+    Consent.registerExtension();
+    Assurance.registerExtension();
+    MobileCore.configureWithAppID("YOUR-APP-ID");
     MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {
