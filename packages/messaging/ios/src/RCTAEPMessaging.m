@@ -11,7 +11,6 @@
 #import "RCTAEPMessaging.h"
 @import AEPMessaging;
 @import AEPCore;
-@import AEPServices;
 
 static NSString* const TAG = @"RCTAEPMessaging";
 
@@ -74,7 +73,7 @@ RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) in
     [AEPLog traceWithLabel:TAG message:[NSString stringWithFormat:@"track is called with message id: %@, withInteraction: %@ and eventType: %i", messageId, interaction, eventTypeValue]];
     AEPMessage * message = [cachedMessages objectForKey:messageId];
     AEPMessagingEdgeEventType messagingEdgeEventType = -1;
-    
+
     if(eventTypeValue == 0){
         messagingEdgeEventType = AEPMessagingEdgeEventTypeInappDismiss;
     } else if (eventTypeValue == 1) {
@@ -88,7 +87,7 @@ RCT_EXPORT_METHOD(track: (NSString *) messageId withInteraction: (NSString *) in
     } else if (eventTypeValue == 5) {
         messagingEdgeEventType = AEPMessagingEdgeEventTypePushCustomAction;
     }
-    
+
     if(messagingEdgeEventType != -1){
         [message trackInteraction:interaction withEdgeEventType:messagingEdgeEventType];
     }
@@ -190,5 +189,3 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
 }
 
 @end
-    
-    
