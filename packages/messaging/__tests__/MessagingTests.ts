@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -14,19 +14,19 @@ import { NativeModules } from 'react-native';
 import { Messaging, Message, MessagingEdgeEventType } from '../ts';
 
 describe('Messaging', () => {
-  it('extensionVersion is called', async () => {    
+  it('extensionVersion is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
     await Messaging.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
-  it("refreshInAppMessages is called", async () => {    
+  it("refreshInAppMessages is called", async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'refreshInAppMessages');
     await Messaging.refreshInAppMessages();
     expect(spy).toHaveBeenCalled();
   });
 
-  it("setMessagingDelegate is called", async () => {    
+  it("setMessagingDelegate is called", async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'setMessagingDelegate');
     let delegate = {
       onShow(_: Message){},
@@ -40,7 +40,7 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it("setAutoTrack is called", async () => {    
+  it("setAutoTrack is called", async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'setAutoTrack');
     let id = "id";
     let autoTrack = true;
@@ -49,7 +49,7 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalledWith(id, false);
   });
 
-  it("show is called", async () => {    
+  it("show is called", async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'show');
     let id = "id";
     let autoTrack = true;
@@ -58,7 +58,7 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalledWith(id);
   });
 
-  it("dismiss is called", async () => {    
+  it("dismiss is called", async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'dismiss');
     let id = "id";
     let autoTrack = true;
@@ -67,7 +67,7 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalledWith(id, true);
   });
 
-  it("track is called", async () => {    
+  it("track is called", async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'track');
     let id = "id";
     let autoTrack = true;
@@ -78,7 +78,7 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalledWith(id, interaction, eventType);
   });
 
-  it("handleJavascriptMessage is called", async () => {    
+  it("handleJavascriptMessage is called", async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'handleJavascriptMessage');
     let id = "id";
     let autoTrack = true;
@@ -88,11 +88,11 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalledWith(id, name);
   });
 
-  it("clear is called", async () => {    
+  it("clear is called", async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'clear');
     let id = "id";
     let autoTrack = true;
-    let message = new Message(id, autoTrack);    
+    let message = new Message(id, autoTrack);
     await message.clear();
     expect(spy).toHaveBeenCalledWith(id);
   });
