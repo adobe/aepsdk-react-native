@@ -26,6 +26,7 @@ import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.edge.consent.Consent;
 import com.adobe.marketing.mobile.optimize.Optimize;
+import com.adobe.marketing.mobile.InvalidInitException;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -69,15 +70,19 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.VERBOSE);
-    Edge.registerExtension();
-    Identity.registerExtension();
-    Optimize.registerExtension();
-    Messaging.registerExtension();
-    UserProfile.registerExtension();
-    Lifecycle.registerExtension();
-    Signal.registerExtension();
-    Consent.registerExtension();
-    Assurance.registerExtension();
+    try {
+        Edge.registerExtension();
+        Identity.registerExtension();
+        Optimize.registerExtension();
+        Messaging.registerExtension();
+        UserProfile.registerExtension();
+        Lifecycle.registerExtension();
+        Signal.registerExtension();
+        Consent.registerExtension();
+        Assurance.registerExtension();
+    } catch (InvalidInitException e) {
+        e.printStackTrace();
+    }
     MobileCore.configureWithAppID("YOUR-APP-ID");
     MobileCore.start(new AdobeCallback() {
         @Override
