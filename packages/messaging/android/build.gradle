@@ -32,6 +32,8 @@ repositories {
 }
 
 dependencies {
+    api (name: "messaging", ext: "aar")
+    api (name: "optimize", ext: "aar")
     implementation "com.facebook.react:react-native:+"
-    api "com.adobe.marketing.mobile:messaging:1.+"
+    compileOnly "com.adobe.marketing.mobile:sdk-core:1.+"
 }

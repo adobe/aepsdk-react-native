@@ -28,15 +28,15 @@ export default StyleSheet.create({
       textAlign: 'center',
       margin: 5,
     }, 
-      breakLine: {
+    breakLine: {
       borderWidth: 0.5,
       borderColor: 'black',
       margin: 10,
       marginTop: 10,
       marginBottom: 10,
+    },
+    textinput: {
+      fontSize: 18,
+      margin: 10,      
     }
   });
-
-
-
-
