@@ -13,6 +13,7 @@ target 'AEPSampleApp' do
   )
 
   pod "AEPMessaging", :git => "https://github.com/adobe/aepsdk-messaging-ios.git", :branch => "staging"
+  pod "AEPOptimize", :git => "https://github.com/adobe/aepsdk-optimize-ios.git", :branch => "staging"
   
   # pod 'AEPCore'
   # pod 'AEPLifecycle'
@@ -21,11 +22,11 @@ target 'AEPSampleApp' do
   # pod 'AEPEdge'
   # pod 'AEPEdgeIdentity'
   # pod 'AEPEdgeConsent'
-  
+
   target 'AEPSampleAppTests' do
     inherit! :complete
     # Pods for testing
-    
+
   end
 
   # Enables Flipper.

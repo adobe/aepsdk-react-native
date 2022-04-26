@@ -1,7 +1,7 @@
 
 # React Native Adobe Experience Platform Messaging Extension
 
-[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging) 
+[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 
 `@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [Adobe Journey Optimizer Messaging](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer) to allow for integration with React Native applications.
@@ -15,7 +15,7 @@ The messaging extension has the following peer dependenices, which must be insta
 
 ## Installation
 
-See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
 Install the `@adobe/react-native-aepmessaging` package:
 
@@ -34,16 +34,17 @@ npm install {path to node package file}
 ```
 
 **Podfile setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**  
-The In app Message APIs depends on the AEP Messaging, v1.1.0. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target. 
+The In app Message APIs depends on the AEP Messaging, v1.1.0. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target.
 
 ```ruby
 target 'AEPSampleApp' do
 pod "AEPMessaging", :git => "https://github.com/adobe/aepsdk-messaging-ios.git", :branch => "staging"
+pod "AEPOptimize", :git => "https://github.com/adobe/aepsdk-optimize-ios.git", :branch => "staging"
 end
 ```
 
 **Gradle setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**
-AEPMessaging Android package v1.1.0 with in-app messaging support is not published to maven yet. In project level build.gradle file of Android project in your RN application add following changes in `allprojects -> repositories`. 
+AEPMessaging Android package v1.1.0 with in-app messaging support is not published to maven yet. In project level build.gradle file of Android project in your RN application add following changes in `allprojects -> repositories`.
 
 ```gradle
 flatDir {
@@ -69,6 +70,7 @@ iOS
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPMessaging;
+@import AEPOptimize;
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -94,7 +96,7 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.Messaging;
-  
+
 ...
 import android.app.Application;
 ...
@@ -144,11 +146,11 @@ extensionVersion(): Promise<string>;
 Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: Messaging version: " + version));
 ```
 
-## Configure Adobe Journey Optimizer 
+## Configure Adobe Journey Optimizer
 To configure Adobe Journey optimizer Messaging in Launch follow steps in [Configure Adobe Journey optimizer](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer#setup-adobe-journey-optimizer-extension)
 
 ## Push Notification Setup
-Handling push notifications must be done in native (Android/iOS) code for the React Native app. To configure push notification in the native project, follow the instructions provided by their respective platforms: 
+Handling push notifications must be done in native (Android/iOS) code for the React Native app. To configure push notification in the native project, follow the instructions provided by their respective platforms:
 - [Apple - iOS push notification setup](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns)  
 - [Google - Android push notification setup](https://firebase.google.com/docs/cloud-messaging/android/client)
 
@@ -202,7 +204,7 @@ const messagingDelegate = {
        // Action after message loads an URL
     }
   };
-        
+
   Messaging.setMessagingDelegate(messagingDelegate);
 ```
 
@@ -317,9 +319,9 @@ Definition of type MessagingDelegate is:
 type MessagingDelegate = {    
 
     onShow(message: Message): void;
-    
+
     onDismiss(message: Message): void;
-   
+
     shouldShowMessage(message: Message): boolean;
 
     urlLoaded(url: string, message: Message): void;
@@ -384,7 +386,7 @@ function shouldShowMessage(message: Message): boolean {
 }
 ```
 
-**Important:** If the cached message is no longer needed after being used, free up the references to the Message object by calling _message.clearMessage()_ to prevent memory leaks. In above example after displaying the in app message using cached message object if it is no longer needed then it should be cleared as shown below. 
+**Important:** If the cached message is no longer needed after being used, free up the references to the Message object by calling _message.clearMessage()_ to prevent memory leaks. In above example after displaying the in app message using cached message object if it is no longer needed then it should be cleared as shown below.
 ```javascript
 function otherWorkflowFinished() {
   anotherWorkflowStatus = "complete";
@@ -392,6 +394,3 @@ function otherWorkflowFinished() {
   currentMessage.clearMessage();
 }
 ```
-
-
-
