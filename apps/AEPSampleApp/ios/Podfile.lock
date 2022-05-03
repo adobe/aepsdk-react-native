@@ -364,6 +364,7 @@ PODS:
 DEPENDENCIES:
   - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, branch `staging`)
   - AEPOptimize (from `https://github.com/adobe/aepsdk-optimize-ios.git`, branch `staging`)
+  - AEPServices (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `dev-v3.5.1`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -417,7 +418,6 @@ SPEC REPOS:
     - AEPIdentity
     - AEPLifecycle
     - AEPRulesEngine
-    - AEPServices
     - AEPSignal
     - AEPUserProfile
     - boost-for-react-native
@@ -429,6 +429,9 @@ EXTERNAL SOURCES:
   AEPOptimize:
     :branch: staging
     :git: https://github.com/adobe/aepsdk-optimize-ios.git
+  AEPServices:
+    :branch: dev-v3.5.1
+    :git: https://github.com/adobe/aepsdk-core-ios.git
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -517,6 +520,9 @@ CHECKOUT OPTIONS:
   AEPOptimize:
     :commit: 17d387e286fdee5a7db9e534490ba4b504af471d
     :git: https://github.com/adobe/aepsdk-optimize-ios.git
+  AEPServices:
+    :commit: fc1a5d495cebe2f02bf24de634ac8faed92c9c77
+    :git: https://github.com/adobe/aepsdk-core-ios.git
 
 SPEC CHECKSUMS:
   AEPAssurance: b25880cd4b14f22c61a1dce19807bd0ca0fe9b17
@@ -574,6 +580,6 @@ SPEC CHECKSUMS:
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: e0459e9540a7d84e2fffdaa2112c2eb32fe38a7a
+PODFILE CHECKSUM: 5e8e87cc1e373d20d6278099c4046b7269772c09
 
 COCOAPODS: 1.11.2

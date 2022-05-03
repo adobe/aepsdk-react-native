@@ -14,7 +14,9 @@ target 'AEPSampleApp' do
 
   pod "AEPMessaging", :git => "https://github.com/adobe/aepsdk-messaging-ios.git", :branch => "staging"
   pod "AEPOptimize", :git => "https://github.com/adobe/aepsdk-optimize-ios.git", :branch => "staging"
-  
+  # services pointing to dev branch until 3.5.1 is released 
+  pod "AEPServices", :git => "https://github.com/adobe/aepsdk-core-ios.git", :branch => "dev-v3.5.1"
+
   # pod 'AEPCore'
   # pod 'AEPLifecycle'
   # pod 'AEPIdentity'
