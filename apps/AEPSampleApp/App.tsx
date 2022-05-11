@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Button, View } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import {Button, View} from 'react-native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
 import OptimizeView from './extensions/OptimizeView';
 import ProfileView from './extensions/ProfileView';
 import MessagingView from './extensions/MessagingView';
@@ -11,11 +11,12 @@ import ConsentView from './extensions/ConsentView';
 import EdgeView from './extensions/EdgeView';
 import AssuranceView from './extensions/AssuranceView';
 import EdgeIdentityView from './extensions/EdgeIdentityView';
-import { NavigationProps } from './types/props';
+import TargetView from './extensions/TargetView';
+import {NavigationProps} from './types/props';
 
-function HomeScreen({ navigation }: NavigationProps) {
+function HomeScreen({navigation}: NavigationProps) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Button
         onPress={() => navigation.navigate('CoreView')}
         title="Core/Lifecycle/Signal"
@@ -41,6 +42,7 @@ function HomeScreen({ navigation }: NavigationProps) {
         onPress={() => navigation.navigate('EdgeView')}
         title="Edge"
       />
+      <Button onPress={() => navigation.navigate('EdgeView')} title="Edge" />
       <Button
         onPress={() => navigation.navigate('EdgeIdentityView')}
         title="EdgeIdentity"
@@ -53,6 +55,7 @@ function HomeScreen({ navigation }: NavigationProps) {
         onPress={() => navigation.navigate('AssuranceView')}
         title="Assurance"
       />
+      <Button onPress={() => navigation.navigate('TargetView')} title="Target" />
     </View>
   );
 }
@@ -73,7 +76,8 @@ export default function App() {
         <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="AssuranceView" component={AssuranceView} />
         <Drawer.Screen name="OptimizeView" component={OptimizeView}/>
-      </Drawer.Navigator >
-    </NavigationContainer >
+        <Drawer.Screen name="TargetView" component={TargetView} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
