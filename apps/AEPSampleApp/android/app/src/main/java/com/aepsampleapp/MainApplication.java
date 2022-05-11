@@ -15,26 +15,24 @@ package com.aepsampleapp;
 import android.app.Application;
 import android.content.Context;
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Assurance;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Messaging;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Edge;
-import com.adobe.marketing.mobile.edge.consent.Consent;
+import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.edge.identity.Identity;
+import com.adobe.marketing.mobile.edge.consent.Consent;
 import com.adobe.marketing.mobile.optimize.Optimize;
+import com.adobe.marketing.mobile.InvalidInitException;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -71,61 +69,26 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
-      try {
-          UserProfile.registerExtension();
-          Lifecycle.registerExtension();
-          Signal.registerExtension();
-          Edge.registerExtension();
-          Identity.registerExtension();
-          Messaging.registerExtension();
-          Optimize.registerExtension();
-          MobileCore.configureWithAppID("3149c49c3910/1405d5d17a20/launch-cdafde27097f-development");
-          MobileCore.start(o -> {
-              MobileCore.lifecycleStart(null);
-          });
-          Consent.registerExtension();                    
-      } catch (InvalidInitException e) {
-          e.printStackTrace();
-      }
-
-      MobileCore.configureWithAppID("your-app-ID");
-      MobileCore.start(new AdobeCallback() {
-          @Override
-          public void call(Object o) {
-              MobileCore.lifecycleStart(null);
-          }
-      });
-  }
-
-  /**
-   * Loads Flipper in React Native templates. Call this in the onCreate method with something like
-   * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
-   *
-   * @param context
-   * @param reactInstanceManager
-   */
-  private static void initializeFlipper(
-      Context context, ReactInstanceManager reactInstanceManager) {
-    if (BuildConfig.DEBUG) {
-      try {
-        /*
-         We use reflection here to pick up the class that initializes Flipper,
-        since Flipper library is not available in release mode
-        */
-        Class<?> aClass = Class.forName("com.aepsampleapp.ReactNativeFlipper");
-        aClass
-            .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
-            .invoke(null, context, reactInstanceManager);
-      } catch (ClassNotFoundException e) {
+    MobileCore.setLogLevel(LoggingMode.VERBOSE);
+    try {
+        Edge.registerExtension();
+        Identity.registerExtension();
+        Optimize.registerExtension();
+        Messaging.registerExtension();
+        UserProfile.registerExtension();
+        Lifecycle.registerExtension();
+        Signal.registerExtension();
+        Consent.registerExtension();
+        Assurance.registerExtension();
+    } catch (InvalidInitException e) {
         e.printStackTrace();
-      } catch (NoSuchMethodException e) {
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
-        e.printStackTrace();
-      } catch (InvocationTargetException e) {
-        e.printStackTrace();
-      }
     }
+    MobileCore.configureWithAppID("YOUR-APP-ID");
+    MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+            MobileCore.lifecycleStart(null);
+        }
+    });
   }
 }

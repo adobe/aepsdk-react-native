@@ -10,14 +10,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
-import { Messaging } from '../ts';
+enum MessagingEdgeEventType {
+    IN_APP_DISMISS = 0,
+    IN_APP_INTERACT = 1,
+    IN_APP_TRIGGER = 2,
+    IN_APP_DISPLAY = 3,
+    PUSH_APPLICATION_OPENED = 4,
+    PUSH_CUSTOM_ACTION = 5    
+};
 
-describe('Messaging', () => {
-  it('extensionVersion is called', async () => {
-    expect(Messaging.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
-    await Messaging.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
-});
+export default MessagingEdgeEventType;

@@ -16,14 +16,15 @@ PODS:
     - AEPCore (>= 3.4.2)
   - AEPLifecycle (3.4.2):
     - AEPCore (>= 3.4.2)
-  - AEPMessaging (1.0.0):
-    - AEPCore
+  - AEPMessaging (1.1.0):
+    - AEPCore (>= 3.4.2)
     - AEPEdge (>= 1.1.0)
     - AEPEdgeIdentity (>= 1.0.0)
     - AEPServices
   - AEPOptimize (1.0.0):
     - AEPCore (>= 3.2.0)
     - AEPEdge (>= 1.1.0)
+    - AEPServices (>= 3.4.2)
   - AEPRulesEngine (1.1.0)
   - AEPServices (3.4.2)
   - AEPSignal (3.4.2):
@@ -368,7 +369,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
-  - AEPOptimize (from `../../../../optimize/aepsdk-optimize-ios`)
+  - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, branch `staging`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -423,7 +424,6 @@ SPEC REPOS:
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
-    - AEPMessaging
     - AEPRulesEngine
     - AEPServices
     - AEPSignal
@@ -431,8 +431,9 @@ SPEC REPOS:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
-  AEPOptimize:
-    :path: "../../../../optimize/aepsdk-optimize-ios"
+  AEPMessaging:
+    :branch: staging
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -518,6 +519,11 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
+CHECKOUT OPTIONS:
+  AEPMessaging:
+    :commit: 6789761e59269ddfe340ff8e2a94c441d4fbf1a2
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
+
 SPEC CHECKSUMS:
   AEPAssurance: b25880cd4b14f22c61a1dce19807bd0ca0fe9b17
   AEPCore: b01856bf24972e4720cb0511a358d1e68067252a
@@ -576,6 +582,6 @@ SPEC CHECKSUMS:
   RNScreens: 2559f98b0835103cbef3b26ba77fa61d4bb37ae7
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: e6c6829d91aba19d298164bd94d23836a9c29f84
+PODFILE CHECKSUM: 18e76638d1b25ad6c02b6b9e0bfacb8bcefda684
 
 COCOAPODS: 1.11.2

@@ -81,7 +81,15 @@ jest.doMock('react-native', () => {
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))) 
                 },
                 AEPMessaging: {
-                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    refreshInAppMessages: jest.fn(),
+                    setMessagingDelegate: jest.fn(),
+                    setAutoTrack: jest.fn(),
+                    show: jest.fn(),
+                    dismiss: jest.fn(),
+                    track: jest.fn(),
+                    handleJavascriptMessage: jest.fn(() => new Promise(resolve => resolve(new Object()))),
+                    clear: jest.fn()
                 },
                 AEPOptimize: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
@@ -100,9 +108,7 @@ jest.doMock('react-native', () => {
                 },                     
             },            
             NativeEventEmitter: class {
-                addListener() {
-
-                }
+                addListener() {}
             }
         },
         ReactNative,
