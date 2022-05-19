@@ -2,6 +2,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 
     dependencies {
@@ -29,10 +30,10 @@ android {
 repositories {
     google()
     mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }   
 }
 
 dependencies {
-    compileOnly files("./libs/optimize-phone-debug.aar")
-    compileOnly "com.adobe.marketing.mobile:core:1.+"
+    api "com.adobe.marketing.mobile:optimize:1.0.0-SNAPSHOT"
     implementation "com.facebook.react:react-native:+"
 }

@@ -89,7 +89,7 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
     public void dismiss(final String messageId, final boolean suppressAutoTrack) {
         if (messageId != null && messageCache.get(messageId) != null) {
             MobileCore.log(VERBOSE, TAG, String.format("dismiss is called with message id: %s and suppressAutoTrack: %b", messageId, suppressAutoTrack));
-            messageCache.get(messageId).dismiss();
+            messageCache.get(messageId).dismiss(suppressAutoTrack);
         }
     }
 
@@ -176,7 +176,7 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
-            data.put("id", message.messageId);
+            data.put("id", message.id);
             data.put("autoTrack", String.valueOf(message.autoTrack));
             emitEvent("onShow", data);
         }
@@ -188,7 +188,7 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
-            data.put("id", message.messageId);
+            data.put("id", message.id);
             data.put("autoTrack", String.valueOf(message.autoTrack));
             emitEvent("onDismiss", data);
         }
@@ -200,7 +200,7 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
-            data.put("id", message.messageId);
+            data.put("id", message.id);
             data.put("autoTrack", String.valueOf(message.autoTrack));
             emitEvent("shouldShowMessage", data);
             //Latch stops the thread until the shouldShowMessage value is received from the JS side on thread dedicated to run JS code. The function called from JS that resumes the thread is "shouldShowMessage".
@@ -212,7 +212,7 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
             }
             MobileCore.log(VERBOSE, TAG, "shouldShowMessage: Thread is resumed.");
             if (shouldSaveMessage) {
-                messageCache.put(message.messageId, message);
+                messageCache.put(message.id, message);
             }
         }
         return shouldShowMessage;
@@ -224,7 +224,7 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
-            data.put("id", message.messageId);
+            data.put("id", message.id);
             data.put("autoTrack", String.valueOf(message.autoTrack));
             data.put("url", s);
             emitEvent("shouldShowMessage", data);
