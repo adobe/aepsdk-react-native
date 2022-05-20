@@ -113,14 +113,13 @@ export default ({navigation}: any) => {
     });
 
   const renderTargetOffer = () => {
-    if (targetProposition && targetProposition.items) {
+    if (targetProposition?.items) {
       if (targetProposition.items[0].format === TARGET_OFFER_TYPE_TEXT) {
         return (
           <Text
             style={{margin: 10, fontSize: 18}}
             onPress={() => {
-              targetProposition.items &&
-                targetProposition.items[0].tapped(targetProposition);
+                targetProposition?.items[0].tapped(targetProposition);
             }}>
             {targetProposition.items[0].content}
           </Text>
@@ -130,8 +129,7 @@ export default ({navigation}: any) => {
           <Text
             style={{margin: 10, fontSize: 18}}
             onPress={() => {
-              targetProposition.items &&
-                targetProposition.items[0].tapped(targetProposition);
+                targetProposition?.items[0].tapped(targetProposition);
             }}>
             {targetProposition.items[0].content}
           </Text>
@@ -140,8 +138,7 @@ export default ({navigation}: any) => {
         return (
           <TouchableOpacity
             onPress={e => {
-              targetProposition.items &&
-                targetProposition.items[0].tapped(targetProposition);
+                targetProposition?.items[0].tapped(targetProposition);
             }}>
             <View style={{width: width, height: 150}}>
               <WebView
@@ -209,10 +206,9 @@ export default ({navigation}: any) => {
               <Text
                 style={{margin: 10, fontSize: 18}}
                 onPress={e => {
-                  textProposition &&
-                    textProposition.items[0].tapped(textProposition);
+                  textProposition?.items[0].tapped(textProposition);
                 }}>
-                {textProposition.items[0]
+                {textProposition?.items[0]
                   ? textProposition.items[0].content
                   : defaultPropositions.textProposition}
               </Text>
@@ -223,13 +219,12 @@ export default ({navigation}: any) => {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 onPress={e => {
-                  imageProposition &&
-                    imageProposition.items[0].tapped(imageProposition);
+                    imageProposition?.items[0].tapped(imageProposition);
                 }}>
                 <Image
                   style={{width: 100, height: 100, margin: 10}}
                   source={{
-                    uri: imageProposition.items[0]
+                    uri: imageProposition?.items[0]
                       ? imageProposition.items[0].content
                       : defaultPropositions.htmlProposition,
                   }}></Image>
@@ -241,8 +236,7 @@ export default ({navigation}: any) => {
             <Text
               style={{margin: 10, fontSize: 18}}
               onPress={e => {
-                jsonProposition &&
-                  jsonProposition.items[0].tapped(jsonProposition);
+                  jsonProposition?.items[0].tapped(jsonProposition);
               }}>
               {' '}
               {jsonProposition?.items?.[0]
@@ -253,9 +247,8 @@ export default ({navigation}: any) => {
         } else if (data === htmlProposition) {
           return (
             <TouchableOpacity
-              onPress={e => {
-                htmlProposition &&
-                  htmlProposition.items[0].tapped(htmlProposition);
+              onPress={() => {
+                  htmlProposition?.items[0].tapped(htmlProposition);
               }}>
               <View style={{width: width, height: 150}}>
                 <WebView
