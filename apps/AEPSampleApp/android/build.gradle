@@ -35,8 +35,6 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
         mavenCentral()
         jcenter()
-        flatDir {
-            dirs project(':adobe_react-native-aepmessaging').file('libs')
-        }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 }
