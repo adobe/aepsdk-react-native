@@ -10,6 +10,7 @@ import ConsentView from './extensions/ConsentView';
 import EdgeView from './extensions/EdgeView';
 import AssuranceView from './extensions/AssuranceView';
 import EdgeIdentityView from './extensions/EdgeIdentityView';
+import PlacesView from './extensions/PlacesView';
 import { NavigationProps } from './types/props';
 
 function HomeScreen({ navigation }: NavigationProps) {
@@ -46,6 +47,10 @@ function HomeScreen({ navigation }: NavigationProps) {
         onPress={() => navigation.navigate('AssuranceView')}
         title="Assurance"
       />
+      <Button
+        onPress={() => navigation.navigate('PlacesView')}
+        title="Places"
+      />
     </View>
   );
 }
@@ -65,6 +70,7 @@ export default function App() {
         <Drawer.Screen name="EdgeIdentityView" component={EdgeIdentityView} />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="AssuranceView" component={AssuranceView} />
+        <Drawer.Screen name="PlacesView" component={PlacesView} />
       </Drawer.Navigator >
     </NavigationContainer >
   );

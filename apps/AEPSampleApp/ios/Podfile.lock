@@ -21,6 +21,9 @@ PODS:
     - AEPEdge (>= 1.1.0)
     - AEPEdgeIdentity (>= 1.0.0)
     - AEPServices (>= 3.4.2)
+  - AEPPlaces (3.0.1):
+    - AEPCore
+    - AEPServices
   - AEPRulesEngine (1.1.0)
   - AEPServices (3.4.2)
   - AEPSignal (3.4.2):
@@ -65,8 +68,8 @@ PODS:
   - RCTAEPEdgeIdentity (1.0.0):
     - AEPEdgeIdentity (~> 1.0)
     - React
-  - RCTAEPMessaging (1.0.0-beta.2):
-    - AEPMessaging (~> 1.0)
+  - RCTAEPPlaces (1.0.0):
+    - AEPPlaces (~> 3.0)
     - React
   - RCTAEPUserProfile (1.0.0):
     - AEPUserProfile (~> 3.0)
@@ -366,13 +369,13 @@ DEPENDENCIES:
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
-  - RCTAEPAssurance (from `../../../packages/assurance`)
+  - "RCTAEPAssurance (from `../node_modules/@adobe/react-native-aepassurance`)"
   - RCTAEPCore (from `../../../packages/core`)
-  - RCTAEPEdge (from `../../../packages/edge`)
-  - RCTAEPEdgeConsent (from `../../../packages/edgeconsent`)
+  - "RCTAEPEdge (from `../node_modules/@adobe/react-native-aepedge`)"
+  - "RCTAEPEdgeConsent (from `../node_modules/@adobe/react-native-aepedgeconsent`)"
   - RCTAEPEdgeIdentity (from `../../../packages/edgeidentity`)
-  - RCTAEPMessaging (from `../../../packages/messaging`)
-  - RCTAEPUserProfile (from `../../../packages/userprofile`)
+  - RCTAEPPlaces (from `../../../packages/places`)
+  - "RCTAEPUserProfile (from `../node_modules/@adobe/react-native-aepuserprofile`)"
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -413,6 +416,7 @@ SPEC REPOS:
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
+    - AEPPlaces
     - AEPRulesEngine
     - AEPServices
     - AEPSignal
@@ -434,19 +438,19 @@ EXTERNAL SOURCES:
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTAEPAssurance:
-    :path: "../../../packages/assurance"
+    :path: "../node_modules/@adobe/react-native-aepassurance"
   RCTAEPCore:
     :path: "../../../packages/core"
   RCTAEPEdge:
-    :path: "../../../packages/edge"
+    :path: "../node_modules/@adobe/react-native-aepedge"
   RCTAEPEdgeConsent:
-    :path: "../../../packages/edgeconsent"
+    :path: "../node_modules/@adobe/react-native-aepedgeconsent"
   RCTAEPEdgeIdentity:
     :path: "../../../packages/edgeidentity"
-  RCTAEPMessaging:
-    :path: "../../../packages/messaging"
+  RCTAEPPlaces:
+    :path: "../../../packages/places"
   RCTAEPUserProfile:
-    :path: "../../../packages/userprofile"
+    :path: "../node_modules/@adobe/react-native-aepuserprofile"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -517,7 +521,8 @@ SPEC CHECKSUMS:
   AEPEdgeIdentity: 5c42cef81835851232136a9e1fbbbe33b204ee11
   AEPIdentity: fbf755560afcbb0acd66cd5b6a1c147530fca5f6
   AEPLifecycle: 1e0e843465fb143f8d8949dcf06de169d5c26f62
-  AEPMessaging: 661cc08435254f3c9cc0899785c20a7952952e95
+  AEPMessaging: 69ddb87d33b92c68d751a0a9713a8ed90f003f1f
+  AEPPlaces: 04294020832c78249732c80aec86928114698cbf
   AEPRulesEngine: bb2927ed5501ddf9754c66e97f8d2b1cf8e33b19
   AEPServices: 3214311f239c8cdc6267d757200b05ec0ab05878
   AEPSignal: be3a4789b492f4d5a5aef7408f30ff8e866d1d79
@@ -525,7 +530,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: a2f531d996fa0cfec14dc62700efc19d68982a65
+  FBReactNativeSpec: 8079de7dfa4fd4aab0e97969116b246069f7ec3e
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPAssurance: 9f51b9b5da17f9b98a41ce29e4f3e3b67ea36c17
@@ -533,7 +538,7 @@ SPEC CHECKSUMS:
   RCTAEPEdge: 9938932e89a90adf5cd30250b46cc67fbe35dd06
   RCTAEPEdgeConsent: b998b2d08f254635ef01263fea186d7262f2d242
   RCTAEPEdgeIdentity: 7f1cd37ab633945599fbe23d41db22a1176f3726
-  RCTAEPMessaging: 5ff246c624ceb253f93dbb1ae96af4ec898c91af
+  RCTAEPPlaces: d666c74a21b7fa2edb3740677b16440b99a9bf8e
   RCTAEPUserProfile: 341c77e0d18d69872c81e425a2e9cae37fe82045
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa

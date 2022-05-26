@@ -10,24 +10,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
+enum PlacesAuthStatus {
+  ALWAYS = 'PLACES_AUTH_STATUS_ALWAYS',
+  DENIED = 'PLACES_AUTH_STATUS_DENIED',
+  RESTRICTED = 'PLACES_AUTH_STATUS_RESTRICTED',
+  UNKNOWN = 'PLACES_AUTH_STATUS_UNKNOWN',
+  WHEN_IN_USE = 'PLACES_AUTH_STATUS_WHEN_IN_USE'
+}
 
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPMessaging;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPEdgeConsent;
-@import AEPAssurance;
-@import AEPPlaces;
-
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-
-@property (nonatomic, strong) UIWindow *window;
-
-@end
+export default PlacesAuthStatus;

@@ -90,6 +90,15 @@ jest.doMock('react-native', () => {
                     track: jest.fn(),
                     handleJavascriptMessage: jest.fn(() => new Promise(resolve => resolve(new Object()))),
                     clear: jest.fn()
+                },
+                AEPPlaces: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getNearbyPointsOfInterest: jest.fn(() => new Promise(resolve => resolve([]))),
+                    processGeofence: jest.fn(),
+                    getCurrentPointsOfInterest: jest.fn(() => new Promise(resolve => resolve([]))),
+                    getLastKnownLocation: () => jest.fn(() => new Promise(resolve => resolve({}))),
+                    clear: jest.fn(),
+                    setAuthorizationStatus: jest.fn(),
                 }
             },
             NativeEventEmitter: class {                
