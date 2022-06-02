@@ -16,6 +16,6 @@ import Proposition from "./Proposition";
 * A Type with callback function that gets called with a Map of decision scope names and Propositions.
 * This is a type for listener used for receiving Proposition updates.
 */
-export type AdobeCallback = {    
+export type AdobePropositionCallback = {    
     call(propositionMap: Map<string, Proposition>): void;
 };

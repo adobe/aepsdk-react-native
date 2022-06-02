@@ -11,14 +11,14 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { AEPOptimize, Proposition, DecisionScope, Offer } from '../ts';
+import { Optimize, Proposition, DecisionScope, Offer } from '../ts';
 import offerJson from './offer.json';
 import propositionJson from './proposition.json';
 
-describe('AEPOptimize', () => {
+describe('Optimize', () => {
   it('AEPOptimize extensionVersion is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPOptimize, 'extensionVersion');
-    await AEPOptimize.extensionVersion();
+    await Optimize.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
@@ -28,7 +28,7 @@ describe('AEPOptimize', () => {
       call(_: Map<string, Proposition>): void {}
     };
 
-    await AEPOptimize.onPropositionUpdate(adobeCallback);
+    await Optimize.onPropositionUpdate(adobeCallback);
     expect(spy).toHaveBeenCalled();
   });
 
@@ -37,14 +37,14 @@ describe('AEPOptimize', () => {
       NativeModules.AEPOptimize,
       'clearCachedPropositions'
     );
-    await AEPOptimize.clearCachedPropositions();
+    await Optimize.clearCachedPropositions();
     expect(spy).toHaveBeenCalledWith();
   });
 
   it('AEPOptimize getPropositions is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPOptimize, 'getPropositions');
     let decisionScopes = [new DecisionScope('abcdef', null, null, null)];
-    await AEPOptimize.getPropositions(decisionScopes);
+    await Optimize.getPropositions(decisionScopes);
     expect(spy).toHaveBeenCalledWith(
       decisionScopes.map((decisionScope) => decisionScope.getName())
     );
@@ -55,7 +55,7 @@ describe('AEPOptimize', () => {
     let decisionScopes = [new DecisionScope('abcdef', null, null, null)];
     let xdm = new Map();
     let data = new Map();
-    await AEPOptimize.updatePropositions(decisionScopes, xdm, data);
+    await Optimize.updatePropositions(decisionScopes, xdm, data);
     expect(spy).toHaveBeenCalledWith(
       decisionScopes.map((decisionScope) => decisionScope.getName()),
       xdm,

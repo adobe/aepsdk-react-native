@@ -82,6 +82,7 @@ static void InitializeFlipper(UIApplication *application) {
 }
 
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  [AEPMobileAssurance startSessionWithUrl:url];
   return true;
 }
 

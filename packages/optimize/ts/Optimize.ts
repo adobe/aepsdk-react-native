@@ -14,7 +14,15 @@ import { EventSubscription, NativeModules } from 'react-native';
 import { NativeEventEmitter } from 'react-native';
 import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
-import { AdobeCallback }  from './models/AdobeCallback';
+import { AdobePropositionCallback }  from './models/AdobePropositionCallback';
+
+interface IOptimize {
+  extensionVersion: () => Promise<string>;
+  onPropositionUpdate: (adobeCallback: AdobePropositionCallback) => void;
+  clearCachedPropositions: () => void;
+  getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
+  updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) => void
+}
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
 
@@ -22,10 +30,11 @@ declare var onPropositionUpdateSubscription: EventSubscription;
 
 var onPropositionUpdateSubscription: EventSubscription;
 
+
 /**
 * Public APIs for Optimize extension
 */
-const AEPOptimize = {
+const Optimize: IOptimize = {
   /**
    * Returns the version of the AEPOptimize extension
    * @return {string} - Promise a promise that resolves with the extension version
@@ -38,7 +47,7 @@ const AEPOptimize = {
    * This API registers a permanent callback which is invoked whenever the Edge extension dispatches a response Event received from the Experience Edge Network upon a personalization query.
    * @param {Object} onPropositionUpdateCallback - the callback that will be called with the updated Propositions.
    */
-  onPropositionUpdate(adobeCallback: AdobeCallback) {        
+  onPropositionUpdate(adobeCallback: AdobePropositionCallback) {        
     if(onPropositionUpdateSubscription) {
       onPropositionUpdateSubscription.remove();
     }
@@ -92,4 +101,4 @@ const AEPOptimize = {
   }  
 };
 
-export default AEPOptimize;
+export default Optimize;

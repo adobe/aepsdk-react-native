@@ -10,15 +10,15 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import AEPOptimize from "./AEPOptimize";
-import { AdobeCallback } from "./models/AdobeCallback";
+import Optimize from "./Optimize";
+import { AdobePropositionCallback } from "./models/AdobePropositionCallback";
 import DecisionScope from "./models/DecisionScope";
 import Offer from "./models/Offer";
 import Proposition from "./models/Proposition";
 
 export {
-  AEPOptimize,
-  AdobeCallback,
+  Optimize,
+  AdobePropositionCallback,
   DecisionScope,
   Offer,
   Proposition,

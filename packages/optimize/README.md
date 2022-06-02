@@ -4,7 +4,7 @@
 
 `@adobe/react-native-aepoptimize` is a wrapper around the iOS and Android [Adobe Experience Platform Optimize Extension](https://aep-sdks.gitbook.io/docs/) to allow for integration with React Native applications.
 
-## Prerequisites
+## Peer Dependencies
 
 The Adobe Experience Platform Optimize extension has the following peer dependency, which must be installed prior to installing the optimize extension:
 - [Core](../core/README.md)
