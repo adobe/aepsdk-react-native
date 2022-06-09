@@ -26,6 +26,7 @@ import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.edge.consent.Consent;
 import com.adobe.marketing.mobile.optimize.Optimize;
+import com.adobe.marketing.mobile.Places;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -80,6 +81,7 @@ public class MainApplication extends Application implements ReactApplication {
         Signal.registerExtension();
         Consent.registerExtension();
         Assurance.registerExtension();
+        Places.registerExtension();
     } catch (InvalidInitException e) {
         e.printStackTrace();
     }

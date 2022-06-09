@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Adobe. All rights reserved.
+Copyright 2020 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -10,24 +10,26 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
+class PlacesLocation {
+  longitude: number;
+  latitude: number;
+  altitude: number;
+  speed: number;
+  accuracy: number;
 
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPMessaging;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPEdgeConsent;
-@import AEPAssurance;
-@import AEPPlaces;
+  constructor(
+    longitude: number,
+    latitude?: number,
+    altitude?: number,
+    speed?: number,
+    accuracy?: number
+  ) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.altitude = altitude;
+    this.speed = speed;
+    this.accuracy = accuracy;
+  }
+}
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-
-@property (nonatomic, strong) UIWindow *window;
-
-@end
+export default PlacesLocation;
