@@ -45,6 +45,7 @@ const EdgeIdentityView = ({navigation}: NavigationProps) => {
   const [version, setVersion] = useState('');
   const [identities, setIdentities] = useState('');
   const [ecid, setECID] = useState('');
+  const [urlvariables, setUrlVariables] = useState('');
   Identity.extensionVersion().then(version => setVersion(version));
 
   function getIdentities() {
@@ -75,6 +76,14 @@ const EdgeIdentityView = ({navigation}: NavigationProps) => {
       });
   }
 
+  function getUrlVariables() {
+    Identity.getUrlVariables()
+      .then(urlVariables => {
+        setUrlVariables(urlVariables);
+        console.log('AdobeExperienceSDK: urlVariables = ' + urlVariables);
+      })
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
@@ -84,9 +93,11 @@ const EdgeIdentityView = ({navigation}: NavigationProps) => {
         <Button title="updateIdentities()" onPress={updateIdentities} />
         <Button title="removeIdentity()" onPress={removeIdentity} />
         <Button title="getIdentities()" onPress={getIdentities} />
+        <Button title="getUrlVariables()" onPress={getUrlVariables} />
         <View style={styles.breakLine} />
         <Text>{identities}</Text>
         <Text>{ecid}</Text>
+        <Text>{urlvariables}</Text>
       </ScrollView>
     </View>
   );

@@ -162,6 +162,24 @@ let identityItem  = new IdentityItem("user@example.com");
 Identity.removeIdentity(identityItem, "Email");
 ```
 
+### getUrlVariables:
+Returns the identifiers in a URL's query parameters for consumption in hybrid mobile applications. The response will not return any leading & or ?, since the caller is responsible for placing the variables in the resulting URL in the correct locations. If an error occurs while retrieving the URL variables, the callback handler will return a null value. Otherwise, the encoded string is returned.
+An example of an encoded string is as follows: "adobe_mc=TS%3DTIMESTAMP_VALUE%7CMCMID%3DYOUR_ECID%7CMCORGID%3D9YOUR_EXPERIENCE_CLOUD_ID"
+
+* MCID: This is also known as the Experience Cloud ID (ECID).
+* MCORGID: This is also known as the Experience Cloud Organization ID.
+* TS: The timestamp that is taken when the request was made.
+
+**Syntax**
+```typescript
+getUrlVariables(): Promise<string>;
+```
+
+**Example**
+```typescript
+Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: Url Variables = " + urlVariables));
+```
+
 ### resetIdentity:
 Clears all identities stored in the Identity extension and generates a new Experience Cloud ID (ECID) . Using this API does not remove the identifiers from the server-side User Profile Graph or Identity Graph.
 

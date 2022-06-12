@@ -11,6 +11,7 @@
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
 
+import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.edge.identity.Identity;
@@ -25,51 +26,66 @@ import com.facebook.react.bridge.WritableMap;
 
 public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
 
-  private final ReactApplicationContext reactContext;
+    private final ReactApplicationContext reactContext;
 
-  public RCTAEPEdgeIdentityModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-    this.reactContext = reactContext;
-  }
+    public RCTAEPEdgeIdentityModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.reactContext = reactContext;
+    }
 
-  @Override
-  public String getName() {
-    return "AEPEdgeIdentity";
-  }
+    @Override
+    public String getName() {
+        return "AEPEdgeIdentity";
+    }
 
-  @ReactMethod
-  public void extensionVersion(final Promise promise) {
-    promise.resolve(Identity.extensionVersion());
-  }
+    @ReactMethod
+    public void extensionVersion(final Promise promise) {
+        promise.resolve(Identity.extensionVersion());
+    }
 
-  @ReactMethod
-  public void getExperienceCloudId(final Promise promise) {
-      Identity.getExperienceCloudId(new AdobeCallbackWithError<String>() {
-        @Override
-          public void fail(AdobeError error) {
-          handleError(promise, error, "getExperienceCloudId");
-          }
+    @ReactMethod
+    public void getExperienceCloudId(final Promise promise) {
+        Identity.getExperienceCloudId(new AdobeCallbackWithError<String>() {
+            @Override
+            public void fail(AdobeError error) {
+                handleError(promise, error, "getExperienceCloudId");
+            }
 
-        @Override
-          public void call(String s) {
+            @Override
+            public void call(String s) {
                 promise.resolve(s);
-          }
+            }
         });
     }
 
-  @ReactMethod
+    @ReactMethod
     public void getIdentities(final Promise promise) {
         Identity.getIdentities(new AdobeCallbackWithError<IdentityMap>() {
 
             @Override
             public void fail(AdobeError error) {
-            handleError(promise, error, "getIdentities");
+                handleError(promise, error, "getIdentities");
             }
 
             @Override
             public void call(IdentityMap map) {
                 WritableMap identitymap = RCTAEPEdgeIdentityDataBridge.mapFromIdentityMap(map);
                 promise.resolve(identitymap);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getUrlVariables(final Promise promise) {
+        Identity.getUrlVariables(new AdobeCallbackWithError<String>() {
+             @Override
+            public void fail(AdobeError error) {
+                handleError(promise, error, "getUrlVariables");
+            }
+
+            @Override
+            public void call(String s) {
+                promise.resolve(s);
             }
         });
     }
@@ -86,8 +102,8 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
         Identity.removeIdentity(itemobj, namespace);
     }
 
-  // Helper method
-  private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
+   // Helper method
+   private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
     if (error == null || promise == null) {
       return;
     }

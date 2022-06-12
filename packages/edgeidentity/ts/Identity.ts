@@ -18,8 +18,10 @@ interface IIdentity {
   extensionVersion: () => Promise<string>;
   getExperienceCloudId: () => Promise<string>;
   getIdentities: () => Promise<IdentityMap>;
+  getUrlVariables: () => Promise<string>;
   updateIdentities: (identityMap: IdentityMap) => void;
   removeIdentity: (item: IdentityItem, namespace: string) => void;
+
 }
 
 const RCTAEPEdgeIdentity: IIdentity = NativeModules.AEPEdgeIdentity;
@@ -66,6 +68,17 @@ const Identity: IIdentity = {
     return getIdentitiesPromise;
   },
 
+   /**
+   * @brief Returns the identifiers in a URL's query parameters for consumption in hybrid mobile applications.
+   *
+   * There is no leading &amp; or ? punctuation as the caller is responsible for placing the variables in their resulting URL in the correct locations.
+   * 
+   * @return promise method which will be invoked once the Url Variables are available or rejected if an unexpected error occurred or the request timed out.
+   */
+  getUrlVariables(): Promise<string> {
+    return RCTAEPEdgeIdentity.getUrlVariables();
+  },
+
   /**
    * @brief Updates the currently known `IdentityMap` within the SDK.
    *
@@ -74,7 +87,7 @@ const Identity: IIdentity = {
    *
    *
    */
-  updateIdentities(identityMap: IdentityMap) {
+   updateIdentities(identityMap: IdentityMap) {
     RCTAEPEdgeIdentity.updateIdentities(identityMap);
   },
 
