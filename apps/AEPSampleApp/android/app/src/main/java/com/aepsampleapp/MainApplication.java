@@ -25,7 +25,6 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.edge.consent.Consent;
-import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -73,7 +72,6 @@ public class MainApplication extends Application implements ReactApplication {
     try {
         Edge.registerExtension();
         Identity.registerExtension();
-        Optimize.registerExtension();
         Messaging.registerExtension();
         UserProfile.registerExtension();
         Lifecycle.registerExtension();
@@ -83,7 +81,7 @@ public class MainApplication extends Application implements ReactApplication {
     } catch (InvalidInitException e) {
         e.printStackTrace();
     }
-    MobileCore.configureWithAppID("YOUR-APP-ID");
+    MobileCore.configureWithAppID("your-app-ID");
     MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {
