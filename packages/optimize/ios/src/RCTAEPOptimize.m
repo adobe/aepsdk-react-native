@@ -28,6 +28,11 @@ static NSString * const TAG = @"RCTAEPOptimize";
   return self;
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+  return NO;
+}
+
 RCT_EXPORT_MODULE(AEPOptimize);
 
 - (dispatch_queue_t)methodQueue
