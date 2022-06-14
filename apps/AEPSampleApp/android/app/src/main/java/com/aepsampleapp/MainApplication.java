@@ -130,7 +130,7 @@ public class MainApplication extends Application implements ReactApplication {
       } catch (InvalidInitException e) {
         e.printStackTrace();
       }
-      MobileCore.configureWithAppID("YOUR-APP-ID");
+      MobileCore.configureWithAppID("94f571f308d5/959a617a4a15/launch-de09b8b97921-development");
       MobileCore.start(new AdobeCallback() {
         @Override
         public void call(Object o) {
