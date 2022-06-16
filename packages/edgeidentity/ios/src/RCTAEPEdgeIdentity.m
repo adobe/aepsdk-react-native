@@ -57,7 +57,7 @@ RCT_EXPORT_METHOD(getUrlVariables:(RCTPromiseResolveBlock) resolve rejecter:(RCT
     [AEPMobileEdgeIdentity getUrlVariables:^(NSString * _Nullable urlVariables, NSError * _Nullable error) {
         
         if (error) {
-            [self handleError:error rejecter:reject errorLocation:@"getUrlVariable"];
+            [self handleError:error rejecter:reject errorLocation:@"getUrlVariables"];
             } else {
               resolve(urlVariables);
             }

@@ -73,7 +73,7 @@ const Identity: IIdentity = {
    *
    * There is no leading &amp; or ? punctuation as the caller is responsible for placing the variables in their resulting URL in the correct locations.
    * 
-   * @return promise method which will be invoked once the Url Variables are available or rejected if an unexpected error occurred or the request timed out.
+   * @return promise method which will be invoked once the URL Variables are available or rejected if an unexpected error occurred or the request timed out.
    */
   getUrlVariables(): Promise<string> {
     return RCTAEPEdgeIdentity.getUrlVariables();

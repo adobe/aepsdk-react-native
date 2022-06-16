@@ -177,7 +177,7 @@ getUrlVariables(): Promise<string>;
 
 **Example**
 ```typescript
-Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: Url Variables = " + urlVariables));
+Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: URL Variables = " + urlVariables));
 ```
 
 ### resetIdentity:
@@ -186,6 +186,21 @@ Clears all identities stored in the Identity extension and generates a new Exper
 :information_source: The Identity for Edge Network extension does not read the Mobile SDK's privacy status and therefor setting the SDK's privacy status to opt-out will not clear the identities from the Identity for Edge Network extension.
 
 For more details, see the[MobileCore.resetIdentities API](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#reset-identities).
+
+### setAdvertisingIdentifier:
+When this API is called with a valid advertising identifier, the Identity for Edge Network extension includes the advertising identifier in the XDM Identity Map using the namespace GAID (Google Advertising ID) in Android and IDFA (Identifier for Advertisers) in iOS. If the API is called with the empty string (""), null/nil, or the all-zeros UUID string values, the advertising identifier is removed from the XDM Identity Map (if previously set).
+The advertising identifier is preserved between app upgrades, is saved and restored during the standard application backup process, and is removed at uninstall.
+
+**Syntax**
+
+```typescript
+setAdvertisingIdentifier(advertisingIdentifier?: string)
+```
+
+**Example**
+
+```typescript
+MobileCore.setAdvertisingIdentifier("adID");
 
 ### updateIdentities:
 

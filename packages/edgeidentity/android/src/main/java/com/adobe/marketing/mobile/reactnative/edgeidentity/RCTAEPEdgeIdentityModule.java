@@ -78,7 +78,7 @@ public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getUrlVariables(final Promise promise) {
         Identity.getUrlVariables(new AdobeCallbackWithError<String>() {
-             @Override
+            @Override
             public void fail(AdobeError error) {
                 handleError(promise, error, "getUrlVariables");
             }
