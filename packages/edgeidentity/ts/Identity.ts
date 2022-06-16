@@ -43,7 +43,16 @@ const Identity: IIdentity = {
    * @return promise method which will be invoked once the Experience Cloud ID is available or rejected if an unexpected error occurred or the request timed out.
    */
   getExperienceCloudId(): Promise<string> {
-    return RCTAEPEdgeIdentity.getExperienceCloudId();
+    const getExperienceCloudIdPromise = new Promise<string>((resolve, reject) => {
+      RCTAEPEdgeIdentity.getExperienceCloudId()
+        .then((experienceId) => {
+          resolve(experienceId);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+    return getExperienceCloudIdPromise;
   },
 
   /**
@@ -76,7 +85,16 @@ const Identity: IIdentity = {
    * @return promise method which will be invoked once the URL Variables are available or rejected if an unexpected error occurred or the request timed out.
    */
   getUrlVariables(): Promise<string> {
-    return RCTAEPEdgeIdentity.getUrlVariables();
+    const getUrlVariablesPromise = new Promise<string>((resolve, reject) => {
+      RCTAEPEdgeIdentity.getUrlVariables()
+        .then((urlVariables) => {
+          resolve(urlVariables);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+    return getUrlVariablesPromise;
   },
 
   /**
