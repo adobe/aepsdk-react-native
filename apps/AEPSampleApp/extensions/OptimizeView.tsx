@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 import React, {useState} from 'react';
 import {
-  AEPOptimize,
+  Optimize,
   DecisionScope,
   Proposition,
 } from '@adobe/react-native-aepoptimize';
@@ -76,14 +76,14 @@ export default ({navigation}: any) => {
     decisionScopeTargetMbox,
   ];
   const optimizeExtensionVersion = () =>
-    AEPOptimize.extensionVersion().then(newVersion => {
+    Optimize.extensionVersion().then(newVersion => {
       console.log('AdobeExperienceSDK: AEPOptimize version: ' + newVersion);
       setVersion(newVersion);
     });
   const updatePropositions = () =>
-    AEPOptimize.updatePropositions(decisionScopes, null, null);
+    Optimize.updatePropositions(decisionScopes, null, null);
   const getPropositions = () =>
-    AEPOptimize.getPropositions(decisionScopes).then(
+    Optimize.getPropositions(decisionScopes).then(
       (propositions: Map<string, Proposition>) => {
         if (propositions) {
           setTextProposition(propositions.get(decisionScopeText.getName()));
@@ -96,9 +96,9 @@ export default ({navigation}: any) => {
         }
       },
     );
-  const clearCachedProposition = () => AEPOptimize.clearCachedPropositions();
+  const clearCachedProposition = () => Optimize.clearCachedPropositions();
   const onPropositionUpdate = () =>
-    AEPOptimize.onPropositionUpdate({
+    Optimize.onPropositionUpdate({
       call(propositions: Map<String, Proposition>) {
         if (propositions) {
           setTextProposition(propositions.get(decisionScopeText.getName()));
@@ -119,7 +119,7 @@ export default ({navigation}: any) => {
           <Text
             style={{margin: 10, fontSize: 18}}
             onPress={() => {
-                targetProposition?.items[0].tapped(targetProposition);
+              targetProposition?.items[0].tapped(targetProposition);
             }}>
             {targetProposition.items[0].content}
           </Text>
@@ -129,7 +129,7 @@ export default ({navigation}: any) => {
           <Text
             style={{margin: 10, fontSize: 18}}
             onPress={() => {
-                targetProposition?.items[0].tapped(targetProposition);
+              targetProposition?.items[0].tapped(targetProposition);
             }}>
             {targetProposition.items[0].content}
           </Text>
@@ -138,7 +138,7 @@ export default ({navigation}: any) => {
         return (
           <TouchableOpacity
             onPress={e => {
-                targetProposition?.items[0].tapped(targetProposition);
+              targetProposition?.items[0].tapped(targetProposition);
             }}>
             <View style={{width: width, height: 150}}>
               <WebView
@@ -219,7 +219,7 @@ export default ({navigation}: any) => {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 onPress={e => {
-                    imageProposition?.items[0].tapped(imageProposition);
+                  imageProposition?.items[0].tapped(imageProposition);
                 }}>
                 <Image
                   style={{width: 100, height: 100, margin: 10}}
@@ -236,7 +236,7 @@ export default ({navigation}: any) => {
             <Text
               style={{margin: 10, fontSize: 18}}
               onPress={e => {
-                  jsonProposition?.items[0].tapped(jsonProposition);
+                jsonProposition?.items[0].tapped(jsonProposition);
               }}>
               {' '}
               {jsonProposition?.items?.[0]
@@ -248,7 +248,7 @@ export default ({navigation}: any) => {
           return (
             <TouchableOpacity
               onPress={() => {
-                  htmlProposition?.items[0].tapped(htmlProposition);
+                htmlProposition?.items[0].tapped(htmlProposition);
               }}>
               <View style={{width: width, height: 150}}>
                 <WebView

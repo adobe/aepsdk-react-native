@@ -39,16 +39,19 @@ The In app Message APIs depends on the AEP Messaging, v1.1.0. This version is no
 ```ruby
 target 'AEPSampleApp' do
 pod "AEPMessaging", :git => "https://github.com/adobe/aepsdk-messaging-ios.git", :branch => "staging"
-pod "AEPOptimize", :git => "https://github.com/adobe/aepsdk-optimize-ios.git", :branch => "staging"
 end
 ```
 
-**Gradle setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**
-AEPMessaging Android package v1.1.0 with in-app messaging support is not published to maven yet. In project level build.gradle file of Android project in your RN application add following changes in `allprojects -> repositories`.
+**Gradle setup for `@adobe/react-native-aepmessaging` v1.2.0-beta.1 with in-app messaging support**
+AEPMessaging Android package v1.2.0-beta.1 with in-app messaging support is published to maven snapshots. In project level build.gradle file of Android project in your RN application add `maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }` in `allprojects -> repositories`.
 
 ```gradle
-flatDir {
-dirs project(':adobe_react-native-aepmessaging').file('libs')
+repositories {
+  google()
+  mavenCentral()
+  maven { 
+    url "https://oss.sonatype.org/content/repositories/snapshots/" 
+  }
 }
 ```
 

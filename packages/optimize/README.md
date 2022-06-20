@@ -12,6 +12,7 @@
 The Adobe Experience Platform Optimize extension has the following peer dependency, which must be installed prior to installing the optimize extension:
 - [Core](../core/README.md)
 - [Edge](../edge/README.md)
+- [Edge Identity](../edgeidentity/README.md)
 
 ## Installation
 
@@ -344,5 +345,3 @@ module.exports = class Offer {
     };   
 };
 ```
-
-
