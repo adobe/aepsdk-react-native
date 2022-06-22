@@ -75,28 +75,36 @@ export default ({navigation}: any) => {
     decisionScopeJson,
     decisionScopeTargetMbox,
   ];
-  const optimizeExtensionVersion = () =>
-    Optimize.extensionVersion().then(newVersion => {
-      console.log('AdobeExperienceSDK: Optimize version: ' + newVersion);
-      setVersion(newVersion);
-    });
-  const updatePropositions = () =>
+
+  const optimizeExtensionVersion = async () => {
+    const version = await Optimize.extensionVersion();
+    console.log('AdobeExperienceSDK: Optimize version: ' + version);
+    setVersion(version);
+  };
+
+  const updatePropositions = () => {
     Optimize.updatePropositions(decisionScopes, null, null);
-  const getPropositions = () =>
-    Optimize.getPropositions(decisionScopes).then(
-      (propositions: Map<string, Proposition>) => {
-        if (propositions) {
-          setTextProposition(propositions.get(decisionScopeText.getName()));
-          setImageProposition(propositions.get(decisionScopeImage.getName()));
-          setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
-          setJsonProposition(propositions.get(decisionScopeJson.getName()));
-          setTargetProposition(
-            propositions.get(decisionScopeTargetMbox.getName()),
-          );
-        }
-      },
-    );
-  const clearCachedProposition = () => Optimize.clearCachedPropositions();
+    console.log('Updated Propositions');
+  };
+
+  const getPropositions = async () => {
+    const propositions: Map<string, Proposition> =
+      await Optimize.getPropositions(decisionScopes);
+    console.log(propositions);
+    if (propositions) {
+      setTextProposition(propositions.get(decisionScopeText.getName()));
+      setImageProposition(propositions.get(decisionScopeImage.getName()));
+      setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
+      setJsonProposition(propositions.get(decisionScopeJson.getName()));
+      setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+    }
+  };
+
+  const clearCachedProposition = () => {
+    Optimize.clearCachedPropositions();
+    console.log('Proposition cache cleared');
+  };
+
   const onPropositionUpdate = () =>
     Optimize.onPropositionUpdate({
       call(propositions: Map<String, Proposition>) {
