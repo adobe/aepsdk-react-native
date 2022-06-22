@@ -77,7 +77,7 @@ export default ({navigation}: any) => {
   ];
   const optimizeExtensionVersion = () =>
     Optimize.extensionVersion().then(newVersion => {
-      console.log('AdobeExperienceSDK: AEPOptimize version: ' + newVersion);
+      console.log('AdobeExperienceSDK: Optimize version: ' + newVersion);
       setVersion(newVersion);
     });
   const updatePropositions = () =>

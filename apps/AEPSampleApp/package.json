@@ -2,6 +2,9 @@
   "name": "aepsampleapp",
   "version": "1.0.0",
   "private": true,
+  "workspaces": {
+    "nohoist": ["**/*"]
+  },
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "android": "react-native run-android",
@@ -20,8 +23,8 @@
     "@adobe/react-native-aepedgeconsent": "^1.0.0",
     "@adobe/react-native-aepedgeidentity": "^1.0.0",
     "@adobe/react-native-aepmessaging": "^1.0.0-beta.2",
-    "@adobe/react-native-aepuserprofile": "^1.0.0",
     "@adobe/react-native-aepoptimize": "^1.0.0-alpha.1",
+    "@adobe/react-native-aepuserprofile": "^1.0.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/core": "^6.2.1",
@@ -37,7 +40,7 @@
     "react-native-screens": "^3.13.1",
     "react-native-webview": "^11.22.0",
     "recyclerlistview": "^3.0.5",
-    "ts-object-utils":"0.0.5"
+    "ts-object-utils": "0.0.5"
   },
   "devDependencies": {
     "react-native-screens": "^3.4.0",

@@ -32,6 +32,11 @@ static NSString* const TAG = @"RCTAEPMessaging";
     return self;
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return NO;
+}
+
 RCT_EXPORT_MODULE(AEPMessaging);
 
 - (dispatch_queue_t)methodQueue
