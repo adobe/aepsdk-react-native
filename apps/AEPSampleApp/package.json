@@ -13,9 +13,6 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
-  "workspaces": {
-    "nohoist": ["**/*"]
-  },
   "dependencies": {
     "@adobe/react-native-aepassurance": "^3.0.0",
     "@adobe/react-native-aepcore": "^1.0.0",
