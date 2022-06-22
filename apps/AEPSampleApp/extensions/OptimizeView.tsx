@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 import React, {useState} from 'react';
 import {
-  AEPOptimize,
+  Optimize,
   DecisionScope,
   Proposition,
 } from '@adobe/react-native-aepoptimize';
@@ -76,14 +76,14 @@ export default ({navigation}: any) => {
     decisionScopeTargetMbox,
   ];
   const optimizeExtensionVersion = () =>
-    AEPOptimize.extensionVersion().then(newVersion => {
-      console.log('AdobeExperienceSDK: AEPOptimize version: ' + newVersion);
+    Optimize.extensionVersion().then(newVersion => {
+      console.log('AdobeExperienceSDK: Optimize version: ' + newVersion);
       setVersion(newVersion);
     });
   const updatePropositions = () =>
-    AEPOptimize.updatePropositions(decisionScopes, null, null);
+    Optimize.updatePropositions(decisionScopes, null, null);
   const getPropositions = () =>
-    AEPOptimize.getPropositions(decisionScopes).then(
+    Optimize.getPropositions(decisionScopes).then(
       (propositions: Map<string, Proposition>) => {
         if (propositions) {
           setTextProposition(propositions.get(decisionScopeText.getName()));
@@ -96,9 +96,9 @@ export default ({navigation}: any) => {
         }
       },
     );
-  const clearCachedProposition = () => AEPOptimize.clearCachedPropositions();
+  const clearCachedProposition = () => Optimize.clearCachedPropositions();
   const onPropositionUpdate = () =>
-    AEPOptimize.onPropositionUpdate({
+  Optimize.onPropositionUpdate({
       call(propositions: Map<String, Proposition>) {
         if (propositions) {
           setTextProposition(propositions.get(decisionScopeText.getName()));
