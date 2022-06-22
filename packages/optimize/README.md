@@ -5,7 +5,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepoptimize)](https://www.npmjs.com/package/@adobe/react-native-aepoptimize)
 
 
-`@adobe/react-native-aepoptimize` is a wrapper around the iOS and Android [Adobe Experience Platform Optimize Extension](https://aep-sdks.gitbook.io/docs/) to allow for integration with React Native applications.
+`@adobe/react-native-aepoptimize` is a wrapper around the iOS and Android [Adobe Experience Platform Optimize Extension](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer-decisioning) to allow for integration with React Native applications.
 
 ## Peer Dependencies
 
@@ -30,8 +30,6 @@ Yarn:
 yarn add @adobe/react-native-aepoptimize
 ```
 
-Optimize native packages are not yet released and their github repo is private. Additional setup needs to be done in Podfile and build.gradle for integrating RN Optimize package in your RN application.
-
 ## Usage
 
 ### Initializing and registering the extension
@@ -45,6 +43,7 @@ iOS
 @import AEPCore;
 @import AEPLifecycle;
 @import AEPEdge;
+@import AEPEdgeIdentity;
 @import AEPOptimize;
 
 @implementation AppDelegate
@@ -68,6 +67,7 @@ import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.optimize.Optimize;
   
 ...
@@ -100,8 +100,8 @@ public class MainApplication extends Application implements ReactApplication {
 
 ### Importing the extension:
 
-```javascript
-import { AEPOptimize, Offer, Proposition, DecisionScope } from '@adobe/react-native-aepoptimize';
+```typescript
+import { Optimize, Offer, Proposition, DecisionScope } from '@adobe/react-native-aepoptimize';
 ```
 
 ## API reference
@@ -109,44 +109,44 @@ import { AEPOptimize, Offer, Proposition, DecisionScope } from '@adobe/react-nat
 ### Clearing the cached Propositions:
 
 **Syntax**
-```javascript
+```typescript
 clearCachedPropositions()
 ```
 
 **Example**
-```javascript
-AEPOptimize.clearCachedPropositions();
+```typescript
+Optimize.clearCachedPropositions();
 ```
 
 ### Getting the SDK version:
 
 **Syntax**
-```javascript
+```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
-```javascript
-AEPOptimize.extensionVersion().then(newVersion => console.log("AdobeExperienceSDK: AEPOptimize version: " + newVersion);
+```typescript
+Optimize.extensionVersion().then(newVersion => console.log("AdobeExperienceSDK: Optimize version: " + newVersion);
 ```
 
 ### Getting the Cached Propositions:
 This API returns the cached propositions for the provided DecisionScopes from the in-memory Proposition cache.
 
 **Syntax**
-```javascript
+```typescript
 getPropositions(decisionScopes: Array<DecisionScope>): Promise<Map<string, Proposition>>
 ```
 
 **Example**
-```javascript
+```typescript
 const decisionScopeText = new DecisionScope("{DecisionScope name}");
 const decisionScopeImage = new DecisionScope("{DecisionScope name}");
 const decisionScopeHtml = new DecisionScope("{DecisionScope name{");
 const decisionScopeJson = new DecisionScope("{DecisionScope name}");
 const decisionScopes = [ decisionScopeText, decisionScopeImage, decisionScopeHtml, decisionScopeJson ];
 
-AEPOptimize.getPropositions(decisionScopes).then(
+Optimize.getPropositions(decisionScopes).then(
    (propositions: Map<string, typeof Proposition>) => {
       //Your app logic using the propositions
 });
@@ -156,13 +156,13 @@ AEPOptimize.getPropositions(decisionScopes).then(
 Callback that will be called with the updated Propositions.
 
 **Syntax**
-```javascript
+```typescript
 onPropositionUpdate(adobeCallback: AdobeCallback)
 ```
 
 **Example**
-```javascript
-AEPOptimize.onPropositionUpdate({
+```typescript
+Optimize.onPropositionUpdate({
   call(proposition: Map<String, typeof Proposition>) {
     //App logic using the updated proposition
   }
@@ -173,19 +173,19 @@ AEPOptimize.onPropositionUpdate({
 This API fetches the propositions for the provided DecisionScope list.
 
 **Syntax**
-```javascript
+```typescript
 updatePropositions(decisionScopes: Array<DecisionScope>, xdm: ?Map<string, any>, data: ?Map<string, any>)
 ```
 
 **Example**
-```javascript
+```typescript
 const decisionScopeText = new DecisionScope("{DecisionScope name}");
 const decisionScopeImage = new DecisionScope("{DecisionScope name}");
 const decisionScopeHtml = new DecisionScope("{DecisionScope name{");
 const decisionScopeJson = new DecisionScope("{DecisionScope name}");
 const decisionScopes = [ decisionScopeText, decisionScopeImage, decisionScopeHtml, decisionScopeJson ];
 
-AEPOptimize.updatePropositions(decisionScopes, null, null);
+Optimize.updatePropositions(decisionScopes, null, null);
 ```
 
 ---
@@ -199,7 +199,7 @@ AEPOptimize.updatePropositions(decisionScopes, null, null);
 ### DecisionScope
 This class represents the decision scope which is used to fetch the decision propositions from the Edge decisioning services. The encapsulated scope name can also represent the Base64 encoded JSON string created using the provided activityId, placementId and itemCount.
 
-```javascript
+```typescript
 /**
 * class represents a decision scope used to fetch personalized offers from the Experience Edge network.
 */
@@ -231,7 +231,7 @@ module.exports = class DecisionScope {
 ### Proposition
 This class represents the decision propositions received from the decisioning services, upon a personalization query request to the Experience Edge network.
 
-```javascript
+```typescript
 module.exports = class Proposition {
     id: string;
     items: Array<Offer>;
@@ -263,7 +263,7 @@ module.exports = class Proposition {
 ### Offer
 This class represents the proposition option received from the decisioning services, upon a personalization query to the Experience Edge network.
 
-```javascript
+```typescript
 module.exports = class Offer {
     id: string;
     etag: string;
