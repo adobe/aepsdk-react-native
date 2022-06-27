@@ -28,6 +28,7 @@ import com.adobe.marketing.mobile.edge.consent.Consent;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.aepsampleapp.newarchitecture.MainApplicationReactNativeHost;
+import com.adobe.marketing.mobile.InvalidInitException;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -120,7 +121,6 @@ public class MainApplication extends Application implements ReactApplication {
       try {
         Edge.registerExtension();
         Identity.registerExtension();
-        Optimize.registerExtension();
         Messaging.registerExtension();
         UserProfile.registerExtension();
         Lifecycle.registerExtension();

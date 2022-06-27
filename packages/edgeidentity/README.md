@@ -162,12 +162,45 @@ let identityItem  = new IdentityItem("user@example.com");
 Identity.removeIdentity(identityItem, "Email");
 ```
 
+### getUrlVariables:
+Returns the identifiers in a URL's query parameters for consumption in hybrid mobile applications. The response will not return any leading & or ?, since the caller is responsible for placing the variables in the resulting URL in the correct locations. If an error occurs while retrieving the URL variables, the callback handler will return a null value. Otherwise, the encoded string is returned.
+An example of an encoded string is as follows: "adobe_mc=TS%3DTIMESTAMP_VALUE%7CMCMID%3DYOUR_ECID%7CMCORGID%3D9YOUR_EXPERIENCE_CLOUD_ID"
+
+* MCID: This is also known as the Experience Cloud ID (ECID).
+* MCORGID: This is also known as the Experience Cloud Organization ID.
+* TS: The timestamp that is taken when the request was made.
+
+**Syntax**
+```typescript
+getUrlVariables(): Promise<string>;
+```
+
+**Example**
+```typescript
+Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: URL Variables = " + urlVariables));
+```
+
 ### resetIdentity:
 Clears all identities stored in the Identity extension and generates a new Experience Cloud ID (ECID) . Using this API does not remove the identifiers from the server-side User Profile Graph or Identity Graph.
 
 :information_source: The Identity for Edge Network extension does not read the Mobile SDK's privacy status and therefor setting the SDK's privacy status to opt-out will not clear the identities from the Identity for Edge Network extension.
 
 For more details, see the[MobileCore.resetIdentities API](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#reset-identities).
+
+### setAdvertisingIdentifier:
+When this API is called with a valid advertising identifier, the Identity for Edge Network extension includes the advertising identifier in the XDM Identity Map using the namespace GAID (Google Advertising ID) in Android and IDFA (Identifier for Advertisers) in iOS. If the API is called with the empty string (""), null/nil, or the all-zeros UUID string values, the advertising identifier is removed from the XDM Identity Map (if previously set).
+The advertising identifier is preserved between app upgrades, is saved and restored during the standard application backup process, and is removed at uninstall.
+
+**Syntax**
+
+```typescript
+setAdvertisingIdentifier(advertisingIdentifier?: string)
+```
+
+**Example**
+
+```typescript
+MobileCore.setAdvertisingIdentifier("adID");
 
 ### updateIdentities:
 
