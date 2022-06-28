@@ -53,6 +53,17 @@ RCT_EXPORT_METHOD(getIdentities:(RCTPromiseResolveBlock) resolve rejecter:(RCTPr
     }];
 }
 
+RCT_EXPORT_METHOD(getUrlVariables:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    [AEPMobileEdgeIdentity getUrlVariables:^(NSString * _Nullable urlVariables, NSError * _Nullable error) {
+        
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getUrlVariables"];
+            } else {
+              resolve(urlVariables);
+            }
+    }];
+}
+
 RCT_EXPORT_METHOD(updateIdentities:(nonnull NSDictionary*) map) {
     AEPIdentityMap *convertMap = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityMap:map];
 

@@ -24,6 +24,7 @@ jest.doMock('react-native', () => {
                 AEPEdgeIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
                     getIdentities: jest.fn(() => new Promise(resolve => resolve({"ABC":[{"id":"id1","authenticatedState":"ambiguous","primary":false}]}))),
                     updateIdentities: jest.fn(),
                     removeIdentity: jest.fn(),
@@ -81,9 +82,22 @@ jest.doMock('react-native', () => {
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))) 
                 },
                 AEPMessaging: {
-                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    refreshInAppMessages: jest.fn(),
+                    setMessagingDelegate: jest.fn(),
+                    setAutoTrack: jest.fn(),
+                    show: jest.fn(),
+                    dismiss: jest.fn(),
+                    track: jest.fn(),
+                    handleJavascriptMessage: jest.fn(() => new Promise(resolve => resolve(new Object()))),
+                    clear: jest.fn()
                 }
             },
+            NativeEventEmitter: class {                
+                addListener() {
+                    
+                }
+            }
         },
         ReactNative,
     );
