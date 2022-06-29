@@ -2,6 +2,9 @@
   "name": "aepsampleapp",
   "version": "1.0.0",
   "private": true,
+  "workspaces": {
+    "nohoist": ["**/*"]
+  },
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "android": "react-native run-android",

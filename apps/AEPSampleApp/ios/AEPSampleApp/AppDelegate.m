@@ -64,6 +64,7 @@ static void InitializeFlipper(UIApplication *application) {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
   [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class,
                                        AEPMobileEdge.class,
+                                       AEPMobileEdgeConsent.class,
                                        AEPMobileMessaging.class
                                       ] completion:^{
     [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
