@@ -2,9 +2,9 @@ PODS:
   - AEPAssurance (3.0.1):
     - AEPCore (>= 3.1.0)
     - AEPServices (>= 3.1.0)
-  - AEPCore (3.6.0):
+  - AEPCore (3.7.0):
     - AEPRulesEngine (>= 1.1.0)
-    - AEPServices (>= 3.6.0)
+    - AEPServices (>= 3.7.0)
   - AEPEdge (1.4.1):
     - AEPCore (>= 3.5.0)
     - AEPEdgeIdentity
@@ -13,10 +13,10 @@ PODS:
     - AEPEdge (>= 1.4.0)
   - AEPEdgeIdentity (1.1.0):
     - AEPCore (>= 3.6.0)
-  - AEPIdentity (3.6.0):
-    - AEPCore (>= 3.6.0)
-  - AEPLifecycle (3.6.0):
-    - AEPCore (>= 3.6.0)
+  - AEPIdentity (3.7.0):
+    - AEPCore (>= 3.7.0)
+  - AEPLifecycle (3.7.0):
+    - AEPCore (>= 3.7.0)
   - AEPMessaging (1.1.0-beta):
     - AEPCore (>= 3.4.2)
     - AEPEdge (>= 1.1.0)
@@ -27,9 +27,9 @@ PODS:
     - AEPCore (>= 3.2.0)
     - AEPEdge (>= 1.2.0)
   - AEPRulesEngine (1.2.0)
-  - AEPServices (3.6.0)
-  - AEPSignal (3.6.0):
-    - AEPCore (>= 3.6.0)
+  - AEPServices (3.7.0)
+  - AEPSignal (3.7.0):
+    - AEPCore (>= 3.7.0)
   - AEPUserProfile (3.0.1):
     - AEPCore
   - boost-for-react-native (1.63.0)
@@ -515,22 +515,22 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AEPAssurance: b25880cd4b14f22c61a1dce19807bd0ca0fe9b17
-  AEPCore: 03a89f8b792a74e17f739ab535982569d6639b76
+  AEPCore: 290dd609f261efe7a049bd3bdcbbc0734fe0e1fc
   AEPEdge: 6faf60328f9e5ae7a107fd61f9a968f46ebf2928
   AEPEdgeConsent: a23b35ab331d2aa2013fcef49c9d6b80085d5597
   AEPEdgeIdentity: 47f0c6ecbec5857b2a8cb9b7bf717c2424c6bae0
-  AEPIdentity: bd5c639f2ddb02e2b15f909c661235ccd86bd98a
-  AEPLifecycle: 7c0452a650a8ccaaa2473a3625a7004e8687797e
+  AEPIdentity: 965c831d132eba4874566220598590399f7617ac
+  AEPLifecycle: 7c2ba7de3b067999eb8b6a66f85f5815e87a06dc
   AEPMessaging: 72ebb84ce97be336660a4bbe7eed46f47965ba5c
   AEPOptimize: 413690f88cb8ae574153a94081331788ca740a91
   AEPRulesEngine: 71228dfdac24c9ded09be13e3257a7eb22468ccc
-  AEPServices: fd41aa2d0eda1e6939ae00a99f8431a57d09e1ca
-  AEPSignal: bbdb296030fec8239fb316576f40b230267fcf7c
+  AEPServices: 7bc2af2a153ea223e87ec50c8e3fd6e0282869c6
+  AEPSignal: a7fbfd170fc121a4c0c413b6af644513d9966fde
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: e68eb3d28b515d9d0257ef6bb8e71c24a995f54b
+  FBReactNativeSpec: de86984f9e9dd834df055a7662bec0b599b2d4ae
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTAEPAssurance: 9f51b9b5da17f9b98a41ce29e4f3e3b67ea36c17
