@@ -62,13 +62,18 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class,
-                                       AEPMobileEdge.class,
-                                       AEPMobileEdgeConsent.class,
-                                       AEPMobileMessaging.class
-                                      ] completion:^{
-    [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
-  }
+  [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
+  [AEPMobileCore registerExtensions: @[AEPMobileIdentity.class,
+                                         AEPMobileLifecycle.class,
+                                         AEPMobileSignal.class,
+                                         AEPMobileUserProfile.class,
+                                         AEPMobileEdge.class,
+                                         AEPMobileEdgeIdentity.class,
+                                         AEPMobileEdgeConsent.class,
+                                         AEPMobileMessaging.class,
+                                         AEPMobileAssurance.class] completion:^{
+           [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+    }
   ];
   return YES;
 }
