@@ -17,20 +17,15 @@ The messaging extension has the following peer dependenices, which must be insta
 
 See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
-Install the `@adobe/react-native-aepmessaging` package:
-
-```bash
-cd MyReactApp
-npm install @adobe/react-native-aepmessaging
-```
-
 **Installation instructions for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**   
-Install the `@adobe/react-native-aepmessaging` package:
+Clone the `@adobe/react-native-aepmessaging` package from the `messaging` branch on [Github](https://github.com/adobe/aepsdk-react-native/tree/messaging). Place the Messaging package folder into app repo or directory of your choosing. Then you can install the package by running:
 
 ```bash
 cd MyReactApp
-npm install {path to node package file}
+npm install {path to messaging package}
 ```
+
+## IOS Setup
 
 **Podfile setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**  
 The In app Message APIs depends on the AEP Messaging, v1.1.0. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target.
@@ -41,8 +36,10 @@ pod "AEPMessaging", :git => "https://github.com/adobe/aepsdk-messaging-ios.git",
 end
 ```
 
-**Gradle setup for `@adobe/react-native-aepmessaging` v1.2.0-beta.1 with in-app messaging support**
-AEPMessaging Android package v1.2.0-beta.1 with in-app messaging support is published to maven snapshots. In project level build.gradle file of Android project in your RN application add `maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }` in `allprojects -> repositories`.
+## Android Setup
+
+**Gradle setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**
+AEPMessaging Android SDK v1.2.0-beta.2 with in-app messaging support is published to maven snapshots. In project level build.gradle file of Android project in your RN application add `maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }` in `allprojects -> repositories`.
 
 ```gradle
 repositories {
@@ -98,6 +95,7 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.Messaging;
+import com.adobe.marketing.mobile.optimize.Optimize;
 
 ...
 import android.app.Application;
@@ -113,6 +111,7 @@ public class MainApplication extends Application implements ReactApplication {
     try {
       Edge.registerExtension();
       Identity.registerExtension();
+      Optimize.registerExtension();
       Messaging.registerExtension();
       MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {

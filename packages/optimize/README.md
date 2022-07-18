@@ -49,7 +49,7 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore registerExtensions: @[AEPMobileEdge.class, AEPMobileOptimize.class] completion:^{
+  [AEPMobileCore registerExtensions: @[AEPMobileEdge.class, AEPMobileEdgeIdentity.class AEPMobileOptimize.class] completion:^{
     [AEPMobileCore configureWithAppId:@"yourAppID"];
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
@@ -83,6 +83,7 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
     try {
       Edge.registerExtension();
+      Identity.registerExtension();
       Optimize.registerExtension();
       MobileCore.configureWithAppID("yourAppID");
       MobileCore.start(new AdobeCallback() {
