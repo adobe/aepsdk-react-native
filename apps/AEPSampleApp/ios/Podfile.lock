@@ -137,7 +137,7 @@ PODS:
   - RCTAEPEdgeIdentity (1.1.0):
     - AEPEdgeIdentity (~> 1.0)
     - React
-  - RCTAEPMessaging (1.0.0-beta.3):
+  - RCTAEPMessaging (1.0.0-beta.2):
     - AEPMessaging (~> 1.0)
     - React
   - RCTAEPOptimize (1.0.0-beta.1):
@@ -344,7 +344,7 @@ PODS:
     - glog
   - react-native-safe-area-context (3.4.1):
     - React-Core
-  - react-native-webview (11.22.3):
+  - react-native-webview (11.22.4):
     - React-Core
   - React-perflogger (0.68.2)
   - React-RCTActionSheet (0.68.2):
@@ -692,7 +692,7 @@ SPEC CHECKSUMS:
   RCTAEPEdge: 9938932e89a90adf5cd30250b46cc67fbe35dd06
   RCTAEPEdgeConsent: b998b2d08f254635ef01263fea186d7262f2d242
   RCTAEPEdgeIdentity: 1b18a3ff1947f8f4896d5f40083d31a6971e4bbc
-  RCTAEPMessaging: f59c11eb1fde8fe2fab71a7fba6602b552984851
+  RCTAEPMessaging: 5ff246c624ceb253f93dbb1ae96af4ec898c91af
   RCTAEPOptimize: 6d171e612151ad213d9e19148c4d0f78cb041ec7
   RCTAEPUserProfile: 341c77e0d18d69872c81e425a2e9cae37fe82045
   RCTRequired: 3e917ea5377751094f38145fdece525aa90545a0
@@ -708,7 +708,7 @@ SPEC CHECKSUMS:
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
-  react-native-webview: ea6fc965e74d6a8335026c913343fafc0463b6ab
+  react-native-webview: a1ed211d50a5047a4fe54e07140991e277cd66e6
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
   React-RCTActionSheet: 547fe42fdb4b6089598d79f8e1d855d7c23e2162
   React-RCTAnimation: bc9440a1c37b06ae9ebbb532d244f607805c6034

@@ -24,7 +24,7 @@ cd MyReactApp
 npm install @adobe/react-native-aepmessaging
 ```
 
-**Installation instructions for `@adobe/react-native-aepmessaging` v1.0.0-beta.3 with in-app messaging support**   
+**Installation instructions for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**   
 Install the `@adobe/react-native-aepmessaging` package:
 
 ```bash
@@ -32,7 +32,7 @@ cd MyReactApp
 npm install @adobe/react-native-aepmessaging
 ```
 
-**Podfile setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.3 with in-app messaging support**  
+**Podfile setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**  
 The In app Message APIs depends on the AEP Messaging, v1.1.0. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target.
 
 ```ruby
