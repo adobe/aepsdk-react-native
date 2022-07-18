@@ -28,7 +28,7 @@ npm install {path to messaging package}
 ## IOS Setup
 
 **Podfile setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**  
-The In app Message APIs depends on the AEP Messaging iOS SDK v1.1.0. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target.
+The In app Message APIs depends on the AEP Messaging iOS SDK v1.1.0-beta. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target.
 
 ```ruby
 target 'AEPSampleApp' do

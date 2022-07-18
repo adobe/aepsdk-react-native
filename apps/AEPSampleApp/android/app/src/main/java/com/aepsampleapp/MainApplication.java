@@ -127,6 +127,7 @@ public class MainApplication extends Application implements ReactApplication {
         Signal.registerExtension();
         Consent.registerExtension();
         Assurance.registerExtension();
+        Optimize.registerExtension();
       } catch (InvalidInitException e) {
         e.printStackTrace();
       }
