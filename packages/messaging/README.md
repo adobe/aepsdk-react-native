@@ -29,7 +29,7 @@ Install the `@adobe/react-native-aepmessaging` package:
 
 ```bash
 cd MyReactApp
-npm install @adobe/react-native-aepmessaging
+npm install {path to node package file}
 ```
 
 **Podfile setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**  
