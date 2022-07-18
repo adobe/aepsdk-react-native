@@ -19,7 +19,7 @@
     "esModuleInterop": true,
     "lib": ["es2015", "es2016", "esnext"],
     "strictNullChecks": false,
-    "noImplicitAny": false
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
