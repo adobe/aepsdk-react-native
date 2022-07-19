@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "AEPTarget", "~>3.1"
+  s.dependency "AEPTarget", "~>3.2"
 end

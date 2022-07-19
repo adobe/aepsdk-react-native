@@ -146,7 +146,7 @@ PODS:
     - AEPOptimize (~> 1.0)
     - React
   - RCTAEPTarget (1.0.0-beta.1):
-    - AEPTarget (~> 3.1)
+    - AEPTarget (~> 3.2)
     - React
   - RCTAEPUserProfile (1.0.0):
     - AEPUserProfile (~> 3.0)
@@ -674,8 +674,8 @@ SPEC CHECKSUMS:
   AEPMessaging: 72ebb84ce97be336660a4bbe7eed46f47965ba5c
   AEPOptimize: 413690f88cb8ae574153a94081331788ca740a91
   AEPRulesEngine: 71228dfdac24c9ded09be13e3257a7eb22468ccc
-  AEPServices: 7284c30359c789cd16bf366b4ea81094a66d21ab
-  AEPSignal: c9b3c239120190fae8e8479d584d54b60af37d99
+  AEPServices: 7bc2af2a153ea223e87ec50c8e3fd6e0282869c6
+  AEPSignal: a7fbfd170fc121a4c0c413b6af644513d9966fde
   AEPTarget: 7aa8a2c8e4a2fd36862911581b420380709e5578
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost: a7c83b31436843459a1961bfd74b96033dc77234
@@ -704,7 +704,7 @@ SPEC CHECKSUMS:
   RCTAEPEdgeIdentity: 1b18a3ff1947f8f4896d5f40083d31a6971e4bbc
   RCTAEPMessaging: 5ff246c624ceb253f93dbb1ae96af4ec898c91af
   RCTAEPOptimize: 6d171e612151ad213d9e19148c4d0f78cb041ec7
-  RCTAEPTarget: 90d883f41b0a41ac18503daf97d2aa82042df6b7
+  RCTAEPTarget: b0dbedb171d8aaf2faa6ac17e96dc3038a2031a4
   RCTAEPUserProfile: 341c77e0d18d69872c81e425a2e9cae37fe82045
   RCTRequired: 3e917ea5377751094f38145fdece525aa90545a0
   RCTTypeSafety: c43c072a4bd60feb49a9570b0517892b4305c45e

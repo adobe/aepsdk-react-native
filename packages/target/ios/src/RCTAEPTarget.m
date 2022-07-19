@@ -40,6 +40,14 @@ RCT_EXPORT_METHOD(getThirdPartyId
   }];
 }
 
+RCT_EXPORT_METHOD(getSessionId 
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  [AEPMobileTarget getSessionId:^(NSString *_Nullable sessionId, NSError * _Nullable error) {
+    resolve(sessionId);
+  }];
+}
+
 RCT_EXPORT_METHOD(getTntId
                   : (RCTPromiseResolveBlock)resolve rejecter
                   : (RCTPromiseRejectBlock)reject) {
@@ -58,6 +66,14 @@ RCT_EXPORT_METHOD(setPreviewRestartDeeplink : (nonnull NSString *)deepLink) {
     NSLog(@"AdobeExperienceSDK: Error, deepLink is not a valid URL in "
           @"locationClickedWithName");
   }
+}
+
+RCT_EXPORT_METHOD(setSessionId : (nonnull NSString *)sessionId) {
+    [AEPMobileTarget setSessionId:sessionId];
+}
+
+RCT_EXPORT_METHOD(setTntId : (nonnull NSString *)tntId) {
+  [AEPMobileTarget setTntId:tntId];
 }
 
 RCT_EXPORT_METHOD(setThirdPartyId : (nonnull NSString *)thirdPartyId) {

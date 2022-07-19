@@ -19,8 +19,11 @@ interface ITarget {
   extensionVersion: () => Promise<string>;
   getThirdPartyId: () => Promise<string>;
   getTntId: () => Promise<string>;
+  getSessionId: () => Promise<string>;
   resetExperience: () => void;
   setPreviewRestartDeeplink: (deepLink: string) => void;
+  setSessionId: (sessionId: string) => void;
+  setTntId: (tntId: string) => void;
   setThirdPartyId: (thirdPartyId: string) => void;
   retrieveLocationContent: (
     requests: Array<TargetRequestObject>,
@@ -59,6 +62,15 @@ const Target: ITarget = {
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTTarget.extensionVersion());
+  },
+
+  /**
+   * @brief Gets the Target session identifier.
+   * The session ID is generated locally in the SDK upon initial Target request and persisted for a period defined by `target.sessionTimeout` configuration setting.
+   * If the session timeout happens upon a subsequent Target request, a new session ID will be generated for use in the request and persisted in the SDK.
+   */
+  getSessionId(): Promise<string> {
+    return Promise.resolve(RCTTarget.getSessionId());
   },
 
   /**
@@ -108,6 +120,36 @@ const Target: ITarget = {
    */
   setPreviewRestartDeeplink(deepLink: string) {
     RCTTarget.setPreviewRestartDeeplink(deepLink);
+  },
+
+  /**
+   * @brief Sets the Target session identifier.
+   *
+   * The provided session ID is persisted in the SDK for a period defined by `target.sessionTimeout` configuration setting.
+   * If the provided session ID is nil or empty or if the privacy status is opted out, the SDK will remove the session ID value from the persistence.
+   *
+   * This ID is preserved between app upgrades, is saved and restored during the standard application backup process,
+   *  and is removed at uninstall, upon privacy status update to opted out or when the AEPTarget.resetExperience API is called.
+   *
+   * @param sessionId a string containing the value of the Target session ID to be set in the SDK.
+   */
+  setSessionId(sessionId: string) {
+    RCTTarget.setSessionId(sessionId);
+  },
+
+  /**
+   * @brief Sets the Target user identifier.
+   *
+   * The provided tnt ID is persisted in the SDK and attached to subsequent Target requests. It is used to
+   * derive the edge host value in the SDK, which is also persisted and used in future Target requests.
+   * If the provided tnt ID is nil or empty or if the privacy status is opted out, the SDK will remove the tnt ID and edge host values from the persistence.
+   * This ID is preserved between app upgrades, is saved and restored during the standard application backup process,
+   * and is removed at uninstall, upon privacy status update to opted out or when the AEPTarget.resetExperience API is called.
+   *
+   * @param tntId a string containing the value of the tnt ID to be set in the SDK.
+   */
+  setTntId(tntId: string) {
+    RCTTarget.setTntId(tntId);
   },
 
   /**
@@ -173,10 +215,7 @@ const Target: ITarget = {
    * @param mboxNames (required) an array of displayed locaitons names
    * @param parameters {@link TargetParameters} for the displayed location
    */
-  locationsDisplayed(
-    mboxNames: Array<string>,
-    parameters?: TargetParameters
-  ) {
+  locationsDisplayed(mboxNames: Array<string>, parameters?: TargetParameters) {
     RCTTarget.locationsDisplayed(mboxNames, parameters);
   },
 

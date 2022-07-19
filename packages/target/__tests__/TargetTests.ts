@@ -30,6 +30,12 @@ describe('Target', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  test('getSessionId is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPTarget, 'getSessionId');
+    await Target.getSessionId();
+    expect(spy).toHaveBeenCalled();
+  });
+
   test('getTntId is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPTarget, 'getTntId');
     await Target.getTntId();
@@ -52,10 +58,24 @@ describe('Target', () => {
     expect(spy).toHaveBeenCalledWith(url);
   });
 
+  test('setSessionId is called with the correct parameter', async () => {
+    const spy = jest.spyOn(NativeModules.AEPTarget, 'setSessionId');
+    let id = 'sessionTestId';
+    await Target.setSessionId(id);
+    expect(spy).toHaveBeenCalledWith(id);
+  });
+
   test('setThirdPartyId is called with correct parameter', async () => {
     const spy = jest.spyOn(NativeModules.AEPTarget, 'setThirdPartyId');
     let id = 'thirdPartyTestId';
     await Target.setThirdPartyId(id);
+    expect(spy).toHaveBeenCalledWith(id);
+  });
+
+  test('setTntId is called with the correct parameter', async () => {
+    const spy = jest.spyOn(NativeModules.AEPTarget, 'setTntId');
+    let id = 'tntTestId';
+    await Target.setTntId(id);
     expect(spy).toHaveBeenCalledWith(id);
   });
 
@@ -66,12 +86,7 @@ describe('Target', () => {
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     var targetProduct = new TargetProduct('24D3412', 'Books');
-    var parameters1 = new TargetParameters(
-      mboxParameters1,
-      null,
-      null,
-      null
-    );
+    var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
     var request1 = new TargetRequestObject(
       'mboxName2',
       parameters1,
@@ -168,12 +183,7 @@ describe('Target', () => {
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     var targetProduct = new TargetProduct('24D3412', 'Books');
-    var parameters1 = new TargetParameters(
-      mboxParameters1,
-      null,
-      null,
-      null
-    );
+    var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
     var prefetch1 = new TargetPrefetchObject('mboxName2', parameters1);
 
     var parameters2 = new TargetParameters(

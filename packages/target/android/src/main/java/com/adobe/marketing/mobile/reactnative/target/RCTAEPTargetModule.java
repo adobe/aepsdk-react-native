@@ -58,6 +58,16 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void getSessionId(final Promise promise) {
+    Target.getSessionId(new AdobeCallback<String>() {
+      @Override
+      public void call(String sessionId) {
+        promise.resolve(sessionId);
+      }
+    });
+  }
+
+  @ReactMethod
   public void getThirdPartyId(final Promise promise) {
     Target.getThirdPartyId(new AdobeCallback<String>() {
       @Override
@@ -78,6 +88,16 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setSessionId(final String setSessionId) {
+    Target.setSessionId(setSessionId);
+  }
+
+  @ReactMethod
+  public void setTntId(final String tntId) {
+    Target.setTntId(tntId);
+  }
+
+  @ReactMethod
   public void setThirdPartyId(final String thirdPartyId) {
     Target.setThirdPartyId(thirdPartyId);
   }
@@ -89,7 +109,7 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setPreviewRestartDeeplink(final String deepLinkString) {
-     Uri deepLink = null;
+    Uri deepLink = null;
     try {
       deepLink = Uri.parse(deepLinkString);
     }catch(Exception e){
