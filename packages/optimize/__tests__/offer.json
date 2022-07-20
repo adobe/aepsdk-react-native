@@ -10,5 +10,8 @@
     "characteristics": {
       "mobile": "true"
     }
+  },
+  "meta": {
+    "custom": "custom-meta"
   }
 }
