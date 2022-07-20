@@ -49,7 +49,7 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore registerExtensions: @[AEPMobileEdge.class, AEPMobileEdgeIdentity.class AEPMobileOptimize.class] completion:^{
+  [AEPMobileCore registerExtensions: @[AEPMobileEdge.class, AEPMobileEdgeIdentity.class, AEPMobileOptimize.class] completion:^{
     [AEPMobileCore configureWithAppId:@"yourAppID"];
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
