@@ -17,14 +17,16 @@ interface OfferEventData {
     id: string;
     etag: string;
     schema: string;
-    data: Record<string, any>;   
+    data: Record<string, any>;  
+    meta?: Record<string, any>; 
 }
 
 class Offer {
     id: string;
     etag: string;
     schema: string;
-    data: Record<string, any>;    
+    data: Record<string, any>;  
+    meta?: Record<string, any>;  
 
     get content(): string {
         return this.data["content"];
@@ -47,6 +49,7 @@ class Offer {
         this.etag = eventData['etag'];
         this.schema = eventData['schema'];        
         this.data = eventData['data'];
+        this.meta = eventData['meta'];
     }
 
     /**
