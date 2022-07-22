@@ -107,9 +107,26 @@ jest.doMock('react-native', () => {
                     generateTapInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
                     generateReferenceXdm: jest.fn(() => new Promise(resolve => resolve(new Map())))
                 },                     
-            },            
-            NativeEventEmitter: class {
-                addListener() {}
+                AEPTarget: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    registerExtension: jest.fn(),
+                    clearPrefetchCache: jest.fn(),
+                    getThirdPartyId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getTntId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    resetExperience: jest.fn(),
+                    setPreviewRestartDeeplink: jest.fn(),
+                    setThirdPartyId: jest.fn(),
+                    retrieveLocationContent: jest.fn(),
+                    prefetchContent: jest.fn(() => new Promise(resolve => resolve(''))),
+                    locationsDisplayed: jest.fn(),
+                    locationClickedWithName: jest.fn(),
+                    registerTargetRequests: jest.fn()
+                }
+            },
+            NativeEventEmitter: class {                
+                addListener() {
+                    
+                }
             }
         },
         ReactNative,
