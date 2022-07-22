@@ -18,7 +18,8 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "lib": ["es2015", "es2016", "esnext"],
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
