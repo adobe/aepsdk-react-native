@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepuserprofile",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
@@ -27,7 +27,7 @@
     "name": "Adobe Experience Platform SDK Team"
   },
   "peerDependencies": {
-    "@adobe/react-native-aepcore": "^1.0.0-beta",
+    "@adobe/react-native-aepcore": "^1.0.0",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {

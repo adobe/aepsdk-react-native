@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+import OptimizeView from './extensions/OptimizeView';
 import ProfileView from './extensions/ProfileView';
 import MessagingView from './extensions/MessagingView';
 import CoreView from './extensions/CoreView';
@@ -27,9 +28,15 @@ function HomeScreen({ navigation }: NavigationProps) {
         onPress={() => navigation.navigate('IdentityView')}
         title="Identity"
       />
+
       <Button
         onPress={() => navigation.navigate('MessagingView')}
-        title="Messaging" />
+        title="Messaging" />        
+
+      <Button
+        onPress={() => navigation.navigate('OptimizeView')}
+        title="Optimize"/>
+
       <Button
         onPress={() => navigation.navigate('EdgeView')}
         title="Edge"
@@ -65,6 +72,7 @@ export default function App() {
         <Drawer.Screen name="EdgeIdentityView" component={EdgeIdentityView} />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="AssuranceView" component={AssuranceView} />
+        <Drawer.Screen name="OptimizeView" component={OptimizeView}/>
       </Drawer.Navigator >
     </NavigationContainer >
   );

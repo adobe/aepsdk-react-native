@@ -10,14 +10,16 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
-import { Messaging } from '../ts';
+import Optimize from "./Optimize";
+import { AdobePropositionCallback } from "./models/AdobePropositionCallback";
+import DecisionScope from "./models/DecisionScope";
+import Offer from "./models/Offer";
+import Proposition from "./models/Proposition";
 
-describe('Messaging', () => {
-  it('extensionVersion is called', async () => {
-    expect(Messaging.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
-    await Messaging.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
-});
+export {
+  Optimize,
+  AdobePropositionCallback,
+  DecisionScope,
+  Offer,
+  Proposition,
+}

@@ -24,6 +24,7 @@ jest.doMock('react-native', () => {
                 AEPEdgeIdentity: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
                     getIdentities: jest.fn(() => new Promise(resolve => resolve({"ABC":[{"id":"id1","authenticatedState":"ambiguous","primary":false}]}))),
                     updateIdentities: jest.fn(),
                     removeIdentity: jest.fn(),
@@ -81,9 +82,35 @@ jest.doMock('react-native', () => {
                     getExperienceCloudId: jest.fn(() => new Promise(resolve => resolve(''))) 
                 },
                 AEPMessaging: {
-                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
-                }
-            },
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    refreshInAppMessages: jest.fn(),
+                    setMessagingDelegate: jest.fn(),
+                    setAutoTrack: jest.fn(),
+                    show: jest.fn(),
+                    dismiss: jest.fn(),
+                    track: jest.fn(),
+                    handleJavascriptMessage: jest.fn(() => new Promise(resolve => resolve(new Object()))),
+                    clear: jest.fn()
+                },
+                AEPOptimize: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    onPropositionsUpdate: jest.fn(),                    
+                    clearCachedPropositions: jest.fn(),
+                    getPropositions: jest.fn(() => new Promise(resolve => {
+                        let map = new Map();
+                        resolve(map);
+                    })),
+                    updatePropositions: jest.fn(),
+                    offerDisplayed: jest.fn(),
+                    offerTapped: jest.fn(),
+                    generateDisplayInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
+                    generateTapInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
+                    generateReferenceXdm: jest.fn(() => new Promise(resolve => resolve(new Map())))
+                },                     
+            },            
+            NativeEventEmitter: class {
+                addListener() {}
+            }
         },
         ReactNative,
     );

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "noEmit": false,
     "rootDir": "./ts",
-    "outDir": "./js"
+    "outDir": "./js",
+    "noImplicitAny": false
   },
   "exclude": ["__tests__", "js"]
 }
