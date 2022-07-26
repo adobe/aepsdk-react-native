@@ -10,33 +10,39 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 export default StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-      fontSize: 22,
-      textAlign: 'center',
-      margin: 10,
-    },
-    text: {
-      fontSize: 15,
-      textAlign: 'center',
-      margin: 5,
-    }, 
-    breakLine: {
-      borderWidth: 0.5,
-      borderColor: 'black',
-      margin: 10,
-      marginTop: 10,
-      marginBottom: 10,
-    },
-    textinput: {
-      fontSize: 18,
-      margin: 10,      
-    }
-  });
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 22,
+    textAlign: 'center',
+    margin: 10,
+  },
+  header: {
+    fontSize: 18,
+    textAlign: 'center',
+    margin: 5,
+    backgroundColor: '#C1B7B5',
+  },
+  text: {
+    fontSize: 15,
+    textAlign: 'center',
+    margin: 5,
+  },
+  breakLine: {
+    borderWidth: 0.5,
+    borderColor: 'black',
+    margin: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  textinput: {
+    fontSize: 18,
+    margin: 10,
+  },
+});

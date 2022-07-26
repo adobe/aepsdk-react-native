@@ -27,9 +27,9 @@
     "name": "Adobe Experience Platform SDK Team"
   },
   "peerDependencies": {
-    "@adobe/react-native-aepcore": "^1.0.0-beta",
-    "@adobe/react-native-aepedge": "^1.0.0-beta",
-    "@adobe/react-native-aepedgeidentity": "^1.0.0-beta",
+    "@adobe/react-native-aepcore": "^1.0.0",
+    "@adobe/react-native-aepedge": "^1.0.0",
+    "@adobe/react-native-aepedgeidentity": "^1.0.0",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {
