@@ -10,6 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+/**
+ * Represents a geofence location that will emit events when exited and entered
+ */
 class PlacesGeofence {
   identifier: string;
   latitude: number;

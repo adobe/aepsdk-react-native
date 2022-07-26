@@ -3,137 +3,168 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepplaces.svg)](https://www.npmjs.com/package/@adobe/react-native-aepplaces)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepplaces)](https://www.npmjs.com/package/@adobe/react-native-aepplaces)
 
-`@adobe/react-native-aepplaces` is a wrapper around the iOS and Android [AEP Places SDK](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-places) to allow for integration with React Native applications. Functionality to enable Adobe Places is provided entirely through JavaScript documented below.
+`@adobe/react-native-aepplaces` is a wrapper around the iOS and Android [Adobe Experience Platform Places Extension](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-places) to allow for integration with React Native applications. Functionality to enable Adobe Places is provided entirely through JavaScript documented below.
+
+## Peer Dependencies
+
+The Adobe Experience Platform Optimize extension has the following peer dependency, which must be installed prior to installing the optimize extension:
+
+- [Core](../core/README.md)
+- [Edge](../edge/README.md)
 
 ## Installation
 
-You need to install the SDK with [npm](https://www.npmjs.com/) and configure the native Android/iOS project in your react native project. Before installing the Places extension it is recommended to begin by installing the [Core extension](https://github.com/adobe/react-native-aepcore).
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
-> Note: If you are new to React Native we suggest you follow the [React Native Getting Started](https://facebook.github.io/react-native/docs/getting-started.html) page before continuing.
+Install the `@adobe/react-native-aepplaces` package:
 
-### 1. Create React Native project
-
-First create a React Native project:
+NPM:
 
 ```bash
-react-native init MyReactApp
-```
-
-### 2. Install JavaScript packages
-
-Install and link the `@adobe/react-native-aepplaces` package:
-
-```bash
-cd MyReactApp
 npm install @adobe/react-native-aepplaces
 ```
 
-or
+Yarn:
 
 ```bash
 yarn add @adobe/react-native-aepplaces
 ```
 
-#### 2.1 Link
-
-This package requires React Native 0.60+ to build which supports [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) to link the modules while building the app.
-
-_Note_ For `iOS` using `cocoapods`, run:
-
-```bash
-cd ios/ && pod install
-```
-
-## Tests
-
-This project contains jest unit tests which are contained in the `__tests__` directory, to run the tests locally:
-
-```
-make run-tests-locally
-```
-
 ## Usage
 
-### [Places](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-places)
+### Initializing and registering the extension
 
-##### Importing the extension:
+Initialization of the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
-```javascript
-import { Places } from '@adobe/react-native-aepplaces';
+Example:
+
+iOS
+
+```objectivec
+@import AEPCore;
+@import AEPLifecycle;
+@import AEPEdge;
+@import AEPPlaces;
+
+@implementation AppDelegate
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [AEPMobileCore setLogLevel: AEPLogLevelTrace];
+  [AEPMobileCore registerExtensions:@[AEPEdge.class, AEPMobilePlaces.class] completion:^{
+      [AEPMobileCore configureWithAppId:@"yourAppID"];
+      [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+    }
+  ];
+  return YES;
+}
+@end
 ```
 
-##### Getting the extension version:
-
-```javascript
-const version = await Places.extensionVersion();
-console.log('AdobeExperienceSDK: Places version: ' + version);
-  
-);
-```
-
-##### Registering the extension with AEPCore:
-
-> Note: It is recommended to initialize the SDK via native code inside your AppDelegate and MainApplication in iOS and Android respectively.
-
-##### **iOS**
-
-```objective-c
-#import <RCTAEPPlaces/AEPPlaces.h>
-
-[AEPMobilePlaces registerExtension];
-```
-
-##### **Android:**
+Android
 
 ```java
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.Places;
-
-Places.registerExtension();
+...
+import android.app.Application;
+...
+public class MainApplication extends Application implements ReactApplication {
+  ...
+  @Override
+  public void on Create(){
+    super.onCreate();
+    ...
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG);
+    try {
+      Edge.registerExtension();
+      Places.registerExtension();
+      MobileCore.start(new AdobeCallback() {
+        @Override
+        public void call(Object o) {
+          MobileCore.lifecycleStart(null);
+        }
+      });
+    } catch (InvalidInitException e) {
+      ...
+    }
+  }
+}
 ```
 
-##### Get the nearby points of interest:
+### Importing the extension:
 
-```javascript
+```typescript
+import { 
+  Places,
+  PlacesAuthStatus,
+  PlacesGeofence,
+  PlacesGeofenceTransitionType,
+  PlacesLocation,
+  PlacesPOI
+} from '@adobe/react-native-aepplaces';
+```
+
+## API reference
+
+#### Getting the extension version:
+
+```typescript
+const version = await Places.extensionVersion();
+console.log(`AdobeExperienceSDK: Places version: ${version}`);
+```
+
+#### Get the nearby points of interest:
+
+```typescript
 let location = new PlacesLocation(<latitude>, <longitude>, <optional altitude>, <optional speed>, <optional accuracy>);
 
-
-Places.getNearbyPointsOfInterest(location, <limit>).then(pois => console.log("AdobeExperienceSDK: Places pois: " + pois)).catch(error => console.log("AdobeExperienceSDK: Places error: " + error));
+try {
+  const pois = await Places.getNearbyPointsOfInterest(location, <limit>);
+  console.log(`AdobeExperienceSDK: Places pois: ${pois}`)
+} catch(error) {
+  console.log(`AdobeExperienceSDK: Places error: ${error}`
+}
 ```
 
-##### Process geofence:
+#### Process geofence:
 
-```javascript
+```typescript
 // create a geofence
 let geofence = new PlacesGeofence("geofence Identifier", <latitude>, <longitude>, <radius>, <optional expiration-duration>);
 Places.processGeofence(geofence, PlacesGeofenceTransitionType.ENTER);
 Places.processGeofence(geofence, PlacesGeofenceTransitionType.EXIT);
 ```
 
-##### Get the current point of interests:
+#### Get the current point of interests:
 
-```javascript
+```typescript
 const pois = await Places.getCurrentPointsOfInterest();
 console.log('AdobeExperienceSDK: Places pois: ' + pois);
 );
 ```
 
-##### Get the last known location
+#### Get the last known location
 
-```javascript
+```typescript
 const location = await Places.getLastKnownLocation();
 console.log('AdobeExperienceSDK: Places location: ' + location)
 );
 ```
 
-##### Clear
+#### Clear
 
-```javascript
+```typescript
 Places.clear();
 ```
 
-##### Set Authorization status:
+#### Set Authorization status:
 
-```javascript
+```typescript
 Places.setAuthorizationStatus(PlacesAuthStatus.ALWAYS);
 Places.setAuthorizationStatus(PlacesAuthStatus.DENIED);
 Places.setAuthorizationStatus(PlacesAuthStatus.RESTRICTED);
