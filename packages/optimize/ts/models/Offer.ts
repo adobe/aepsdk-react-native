@@ -11,45 +11,57 @@ governing permissions and limitations under the License.
 */
 
 import Proposition from'./Proposition';
-const RCTAEPOptimize = require('react-native').NativeModules.AEPOptimize;
+import { NativeModules } from 'react-native';
+const { AEPOptimize: RCTAEPOptimize } = NativeModules;
+
+interface OfferData {
+    id: string;
+    content: string;
+    format: string;
+    characteristics?: Record<string, string>;
+    language?: string[];
+}
 
 interface OfferEventData {
     id: string;
     etag: string;
     schema: string;
-    data: Record<string, any>;  
-    meta?: Record<string, any>; 
+    data: OfferData;
+    score: number;
+    meta?: Record<string, any>;
 }
 
 class Offer {
     id: string;
     etag: string;
     schema: string;
-    data: Record<string, any>;  
-    meta?: Record<string, any>;  
+    data: OfferData;  
+    score: number;
+    meta?: Record<string, any>;
 
     get content(): string {
-        return this.data["content"];
+        return this.data.content;
     }
 
     get format(): string {
-        return this.data["format"];
+        return this.data.format;
     }
 
     get language(): Array<string> {
-        return this.data["language"];
+        return this.data.language;
     }
 
-    get characteristics(): Map<string, any> {
-        return this.data["characteristics"];
+    get characteristics(): Record<string, string> {
+        return this.data.characteristics;
     }    
 
     constructor(eventData: OfferEventData) {
-        this.id = eventData['id'];
-        this.etag = eventData['etag'];
-        this.schema = eventData['schema'];        
-        this.data = eventData['data'];
-        this.meta = eventData['meta'];
+        this.id = eventData.id;
+        this.etag = eventData.etag;
+        this.schema = eventData.schema;        
+        this.data = eventData.data;
+        this.score = eventData.score;
+        this.meta = eventData.meta;
     }
 
     /**
@@ -59,7 +71,7 @@ class Offer {
     */
     displayed(proposition: Proposition): void {
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");        
-        const cleanedProposition = Object.fromEntries(entries);        
+        const cleanedProposition = Object.fromEntries(entries);  
         RCTAEPOptimize.offerDisplayed(this.id, cleanedProposition);
     };
 
@@ -81,7 +93,7 @@ class Offer {
     * Note: The Edge sendEvent API can be used to dispatch this data in an Experience Event along with any additional XDM, free-form data, and override
     * dataset identifier.
     * @param {Proposition} proposition - the proposition this Offer belongs to
-    * @return {Promise<Map<string, any>>} - a promise that resolves to xdm map
+    * @return {Promise<Record<string, any>>} - a promise that resolves to xdm map
     */
     generateDisplayInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {        
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");
@@ -95,7 +107,7 @@ class Offer {
     * Note: The Edge sendEvent API can be used to dispatch this data in an Experience Event along with any additional XDM, free-form data, and override
     * dataset identifier.    
     * @param {Proposition} proposition - proposition this Offer belongs to
-    * @return {Promise<Map<string, any>>} a promise that resolves to xdm map
+    * @return {Promise<Record<string, any>>} a promise that resolves to xdm map
     */
     generateTapInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");
