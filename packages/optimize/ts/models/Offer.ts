@@ -28,7 +28,7 @@ interface OfferEventData {
     schema: string;
     data: OfferData;
     score: number;
-    meta?: Record<string, any>;
+    meta?: Map<string, any>;
 }
 
 class Offer {
@@ -37,7 +37,7 @@ class Offer {
     schema: string;
     data: OfferData;  
     score: number;
-    meta?: Record<string, any>;
+    meta?: Map<string, any>;
 
     get content(): string {
         return this.data.content;
@@ -93,7 +93,7 @@ class Offer {
     * Note: The Edge sendEvent API can be used to dispatch this data in an Experience Event along with any additional XDM, free-form data, and override
     * dataset identifier.
     * @param {Proposition} proposition - the proposition this Offer belongs to
-    * @return {Promise<Record<string, any>>} - a promise that resolves to xdm map
+    * @return {Promise<Map<string, any>>} - a promise that resolves to xdm map
     */
     generateDisplayInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {        
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");
@@ -107,7 +107,7 @@ class Offer {
     * Note: The Edge sendEvent API can be used to dispatch this data in an Experience Event along with any additional XDM, free-form data, and override
     * dataset identifier.    
     * @param {Proposition} proposition - proposition this Offer belongs to
-    * @return {Promise<Record<string, any>>} a promise that resolves to xdm map
+    * @return {Promise<Map<string, any>>} a promise that resolves to xdm map
     */
     generateTapInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");

@@ -71,22 +71,21 @@ class RCTAEPOptimizeUtil {
             offerWritableMap.putString("etag", offer.getEtag());
         }
         offerWritableMap.putString("schema", offer.getSchema());
+        if (offer.getMeta() != null) {
+            offerWritableMap.putMap("meta", convertMapToWritableMap(new HashMap<String, Object>(offer.getMeta())));
+        }
+        offerWritableMap.putInt("score", offer.getScore());
 
         final WritableMap dataWritableMap = new WritableNativeMap();
         dataWritableMap.putString("id", offer.getId());
         dataWritableMap.putString("format", offer.getType().toString());
         dataWritableMap.putString("content", offer.getContent());
-        dataWritableMap.putInt("score", offer.getScore());
         if (offer.getLanguage() != null) {
             dataWritableMap.putArray("language", convertListToWritableArray(new ArrayList<Object>(offer.getLanguage())));
         }
 
         if (offer.getCharacteristics() != null) {
             dataWritableMap.putMap("characteristics", convertMapToWritableMap(new HashMap<String, Object>(offer.getCharacteristics())));
-        }
-
-        if (offer.getMeta() != null) {
-            dataWritableMap.putMap("meta", convertMapToWritableMap(new HashMap<String, Object>(offer.getMeta())));
         }
 
         offerWritableMap.putMap("data", dataWritableMap);
