@@ -29,8 +29,8 @@ NSString *const DEFAULT_CONTENT_KEY = @"defaultContent";
 
   AEPTargetParameters *parameters = [AEPTargetParameters
       targetParametersFromDict:dict[REQUEST_PARAMETERS_KEY]];
-  return [AEPTargetRequestObject
-      targetRequestObjectFromDict:dict[REQUEST_NAME_KEY] callback:callback];
+  return [[AEPTargetRequestObject alloc]
+          initWithMboxName:dict[REQUEST_NAME_KEY] defaultContent:dict[DEFAULT_CONTENT_KEY] targetParameters:parameters contentCallback:callback];
 }
 
 @end

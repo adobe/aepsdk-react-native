@@ -96,10 +96,10 @@ function TargetView({navigation}: NavigationProps) {
     Target.retrieveLocationContent(locationRequests, parameters);
   };
 
-  const locationsDisplayed = () =>
-    Target.locationsDisplayed(['clickTestRyan', 'clickTestRyan'], null);
+  const displayedLocations = () =>
+    Target.displayedLocations(['clickTestRyan', 'clickTestRyan'], null);
 
-  const locationClickedWithName = () => {
+  const clickedLocation = () => {
     const purchaseIDs = ['34', '125'];
 
     const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
@@ -173,10 +173,10 @@ function TargetView({navigation}: NavigationProps) {
           onPress={retrieveLocationContent}
         />
         <Button title="prefetchContent(...)" onPress={prefetchContent} />
-        <Button title="locationsDisplayed(...)" onPress={locationsDisplayed} />
+        <Button title="displayedLocations(...)" onPress={displayedLocations} />
         <Button
-          title="locationClickedWithName(...)"
-          onPress={locationClickedWithName}
+          title="clickedLocation(...)"
+          onPress={clickedLocation}
         />
       </ScrollView>
     </View>

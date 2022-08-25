@@ -140,7 +140,7 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void locationsDisplayed(ReadableArray mboxNames, ReadableMap parameters) {
+  public void displayedLocations(ReadableArray mboxNames, ReadableMap parameters) {
     ArrayList<String> mboxNamesList = new ArrayList<>();
     for (int i = 0; i < mboxNames.size(); i++) {
       String mboxName = mboxNames.getString(i);
@@ -153,7 +153,7 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void locationClickedWithName(String mboxName, ReadableMap parameters) {
+  public void clickedLocation(String mboxName, ReadableMap parameters) {
     TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
 
     Target.locationClicked(mboxName, parametersObj);

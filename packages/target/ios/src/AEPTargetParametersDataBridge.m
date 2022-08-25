@@ -39,8 +39,10 @@ NSString *const PRODUCT_KEY = @"product";
           ? nil
           : dict[PROFILE_PARAMETERS_KEY];
 
-  return
-      [AEPTargetParameters targetParametersFromDict:parametersDict];
+  return [[AEPTargetParameters alloc] initWithParameters:parametersDict
+                                       profileParameters:profileParametersDict
+                                                   order:order
+                                                 product:product];
 }
 
 @end

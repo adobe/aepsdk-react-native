@@ -42,7 +42,6 @@ function HomeScreen({navigation}: NavigationProps) {
         onPress={() => navigation.navigate('EdgeView')}
         title="Edge"
       />
-      <Button onPress={() => navigation.navigate('EdgeView')} title="Edge" />
       <Button
         onPress={() => navigation.navigate('EdgeIdentityView')}
         title="EdgeIdentity"

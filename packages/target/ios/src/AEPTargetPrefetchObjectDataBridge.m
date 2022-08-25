@@ -25,8 +25,8 @@ NSString *const PARAMETERS_KEY = @"targetParameters";
 
   AEPTargetParameters *parameters =
       [AEPTargetParameters targetParametersFromDict:dict[PARAMETERS_KEY]];
-  return [AEPTargetPrefetchObject
-      prefetchObjectFromDict:dict[PREFETCH_NAME_KEY]];
+  return [[AEPTargetPrefetchObject alloc] initWithName:dict[PREFETCH_NAME_KEY]
+                                      targetParameters:parameters];
 }
 
 @end

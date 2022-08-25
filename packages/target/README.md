@@ -7,7 +7,7 @@
 
 ## Peer Dependencies
 
-The Adobe Experience Platform Optimize extension has the following peer dependency, which must be installed prior to installing the optimize extension:
+The Adobe Experience Platform Target extension has the following peer dependency, which must be installed prior to installing the target extension:
 
 - [Core](../core/README.md)
 - [Edge](../edge/README.md)
@@ -115,6 +115,12 @@ import {
 
 #### Getting the extension version:
 
+**Syntax**
+```typescript
+extensionVersion(): Promise<string>
+```
+
+**Example**
 ```typescript
 const version = await Target.extensionVersion();
 console.log('AdobeExperienceSDK: AEPTarget version: ' + version);
@@ -122,6 +128,12 @@ console.log('AdobeExperienceSDK: AEPTarget version: ' + version);
 
 #### Get custom visitor IDs:
 
+**Syntax**
+```typescript
+getThirdPartyId(): Promise<string>
+```
+
+**Example**
 ```typescript
 const id = await Target.getThirdPartyId();
 console.log('AdobeExperienceSDK: Third Party ID: ' + id);
@@ -129,18 +141,36 @@ console.log('AdobeExperienceSDK: Third Party ID: ' + id);
 
 #### Set custom visitor IDs:
 
+**Syntax**
+```typescript
+setThirdPartyId(<id>): void
+```
+
+**Example**
 ```typescript
 Target.setThirdPartyId('thirdPartyId');
 ```
 
 #### Reset user experience:
 
+**Syntax**
+```typescript
+resetExperience(): void
+```
+
+**Example**
 ```typescript
 Target.resetExperience();
 ```
 
 #### Get Target Session ID:
 
+**Syntax**
+```typescript
+getSessionId(): Promise<string>
+```
+
+**Example**
 ```typescript
 const id = await Target.getSessionId();
 console.log('AdobeExperienceSDK: Session ID ' + id);
@@ -148,6 +178,12 @@ console.log('AdobeExperienceSDK: Session ID ' + id);
 
 #### Get Target user identifier:
 
+**Syntax**
+```typescript
+getTntId(): Promise<string>
+```
+
+**Example**
 ```typescript
 const id = await Target.getTntId();
 console.log('AdobeExperienceSDK: TNT ID ' + id);
@@ -155,6 +191,12 @@ console.log('AdobeExperienceSDK: TNT ID ' + id);
 
 #### Load Target requests:
 
+**Syntax**
+```typescript
+retrieveLocationContent(Array<TargetRequestObject>, <TargetParameters>): void
+```
+
+**Example**
 ```typescript
 var mboxParameters1 = { status: 'platinum' };
 var mboxParameters2 = { userType: 'Paid' };
@@ -209,6 +251,12 @@ Target.retrieveLocationContent(locationRequests, parameters);
 
 #### Using the prefetch APIs:
 
+**Syntax**
+```typescript
+prefetchContent(Array<TargetPrefetchObject>, <TargetParameters>): Promise<any>
+```
+
+**Example**
 ```typescript
 var mboxParameters1 = { status: 'platinum' };
 var mboxParameters2 = { userType: 'Paid' };
@@ -243,24 +291,48 @@ Target.prefetchContent(prefetchList, parameters)
 
 #### Set Session ID
 
+**Syntax**
+```typescript
+Target.setSessionId(<sessionId>): void
+```
+
+**Example**
 ```typescript
 Target.setSessionId('sessionId');
 ```
 
 #### Set TNT ID
 
+**Syntax**
+```typescript
+Target.setTntId(<tntId>): void
+```
+
+**Example**
 ```typescript
 Target.setTntId('tntId');
 ```
 
 #### Set preview restart deep link:
 
+**Syntax**
+```typescript
+setPreviewRestartDeeplink(<deeplink>): void;
+```
+
+**Example**
 ```typescript
 Target.setPreviewRestartDeeplink('https://www.adobe.com');
 ```
 
 #### Send an mbox click notification:
 
+**Syntax**
+```typescript
+clickedLocation(<locationName>, <TargetParameters>): void;
+```
+
+**Example**
 ```typescript
 var purchaseIDs = ['34', '125'];
 
@@ -274,11 +346,17 @@ var parameters = new TargetParameters(
   targetOrder
 );
 
-Target.locationClickedWithName('locationName', parameters);
+Target.clickedLocation('locationName', parameters);
 ```
 
 #### Send an mbox location displayed notification:
 
+**Syntax**
+```typescript
+displayedLocations(Array<string>, <TargetParameters>): void;
+```
+
+**Example**
 ```typescript
 var purchaseIDs = ['34', '125'];
 
@@ -292,7 +370,7 @@ var parameters = new TargetParameters(
   targetOrder
 );
 
-Target.locationsDisplayed(['locationName', 'locationName1'], parameters);
+Target.displayedLocations(['locationName', 'locationName1'], parameters);
 ```
 
 #### TargetPrefetchObject:

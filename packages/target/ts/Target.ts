@@ -33,11 +33,11 @@ interface ITarget {
     prefetchObjectArray: Array<TargetPrefetchObject>,
     parameters?: TargetParameters
   ) => Promise<any>;
-  locationsDisplayed: (
+  displayedLocations: (
     mboxNames: Array<string>,
     parameters?: TargetParameters
   ) => void;
-  locationClickedWithName: (
+  clickedLocation: (
     name: string,
     parameters?: TargetParameters
   ) => void;
@@ -215,8 +215,8 @@ const Target: ITarget = {
    * @param mboxNames (required) an array of displayed locaitons names
    * @param parameters {@link TargetParameters} for the displayed location
    */
-  locationsDisplayed(mboxNames: Array<string>, parameters?: TargetParameters) {
-    RCTTarget.locationsDisplayed(mboxNames, parameters);
+  displayedLocations(mboxNames: Array<string>, parameters?: TargetParameters) {
+    RCTTarget.displayedLocations(mboxNames, parameters);
   },
 
   /**
@@ -228,8 +228,8 @@ const Target: ITarget = {
    * @param name NSString value representing the name for location/mbox
    * @param parameters a TargetParameters object containing parameters for the location clicked
    */
-  locationClickedWithName(name: string, parameters?: TargetParameters) {
-    RCTTarget.locationClickedWithName(name, parameters);
+  clickedLocation(name: string, parameters?: TargetParameters) {
+    RCTTarget.clickedLocation(name, parameters);
   }
 };
 

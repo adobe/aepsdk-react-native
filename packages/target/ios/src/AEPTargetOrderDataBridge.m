@@ -24,8 +24,7 @@ NSString *const PURCHASED_PRODUCTS_IDS_KEY = @"purchasedProductIds";
     return nil;
   }
 
-  return
-      [AEPTargetOrder targetOrderFromDict:dict[ORDER_ID_KEY]];
+  return [[AEPTargetOrder alloc] initWithId:dict[ORDER_ID_KEY] total:[dict[TOTAL_KEY] doubleValue] purchasedProductIds:dict[PURCHASED_PRODUCTS_IDS_KEY]];
 }
 
 @end

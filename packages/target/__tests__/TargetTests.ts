@@ -133,8 +133,8 @@ describe('Target', () => {
     expect(spy).toHaveBeenCalledWith(locationRequests, parameters);
   });
 
-  test('locationsDisplayed is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'locationsDisplayed');
+  test('displayedLocations is called with correct parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPTarget, 'displayedLocations');
     var purchaseIDs = ['34', '125'];
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
@@ -147,7 +147,7 @@ describe('Target', () => {
       targetOrder
     );
 
-    await Target.locationsDisplayed(
+    await Target.displayedLocations(
       ['locationName', 'locationName1'],
       parameters
     );
@@ -157,8 +157,8 @@ describe('Target', () => {
     );
   });
 
-  test('locationClickedWithName is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'locationClickedWithName');
+  test('clickedLocation is called with correct parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPTarget, 'clickedLocation');
     var purchaseIDs = ['34', '125'];
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
@@ -171,7 +171,7 @@ describe('Target', () => {
       targetOrder
     );
 
-    await Target.locationClickedWithName('locationName', parameters);
+    await Target.clickedLocation('locationName', parameters);
 
     expect(spy).toHaveBeenCalledWith('locationName', parameters);
   });

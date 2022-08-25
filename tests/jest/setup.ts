@@ -121,8 +121,8 @@ jest.doMock('react-native', () => {
                     setTntId: jest.fn(),
                     retrieveLocationContent: jest.fn(),
                     prefetchContent: jest.fn(() => new Promise(resolve => resolve(''))),
-                    locationsDisplayed: jest.fn(),
-                    locationClickedWithName: jest.fn(),
+                    displayedLocations: jest.fn(),
+                    clickedLocation: jest.fn(),
                     registerTargetRequests: jest.fn()
                 }                    
             },            

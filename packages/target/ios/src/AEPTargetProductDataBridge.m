@@ -22,8 +22,7 @@ NSString *const CATEGORY_ID_KEY = @"categoryId";
     return nil;
   }
 
-  return [AEPTargetProduct
-      targetProductFromDict:dict[PRODUCT_ID_KEY]];
+  return [[AEPTargetProduct alloc] initWithProductId:dict[@"productId"] categoryId:dict[@"categoryId"]];
 }
 
 @end

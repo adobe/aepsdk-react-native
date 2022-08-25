@@ -35,25 +35,28 @@ RCT_EXPORT_METHOD(clearPrefetchCache) { [AEPMobileTarget clearPrefetchCache]; }
 RCT_EXPORT_METHOD(getThirdPartyId
                   : (RCTPromiseResolveBlock)resolve rejecter
                   : (RCTPromiseRejectBlock)reject) {
-  [AEPMobileTarget getThirdPartyId:^(NSString *_Nullable thirdPartyId, NSError * _Nullable error) {
+  [AEPMobileTarget getThirdPartyId:^(NSString *_Nullable thirdPartyId,
+                                     NSError *_Nullable error) {
     resolve(thirdPartyId);
   }];
 }
 
-RCT_EXPORT_METHOD(getSessionId 
+RCT_EXPORT_METHOD(getSessionId
                   : (RCTPromiseResolveBlock)resolve rejecter
                   : (RCTPromiseRejectBlock)reject) {
-  [AEPMobileTarget getSessionId:^(NSString *_Nullable sessionId, NSError * _Nullable error) {
-    resolve(sessionId);
-  }];
+  [AEPMobileTarget
+      getSessionId:^(NSString *_Nullable sessionId, NSError *_Nullable error) {
+        resolve(sessionId);
+      }];
 }
 
 RCT_EXPORT_METHOD(getTntId
                   : (RCTPromiseResolveBlock)resolve rejecter
                   : (RCTPromiseRejectBlock)reject) {
-  [AEPMobileTarget getTntId:^(NSString *_Nullable tntId, NSError * _Nullable error) {
-    resolve(tntId);
-  }];
+  [AEPMobileTarget
+      getTntId:^(NSString *_Nullable tntId, NSError *_Nullable error) {
+        resolve(tntId);
+      }];
 }
 
 RCT_EXPORT_METHOD(resetExperience) { [AEPMobileTarget resetExperience]; }
@@ -64,12 +67,12 @@ RCT_EXPORT_METHOD(setPreviewRestartDeeplink : (nonnull NSString *)deepLink) {
     [AEPMobileTarget setPreviewRestartDeepLink:url];
   } else {
     NSLog(@"AdobeExperienceSDK: Error, deepLink is not a valid URL in "
-          @"locationClickedWithName");
+          @"clickedLocation");
   }
 }
 
 RCT_EXPORT_METHOD(setSessionId : (nonnull NSString *)sessionId) {
-    [AEPMobileTarget setSessionId:sessionId];
+  [AEPMobileTarget setSessionId:sessionId];
 }
 
 RCT_EXPORT_METHOD(setTntId : (nonnull NSString *)tntId) {
@@ -96,7 +99,8 @@ RCT_EXPORT_METHOD(retrieveLocationContent
   AEPTargetParameters *parametersObj =
       [AEPTargetParameters targetParametersFromDict:parameters];
 
-  [AEPMobileTarget retrieveLocationContent:requestsArr withParameters:parametersObj];
+  [AEPMobileTarget retrieveLocationContent:requestsArr
+                            withParameters:parametersObj];
 }
 
 RCT_EXPORT_METHOD(prefetchContent
@@ -115,28 +119,30 @@ RCT_EXPORT_METHOD(prefetchContent
   AEPTargetParameters *parametersObj =
       [AEPTargetParameters targetParametersFromDict:parameters];
 
-  [AEPMobileTarget prefetchContent:prefetchObjArray
-              withParameters:parametersObj
-                    callback:^(NSError *_Nullable error) {
-                      if (error) {
-                        NSString *errorCode = [NSString
-                            stringWithFormat:@"%ld", (long)error.code];
-                        reject(errorCode, [error localizedDescription], error);
-                      } else {
-                        resolve(@(YES));
-                      }
-                    }];
+  [AEPMobileTarget
+      prefetchContent:prefetchObjArray
+       withParameters:parametersObj
+             callback:^(NSError *_Nullable error) {
+               if (error) {
+                 NSString *errorCode =
+                     [NSString stringWithFormat:@"%ld", (long)error.code];
+                 reject(errorCode, [error localizedDescription], error);
+               } else {
+                 resolve(@(YES));
+               }
+             }];
 }
 
-RCT_EXPORT_METHOD(locationsDisplayed
+RCT_EXPORT_METHOD(displayedLocations
                   : (nonnull NSArray *)mboxNames withTargetParameters
                   : (nullable NSDictionary *)parameters) {
   AEPTargetParameters *parametersObj =
       [AEPTargetParameters targetParametersFromDict:parameters];
-  [AEPMobileTarget displayedLocations:mboxNames withTargetParameters:parametersObj];
+  [AEPMobileTarget displayedLocations:mboxNames
+                 withTargetParameters:parametersObj];
 }
 
-RCT_EXPORT_METHOD(locationClickedWithName
+RCT_EXPORT_METHOD(clickedLocation
                   : (nonnull NSString *)name targetParameters
                   : (nullable NSDictionary *)parameters) {
   AEPTargetParameters *parametersObj =
@@ -144,20 +150,20 @@ RCT_EXPORT_METHOD(locationClickedWithName
   [AEPMobileTarget clickedLocation:name withTargetParameters:parametersObj];
 }
 
- RCT_EXPORT_METHOD(registerTargetRequests
-                   : (nonnull NSDictionary *)requestDict callback
-                   : (RCTResponseSenderBlock)callback) {
-   AEPTargetRequestObject *obj = [AEPTargetRequestObject
-       targetRequestObjectFromDict:requestDict
-                          callback:^(NSString *_Nullable content) {
-                            callback(@[ [NSNull null], content ]);
-                          }];
+RCT_EXPORT_METHOD(registerTargetRequests
+                  : (nonnull NSDictionary *)requestDict callback
+                  : (RCTResponseSenderBlock)callback) {
+  AEPTargetRequestObject *obj = [AEPTargetRequestObject
+      targetRequestObjectFromDict:requestDict
+                         callback:^(NSString *_Nullable content) {
+                           callback(@[ [NSNull null], content ]);
+                         }];
 
-   if (!_registeredTargetRequests) {
-     _registeredTargetRequests = [NSMutableDictionary dictionary];
-   }
+  if (!_registeredTargetRequests) {
+    _registeredTargetRequests = [NSMutableDictionary dictionary];
+  }
 
-   _registeredTargetRequests[requestDict[@"id"]] = obj;
- }
+  _registeredTargetRequests[requestDict[@"id"]] = obj;
+}
 
 @end
