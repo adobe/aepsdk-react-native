@@ -10,22 +10,16 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
+/**
+ * Represents the current authorization status of location services of your application.
+ * Used EventData for Places Events and Shared State.
+ */
+enum PlacesAuthStatus {
+  ALWAYS = 'PLACES_AUTH_STATUS_ALWAYS',
+  DENIED = 'PLACES_AUTH_STATUS_DENIED',
+  RESTRICTED = 'PLACES_AUTH_STATUS_RESTRICTED',
+  UNKNOWN = 'PLACES_AUTH_STATUS_UNKNOWN',
+  WHEN_IN_USE = 'PLACES_AUTH_STATUS_WHEN_IN_USE'
+}
 
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPMessaging;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPEdgeConsent;
-@import AEPAssurance;
-@import AEPOptimize;
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-@property (nonatomic, strong) UIWindow *window;
-
-@end
+export default PlacesAuthStatus;

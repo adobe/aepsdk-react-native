@@ -27,6 +27,7 @@ import com.adobe.marketing.mobile.UserProfile;
 import com.adobe.marketing.mobile.edge.consent.Consent;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.optimize.Optimize;
+import com.adobe.marketing.mobile.Places;
 import com.aepsampleapp.newarchitecture.MainApplicationReactNativeHost;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.facebook.react.PackageList;
@@ -127,6 +128,7 @@ public class MainApplication extends Application implements ReactApplication {
         Signal.registerExtension();
         Consent.registerExtension();
         Assurance.registerExtension();
+        Places.registerExtension();
         Optimize.registerExtension();
       } catch (InvalidInitException e) {
         e.printStackTrace();

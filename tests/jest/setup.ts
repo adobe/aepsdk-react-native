@@ -106,7 +106,16 @@ jest.doMock('react-native', () => {
                     generateDisplayInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
                     generateTapInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
                     generateReferenceXdm: jest.fn(() => new Promise(resolve => resolve(new Map())))
-                },                     
+                },   
+                AEPPlaces: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getNearbyPointsOfInterest: jest.fn(() => new Promise(resolve => resolve([]))),
+                    processGeofence: jest.fn(),
+                    getCurrentPointsOfInterest: jest.fn(() => new Promise(resolve => resolve([]))),
+                    getLastKnownLocation: () => jest.fn(() => new Promise(resolve => resolve({}))),
+                    clear: jest.fn(),
+                    setAuthorizationStatus: jest.fn(),
+                }                  
             },            
             NativeEventEmitter: class {
                 addListener() {}

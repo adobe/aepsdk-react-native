@@ -10,22 +10,29 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
+/**
+ * Represents a location returned by the places SDK that includes data about what location was provided to the SDK
+ */
+class PlacesLocation {
+  longitude: number;
+  latitude: number;
+  altitude: number;
+  speed: number;
+  accuracy: number;
 
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPMessaging;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPEdgeConsent;
-@import AEPAssurance;
-@import AEPOptimize;
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-@property (nonatomic, strong) UIWindow *window;
+  constructor(
+    longitude: number,
+    latitude?: number,
+    altitude?: number,
+    speed?: number,
+    accuracy?: number
+  ) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.altitude = altitude;
+    this.speed = speed;
+    this.accuracy = accuracy;
+  }
+}
 
-@end
+export default PlacesLocation;
