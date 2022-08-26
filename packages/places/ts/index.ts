@@ -10,24 +10,18 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
+import Places from './Places';
+import PlacesAuthStatus from './models/PlacesAuthStatus';
+import PlacesGeofence from './models/PlacesGeofence';
+import PlacesGeofenceTransitionType from './models/PlacesGeofenceTransitionType';
+import PlacesLocation from './models/PlacesLocation';
+import PlacesPOI from './models/PlacesPOI';
 
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPMessaging;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPEdgeConsent;
-@import AEPAssurance;
-@import AEPOptimize;
-@import AEPPlaces;
-@import AEPTarget;
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-@property (nonatomic, strong) UIWindow *window;
-
-@end
+export {
+  Places,
+  PlacesAuthStatus,
+  PlacesGeofence,
+  PlacesGeofenceTransitionType,
+  PlacesLocation,
+  PlacesPOI
+};

@@ -113,7 +113,7 @@ import {
 
 ## API Reference
 
-#### Getting the extension version:
+### Getting the extension version:
 
 **Syntax**
 ```typescript
@@ -126,7 +126,7 @@ const version = await Target.extensionVersion();
 console.log('AdobeExperienceSDK: AEPTarget version: ' + version);
 ```
 
-#### Get custom visitor IDs:
+### Get custom visitor IDs:
 
 **Syntax**
 ```typescript
@@ -139,7 +139,7 @@ const id = await Target.getThirdPartyId();
 console.log('AdobeExperienceSDK: Third Party ID: ' + id);
 ```
 
-#### Set custom visitor IDs:
+### Set custom visitor IDs:
 
 **Syntax**
 ```typescript
@@ -151,7 +151,7 @@ setThirdPartyId(<id>): void
 Target.setThirdPartyId('thirdPartyId');
 ```
 
-#### Reset user experience:
+### Reset user experience:
 
 **Syntax**
 ```typescript
@@ -163,7 +163,7 @@ resetExperience(): void
 Target.resetExperience();
 ```
 
-#### Get Target Session ID:
+### Get Target Session ID:
 
 **Syntax**
 ```typescript
@@ -176,7 +176,7 @@ const id = await Target.getSessionId();
 console.log('AdobeExperienceSDK: Session ID ' + id);
 ```
 
-#### Get Target user identifier:
+### Get Target user identifier:
 
 **Syntax**
 ```typescript
@@ -189,7 +189,7 @@ const id = await Target.getTntId();
 console.log('AdobeExperienceSDK: TNT ID ' + id);
 ```
 
-#### Load Target requests:
+### Load Target requests:
 
 **Syntax**
 ```typescript
@@ -249,7 +249,7 @@ var parameters = new TargetParameters(
 Target.retrieveLocationContent(locationRequests, parameters);
 ```
 
-#### Using the prefetch APIs:
+### Using the prefetch APIs:
 
 **Syntax**
 ```typescript
@@ -289,7 +289,7 @@ Target.prefetchContent(prefetchList, parameters)
   .catch((err) => console.log(err));
 ```
 
-#### Set Session ID
+### Set Session ID
 
 **Syntax**
 ```typescript
@@ -301,7 +301,7 @@ Target.setSessionId(<sessionId>): void
 Target.setSessionId('sessionId');
 ```
 
-#### Set TNT ID
+### Set TNT ID
 
 **Syntax**
 ```typescript
@@ -313,7 +313,7 @@ Target.setTntId(<tntId>): void
 Target.setTntId('tntId');
 ```
 
-#### Set preview restart deep link:
+### Set preview restart deep link:
 
 **Syntax**
 ```typescript
@@ -325,7 +325,7 @@ setPreviewRestartDeeplink(<deeplink>): void;
 Target.setPreviewRestartDeeplink('https://www.adobe.com');
 ```
 
-#### Send an mbox click notification:
+### Send an mbox click notification:
 
 **Syntax**
 ```typescript
@@ -349,7 +349,7 @@ var parameters = new TargetParameters(
 Target.clickedLocation('locationName', parameters);
 ```
 
-#### Send an mbox location displayed notification:
+### Send an mbox location displayed notification:
 
 **Syntax**
 ```typescript
@@ -373,7 +373,7 @@ var parameters = new TargetParameters(
 Target.displayedLocations(['locationName', 'locationName1'], parameters);
 ```
 
-#### TargetPrefetchObject:
+### TargetPrefetchObject:
 
 The Target extension exports a class `TargetPrefetchObject`.
 
@@ -381,7 +381,7 @@ The Target extension exports a class `TargetPrefetchObject`.
 constructor(name?: string, targetParameters?: TargetParameters);
 ```
 
-#### TargetRequestObject:
+### TargetRequestObject:
 
 The Target extension exports a class `TargetRequestObject`, which extends `TargetPrefetchObject`.
 
@@ -389,7 +389,7 @@ The Target extension exports a class `TargetRequestObject`, which extends `Targe
 constructor(name: string, targetParameters: TargetParameters, defaultContent: string);
 ```
 
-#### TargetOrder:
+### TargetOrder:
 
 The Target extension exports a class `TargetOrder`.
 
@@ -397,7 +397,7 @@ The Target extension exports a class `TargetOrder`.
 constructor(orderId: string, total?: number, purchasedProductIds: Array<string>);
 ```
 
-#### TargetProduct:
+### TargetProduct:
 
 The Target extension exports a class `TargetOrder`.
 
@@ -405,7 +405,7 @@ The Target extension exports a class `TargetOrder`.
 constructor(productId: string, categoryId: string);
 ```
 
-#### TargetParameters:
+### TargetParameters:
 
 The Target extension exports a class `TargetParameters`.
 

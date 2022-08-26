@@ -12,6 +12,7 @@ import EdgeView from './extensions/EdgeView';
 import AssuranceView from './extensions/AssuranceView';
 import EdgeIdentityView from './extensions/EdgeIdentityView';
 import TargetView from './extensions/TargetView';
+import PlacesView from './extensions/PlacesView';
 import {NavigationProps} from './types/props';
 
 function HomeScreen({navigation}: NavigationProps) {
@@ -32,16 +33,15 @@ function HomeScreen({navigation}: NavigationProps) {
 
       <Button
         onPress={() => navigation.navigate('MessagingView')}
-        title="Messaging" />        
+        title="Messaging"
+      />
 
       <Button
         onPress={() => navigation.navigate('OptimizeView')}
-        title="Optimize"/>
-
-      <Button
-        onPress={() => navigation.navigate('EdgeView')}
-        title="Edge"
+        title="Optimize"
       />
+
+      <Button onPress={() => navigation.navigate('EdgeView')} title="Edge" />
       <Button
         onPress={() => navigation.navigate('EdgeIdentityView')}
         title="EdgeIdentity"
@@ -54,7 +54,14 @@ function HomeScreen({navigation}: NavigationProps) {
         onPress={() => navigation.navigate('AssuranceView')}
         title="Assurance"
       />
-      <Button onPress={() => navigation.navigate('TargetView')} title="Target" />
+      <Button
+        onPress={() => navigation.navigate('TargetView')}
+        title="Target"
+      />
+      <Button
+        onPress={() => navigation.navigate('PlacesView')}
+        title="Places"
+      />
     </View>
   );
 }
@@ -74,7 +81,8 @@ export default function App() {
         <Drawer.Screen name="EdgeIdentityView" component={EdgeIdentityView} />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="AssuranceView" component={AssuranceView} />
-        <Drawer.Screen name="OptimizeView" component={OptimizeView}/>
+        <Drawer.Screen name="PlacesView" component={PlacesView} />
+        <Drawer.Screen name="OptimizeView" component={OptimizeView} />
         <Drawer.Screen name="TargetView" component={TargetView} />
       </Drawer.Navigator>
     </NavigationContainer>
