@@ -76,7 +76,7 @@
   [AEPMobileCore registerExtensions:@[
     AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
     AEPMobileEdgeConsent.class, AEPMobileMessaging.class,
-    AEPMobileOptimize.class
+    AEPMobileOptimize.class, AEPMobilePlaces.class, AEPMobileTarget.class
   ]
                          completion:^{
                            [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
