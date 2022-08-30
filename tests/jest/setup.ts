@@ -106,7 +106,34 @@ jest.doMock('react-native', () => {
                     generateDisplayInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
                     generateTapInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
                     generateReferenceXdm: jest.fn(() => new Promise(resolve => resolve(new Map())))
-                },                     
+                }, 
+                AEPTarget: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    registerExtension: jest.fn(),
+                    clearPrefetchCache: jest.fn(),
+                    getSessionId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getThirdPartyId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getTntId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    resetExperience: jest.fn(),
+                    setPreviewRestartDeeplink: jest.fn(),
+                    setSessionId: jest.fn(),
+                    setThirdPartyId: jest.fn(),
+                    setTntId: jest.fn(),
+                    retrieveLocationContent: jest.fn(),
+                    prefetchContent: jest.fn(() => new Promise(resolve => resolve(''))),
+                    displayedLocations: jest.fn(),
+                    clickedLocation: jest.fn(),
+                    registerTargetRequests: jest.fn()
+                },   
+                AEPPlaces: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getNearbyPointsOfInterest: jest.fn(() => new Promise(resolve => resolve([]))),
+                    processGeofence: jest.fn(),
+                    getCurrentPointsOfInterest: jest.fn(() => new Promise(resolve => resolve([]))),
+                    getLastKnownLocation: () => jest.fn(() => new Promise(resolve => resolve({}))),
+                    clear: jest.fn(),
+                    setAuthorizationStatus: jest.fn(),
+                }                  
             },            
             NativeEventEmitter: class {
                 addListener() {}
