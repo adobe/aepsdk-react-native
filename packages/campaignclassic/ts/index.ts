@@ -10,25 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-#import <React/RCTBridgeDelegate.h>
-#import <UIKit/UIKit.h>
+import CampaignClassic from './CampaignClassic';
+import { UserInfo } from './models/UserInfo';
 
-@import AEPCore;
-@import AEPServices;
-@import AEPSignal;
-@import AEPLifecycle;
-@import AEPIdentity;
-@import AEPUserProfile;
-@import AEPMessaging;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPEdgeConsent;
-@import AEPAssurance;
-@import AEPOptimize;
-@import AEPPlaces;
-@import AEPTarget;
-@import AEPCampaignClassic;
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-@property (nonatomic, strong) UIWindow *window;
+export { CampaignClassic, UserInfo };
 
-@end
+export default CampaignClassic;
