@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Lifecycle } from '../ts';
+import { Lifecycle } from '../src';
 
 describe('Lifecycle', () => {
   it('extensionVersion is called', async () => {

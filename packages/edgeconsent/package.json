@@ -4,10 +4,22 @@
   "description": "Adobe Experience Platform Consent Collection extension for AEP Mobile SDK. Written and maintained by Adobe.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
-  "main": "./ts/index.ts",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "source": "ts/index.ts",
+  "types": "lib/typescript/index.d.ts",
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  },
   "scripts": {
     "cleanup": "rm -rf node_modules",
-    "tsc": "tsc"
+    "build": "bob build"
   },
   "repository": {
     "type": "git",

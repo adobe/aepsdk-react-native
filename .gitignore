@@ -108,4 +108,4 @@ build/
 xcuserdata/
 packages/.DS_Store
 
-js/
+lib/

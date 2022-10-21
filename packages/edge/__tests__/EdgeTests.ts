@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Edge, ExperienceEvent } from '../ts';
+import { Edge, ExperienceEvent } from '../src';
 
 describe('Edge', () => {
   it('extensionVersion is called', async () => {

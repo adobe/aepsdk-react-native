@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Optimize, Proposition, DecisionScope, Offer } from '../ts';
+import { Optimize, Proposition, DecisionScope, Offer } from '../src';
 import offerJson from './offer.json';
 import propositionJson from './proposition.json';
 

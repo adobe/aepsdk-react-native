@@ -3,10 +3,22 @@
   "version": "3.0.0",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
-  "main": "./ts/index.ts",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "source": "ts/index.ts",
+  "types": "lib/typescript/index.d.ts",
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  },
   "scripts": {
     "cleanup": "rm -rf node_modules",
-    "tsc": "tsc"
+    "build": "bob build"
   },
   "repository": {
     "type": "git",

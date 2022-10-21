@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "noEmit": false,
-    "rootDir": "./ts",
-    "outDir": "./js"
+    "rootDir": "src",
   },
-  "exclude": ["__tests__", "js"]
+  "exclude": ["__tests__", "lib", "node_modules", "**/node_modules"]
 }

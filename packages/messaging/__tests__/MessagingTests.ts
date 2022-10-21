@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Messaging, Message, MessagingEdgeEventType } from '../ts';
+import { Messaging, Message, MessagingEdgeEventType } from '../src';
 
 describe('Messaging', () => {
   it('extensionVersion is called', async () => {
