@@ -182,6 +182,14 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         }
     }
 
+    // Required for React Native built in EventEmitter Calls.
+    @ReactMethod
+    public void addListener(String eventName) {}
+
+    // Required for React Native built in EventEmitter Calls.
+    @ReactMethod
+    public void removeListeners(Integer count) {}
+
     private static Offer createOffer(Map<String, Object> offerEventData) {
         String id = (String) offerEventData.get("id");
         String type = (String) offerEventData.get("type");
