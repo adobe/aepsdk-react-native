@@ -59,6 +59,13 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
         return "AEPMessaging";
     }
 
+    // Required for rn built in EventEmitter Calls.
+    @ReactMethod
+    public void addListener(String eventName) {}
+
+    @ReactMethod
+    public void removeListeners(Integer count) {}
+
     @ReactMethod
     public void extensionVersion(final Promise promise) {
         MobileCore.log(VERBOSE, TAG, "extensionVersion is called");

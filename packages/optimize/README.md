@@ -49,7 +49,7 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore registerExtensions: @[AEPMobileEdge.class, AEPMobileEdgeIdentity.class AEPMobileOptimize.class] completion:^{
+  [AEPMobileCore registerExtensions: @[AEPMobileEdge.class, AEPMobileEdgeIdentity.class, AEPMobileOptimize.class] completion:^{
     [AEPMobileCore configureWithAppId:@"yourAppID"];
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
@@ -175,7 +175,7 @@ This API fetches the propositions for the provided DecisionScope list.
 
 **Syntax**
 ```typescript
-updatePropositions(decisionScopes: Array<DecisionScope>, xdm: ?Map<string, any>, data: ?Map<string, any>)
+updatePropositions(decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>)
 ```
 
 **Example**
@@ -207,7 +207,7 @@ This class represents the decision scope which is used to fetch the decision pro
 module.exports = class DecisionScope {
     name: string;        
 
-    constructor(name: ?string, activityId: ?string, placementId: ?string, itemCount: ?number) {                
+    constructor(name?: string, activityId?: string, placementId?: string, itemCount?: number) {                
         if(name && name.trim()) {
             this.name = name;
         } else {            
@@ -239,7 +239,7 @@ module.exports = class Proposition {
     scope: string;
     scopeDetails: Map<string, any>;
 
-    constructor(eventData: any) {
+    constructor(eventData: PropositionEventData) {
         this.id = eventData['id'];
         this.scope = eventData['scope'];
         this.scopeDetails = eventData['scopeDetails'];
@@ -269,29 +269,31 @@ module.exports = class Offer {
     id: string;
     etag: string;
     schema: string;
-    data: {string: any};    
+    data: Record<string, any>;    
+    meta?: Record<string, any>;    
 
-    get content(): ?string {
+    get content(): string {
         return this.data["content"];
     }
 
-    get format(): ?string {
+    get format(): string {
         return this.data["format"];
     }
 
-    get language(): ?Array<string> {
+    get language(): Array<string> {
         return this.data["language"];
     }
 
-    get characteristics(): ?Map<string, any> {
+    get characteristics(): Map<string, any> {
         return this.data["characteristics"];
     }    
 
-    constructor(eventData: any) {
+    constructor(eventData: OfferEventData) {
         this.id = eventData['id'];
         this.etag = eventData['etag'];
         this.schema = eventData['schema'];        
         this.data = eventData['data'];
+        this.meta = eventData['meta']
     }
 
     /**

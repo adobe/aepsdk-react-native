@@ -71,6 +71,10 @@ class RCTAEPOptimizeUtil {
             offerWritableMap.putString("etag", offer.getEtag());
         }
         offerWritableMap.putString("schema", offer.getSchema());
+        if (offer.getMeta() != null) {
+            offerWritableMap.putMap("meta", convertMapToWritableMap(new HashMap<String, Object>(offer.getMeta())));
+        }
+        offerWritableMap.putInt("score", offer.getScore());
 
         final WritableMap dataWritableMap = new WritableNativeMap();
         dataWritableMap.putString("id", offer.getId());

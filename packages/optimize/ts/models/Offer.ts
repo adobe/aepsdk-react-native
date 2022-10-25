@@ -11,42 +11,57 @@ governing permissions and limitations under the License.
 */
 
 import Proposition from'./Proposition';
-const RCTAEPOptimize = require('react-native').NativeModules.AEPOptimize;
+import { NativeModules } from 'react-native';
+const { AEPOptimize: RCTAEPOptimize } = NativeModules;
+
+interface OfferData {
+    id: string;
+    content: string;
+    format: string;
+    characteristics?: Record<string, string>;
+    language?: string[];
+}
 
 interface OfferEventData {
     id: string;
     etag: string;
     schema: string;
-    data: Record<string, any>;   
+    data: OfferData;
+    score: number;
+    meta?: Map<string, any>;
 }
 
 class Offer {
     id: string;
     etag: string;
     schema: string;
-    data: Record<string, any>;    
+    data: OfferData;  
+    score: number;
+    meta?: Map<string, any>;
 
     get content(): string {
-        return this.data["content"];
+        return this.data.content;
     }
 
     get format(): string {
-        return this.data["format"];
+        return this.data.format;
     }
 
     get language(): Array<string> {
-        return this.data["language"];
+        return this.data.language;
     }
 
-    get characteristics(): Map<string, any> {
-        return this.data["characteristics"];
+    get characteristics(): Record<string, string> {
+        return this.data.characteristics;
     }    
 
     constructor(eventData: OfferEventData) {
-        this.id = eventData['id'];
-        this.etag = eventData['etag'];
-        this.schema = eventData['schema'];        
-        this.data = eventData['data'];
+        this.id = eventData.id;
+        this.etag = eventData.etag;
+        this.schema = eventData.schema;        
+        this.data = eventData.data;
+        this.score = eventData.score;
+        this.meta = eventData.meta;
     }
 
     /**
@@ -56,7 +71,7 @@ class Offer {
     */
     displayed(proposition: Proposition): void {
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");        
-        const cleanedProposition = Object.fromEntries(entries);        
+        const cleanedProposition = Object.fromEntries(entries);  
         RCTAEPOptimize.offerDisplayed(this.id, cleanedProposition);
     };
 
