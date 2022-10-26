@@ -23,7 +23,7 @@
     "bootstrap": "npx lerna bootstrap",
     "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf js",
     "build": "npx lerna exec --ignore aepsampleapp -- tsc",
-    "tests:jest": "npx jest",
+    "tests:jest": "jest",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
     "sampleapp:ios:pod:install": "cd apps/AEPSampleApp/ios && pod install",
     "sampleapp:ios:build": "cd apps/AEPSampleApp && npx react-native run-ios",
