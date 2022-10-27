@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "AEPMessaging", "~>1.0"
+  s.dependency "AEPMessaging", "~>1.1.0-beta2"
 end

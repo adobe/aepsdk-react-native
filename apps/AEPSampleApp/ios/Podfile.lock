@@ -17,11 +17,10 @@ PODS:
     - AEPCore (>= 3.7.1)
   - AEPLifecycle (3.7.1):
     - AEPCore (>= 3.7.1)
-  - AEPMessaging (1.1.0-beta):
+  - AEPMessaging (1.1.0-beta2):
     - AEPCore (>= 3.4.2)
     - AEPEdge (>= 1.1.0)
     - AEPEdgeIdentity (>= 1.0.0)
-    - AEPOptimize (>= 1.0.0)
     - AEPServices (>= 3.4.2)
   - AEPOptimize (1.0.0):
     - AEPCore (>= 3.2.0)
@@ -142,8 +141,8 @@ PODS:
   - RCTAEPEdgeIdentity (1.1.0):
     - AEPEdgeIdentity (~> 1.0)
     - React
-  - RCTAEPMessaging (1.0.0-beta.2):
-    - AEPMessaging (~> 1.0)
+  - RCTAEPMessaging (1.0.0-beta.3):
+    - AEPMessaging (~> 1.1.0-beta2)
     - React
   - RCTAEPOptimize (1.0.0-beta.2):
     - AEPOptimize (~> 1.0)
@@ -670,7 +669,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   AEPMessaging:
-    :commit: 713867e60fa16c2e350c01e1ca799bf46c7ac7c3
+    :commit: 4cee3af0f2ad5edc955e13c20fa025935584ee49
     :git: https://github.com/adobe/aepsdk-messaging-ios.git
 
 SPEC CHECKSUMS:
@@ -681,7 +680,7 @@ SPEC CHECKSUMS:
   AEPEdgeIdentity: 47f0c6ecbec5857b2a8cb9b7bf717c2424c6bae0
   AEPIdentity: 7cd5a51d8012aeaeee769e99597db016ad68b0d1
   AEPLifecycle: 94c36a54f7e5466c5274bc822c53eaa410b74888
-  AEPMessaging: 72ebb84ce97be336660a4bbe7eed46f47965ba5c
+  AEPMessaging: 31635f7570be215f1bd2781f0e67a7a3a49952aa
   AEPOptimize: 413690f88cb8ae574153a94081331788ca740a91
   AEPPlaces: 04294020832c78249732c80aec86928114698cbf
   AEPRulesEngine: 71228dfdac24c9ded09be13e3257a7eb22468ccc
@@ -713,7 +712,7 @@ SPEC CHECKSUMS:
   RCTAEPEdge: 9938932e89a90adf5cd30250b46cc67fbe35dd06
   RCTAEPEdgeConsent: b998b2d08f254635ef01263fea186d7262f2d242
   RCTAEPEdgeIdentity: 1b18a3ff1947f8f4896d5f40083d31a6971e4bbc
-  RCTAEPMessaging: 5ff246c624ceb253f93dbb1ae96af4ec898c91af
+  RCTAEPMessaging: db5eac36357eef99c482687f76ebe4ad4c491879
   RCTAEPOptimize: f4852f029423e0e1c62a012a9af8377c9b28ca54
   RCTAEPPlaces: ed94d03350cf3e945a606d673e1c42d91ee97f3d
   RCTAEPTarget: b0dbedb171d8aaf2faa6ac17e96dc3038a2031a4
