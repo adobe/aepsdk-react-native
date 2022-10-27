@@ -5,7 +5,7 @@ PODS:
   - AEPCore (3.7.1):
     - AEPRulesEngine (>= 1.1.0)
     - AEPServices (>= 3.7.1)
-  - AEPEdge (1.5.0):
+  - AEPEdge (1.4.1):
     - AEPCore (>= 3.5.0)
     - AEPEdgeIdentity
   - AEPEdgeConsent (1.0.1):
@@ -25,14 +25,14 @@ PODS:
   - AEPOptimize (1.0.0):
     - AEPCore (>= 3.2.0)
     - AEPEdge (>= 1.2.0)
-  - AEPPlaces (3.0.2):
+  - AEPPlaces (3.0.1):
     - AEPCore
     - AEPServices
   - AEPRulesEngine (1.2.0)
   - AEPServices (3.7.1)
   - AEPSignal (3.7.1):
     - AEPCore (>= 3.7.1)
-  - AEPTarget (3.3.0):
+  - AEPTarget (3.2.0):
     - AEPCore (>= 3.1.0)
   - AEPUserProfile (3.0.1):
     - AEPCore
@@ -675,18 +675,18 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AEPAssurance: b25880cd4b14f22c61a1dce19807bd0ca0fe9b17
   AEPCore: 412fe933382892ab6c6af958d2f69ebcbca11216
-  AEPEdge: 924cd8ace3db40b9c42bc2bc5e8fb1fcad3a9b77
+  AEPEdge: 6faf60328f9e5ae7a107fd61f9a968f46ebf2928
   AEPEdgeConsent: a23b35ab331d2aa2013fcef49c9d6b80085d5597
   AEPEdgeIdentity: 47f0c6ecbec5857b2a8cb9b7bf717c2424c6bae0
   AEPIdentity: 7cd5a51d8012aeaeee769e99597db016ad68b0d1
   AEPLifecycle: 94c36a54f7e5466c5274bc822c53eaa410b74888
   AEPMessaging: 31635f7570be215f1bd2781f0e67a7a3a49952aa
   AEPOptimize: 413690f88cb8ae574153a94081331788ca740a91
-  AEPPlaces: f52c80817845429fca4321fc64326bd45ad9e495
+  AEPPlaces: 04294020832c78249732c80aec86928114698cbf
   AEPRulesEngine: 71228dfdac24c9ded09be13e3257a7eb22468ccc
   AEPServices: 7284c30359c789cd16bf366b4ea81094a66d21ab
   AEPSignal: c9b3c239120190fae8e8479d584d54b60af37d99
-  AEPTarget: dcadd4dabd59976ff9067cead194c2d29576ffd9
+  AEPTarget: 7aa8a2c8e4a2fd36862911581b420380709e5578
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
