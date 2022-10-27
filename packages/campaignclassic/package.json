@@ -1,7 +1,7 @@
 {
-  "name": "@adobe/react-native-aepmessaging",
-  "version": "1.0.0-beta.3",
-  "description": "Adobe Experience Platform support for React Native apps.",
+  "name": "@adobe/react-native-aepcampaignclassic",
+  "version": "1.0.0-beta.1",
+  "description": "Experience Platform Campaign Classic extension for Adobe Experience Platform Mobile SDK. Written and Supported by Adobe.",
   "homepage": "https://aep-sdks.gitbook.io/docs/",
   "license": "Apache-2.0",
   "main": "./ts/index.ts",
@@ -12,14 +12,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/adobe/aepsdk-react-native",
-    "directory": "packages/messaging"
+    "directory": "packages/campaignclassic"
   },
   "keywords": [
     "react-native",
     "adobe",
     "adobe experience platform",
     "ajo",
-    "messaging",
+    "campaign classic",
     "ios",
     "android"
   ],
@@ -28,8 +28,6 @@
   },
   "peerDependencies": {
     "@adobe/react-native-aepcore": "^1.0.0",
-    "@adobe/react-native-aepedge": "^1.0.0",
-    "@adobe/react-native-aepedgeidentity": "^1.0.0",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {

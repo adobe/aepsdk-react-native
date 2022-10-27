@@ -2,7 +2,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 
     dependencies {
@@ -13,12 +12,12 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
 //    buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -30,11 +29,9 @@ android {
 repositories {
     google()
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
-    api "com.adobe.marketing.mobile:optimize:1.+"
-    api "com.adobe.marketing.mobile:messaging:1.3.0-beta-3-SNAPSHOT"
+    api "com.adobe.marketing.mobile:campaignclassic:1.+"
     implementation "com.facebook.react:react-native:+"
 }

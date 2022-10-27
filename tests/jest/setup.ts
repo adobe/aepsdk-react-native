@@ -133,7 +133,13 @@ jest.doMock('react-native', () => {
                     getLastKnownLocation: () => jest.fn(() => new Promise(resolve => resolve({}))),
                     clear: jest.fn(),
                     setAuthorizationStatus: jest.fn(),
-                }                  
+                },
+                AEPCampaignClassic: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('1.0.0'))),
+                    registerDeviceWithToken: jest.fn(),
+                    trackNotificationClickWithUserInfo: jest.fn(),
+                    trackNotificationReceiveWithUserInfo: jest.fn(),
+                }                       
             },            
             NativeEventEmitter: class {
                 addListener() {}

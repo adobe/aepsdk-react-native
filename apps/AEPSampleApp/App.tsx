@@ -14,6 +14,7 @@ import EdgeIdentityView from './extensions/EdgeIdentityView';
 import TargetView from './extensions/TargetView';
 import PlacesView from './extensions/PlacesView';
 import {NavigationProps} from './types/props';
+import CampaignClassicView from './extensions/CampaignClassicView';
 
 function HomeScreen({navigation}: NavigationProps) {
   return (
@@ -62,6 +63,10 @@ function HomeScreen({navigation}: NavigationProps) {
         onPress={() => navigation.navigate('PlacesView')}
         title="Places"
       />
+      <Button
+        onPress={() => navigation.navigate('CampaignClassicView')}
+        title="Campaign Classic"
+      />
     </View>
   );
 }
@@ -74,15 +79,16 @@ export default function App() {
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="CoreView" component={CoreView} />
-        <Drawer.Screen name="ProfileView" component={ProfileView} />
-        <Drawer.Screen name="IdentityView" component={IdentityView} />
-        <Drawer.Screen name="MessagingView" component={MessagingView} />
+        <Drawer.Screen name="AssuranceView" component={AssuranceView} />
+        <Drawer.Screen name="CampaignClassicView" component={CampaignClassicView} />
+        <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="EdgeView" component={EdgeView} />
         <Drawer.Screen name="EdgeIdentityView" component={EdgeIdentityView} />
-        <Drawer.Screen name="ConsentView" component={ConsentView} />
-        <Drawer.Screen name="AssuranceView" component={AssuranceView} />
-        <Drawer.Screen name="PlacesView" component={PlacesView} />
+        <Drawer.Screen name="IdentityView" component={IdentityView} />
+        <Drawer.Screen name="MessagingView" component={MessagingView} />
         <Drawer.Screen name="OptimizeView" component={OptimizeView} />
+        <Drawer.Screen name="PlacesView" component={PlacesView} />
+        <Drawer.Screen name="ProfileView" component={ProfileView} />
         <Drawer.Screen name="TargetView" component={TargetView} />
       </Drawer.Navigator>
     </NavigationContainer>
