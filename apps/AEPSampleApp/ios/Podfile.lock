@@ -129,7 +129,7 @@ PODS:
   - RCTAEPAssurance (3.0.0):
     - AEPAssurance (~> 3.0)
     - React
-  - RCTAEPCampaignClassic (1.0.0-beta.1):
+  - RCTAEPCampaignClassic (1.0.0):
     - AEPCampaignClassic (~> 3.0)
     - React
   - RCTAEPCore (1.0.1):
@@ -150,13 +150,13 @@ PODS:
   - RCTAEPMessaging (1.0.0-beta.3):
     - AEPMessaging (~> 1.1.0-beta2)
     - React
-  - RCTAEPOptimize (1.0.0-beta.2):
+  - RCTAEPOptimize (1.0.0):
     - AEPOptimize (~> 1.0)
     - React
-  - RCTAEPPlaces (1.0.0-beta.1):
+  - RCTAEPPlaces (1.0.0):
     - AEPPlaces (~> 3.0)
     - React
-  - RCTAEPTarget (1.0.0-beta.1):
+  - RCTAEPTarget (1.0.0):
     - AEPTarget (~> 3.2)
     - React
   - RCTAEPUserProfile (1.0.0):
@@ -679,7 +679,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   AEPMessaging:
-    :commit: 4cee3af0f2ad5edc955e13c20fa025935584ee49
+    :commit: 7cfc4a2403b5c824f2902ed5b6395cecc446d583
     :git: https://github.com/adobe/aepsdk-messaging-ios.git
 
 SPEC CHECKSUMS:
@@ -719,15 +719,15 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTAEPAssurance: 9f51b9b5da17f9b98a41ce29e4f3e3b67ea36c17
-  RCTAEPCampaignClassic: eab902c60651cca7030756d1df9e4048e681f626
+  RCTAEPCampaignClassic: 4a4fa594992153438e9f838d50ad97bb734d8fd9
   RCTAEPCore: 513c7e995cafcaf536653f0dfaaba2b92862b93a
   RCTAEPEdge: 9938932e89a90adf5cd30250b46cc67fbe35dd06
   RCTAEPEdgeConsent: b998b2d08f254635ef01263fea186d7262f2d242
   RCTAEPEdgeIdentity: 1b18a3ff1947f8f4896d5f40083d31a6971e4bbc
   RCTAEPMessaging: db5eac36357eef99c482687f76ebe4ad4c491879
-  RCTAEPOptimize: f4852f029423e0e1c62a012a9af8377c9b28ca54
-  RCTAEPPlaces: ed94d03350cf3e945a606d673e1c42d91ee97f3d
-  RCTAEPTarget: b0dbedb171d8aaf2faa6ac17e96dc3038a2031a4
+  RCTAEPOptimize: 634c655a49f57aaf9e9f41b03be4d69ba0df1e9b
+  RCTAEPPlaces: d666c74a21b7fa2edb3740677b16440b99a9bf8e
+  RCTAEPTarget: 84b56042d100452714ef6b7c816808a51ff901b8
   RCTAEPUserProfile: 341c77e0d18d69872c81e425a2e9cae37fe82045
   RCTRequired: 3e917ea5377751094f38145fdece525aa90545a0
   RCTTypeSafety: c43c072a4bd60feb49a9570b0517892b4305c45e
@@ -765,4 +765,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: b6cc517de111ec2f7c3a5f799cfd5bd953d7cb51
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.1
