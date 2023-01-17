@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aeptarget.svg)](https://www.npmjs.com/package/@adobe/react-native-aeptarget)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aeptarget)](https://www.npmjs.com/package/@adobe/react-native-aeptarget)
 
-`@adobe/react-native-aeptarget` is a wrapper around the iOS and Android [AEP Target SDK](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-target) to allow integration with React Native applications.
+`@adobe/react-native-aeptarget` is a wrapper around the iOS and Android [AEP Target SDK](https://developer.adobe.com/client-sdks/documentation/adobe-target) to allow integration with React Native applications.
 
 ## Peer Dependencies
 
