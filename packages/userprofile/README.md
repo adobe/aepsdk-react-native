@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile) 
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepuserprofile)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile)
 
-`@adobe/react-native-aepcore` is a wrapper around the iOS and Android [Adobe Experience Platform User Profile Extension](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/profile) to allow for integration with React Native applications.
+`@adobe/react-native-aepcore` is a wrapper around the iOS and Android [Adobe Experience Platform User Profile Extension](https://developer.adobe.com/client-sdks/documentation/profile) to allow for integration with React Native applications.
 
 
 ## Prerequisites

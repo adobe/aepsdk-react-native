@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic)
 
-`@adobe/react-native-aepcampaignclassic` is a wrapper around the iOS and Android [Adobe Experience Platform Campaign Classic Extension](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-campaignclassic) to allow for integration with React Native applications.
+`@adobe/react-native-aepcampaignclassic` is a wrapper around the iOS and Android [Adobe Experience Platform Campaign Classic Extension](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic) to allow for integration with React Native applications.
 
 ## Peer Dependencies
 

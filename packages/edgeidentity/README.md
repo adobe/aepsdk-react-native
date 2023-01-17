@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedgeidentity.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedgeidentity) 
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedgeidentity)](https://www.npmjs.com/package/@adobe/react-native-aepedgeidentity)
 
-`@adobe/react-native-aepedgeidentity` is a wrapper around the iOS and Android [Adobe Experience Platform Identity for Edge Network Extension](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network) to allow for integration with React Native applications.
+`@adobe/react-native-aepedgeidentity` is a wrapper around the iOS and Android [Adobe Experience Platform Identity for Edge Network Extension](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network) to allow for integration with React Native applications.
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ npm install @adobe/react-native-aepedgeidentity
 
 The Identity for Edge Network is required for providing the identity information to the Edge Network extension when sending Experience events.
 
-Install the Identity extension in your mobile property by following the steps in the [Identity for Edge Network extension documentation](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network).
+Install the Identity extension in your mobile property by following the steps in the [Identity for Edge Network extension documentation](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network).
 
 Then follow the same document for registering the Identity extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
@@ -89,10 +89,10 @@ public class MainApplication extends Application implements ReactApplication {
 }     
 ```
 
-:information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq#register-the-identity-and-identity-for-edge-network-extensions-with-mobile-core).
+:information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network/faq/#q-i-am-using-aep-edge-and-adobe-solutions-extensions-which-identity-extension-should-i-install-and-register).
 
 
-### [Identity for Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network)
+### [Identity for Edge Network](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network)
 
 ### Importing the extension:
 In your React Native application, import the Identity extension as follows:
@@ -142,6 +142,24 @@ getIdentities(): Promise<IdentityMap>;
 Identity.getIdentities().then(identities => console.log("AdobeExperienceSDK: Get Identities = " + JSON.stringify(identities)));
 ```
 
+### getUrlVariables:
+Returns the identifiers in a URL's query parameters for consumption in hybrid mobile applications. The response will not return any leading & or ?, since the caller is responsible for placing the variables in the resulting URL in the correct locations. If an error occurs while retrieving the URL variables, the callback handler will return a null value. Otherwise, the encoded string is returned.
+An example of an encoded string is as follows: "adobe_mc=TS%3DTIMESTAMP_VALUE%7CMCMID%3DYOUR_ECID%7CMCORGID%3D9YOUR_EXPERIENCE_CLOUD_ID"
+
+* MCID: This is also known as the Experience Cloud ID (ECID).
+* MCORGID: This is also known as the Experience Cloud Organization ID.
+* TS: The timestamp that is taken when the request was made.
+
+**Syntax**
+```typescript
+getUrlVariables(): Promise<string>;
+```
+
+**Example**
+```typescript
+Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: URL Variables = " + urlVariables));
+```
+
 ### removeIdentity:
 Remove the identity from the stored client-side IdentityMap. The Identity extension will stop sending the identifier to the Edge Network. Using this API does not remove the identifier from the server-side User Profile Graph or Identity Graph.
 
@@ -160,24 +178,6 @@ removeIdentity(item: IdentityItem, namespace: string);
 ```typescript
 let identityItem  = new IdentityItem("user@example.com");
 Identity.removeIdentity(identityItem, "Email");
-```
-
-### getUrlVariables:
-Returns the identifiers in a URL's query parameters for consumption in hybrid mobile applications. The response will not return any leading & or ?, since the caller is responsible for placing the variables in the resulting URL in the correct locations. If an error occurs while retrieving the URL variables, the callback handler will return a null value. Otherwise, the encoded string is returned.
-An example of an encoded string is as follows: "adobe_mc=TS%3DTIMESTAMP_VALUE%7CMCMID%3DYOUR_ECID%7CMCORGID%3D9YOUR_EXPERIENCE_CLOUD_ID"
-
-* MCID: This is also known as the Experience Cloud ID (ECID).
-* MCORGID: This is also known as the Experience Cloud Organization ID.
-* TS: The timestamp that is taken when the request was made.
-
-**Syntax**
-```typescript
-getUrlVariables(): Promise<string>;
-```
-
-**Example**
-```typescript
-Identity.getUrlVariables().then(urlVariables => console.log("AdobeExperienceSDK: URL Variables = " + urlVariables));
 ```
 
 ### resetIdentity:
@@ -201,6 +201,7 @@ setAdvertisingIdentifier(advertisingIdentifier?: string)
 
 ```typescript
 MobileCore.setAdvertisingIdentifier("adID");
+```
 
 ### updateIdentities:
 
@@ -328,5 +329,4 @@ The possible authenticated states are:
 
 
 ## Frequently Asked Questions (FAQ)
-For more details, refer to the [frequently asked questions page](https://aep-sdks.gitbook.io/docs/foundation-extensions/identity-for-edge-network/identity-faq) 
-
+For more details, refer to the [frequently asked questions page](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network/faq)

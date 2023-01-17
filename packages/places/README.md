@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepplaces.svg)](https://www.npmjs.com/package/@adobe/react-native-aepplaces)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepplaces)](https://www.npmjs.com/package/@adobe/react-native-aepplaces)
 
-`@adobe/react-native-aepplaces` is a wrapper around the iOS and Android [Adobe Experience Platform Places Extension](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-places) to allow for integration with React Native applications. Functionality to enable Adobe Places is provided entirely through JavaScript documented below.
+`@adobe/react-native-aepplaces` is a wrapper around the iOS and Android [Adobe Experience Platform Places Extension](https://developer.adobe.com/client-sdks/documentation/places) to allow for integration with React Native applications. Functionality to enable Adobe Places is provided entirely through JavaScript documented below.
 
 ## Peer Dependencies
 
