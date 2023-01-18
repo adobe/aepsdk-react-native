@@ -78,6 +78,12 @@ const setAuthorizationStatus = () => {
   console.log('Authorization status set');
 };
 
+const setAccuracyAuthorization = () => {
+  Places.setAccuracyAuthorization('fullAccuracy');
+  console.log('Accuracy authorization set');
+};
+
+
 const PlacesView = ({navigation: {goBack}}: NavigationProps) => {
   return (
     <View style={styles.container}>
@@ -98,6 +104,10 @@ const PlacesView = ({navigation: {goBack}}: NavigationProps) => {
         <Button
           title="setAuthorizationStatus()"
           onPress={setAuthorizationStatus}
+        />
+        <Button
+          title="setAccuracyAuthorization()"
+          onPress={setAccuracyAuthorization}
         />
         <Button title="clear" onPress={clear} />
       </ScrollView>

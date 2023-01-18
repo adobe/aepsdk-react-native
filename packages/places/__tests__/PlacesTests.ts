@@ -68,4 +68,10 @@ describe('Places', () => {
     await Places.setAuthorizationStatus();
     expect(spy).toHaveBeenCalled();
   });
+
+  test('setAccuracyAuthorization is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPPlaces, 'setAccuracyAuthorization');
+    await Places.setAccuracyAuthorization('fullAccuracy');
+    expect(spy).toHaveBeenCalled();
+  })
 });

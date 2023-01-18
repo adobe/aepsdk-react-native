@@ -25,6 +25,10 @@ static NSString *const AEP_PLACES_AUTH_STATUS_RESTRICTED =
 static NSString *const AEP_PLACES_AUTH_STATUS_WHEN_IN_USE =
     @"AEP_PLACES_AUTH_STATUS_WHEN_IN_USE";
 
+// AccuracyStatus
+static NSString *const FULL_ACCURACY_STATUS = @"fullAccuracy";
+static NSString *const REDUCED_ACCURACY_STATUS = @"reducedAccuracy";
+
 // Location
 static NSString *const LOCATION_LATITUDE = @"latitude";
 static NSString *const LOCATION_LONGITUDE = @"longitude";
@@ -84,6 +88,16 @@ static NSString *const AEP_PLACES_GEOFENCE_EXPIRATION_DURATION =
   } else {
     return kCLAuthorizationStatusNotDetermined;
   }
+}
+
++ (CLAccuracyAuthorization)accuracyAuthoriztionFromString:(NSString *)accuracy {
+  if ([accuracy isEqualToString:FULL_ACCURACY_STATUS]) {
+    return CLAccuracyAuthorizationFullAccuracy;
+  }
+  if ([accuracy isEqualToString:REDUCED_ACCURACY_STATUS]) {
+    return CLAccuracyAuthorizationReducedAccuracy;
+  }
+  return CLAccuracyAuthorizationFullAccuracy;
 }
 
 + (NSDictionary *)dictionaryFromPoi:(AEPPlacesPoi *)poi {

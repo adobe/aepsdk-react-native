@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
+import { PlacesAccuracy } from './models/PlacesAccuracy';
 import PlacesAuthStatus from './models/PlacesAuthStatus';
 import PlacesGeofence from './models/PlacesGeofence';
 import PlacesLocation from './models/PlacesLocation';
@@ -26,7 +27,12 @@ interface IPlaces {
   getCurrentPointsOfInterest: () => Promise<Array<PlacesPOI>>;
   getLastKnownLocation: () => Promise<PlacesLocation>;
   clear: () => void;
-  setAuthorizationStatus: (authStatus?: PlacesAuthStatus) => void;
+  setAuthorizationStatus: (
+    authStatus?: PlacesAuthStatus | `${PlacesAuthStatus}`
+  ) => void;
+  setAccuracyAuthorization: (
+    accuracy: PlacesAccuracy | `${PlacesAccuracy}`
+  ) => void;
 }
 
 const AEPPlaces: IPlaces = NativeModules.AEPPlaces;
@@ -107,8 +113,26 @@ const Places: IPlaces = {
    *
    * @param authStatus the {@link PlacesAuthStatus} to be set for this device
    */
-  setAuthorizationStatus(authStatus?: PlacesAuthStatus) {
+  setAuthorizationStatus(
+    authStatus?: PlacesAuthStatus | `${PlacesAuthStatus}`
+  ) {
     AEPPlaces.setAuthorizationStatus(authStatus);
+  },
+
+  /**
+   * @brief IOS Only - Sets the accuracy authorization in the Places extension.
+   *
+   *  The status provided is stored in the Places shared state, and is for reference only.
+   * Calling this method does not impact the actual location accuracy setting for this device.
+   *
+   * This method is only available on iOS 14 and newer.
+   *
+   * @param accuracy the CLAccuracyAuthorization to be set for this device
+   */
+  setAccuracyAuthorization(accuracy: PlacesAccuracy | `${PlacesAccuracy}`) {
+    if (Platform.OS === 'ios') {
+      AEPPlaces.setAccuracyAuthorization(accuracy);
+    }
   }
 };
 
