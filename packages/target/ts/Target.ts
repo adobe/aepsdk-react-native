@@ -212,7 +212,7 @@ const Target: ITarget = {
   /**
    * Sends a display notification to Target for given prefetched mboxes. This helps Target record location display events.
    *
-   * @param mboxNames (required) an array of displayed locaitons names
+   * @param mboxNames (required) an array of displayed locations names
    * @param parameters {@link TargetParameters} for the displayed location
    */
   displayedLocations(mboxNames: Array<string>, parameters?: TargetParameters) {

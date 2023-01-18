@@ -33,10 +33,6 @@ const ViewTypes = {
   content: 1,
 };
 
-const TARGET_OFFER_TYPE_TEXT = 'text/plain';
-const TARGET_OFFER_TYPE_JSON = 'application/json';
-const TARGET_OFFER_TYPE_HTML = 'text/html';
-
 const defaultPropositions = {
   textProposition: 'Placeholder Text Offer!!',
   imageProposition:
@@ -122,7 +118,7 @@ export default ({navigation}: any) => {
 
   const renderTargetOffer = () => {
     if (targetProposition?.items) {
-      if (targetProposition.items[0].format === TARGET_OFFER_TYPE_TEXT) {
+      if (targetProposition.items[0].format === 'text/plain') {
         return (
           <Text
             style={{margin: 10, fontSize: 18}}
@@ -132,7 +128,7 @@ export default ({navigation}: any) => {
             {targetProposition.items[0].content}
           </Text>
         );
-      } else if (targetProposition.items[0].format === TARGET_OFFER_TYPE_JSON) {
+      } else if (targetProposition.items[0].format === 'application/json') {
         return (
           <Text
             style={{margin: 10, fontSize: 18}}
@@ -142,7 +138,7 @@ export default ({navigation}: any) => {
             {targetProposition.items[0].content}
           </Text>
         );
-      } else if (targetProposition.items[0].format === TARGET_OFFER_TYPE_HTML) {
+      } else if (targetProposition.items[0].format === 'text/html') {
         return (
           <TouchableOpacity
             onPress={e => {

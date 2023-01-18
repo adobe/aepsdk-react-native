@@ -4,11 +4,11 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 
-`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [Adobe Journey Optimizer Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer) to allow for integration with React Native applications.
+`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [Adobe Journey Optimizer Messaging](https://developer.adobe.com/client-sdks/documentation/iam) to allow for integration with React Native applications.
 
 ## Prerequisites
 
-The messaging extension has the following peer dependenices, which must be installed prior to installing the messaging extension:
+The messaging extension has the following peer dependencies, which must be installed prior to installing the messaging extension:
 - [Core](../core/README.md)
 - [Edge](../edge/README.md)
 - [Edge Identity](../edgeidentity/README.md)
@@ -17,12 +17,10 @@ The messaging extension has the following peer dependenices, which must be insta
 
 See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
-**Installation instructions for `@adobe/react-native-aepmessaging` v1.0.0-beta.3 with in-app messaging support**   
-Clone the `@adobe/react-native-aepmessaging` package from the `messaging` branch on [Github](https://github.com/adobe/aepsdk-react-native/tree/messaging). Place the Messaging package folder into app repo or directory of your choosing. Then you can install the package by running:
+Install the `@adobe/react-native-aepmessaging` package:
 
 ```bash
-cd MyReactApp
-npm install {path to messaging package}
+npm install @adobe/react-native-aepmessaging
 ```
 
 ## IOS Setup
@@ -313,7 +311,7 @@ var message: Message;
 message.clear();
 ```
 
-## Programatically control the display of in-app messages
+## Programmatically control the display of in-app messages
 App developers can now create a type MessagingDelegate in order to be alerted when specific events occur during the lifecycle of an in-app message.
 
 Definition of type MessagingDelegate is:
