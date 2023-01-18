@@ -46,6 +46,15 @@ RCT_EXPORT_METHOD(setAuthorizationStatus : (nonnull NSString *)authStatus) {
                                               authStatusFromString:authStatus]];
 }
 
+RCT_EXPORT_METHOD(setAccuracyAuthorization
+                  : (nonnull NSString *)accuracy) {
+  if (@available(iOS 14, *)) {
+    [AEPMobilePlaces
+        setAccuracyAuthorization:[RCTAEPPlacesDataBridge
+                                     accuracyAuthoriztionFromString:accuracy]];
+  }
+}
+
 RCT_EXPORT_METHOD(getNearbyPointsOfInterest
                   : (nonnull NSDictionary *)locationDict limit
                   : (int)limit resolver
@@ -70,10 +79,10 @@ RCT_EXPORT_METHOD(getNearbyPointsOfInterest
 RCT_EXPORT_METHOD(processGeofence
                   : (nonnull NSDictionary *)geofenceDict transitionType
                   : (int)transitionType) {
-  [AEPMobilePlaces
-      processRegionEvent:[RCTAEPPlacesDataBridge
-                          regionEventFromInt:transitionType]
-      forRegion:[RCTAEPPlacesDataBridge clRegionFromDict:geofenceDict]];
+  [AEPMobilePlaces processRegionEvent:[RCTAEPPlacesDataBridge
+                                          regionEventFromInt:transitionType]
+                            forRegion:[RCTAEPPlacesDataBridge
+                                          clRegionFromDict:geofenceDict]];
 }
 
 RCT_EXPORT_METHOD(getCurrentPointsOfInterest

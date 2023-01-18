@@ -22,6 +22,8 @@
 
 + (CLAuthorizationStatus)authStatusFromString: (NSString *) authStatusString;
 
++ (CLAccuracyAuthorization)accuracyAuthoriztionFromString:(NSString *) accuracy;
+
 + (NSDictionary *)dictionaryFromPoi: (AEPPlacesPoi *) poi;
 
 + (CLRegion *)clRegionFromDict: (NSDictionary *) clRegionDict;

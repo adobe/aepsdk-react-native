@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import Places from './Places';
+import { PlacesAccuracy } from './models/PlacesAccuracy';
 import PlacesAuthStatus from './models/PlacesAuthStatus';
 import PlacesGeofence from './models/PlacesGeofence';
 import PlacesGeofenceTransitionType from './models/PlacesGeofenceTransitionType';
@@ -19,6 +20,7 @@ import PlacesPOI from './models/PlacesPOI';
 
 export {
   Places,
+  PlacesAccuracy,
   PlacesAuthStatus,
   PlacesGeofence,
   PlacesGeofenceTransitionType,
