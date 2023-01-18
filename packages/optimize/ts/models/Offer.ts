@@ -14,10 +14,12 @@ import Proposition from'./Proposition';
 import { NativeModules } from 'react-native';
 const { AEPOptimize: RCTAEPOptimize } = NativeModules;
 
+type OfferFormat = 'text/html' | 'application/json' | 'text/plain' | 'image/*' | '';
+
 interface OfferData {
     id: string;
     content: string;
-    format: string;
+    format: OfferFormat;
     characteristics?: Record<string, string>;
     language?: string[];
 }
@@ -43,7 +45,7 @@ class Offer {
         return this.data.content;
     }
 
-    get format(): string {
+    get format(): OfferFormat {
         return this.data.format;
     }
 
@@ -88,7 +90,7 @@ class Offer {
     };
 
     /**
-    * Generates a map containing XDM formatted data for {Experience Event - Proposition Interactions} field group from proposition arguement.
+    * Generates a map containing XDM formatted data for {Experience Event - Proposition Interactions} field group from proposition argument.
     * The returned XDM data does contain the eventType for the Experience Event with value decisioning.propositionDisplay.    
     * Note: The Edge sendEvent API can be used to dispatch this data in an Experience Event along with any additional XDM, free-form data, and override
     * dataset identifier.
@@ -102,7 +104,7 @@ class Offer {
     };   
 
     /**
-    * Generates a map containing XDM formatted data for {Experience Event - Proposition Interactions} field group from this proposition arguement.    
+    * Generates a map containing XDM formatted data for {Experience Event - Proposition Interactions} field group from this proposition argument.    
     * The returned XDM data contains the eventType for the Experience Event with value decisioning.propositionInteract.    
     * Note: The Edge sendEvent API can be used to dispatch this data in an Experience Event along with any additional XDM, free-form data, and override
     * dataset identifier.    

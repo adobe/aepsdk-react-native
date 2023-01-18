@@ -116,11 +116,13 @@ import {
 ### Getting the extension version:
 
 **Syntax**
+
 ```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const version = await Target.extensionVersion();
 console.log('AdobeExperienceSDK: AEPTarget version: ' + version);
@@ -129,11 +131,13 @@ console.log('AdobeExperienceSDK: AEPTarget version: ' + version);
 ### Get custom visitor IDs:
 
 **Syntax**
+
 ```typescript
 getThirdPartyId(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const id = await Target.getThirdPartyId();
 console.log('AdobeExperienceSDK: Third Party ID: ' + id);
@@ -142,11 +146,13 @@ console.log('AdobeExperienceSDK: Third Party ID: ' + id);
 ### Set custom visitor IDs:
 
 **Syntax**
+
 ```typescript
 setThirdPartyId(<id>): void
 ```
 
 **Example**
+
 ```typescript
 Target.setThirdPartyId('thirdPartyId');
 ```
@@ -154,11 +160,13 @@ Target.setThirdPartyId('thirdPartyId');
 ### Reset user experience:
 
 **Syntax**
+
 ```typescript
 resetExperience(): void
 ```
 
 **Example**
+
 ```typescript
 Target.resetExperience();
 ```
@@ -166,11 +174,13 @@ Target.resetExperience();
 ### Get Target Session ID:
 
 **Syntax**
+
 ```typescript
 getSessionId(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const id = await Target.getSessionId();
 console.log('AdobeExperienceSDK: Session ID ' + id);
@@ -179,11 +189,13 @@ console.log('AdobeExperienceSDK: Session ID ' + id);
 ### Get Target user identifier:
 
 **Syntax**
+
 ```typescript
 getTntId(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const id = await Target.getTntId();
 console.log('AdobeExperienceSDK: TNT ID ' + id);
@@ -192,11 +204,13 @@ console.log('AdobeExperienceSDK: TNT ID ' + id);
 ### Load Target requests:
 
 **Syntax**
+
 ```typescript
 retrieveLocationContent(Array<TargetRequestObject>, <TargetParameters>): void
 ```
 
 **Example**
+
 ```typescript
 var mboxParameters1 = { status: 'platinum' };
 var mboxParameters2 = { userType: 'Paid' };
@@ -252,11 +266,13 @@ Target.retrieveLocationContent(locationRequests, parameters);
 ### Using the prefetch APIs:
 
 **Syntax**
+
 ```typescript
 prefetchContent(Array<TargetPrefetchObject>, <TargetParameters>): Promise<any>
 ```
 
 **Example**
+
 ```typescript
 var mboxParameters1 = { status: 'platinum' };
 var mboxParameters2 = { userType: 'Paid' };
@@ -289,14 +305,30 @@ Target.prefetchContent(prefetchList, parameters)
   .catch((err) => console.log(err));
 ```
 
+### Clear the Prefetch cache
+
+**Syntax**
+
+```typescript
+Target.clearPrefetchCache(): void
+```
+
+**Example**
+
+```typescript
+Target.clearPrefetchCache()
+```
+
 ### Set Session ID
 
 **Syntax**
+
 ```typescript
 Target.setSessionId(<sessionId>): void
 ```
 
 **Example**
+
 ```typescript
 Target.setSessionId('sessionId');
 ```
@@ -304,11 +336,13 @@ Target.setSessionId('sessionId');
 ### Set TNT ID
 
 **Syntax**
+
 ```typescript
 Target.setTntId(<tntId>): void
 ```
 
 **Example**
+
 ```typescript
 Target.setTntId('tntId');
 ```
@@ -316,11 +350,13 @@ Target.setTntId('tntId');
 ### Set preview restart deep link:
 
 **Syntax**
+
 ```typescript
 setPreviewRestartDeeplink(<deeplink>): void;
 ```
 
 **Example**
+
 ```typescript
 Target.setPreviewRestartDeeplink('https://www.adobe.com');
 ```
@@ -328,11 +364,13 @@ Target.setPreviewRestartDeeplink('https://www.adobe.com');
 ### Send an mbox click notification:
 
 **Syntax**
+
 ```typescript
 clickedLocation(<locationName>, <TargetParameters>): void;
 ```
 
 **Example**
+
 ```typescript
 var purchaseIDs = ['34', '125'];
 
@@ -352,11 +390,13 @@ Target.clickedLocation('locationName', parameters);
 ### Send an mbox location displayed notification:
 
 **Syntax**
+
 ```typescript
 displayedLocations(Array<string>, <TargetParameters>): void;
 ```
 
 **Example**
+
 ```typescript
 var purchaseIDs = ['34', '125'];
 
