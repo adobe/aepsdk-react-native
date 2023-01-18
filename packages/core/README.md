@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcore.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcore) 
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcore)](https://www.npmjs.com/package/@adobe/react-native-aepcore)
 
-`@adobe/react-native-aepcore` is a wrapper around the iOS and Android [Adobe Experience Platform Mobile Core Extension](https://aep-sdks.gitbook.io/docs/foundation-extensions/mobile-core) to allow for integration with React Native applications.
+`@adobe/react-native-aepcore` is a wrapper around the iOS and Android [Adobe Experience Platform Mobile Core Extension](https://developer.adobe.com/client-sdks/documentation/mobile-core) to allow for integration with React Native applications.
 
 ## Installation
 
@@ -30,7 +30,7 @@ import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, Event } from '@
 
 ## API reference
 
-### [Core](https://aep-sdks.gitbook.io/docs/foundation-extensions/mobile-core/mobile-core-api-reference)
+### [Core](https://developer.adobe.com/client-sdks/documentation/mobile-core/api-reference)
 
 - #### collectPii
 The `collectPii` function lets the SDK to collect sensitive or personally identifiable information (PII).
@@ -264,7 +264,7 @@ clearUpdatedConfiguration()
 MobileCore.clearUpdatedConfiguration();
 ```
 
-### [Identity](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/identity)
+### [Identity](https://developer.adobe.com/client-sdks/documentation/mobile-core/identity)
 
 - #### appendVisitorInfoForURL
 
@@ -439,11 +439,11 @@ import {VisitorID} from '@adobe/react-native-aepcore';
 var visitorId = new VisitorID(idOrigin?: string, idType: string, id?: string, authenticationState?: MobileVisitorAuthenticationState)
 ```
 
-### [Lifecycle](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/lifecycle)
+### [Lifecycle](https://developer.adobe.com/client-sdks/documentation/mobile-core/lifecycle)
 
-> Note: Implementing Lifecycle via Javascript may lead to inaccurate Lifecycle metrics, therefore we recommend implementing Lifecycle in native [Android and iOS code](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/lifecycle).
+> Note: Implementing Lifecycle via Javascript may lead to inaccurate Lifecycle metrics, therefore we recommend implementing Lifecycle in native [Android and iOS code](https://developer.adobe.com/client-sdks/documentation/mobile-core/lifecycle).
 
-> To enable Lifecycle metrics for the Edge workflows, see (Lifecycle for Edge Network) (https://aep-sdks.gitbook.io/docs/foundation-extensions/lifecycle-for-edge-network).
+> To enable Lifecycle metrics for the Edge workflows, see (Lifecycle for Edge Network) (https://developer.adobe.com/client-sdks/documentation/lifecycle-for-edge-network).
 
 - #### extensionVersion
 
@@ -461,7 +461,7 @@ extensionVersion(): Promise<string>
 Lifecycle.extensionVersion().then(version => console.log("AdobeExperienceSDK: Lifecycle version: " + version));
 ```
 
-### [Signal](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/mobile-core/signals)
+### [Signal](https://developer.adobe.com/client-sdks/documentation/mobile-core/signal)
 
 - #### extensionVersion
 
