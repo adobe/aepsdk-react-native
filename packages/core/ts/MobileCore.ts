@@ -17,12 +17,12 @@ import { PrivacyStatus } from './models/PrivacyStatus';
 
 interface IMobileCore {
   extensionVersion: () => Promise<string>;
-  configureWithAppId: (appId?: String) => void;
+  configureWithAppId: (appId?: string) => void;
   updateConfiguration: (configMap?: Record<string, any>) => void;
-  setLogLevel: (mode: LogLevel) => void;
+  setLogLevel: (mode: LogLevel | `${LogLevel}`) => void;
   getLogLevel: () => Promise<LogLevel>;
-  log: (logLevel: LogLevel, tag: string, message: string) => void;
-  setPrivacyStatus: (privacyStatus: PrivacyStatus) => void;
+  log: (logLevel: LogLevel | `${LogLevel}`, tag: string, message: string) => void;
+  setPrivacyStatus: (privacyStatus: PrivacyStatus | `${PrivacyStatus}`) => void;
   getPrivacyStatus: () => Promise<PrivacyStatus>;
   getSdkIdentities: () => Promise<string>;
   dispatchEvent: (event: Event) => Promise<boolean>;
@@ -69,11 +69,11 @@ const MobileCore: IMobileCore = {
    * made using AEPCore::updateConfiguration:
    * and AEPCore::setPrivacyStatus: are always applied on top of configuration changes made using this API.
    *
-   * @param  {String?} appId a unique identifier assigned to the app instance by the Adobe Mobile Services. It is automatically
+   * @param  {string?} appId a unique identifier assigned to the app instance by the Adobe Mobile Services. It is automatically
    * added to the ADBMobile JSON file when downloaded from the Adobe Mobile Services UI and can be
    * found in Manage App Settings. A value of `nil` has no effect.
    */
-  configureWithAppId(appId?: String) {
+  configureWithAppId(appId?: string) {
     RCTAEPCore.configureWithAppId(appId);
   },
 
@@ -107,7 +107,7 @@ const MobileCore: IMobileCore = {
    *
    * @param {LogLevel} mode LogLevel to be used by the SDK
    */
-  setLogLevel(mode: LogLevel) {
+  setLogLevel(mode: LogLevel | `${LogLevel}`) {
     RCTAEPCore.setLogLevel(mode);
   },
 
@@ -129,7 +129,7 @@ const MobileCore: IMobileCore = {
    * @param tag used to identify the source of the log message
    * @param message the message to log
    */
-  log(logLevel: LogLevel, tag: string, message: string) {
+  log(logLevel: LogLevel | `${LogLevel}`, tag: string, message: string) {
     RCTAEPCore.log(logLevel, tag, message);
   },
 
@@ -138,7 +138,7 @@ const MobileCore: IMobileCore = {
    *
    * @param privacyStatus {@linkPrivacyStatus} to be set to the SDK
    */
-  setPrivacyStatus(privacyStatus: PrivacyStatus) {
+  setPrivacyStatus(privacyStatus: PrivacyStatus | `${PrivacyStatus}`) {
     RCTAEPCore.setPrivacyStatus(privacyStatus);
   },
 

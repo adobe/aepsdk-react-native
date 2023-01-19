@@ -21,7 +21,6 @@ interface IIdentity {
   getUrlVariables: () => Promise<string>;
   updateIdentities: (identityMap: IdentityMap) => void;
   removeIdentity: (item: IdentityItem, namespace: string) => void;
-
 }
 
 const RCTAEPEdgeIdentity: IIdentity = NativeModules.AEPEdgeIdentity;
@@ -43,15 +42,17 @@ const Identity: IIdentity = {
    * @return promise method which will be invoked once the Experience Cloud ID is available or rejected if an unexpected error occurred or the request timed out.
    */
   getExperienceCloudId(): Promise<string> {
-    const getExperienceCloudIdPromise = new Promise<string>((resolve, reject) => {
-      RCTAEPEdgeIdentity.getExperienceCloudId()
-        .then((experienceId) => {
-          resolve(experienceId);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+    const getExperienceCloudIdPromise = new Promise<string>(
+      (resolve, reject) => {
+        RCTAEPEdgeIdentity.getExperienceCloudId()
+          .then((experienceId) => {
+            resolve(experienceId);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      }
+    );
     return getExperienceCloudIdPromise;
   },
 
@@ -77,11 +78,11 @@ const Identity: IIdentity = {
     return getIdentitiesPromise;
   },
 
-   /**
+  /**
    * @brief Returns the identifiers in a URL's query parameters for consumption in hybrid mobile applications.
    *
    * There is no leading &amp; or ? punctuation as the caller is responsible for placing the variables in their resulting URL in the correct locations.
-   * 
+   *
    * @return promise method which will be invoked once the URL Variables are available or rejected if an unexpected error occurred or the request timed out.
    */
   getUrlVariables(): Promise<string> {
@@ -105,7 +106,7 @@ const Identity: IIdentity = {
    *
    *
    */
-   updateIdentities(identityMap: IdentityMap) {
+  updateIdentities(identityMap: IdentityMap) {
     RCTAEPEdgeIdentity.updateIdentities(identityMap);
   },
 
@@ -126,7 +127,7 @@ function toIdentityMap(idObj: IdentityMap) {
   var idMap = new IdentityMap();
 
   for (const [key, value] of Object.entries(idObj)) {
-    value.forEach(function(item: IdentityItem) {
+    value.forEach(function (item: IdentityItem) {
       var identityItem = new IdentityItem(
         item.id,
         item.authenticatedState,

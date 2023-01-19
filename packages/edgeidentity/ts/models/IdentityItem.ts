@@ -14,12 +14,12 @@ import { AuthenticatedState } from './AuthenticatedState';
 
 class IdentityItem {
   id: string;
-  authenticatedState: AuthenticatedState;
+  authenticatedState: AuthenticatedState | `${AuthenticatedState}`;
   primary: boolean;
 
   constructor(
     id: string,
-    authenticatedState = AuthenticatedState.AMBIGUOUS,
+    authenticatedState: AuthenticatedState | `${AuthenticatedState}` = AuthenticatedState.AMBIGUOUS,
     primary: boolean = false
   ) {
     this.id = id;

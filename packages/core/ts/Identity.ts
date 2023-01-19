@@ -19,14 +19,14 @@ interface IIdentity {
   syncIdentifiers: (identifiers?: Record<string, string>) => void;
   syncIdentifiersWithAuthState: (
     identifiers: Record<string, string> | null,
-    authenticationState: MobileVisitorAuthenticationState
+    authenticationState: MobileVisitorAuthenticationState | `${MobileVisitorAuthenticationState}`
   ) => void;
   syncIdentifier: (
-    identifierType: String,
-    identifier: String,
-    authenticationState: MobileVisitorAuthenticationState
+    identifierType: string,
+    identifier: string,
+    authenticationState: MobileVisitorAuthenticationState | `${MobileVisitorAuthenticationState}`
   ) => void;
-  appendVisitorInfoForURL: (baseURL?: String) => Promise<string>;
+  appendVisitorInfoForURL: (baseURL?: string) => Promise<string>;
   getUrlVariables: () => Promise<string>;
   getIdentifiers: () => Promise<Array<VisitorID>>;
   getExperienceCloudId: () => Promise<string>;
@@ -81,7 +81,7 @@ const Identity: IIdentity = {
    */
   syncIdentifiersWithAuthState(
     identifiers: Record<string, string> | null,
-    authenticationState: MobileVisitorAuthenticationState
+    authenticationState: MobileVisitorAuthenticationState | `${MobileVisitorAuthenticationState}`
   ) {
     RCTAEPIdentity.syncIdentifiersWithAuthState(
       identifiers,
@@ -108,9 +108,9 @@ const Identity: IIdentity = {
    * @see PrivacyStatus
    */
   syncIdentifier(
-    identifierType: String,
-    identifier: String,
-    authenticationState: MobileVisitorAuthenticationState
+    identifierType: string,
+    identifier: string,
+    authenticationState: MobileVisitorAuthenticationState | `${MobileVisitorAuthenticationState}`
   ) {
     RCTAEPIdentity.syncIdentifier(
       identifierType,
@@ -130,7 +130,7 @@ const Identity: IIdentity = {
    * @param baseURL URL to which the visitor info needs to be appended. Returned as is if it is nil or empty.
    * @return promise method which will be invoked once the updated url is available.
    */
-  appendVisitorInfoForURL(baseURL?: String): Promise<string> {
+  appendVisitorInfoForURL(baseURL?: string): Promise<string> {
     return RCTAEPIdentity.appendVisitorInfoForURL(baseURL);
   },
 

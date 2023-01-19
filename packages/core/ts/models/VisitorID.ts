@@ -16,13 +16,13 @@ class VisitorID {
   idOrigin?: string;
   idType?: string;
   identifier?: string;
-  authenticationState?: MobileVisitorAuthenticationState;
+  authenticationState?: MobileVisitorAuthenticationState | `${MobileVisitorAuthenticationState}`;
 
   constructor(
     idOrigin?: string,
     idType?: string,
     id?: string,
-    authenticationState?: MobileVisitorAuthenticationState
+    authenticationState?: MobileVisitorAuthenticationState | `${MobileVisitorAuthenticationState}`
   ) {
     this.idOrigin = idOrigin;
     this.idType = idType;
