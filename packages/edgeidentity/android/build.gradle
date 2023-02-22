@@ -36,5 +36,5 @@ repositories {
 
 dependencies {
     implementation "com.facebook.react:react-native:+"
-    api "com.adobe.marketing.mobile:edgeidentity:1.+"
+    api "com.adobe.marketing.mobile:edgeidentity:2.+"
 }

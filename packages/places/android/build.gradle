@@ -37,6 +37,6 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    api "com.adobe.marketing.mobile:places:1.+"
+    api "com.adobe.marketing.mobile:places:2.+"
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 }

@@ -18,8 +18,9 @@ import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.Places;
-import com.adobe.marketing.mobile.PlacesPOI;
-import com.adobe.marketing.mobile.PlacesRequestError;
+//TODO: fix this breaking change in Android 2.0
+//import com.adobe.marketing.mobile.PlacesPOI;
+//import com.adobe.marketing.mobile.PlacesRequestError;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -54,17 +55,18 @@ public class RCTAEPPlacesModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void getNearbyPointsOfInterest(final ReadableMap locationMap, final int limit, final Promise promise) {
     Location location = RCTAEPPlacesDataBridge.locationFromMap(locationMap);
-    Places.getNearbyPointsOfInterest(location, limit, new AdobeCallback<List<PlacesPOI>>() {
-      @Override
-      public void call(List<PlacesPOI> placesPOIS) {
-        promise.resolve(RCTAEPPlacesDataBridge.writableArrayFromListPOIs(placesPOIS));
-      }
-    }, new AdobeCallback<PlacesRequestError>() {
-      @Override
-      public void call(PlacesRequestError placesRequestError) {
-        promise.reject(String.valueOf(placesRequestError.getValue()), placesRequestError.name());
-      }
-    });
+    //TODO: fix this breaking change in Android 2.0
+//    Places.getNearbyPointsOfInterest(location, limit, new AdobeCallback<List<PlacesPOI>>() {
+//      @Override
+//      public void call(List<PlacesPOI> placesPOIS) {
+//        promise.resolve(RCTAEPPlacesDataBridge.writableArrayFromListPOIs(placesPOIS));
+//      }
+//    }, new AdobeCallback<PlacesRequestError>() {
+//      @Override
+//      public void call(PlacesRequestError placesRequestError) {
+//        promise.reject(String.valueOf(placesRequestError.getValue()), placesRequestError.name());
+//      }
+//    });
   }
 
   @ReactMethod
@@ -74,12 +76,13 @@ public class RCTAEPPlacesModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getCurrentPointsOfInterest(final Promise promise) {
-    Places.getCurrentPointsOfInterest(new AdobeCallback<List<PlacesPOI>>() {
-      @Override
-      public void call(List<PlacesPOI> placesPOIS) {
-        promise.resolve(RCTAEPPlacesDataBridge.writableArrayFromListPOIs(placesPOIS));
-      }
-    });
+    //TODO: fix this breaking change in Android 2.0
+//    Places.getCurrentPointsOfInterest(new AdobeCallback<List<PlacesPOI>>() {
+//      @Override
+//      public void call(List<PlacesPOI> placesPOIS) {
+//        promise.resolve(RCTAEPPlacesDataBridge.writableArrayFromListPOIs(placesPOIS));
+//      }
+//    });
   }
 
   @ReactMethod
@@ -99,6 +102,7 @@ public class RCTAEPPlacesModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setAuthorizationStatus(String authStatus) {
-    Places.setAuthorizationStatus(RCTAEPPlacesDataBridge.placesAuthorizationStatusFromString(authStatus));
+    //TODO: fix this breaking change in Android 2.0
+//    Places.setAuthorizationStatus(RCTAEPPlacesDataBridge.placesAuthorizationStatusFromString(authStatus));
   }
 }
