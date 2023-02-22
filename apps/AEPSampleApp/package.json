@@ -24,7 +24,7 @@
     "@adobe/react-native-aepoptimize": "^2.0.0",
     "@adobe/react-native-aepplaces": "^2.0.0",
     "@adobe/react-native-aeptarget": "^2.0.0",
-    "@adobe/react-native-aepuserprofile": "^1.0.0",
+    "@adobe/react-native-aepuserprofile": "^2.0.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/core": "^6.2.1",
