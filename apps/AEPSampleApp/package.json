@@ -20,7 +20,7 @@
     "@adobe/react-native-aepedge": "^2.0.0",
     "@adobe/react-native-aepedgeconsent": "^2.0.0",
     "@adobe/react-native-aepedgeidentity": "^2.0.0",
-    "@adobe/react-native-aepmessaging": "^2.0.0",
+    "@adobe/react-native-aepmessaging": "^1.0.0",
     "@adobe/react-native-aepoptimize": "^2.0.0",
     "@adobe/react-native-aepplaces": "^2.0.0",
     "@adobe/react-native-aeptarget": "^2.0.0",
