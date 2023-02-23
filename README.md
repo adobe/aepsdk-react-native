@@ -20,7 +20,7 @@ This repository is a monorepo and contains a collection of React Native modules 
 | [@adobe/react-native-aeptarget](./packages/target) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aeptarget.svg)](https://www.npmjs.com/package/@adobe/react-native-aeptarget) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aeptarget) | [Target](https://developer.adobe.com/client-sdks/documentation/adobe-target)
 | [@adobe/react-native-aepcampaignclassic](./packages/campaignclassic) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) |[CampaignClassic](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic)
 
-> Warning: Please always use the latest version of the above libraries to avoid incompatible issues.
+> Warning: Please always use the latest major versions of the above libraries to avoid incompatible issues.
 
 ## Requirements
 
