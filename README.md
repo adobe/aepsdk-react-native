@@ -146,7 +146,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 ```java
 //MainApplication.java
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Extension;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Lifecycle;

@@ -17,6 +17,7 @@ import android.content.Context;
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.Extension;
 import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
@@ -30,7 +31,6 @@ import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.Places;
 import com.adobe.marketing.mobile.Target;
 import com.aepsampleapp.newarchitecture.MainApplicationReactNativeHost;
-import com.adobe.marketing.mobile.InvalidInitException;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -39,6 +39,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -89,16 +90,15 @@ public class MainApplication extends Application implements ReactApplication {
   }
 
   /**
-   * Loads Flipper in React Native templates. Call this in the onCreate method
-   * with something like initializeFlipper(this,
-   * getReactNativeHost().getReactInstanceManager());
+   * Loads Flipper in React Native templates. Call this in the onCreate method with something like
+   * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
    *
    * @param context
    * @param reactInstanceManager
    */
   private static void
   initializeFlipper(Context context,
-                    ReactInstanceManager reactInstanceManager) {
+      ReactInstanceManager reactInstanceManager) {
     if (BuildConfig.DEBUG) {
       try {
         /*
@@ -108,7 +108,7 @@ public class MainApplication extends Application implements ReactApplication {
         Class<?> aClass = Class.forName("com.aepsampleapp.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class,
-                       ReactInstanceManager.class)
+                ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
@@ -119,28 +119,21 @@ public class MainApplication extends Application implements ReactApplication {
       } catch (InvocationTargetException e) {
         e.printStackTrace();
       }
-
-      try {
-        Edge.registerExtension();
-        Identity.registerExtension();
-        Messaging.registerExtension();
-        UserProfile.registerExtension();
-        Lifecycle.registerExtension();
-        Signal.registerExtension();
-        Consent.registerExtension();
-        Assurance.registerExtension();
-        Places.registerExtension();
-        Target.registerExtension();
-        Optimize.registerExtension();
-      } catch (InvalidInitException e) {
-        e.printStackTrace();
-      }
       MobileCore.configureWithAppID("YOUR-APP-ID");
-      MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-          MobileCore.lifecycleStart(null);
-        }
+      List<Class<? extends Extension>> extensions = Arrays.asList(
+          Lifecycle.EXTENSION,
+          Signal.EXTENSION,
+          Edge.EXTENSION,
+          com.adobe.marketing.mobile.edge.identity.Identity.EXTENSION,
+          Messaging.EXTENSION,
+          UserProfile.EXTENSION,
+          Assurance.EXTENSION,
+          Places.EXTENSION,
+          Target.EXTENSION,
+          Optimize.EXTENSION,
+          Consent.EXTENSION);
+      MobileCore.registerExtensions(extensions, o -> {
+        MobileCore.lifecycleStart(null);
       });
     }
   }
