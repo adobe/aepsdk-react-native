@@ -5,7 +5,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepoptimize)](https://www.npmjs.com/package/@adobe/react-native-aepoptimize)
 
 
-`@adobe/react-native-aepoptimize` is a wrapper around the iOS and Android [Adobe Experience Platform Optimize Extension](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer-decisioning) to allow for integration with React Native applications.
+`@adobe/react-native-aepoptimize` is a wrapper around the iOS and Android [Adobe Experience Platform Optimize Extension](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer-decisioning) to allow for integration with React Native applications.
 
 ## Peer Dependencies
 

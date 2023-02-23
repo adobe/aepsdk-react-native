@@ -25,9 +25,10 @@ governing permissions and limitations under the License.
 @import AEPEdgeConsent;
 @import AEPAssurance;
 @import AEPOptimize;
-
+@import AEPPlaces;
+@import AEPTarget;
+@import AEPCampaignClassic;
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-
 @property (nonatomic, strong) UIWindow *window;
 
 @end

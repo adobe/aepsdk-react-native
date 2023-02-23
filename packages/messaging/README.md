@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 
-`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [Adobe Journey Optimizer Messaging](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer) to allow for integration with React Native applications.
+`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [Adobe Journey Optimizer Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer) to allow for integration with React Native applications.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ The messaging extension has the following peer dependenices, which must be insta
 
 See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
-**Installation instructions for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**   
+**Installation instructions for `@adobe/react-native-aepmessaging` v1.0.0-beta.3 with in-app messaging support**   
 Clone the `@adobe/react-native-aepmessaging` package from the `messaging` branch on [Github](https://github.com/adobe/aepsdk-react-native/tree/messaging). Place the Messaging package folder into app repo or directory of your choosing. Then you can install the package by running:
 
 ```bash
@@ -27,7 +27,7 @@ npm install {path to messaging package}
 
 ## IOS Setup
 
-**Podfile setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**  
+**Podfile setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.3 with in-app messaging support**  
 The In app Message APIs depends on the AEP Messaging iOS SDK v1.1.0-beta. This version is not yet published to the Cocoapods but is available in the public [github repository](https://github.com/adobe/aepsdk-messaging-ios/tree/staging). Add the following pod dependency in your applications Podfile under the application target.
 
 ```ruby
@@ -38,8 +38,8 @@ end
 
 ## Android Setup
 
-**Gradle setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.2 with in-app messaging support**  
-AEPMessaging Android SDK v1.2.0-beta.2 with in-app messaging support is published to maven snapshots. In project level build.gradle file of Android project in your RN application add `maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }` in `allprojects -> repositories`.
+**Gradle setup for `@adobe/react-native-aepmessaging` v1.0.0-beta.3 with in-app messaging support**  
+AEPMessaging Android SDK v1.2.0-beta.3 with in-app messaging support is published to maven snapshots. In project level build.gradle file of Android project in your RN application add `maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }` in `allprojects -> repositories`.
 
 
 ```gradle
@@ -54,7 +54,7 @@ repositories {
 
 ## Usage
 
-### [Messaging](https://aep-sdks.gitbook.io/docs/beta/iam)
+### [Messaging](https://developer.adobe.com/client-sdks/documentation/iam)
 
 ### Installing and registering the extension with the AEP Mobile Core
 
@@ -149,7 +149,7 @@ Messaging.extensionVersion().then(version => console.log("AdobeExperienceSDK: Me
 ```
 
 ## Configure Adobe Journey Optimizer
-To configure Adobe Journey optimizer Messaging in Launch follow steps in [Configure Adobe Journey optimizer](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-journey-optimizer#setup-adobe-journey-optimizer-extension)
+To configure Adobe Journey optimizer Messaging in Launch follow steps in [Configure Adobe Journey optimizer](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer/#setup-adobe-journey-optimizer-extension)
 
 ## Push Notification Setup
 Handling push notifications must be done in native (Android/iOS) code for the React Native app. To configure push notification in the native project, follow the instructions provided by their respective platforms:

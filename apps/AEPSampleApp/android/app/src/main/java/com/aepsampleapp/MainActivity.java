@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 package com.aepsampleapp;
 
+import com.adobe.marketing.mobile.MobileCore;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
@@ -33,6 +34,19 @@ public class MainActivity extends ReactActivity {
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
     return new MainActivityDelegate(this, getMainComponentName());
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    MobileCore.setApplication(getApplication());
+    MobileCore.lifecycleStart(null);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    MobileCore.lifecyclePause();
   }
 
   public static class MainActivityDelegate extends ReactActivityDelegate {

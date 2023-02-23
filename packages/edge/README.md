@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedge.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedge)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedge)](https://www.npmjs.com/package/@adobe/react-native-aepedge)
 
-`@adobe/react-native-aepedge` is a wrapper around the iOS and Android [Adobe Experience Platform Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension) to allow for integration with React Native applications.
+`@adobe/react-native-aepedge` is a wrapper around the iOS and Android [Adobe Experience Platform Edge Network](https://developer.adobe.com/client-sdks/documentation/edge-network) to allow for integration with React Native applications.
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ npm install @adobe/react-native-aepedge
 
 ### Installing and registering the extension with the AEP Mobile Core
 
-Install the Adobe Experience Platform Edge Network extension in your mobile property and configure the default Datastream ID by following the steps in the [Edge Network extension documentation](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension).
+Install the Adobe Experience Platform Edge Network extension in your mobile property and configure the default Datastream ID by following the steps in the [Edge Network extension documentation](https://developer.adobe.com/client-sdks/documentation/edge-network).
 
 Then follow the same document for registering the Edge extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
@@ -94,6 +94,7 @@ import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
 
 ## API reference
 ### extensionVersion
+Returns the version of the client-side Edge extension.
 
 **Syntax**
 ```typescript
@@ -104,6 +105,9 @@ extensionVersion(): Promise<string>;
 ```typescript
 Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge version: " + version));
 ```
+### resetIdentity
+Resets current state of the AEP Edge extension and clears previously cached content related to current identity, if any.
+See [MobileCore.resetIdentities](../core/README.md#resetidentities) for more details.
 
 ### sendEvent
 
@@ -126,34 +130,61 @@ Edge.sendEvent(experienceEvent).then(eventHandles => console.log("Edge.sentEvent
 ```
 
 ### Public classes
-#### ExperienceEvent
 
-##### Create Experience Event from Dictionary:
+#### EdgeEventHandle
+The EdgeEventHandle is a response fragment from Adobe Experience Platform Edge Network for a sent XDM Experience Event. One event can receive none, one or multiple EdgeEventHandle(s) as response.
 
 ```typescript
-var xdmData  = {"eventType" : "SampleXDMEvent"};
-let experienceEvent = new ExperienceEvent(xdmData);
+class EdgeEventHandle {
+  type?: string;
+  payload?: Array<Record<string, any>>;
+
+  constructor(type?: string, payload?: Array<Record<string, any>>) {
+    this.type = type;
+    this.payload = payload;
+  }
+}
+
+export default EdgeEventHandle;
 ```
 
-##### Add free form data to the Experience event:
 
+#### ExperienceEvent
+
+Experience Event is the event to be sent to Adobe Experience Platform Edge Network. The XDM data is required for any Experience Event being sent using the Edge extension.
+
+**Syntax**
 ```typescript
+class ExperienceEvent {
+  xdmData?: Record<string, any>;
+  data?: Record<string, any>;
+  datasetIdentifier?: string;
+
+  constructor(
+    xdmData?: Record<string, any>,
+    data?: Record<string, any>,
+    datasetIdentifier?: string
+  ) {
+    this.xdmData = xdmData;
+    this.data = data;
+    this.datasetIdentifier = datasetIdentifier;
+  }
+}
+
+export default ExperienceEvent;
+```
+
+**Example**
+```typescript
+//Example 1
+// set freeform data to the Experience event
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"free": "form", "data": "example"};
 let experienceEvent = new ExperienceEvent(xdmData, data);
 ```
-
-##### Set the destination Dataset identifier to the current Experience event:
-
 ```typescript
+//Example 2
+// Set the destination Dataset identifier to the current Experience event:
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 let experienceEvent = new ExperienceEvent(xdmData, null, "datasetIdExample")
-```
-
-##### Create Experience Event with xdmdata, free form data and the destination Dataset identifier:
-
-```typescript
-var xdmData  = {"eventType" : "SampleXDMEvent"};
-var data  = {"dataKey" : "dataValue"};
-let experienceEvent = new ExperienceEvent(xdmData, data, "datasetIdExample")
 ```

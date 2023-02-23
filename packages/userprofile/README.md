@@ -1,20 +1,19 @@
-
 # React Native Adobe Experience Platform User Profile Extension
 
-[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile) 
+[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepuserprofile.svg)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepuserprofile)](https://www.npmjs.com/package/@adobe/react-native-aepuserprofile)
 
-`@adobe/react-native-aepcore` is a wrapper around the iOS and Android [Adobe Experience Platform User Profile Extension](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/profile) to allow for integration with React Native applications.
-
+`@adobe/react-native-aepcore` is a wrapper around the iOS and Android [Adobe Experience Platform User Profile Extension](https://developer.adobe.com/client-sdks/documentation/profile) to allow for integration with React Native applications.
 
 ## Prerequisites
 
 The UserProfile extension has the following peer dependency, which must be installed prior to installing the UserProfile extension:
+
 - [Core](../core/README.md)
 
 ## Installation
 
-See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
 Install the `@adobe/react-native-aepuserprofile` package:
 
@@ -31,6 +30,7 @@ Initializing the SDK should be done in native code, documentation on how to init
 **Initialization Example**
 
 iOS
+
 ```objc
 // AppDelegate.h
 @import AEPCore;
@@ -43,21 +43,22 @@ iOS
     [AEPMobileCore setLogLevel: AEPLogLevelDebug];
     // register UserProfile extension
     [AEPMobileCore registerExtensions:@[AEPMobileUserProfile.class] completion:^{
-        [AEPMobileCore configureWithAppId:@"yourAppID"];  
-    ...   
-   }]; 
-   return YES;   
- } 
+        [AEPMobileCore configureWithAppId:@"yourAppID"];
+    ...
+   }];
+   return YES;
+ }
 
 @end
 ```
 
 Android
+
 ```java
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.UserProfile;
-  
+
 ...
 import android.app.Application;
 ...
@@ -71,15 +72,13 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
     MobileCore.configureWithAppID("yourAppID");
 
-    UserProfile.registerExtension();// register UserProfile extension
-
-    MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-        
-        }});
-    }
-}     
+    // register UserProfile extension
+    MobileCore.registerExtensions(
+        Arrays.asList(UserProfile.EXTENSION),
+        o -> Log.d("MainApp", "Adobe UserProfile Mobile SDK was initialized.")
+    )
+  }
+}
 ```
 
 #### Importing the extension:
@@ -87,7 +86,7 @@ public class MainApplication extends Application implements ReactApplication {
 In your React Native application, import the UserProfile extension as follows:
 
 ```typescript
-import {UserProfile} from '@adobe/react-native-aepuserprofile';
+import { UserProfile } from "@adobe/react-native-aepuserprofile";
 ```
 
 ## API reference
@@ -105,7 +104,9 @@ extensionVersion(): Promise<string>
 **Example**
 
 ```typescript
-UserProfile.extensionVersion().then(version => console.log("AdobeExperienceSDK: UserProfile version: " + version));
+UserProfile.extensionVersion().then((version) =>
+  console.log("AdobeExperienceSDK: UserProfile version: " + version)
+);
 ```
 
 ### getUserAttributes
@@ -121,7 +122,9 @@ getUserAttributes(attributeNames: Array<string>): Promise<Record<string, any>>
 **Example**
 
 ```typescript
-UserProfile.getUserAttributes(["mapKey", "mapKey1"]).then(map => console.log("AdobeExperienceSDK: UserProfile getUserAttributes: " + map));
+UserProfile.getUserAttributes(["mapKey", "mapKey1"]).then((map) =>
+  console.log("AdobeExperienceSDK: UserProfile getUserAttributes: " + map)
+);
 ```
 
 ### removeUserAttributes
@@ -154,6 +157,6 @@ updateUserAttributes(attributeMap: Record<string, any>)
 **Example**
 
 ```typescript
-let attrMap = {"mapKey": "mapValue", "mapKey1": "mapValue1"};
+let attrMap = { mapKey: "mapValue", mapKey1: "mapValue1" };
 UserProfile.updateUserAttributes(attrMap);
 ```
