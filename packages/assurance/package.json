@@ -29,7 +29,7 @@
   },
   "peerDependencies": {
     "react-native": ">=0.60.0",
-    "@adobe/react-native-aepcore": "^1.0.0"
+    "@adobe/react-native-aepcore": "^2.0.0"
   },
   "publishConfig": {
     "access": "public"

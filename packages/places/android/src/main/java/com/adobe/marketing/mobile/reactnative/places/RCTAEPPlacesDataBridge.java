@@ -14,8 +14,9 @@ package com.adobe.marketing.mobile.reactnative.places;
 
 import android.location.Location;
 
-import com.adobe.marketing.mobile.PlacesAuthorizationStatus;
-import com.adobe.marketing.mobile.PlacesPOI;
+//TODO: fix this breaking change in Android 2.0
+//import com.adobe.marketing.mobile.PlacesAuthorizationStatus;
+//import com.adobe.marketing.mobile.PlacesPOI;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -57,41 +58,43 @@ public class RCTAEPPlacesDataBridge {
   private final static String AEP_PLACES_GEOFENCE_RADIUS = "radius";
   private final static String AEP_PLACES_GEOFENCE_EXPIRATION_DURATION = "expirationDuration";
 
-  public static PlacesAuthorizationStatus placesAuthorizationStatusFromString(final String placesAuthStatus) {
-    if (placesAuthStatus == null) {
-      return PlacesAuthorizationStatus.UNKNOWN;
-    }
+  //TODO: fix this breaking change in Android 2.0
+//  public static PlacesAuthorizationStatus placesAuthorizationStatusFromString(final String placesAuthStatus) {
+//    if (placesAuthStatus == null) {
+//      return PlacesAuthorizationStatus.UNKNOWN;
+//    }
+//
+//    if (placesAuthStatus.equals(AEP_PLACES_AUTH_STATUS_DENIED)) {
+//      return PlacesAuthorizationStatus.DENIED;
+//    } else if (placesAuthStatus.equals(AEP_PLACES_AUTH_STATUS_ALWAYS)) {
+//      return PlacesAuthorizationStatus.ALWAYS;
+//    } else if (placesAuthStatus.equals(AEP_PLACES_AUTH_STATUS_RESTRICTED)) {
+//      return PlacesAuthorizationStatus.RESTRICTED;
+//    } else if (placesAuthStatus.equals(AEP_PLACES_AUTH_STATUS_WHEN_IN_USE)) {
+//      return PlacesAuthorizationStatus.WHEN_IN_USE;
+//    }
+//
+//    return PlacesAuthorizationStatus.UNKNOWN;
+//  }
 
-    if (placesAuthStatus.equals(AEP_PLACES_AUTH_STATUS_DENIED)) {
-      return PlacesAuthorizationStatus.DENIED;
-    } else if (placesAuthStatus.equals(AEP_PLACES_AUTH_STATUS_ALWAYS)) {
-      return PlacesAuthorizationStatus.ALWAYS;
-    } else if (placesAuthStatus.equals(AEP_PLACES_AUTH_STATUS_RESTRICTED)) {
-      return PlacesAuthorizationStatus.RESTRICTED;
-    } else if (placesAuthStatus.equals(AEP_PLACES_AUTH_STATUS_WHEN_IN_USE)) {
-      return PlacesAuthorizationStatus.WHEN_IN_USE;
-    }
-
-    return PlacesAuthorizationStatus.UNKNOWN;
-  }
-
-  public static String stringFromPlacesAuthorizationStatus(final PlacesAuthorizationStatus placesAuthorizationStatus) {
-    if (placesAuthorizationStatus == null) {
-      return AEP_PLACES_AUTH_STATUS_UNKNOWN;
-    }
-
-    if (placesAuthorizationStatus == PlacesAuthorizationStatus.DENIED) {
-      return AEP_PLACES_AUTH_STATUS_DENIED;
-    } else if (placesAuthorizationStatus == PlacesAuthorizationStatus.ALWAYS) {
-      return AEP_PLACES_AUTH_STATUS_ALWAYS;
-    } else if (placesAuthorizationStatus == PlacesAuthorizationStatus.WHEN_IN_USE) {
-      return AEP_PLACES_AUTH_STATUS_WHEN_IN_USE;
-    } else if (placesAuthorizationStatus == PlacesAuthorizationStatus.RESTRICTED) {
-      return AEP_PLACES_AUTH_STATUS_RESTRICTED;
-    }
-
-    return AEP_PLACES_AUTH_STATUS_UNKNOWN;
-  }
+  //TODO: fix this breaking change in Android 2.0
+//  public static String stringFromPlacesAuthorizationStatus(final PlacesAuthorizationStatus placesAuthorizationStatus) {
+//    if (placesAuthorizationStatus == null) {
+//      return AEP_PLACES_AUTH_STATUS_UNKNOWN;
+//    }
+//
+//    if (placesAuthorizationStatus == PlacesAuthorizationStatus.DENIED) {
+//      return AEP_PLACES_AUTH_STATUS_DENIED;
+//    } else if (placesAuthorizationStatus == PlacesAuthorizationStatus.ALWAYS) {
+//      return AEP_PLACES_AUTH_STATUS_ALWAYS;
+//    } else if (placesAuthorizationStatus == PlacesAuthorizationStatus.WHEN_IN_USE) {
+//      return AEP_PLACES_AUTH_STATUS_WHEN_IN_USE;
+//    } else if (placesAuthorizationStatus == PlacesAuthorizationStatus.RESTRICTED) {
+//      return AEP_PLACES_AUTH_STATUS_RESTRICTED;
+//    }
+//
+//    return AEP_PLACES_AUTH_STATUS_UNKNOWN;
+//  }
 
   public static WritableMap mapFromLocation(final Location location) {
     if (location == null) {
@@ -117,33 +120,34 @@ public class RCTAEPPlacesDataBridge {
     return location;
   }
 
-  public static WritableMap mapFromPlacesPOI(final PlacesPOI placesPOI) {
-    if (placesPOI == null) {
-      return null;
-    }
-
-    WritableMap locationMap = new WritableNativeMap();
-    locationMap.putString(AEP_PLACES_POI_IDENTIFIER, placesPOI.getIdentifier());
-    locationMap.putString(AEP_PLACES_POI_NAME, placesPOI.getName());
-    locationMap.putDouble(AEP_PLACES_POI_LATITUDE, placesPOI.getLatitude());
-    locationMap.putDouble(AEP_PLACES_POI_LONGITUDE, placesPOI.getLongitude());
-    locationMap.putDouble(AEP_PLACES_POI_RADIUS, placesPOI.getRadius());
-    locationMap.putBoolean(AEP_PLACES_POI_USER_IS_WITHIN, placesPOI.containsUser());
-    locationMap.putString(AEP_PLACES_POI_LIBRARY, placesPOI.getLibrary());
-    locationMap.putInt(AEP_PLACES_POI_WEIGHT, placesPOI.getWeight());
-    locationMap.putMap(AEP_PLACES_POI_METADATA, RCTAEPMapUtil.toWritableMap(placesPOI.getMetadata()));
-
-    return locationMap;
-  }
-
-  public static WritableArray writableArrayFromListPOIs(List<PlacesPOI> placesPOIS) {
-    WritableArray arr = new WritableNativeArray();
-
-    for (PlacesPOI poi : placesPOIS) {
-      arr.pushMap(RCTAEPPlacesDataBridge.mapFromPlacesPOI(poi));
-    }
-    return arr;
-  }
+  //TODO: fix this breaking change in Android 2.0
+//  public static WritableMap mapFromPlacesPOI(final PlacesPOI placesPOI) {
+//    if (placesPOI == null) {
+//      return null;
+//    }
+//
+//    WritableMap locationMap = new WritableNativeMap();
+//    locationMap.putString(AEP_PLACES_POI_IDENTIFIER, placesPOI.getIdentifier());
+//    locationMap.putString(AEP_PLACES_POI_NAME, placesPOI.getName());
+//    locationMap.putDouble(AEP_PLACES_POI_LATITUDE, placesPOI.getLatitude());
+//    locationMap.putDouble(AEP_PLACES_POI_LONGITUDE, placesPOI.getLongitude());
+//    locationMap.putDouble(AEP_PLACES_POI_RADIUS, placesPOI.getRadius());
+//    locationMap.putBoolean(AEP_PLACES_POI_USER_IS_WITHIN, placesPOI.containsUser());
+//    locationMap.putString(AEP_PLACES_POI_LIBRARY, placesPOI.getLibrary());
+//    locationMap.putInt(AEP_PLACES_POI_WEIGHT, placesPOI.getWeight());
+//    locationMap.putMap(AEP_PLACES_POI_METADATA, RCTAEPMapUtil.toWritableMap(placesPOI.getMetadata()));
+//
+//    return locationMap;
+//  }
+//
+//  public static WritableArray writableArrayFromListPOIs(List<PlacesPOI> placesPOIS) {
+//    WritableArray arr = new WritableNativeArray();
+//
+//    for (PlacesPOI poi : placesPOIS) {
+//      arr.pushMap(RCTAEPPlacesDataBridge.mapFromPlacesPOI(poi));
+//    }
+//    return arr;
+//  }
 
   public static Geofence geofenceFromMap(ReadableMap geofenceMap, int transitionType) {
     if (geofenceMap == null) {

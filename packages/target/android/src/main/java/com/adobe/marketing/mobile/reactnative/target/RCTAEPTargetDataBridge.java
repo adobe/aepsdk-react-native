@@ -12,11 +12,11 @@ governing permissions and limitations under the License.
 package com.adobe.marketing.mobile.reactnative.target;
 
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.TargetOrder;
-import com.adobe.marketing.mobile.TargetParameters;
-import com.adobe.marketing.mobile.TargetPrefetch;
-import com.adobe.marketing.mobile.TargetProduct;
-import com.adobe.marketing.mobile.TargetRequest;
+//import com.adobe.marketing.mobile.TargetOrder;
+//import com.adobe.marketing.mobile.TargetParameters;
+//import com.adobe.marketing.mobile.TargetPrefetch;
+//import com.adobe.marketing.mobile.TargetProduct;
+//import com.adobe.marketing.mobile.TargetRequest;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -42,60 +42,61 @@ public class RCTAEPTargetDataBridge {
     final private static String PRODUCT_ID_KEY = "productId";
     final private static String CATEGORY_ID_KEY = "categoryId";
 
-    public static TargetPrefetch mapToPrefetch(ReadableMap map) {
-        if (map == null) {
-            return null;
-        }
-
-        TargetParameters parameters = mapToParameters(getNullableMap(map, TARGET_PARAMETERS_KEY));
-        return new TargetPrefetch(getNullableString(map, NAME_KEY), parameters);
-    }
-
-    public static TargetRequest mapToRequest(ReadableMap map, final Callback successCallback) {
-        if (map == null) {
-            return null;
-        }
-
-        TargetParameters parameters = mapToParameters(getNullableMap(map, TARGET_PARAMETERS_KEY));
-        return new TargetRequest(getNullableString(map, NAME_KEY), parameters, getNullableString(map, DEFAULT_CONTENT_KEY), new AdobeCallback<String>() {
-            @Override
-            public void call(String content) {
-                successCallback.invoke(null, content);
-            }
-        });
-    }
-
-    public static TargetParameters mapToParameters(ReadableMap map) {
-        if (map == null) {
-            return null;
-        }
-
-        TargetOrder order = mapToOrder(getNullableMap(map, ORDER_KEY));
-        TargetProduct product = mapToProduct(getNullableMap(map, PRODUCT_KEY));
-
-        Map<String, String> parameters = RCTAEPTargetMapUtil.toStringMap(getNullableMap(map, PARAMETERS_KEY));
-        Map<String, String> profileParameters = RCTAEPTargetMapUtil.toStringMap(getNullableMap(map, PROFILE_PARAMETERS_KEY));
-
-        return new TargetParameters.Builder().order(order).product(product).parameters(parameters).profileParameters(profileParameters).build();
-    }
-
-
-    public static TargetOrder mapToOrder(ReadableMap map) {
-        if (map == null) {
-            return null;
-        }
-
-        List<String> purchasedProductsIds = RCTAEPTargetArrayUtil.toStringArray(getNullableArray(map, PURCHASED_PRODUCTS_IDS_KEY));
-        return new TargetOrder(getNullableString(map, ORDER_ID_KEY), getNullableDouble(map, TOTAL_KEY), purchasedProductsIds);
-    }
-
-    public static TargetProduct mapToProduct(ReadableMap map) {
-        if (map == null) {
-            return null;
-        }
-
-        return new TargetProduct(getNullableString(map, PRODUCT_ID_KEY), getNullableString(map, CATEGORY_ID_KEY));
-    }
+    //TODO: fix this breaking change in Android 2.0
+//    public static TargetPrefetch mapToPrefetch(ReadableMap map) {
+//        if (map == null) {
+//            return null;
+//        }
+//
+//        TargetParameters parameters = mapToParameters(getNullableMap(map, TARGET_PARAMETERS_KEY));
+//        return new TargetPrefetch(getNullableString(map, NAME_KEY), parameters);
+//    }
+//
+//    public static TargetRequest mapToRequest(ReadableMap map, final Callback successCallback) {
+//        if (map == null) {
+//            return null;
+//        }
+//
+//        TargetParameters parameters = mapToParameters(getNullableMap(map, TARGET_PARAMETERS_KEY));
+//        return new TargetRequest(getNullableString(map, NAME_KEY), parameters, getNullableString(map, DEFAULT_CONTENT_KEY), new AdobeCallback<String>() {
+//            @Override
+//            public void call(String content) {
+//                successCallback.invoke(null, content);
+//            }
+//        });
+//    }
+//
+//    public static TargetParameters mapToParameters(ReadableMap map) {
+//        if (map == null) {
+//            return null;
+//        }
+//
+//        TargetOrder order = mapToOrder(getNullableMap(map, ORDER_KEY));
+//        TargetProduct product = mapToProduct(getNullableMap(map, PRODUCT_KEY));
+//
+//        Map<String, String> parameters = RCTAEPTargetMapUtil.toStringMap(getNullableMap(map, PARAMETERS_KEY));
+//        Map<String, String> profileParameters = RCTAEPTargetMapUtil.toStringMap(getNullableMap(map, PROFILE_PARAMETERS_KEY));
+//
+//        return new TargetParameters.Builder().order(order).product(product).parameters(parameters).profileParameters(profileParameters).build();
+//    }
+//
+//
+//    public static TargetOrder mapToOrder(ReadableMap map) {
+//        if (map == null) {
+//            return null;
+//        }
+//
+//        List<String> purchasedProductsIds = RCTAEPTargetArrayUtil.toStringArray(getNullableArray(map, PURCHASED_PRODUCTS_IDS_KEY));
+//        return new TargetOrder(getNullableString(map, ORDER_ID_KEY), getNullableDouble(map, TOTAL_KEY), purchasedProductsIds);
+//    }
+//
+//    public static TargetProduct mapToProduct(ReadableMap map) {
+//        if (map == null) {
+//            return null;
+//        }
+//
+//        return new TargetProduct(getNullableString(map, PRODUCT_ID_KEY), getNullableString(map, CATEGORY_ID_KEY));
+//    }
 
     // Helper methods
 

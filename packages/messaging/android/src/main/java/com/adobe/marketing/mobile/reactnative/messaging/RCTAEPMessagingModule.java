@@ -81,7 +81,8 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
     @ReactMethod
     public void setMessagingDelegate() {
         MobileCore.log(VERBOSE, TAG, "setMessagingDelegate is called");
-        ServiceProvider.getInstance().setMessageDelegate(this);
+        //TODO: fix this breaking change in Android 2.0
+//        ServiceProvider.getInstance().setMessageDelegate(this);
     }
 
     @ReactMethod
@@ -164,7 +165,8 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
     public void setAutoTrack(final String messageId, final boolean autoTrack) {
         if (messageId != null && messageCache.get(messageId) != null) {
             MobileCore.log(VERBOSE, TAG, String.format("setAutoTrack is called with message id: %s and autoTrack: %b", messageId, autoTrack));
-            messageCache.get(messageId).autoTrack = autoTrack;
+            //TODO: fix this breaking change in Android 2.0
+            //            messageCache.get(messageId).autoTrack = autoTrack;
         }
     }
 
@@ -183,8 +185,9 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
-            data.put("id", message.id);
-            data.put("autoTrack", String.valueOf(message.autoTrack));
+            //TODO: fix this breaking change in Android 2.0
+//            data.put("id", message.id);
+//            data.put("autoTrack", String.valueOf(message.autoTrack));
             emitEvent("onShow", data);
         }
     }
@@ -195,35 +198,39 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
-            data.put("id", message.id);
-            data.put("autoTrack", String.valueOf(message.autoTrack));
+            //TODO: fix this breaking change in Android 2.0
+//            data.put("id", message.id);
+//            data.put("autoTrack", String.valueOf(message.autoTrack));
             emitEvent("onDismiss", data);
         }
     }
 
-    @Override
-    public boolean shouldShowMessage(final FullscreenMessage fullscreenMessage) {
-        MobileCore.log(VERBOSE, TAG, "shouldShowMessage is called");
-        final Message message = (Message) fullscreenMessage.getParent();
-        if (message != null) {
-            Map<String, String> data = new HashMap<>();
-            data.put("id", message.id);
-            data.put("autoTrack", String.valueOf(message.autoTrack));
-            emitEvent("shouldShowMessage", data);
-            //Latch stops the thread until the shouldShowMessage value is received from the JS side on thread dedicated to run JS code. The function called from JS that resumes the thread is "shouldShowMessage".
-            MobileCore.log(VERBOSE, TAG, "shouldShowMessage: Thread is locked.");
-            try {
-                latch.await();
-            } catch (final InterruptedException e) {
-                MobileCore.log(LoggingMode.ERROR, TAG, String.format("CountDownLatch await Interrupted: (%s)", e.getLocalizedMessage()));
-            }
-            MobileCore.log(VERBOSE, TAG, "shouldShowMessage: Thread is resumed.");
-            if (shouldSaveMessage) {
-                messageCache.put(message.id, message);
-            }
-        }
-        return shouldShowMessage;
-    }
+    //TODO: fix this breaking change in Android 2.0
+//    @Override
+//    public boolean shouldShowMessage(final FullscreenMessage fullscreenMessage) {
+//        MobileCore.log(VERBOSE, TAG, "shouldShowMessage is called");
+//        final Message message = (Message) fullscreenMessage.getParent();
+//        if (message != null) {
+//            Map<String, String> data = new HashMap<>();
+//            //TODO: fix this breaking change in Android 2.0
+////            data.put("id", message.id);
+////            data.put("autoTrack", String.valueOf(message.autoTrack));
+//            emitEvent("shouldShowMessage", data);
+//            //Latch stops the thread until the shouldShowMessage value is received from the JS side on thread dedicated to run JS code. The function called from JS that resumes the thread is "shouldShowMessage".
+//            MobileCore.log(VERBOSE, TAG, "shouldShowMessage: Thread is locked.");
+//            try {
+//                latch.await();
+//            } catch (final InterruptedException e) {
+//                MobileCore.log(LoggingMode.ERROR, TAG, String.format("CountDownLatch await Interrupted: (%s)", e.getLocalizedMessage()));
+//            }
+//            MobileCore.log(VERBOSE, TAG, "shouldShowMessage: Thread is resumed.");
+//            if (shouldSaveMessage) {
+//                //TODO: fix this breaking change in Android 2.0
+////                messageCache.put(message.id, message);
+//            }
+//        }
+//        return shouldShowMessage;
+//    }
 
     @Override
     public boolean overrideUrlLoad(FullscreenMessage fullscreenMessage, String s) {
@@ -231,8 +238,9 @@ public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule impl
         final Message message = (Message) fullscreenMessage.getParent();
         if (message != null) {
             Map<String, String> data = new HashMap<>();
-            data.put("id", message.id);
-            data.put("autoTrack", String.valueOf(message.autoTrack));
+            //TODO: fix this breaking change in Android 2.0
+//            data.put("id", message.id);
+//            data.put("autoTrack", String.valueOf(message.autoTrack));
             data.put("url", s);
             emitEvent("shouldShowMessage", data);
             emitEvent("urlLoaded", data);
