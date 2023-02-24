@@ -42,10 +42,15 @@ jobs:
           
   build-sample-app-ios:
     macos:
-      xcode: "12.0.1"
+      xcode: "13.0.0"
 
     steps:
       - checkout
+
+      # CircleCI puts xcode app in consistent path, RN looks for versioned path
+      - run:
+          name: Move xcode
+          command: cd /Applications && mv Xcode.app Xcode-13.0.app
 
       - run:
           name: Install latest NodeJS
@@ -66,7 +71,7 @@ jobs:
           command: sudo gem install cocoapods
           
       - run:
-          name: intall pods
+          name: Install pods
           command: yarn sampleapp:ios:pod:install
 
       - run:

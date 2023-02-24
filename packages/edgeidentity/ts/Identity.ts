@@ -18,8 +18,10 @@ interface IIdentity {
   extensionVersion: () => Promise<string>;
   getExperienceCloudId: () => Promise<string>;
   getIdentities: () => Promise<IdentityMap>;
+  getUrlVariables: () => Promise<string>;
   updateIdentities: (identityMap: IdentityMap) => void;
   removeIdentity: (item: IdentityItem, namespace: string) => void;
+
 }
 
 const RCTAEPEdgeIdentity: IIdentity = NativeModules.AEPEdgeIdentity;
@@ -27,7 +29,7 @@ const RCTAEPEdgeIdentity: IIdentity = NativeModules.AEPEdgeIdentity;
 const Identity: IIdentity = {
   /**
    * Returns the version of the Identity extension
-   * @param  {string} Promise a promise that resolves with the extension version
+   * @return  {string} Promise a promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPEdgeIdentity.extensionVersion());
@@ -41,7 +43,16 @@ const Identity: IIdentity = {
    * @return promise method which will be invoked once the Experience Cloud ID is available or rejected if an unexpected error occurred or the request timed out.
    */
   getExperienceCloudId(): Promise<string> {
-    return RCTAEPEdgeIdentity.getExperienceCloudId();
+    const getExperienceCloudIdPromise = new Promise<string>((resolve, reject) => {
+      RCTAEPEdgeIdentity.getExperienceCloudId()
+        .then((experienceId) => {
+          resolve(experienceId);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+    return getExperienceCloudIdPromise;
   },
 
   /**
@@ -66,6 +77,26 @@ const Identity: IIdentity = {
     return getIdentitiesPromise;
   },
 
+   /**
+   * @brief Returns the identifiers in a URL's query parameters for consumption in hybrid mobile applications.
+   *
+   * There is no leading &amp; or ? punctuation as the caller is responsible for placing the variables in their resulting URL in the correct locations.
+   * 
+   * @return promise method which will be invoked once the URL Variables are available or rejected if an unexpected error occurred or the request timed out.
+   */
+  getUrlVariables(): Promise<string> {
+    const getUrlVariablesPromise = new Promise<string>((resolve, reject) => {
+      RCTAEPEdgeIdentity.getUrlVariables()
+        .then((urlVariables) => {
+          resolve(urlVariables);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+    return getUrlVariablesPromise;
+  },
+
   /**
    * @brief Updates the currently known `IdentityMap` within the SDK.
    *
@@ -74,7 +105,7 @@ const Identity: IIdentity = {
    *
    *
    */
-  updateIdentities(identityMap: IdentityMap) {
+   updateIdentities(identityMap: IdentityMap) {
     RCTAEPEdgeIdentity.updateIdentities(identityMap);
   },
 
