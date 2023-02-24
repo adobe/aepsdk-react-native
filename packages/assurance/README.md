@@ -74,7 +74,7 @@ public class MainApplication extends Application implements ReactApplication {
                 Lifecycle.EXTENSION,
                 Assurance.EXTENSION);
     MobileCore.registerExtensions(extensions, o -> {
-      Log.d(LOG_TAG, "AEP Mobile SDK is initialized");
+      Log.d(LOG_TAG, "Adobe Experience Platform Mobile SDK is initialized");
       MobileCore.lifecycleStart(null);
       //enable this for Lifecycle. See Note for collecting Lifecycle metrics.
     });
