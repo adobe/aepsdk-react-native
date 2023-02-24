@@ -11,5 +11,8 @@ governing permissions and limitations under the License.
 */
 
 import Messaging from './Messaging';
+import Message from './models/Message';
+import { MessagingDelegate } from './models/MessagingDelegate';
+import MessagingEdgeEventType from './models/MessagingEdgeEventType';
 
-export { Messaging };
+export { Messaging, Message, MessagingDelegate, MessagingEdgeEventType };

@@ -7,7 +7,7 @@
 How to run the sample app:
 
 ### Add your App Id:
-In `ios/**/AppDelegate.m`, find the call to `configureWithAppId` and add your app id.
+In `ios/**/AppDelegate.mm`, find the call to `configureWithAppId` and add your app id.
 
 In `android/**/MainApplication.java`, find the call to `configureWithAppId` and add your app id.
 
