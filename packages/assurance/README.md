@@ -1,4 +1,3 @@
-
 # React Native Adobe Experience Platform Assurance Extension
 
 [![npm version](https://img.shields.io/npm/v/@adobe/react-native-aepassurance/alpha?color=green&label=npm%20package)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1)
@@ -9,8 +8,8 @@
 ## Prerequisites
 
 The Adobe Experience Platform Assurance extension has the following peer dependency, which must be installed prior to installing the identity extension:
-- [Core](../core/README.md)
 
+- [Core](../core/README.md)
 
 ## Installation
 
@@ -23,11 +22,9 @@ cd MyReactApp
 npm install @adobe/react-native-aepassurance
 ```
 
-
 ## Usage
 
 ### [Assurance](https://developer.adobe.com/client-sdks/documentation/platform-assurance/tutorials)
-
 
 ### Initializing:
 
@@ -36,6 +33,7 @@ Initializing the SDK should be done in native code, documentation on how to init
 Example:
 
 iOS
+
 ```objective-c
 @import AEPAssurance;
 
@@ -60,6 +58,7 @@ To connect to a griffon session by scanning the QR code. Follow [Apple developer
 ```
 
 Android
+
 ```java
 import com.adobe.marketing.mobile.Assurance;
 
@@ -70,16 +69,17 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
 
     MobileCore.setApplication(this);
-    try {
-        Lifecycle.registerExtension();
-        Assurance.registerExtension();
-        MobileCore.configureWithAppID("your-app-ID");
-        MobileCore.start(null);
-      } catch (InvalidInitException e) {
-        // handle exception
-      }
-    }
-}    
+    MobileCore.configureWithAppID("your-app-ID");
+    List<Class<? extends Extension>> extensions = Arrays.asList(
+                Lifecycle.EXTENSION,
+                Assurance.EXTENSION);
+    MobileCore.registerExtensions(extensions, o -> {
+      Log.d(LOG_TAG, "AEP Mobile SDK is initialized");
+      MobileCore.lifecycleStart(null);
+      //enable this for Lifecycle. See Note for collecting Lifecycle metrics.
+    });
+  }
+}
 ```
 
 To connect to a griffon session by scanning the QR code. Follow the [Android documentation](https://developer.android.com/training/app-links/deep-linking) on information about how to setup a deeplink.
@@ -87,6 +87,6 @@ To connect to a griffon session by scanning the QR code. Follow the [Android doc
 ##### Start Assurance session:
 
 ```typescript
-import {Assurance} from '@adobe/react-native-aepassurance';
+import { Assurance } from "@adobe/react-native-aepassurance";
 Assurance.startSession("{your-assurance-session-url}");
 ```
