@@ -36,6 +36,7 @@ interface IMobileCore {
   setLargeIconResourceID: (resourceID: number) => void;
   setAppGroup: (appGroup?: string) => void;
   resetIdentities: () => void;
+  clearUpdatedConfiguration: () => void;
 }
 
 const RCTAEPCore: IMobileCore = NativeModules.AEPCore;
@@ -43,7 +44,7 @@ const RCTAEPCore: IMobileCore = NativeModules.AEPCore;
 const MobileCore: IMobileCore = {
   /**
    * Returns the version of the AEPCore extension
-   * @param  {string} Promise a promise that resolves with the extension version
+   * @return  {string} Promise a promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPCore.extensionVersion());
@@ -77,6 +78,15 @@ const MobileCore: IMobileCore = {
   },
 
   /**
+   *
+   * @brief You can clear any programmatic updates made to the configuration via this API. 
+   *
+   */
+   clearUpdatedConfiguration() {
+    RCTAEPCore.clearUpdatedConfiguration();
+  },
+
+  /**
    * Update specific configuration parameters
    *
    * Update the current SDK configuration with specific key/value pairs. Keys not found in the current
@@ -86,7 +96,7 @@ const MobileCore: IMobileCore = {
    *
    * Using `nil` values is allowed and effectively removes the configuration parameter from the current configuration.
    *
-   * @param  {{ string: any }?} configMap configuration key/value pairs to be updated or added. A value of `nil` has no effect.
+   * @param  {Record<string, any>} configMap configuration key/value pairs to be updated or added. A value of `nil` has no effect.
    */
   updateConfiguration(configMap?: Record<string, any>) {
     RCTAEPCore.updateConfiguration(configMap);
@@ -115,7 +125,7 @@ const MobileCore: IMobileCore = {
    * more verbose than the current {@link LogLevel} set from {@link #setLogLevel(LogLevel)}
    * then the message is not printed.
    *
-   * @param mode the {@link LogLevel} used to print the message
+   * @param logLevel the {@link LogLevel} used to print the message
    * @param tag used to identify the source of the log message
    * @param message the message to log
    */
@@ -126,7 +136,7 @@ const MobileCore: IMobileCore = {
   /**
    * Set the Adobe Mobile Privacy status
    *
-   * @param {PrivacyStatus} privacyStatus PrivacyStatus to be set to the SDK
+   * @param privacyStatus {@linkPrivacyStatus} to be set to the SDK
    */
   setPrivacyStatus(privacyStatus: PrivacyStatus) {
     RCTAEPCore.setPrivacyStatus(privacyStatus);
@@ -166,8 +176,8 @@ const MobileCore: IMobileCore = {
    * is expected in return.
    * <p>
    *
-   * @param event            required parameter, {@link Event} instance to be dispatched, used as a trigger
-   * @param responseCallback required parameters, {@link Promise} to be called with the response event received
+   * @param event required parameter, {@link Event} instance to be dispatched, used as a trigger
+   * @return Promise a promise that resolves with {@link Event}
    *
    */
   dispatchEventWithResponseCallback(event: Event): Promise<Event> {
@@ -182,8 +192,8 @@ const MobileCore: IMobileCore = {
    *  button or a certain article was viewed.
    *
    *  note: when using the Adobe Analytics extension, calling this API will increment page views
-   * @param  {String?} state containing the name of the state to track
-   * @param  {{ string: string }?} contextData containing context data to attach on this hit
+   * @param  {String?} action containing the name of the action to track
+   * @param  {Record<string, string>} contextData containing context data to attach on this hit
    */
   trackAction(action?: string, contextData?: Record<string, string>) {
     RCTAEPCore.trackAction(action, contextData);
@@ -198,7 +208,7 @@ const MobileCore: IMobileCore = {
    *
    *  note: when using the Adobe Analytics extension, calling this API will increment page views
    * @param  {String?} state containing the name of the state to track
-   * @param  {{ string: string }?} contextData containing context data to attach on this hit
+   * @param  {Record<string, string>} contextData containing context data to attach on this hit
    */
   trackState(state?: string, contextData?: Record<string, string>) {
     RCTAEPCore.trackState(state, contextData);
@@ -235,7 +245,7 @@ const MobileCore: IMobileCore = {
   /**
    * Collect PII data. Although using this call enables collection of PII data, the SDK does not
    * automatically send the data to any Adobe endpoint.
-   * @param  {{ string: string }} data the dictionary containing the PII data to be collected
+   * @param  {Record<string, string>} data the dictionary containing the PII data to be collected
    */
   collectPii(data: Record<string, string>) {
     RCTAEPCore.collectPii(data);

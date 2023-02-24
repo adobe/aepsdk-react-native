@@ -21,7 +21,7 @@ const RCTAEPLifecycle: ILifecycle = NativeModules.AEPLifecycle;
 const Lifecycle: ILifecycle = {
   /**
    * Returns the version of the Lifecycle extension
-   * @param  {string} Promise a promise that resolves with the extension version
+   * @return  {string} Promise a promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPLifecycle.extensionVersion());

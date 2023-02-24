@@ -21,7 +21,7 @@ const RCTAEPSignal: ISignal = NativeModules.AEPSignal;
 const Signal: ISignal = {
   /**
    * Returns the version of the AEPSignal extension
-   * @param  {string} Promise a promise that resolves with the extension version
+   * @return  {string} Promise a promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPSignal.extensionVersion());

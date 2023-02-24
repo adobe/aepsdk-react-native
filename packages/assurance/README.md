@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/@adobe/react-native-aepassurance/alpha?color=green&label=npm%20package)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepassurance)](https://www.npmjs.com/package/@adobe/react-native-aepassurance/v/3.0.0-alpha.1)
 
-`@adobe/react-native-aepassurance` is a wrapper around the iOS and Android [Adobe Experience Platform Assurance](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-experience-platform-assurance) to allow for integration with React Native applications. Functionality to start Assurance session is provided through JavaScript documented below.
+`@adobe/react-native-aepassurance` is a wrapper around the iOS and Android [Adobe Experience Platform Assurance](https://developer.adobe.com/client-sdks/documentation/platform-assurance) to allow for integration with React Native applications. Functionality to start Assurance session is provided through JavaScript documented below.
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ npm install @adobe/react-native-aepassurance
 
 ## Usage
 
-### [Assurance](https://aep-sdks.gitbook.io/docs/beta/project-griffon/using-project-griffon)
+### [Assurance](https://developer.adobe.com/client-sdks/documentation/platform-assurance/tutorials)
 
 
 ### Initializing:
@@ -86,7 +86,7 @@ To connect to a griffon session by scanning the QR code. Follow the [Android doc
 
 ##### Start Assurance session:
 
-```javascript
+```typescript
 import {Assurance} from '@adobe/react-native-aepassurance';
 Assurance.startSession("{your-assurance-session-url}");
 ```

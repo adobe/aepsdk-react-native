@@ -34,6 +34,15 @@ describe('Identity for Edge Network', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+   it('getUrlVariables is called', async () => {
+    const spy = jest.spyOn(
+      NativeModules.AEPEdgeIdentity,
+      'getUrlVariables'
+    );
+    await Identity.getUrlVariables();
+    expect(spy).toHaveBeenCalled();
+  });
+
   it('getIdentities is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'getIdentities');
     await Identity.getIdentities();

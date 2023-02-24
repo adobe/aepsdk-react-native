@@ -24,7 +24,7 @@ describe('Identity', () => {
   it('syncIdentifiers is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPIdentity, 'syncIdentifiers');
     let identifiers = { testKey: 'testValue' };
-    await Identity.syncIdentifiers(identifiers);
+    Identity.syncIdentifiers(identifiers);
     expect(spy).toHaveBeenCalledWith(identifiers);
   });
 
@@ -35,7 +35,7 @@ describe('Identity', () => {
     );
     let identifiers = { testKey: 'testValue' };
     let authState = MobileVisitorAuthenticationState.LOGGED_OUT;
-    await Identity.syncIdentifiersWithAuthState(identifiers, authState);
+    Identity.syncIdentifiersWithAuthState(identifiers, authState);
     expect(spy).toHaveBeenCalledWith(
       identifiers,
       MobileVisitorAuthenticationState.LOGGED_OUT
@@ -48,7 +48,7 @@ describe('Identity', () => {
     let identifierType = 'testIdType';
     let authState =
       MobileVisitorAuthenticationState.AUTHENTICATED;
-    await Identity.syncIdentifier(identifier, identifierType, authState);
+    Identity.syncIdentifier(identifier, identifierType, authState);
     expect(spy).toHaveBeenCalledWith(
       identifier,
       identifierType,

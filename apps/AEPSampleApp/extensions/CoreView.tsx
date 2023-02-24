@@ -64,8 +64,13 @@ function getSdkIdentities() {
     console.log('AdobeExperienceSDK: Identities = ' + identities),
   );
 }
+
 function updateConfiguration() {
   MobileCore.updateConfiguration({'global.privacy': 'optedout'});
+}
+
+function clearUpdatedConfiguration() {
+  MobileCore.clearUpdatedConfiguration();
 }
 
 function getLogLevel() {
@@ -128,6 +133,7 @@ const CoreView = ({navigation}: NavigationProps) => {
         <Text style={styles.welcome}>Core</Text>
         <Button title="extensionVersion()" onPress={coreExtensionVersion} />
         <Button title="updateConfiguration" onPress={updateConfiguration} />
+        <Button title="clearUpdatedConfiguration" onPress={clearUpdatedConfiguration} />
         <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn} />
         <Button title="getPrivacyStatus()" onPress={getPrivacyStatus} />
         <Button title="log(...)" onPress={log} />

@@ -105,7 +105,12 @@ public class RCTAEPIdentityModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(List<VisitorID> visitorIDS) {
-                WritableArray arr = new WritableNativeArray();
+                WritableArray arr = new WritableNativeArray();   
+                if  (visitorIDS == null) {
+                    promise.resolve(arr);
+                    return;
+                }
+
                 for (VisitorID vid: visitorIDS) {
                     arr.pushMap(RCTAEPIdentityDataBridge.mapFromVisitorIdentifier(vid));
                 }

@@ -37,7 +37,7 @@ const RCTAEPIdentity: IIdentity = NativeModules.AEPIdentity;
 const Identity: IIdentity = {
   /**
    * Returns the version of the AEPIdentity extension
-   * @param  {string} Promise a promise that resolves with the extension version
+   * @return  {string} Promise a promise that resolves with the extension version
    */
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPIdentity.extensionVersion());
@@ -127,8 +127,8 @@ const Identity: IIdentity = {
    * was made. The attribute `adobe_aa_vid` is the URL encoded Visitor ID, however the attribute is only included
    * if the Visitor ID was previously set.
    *
-   * @param baseUrl URL to which the visitor info needs to be appended. Returned as is if it is nil or empty.
-   * @param promise method which will be invoked once the updated url is available.
+   * @param baseURL URL to which the visitor info needs to be appended. Returned as is if it is nil or empty.
+   * @return promise method which will be invoked once the updated url is available.
    */
   appendVisitorInfoForURL(baseURL?: String): Promise<string> {
     return RCTAEPIdentity.appendVisitorInfoForURL(baseURL);
@@ -146,7 +146,7 @@ const Identity: IIdentity = {
    * was made. The attribute `adobe_aa_vid` is the URL encoded Analytics Customer Visitor ID, if previously set in
    * Analytics extension.
    *
-   * @param promise method which will be invoked once the url query parameter string is available.
+   * @return promise method which will be invoked once the url query parameter string is available.
    */
   getUrlVariables(): Promise<string> {
     return RCTAEPIdentity.getUrlVariables();
@@ -155,7 +155,7 @@ const Identity: IIdentity = {
   /**
    * @brief Returns all customer identifiers which were previously synced with the Adobe Experience Cloud.
    *
-   * @param callback method which will be invoked once the customer identifiers are available.
+   * @reutrn promise method which will be invoked once the customer identifiers are available.
    * @see AEPIdentity::syncIdentifier:identifier:authentication:
    * @see AEPIdentity::syncIdentifiers:
    */
@@ -170,7 +170,7 @@ const Identity: IIdentity = {
    * This ID is preserved between app upgrades, is saved and restored during the standard application backup process,
    * and is removed at uninstall.
    *
-   * @param callback method which will be invoked once Experience Cloud ID is available.
+   * @return Promise method which will be invoked once Experience Cloud ID is available.
    */
   getExperienceCloudId(): Promise<string> {
     return RCTAEPIdentity.getExperienceCloudId();
