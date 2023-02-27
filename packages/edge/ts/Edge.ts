@@ -19,6 +19,8 @@ interface IEdge {
   sendEvent: (
     experienceEvent: ExperienceEvent
   ) => Promise<Array<EdgeEventHandle>>;
+  setLocationHint: (hint?: string) => void;
+  getLocationHint: () => Promise<string>;
 }
 
 const RCTAEPEdge: IEdge = NativeModules.AEPEdge;
@@ -55,6 +57,28 @@ const Edge: IEdge = {
       }
     );
     return sentEventPromise;
+  },
+
+  /**
+   * Set the Edge Network location hint used in requests to the Adobe Experience Platform Edge Network.
+   * Sets the Edge Network location hint used in requests to the AEP Edge Network causing requests to "stick" to a specific server cluster.
+   * Passing null or an empty string will clear the existing location hint. Edge Network responses may overwrite the location hint to a new value when necessary to manage network traffic.
+   * Use caution when setting the location hint. Only use location hints for the 'EdgeNetwork' scope. An incorrect location hint value will cause all Edge Network requests to fail.
+   * @param {hint} the Edge Network location hint to use when connecting to the Adobe Experience Platform Edge Network
+   */
+
+  setLocationHint(hint?: string) {
+    RCTAEPEdge.setLocationHint(hint);
+  },
+
+  /**
+   * Gets the Edge Network location hint used in requests to the Adobe Experience Platform Edge Network.
+   * The Edge Network location hint may be used when building the URL for Adobe Experience Platform Edge Network
+   * requests to hint at the server cluster to use.
+   * @return the Edge Network location hint, or null if the location hint expired or is not set.
+   */
+  getLocationHint(): Promise<string> {
+  return RCTAEPEdge.getLocationHint();
   }
 };
 
