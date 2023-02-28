@@ -50,7 +50,7 @@ const EdgeView = ({navigation}: NavigationProps) => {
         <Text style={styles.welcome}>Edge v{version}</Text>
         <Button title="sendEvent()" onPress={() => sendEvent()} />
         <Button
-          title="sendEventtest() to Dataset"
+          title="sendEvent() to Dataset"
           onPress={() => sendEvent('datasetIdExample')}
         />
         <Text style={styles.text}>Response event handles: {eventHandles}</Text>
