@@ -110,7 +110,7 @@ Gets the Edge Network location hint used in requests to the Adobe Experience Pla
 
 **Syntax**
 ```typescript
-getLocationHint(): Promise<string>
+getLocationHint(): Promise<string|null>
 ```
 
 **Example**

@@ -34,10 +34,6 @@ const EdgeView = ({navigation}: NavigationProps) => {
       setEventHandles(eventHandlesStr);
     })
   }
-
-  function setLocationHint() {
-    Edge.setLocationHint('va6');
-  }
   
   function getLocationHint() {
     Edge.getLocationHint().then(hint => {
@@ -60,11 +56,11 @@ const EdgeView = ({navigation}: NavigationProps) => {
         <Text style={styles.text}>Response event handles: {eventHandles}</Text>
         <Button
           title="setLocationHint(va6)"
-          onPress={() => setLocationHint()} 
+          onPress={() => Edge.setLocationHint('va6')} 
         />
         <Button
-          title="setLocationHint(null))"
-          onPress={() => Edge.setLocationHint(null)} 
+          title="setLocationHint(empty))"
+          onPress={() => Edge.setLocationHint("")} 
         />
         <Button title="getLocationHint()" onPress={() => getLocationHint()}  />
         <Text style={styles.text}>Location Hint: {locationHint}</Text>
