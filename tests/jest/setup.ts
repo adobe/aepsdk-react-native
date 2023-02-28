@@ -32,6 +32,9 @@ jest.doMock('react-native', () => {
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     sendEvent: jest.fn(() => new Promise(resolve => resolve([{type: "example", payload: {sample: "data"}}]))),
+                    setLocationHint: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getLocationHint: jest.fn(() => new Promise(resolve => resolve('va6'))),
+                    
                 },
                 AEPAssurance: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
