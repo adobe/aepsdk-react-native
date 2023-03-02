@@ -4,7 +4,7 @@ version: 2.1
 jobs:
   unit-test:
     docker:
-      - image: cimg/node:16.6.2
+      - image: cimg/node:19.7.0
 
     steps:
       - checkout
