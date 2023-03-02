@@ -42,7 +42,7 @@ jobs:
           
   build-sample-app-ios:
     macos:
-      xcode: "13.4.0"
+      xcode: "13.0.0"
 
     steps:
       - checkout
@@ -50,7 +50,7 @@ jobs:
       # CircleCI puts xcode app in consistent path, RN looks for versioned path
       - run:
           name: Move xcode
-          command: cd /Applications && mv Xcode.app Xcode-13.4.app
+          command: cd /Applications && mv Xcode.app Xcode-13.0.app
 
       - run:
           name: Install latest NodeJS
