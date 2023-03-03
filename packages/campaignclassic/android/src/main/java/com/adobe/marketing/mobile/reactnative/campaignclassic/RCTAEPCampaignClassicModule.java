@@ -59,9 +59,7 @@ public class RCTAEPCampaignClassicModule extends ReactContextBaseJavaModule {
             ? RCTAEPCampaignClassicUtil.convertReadableMapToMap(
                   additionalParams)
             : null;
-    //TODO: fix this breaking change in Android 2.0
-//    CampaignClassic.registerDevice(deviceToken, userKey, additionalParamsMap,
-//                                   null);
+      CampaignClassic.registerDevice(deviceToken, userKey, additionalParamsMap);
   }
 
   @ReactMethod
