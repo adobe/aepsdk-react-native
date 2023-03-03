@@ -11,8 +11,7 @@ governing permissions and limitations under the License.
 
 import { NativeModules } from 'react-native';
 import Target from '../ts/Target';
-//TODO: test is failing, commented out for now
-//import TargetPrefetchObject from '../ts/models/TargetPrefetchObject';
+import TargetPrefetchObject from '../ts/models/TargetPrefetchObject';
 import TargetRequestObject from '../ts/models/TargetRequestObject';
 import TargetOrder from '../ts/models/TargetOrder';
 import TargetProduct from '../ts/models/TargetProduct';
@@ -177,41 +176,40 @@ describe('Target', () => {
     expect(spy).toHaveBeenCalledWith('locationName', parameters);
   });
 
-   //TODO: test is failing, commented out for now
- // test('prefetchContent is called with correct parameters', async () => {
+ test('prefetchContent is called with correct parameters', async () => {
    
-    //const spy = jest.spyOn(NativeModules.AEPTarget, 'prefetchContent');
-  //   var mboxParameters1 = { status: 'platinum' };
-  //   var purchaseIDs = ['34', '125'];
+    const spy = jest.spyOn(NativeModules.AEPTarget, 'prefetchContent');
+    var mboxParameters1 = { status: 'platinum' };
+    var purchaseIDs = ['34', '125'];
 
-  //   var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
-  //   var targetProduct = new TargetProduct('24D3412', 'Books');
-  //   var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
-  //   var prefetch1 = new TargetPrefetchObject('mboxName2', parameters1);
+    var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
+    var targetProduct = new TargetProduct('24D3412', 'Books');
+    var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
+    var prefetch1 = new TargetPrefetchObject('mboxName2', parameters1);
 
-  //   var parameters2 = new TargetParameters(
-  //     mboxParameters1,
-  //     { profileParameters: 'parameterValue' },
-  //     targetProduct,
-  //     targetOrder
-  //   );
-  //  // var prefetch2 = new TargetPrefetchObject('mboxName2', parameters2);
+    var parameters2 = new TargetParameters(
+      mboxParameters1,
+      { profileParameters: 'parameterValue' },
+      targetProduct,
+      targetOrder
+    );
+    var prefetch2 = new TargetPrefetchObject('mboxName2', parameters2);
 
-  //   //var prefetchList = [prefetch1, prefetch2];
-  //   var profileParameters1 = { ageGroup: '20-32' };
+    var prefetchList = [prefetch1, prefetch2];
+    var profileParameters1 = { ageGroup: '20-32' };
 
-  //   var parameters = new TargetParameters(
-  //     { parameters: 'parametervalue' },
-  //     profileParameters1,
-  //     targetProduct,
-  //     targetOrder
-  //   );
+    var parameters = new TargetParameters(
+      { parameters: 'parametervalue' },
+      profileParameters1,
+      targetProduct,
+      targetOrder
+    );
 
   
-   // await Target.prefetchContent(prefetchList, parameters)
-    //   .then((success) => console.log(success))
-    //   .catch((err) => console.log(err));
+   await Target.prefetchContent(prefetchList, parameters)
+      .then((success) => console.log(success))
+      .catch((err) => console.log(err));
 
-    // expect(spy).toHaveBeenCalledWith(prefetchList, parameters);
-//  });
+    expect(spy).toHaveBeenCalledWith(prefetchList, parameters);
+ });
 });
