@@ -21,7 +21,7 @@ jobs:
       
       - run:
           name: Unit Tests
-          command: yarn tests:jest
+          command: yarn tests:jest --watchAll=false --runInBand
 
   build-sample-app-android:
     docker:
