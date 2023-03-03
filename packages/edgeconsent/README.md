@@ -44,11 +44,16 @@ iOS
 
 // AppDelegate.m
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-    [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
-                                        AEPMobileEdge.class, 
-                                        AEPMobileEdgeConsent.class] completion:^{
-      [AEPMobileCore configureWithAppId:@"yourAppID"];  
+    
+    // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+    NSString* ENVIRONMENT_FILE_ID = @"YOUR-APP-ID";
+
+    NSArray *extensionsToRegister = @[AEPMobileEdgeIdentity.class, 
+                                      AEPMobileEdge.class, 
+                                      AEPMobileEdgeConsent.class
+                                      ];
+
+    [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
    }]; 
    return YES;   
@@ -59,7 +64,6 @@ iOS
 
 Android
 ```java
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity.Identity;
@@ -70,30 +74,28 @@ import android.app.Application;
 ...
 public class MainApplication extends Application implements ReactApplication {
   ...
+  // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+  private final String ENVIRONMENT_FILE_ID = "YOUR-APP-ID";
+
   @Override
   public void on Create(){
     super.onCreate();
     ...
     MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
     MobileCore.configureWithAppID("yourAppID");
 
-    Edge.registerExtension();
-    Identity.registerExtension();
-    Consent.registerExtension();
-    MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-        
-        }});
+     MobileCore.registerExtensions(
+      Arrays.asList(Consent.EXTENSION, Identity.EXTENSION, Edge.EXTENSION),
+      o -> Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
+    );
   }
-}     
+}  
 ```
 
 ### Importing the extension
 In your React Native application, import the Consent extension as follows:
 ```typescript
-import {Consent} from '@adobe/react-native-aepedgeconsent';
+import {Consent} from "@adobe/react-native-aepedgeconsent";
 ```
 
 ## API reference
