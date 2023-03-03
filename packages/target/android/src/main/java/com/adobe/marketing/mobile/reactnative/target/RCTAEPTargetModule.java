@@ -14,11 +14,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Target;
-//import com.adobe.marketing.mobile.TargetParameters;
-//import com.adobe.marketing.mobile.TargetPrefetch;
-//import com.adobe.marketing.mobile.TargetRequest;
+import com.adobe.marketing.mobile.target.TargetParameters;
+import com.adobe.marketing.mobile.target.TargetPrefetch;
+import com.adobe.marketing.mobile.target.TargetRequest;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -30,14 +29,12 @@ import com.facebook.react.bridge.Callback;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
   private final String REQUEST_ID_KEY = "id";
 
-  //TODO: fix this breaking change in Android 2.0
-//  private HashMap<String, TargetRequest> registeredTargetRequests = new HashMap<>();
+  private HashMap<String, TargetRequest> registeredTargetRequests = new HashMap<>();
 
   public RCTAEPTargetModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -127,19 +124,18 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void retrieveLocationContent(ReadableArray targetRequestList, ReadableMap parameters) {
-    //TODO: fix this breaking change in Android 2.0
-//    ArrayList<TargetRequest> requestList = new ArrayList<>();
-//    for (int i = 0; i < targetRequestList.size(); i++) {
-//      String identifier = targetRequestList.getMap(i).getString(REQUEST_ID_KEY);
-//
-//      if (registeredTargetRequests.containsKey(identifier)) {
-//        requestList.add(registeredTargetRequests.get(identifier));
-//      }
-//    }
-//
-//    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
-//
-//    Target.retrieveLocationContent(requestList, parametersObj);
+    ArrayList<TargetRequest> requestList = new ArrayList<>();
+    for (int i = 0; i < targetRequestList.size(); i++) {
+      String identifier = targetRequestList.getMap(i).getString(REQUEST_ID_KEY);
+
+      if (registeredTargetRequests.containsKey(identifier)) {
+        requestList.add(registeredTargetRequests.get(identifier));
+      }
+    }
+
+    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
+
+    Target.retrieveLocationContent(requestList, parametersObj);
   }
 
   @ReactMethod
@@ -150,44 +146,40 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
       mboxNamesList.add(mboxName);
     }
 
-    //TODO: fix this breaking change in Android 2.0
-//    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
-//
-//    Target.locationsDisplayed(mboxNamesList, parametersObj);
+    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
+
+    Target.displayedLocations(mboxNamesList, parametersObj);
   }
 
   @ReactMethod
   public void clickedLocation(String mboxName, ReadableMap parameters) {
-    //TODO: fix this breaking change in Android 2.0
-//    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
-//
-//    Target.locationClicked(mboxName, parametersObj);
+    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
+
+    Target.clickedLocation(mboxName, parametersObj);
   }
 
   @ReactMethod
   public void prefetchContent(ReadableArray mboxPrefetchList, ReadableMap parameters, final Promise promise) {
-    //TODO: fix this breaking change in Android 2.0
-//    ArrayList<TargetPrefetch> prefetchList = new ArrayList<>();
-//    for (int i = 0; i < mboxPrefetchList.size(); i++) {
-//      TargetPrefetch prefetch = RCTAEPTargetDataBridge.mapToPrefetch(mboxPrefetchList.getMap(i));
-//      prefetchList.add(prefetch);
-//    }
-//
-//    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
-//
-//    Target.prefetchContent(prefetchList, parametersObj, new AdobeCallback<String>() {
-//      @Override
-//      public void call(String s) {
-//        promise.resolve(s);
-//      }
-//    });
+    ArrayList<TargetPrefetch> prefetchList = new ArrayList<>();
+    for (int i = 0; i < mboxPrefetchList.size(); i++) {
+      TargetPrefetch prefetch = RCTAEPTargetDataBridge.mapToPrefetch(mboxPrefetchList.getMap(i));
+      prefetchList.add(prefetch);
+    }
+
+    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
+
+    Target.prefetchContent(prefetchList, parametersObj, new AdobeCallback<String>() {
+      @Override
+      public void call(String s) {
+        promise.resolve(s);
+      }
+    });
   }
 
   @ReactMethod
   public void registerTargetRequests(ReadableMap requestMap, Callback successCallback) {
-    //TODO: fix this breaking change in Android 2.0
-//    TargetRequest request = RCTAEPTargetDataBridge.mapToRequest(requestMap, successCallback);
-//    registeredTargetRequests.put(requestMap.getString(REQUEST_ID_KEY), request);
+    TargetRequest request = RCTAEPTargetDataBridge.mapToRequest(requestMap, successCallback);
+    registeredTargetRequests.put(requestMap.getString(REQUEST_ID_KEY), request);
   }
 
 }
