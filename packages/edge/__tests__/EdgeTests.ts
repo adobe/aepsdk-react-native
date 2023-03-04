@@ -118,6 +118,12 @@ describe('Edge', () => {
     expect(spy).toHaveBeenCalledWith(null);
   });
 
+  it('setLocationHint is called with empty string', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'setLocationHint');
+    Edge.setLocationHint('');
+    expect(spy).toHaveBeenCalledWith(null);
+  });
+
   it('getLocationHint is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'getLocationHint');
     const locationHint = await Edge.getLocationHint();

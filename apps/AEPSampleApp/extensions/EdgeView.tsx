@@ -37,8 +37,11 @@ const EdgeView = ({navigation}: NavigationProps) => {
   
   function getLocationHint() {
     Edge.getLocationHint().then(hint => {
-      let locationStr = JSON.stringify(hint);
-      console.log('AdobeExperienceSDK: location hint = ' + hint),
+      let locationStr = hint;
+      console.log('AdobeExperienceSDK: location hint = ' + locationStr);
+      if (hint == null) {
+       locationStr = "null";
+      }
       getlocationHintText(locationStr);
   })
   }
@@ -59,8 +62,8 @@ const EdgeView = ({navigation}: NavigationProps) => {
           onPress={() => Edge.setLocationHint('va6')} 
         />
         <Button
-          title="setLocationHint(empty))"
-          onPress={() => Edge.setLocationHint("")} 
+          title="setLocationHint(null))"
+          onPress={() => Edge.setLocationHint(null)} 
         />
         <Button title="getLocationHint()" onPress={() => getLocationHint()}  />
         <Text style={styles.text}>Location Hint: {locationHint}</Text>

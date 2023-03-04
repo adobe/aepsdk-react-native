@@ -75,7 +75,7 @@ const Edge: IEdge = {
    * Gets the Edge Network location hint used in requests to the Adobe Experience Platform Edge Network.
    * The Edge Network location hint may be used when building the URL for Adobe Experience Platform Edge Network
    * requests to hint at the server cluster to use.
-   * @return the Edge Network location hint, or blank if the location hint expired or is not set.
+   * @return the Edge Network location hint, or null if the location hint expired or is not set.
    */
   getLocationHint(): Promise<string|null> {
   return RCTAEPEdge.getLocationHint();
