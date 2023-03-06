@@ -45,13 +45,18 @@ iOS
 
 // AppDelegate.m
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-    [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
-                                        AEPMobileEdge.class] completion:^{
-        [AEPMobileCore configureWithAppId:@"yourAppID"];  
+
+   // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+   NSString* ENVIRONMENT_FILE_ID = @"YOUR-APP-ID";
+
+   NSArray *extensionsToRegister = @[AEPMobileEdgeIdentity.class, 
+                                     AEPMobileEdge.class
+                                     ];
+
+   [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
-   }]; 
-   return YES;   
+  }]; 
+  return YES;   
  } 
 
 @end
@@ -59,31 +64,32 @@ iOS
 
 Android
 ```java
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
-  
+import com.adobe.marketing.mobile.edge.identity.Identity;
+
 ...
 import android.app.Application;
 ...
 public class MainApplication extends Application implements ReactApplication {
   ...
+  // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+  private final String ENVIRONMENT_FILE_ID = "YOUR-APP-ID";
+
   @Override
   public void on Create(){
     super.onCreate();
     ...
+  
     MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
     MobileCore.configureWithAppID("yourAppID");
-    Edge.registerExtension();
-    com.adobe.marketing.mobile.edge.identity.Identity.registerExtension();
-    MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-        
-        }});
-    }
-}     
+
+    MobileCore.registerExtensions(
+      Arrays.asList(Identity.EXTENSION, Edge.EXTENSION),
+      o -> Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
+    );
+  }
+}  
 ```
 
 ### Importing the extension
@@ -105,6 +111,36 @@ extensionVersion(): Promise<string>;
 ```typescript
 Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge version: " + version));
 ```
+### getLocationHint
+Gets the Edge Network location hint used in requests to the Adobe Experience Platform Edge Network. The Edge Network location hint may be used when building the URL for Adobe Experience Platform Edge Network requests to hint at the server cluster to use.
+
+**Syntax**
+```typescript
+getLocationHint(): Promise<string|null>
+```
+
+**Example**
+```typescript
+Edge.getLocationHint().then(hint =>
+    console.log('AdobeExperienceSDK: location hint = ' + hint),
+);
+```
+
+### setLocationHint
+Sets the Edge Network location hint used in requests to the Adobe Experience Platform Edge Network. Passing null or an empty string clears the existing location hint. Edge Network responses may overwrite the location hint to a new value when necessary to manage network traffic.
+
+>Warning: Use caution when setting the location hint. Only use location hints for the "EdgeNetwork" scope. An incorrect location hint value will cause all Edge Network requests to fail with 404 response code.
+
+**Syntax**
+```typescript
+setLocationHint(hint?: string)
+```
+
+**Example**
+```typescript
+Edge.setLocationHint('va6');
+```
+
 ### resetIdentity
 Resets current state of the AEP Edge extension and clears previously cached content related to current identity, if any.
 See [MobileCore.resetIdentities](../core/README.md#resetidentities) for more details.

@@ -84,9 +84,9 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setApplication(this);
     MobileCore.configureWithAppID("yourAppID");
 
-     MobileCore.registerExtensions(
-      Arrays.asList(Consent.EXTENSION, Identity.EXTENSION, Edge.EXTENSION),
-      o -> Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
+    MobileCore.registerExtensions(
+    Arrays.asList(Consent.EXTENSION, Identity.EXTENSION, Edge.EXTENSION),
+    o -> Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
     );
   }
 }  

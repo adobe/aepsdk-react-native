@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@adobe/react-native-aepuserprofile@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepuserprofile/-/react-native-aepuserprofile-1.0.0.tgz#756a2f987ef0e9da500c3438d2746d203f7a2c51"
-  integrity sha512-KeVPKkHaRmMXVYOW3zwjCawaqgsH8b8c+qCrbrOU9sc6jRs0iNnjwm9mXSJLjlq7KFYBxI3tHgY/nLuJ8cBCzA==
-
 "@ampproject/remapping@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.2.0.tgz#56c133824780de3174aed5ab6834f3026790154d"

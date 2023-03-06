@@ -81,19 +81,13 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    try {
-      Edge.registerExtension();
-      Target.registerExtension();
-      MobileCore.configureWithAppID("yourAppID");
-      MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-          MobileCore.lifecycleStart(null);
-        }
-      });
-    } catch (InvalidInitException e) {
-      ...
-    }
+    MobileCore.configureWithAppID("yourAppID");
+    List<Class<? extends Extension>> extensions = Arrays.asList(
+                Edge.EXTENSION,
+                Target.EXTENSION);
+    MobileCore.registerExtensions(extensions, o -> {
+      MobileCore.lifecycleStart(null);
+    });
   }
 }
 ```
@@ -107,8 +101,8 @@ import {
   TargetParameters,
   TargetPrefetchObject,
   TargetProduct,
-  TargetRequestObject
-} from '@adobe/react-native-aeptarget';
+  TargetRequestObject,
+} from "@adobe/react-native-aeptarget";
 ```
 
 ## API Reference
@@ -116,49 +110,57 @@ import {
 ### Getting the extension version:
 
 **Syntax**
+
 ```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const version = await Target.extensionVersion();
-console.log('AdobeExperienceSDK: AEPTarget version: ' + version);
+console.log("AdobeExperienceSDK: AEPTarget version: " + version);
 ```
 
 ### Get custom visitor IDs:
 
 **Syntax**
+
 ```typescript
 getThirdPartyId(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const id = await Target.getThirdPartyId();
-console.log('AdobeExperienceSDK: Third Party ID: ' + id);
+console.log("AdobeExperienceSDK: Third Party ID: " + id);
 ```
 
 ### Set custom visitor IDs:
 
 **Syntax**
+
 ```typescript
 setThirdPartyId(<id>): void
 ```
 
 **Example**
+
 ```typescript
-Target.setThirdPartyId('thirdPartyId');
+Target.setThirdPartyId("thirdPartyId");
 ```
 
 ### Reset user experience:
 
 **Syntax**
+
 ```typescript
 resetExperience(): void
 ```
 
 **Example**
+
 ```typescript
 Target.resetExperience();
 ```
@@ -166,82 +168,88 @@ Target.resetExperience();
 ### Get Target Session ID:
 
 **Syntax**
+
 ```typescript
 getSessionId(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const id = await Target.getSessionId();
-console.log('AdobeExperienceSDK: Session ID ' + id);
+console.log("AdobeExperienceSDK: Session ID " + id);
 ```
 
 ### Get Target user identifier:
 
 **Syntax**
+
 ```typescript
 getTntId(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const id = await Target.getTntId();
-console.log('AdobeExperienceSDK: TNT ID ' + id);
+console.log("AdobeExperienceSDK: TNT ID " + id);
 ```
 
 ### Load Target requests:
 
 **Syntax**
+
 ```typescript
 retrieveLocationContent(Array<TargetRequestObject>, <TargetParameters>): void
 ```
 
 **Example**
-```typescript
-var mboxParameters1 = { status: 'platinum' };
-var mboxParameters2 = { userType: 'Paid' };
-var purchaseIDs = ['34', '125'];
 
-var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
-var targetProduct = new TargetProduct('24D3412', 'Books');
+```typescript
+var mboxParameters1 = { status: "platinum" };
+var mboxParameters2 = { userType: "Paid" };
+var purchaseIDs = ["34", "125"];
+
+var targetOrder = new TargetOrder("ADCKKIM", 344.3, purchaseIDs);
+var targetProduct = new TargetProduct("24D3412", "Books");
 var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
 var request1 = new TargetRequestObject(
-  'mboxName2',
+  "mboxName2",
   parameters1,
-  'defaultContent1',
+  "defaultContent1",
   (error, content) => {
     if (error) {
       console.error(error);
     } else {
-      console.log('Adobe content:' + content);
+      console.log("Adobe content:" + content);
     }
   }
 );
 
 var parameters2 = new TargetParameters(
   mboxParameters1,
-  { profileParameters: 'parameterValue' },
+  { profileParameters: "parameterValue" },
   targetProduct,
   targetOrder
 );
 var request2 = new TargetRequestObject(
-  'mboxName2',
+  "mboxName2",
   parameters2,
-  'defaultContent2',
+  "defaultContent2",
   (error, content) => {
     if (error) {
       console.error(error);
     } else {
-      console.log('Adobe content:' + content);
+      console.log("Adobe content:" + content);
     }
   }
 );
 
 var locationRequests = [request1, request2];
-var profileParameters1 = { ageGroup: '20-32' };
+var profileParameters1 = { ageGroup: "20-32" };
 
 var parameters = new TargetParameters(
-  { parameters: 'parametervalue' },
+  { parameters: "parametervalue" },
   profileParameters1,
   targetProduct,
   targetOrder
@@ -252,34 +260,36 @@ Target.retrieveLocationContent(locationRequests, parameters);
 ### Using the prefetch APIs:
 
 **Syntax**
+
 ```typescript
 prefetchContent(Array<TargetPrefetchObject>, <TargetParameters>): Promise<any>
 ```
 
 **Example**
-```typescript
-var mboxParameters1 = { status: 'platinum' };
-var mboxParameters2 = { userType: 'Paid' };
-var purchaseIDs = ['34', '125'];
 
-var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
-var targetProduct = new TargetProduct('24D3412', 'Books');
+```typescript
+var mboxParameters1 = { status: "platinum" };
+var mboxParameters2 = { userType: "Paid" };
+var purchaseIDs = ["34", "125"];
+
+var targetOrder = new TargetOrder("ADCKKIM", 344.3, purchaseIDs);
+var targetProduct = new TargetProduct("24D3412", "Books");
 var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
-var prefetch1 = new TargetPrefetchObject('mboxName2', parameters1);
+var prefetch1 = new TargetPrefetchObject("mboxName2", parameters1);
 
 var parameters2 = new TargetParameters(
   mboxParameters1,
-  { profileParameters: 'parameterValue' },
+  { profileParameters: "parameterValue" },
   targetProduct,
   targetOrder
 );
-var prefetch2 = new TargetPrefetchObject('mboxName2', parameters2);
+var prefetch2 = new TargetPrefetchObject("mboxName2", parameters2);
 
 var prefetchList = [prefetch1, prefetch2];
-var profileParameters1 = { ageGroup: '20-32' };
+var profileParameters1 = { ageGroup: "20-32" };
 
 var parameters = new TargetParameters(
-  { parameters: 'parametervalue' },
+  { parameters: "parametervalue" },
   profileParameters1,
   targetProduct,
   targetOrder
@@ -292,85 +302,95 @@ Target.prefetchContent(prefetchList, parameters)
 ### Set Session ID
 
 **Syntax**
+
 ```typescript
 Target.setSessionId(<sessionId>): void
 ```
 
 **Example**
+
 ```typescript
-Target.setSessionId('sessionId');
+Target.setSessionId("sessionId");
 ```
 
 ### Set TNT ID
 
 **Syntax**
+
 ```typescript
 Target.setTntId(<tntId>): void
 ```
 
 **Example**
+
 ```typescript
-Target.setTntId('tntId');
+Target.setTntId("tntId");
 ```
 
 ### Set preview restart deep link:
 
 **Syntax**
+
 ```typescript
 setPreviewRestartDeeplink(<deeplink>): void;
 ```
 
 **Example**
+
 ```typescript
-Target.setPreviewRestartDeeplink('https://www.adobe.com');
+Target.setPreviewRestartDeeplink("https://www.adobe.com");
 ```
 
 ### Send an mbox click notification:
 
 **Syntax**
+
 ```typescript
 clickedLocation(<locationName>, <TargetParameters>): void;
 ```
 
 **Example**
-```typescript
-var purchaseIDs = ['34', '125'];
 
-var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
-var targetProduct = new TargetProduct('24D3412', 'Books');
-var profileParameters1 = { ageGroup: '20-32' };
+```typescript
+var purchaseIDs = ["34", "125"];
+
+var targetOrder = new TargetOrder("ADCKKIM", 344.3, purchaseIDs);
+var targetProduct = new TargetProduct("24D3412", "Books");
+var profileParameters1 = { ageGroup: "20-32" };
 var parameters = new TargetParameters(
-  { parameters: 'parametervalue' },
+  { parameters: "parametervalue" },
   profileParameters1,
   targetProduct,
   targetOrder
 );
 
-Target.clickedLocation('locationName', parameters);
+Target.clickedLocation("locationName", parameters);
 ```
 
 ### Send an mbox location displayed notification:
 
 **Syntax**
+
 ```typescript
 displayedLocations(Array<string>, <TargetParameters>): void;
 ```
 
 **Example**
-```typescript
-var purchaseIDs = ['34', '125'];
 
-var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
-var targetProduct = new TargetProduct('24D3412', 'Books');
-var profileParameters1 = { ageGroup: '20-32' };
+```typescript
+var purchaseIDs = ["34", "125"];
+
+var targetOrder = new TargetOrder("ADCKKIM", 344.3, purchaseIDs);
+var targetProduct = new TargetProduct("24D3412", "Books");
+var profileParameters1 = { ageGroup: "20-32" };
 var parameters = new TargetParameters(
-  { parameters: 'parametervalue' },
+  { parameters: "parametervalue" },
   profileParameters1,
   targetProduct,
   targetOrder
 );
 
-Target.displayedLocations(['locationName', 'locationName1'], parameters);
+Target.displayedLocations(["locationName", "locationName1"], parameters);
 ```
 
 ### TargetPrefetchObject:
