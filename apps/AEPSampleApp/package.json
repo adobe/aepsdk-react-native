@@ -14,7 +14,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@adobe/react-native-aepassurance": "^3.0.0",
+    "@adobe/react-native-aepassurance": "^4.0.0",
     "@adobe/react-native-aepcampaignclassic": "^2.0.0",
     "@adobe/react-native-aepcore": "^2.0.0",
     "@adobe/react-native-aepedge": "^2.0.0",
