@@ -47,10 +47,15 @@ iOS
 
 // AppDelegate.m
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-    [AEPMobileCore registerExtensions:@[AEPMobileEdgeIdentity.class, 
-                                        AEPMobileEdge.class] completion:^{
-      [AEPMobileCore configureWithAppId:@"yourAppID"];  
+
+    // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+    NSString* ENVIRONMENT_FILE_ID = @"YOUR-APP-ID";
+
+    NSArray *extensionsToRegister = @[AEPMobileEdgeIdentity.class, 
+                                    AEPMobileEdge.class
+                                    ];
+
+    [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
    }]; 
    return YES;   
@@ -61,7 +66,6 @@ iOS
 
 Android
 ```java
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity.Identity;  
@@ -70,23 +74,22 @@ import android.app.Application;
 ...
 public class MainApplication extends Application implements ReactApplication {
   ...
+  // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+  private final String ENVIRONMENT_FILE_ID = "YOUR-APP-ID";
+
   @Override
   public void on Create(){
     super.onCreate();
     ...
     MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
     MobileCore.configureWithAppID("yourAppID");
 
-    Edge.registerExtension();
-    Identity.registerExtension();
-    MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-        
-    }});
+    MobileCore.registerExtensions(
+     Arrays.asList(Identity.EXTENSION, Edge.EXTENSION),
+     o -> Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
+    );
   }
-}     
+}  
 ```
 
 :information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network/faq/#q-i-am-using-aep-edge-and-adobe-solutions-extensions-which-identity-extension-should-i-install-and-register).
