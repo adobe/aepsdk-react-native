@@ -126,7 +126,7 @@ PODS:
     - DoubleConversion
     - fmt (~> 6.2.1)
     - glog
-  - RCTAEPAssurance (3.0.0):
+  - RCTAEPAssurance (4.0.0):
     - AEPAssurance (~> 3.0)
     - React
   - RCTAEPCampaignClassic (2.0.0):
@@ -718,7 +718,7 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
-  RCTAEPAssurance: 9f51b9b5da17f9b98a41ce29e4f3e3b67ea36c17
+  RCTAEPAssurance: 6a643e20716967f58ab982e734b1cb432424e253
   RCTAEPCampaignClassic: 210ff4bddafe2987db76332f350a17200dfaeb27
   RCTAEPCore: 2c2e2711e00091d8abea6f5e7bffaf34367c363d
   RCTAEPEdge: 49d403c33981d1dd16085d586d561c736d9637e8

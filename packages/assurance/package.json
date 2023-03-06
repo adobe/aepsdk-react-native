@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepassurance",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "main": "./ts/index.ts",
