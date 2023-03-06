@@ -53,7 +53,7 @@ iOS
                                      AEPMobileEdge.class
                                      ];
 
-    [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
+   [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
   }]; 
   return YES;   
