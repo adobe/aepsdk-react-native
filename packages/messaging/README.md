@@ -53,7 +53,7 @@ repositories {
 
 ## Usage
 
-### [Messaging](https://developer.adobe.com/client-sdks/documentation/iam)
+### [Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer)
 
 ### Installing and registering the extension with the AEP Mobile Core
 
