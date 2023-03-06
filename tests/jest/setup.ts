@@ -27,11 +27,13 @@ jest.doMock('react-native', () => {
                     getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
                     getIdentities: jest.fn(() => new Promise(resolve => resolve({"ABC":[{"id":"id1","authenticatedState":"ambiguous","primary":false}]}))),
                     updateIdentities: jest.fn(),
-                    removeIdentity: jest.fn(),
+                    removeIdentity: jest.fn()
                 },
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     sendEvent: jest.fn(() => new Promise(resolve => resolve([{type: "example", payload: {sample: "data"}}]))),
+                    setLocationHint: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getLocationHint: jest.fn(() => new Promise(resolve => resolve('va6'))),
                 },
                 AEPAssurance: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),

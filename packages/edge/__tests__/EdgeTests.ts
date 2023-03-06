@@ -105,4 +105,29 @@ describe('Edge', () => {
     expect(result[0].type).toEqual('example');
     expect(result[0].payload).toEqual({ sample: 'data' });
   });
+
+  it('setLocationHint is called with correct parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'setLocationHint');
+    Edge.setLocationHint('or2');
+    expect(spy).toHaveBeenCalledWith('or2');
+  });
+
+  it('setLocationHint is called with null', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'setLocationHint');
+    Edge.setLocationHint(null);
+    expect(spy).toHaveBeenCalledWith(null);
+  });
+
+  it('setLocationHint is called with empty string', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'setLocationHint');
+    Edge.setLocationHint('');
+    expect(spy).toHaveBeenCalledWith(null);
+  });
+
+  it('getLocationHint is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPEdge, 'getLocationHint');
+    const locationHint = await Edge.getLocationHint();
+    expect(spy).toHaveBeenCalled();
+    expect(locationHint).toEqual('va6');
+  });
 });

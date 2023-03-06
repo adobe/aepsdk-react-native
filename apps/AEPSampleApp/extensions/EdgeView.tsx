@@ -19,6 +19,7 @@ import {NavigationProps} from '../types/props';
 const EdgeView = ({navigation}: NavigationProps) => {
   const [version, setVersion] = useState('');
   const [eventHandles, setEventHandles] = useState('');
+  const [locationHint, getlocationHintText] = useState('');
 
   Edge.extensionVersion().then(version => setVersion(version));
 
@@ -31,7 +32,18 @@ const EdgeView = ({navigation}: NavigationProps) => {
       let eventHandlesStr = JSON.stringify(eventHandles);
       console.log('AdobeExperienceSDK: EdgeEventHandles = ' + eventHandlesStr);
       setEventHandles(eventHandlesStr);
-    });
+    })
+  }
+  
+  function getLocationHint() {
+    Edge.getLocationHint().then(hint => {
+      let locationStr = hint;
+      console.log('AdobeExperienceSDK: location hint = ' + locationStr);
+      if (hint == null) {
+       locationStr = "null";
+      }
+      getlocationHintText(locationStr);
+  })
   }
 
   return (
@@ -45,6 +57,16 @@ const EdgeView = ({navigation}: NavigationProps) => {
           onPress={() => sendEvent('datasetIdExample')}
         />
         <Text style={styles.text}>Response event handles: {eventHandles}</Text>
+        <Button
+          title="setLocationHint(va6)"
+          onPress={() => Edge.setLocationHint('va6')} 
+        />
+        <Button
+          title="setLocationHint(null))"
+          onPress={() => Edge.setLocationHint(null)} 
+        />
+        <Button title="getLocationHint()" onPress={() => getLocationHint()}  />
+        <Text style={styles.text}>Location Hint: {locationHint}</Text>
       </ScrollView>
     </View>
   );

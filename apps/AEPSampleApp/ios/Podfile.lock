@@ -5,10 +5,10 @@ PODS:
   - AEPCampaignClassic (3.0.0):
     - AEPCore (>= 3.7.0)
     - AEPServices (>= 3.7.0)
-  - AEPCore (3.7.1):
+  - AEPCore (3.7.4):
     - AEPRulesEngine (>= 1.1.0)
-    - AEPServices (>= 3.7.1)
-  - AEPEdge (1.4.1):
+    - AEPServices (>= 3.7.4)
+  - AEPEdge (1.5.0):
     - AEPCore (>= 3.5.0)
     - AEPEdgeIdentity
   - AEPEdgeConsent (1.0.1):
@@ -16,26 +16,26 @@ PODS:
     - AEPEdge (>= 1.4.0)
   - AEPEdgeIdentity (1.1.0):
     - AEPCore (>= 3.6.0)
-  - AEPIdentity (3.7.1):
-    - AEPCore (>= 3.7.1)
-  - AEPLifecycle (3.7.1):
-    - AEPCore (>= 3.7.1)
-  - AEPMessaging (1.1.0-beta2):
-    - AEPCore (>= 3.4.2)
-    - AEPEdge (>= 1.1.0)
-    - AEPEdgeIdentity (>= 1.0.0)
-    - AEPServices (>= 3.4.2)
+  - AEPIdentity (3.7.4):
+    - AEPCore (>= 3.7.4)
+  - AEPLifecycle (3.7.4):
+    - AEPCore (>= 3.7.4)
+  - AEPMessaging (1.1.0):
+    - AEPCore (>= 3.7.4)
+    - AEPEdge (>= 1.5.0)
+    - AEPEdgeIdentity (>= 1.1.0)
+    - AEPServices (>= 3.7.4)
   - AEPOptimize (1.0.0):
     - AEPCore (>= 3.2.0)
     - AEPEdge (>= 1.2.0)
-  - AEPPlaces (3.0.1):
+  - AEPPlaces (3.0.2):
     - AEPCore
     - AEPServices
   - AEPRulesEngine (1.2.0)
-  - AEPServices (3.7.1)
-  - AEPSignal (3.7.1):
-    - AEPCore (>= 3.7.1)
-  - AEPTarget (3.2.0):
+  - AEPServices (3.7.4)
+  - AEPSignal (3.7.4):
+    - AEPCore (>= 3.7.4)
+  - AEPTarget (3.3.0):
     - AEPCore (>= 3.1.0)
   - AEPUserProfile (3.0.1):
     - AEPCore
@@ -126,40 +126,40 @@ PODS:
     - DoubleConversion
     - fmt (~> 6.2.1)
     - glog
-  - RCTAEPAssurance (3.0.0):
+  - RCTAEPAssurance (4.0.0):
     - AEPAssurance (~> 3.0)
     - React
-  - RCTAEPCampaignClassic (1.0.0):
+  - RCTAEPCampaignClassic (2.0.0):
     - AEPCampaignClassic (~> 3.0)
     - React
-  - RCTAEPCore (1.0.1):
+  - RCTAEPCore (2.0.0):
     - AEPCore (~> 3.0)
     - AEPIdentity (~> 3.0)
     - AEPLifecycle (~> 3.0)
     - AEPSignal (~> 3.0)
     - React
-  - RCTAEPEdge (1.0.0):
+  - RCTAEPEdge (2.0.0):
     - AEPEdge (~> 1.0)
     - React
-  - RCTAEPEdgeConsent (1.0.0):
+  - RCTAEPEdgeConsent (2.0.0):
     - AEPEdgeConsent (~> 1.0)
     - React
-  - RCTAEPEdgeIdentity (1.1.0):
+  - RCTAEPEdgeIdentity (2.0.0):
     - AEPEdgeIdentity (~> 1.0)
     - React
-  - RCTAEPMessaging (1.0.0-beta.3):
+  - RCTAEPMessaging (1.0.0):
     - AEPMessaging (~> 1.1.0-beta2)
     - React
-  - RCTAEPOptimize (1.0.0):
+  - RCTAEPOptimize (2.0.0):
     - AEPOptimize (~> 1.0)
     - React
-  - RCTAEPPlaces (1.0.0):
+  - RCTAEPPlaces (2.0.0):
     - AEPPlaces (~> 3.0)
     - React
-  - RCTAEPTarget (1.0.0):
+  - RCTAEPTarget (2.0.0):
     - AEPTarget (~> 3.2)
     - React
-  - RCTAEPUserProfile (1.0.0):
+  - RCTAEPUserProfile (2.0.0):
     - AEPUserProfile (~> 3.0)
     - React
   - RCTRequired (0.68.5)
@@ -679,25 +679,25 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   AEPMessaging:
-    :commit: 7cfc4a2403b5c824f2902ed5b6395cecc446d583
+    :commit: 07b77f29430e5cc7b6564809bbdf58fed622afb4
     :git: https://github.com/adobe/aepsdk-messaging-ios.git
 
 SPEC CHECKSUMS:
   AEPAssurance: b25880cd4b14f22c61a1dce19807bd0ca0fe9b17
   AEPCampaignClassic: cd20252606d9e12d5ee2c410df260762faa49d2c
-  AEPCore: 412fe933382892ab6c6af958d2f69ebcbca11216
-  AEPEdge: 6faf60328f9e5ae7a107fd61f9a968f46ebf2928
+  AEPCore: 4f2d6af62f492e87a6cc9cbf4c89ae6f0ea89d81
+  AEPEdge: 924cd8ace3db40b9c42bc2bc5e8fb1fcad3a9b77
   AEPEdgeConsent: a23b35ab331d2aa2013fcef49c9d6b80085d5597
   AEPEdgeIdentity: 47f0c6ecbec5857b2a8cb9b7bf717c2424c6bae0
-  AEPIdentity: 7cd5a51d8012aeaeee769e99597db016ad68b0d1
-  AEPLifecycle: 94c36a54f7e5466c5274bc822c53eaa410b74888
-  AEPMessaging: 31635f7570be215f1bd2781f0e67a7a3a49952aa
+  AEPIdentity: 4e298be480b327dd1fbb89e74210001bbbbb1c81
+  AEPLifecycle: 64107400233d9add603a87d2a4b36002bccb0129
+  AEPMessaging: 5497fbfaa9dc2a6ad3bc77068936491fc1706066
   AEPOptimize: 413690f88cb8ae574153a94081331788ca740a91
-  AEPPlaces: 04294020832c78249732c80aec86928114698cbf
+  AEPPlaces: f52c80817845429fca4321fc64326bd45ad9e495
   AEPRulesEngine: 71228dfdac24c9ded09be13e3257a7eb22468ccc
-  AEPServices: 7284c30359c789cd16bf366b4ea81094a66d21ab
-  AEPSignal: c9b3c239120190fae8e8479d584d54b60af37d99
-  AEPTarget: 7aa8a2c8e4a2fd36862911581b420380709e5578
+  AEPServices: 1c66ce125f9b3bbd46e42687b6929cd584bffdf4
+  AEPSignal: d6473de3410183f1f0754b92b2938a571332362e
+  AEPTarget: dcadd4dabd59976ff9067cead194c2d29576ffd9
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -718,17 +718,17 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
-  RCTAEPAssurance: 9f51b9b5da17f9b98a41ce29e4f3e3b67ea36c17
-  RCTAEPCampaignClassic: 4a4fa594992153438e9f838d50ad97bb734d8fd9
-  RCTAEPCore: 513c7e995cafcaf536653f0dfaaba2b92862b93a
-  RCTAEPEdge: 9938932e89a90adf5cd30250b46cc67fbe35dd06
-  RCTAEPEdgeConsent: b998b2d08f254635ef01263fea186d7262f2d242
-  RCTAEPEdgeIdentity: 1b18a3ff1947f8f4896d5f40083d31a6971e4bbc
-  RCTAEPMessaging: db5eac36357eef99c482687f76ebe4ad4c491879
-  RCTAEPOptimize: 634c655a49f57aaf9e9f41b03be4d69ba0df1e9b
-  RCTAEPPlaces: d666c74a21b7fa2edb3740677b16440b99a9bf8e
-  RCTAEPTarget: 84b56042d100452714ef6b7c816808a51ff901b8
-  RCTAEPUserProfile: 341c77e0d18d69872c81e425a2e9cae37fe82045
+  RCTAEPAssurance: 6a643e20716967f58ab982e734b1cb432424e253
+  RCTAEPCampaignClassic: 210ff4bddafe2987db76332f350a17200dfaeb27
+  RCTAEPCore: 2c2e2711e00091d8abea6f5e7bffaf34367c363d
+  RCTAEPEdge: 49d403c33981d1dd16085d586d561c736d9637e8
+  RCTAEPEdgeConsent: dc4de5eca23da4a4859fea12dca63e89a08f9d2e
+  RCTAEPEdgeIdentity: 39ad6df51e1d15066ec6d6072b12ec78500e268a
+  RCTAEPMessaging: 94607ae33ee697fe07fd97aabc5d397c1c3fcb5d
+  RCTAEPOptimize: 4683ee837ea032dc99cbda0081e68ea8100f1477
+  RCTAEPPlaces: 280e50ef0a8fd73deb7e88e31734d7bc9a7cec4e
+  RCTAEPTarget: 8bed683d798c8aba89700fa4f22c8465615faeac
+  RCTAEPUserProfile: a3b540291d26782d2fe8f47c5ad058e94a3d4e8f
   RCTRequired: 0f06b6068f530932d10e1a01a5352fad4eaacb74
   RCTTypeSafety: b0ee81f10ef1b7d977605a2b266823dabd565e65
   React: 3becd12bd51ea8a43bdde7e09d0f40fba7820e03

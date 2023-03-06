@@ -176,7 +176,8 @@ describe('Target', () => {
     expect(spy).toHaveBeenCalledWith('locationName', parameters);
   });
 
-  test('prefetchContent is called with correct parameters', async () => {
+ test('prefetchContent is called with correct parameters', async () => {
+   
     const spy = jest.spyOn(NativeModules.AEPTarget, 'prefetchContent');
     var mboxParameters1 = { status: 'platinum' };
     var purchaseIDs = ['34', '125'];
@@ -204,10 +205,11 @@ describe('Target', () => {
       targetOrder
     );
 
-    await Target.prefetchContent(prefetchList, parameters)
+  
+   await Target.prefetchContent(prefetchList, parameters)
       .then((success) => console.log(success))
       .catch((err) => console.log(err));
 
     expect(spy).toHaveBeenCalledWith(prefetchList, parameters);
-  });
+ });
 });

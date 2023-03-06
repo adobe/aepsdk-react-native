@@ -80,18 +80,13 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    try {
-      Edge.registerExtension();
-      Places.registerExtension();
-      MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-          MobileCore.lifecycleStart(null);
-        }
-      });
-    } catch (InvalidInitException e) {
-      ...
-    }
+    MobileCore.configureWithAppID("your-app-ID");
+    List<Class<? extends Extension>> extensions = Arrays.asList(
+                Edge.EXTENSION,
+                Places.EXTENSION);
+    MobileCore.registerExtensions(extensions, o -> {
+      MobileCore.lifecycleStart(null);
+    });
   }
 }
 ```
@@ -99,14 +94,14 @@ public class MainApplication extends Application implements ReactApplication {
 ### Importing the extension:
 
 ```typescript
-import { 
+import {
   Places,
   PlacesAuthStatus,
   PlacesGeofence,
   PlacesGeofenceTransitionType,
   PlacesLocation,
-  PlacesPOI
-} from '@adobe/react-native-aepplaces';
+  PlacesPOI,
+} from "@adobe/react-native-aepplaces";
 ```
 
 ## API reference
@@ -114,11 +109,13 @@ import {
 #### Getting the extension version:
 
 **Syntax**
+
 ```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const version = await Places.extensionVersion();
 console.log(`AdobeExperienceSDK: Places version: ${version}`);
@@ -127,11 +124,13 @@ console.log(`AdobeExperienceSDK: Places version: ${version}`);
 #### Get the nearby points of interest:
 
 **Syntax**
+
 ```typescript
 getNearbyPointsOfInterest(location, <limit>): Promise<Array<PlacesPOI>>
 ```
 
 **Example**
+
 ```typescript
 let location = new PlacesLocation(<latitude>, <longitude>, <optional altitude>, <optional speed>, <optional accuracy>);
 
@@ -146,11 +145,13 @@ try {
 #### Process geofence:
 
 **Syntax**
+
 ```typescript
 processGeofence(geofence, <transitionType>): void
 ```
 
 **Example**
+
 ```typescript
 // create a geofence
 let geofence = new PlacesGeofence("geofence Identifier", <latitude>, <longitude>, <radius>, <optional expiration-duration>);
@@ -161,11 +162,13 @@ Places.processGeofence(geofence, PlacesGeofenceTransitionType.EXIT);
 #### Get the current point of interests:
 
 **Syntax**
+
 ```typescript
 getCurrentPointsOfInterest(): Promise<Array<PlacesPOI>>
 ```
 
 **Example**
+
 ```typescript
 const pois = await Places.getCurrentPointsOfInterest();
 console.log('AdobeExperienceSDK: Places pois: ' + pois);
@@ -175,11 +178,13 @@ console.log('AdobeExperienceSDK: Places pois: ' + pois);
 #### Get the last known location
 
 **Syntax**
+
 ```typescript
 getLastKnownLocation(): Promise<PlacesLocation>
 ```
 
 **Example**
+
 ```typescript
 const location = await Places.getLastKnownLocation();
 console.log('AdobeExperienceSDK: Places location: ' + location)
@@ -189,11 +194,13 @@ console.log('AdobeExperienceSDK: Places location: ' + location)
 #### Clear
 
 **Syntax**
+
 ```typescript
 clear(): void
 ```
 
 **Example**
+
 ```typescript
 Places.clear();
 ```
@@ -201,11 +208,13 @@ Places.clear();
 #### Set Authorization status:
 
 **Syntax**
+
 ```typescript
 setAuthorizationStatus(authStatus?: PlacesAuthStatus): void;
 ```
 
 **Example**
+
 ```typescript
 Places.setAuthorizationStatus(PlacesAuthStatus.ALWAYS);
 Places.setAuthorizationStatus(PlacesAuthStatus.DENIED);
