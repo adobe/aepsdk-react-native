@@ -47,6 +47,7 @@ iOS
 
 ```objectivec
 @import AEPCore;
+@import AEPLifecycle;
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPMessaging;
@@ -55,7 +56,7 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class, AEPMobileEdge.class, AEPMobileMessaging.class] completion:^{
+  [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class, AEPMobileEdge.class, AEPMobileMessaging.class, AEPMobileLifecycle.class] completion:^{
     [AEPMobileCore configureWithAppId:@"yourAppID"];
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
@@ -71,6 +72,7 @@ Android
 ```java
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
@@ -92,7 +94,8 @@ public class MainApplication extends Application implements ReactApplication {
     List<Class<? extends Extension>> extensions = Arrays.asList(
                 Edge.EXTENSION,
                 Identity.EXTENSION,
-                Messaging.EXTENSION);
+                Messaging.EXTENSION,
+    						Lifecycle.EXTENSION);
     MobileCore.registerExtensions(extensions, o -> {
       MobileCore.lifecycleStart(null);
     });
