@@ -15,34 +15,20 @@ The messaging extension has the following peer dependenices, which must be insta
 
 ## Installation
 
-See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page.
-Clone the `@adobe/react-native-aepmessaging` package from the `messaging` branch on [Github](https://github.com/adobe/aepsdk-react-native/tree/messaging). Place the Messaging package folder into app repo or directory of your choosing. Then you can install the package by running:
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
+
+Install the `@adobe/react-native-aepmessaging` package:
+
+NPM:
 
 ```bash
-cd MyReactApp
-npm install {path to messaging package}
+npm install @adobe/react-native-aepmessaging
 ```
 
-## IOS Setup
+Yarn:
 
-**Podfile setup for `@adobe/react-native-aepmessaging`**  
-
-```ruby
-target 'AEPSampleApp' do
-pod "AEPMessaging"
-end
-```
-
-## Android Setup
-
-**Gradle setup for `@adobe/react-native-aepmessaging` **
-
-In the project level build.gradle file of your Android project in your RN application add:
-
-```gradle
-repositories {
-  mavenCentral()
-}
+```bash
+yarn add @adobe/react-native-aepmessaging
 ```
 
 ## Usage

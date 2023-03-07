@@ -8,19 +8,19 @@ PODS:
   - AEPCore (3.7.4):
     - AEPRulesEngine (>= 1.1.0)
     - AEPServices (>= 3.7.4)
-  - AEPEdge (1.5.0):
-    - AEPCore (>= 3.5.0)
-    - AEPEdgeIdentity
-  - AEPEdgeConsent (1.0.1):
-    - AEPCore (>= 3.5.0)
-    - AEPEdge (>= 1.4.0)
-  - AEPEdgeIdentity (1.1.0):
-    - AEPCore (>= 3.6.0)
+  - AEPEdge (1.6.0):
+    - AEPCore (>= 3.7.0)
+    - AEPEdgeIdentity (>= 1.2.0)
+  - AEPEdgeConsent (1.1.0):
+    - AEPCore (>= 3.7.0)
+    - AEPEdge (>= 1.6.0)
+  - AEPEdgeIdentity (1.2.0):
+    - AEPCore (>= 3.7.0)
   - AEPIdentity (3.7.4):
     - AEPCore (>= 3.7.4)
   - AEPLifecycle (3.7.4):
     - AEPCore (>= 3.7.4)
-  - AEPMessaging (1.1.0):
+  - AEPMessaging (1.1.1):
     - AEPCore (>= 3.7.4)
     - AEPEdge (>= 1.5.0)
     - AEPEdgeIdentity (>= 1.1.0)
@@ -28,14 +28,14 @@ PODS:
   - AEPOptimize (1.0.0):
     - AEPCore (>= 3.2.0)
     - AEPEdge (>= 1.2.0)
-  - AEPPlaces (3.0.2):
-    - AEPCore
-    - AEPServices
+  - AEPPlaces (3.0.3):
+    - AEPCore (>= 3.0.0)
+    - AEPServices (>= 3.0.0)
   - AEPRulesEngine (1.2.0)
   - AEPServices (3.7.4)
   - AEPSignal (3.7.4):
     - AEPCore (>= 3.7.4)
-  - AEPTarget (3.3.0):
+  - AEPTarget (3.3.1):
     - AEPCore (>= 3.1.0)
   - AEPUserProfile (3.0.1):
     - AEPCore
@@ -148,7 +148,7 @@ PODS:
     - AEPEdgeIdentity (~> 1.0)
     - React
   - RCTAEPMessaging (1.0.0):
-    - AEPMessaging (~> 1.1.0-beta2)
+    - AEPMessaging (~> 1.1)
     - React
   - RCTAEPOptimize (2.0.0):
     - AEPOptimize (~> 1.0)
@@ -469,7 +469,6 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
-  - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, branch `staging`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -553,6 +552,7 @@ SPEC REPOS:
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
+    - AEPMessaging
     - AEPOptimize
     - AEPPlaces
     - AEPRulesEngine
@@ -577,9 +577,6 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
-  AEPMessaging:
-    :branch: staging
-    :git: https://github.com/adobe/aepsdk-messaging-ios.git
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -677,27 +674,22 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
-CHECKOUT OPTIONS:
-  AEPMessaging:
-    :commit: 07b77f29430e5cc7b6564809bbdf58fed622afb4
-    :git: https://github.com/adobe/aepsdk-messaging-ios.git
-
 SPEC CHECKSUMS:
   AEPAssurance: b25880cd4b14f22c61a1dce19807bd0ca0fe9b17
   AEPCampaignClassic: cd20252606d9e12d5ee2c410df260762faa49d2c
   AEPCore: 4f2d6af62f492e87a6cc9cbf4c89ae6f0ea89d81
-  AEPEdge: 924cd8ace3db40b9c42bc2bc5e8fb1fcad3a9b77
-  AEPEdgeConsent: a23b35ab331d2aa2013fcef49c9d6b80085d5597
-  AEPEdgeIdentity: 47f0c6ecbec5857b2a8cb9b7bf717c2424c6bae0
+  AEPEdge: e4364a56d358c517f7d4cef87570ac4e7652d3a2
+  AEPEdgeConsent: d10d4232615b880d484050edf47b2e3fbfb787bb
+  AEPEdgeIdentity: 6bb2c1e62d48cdc988b4d492e8e6d563f0ced73d
   AEPIdentity: 4e298be480b327dd1fbb89e74210001bbbbb1c81
   AEPLifecycle: 64107400233d9add603a87d2a4b36002bccb0129
-  AEPMessaging: 5497fbfaa9dc2a6ad3bc77068936491fc1706066
+  AEPMessaging: 622f4d45f21729b357452a79c67d0f3bc36045a8
   AEPOptimize: 413690f88cb8ae574153a94081331788ca740a91
-  AEPPlaces: f52c80817845429fca4321fc64326bd45ad9e495
+  AEPPlaces: 561e22d5ee6570fcb0b721a47aa7cda2c4f00ec0
   AEPRulesEngine: 71228dfdac24c9ded09be13e3257a7eb22468ccc
   AEPServices: 1c66ce125f9b3bbd46e42687b6929cd584bffdf4
   AEPSignal: d6473de3410183f1f0754b92b2938a571332362e
-  AEPTarget: dcadd4dabd59976ff9067cead194c2d29576ffd9
+  AEPTarget: 90c732ef32cee5733897e395afdab7242df9762d
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -724,7 +716,7 @@ SPEC CHECKSUMS:
   RCTAEPEdge: 49d403c33981d1dd16085d586d561c736d9637e8
   RCTAEPEdgeConsent: dc4de5eca23da4a4859fea12dca63e89a08f9d2e
   RCTAEPEdgeIdentity: 39ad6df51e1d15066ec6d6072b12ec78500e268a
-  RCTAEPMessaging: 94607ae33ee697fe07fd97aabc5d397c1c3fcb5d
+  RCTAEPMessaging: d6d2cb608e45a428fb0198d5f78486889f15bd87
   RCTAEPOptimize: 4683ee837ea032dc99cbda0081e68ea8100f1477
   RCTAEPPlaces: 280e50ef0a8fd73deb7e88e31734d7bc9a7cec4e
   RCTAEPTarget: 8bed683d798c8aba89700fa4f22c8465615faeac
@@ -763,6 +755,6 @@ SPEC CHECKSUMS:
   Yoga: c4d61225a466f250c35c1ee78d2d0b3d41fe661c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: b6cc517de111ec2f7c3a5f799cfd5bd953d7cb51
+PODFILE CHECKSUM: 13d57dc1d680859752a8fe6e191c0c3c4dd626cd
 
 COCOAPODS: 1.11.3
