@@ -220,7 +220,7 @@ Messaging.setMessagingDelegate(messagingDelegate)
 
 ### saveMessage
 
-Natively caches the provided `Message` object in-memory. Cached `Message` objects can used at a later time to show the cached `Message` or perform other actions on the `Message` object. This function should be called from `shouldShowMessage` of the custom `MessagingDelegate`.
+Natively caches the provided `Message` object in-memory. Cached `Message` objects can used at a later time to show the cached `Message` or perform other actions on the `Message` object. This function should be called from the `shouldShowMessage` function of the custom `MessagingDelegate`.
 
 **Syntax**
 
@@ -389,7 +389,7 @@ const messagingDelegate = {
 
 ### Controlling when the message should be shown to the end user.
 
-If a `MessagingDelegate` has been set, the delegate's `shouldShowMessage` method will be called prior to displaying an in-app message for which the end user has qualified. The developer is responsible for returning true if the message should be shown, or false if the message should be suppressed.
+If a `MessagingDelegate` has been set, the delegate's `shouldShowMessage` function will be called prior to displaying an in-app message for which the end user has qualified. The developer is responsible for returning true if the message should be shown, or false if the message should be suppressed.
 
 Below is an example of when the developer may choose to suppress an in-app message due to the status of some other workflow within the app:
 
@@ -403,7 +403,7 @@ function shouldShowMessage(message: Message): boolean {
 }
 ```
 
-Another option for the developer is to store a reference to the `Message` object, and call the `show` method on it at a later time. To use this functionality, app developers can call `Messaging.saveMessage(message)` from the `shouldShowMessage` of the `MessagingDelegate` for caching the Message on the native side of the RN AEPMessaging package.
+Another option for the developer is to store a reference to the `Message` object, and call the `show` function on it at a later time. To use this functionality, app developers can call `Messaging.saveMessage(message)` from the `shouldShowMessage` of the `MessagingDelegate` for caching the Message on the native side of the RN AEPMessaging package.
 Continuing with the above example, the developer has stored the message that was triggered initially, and chooses to show it upon completion of the other workflow:
 
 ```javascript
