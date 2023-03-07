@@ -2,7 +2,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 
     dependencies {
@@ -33,11 +32,9 @@ android {
 repositories {
     google()
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
-    api "com.adobe.marketing.mobile:optimize:2.+"
-    api "com.adobe.marketing.mobile:messaging:2.+"
+    api "com.adobe.marketing.mobile:messaging:[2.1.0, 3.0["
     implementation "com.facebook.react:react-native:+"
 }

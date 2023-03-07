@@ -133,7 +133,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
 }
 
 //MARK: - AEPMessagingDelegate functions.
-- (void) onDismissWithMessage:(id<AEPShowable> _Nonnull) message {
+- (void) onDismiss:(id<AEPShowable> _Nonnull) message {
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
         if(messageObj) {
@@ -141,7 +141,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
         }
 }
 
-- (void) onShowWithMessage:(id<AEPShowable> _Nonnull)message {
+- (void) onShow:(id<AEPShowable> _Nonnull)message {
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
     if(messageObj) {
@@ -149,7 +149,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(shouldShowMessage: (BOOL) shouldShowMessa
     }
 }
 
-- (BOOL) shouldShowMessageWithMessage:(id<AEPShowable> _Nonnull)message {
+- (BOOL) shouldShowMessage:(id<AEPShowable> _Nonnull)message {
     AEPFullscreenMessage * fullscreenMessage = (AEPFullscreenMessage *) message;
     AEPMessage * messageObj = (AEPMessage *) fullscreenMessage.settings.parent;
     if(messageObj) {
