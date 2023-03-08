@@ -29,11 +29,11 @@ public class RCTAEPPlacesDataBridge {
 
 
   // @{link PlacesAuthorizationStatus}
-  public final static String AEP_PLACES_AUTH_STATUS_DENIED = "AEP_PLACES_AUTH_STATUS_DENIED";
-  public final static String AEP_PLACES_AUTH_STATUS_ALWAYS = "AEP_PLACES_AUTH_STATUS_ALWAYS";
-  public final static String AEP_PLACES_AUTH_STATUS_UNKNOWN = "AEP_PLACES_AUTH_STATUS_UNKNOWN";
-  public final static String AEP_PLACES_AUTH_STATUS_RESTRICTED = "AEP_PLACES_AUTH_STATUS_RESTRICTED";
-  public final static String AEP_PLACES_AUTH_STATUS_WHEN_IN_USE = "AEP_PLACES_AUTH_STATUS_WHEN_IN_USE";
+  public final static String AEP_PLACES_AUTH_STATUS_DENIED = "PLACES_AUTH_STATUS_DENIED";
+  public final static String AEP_PLACES_AUTH_STATUS_ALWAYS = "PLACES_AUTH_STATUS_ALWAYS";
+  public final static String AEP_PLACES_AUTH_STATUS_UNKNOWN = "PLACES_AUTH_STATUS_UNKNOWN";
+  public final static String AEP_PLACES_AUTH_STATUS_RESTRICTED = "PLACES_AUTH_STATUS_RESTRICTED";
+  public final static String AEP_PLACES_AUTH_STATUS_WHEN_IN_USE = "PLACES_AUTH_STATUS_WHEN_IN_USE";
 
   // Location
   private final static String AEP_PLACES_LOCATION_LATITUDE = "latitude";
