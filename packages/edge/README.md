@@ -104,7 +104,7 @@ Returns the version of the client-side Edge extension.
 
 **Syntax**
 ```typescript
-extensionVersion(): Promise<string>;
+extensionVersion(): Promise<string>
 ```
 
 **Example**
@@ -149,7 +149,7 @@ See [MobileCore.resetIdentities](../core/README.md#resetidentities) for more det
 
 **Syntax**
 ```typescript
-sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>;
+sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>
 ```
 
 **Example**
