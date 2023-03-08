@@ -49,6 +49,7 @@ import com.adobe.marketing.mobile.UserProfile;
 import com.adobe.marketing.mobile.Target;
 import com.adobe.marketing.mobile.Places;
 import com.adobe.marketing.mobile.CampaignClassic;
+import com.adobe.marketing.mobile.Assurance;
 ...
 import android.app.Application;
 ...
@@ -71,6 +72,7 @@ public class MainApplication extends Application implements ReactApplication {
 -     Target.registerExtension();
 -     Places.registerExtension();
 -     Campaign.registerExtension();
+-     Assurance.registerExtension();
 -     MobileCore.start(new AdobeCallback () {
 -          @Override
 -          public void call(Object o) {
@@ -86,7 +88,8 @@ public class MainApplication extends Application implements ReactApplication {
       Signal.EXTENSION,
       Target.EXTENSION,
       Places.EXTENSION,
-      CampaignClassic.EXTENSION
+      CampaignClassic.EXTENSION,
+      Assurance.EXTENSION,
   );
   MobileCore.registerExtensions(extensions, o -> MobileCore.configureWithAppID("YourEnvironmentFileID"));
         ...
@@ -109,15 +112,18 @@ public class MainApplication extends Application implements ReactApplication {
 //#import "ACPTarget.h"
 //#import "ACPCampaign.h"
 //#import "ACPPlaces.h"
+//#import "AEPAssurance.h"
 
 // 2. import AEP extensions
 @import AEPCore;
+@import AEPUserProfile;
 @import AEPServices;
-@import AEPSignal;
+@import AEPIdentity;
 @import AEPLifecycle;
 @import AEPTarget;
 @import AEPCampaignClassic;
 @import AEPPlaces;
+@import AEPAssurance;
 //  --- 2. end ----
 
 ...
@@ -152,9 +158,10 @@ public class MainApplication extends Application implements ReactApplication {
         AEPMobileIdentity.class,
         AEPMobileLifecycle.class,
         AEPMobileSignal.class,
-        AEPMobileCampaignClassic.class,
         AEPMobileTarget.class,
+        AEPMobileCampaignClassic.class,
         AEPMobilePlaces.class,
+        AEPMobileAssurance.class,
     ] completion:^{
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
