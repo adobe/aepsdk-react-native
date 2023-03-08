@@ -73,6 +73,6 @@ public class RCTAEPCampaignClassicModule extends ReactContextBaseJavaModule {
   public void trackNotificationClickWithUserInfo(ReadableMap trackInfo) {
     final Map<String, String> trackInfoMap =
         RCTAEPCampaignClassicUtil.convertTrackInfoToMap(trackInfo);
-    CampaignClassic.trackNotificationReceive(trackInfoMap);
+    CampaignClassic.trackNotificationClick(trackInfoMap);
   }
 }
