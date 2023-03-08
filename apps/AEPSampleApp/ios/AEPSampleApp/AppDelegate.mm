@@ -78,7 +78,7 @@
         AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
         AEPMobileEdgeConsent.class, AEPMobileMessaging.class,
         AEPMobileOptimize.class, AEPMobilePlaces.class, AEPMobileTarget.class,
-        AEPMobileCampaignClassic.class
+        AEPMobileCampaignClassic.class, AEPMobileAssurance.class
       ]
               completion:^{
                 [AEPMobileCore
