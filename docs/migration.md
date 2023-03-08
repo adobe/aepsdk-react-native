@@ -120,6 +120,7 @@ public class MainApplication extends Application implements ReactApplication {
 @import AEPServices;
 @import AEPIdentity;
 @import AEPLifecycle;
+@import AEPSignal;
 @import AEPTarget;
 @import AEPCampaignClassic;
 @import AEPPlaces;
@@ -183,7 +184,7 @@ public class MainApplication extends Application implements ReactApplication {
 ```javascript
 ACPCore.collectPii(data: [String : String])
 ```
-- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#collecting-pii)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#collectpii)
 ```typescript
 MobileCore.collectPii(data: Record<string, string>)
 ```
