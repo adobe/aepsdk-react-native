@@ -47,11 +47,15 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+  const UIApplicationState appState = application.applicationState;
+
   [AEPMobileCore registerExtensions: @[ AEPCampaignClassic.class] completion:^{
-    [AEPMobileCore configureWithAppId:@"yourAppID"];
+    if (appState != UIApplicationStateBackground) {
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
-  ];
+    }
+  }];
   return YES;
 }
 @end

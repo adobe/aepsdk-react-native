@@ -55,12 +55,16 @@ iOS
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class, AEPMobileEdge.class, AEPMobileMessaging.class, AEPMobileLifecycle.class] completion:^{
-    [AEPMobileCore configureWithAppId:@"yourAppID"];
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+  const UIApplicationState appState = application.applicationState;
+
+  [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class, AEPMobileEdge.class, AEPMobileMessaging.class, AEPMobileOptimize.class] completion:^{
+  if (appState != UIApplicationStateBackground) {
+        [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
-  ];
+  }];
   return YES;
 }
 
