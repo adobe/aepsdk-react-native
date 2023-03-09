@@ -50,10 +50,13 @@ iOS
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+  const UIApplicationState appState = application.applicationState;
+  
   [AEPMobileCore registerExtensions:@[AEPEdge.class, AEPMobilePlaces.class] completion:^{
-  if (appState != UIApplicationStateBackground) {
-     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
+    if (appState != UIApplicationStateBackground) {
+       [AEPMobileCore lifecycleStart:nil];
+    }
   }];
   return YES;
 }

@@ -154,6 +154,9 @@ public class MainApplication extends Application implements ReactApplication {
 
     [AEPMobileCore setLogLevel: AEPLogLevelDebug];
     [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+    const UIApplicationState appState = application.applicationState;
+
     [AEPMobileCore registerExtensions: @[
         AEPMobileUserProfile.class,
         AEPMobileIdentity.class,
@@ -164,9 +167,10 @@ public class MainApplication extends Application implements ReactApplication {
         AEPMobilePlaces.class,
         AEPMobileAssurance.class,
     ] completion:^{
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
-  ];
+      if (appState != UIApplicationStateBackground) {
+       [AEPMobileCore lifecycleStart:nil];
+      }
+    }];
   //  --- 4. end ----
 
     ...

@@ -116,18 +116,20 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+  const UIApplicationState appState = application.applicationState;
+
   [AEPMobileCore registerExtensions: @[
       AEPMobileLifecycle.class,
       AEPMobileSignal.class,
       AEPMobileEdge.class,
       AEPMobileEdgeIdentity.class,
       AEPMobileEdgeConsent.class,
-    ] completion:^{
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-    //enable this for Lifecycle. See Note for collecting Lifecycle metrics.
-  }
-  ];
-
+  ] completion:^{
+    if (appState != UIApplicationStateBackground) {
+       [AEPMobileCore lifecycleStart:nil}];
+    }
+  }];
   return YES;
 }
 

@@ -82,10 +82,9 @@
         AEPMobileEdgeConsent.class, AEPMobileMessaging.class,
         AEPMobileOptimize.class, AEPMobilePlaces.class, AEPMobileTarget.class,
         AEPMobileCampaignClassic.class, AEPMobileAssurance.class
-      ]
-      completion:^{
-       if (appState != UIApplicationStateBackground) {
-          [AEPMobileCore lifecycleStart:nil];
+   ] completion:^{
+      if (appState != UIApplicationStateBackground) {
+        [AEPMobileCore lifecycleStart:nil];
       }
    }];
   return YES;

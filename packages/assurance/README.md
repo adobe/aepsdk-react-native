@@ -45,7 +45,7 @@ iOS
 
   [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileAssurance.class] completion:^{
       if (appState != UIApplicationStateBackground) {
-        [AEPMobileCore lifecycleStart:nil];
+         [AEPMobileCore lifecycleStart:nil];
       }
   }];
   return YES;

@@ -61,9 +61,9 @@ iOS
   const UIApplicationState appState = application.applicationState;
 
   [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class, AEPMobileEdge.class, AEPMobileMessaging.class, AEPMobileOptimize.class] completion:^{
-  if (appState != UIApplicationStateBackground) {
-        [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
+    if (appState != UIApplicationStateBackground) {
+        [AEPMobileCore lifecycleStart:nil}];
+    }
   }];
   return YES;
 }

@@ -53,7 +53,7 @@ iOS
 
   [AEPMobileCore registerExtensions: @[ AEPCampaignClassic.class] completion:^{
     if (appState != UIApplicationStateBackground) {
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+    [AEPMobileCore lifecycleStart:nil}];
     }
   }];
   return YES;
