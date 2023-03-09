@@ -59,8 +59,7 @@ public class RCTAEPCampaignClassicModule extends ReactContextBaseJavaModule {
             ? RCTAEPCampaignClassicUtil.convertReadableMapToMap(
                   additionalParams)
             : null;
-    CampaignClassic.registerDevice(deviceToken, userKey, additionalParamsMap,
-                                   null);
+      CampaignClassic.registerDevice(deviceToken, userKey, additionalParamsMap);
   }
 
   @ReactMethod
@@ -74,6 +73,6 @@ public class RCTAEPCampaignClassicModule extends ReactContextBaseJavaModule {
   public void trackNotificationClickWithUserInfo(ReadableMap trackInfo) {
     final Map<String, String> trackInfoMap =
         RCTAEPCampaignClassicUtil.convertTrackInfoToMap(trackInfo);
-    CampaignClassic.trackNotificationReceive(trackInfoMap);
+    CampaignClassic.trackNotificationClick(trackInfoMap);
   }
 }

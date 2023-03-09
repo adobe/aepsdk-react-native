@@ -14,11 +14,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.InvalidInitException;
 import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.TargetParameters;
-import com.adobe.marketing.mobile.TargetPrefetch;
-import com.adobe.marketing.mobile.TargetRequest;
+import com.adobe.marketing.mobile.target.TargetParameters;
+import com.adobe.marketing.mobile.target.TargetPrefetch;
+import com.adobe.marketing.mobile.target.TargetRequest;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -30,11 +29,11 @@ import com.facebook.react.bridge.Callback;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
   private final String REQUEST_ID_KEY = "id";
+
   private HashMap<String, TargetRequest> registeredTargetRequests = new HashMap<>();
 
   public RCTAEPTargetModule(ReactApplicationContext reactContext) {
@@ -149,14 +148,14 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
 
     TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
 
-    Target.locationsDisplayed(mboxNamesList, parametersObj);
+    Target.displayedLocations(mboxNamesList, parametersObj);
   }
 
   @ReactMethod
   public void clickedLocation(String mboxName, ReadableMap parameters) {
     TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
 
-    Target.locationClicked(mboxName, parametersObj);
+    Target.clickedLocation(mboxName, parametersObj);
   }
 
   @ReactMethod

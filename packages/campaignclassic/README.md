@@ -47,11 +47,15 @@ iOS
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+  const UIApplicationState appState = application.applicationState;
+
   [AEPMobileCore registerExtensions: @[ AEPCampaignClassic.class] completion:^{
-    [AEPMobileCore configureWithAppId:@"yourAppID"];
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
-  ];
+    if (appState != UIApplicationStateBackground) {
+    [AEPMobileCore lifecycleStart:nil}];
+    }
+  }];
   return YES;
 }
 @end
@@ -78,18 +82,12 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    try {
-      CampaignClassic.registerExtension();
-      MobileCore.configureWithAppID("yourAppID");
-      MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-          MobileCore.lifecycleStart(null);
-        }
-      });
-    } catch (InvalidInitException e) {
-      ...
-    }
+    MobileCore.configureWithAppID("yourAppID");
+    List<Class<? extends Extension>> extensions = Arrays.asList(
+                CampaignClassic.EXTENSION);
+    MobileCore.registerExtensions(extensions, o -> {
+      MobileCore.lifecycleStart(null);
+    });
   }
 }
 ```
@@ -97,7 +95,7 @@ public class MainApplication extends Application implements ReactApplication {
 ### Importing the extension:
 
 ```typescript
-import { CampaignClassic } from '@adobe/react-native-AEPCampaignClassic';
+import { CampaignClassic } from "@adobe/react-native-AEPCampaignClassic";
 ```
 
 ## API reference
@@ -150,7 +148,10 @@ trackNotificationClickWithUserInfo(userInfo: Record<string, any>): void
 **Example**
 
 ```typescript
-CampaignClassic.trackNotificationClickWithUserInfo({ _mId: 'testId', _dId: 'testId' });
+CampaignClassic.trackNotificationClickWithUserInfo({
+  _mId: "testId",
+  _dId: "testId",
+});
 ```
 
 ### Tracking Notification Receive:
@@ -166,5 +167,8 @@ CampaignClassic.trackNotificationReceiveWithUserInfo(userInfo: Record<string, an
 **Example**
 
 ```typescript
-CampaignClassic.trackNotificationReceiveWithUserInfo({ _mId: 'testId', _dId: 'testId' });
+CampaignClassic.trackNotificationReceiveWithUserInfo({
+  _mId: "testId",
+  _dId: "testId",
+});
 ```

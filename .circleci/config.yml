@@ -4,7 +4,7 @@ version: 2.1
 jobs:
   unit-test:
     docker:
-      - image: cimg/node:16.6.2
+      - image: cimg/node:19.7.0
 
     steps:
       - checkout
@@ -21,7 +21,7 @@ jobs:
       
       - run:
           name: Unit Tests
-          command: yarn tests:jest
+          command: yarn tests:jest --watchAll=false --runInBand
 
   build-sample-app-android:
     docker:
@@ -50,7 +50,9 @@ jobs:
       # CircleCI puts xcode app in consistent path, RN looks for versioned path
       - run:
           name: Move xcode
-          command: cd /Applications && mv Xcode.app Xcode-13.0.app
+          command: |
+            cd /Applications && mv Xcode.app Xcode-13.0.app
+            /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f /Applications/Xcode-13.0.app/Contents/Developer/Applications/Simulator.app
 
       - run:
           name: Install latest NodeJS

@@ -19,8 +19,6 @@ target 'AEPSampleApp' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod "AEPMessaging", :git => "https://github.com/adobe/aepsdk-messaging-ios.git", :branch => "staging"
-
   target 'AEPSampleAppTests' do
     inherit! :complete
     # Pods for testing
