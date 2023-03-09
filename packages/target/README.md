@@ -48,12 +48,16 @@ iOS
 
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [AEPMobileCore setLogLevel: AEPLogLevelTrace];
+  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+  const UIApplicationState appState = application.applicationState;
+
   [AEPMobileCore registerExtensions: @[AEPMobileEdge.class, AEPMobileTarget.class] completion:^{
-    [AEPMobileCore configureWithAppId:@"yourAppID"];
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
-  ];
+    if (appState != UIApplicationStateBackground) {
+       [AEPMobileCore lifecycleStart:nil];
+    }
+  }];
   return YES;
 }
 @end

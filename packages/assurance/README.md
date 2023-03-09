@@ -40,15 +40,19 @@ iOS
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
   [AEPMobileCore configureWithAppId:@"your-app-ID"];
+
+  const UIApplicationState appState = application.applicationState;
+
   [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileAssurance.class] completion:^{
-          [AEPMobileCore lifecycleStart:nil];
+      if (appState != UIApplicationStateBackground) {
+         [AEPMobileCore lifecycleStart:nil];
+      }
   }];
   return YES;
 }
-
 ```
 
-To connect to a griffon session by scanning the QR code. Follow [Apple developer](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) documentation to set custom URL scheme for your application. Finally, implement the `openURL` delegate method and pass the deeplink URL to startSessionWithURL API.
+To connect to an Assurance session by scanning the QR code, follow [Apple developer](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) documentation to set custom URL scheme for your application. Finally, implement the `openURL` delegate method and pass the deeplink URL to startSessionWithURL API.
 
 ```objective-c
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
@@ -82,7 +86,7 @@ public class MainApplication extends Application implements ReactApplication {
 }
 ```
 
-To connect to a griffon session by scanning the QR code. Follow the [Android documentation](https://developer.android.com/training/app-links/deep-linking) on information about how to setup a deeplink.
+To connect to an Assurance session by scanning the QR code, follow the [Android documentation](https://developer.android.com/training/app-links/deep-linking) for more information about how to setup a deeplink.
 
 ##### Start Assurance session:
 

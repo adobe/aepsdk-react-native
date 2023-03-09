@@ -1,6 +1,6 @@
-# Migrate to the Experience Platform SDK libraries (AEP 1.x) for React Native
+# Migrate to the Experience Platform SDK libraries (AEP) for React Native
 
-If you have implemented SDK's older React Native libraries (ACP-prefixed React Native libraries, 2.x or lower) in your mobile app, then the following steps will help you migrate your implementation to the latest React Native libraries(AEP-prefixed React Native libraries, 1.x or higher).
+If you have implemented SDK's older React Native libraries (ACP-prefixed React Native libraries) in your mobile app, then the following steps will help you migrate your implementation to the latest React Native libraries(AEP-prefixed React Native libraries).
 
 ## Switch dependent packages
 
@@ -11,30 +11,29 @@ Open your app's package.json file and replace the ACP-prefixed packages with the
 "dependencies": {
     "react-native": "0.64.2",
 -   "@adobe/react-native-acpcore": "^2.0.0"
-+   "@adobe/react-native-aepcore": "^1.0.0",
++   "@adobe/react-native-aepcore": "^2.0.0",
     ...
 },
 
 ```
 At this time, the following ACP-prefix libraries can be switched out with their respective AEP-prefix libraries.  However, ACP and AEP React Native libraries are not compatible. For extensions not supported in AEP-prefixed libraries, you should remove those packages from your package.json file. 
 
-| React Native (ACP 2.x) | React Native (AEP 1.x) |
+| React Native (ACP) | React Native (AEP) |
 | :--- | :--- |
 | @adobe/react-native-acpcore | @adobe/react-native-aepcore |
 | @adobe/react-native-acpuserprofile | @adobe/react-native-aepuserprofile |
-| @adobe/react-native-acpplaces | NA |
+| @adobe/react-native-acpplaces | @adobe/react-native-aepplaces |
 | @adobe/react-native-acpplaces-monitor | NA |
 | @adobe/react-native-acpanalytics | NA |
 | @adobe/react-native-acpmedia | NA |
 | @adobe/react-native-acpaudience | NA |
-| @adobe/react-native-acptarget | NA |
+| @adobe/react-native-acptarget | @adobe/react-native-aeptarget |
 | @adobe/react-native-acpcampaign | NA |
-| @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/react-native-aepassurance:3.x (compatible with AEP libraries)|
-
-<!--- TODO: add more descritions for Assurance library?? --->
+| @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/react-native-aepassurance:4.x (compatible with AEP libraries)|
 
 ## Update SDK initialization
-Remove the registration code for extensions that are not supported in AEP React Native libraries.
+Remove the deprecated registration code and the extensions that are not supported in AEP React Native libraries.
+
 ### Android
 ```diff
 import com.adobe.marketing.mobile.AdobeCallback;
@@ -45,6 +44,9 @@ import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.Places;
+import com.adobe.marketing.mobile.Assurance;
 ...
 import android.app.Application;
 ...
@@ -58,23 +60,35 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.DEBUG);
 -   MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
 
-    try {
-      UserProfile.registerExtension();
-      Identity.registerExtension();
-      Lifecycle.registerExtension();
-      Signal.registerExtension();
+-    try {
+-     UserProfile.registerExtension();
+-     Identity.registerExtension();
+-     Lifecycle.registerExtension();
+-     Signal.registerExtension();
 -     Analytics.registerExtension();
 -     Target.registerExtension();
 -     Places.registerExtension();
 -     Campaign.registerExtension();
-      MobileCore.start(new AdobeCallback () {
-          @Override
-          public void call(Object o) {
-            MobileCore.configureWithAppID("yourAppID");
-         }
-      });
-    } catch (InvalidInitException e) {
-      ...
+-     Assurance.registerExtension();
+-     MobileCore.start(new AdobeCallback () {
+-          @Override
+-          public void call(Object o) {
+-            MobileCore.configureWithAppID("yourAppID");
+-         }
+-      });
+-    } catch (InvalidInitException e) {
+
+  List<Class<? extends Extension>> extensions = Arrays.asList(
+      UserProfile.EXTENSION
+      Identity.EXTENSION,
+      Lifecycle.EXTENSION,
+      Signal.EXTENSION,
+      Target.EXTENSION,
+      Places.EXTENSION,
+      Assurance.EXTENSION,
+  );
+  MobileCore.registerExtensions(extensions, o -> MobileCore.configureWithAppID("YourEnvironmentFileID"));
+        ...
     }
   }
 }
@@ -91,12 +105,21 @@ public class MainApplication extends Application implements ReactApplication {
 //#import "ACPIdentity.h"
 //#import "ACPLifecycle.h"
 //#import "ACPSignal.h"
+//#import "ACPTarget.h"
+//#import "ACPCampaign.h"
+//#import "ACPPlaces.h"
+//#import "AEPAssurance.h"
 
 // 2. import AEP extensions
 @import AEPCore;
+@import AEPUserProfile;
 @import AEPServices;
-@import AEPSignal;
+@import AEPIdentity;
 @import AEPLifecycle;
+@import AEPSignal;
+@import AEPTarget;
+@import AEPPlaces;
+@import AEPAssurance;
 //  --- 2. end ----
 
 ...
@@ -111,8 +134,9 @@ public class MainApplication extends Application implements ReactApplication {
     // [ACPLifecycle registerExtension];
     // [ACPSignal registerExtension];
     // [ACPAnalytics registerExtension];
-    // [ACPCampaign registerExtension];
     // [ACPTarget registerExtension];
+    // [ACPCampaign registerExtension];
+    // [ACPPlaces registerExtension];
 
     // const UIApplicationState appState = application.applicationState;
     // [ACPCore start:^{
@@ -125,15 +149,22 @@ public class MainApplication extends Application implements ReactApplication {
 
     [AEPMobileCore setLogLevel: AEPLogLevelDebug];
     [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+    const UIApplicationState appState = application.applicationState;
+
     [AEPMobileCore registerExtensions: @[
+        AEPMobileUserProfile.class,
+        AEPMobileIdentity.class,
         AEPMobileLifecycle.class,
         AEPMobileSignal.class,
-        AEPMobileIdentity.class,
-        AEPMobileUserProfile.class,
+        AEPMobileTarget.class,
+        AEPMobilePlaces.class,
+        AEPMobileAssurance.class,
     ] completion:^{
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
-  ];
+      if (appState != UIApplicationStateBackground) {
+       [AEPMobileCore lifecycleStart:nil];
+      }
+    }];
   //  --- 4. end ----
 
     ...
@@ -147,121 +178,121 @@ public class MainApplication extends Application implements ReactApplication {
 ### Core
 
 #### collectPii
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.collectPii(data: [String : String])
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#collecting-pii)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#collectpii)
 ```typescript
 MobileCore.collectPii(data: Record<string, string>)
 ```
 
 #### dispatchEvent
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.dispatchEvent(event: ACPExtensionEvent): Promise<boolean>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#dispatchevent)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#dispatchevent)
 ```typescript
 MobileCore.dispatchEvent(event: Event): Promise<boolean>
 ```
 
 #### dispatchEventWithResponseCallback
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.dispatchEventWithResponseCallback(event: ACPExtensionEvent): Promise<ACPExtensionEvent>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#dispatcheventwithresponsecallback)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#dispatcheventwithresponsecallback)
 ```typescript
 MobileCore.dispatchEventWithResponseCallback(event: Event): Promise<Event>
 ```
 
 #### extensionVersion
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.extensionVersion(): Promise<string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion)
 ```typescript
 MobileCore.extensionVersion(): Promise<string>
 ```
 
 #### getLogLevel
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.getLogLevel(): Promise<string> 
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getloglevel)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getloglevel)
 ```typescript
 MobileCore.getLogLevel(): Promise<LogLevel>
 ```
 
 #### getSdkIdentities
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.getSdkIdentities(): Promise<?string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getsdkidentities)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getsdkidentities)
 ```typescript
 MobileCore.getSdkIdentities(): Promise<string>
 ```
 
 #### getPrivacyStatus
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.getPrivacyStatus(): Promise<string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getprivacystatus)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getprivacystatus)
 ```typescript
 MobileCore.getPrivacyStatus(): Promise<string>
 ```
 
 #### log
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.log(logLevel: string, tag: string, message: string)
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#log)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#log)
 ```typescript
 MobileCore.log(logLevel: LogLevel, tag: string, message: string)
 ```
 
 #### resetIdentities
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.resetIdentities()
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#resetidentities)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#resetidentities)
 ```typescript
 MobileCore.resetIdentities()
 ```
 
 #### setPrivacyStatus
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.setPrivacyStatus(privacyStatus: string) 
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setprivacystatus)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setprivacystatus)
 ```typescript
 MobileCore.setPrivacyStatus(privacyStatus: string) 
 ```
 
 #### setLogLevel
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.setLogLevel(mode: string)
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setloglevel)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setloglevel)
 ```typescript
 MobileCore.setLogLevel(mode: LogLevel)
 ```
 
 #### updateConfiguration
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.updateConfiguration(configMap?: { string: any })
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#updateconfiguration)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#updateconfiguration)
 ```typescript
 MobileCore.updateConfiguration(configMap?: Record<string, any>)
 ```
@@ -269,103 +300,103 @@ MobileCore.updateConfiguration(configMap?: Record<string, any>)
 ### Identity
 
 #### appendVisitorInfoForURL
-- ACP (2.x)
+- ACP
 ```javascript
 ACPIdentity.appendVisitorInfoForURL(baseURL?: String): Promise<?string> 
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#appendvisitorinfoforurl)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#appendvisitorinfoforurl)
 ```typescript
 Identity.appendVisitorInfoForURL(baseURL?: String): Promise<string>
 ```
 
 #### extensionVersion
-- ACP (2.x)
+- ACP
 ```javascript
 ACPIdentity.extensionVersion(): Promise<string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-1)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-1)
 ```typescript
 Identity.extensionVersion(): Promise<string>
 ```
 
 #### getUrlVariables
-- ACP (2.x)
+- ACP
 ```javascript
 ACPIdentity.getUrlVariables(): Promise<?string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#geturlvariables)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#geturlvariables)
 ```typescript
 Identity.getUrlVariables(): Promise<string>
 ```
  
 #### getIdentifiers
-- ACP (2.x)
+- ACP
 ```javascript
 ACPIdentity.getIdentifiers(): Promise<Array<?ACPVisitorID>> 
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getidentifiers)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getidentifiers)
 ```typescript
 Identity.getIdentifiers(): Promise<Array<VisitorID>>
 ```
 
 #### getExperienceCloudId
-- ACP (2.x)
+- ACP
 ```javascript
 ACPIdentity.getExperienceCloudId(): Promise<?string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getexperiencecloudid)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#getexperiencecloudid)
 ```typescript
 Identity.getExperienceCloudId(): Promise<string>
 ```
 
 
 #### syncIdentifier
-- ACP (2.x)
+- ACP
 ```javascript
 ACPIdentity.syncIdentifier(identifierType: String, identifier: String, authenticationState: string)
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifier)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifier)
 ```typescript
 Identity.syncIdentifier(identifierType: String, identifier: String, authenticationState: MobileVisitorAuthenticationState) 
 ```
 
 #### syncIdentifiers
-- ACP (2.x)
+- ACP
 ```javascript
 ACPIdentity.syncIdentifiers(identifiers?: { string: string })
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifiers)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifiers)
 ```typescript
 Identity.syncIdentifiers(identifiers?: Record<string, string>)
 ```
 
 #### syncIdentifiersWithAuthState
-- ACP (2.x)
+- ACP
 ```javascript
 ACPIdentity.syncIdentifiersWithAuthState(identifiers?: { string: string }, authenticationState: string) 
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifierswithauthstate)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#syncidentifierswithauthstate)
 ```typescript
 Identity.syncIdentifiersWithAuthState(identifiers: Record<string, string> | null, authenticationState: MobileVisitorAuthenticationState)
 ```
 
 
 #### setAdvertisingIdentifier
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.setAdvertisingIdentifier(advertisingIdentifier?: String)
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setadvertisingidentifier)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setadvertisingidentifier)
 ```typescript
 MobileCore.setAdvertisingIdentifier(advertisingIdentifier?: string)
 ```
 
 #### setPushIdentifier
-- ACP (2.x)
+- ACP
 ```javascript
 ACPCore.setPushIdentifier(pushIdentifier?: String) 
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setpushidentifier)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#setpushidentifier)
 ```typescript
 MobileCore.setPushIdentifier(pushIdentifier?: string) 
 ```
@@ -373,11 +404,11 @@ MobileCore.setPushIdentifier(pushIdentifier?: string)
 ### Lifecycle
 
 #### extensionVersion
-- ACP (2.x)
+- ACP
 ```javascript
 ACPLifecycle.extensionVersion(): Promise<string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-2)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-2)
 ```typescript
 Lifecycle.extensionVersion(): Promise<string>
 ```
@@ -385,11 +416,11 @@ Lifecycle.extensionVersion(): Promise<string>
 ### Signal
 
 #### extensionVersion
-- ACP (2.x)
+- ACP
 ```javascript
 ACPSignal.extensionVersion(): Promise<string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-3)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#extensionversion-3)
 ```typescript
 Signal.extensionVersion(): Promise<string>
 ```
@@ -397,34 +428,34 @@ Signal.extensionVersion(): Promise<string>
 ### UserProfile
 
 #### extensionVersion
-- ACP (2.x)
+- ACP
 ```javascript
 ACPUserProfile.extensionVersion(): Promise<string>
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#extensionversion)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#extensionversion)
 ```typescript
 UserProfile.extensionVersion(): Promise<string>
 ```
 
 #### removeUserAttributes
-- ACP (2.x)
+- ACP
 ```javascript
 ACPUserProfile.removeUserAttribute(attributeName: string)
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#removeuserattributes)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#removeuserattributes)
 ```typescript
 UserProfile.removeUserAttributes(attributeNames: Array<string>)
 ```
 
 #### updateUserAttributes
-- ACP (2.x)
+- ACP
 ```javascript
 ACPUserProfile.updateUserAttributes(attributeMap: { string: any })
 ```
 ```javascript
 ACPUserProfile.updateUserAttribute(attributeName: string, attributeValue: string)
 ```
-- [AEP (1.x)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#updateuserattributes)
+- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/userprofile/README.md#updateuserattributes)
 ```typescript
 UserProfile.updateUserAttributes(attributeMap: Record<string, any>)
 ```
