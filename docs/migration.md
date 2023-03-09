@@ -28,10 +28,8 @@ At this time, the following ACP-prefix libraries can be switched out with their 
 | @adobe/react-native-acpmedia | NA |
 | @adobe/react-native-acpaudience | NA |
 | @adobe/react-native-acptarget | @adobe/react-native-aeptarget |
-| @adobe/react-native-acpcampaign | @adobe/react-native-aepcampaignclassic |
+| @adobe/react-native-acpcampaign | NA |
 | @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/react-native-aepassurance:4.x (compatible with AEP libraries)|
-
-<!--- TODO: add more descritions for Assurance library?? --->
 
 ## Update SDK initialization
 Remove the deprecated registration code and the extensions that are not supported in AEP React Native libraries.
@@ -48,7 +46,6 @@ import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
 import com.adobe.marketing.mobile.Target;
 import com.adobe.marketing.mobile.Places;
-import com.adobe.marketing.mobile.CampaignClassic;
 import com.adobe.marketing.mobile.Assurance;
 ...
 import android.app.Application;
@@ -88,7 +85,6 @@ public class MainApplication extends Application implements ReactApplication {
       Signal.EXTENSION,
       Target.EXTENSION,
       Places.EXTENSION,
-      CampaignClassic.EXTENSION,
       Assurance.EXTENSION,
   );
   MobileCore.registerExtensions(extensions, o -> MobileCore.configureWithAppID("YourEnvironmentFileID"));
@@ -122,7 +118,6 @@ public class MainApplication extends Application implements ReactApplication {
 @import AEPLifecycle;
 @import AEPSignal;
 @import AEPTarget;
-@import AEPCampaignClassic;
 @import AEPPlaces;
 @import AEPAssurance;
 //  --- 2. end ----
@@ -163,7 +158,6 @@ public class MainApplication extends Application implements ReactApplication {
         AEPMobileLifecycle.class,
         AEPMobileSignal.class,
         AEPMobileTarget.class,
-        AEPMobileCampaignClassic.class,
         AEPMobilePlaces.class,
         AEPMobileAssurance.class,
     ] completion:^{
