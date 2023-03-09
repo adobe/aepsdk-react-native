@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepmessaging.svg)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepmessaging)](https://www.npmjs.com/package/@adobe/react-native-aepmessaging)
 
-`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [Adobe Journey Optimizer Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer) to allow for integration with React Native applications.
+`@adobe/react-native-aepmessaging` is a wrapper around the iOS and Android [Adobe Journey Optimizer Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer) extension to allow for integration with React Native applications.
 
 ## Prerequisites
 
@@ -51,12 +51,12 @@ iOS
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPMessaging;
-@import AEPOptimize;
+
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class, AEPMobileEdge.class, AEPMobileMessaging.class, AEPMobileOptimize.class] completion:^{
+  [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class, AEPMobileEdge.class, AEPMobileMessaging.class, AEPMobileLifecycle.class] completion:^{
     [AEPMobileCore configureWithAppId:@"yourAppID"];
     [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
   }
@@ -78,7 +78,6 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.identity.Identity;
 import com.adobe.marketing.mobile.Messaging;
-import com.adobe.marketing.mobile.optimize.Optimize;
 
 ...
 import android.app.Application;
@@ -95,8 +94,8 @@ public class MainApplication extends Application implements ReactApplication {
     List<Class<? extends Extension>> extensions = Arrays.asList(
                 Edge.EXTENSION,
                 Identity.EXTENSION,
-                Optimize.EXTENSION,
-                Messaging.EXTENSION);
+                Messaging.EXTENSION,
+    						Lifecycle.EXTENSION);
     MobileCore.registerExtensions(extensions, o -> {
       MobileCore.lifecycleStart(null);
     });
@@ -124,7 +123,7 @@ Returns the version of the AEPMessaging extension
 **Syntax**
 
 ```javascript
-extensionVersion(): Promise<string>;
+extensionVersion(): Promise<string>
 ```
 
 **Example**
@@ -137,24 +136,24 @@ Messaging.extensionVersion().then((version) =>
 
 ## Configure Adobe Journey Optimizer
 
-To configure Adobe Journey optimizer Messaging in Launch follow steps in [Configure Adobe Journey optimizer](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer/#setup-adobe-journey-optimizer-extension)
+To configure Adobe Journey Optimizer Messaging in Launch follow the steps in [Configure Adobe Journey Optimizer](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer/#setup-adobe-journey-optimizer-extension)
 
 ## Push Notification Setup
 
-Handling push notifications must be done in native (Android/iOS) code for the React Native app. To configure push notification in the native project, follow the instructions provided by their respective platforms:
+Handling push notifications must be done in native (Android/iOS) code for the React Native app. To configure push notifications in the native project, follow the instructions provided for their respective platforms:
 
 - [Apple - iOS push notification setup](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns)
 - [Google - Android push notification setup](https://firebase.google.com/docs/cloud-messaging/android/client)
 
 ## Push Messaging APIs usage
 
-Push messaging APIs in the SDK must be called from the native Android/iOS project of React Native app.
+The AEPMessaging extension's push messaging APIs must be called from the native Android/iOS project of React Native app.
 
-###### [iOS API usage](https://github.com/adobe/aepsdk-messaging-ios/blob/main/Documentation/APIUsage.md)
+###### [iOS API usage](https://github.com/adobe/aepsdk-messaging-ios/blob/main/Documentation/sources/usage.md)
 
-##### [Android API usage](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/APIUsage.md)
+##### [Android API usage](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/sources/api-usage.md)
 
-In Android, [MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/push/MessagingPushPayload.md#messagingpushpayload-usage) can be used for getting the notification attributes like title, body, and action. These are useful for push notification creation.
+In Android, [MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/sources/messaging-push-payload.md#messagingpushpayload-usage) can be used for getting the notification attributes like title, body, and action. These are useful for push notification creation.
 
 ## In-app messages API reference
 
@@ -165,23 +164,23 @@ Initiates a network call to retrieve remote in-app message definitions.
 **Syntax**
 
 ```javascript
-refreshInAppMessages();
+refreshInAppMessages()
 ```
 
 **Example**
 
 ```javascript
-Messaging.refreshInAppMessages();
+Messaging.refreshInAppMessages()
 ```
 
 ### setMessagingDelegate
 
-Sets the MessagingDelegate in AEPCore to listen the Message lifecycle events.
+Sets a custom `MessagingDelegate` in AEPCore to listen for Message lifecycle events.
 
 **Syntax**
 
 ```javascript
-setMessagingDelegate(delegate: MessagingDelegate);
+setMessagingDelegate(delegate: MessagingDelegate)
 ```
 
 **Example**
@@ -205,78 +204,85 @@ const messagingDelegate = {
   },
 };
 
-Messaging.setMessagingDelegate(messagingDelegate);
+Messaging.setMessagingDelegate(messagingDelegate)
 ```
 
 ### saveMessage
 
-Natively caches the provided Message object in-memory. Cached Message object can be later use to show message or perform other actions on the Message object. This function should be called from **shouldShowMessage** of MessagingDelegate.
+Natively caches the provided `Message` object in-memory. Cached `Message` objects can used at a later time to show the cached `Message` or perform other actions on the `Message` object. This function should be called from the `shouldShowMessage` function of the custom `MessagingDelegate`.
 
 **Syntax**
 
 ```javascript
-saveMessage(message: Message);
+saveMessage(message: Message)
 ```
 
 **Example**
 
 ```javascript
-Messaging.saveMessage(message);
+const messagingDelegate = {
+  
+  shouldShowMessage(message: Message) {
+    Messaging.saveMessage(message)
+    return false;
+  },
+  
+};
 ```
 
 ## Handling In App Messages using Message Object
 
-The Message Object passed to the Messaging delegate contains the following functions to handle a message
+The `Message` object passed to the `MessagingDelegate` contains the following functions to handle a message:
 
 ### show
 
-Signals to the UIServices that the message should be shown.
+Signals to the `UIService` that the message should be shown.
 
 **Syntax**
 
 ```javascript
-show();
+show()
 ```
 
 **Example**
 
 ```javascript
-var message: Message;
-message.show();
+var message: Message
+message.show()
 ```
 
 ### dismiss
 
-Signals to the UIServices that the message should be dismissed.
+Signals to the `UIService` that the message should be dismissed.
 
 **Syntax**
 
 ```javascript
-dismiss(((suppressAutoTrack: ?boolean) = false));
+dismiss(((suppressAutoTrack: ?boolean) = false))
 ```
 
 **Example**
 
 ```javascript
-var message: Message;
-message.dismiss(true);
+var message: Message
+message.dismiss(true)
 ```
 
 ### track
 
-Generates an Edge Event for the provided interaction and eventType.
+Generates an Edge Event for the provided interaction and event type.
 
 **Syntax**
 
 ```javascript
-track(interaction: ?string, eventType: MessagingEdgeEventType);
+track(interaction: ?string, eventType: MessagingEdgeEventType)
 ```
 
 **Example**
 
 ```javascript
 var message: Message;
-message.track("sample text", MessagingEdgeEventType.IN_APP_DISMISS);
+message.track("sample text", MessagingEdgeEventType.IN_APP_DISMISS)
 ```
 
 ### handleJavascriptMessage
@@ -286,55 +292,55 @@ Adds a handler for Javascript messages sent from the message's webview.
 **Syntax**
 
 ```javascript
-handleJavascriptMessage(name: string) : Promise<?any>;
+handleJavascriptMessage(name: string) : Promise<?any>
 ```
 
 **Example**
 
 ```javascript
 var message: Message;
-message.handleJavascriptMessage("test").then((data) => {});
+message.handleJavascriptMessage("test").then((data) => {})
 ```
 
 ### setAutoTrack
 
-Enables/Disables the autotracking for the Message events.
+Enables/Disables autotracking for message events.
 
 **Syntax**
 
 ```javascript
-setAutoTrack(autoTrack: boolean);
+setAutoTrack(autoTrack: boolean)
 ```
 
 **Example**
 
 ```javascript
 var message: Message;
-message.setAutoTrack(true);
+message.setAutoTrack(true)
 ```
 
 ### clear
 
-Clears the reference to the in-memory cached Message object. This function must be called if a Message was saved by calling "Messaging.saveMessage" but no longer needed. Failure to call this function leads to memory leaks.
+Clears the reference to the in-memory cached `Message` object. This function must be called if a message was saved by calling `Messaging.saveMessage` but no longer needed. Failure to call this function leads to memory leaks.
 
 **Syntax**
 
 ```javascript
-clear();
+clear()
 ```
 
 **Example**
 
 ```javascript
-var message: Message;
-message.clear();
+var message: Message
+message.clear()
 ```
 
 ## Programatically control the display of in-app messages
 
-App developers can now create a type MessagingDelegate in order to be alerted when specific events occur during the lifecycle of an in-app message.
+App developers can now create a type `MessagingDelegate` in order to be alerted when specific events occur during the lifecycle of an in-app message.
 
-Definition of type MessagingDelegate is:
+Definition of type `MessagingDelegate` is:
 
 ```javascript
 type MessagingDelegate = {
@@ -348,7 +354,7 @@ type MessagingDelegate = {
 };
 ```
 
-Objects of type MessagingDelegate can be created as shown below:
+Objects of type `MessagingDelegate` can be created as shown below:
 
 ```javascript
 const messagingDelegate = {
@@ -372,7 +378,7 @@ const messagingDelegate = {
 
 ### Controlling when the message should be shown to the end user.
 
-If a MessagingDelegate has been set, the delegate's shouldShowMessage method will be called prior to displaying an in-app message for which the end user has qualified. The developer is responsible for returning true if the message should be shown, or false if the message should be suppressed.
+If a `MessagingDelegate` has been set, the delegate's `shouldShowMessage` function will be called prior to displaying an in-app message for which the end user has qualified. The developer is responsible for returning true if the message should be shown, or false if the message should be suppressed.
 
 Below is an example of when the developer may choose to suppress an in-app message due to the status of some other workflow within the app:
 
@@ -386,7 +392,7 @@ function shouldShowMessage(message: Message): boolean {
 }
 ```
 
-Another option for the developer is to store a reference to the Message object, and call the show() function on it at a later time. App developer also have to call _Messaging.saveMessage(message)_ from _shouldShowMessage_ of MessagingDelegate for caching the Message on the native side of the RN AEPMessaging package.
+Another option for the developer is to store a reference to the `Message` object, and call the `show` function on it at a later time. To use this functionality, app developers can call `Messaging.saveMessage(message)` from the `shouldShowMessage` of the `MessagingDelegate` for caching the Message on the native side of the RN AEPMessaging package.
 Continuing with the above example, the developer has stored the message that was triggered initially, and chooses to show it upon completion of the other workflow:
 
 ```javascript
@@ -409,7 +415,7 @@ function shouldShowMessage(message: Message): boolean {
 }
 ```
 
-**Important:** If the cached message is no longer needed after being used, free up the references to the Message object by calling _message.clearMessage()_ to prevent memory leaks. In above example after displaying the in app message using cached message object if it is no longer needed then it should be cleared as shown below.
+**Important:** If the cached message is no longer needed after being used, free up the references to the `Message` object by calling `message.clearMessage()` to prevent memory leaks. In above example after displaying the in app message using cached message object if it is no longer needed then it should be cleared as shown below.
 
 ```javascript
 function otherWorkflowFinished() {

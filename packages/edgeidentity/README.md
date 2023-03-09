@@ -110,7 +110,7 @@ Returns the version of the Identity for Edge Network extension
 **Syntax**
 
 ```typescript
-extensionVersion(): Promise<string>;
+extensionVersion(): Promise<string>
 ```
 **Example**
 
@@ -124,7 +124,7 @@ A promise method which will be invoked once the Experience Cloud ID is available
 
 **Syntax**
 ```typescript
-getExperienceCloudId(): Promise<string>;
+getExperienceCloudId(): Promise<string>
 ```
 
 **Example**
@@ -138,7 +138,7 @@ A promise method which will be invoked once the identities are available or reje
 
 **Syntax**
 ```typescript
-getIdentities(): Promise<IdentityMap>;
+getIdentities(): Promise<IdentityMap>
 ```
 **Example**
 ```typescript
@@ -155,7 +155,7 @@ An example of an encoded string is as follows: "adobe_mc=TS%3DTIMESTAMP_VALUE%7C
 
 **Syntax**
 ```typescript
-getUrlVariables(): Promise<string>;
+getUrlVariables(): Promise<string>
 ```
 
 **Example**
@@ -175,7 +175,7 @@ Removing identities using a reserved namespace is not allowed using this API. Th
 
 **Syntax**
 ```typescript
-removeIdentity(item: IdentityItem, namespace: string);
+removeIdentity(item: IdentityItem, namespace: string)
 ```
 **Example**
 ```typescript
@@ -221,7 +221,7 @@ Updating identities using a reserved namespace is not allowed using this API. Th
 **Syntax**
 
 ```typescript
-updateIdentities(identityMap: IdentityMap);
+updateIdentities(identityMap: IdentityMap)
 ```
 
 **Example**
