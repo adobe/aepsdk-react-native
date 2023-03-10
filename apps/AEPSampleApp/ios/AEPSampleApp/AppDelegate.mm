@@ -78,7 +78,7 @@
   const UIApplicationState appState = application.applicationState;
   [AEPMobileCore
       registerExtensions:@[
-        AEPMobileLifecycle.class, AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
+        AEPMobileLifecycle.class, AEPMobileIdentity.class, AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
         AEPMobileEdgeConsent.class, AEPMobileMessaging.class,
         AEPMobileOptimize.class, AEPMobilePlaces.class, AEPMobileTarget.class,
         AEPMobileCampaignClassic.class, AEPMobileAssurance.class
