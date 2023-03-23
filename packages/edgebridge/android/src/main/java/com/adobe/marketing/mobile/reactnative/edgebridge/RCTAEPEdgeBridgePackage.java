@@ -8,7 +8,7 @@
  OF ANY KIND, either express or implied. See the License for the specific language
  governing permissions and limitations under the License.
  */
-package com.adobe.marketing.mobile.reactnative.edgeconsent;
+package com.adobe.marketing.mobile.reactnative.edgebridge;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,10 +20,10 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.JavaScriptModule;
 
-public class RCTAEPEdgeConsentPackage implements ReactPackage {
+public class RCTAEPEdgeBridgePackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RCTAEPEdgeConsentModule(reactContext));
+      return Arrays.<NativeModule>asList(new RCTAEPEdgeBridgeModule(reactContext));
     }
 
     // Deprecated from RN 0.47

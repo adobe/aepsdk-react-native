@@ -24,6 +24,7 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
 import com.adobe.marketing.mobile.edge.consent.Consent;
+import com.adobe.marketing.mobile.edge.bridge.EdgeBridge;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.Places;
 import com.adobe.marketing.mobile.Target;
