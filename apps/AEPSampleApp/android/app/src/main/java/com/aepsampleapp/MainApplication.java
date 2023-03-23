@@ -122,6 +122,7 @@ public class MainApplication extends Application implements ReactApplication {
           Signal.EXTENSION,
           Edge.EXTENSION,
           com.adobe.marketing.mobile.edge.identity.Identity.EXTENSION,
+          EdgeBridge.EXTENSION,
           Messaging.EXTENSION,
           UserProfile.EXTENSION,
           Assurance.EXTENSION,

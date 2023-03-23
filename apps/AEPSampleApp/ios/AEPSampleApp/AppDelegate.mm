@@ -79,7 +79,7 @@
   [AEPMobileCore
       registerExtensions:@[
         AEPMobileLifecycle.class, AEPMobileIdentity.class, AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
-        AEPMobileEdgeConsent.class, AEPMobileMessaging.class,
+        AEPMobileEdgeConsent.class, AEPMobileEdgeBridge.class, AEPMobileMessaging.class,
         AEPMobileOptimize.class, AEPMobilePlaces.class, AEPMobileTarget.class,
         AEPMobileCampaignClassic.class, AEPMobileAssurance.class
    ] completion:^{
