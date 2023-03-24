@@ -17,29 +17,34 @@ import {MobileCore} from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
 import {NavigationProps} from '../types/props';
 
+
+const EdgeBridgeView = ({navigation}: NavigationProps) => {
+  const [version, setVersion] = useState('');
+  EdgeBridge.extensionVersion().then(version => setVersion(version));
+
+
 function trackAction() {
-  MobileCore.trackAction('action name', {key: 'value'});
+  MobileCore.trackAction('action value', {"customKey": "value"});
 }
 
 function trackState() {
-  MobileCore.trackState('state name', {key: 'value'});
+  MobileCore.trackState('state value ', {"customKey": "value"});
 }
 
 function resetIdentities() {
   MobileCore.resetIdentities();
 }
+ 
 
-const EdgeBridgeView = ({navigation}: NavigationProps) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
-        <Text style={styles.welcome}>Core</Text>
-
+        <Text style={styles.welcome}>Edge Bridge v{version}</Text>
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackState()" onPress={trackState} />
-  
         <Button title="resetIdentities()" onPress={resetIdentities} />
+
       </ScrollView>
     </View>
   );

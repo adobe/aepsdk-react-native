@@ -1,7 +1,7 @@
 {
   "name": "@adobe/react-native-aepedgebridge",
   "version": "1.0.0",
-  "description": "Adobe Experience Platform Consent Collection extension for AEP Mobile SDK. Written and maintained by Adobe.",
+  "description": "Adobe Experience Platform Edge Bridge extension for AEP Mobile SDK. Written and maintained by Adobe.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
   "main": "./ts/index.ts",
