@@ -12,7 +12,7 @@ The Adobe Experience Platform Edge Bridge mobile extension enables forwarding of
 2. The generic data is converted into the Experience Data Model (XDM) format, which is a standard experience-driven data schema for Adobe and partner solutions. 
    * This conversion mapping can be set in the Data Collection datastream associated with the application's mobile property using [Data Prep for Data Collection](https://experienceleague.adobe.com/docs/platform-learn/data-collection/edge-network/data-prep.html).
   
-   * For more info, refer to [Data Prep for Data Collection](https://experienceleague.adobe.com/docs/experience-platform/data-prep/home.html).
+   * For more info, refer to [Data Prep for Data Collection Documentation](https://experienceleague.adobe.com/docs/experience-platform/data-prep/home.html).
 
 > **Note**  
 > For new implementations of the Adobe Experience Platform SDK, it's highly recommended to send event data that is already XDM formatted using the [`Edge.sendEvent`](../edge/README.md#api-reference) API instead of converting events from the `MobileCore.trackState` and `MobileCore.trackAction` APIs using Edge Bridge. 
