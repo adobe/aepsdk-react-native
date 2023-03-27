@@ -31,11 +31,6 @@ function trackState() {
   MobileCore.trackState('state value ', {"customKey": "value"});
 }
 
-function resetIdentities() {
-  MobileCore.resetIdentities();
-}
- 
-
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
@@ -43,8 +38,6 @@ function resetIdentities() {
         <Text style={styles.welcome}>Edge Bridge v{version}</Text>
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackState()" onPress={trackState} />
-        <Button title="resetIdentities()" onPress={resetIdentities} />
-
       </ScrollView>
     </View>
   );

@@ -17,7 +17,7 @@
                BlueprintIdentifier = "58B511DA1A9E6C8500147676"
                BuildableName = "libRCTAEPEdgeConsent.a"
                BlueprintName = "RCTAEPEdgeConsent"
-               ReferencedContainer = "container:RCTAEPEdgeConsent.xcodeproj">
+               ReferencedContainer = "container:RCTAEPEdgeBridge.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -53,7 +53,7 @@
             BlueprintIdentifier = "58B511DA1A9E6C8500147676"
             BuildableName = "libRCTAEPEdgeConsent.a"
             BlueprintName = "RCTAEPEdgeConsent"
-            ReferencedContainer = "container:RCTAEPEdgeConsent.xcodeproj">
+            ReferencedContainer = "container:RCTAEPEdgeBridge.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
