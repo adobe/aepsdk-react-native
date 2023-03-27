@@ -36,8 +36,8 @@ function trackState() {
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Edge Bridge v{version}</Text>
-        <Button title="trackAction()" onPress={trackAction} />
-        <Button title="trackState()" onPress={trackState} />
+        <Button title="MobileCore.trackAction()" onPress={trackAction} />
+        <Button title="MobileCore.trackState()" onPress={trackState} />
       </ScrollView>
     </View>
   );
