@@ -6,13 +6,7 @@
 
 `@adobe/react-native-aepedgebridge` is a wrapper around the iOS and Android Adobe Experience Platform Edge Bridge to allow for integration with React Native applications.
 
-The Adobe Experience Platform Edge Bridge mobile extension enables forwarding of Analytics track events to Experience Platform Edge Network when using the [Experience Platform Mobile SDK](https://developer.adobe.com/client-sdks) and the Edge Network extension. The complete ingestion process occurs in two main steps:
-
-1. Edge Bridge forwards the track event data to Edge Network in a generic data format. 
-2. The generic data is converted into the Experience Data Model (XDM) format, which is a standard experience-driven data schema for Adobe and partner solutions. 
-   * This conversion mapping can be set in the Data Collection datastream associated with the application's mobile property using [Data Prep for Data Collection](https://experienceleague.adobe.com/docs/platform-learn/data-collection/edge-network/data-prep.html).
-  
-   * For more info, refer to [Data Prep for Data Collection Documentation](https://experienceleague.adobe.com/docs/experience-platform/data-prep/home.html).
+The Edge Bridge mobile extension provides seamless routing of data to the Adobe Experience Platform Edge Network for existing SDK implementations. For applications which already make use of the [MobileCore.trackAction](https://developer.adobe.com/client-sdks/documentation/mobile-core/api-reference/#trackaction) and/or [MobileCore.trackState](https://developer.adobe.com/client-sdks/documentation/mobile-core/api-reference/#trackstate) APIs to send data to Adobe Analytics, this extension will automatically route those API calls to the Edge Network, making the data available for mapping to a user's XDM schema using the [Data Prep for Data Collection](https://experienceleague.adobe.com/docs/experience-platform/data-prep/home.html).
 
 > **Note**  
 > For new implementations of the Adobe Experience Platform SDK, it's highly recommended to send event data that is already XDM formatted using the [`Edge.sendEvent`](../edge/README.md#api-reference) API instead of converting events from the `MobileCore.trackState` and `MobileCore.trackAction` APIs using Edge Bridge. 
@@ -42,8 +36,6 @@ npm install @adobe/react-native-aepedgebridge
 ### Installing and registering the extension with the AEP Mobile Core
 
 Install the `Adobe Experience Platform Edge Network extension` in your mobile property and configure the default Datastream ID by following the steps in the [Edge Network extension documentation](https://developer.adobe.com/client-sdks/documentation/edge-network).
-
-For sending the data to Analytics Report, Add Service `Adobe Analytics` to Datastreams when configurating. 
 
 > **Note**  
 > Experience Platform Edge Bridge does not have a corresponding extension card in the Data Collection UI; no changes to a Data Collection mobile property are required to use Edge Bridge.
@@ -121,11 +113,9 @@ In your React Native application, import the Edge extension as follows:
 import {EdgeBridge} from '@adobe/react-native-aepedgebridge';
 ```
 
-### Validating and Data Prep Mapping
+### Next steps - Data Prep mapping and validation with Assurance
 
-Refer to [Validating Event in Assurance tutorial](https://github.com/adobe/aepsdk-edgebridge-ios/blob/main/Documentation/tutorials/edge-bridge-tutorial.md#initial-validation-with-assurance) for Edge Bridge events examples.
-
-Refer to [Data Prep Mapping tutorial](https://github.com/adobe/aepsdk-edgebridge-ios/blob/main/Documentation/tutorials/edge-bridge-tutorial.md#data-prep-mapping) for Data Prep Mapping examples.
+For Data Prep mapping examples and tips on validating with Assurance, refer to the [Edge Bridge tutorials](https://github.com/adobe/aepsdk-edgebridge-ios/tree/main/Documentation/tutorials).
 
 ## API reference
 ### extensionVersion

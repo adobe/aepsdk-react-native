@@ -24,7 +24,7 @@ At this time, the following ACP-prefix libraries can be switched out with their 
 | @adobe/react-native-acpuserprofile | @adobe/react-native-aepuserprofile |
 | @adobe/react-native-acpplaces | @adobe/react-native-aepplaces |
 | @adobe/react-native-acpplaces-monitor | NA |
-| @adobe/react-native-acpanalytics | refer to [send data to Analytics](#sending-data-to-analytics) |
+| @adobe/react-native-acpanalytics | NA, workflows supported through [Edge Network](../packages/edge) or [Edge Bridge](../packages/edgebridge) extension. |
 | @adobe/react-native-acpmedia | NA |
 | @adobe/react-native-acpaudience | NA |
 | @adobe/react-native-acptarget | @adobe/react-native-aeptarget |
@@ -459,12 +459,3 @@ ACPUserProfile.updateUserAttribute(attributeName: string, attributeValue: string
 ```typescript
 UserProfile.updateUserAttributes(attributeMap: Record<string, any>)
 ```
-
-## Send data to Analytics
-There is no direct Analytics extension supported in Adobe Experience Platform SDK AEP-prefix React Native libraries. In order to send data to Analytics, there are two options we can achieve that.
-
-1. For new implementations of the Adobe Experience Platform SDK, it's highly recommended to send event data that is already XDM formatted using the `Edge.sendEvent` API to Edge Network Extension while set datastream directing to Adobe Analytics Service.
-Learn more the implementation at the [React Native Adobe Experience Platform Edge Network extension](../packages/edge).
-
-2. For migrating existing ACP-prefix react native libraries `MobileCore.trackAction` and `MobileCore.trackState` to AEP-prefix react native libraries, we can use Edge Bridge library which enables forwarding of Analytics track events through Experience platform Edge Network while set datastream directing to Adobe Analytics Service.
-Learn more about the implementation at [React Native Adobe Experience Platform Edge Bridge extension](../packages/edgebridge).

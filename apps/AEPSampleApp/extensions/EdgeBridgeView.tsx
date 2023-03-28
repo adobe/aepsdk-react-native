@@ -24,11 +24,11 @@ const EdgeBridgeView = ({navigation}: NavigationProps) => {
 
 
 function trackAction() {
-  MobileCore.trackAction('action value', {"customKey": "value"});
+  MobileCore.trackAction('add_to_cart', {"product.id": "12345", "product.add.event": "1", "product.name": "wide_brim_sunhat", "product.units": "1"});
 }
 
 function trackState() {
-  MobileCore.trackState('state value ', {"customKey": "value"});
+  MobileCore.trackState('hats/sunhat/wide_brim_sunhat_id12345', {"product.name": "wide_brim_sunhat", "product.id": "12345",  "product.view.event": "1"});
 }
 
   return (

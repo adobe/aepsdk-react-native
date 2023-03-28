@@ -11,7 +11,6 @@
 
 #import "RCTAEPEdgeBridge.h"
 @import AEPEdgeBridge;
-@import AEPCore;
 
 @implementation RCTAEPEdgeBridge
 
