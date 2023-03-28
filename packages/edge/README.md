@@ -226,4 +226,4 @@ let experienceEvent = new ExperienceEvent(xdmData, null, "datasetIdExample")
 ```
 
 ## Reference for Edge Network Setup and validation with Assurance
-For `Adobe Experience platform setup` examples and tips on validating with Assurance, refer to the [Edge Network tutorial](https://github.com/adobe/aepsdk-edge-ios/blob/main/Documentation/Tutorials).
+For `Adobe Experience platform setup` examples and tips on `validating with Assurance`, refer to the [Edge Network tutorial](https://github.com/adobe/aepsdk-edge-ios/blob/main/Documentation/Tutorials).
