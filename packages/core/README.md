@@ -232,6 +232,38 @@ import {LogLevel} from '@adobe/react-native-aepcore';
 MobileCore.setLogLevel(LogLevel.VERBOSE);
 ```
 
+- #### trackAction
+
+Track event actions that occur in your application.
+
+**Syntax**
+
+```typescript
+trackAction(action?: string, contextData?: Record<string, string>)
+```
+
+**Example**
+
+```typescript
+MobileCore.trackAction('loginClicked', {"customKey", "value"});
+```
+
+- #### trackState
+
+Track states represent screens or views in your application. 
+
+**Syntax**
+
+```typescript
+trackState(state?: string, contextData?: Record<string, string>)
+```
+
+**Example**
+
+```typescript
+MobileCore.trackState('homePage', {"customKey", "value"});
+```
+
 - #### updateConfiguration
 
 Update the configuration programmatically by passing configuration keys and values to override the existing configuration.

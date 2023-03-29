@@ -6,7 +6,7 @@
 
 `@adobe/react-native-aepedgebridge` is a wrapper around the iOS and Android Adobe Experience Platform Edge Bridge to allow for integration with React Native applications.
 
-The Edge Bridge mobile extension provides seamless routing of data to the Adobe Experience Platform Edge Network for existing SDK implementations. For applications which already make use of the [MobileCore.trackAction](https://developer.adobe.com/client-sdks/documentation/mobile-core/api-reference/#trackaction) and/or [MobileCore.trackState](https://developer.adobe.com/client-sdks/documentation/mobile-core/api-reference/#trackstate) APIs to send data to Adobe Analytics, this extension will automatically route those API calls to the Edge Network, making the data available for mapping to a user's XDM schema using the [Data Prep for Data Collection](https://experienceleague.adobe.com/docs/experience-platform/data-prep/home.html).
+The Edge Bridge mobile extension provides seamless routing of data to the Adobe Experience Platform Edge Network for existing SDK implementations. For applications which already make use of the [MobileCore.trackAction](../core/README.md#trackaction) and/or [MobileCore.trackState](../core/README.md#trackstate) APIs to send data to Adobe Analytics, this extension will automatically route those API calls to the Edge Network, making the data available for mapping to a user's XDM schema using the [Data Prep for Data Collection](https://experienceleague.adobe.com/docs/experience-platform/data-prep/home.html).
 
 > **Note**  
 > For new implementations of the Adobe Experience Platform SDK, it's highly recommended to send event data that is already XDM formatted using the [`Edge.sendEvent`](../edge/README.md#api-reference) API instead of converting events from the `MobileCore.trackState` and `MobileCore.trackAction` APIs using Edge Bridge. 
@@ -35,12 +35,12 @@ npm install @adobe/react-native-aepedgebridge
 
 ### Installing and registering the extension with the AEP Mobile Core
 
-Install the `Adobe Experience Platform Edge Network extension` in your mobile property and configure the default Datastream ID by following the steps in the [Edge Network extension documentation](https://developer.adobe.com/client-sdks/documentation/edge-network).
+Install the Adobe Experience Platform Edge Network extension in your mobile property and configure the default Datastream ID by following the steps in the [Edge Network extension documentation](https://developer.adobe.com/client-sdks/documentation/edge-network).
 
 > **Note**  
 > Experience Platform Edge Bridge does not have a corresponding extension card in the Data Collection UI; no changes to a Data Collection mobile property are required to use Edge Bridge.
 
-Then registering the Edge Bridge extension with the Mobile Core.
+Then register the Edge Bridge extension with the Mobile Core.
 Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
 
@@ -107,7 +107,7 @@ public class MainApplication extends Application implements ReactApplication {
 }  
 ```
 
-### Importing the extension
+### Import the Edge Bridge extension
 In your React Native application, import the Edge extension as follows:
 ```typescript
 import {EdgeBridge} from '@adobe/react-native-aepedgebridge';
