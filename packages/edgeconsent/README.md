@@ -53,9 +53,10 @@ iOS
                                       AEPMobileEdgeConsent.class
                                       ];
 
+    [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
     [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
-   }]; 
+  }]; 
    return YES;   
  } 
 

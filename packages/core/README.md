@@ -245,12 +245,12 @@ trackAction(action?: string, contextData?: Record<string, string>)
 **Example**
 
 ```typescript
-MobileCore.trackAction('loginClicked', {"customKey", "value"});
+MobileCore.trackAction("loginClicked", {"customKey", "value"});
 ```
 
 - #### trackState
 
-Track states represent screens or views in your application. 
+Track states that represent screens or views in your application. 
 
 **Syntax**
 
@@ -261,7 +261,7 @@ trackState(state?: string, contextData?: Record<string, string>)
 **Example**
 
 ```typescript
-MobileCore.trackState('homePage', {"customKey", "value"});
+MobileCore.trackState("homePage", {"customKey", "value"});
 ```
 
 - #### updateConfiguration

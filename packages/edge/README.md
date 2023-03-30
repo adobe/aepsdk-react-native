@@ -53,7 +53,8 @@ iOS
                                      AEPMobileEdge.class
                                      ];
 
-   [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
+  [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
+  [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
   }]; 
   return YES;   
@@ -226,4 +227,4 @@ let experienceEvent = new ExperienceEvent(xdmData, null, "datasetIdExample")
 ```
 
 ## Next steps - Schemas setup and validation with Assurance
-For examples on XDM schemas and datasets setup and tips on validating with Assurance, refer to the Edge Network tutorial., refer to the [Edge Network tutorial](https://github.com/adobe/aepsdk-edge-ios/blob/main/Documentation/Tutorials).
+For examples on XDM schemas and datasets setup and tips on validating with Assurance, refer to the [Edge Network tutorial](https://github.com/adobe/aepsdk-edge-ios/blob/main/Documentation/Tutorials).

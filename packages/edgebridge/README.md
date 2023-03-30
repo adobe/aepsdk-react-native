@@ -67,7 +67,9 @@ iOS
                                      AEPMobileEdgeBridge.class
                                      ];
 
-   [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
+  
+  [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
+  [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
   }]; 
   return YES;   
@@ -107,8 +109,8 @@ public class MainApplication extends Application implements ReactApplication {
 }  
 ```
 
-### Import the Edge Bridge extension
-In your React Native application, import the Edge extension as follows:
+### Importing the extension
+In your React Native application, import the Edge Bridge extension as follows:
 ```typescript
 import {EdgeBridge} from '@adobe/react-native-aepedgebridge';
 ```
