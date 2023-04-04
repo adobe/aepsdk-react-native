@@ -54,7 +54,7 @@ iOS
                                      ];
 
   [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
-  [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
+    [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
   }]; 
   return YES;   
