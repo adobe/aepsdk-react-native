@@ -53,7 +53,8 @@ iOS
                                      AEPMobileEdge.class
                                      ];
 
-   [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
+  [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
+  [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
   }]; 
   return YES;   
@@ -82,7 +83,7 @@ public class MainApplication extends Application implements ReactApplication {
     ...
   
     MobileCore.setApplication(this);
-    MobileCore.configureWithAppID("yourAppID");
+    MobileCore.configureWithAppID(ENVIRONMENT_FILE_ID);
 
     MobileCore.registerExtensions(
       Arrays.asList(Identity.EXTENSION, Edge.EXTENSION),
@@ -224,3 +225,6 @@ let experienceEvent = new ExperienceEvent(xdmData, data);
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 let experienceEvent = new ExperienceEvent(xdmData, null, "datasetIdExample")
 ```
+
+## Next steps - Schemas setup and validation with Assurance
+For examples on XDM schemas and datasets setup and tips on validating with Assurance, refer to the [Edge Network tutorial](https://github.com/adobe/aepsdk-edge-ios/blob/main/Documentation/Tutorials).
