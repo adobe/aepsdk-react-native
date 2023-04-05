@@ -35,6 +35,9 @@ jest.doMock('react-native', () => {
                     setLocationHint: jest.fn(() => new Promise(resolve => resolve(''))),
                     getLocationHint: jest.fn(() => new Promise(resolve => resolve('va6'))),
                 },
+                AEPEdgeBridge: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
+                }, 
                 AEPAssurance: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     startSession: jest.fn()

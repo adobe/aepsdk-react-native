@@ -1,40 +1,42 @@
 PODS:
-  - AEPAssurance (3.0.1):
+  - AEPAssurance (3.1.0):
     - AEPCore (>= 3.1.0)
     - AEPServices (>= 3.1.0)
   - AEPCampaignClassic (3.0.0):
     - AEPCore (>= 3.7.0)
     - AEPServices (>= 3.7.0)
-  - AEPCore (3.7.4):
-    - AEPRulesEngine (>= 1.1.0)
-    - AEPServices (>= 3.7.4)
+  - AEPCore (3.8.1):
+    - AEPRulesEngine (>= 1.2.2)
+    - AEPServices (>= 3.8.1)
   - AEPEdge (1.6.0):
     - AEPCore (>= 3.7.0)
     - AEPEdgeIdentity (>= 1.2.0)
+  - AEPEdgeBridge (1.0.0):
+    - AEPCore (>= 3.5.0)
   - AEPEdgeConsent (1.1.0):
     - AEPCore (>= 3.7.0)
     - AEPEdge (>= 1.6.0)
   - AEPEdgeIdentity (1.2.0):
     - AEPCore (>= 3.7.0)
-  - AEPIdentity (3.7.4):
-    - AEPCore (>= 3.7.4)
-  - AEPLifecycle (3.7.4):
-    - AEPCore (>= 3.7.4)
-  - AEPMessaging (1.1.1):
-    - AEPCore (>= 3.7.4)
+  - AEPIdentity (3.8.1):
+    - AEPCore (>= 3.8.1)
+  - AEPLifecycle (3.8.1):
+    - AEPCore (>= 3.8.1)
+  - AEPMessaging (1.1.3):
+    - AEPCore (>= 3.8.1)
     - AEPEdge (>= 1.5.0)
     - AEPEdgeIdentity (>= 1.1.0)
-    - AEPServices (>= 3.7.4)
+    - AEPServices (>= 3.8.1)
   - AEPOptimize (1.0.0):
     - AEPCore (>= 3.2.0)
     - AEPEdge (>= 1.2.0)
   - AEPPlaces (3.0.3):
     - AEPCore (>= 3.0.0)
     - AEPServices (>= 3.0.0)
-  - AEPRulesEngine (1.2.0)
-  - AEPServices (3.7.4)
-  - AEPSignal (3.7.4):
-    - AEPCore (>= 3.7.4)
+  - AEPRulesEngine (1.2.2)
+  - AEPServices (3.8.1)
+  - AEPSignal (3.8.1):
+    - AEPCore (>= 3.8.1)
   - AEPTarget (3.3.1):
     - AEPCore (>= 3.1.0)
   - AEPUserProfile (3.0.1):
@@ -140,6 +142,9 @@ PODS:
     - React
   - RCTAEPEdge (2.0.0):
     - AEPEdge (~> 1.0)
+    - React
+  - RCTAEPEdgeBridge (1.0.0):
+    - AEPEdgeBridge (~> 1.0)
     - React
   - RCTAEPEdgeConsent (2.0.0):
     - AEPEdgeConsent (~> 1.0)
@@ -501,6 +506,7 @@ DEPENDENCIES:
   - RCTAEPCampaignClassic (from `../../../packages/campaignclassic`)
   - RCTAEPCore (from `../../../packages/core`)
   - RCTAEPEdge (from `../../../packages/edge`)
+  - RCTAEPEdgeBridge (from `../../../packages/edgebridge`)
   - RCTAEPEdgeConsent (from `../../../packages/edgeconsent`)
   - RCTAEPEdgeIdentity (from `../../../packages/edgeidentity`)
   - RCTAEPMessaging (from `../../../packages/messaging`)
@@ -548,6 +554,7 @@ SPEC REPOS:
     - AEPCampaignClassic
     - AEPCore
     - AEPEdge
+    - AEPEdgeBridge
     - AEPEdgeConsent
     - AEPEdgeIdentity
     - AEPIdentity
@@ -597,6 +604,8 @@ EXTERNAL SOURCES:
     :path: "../../../packages/core"
   RCTAEPEdge:
     :path: "../../../packages/edge"
+  RCTAEPEdgeBridge:
+    :path: "../../../packages/edgebridge"
   RCTAEPEdgeConsent:
     :path: "../../../packages/edgeconsent"
   RCTAEPEdgeIdentity:
@@ -675,20 +684,21 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPAssurance: b25880cd4b14f22c61a1dce19807bd0ca0fe9b17
+  AEPAssurance: cea6c6b08a1ff6e5025f3ae79a68a1619c49cb4e
   AEPCampaignClassic: cd20252606d9e12d5ee2c410df260762faa49d2c
-  AEPCore: 4f2d6af62f492e87a6cc9cbf4c89ae6f0ea89d81
+  AEPCore: 460eb0a7cc85180a4b77ac204cf8a7711d1341b8
   AEPEdge: e4364a56d358c517f7d4cef87570ac4e7652d3a2
+  AEPEdgeBridge: de9813a9d8f44ee09f57240ab7626570d23fcd5f
   AEPEdgeConsent: d10d4232615b880d484050edf47b2e3fbfb787bb
   AEPEdgeIdentity: 6bb2c1e62d48cdc988b4d492e8e6d563f0ced73d
-  AEPIdentity: 4e298be480b327dd1fbb89e74210001bbbbb1c81
-  AEPLifecycle: 64107400233d9add603a87d2a4b36002bccb0129
-  AEPMessaging: 622f4d45f21729b357452a79c67d0f3bc36045a8
+  AEPIdentity: 8bf62ac575ce91f8063bb0154c398f0358fefb82
+  AEPLifecycle: 7b9dd2fd528035c4555ff838f89f9c45e62dbb64
+  AEPMessaging: 988ad59fa642c491aef4ebf2dc48283abe9fc722
   AEPOptimize: 413690f88cb8ae574153a94081331788ca740a91
   AEPPlaces: 561e22d5ee6570fcb0b721a47aa7cda2c4f00ec0
-  AEPRulesEngine: 71228dfdac24c9ded09be13e3257a7eb22468ccc
-  AEPServices: 1c66ce125f9b3bbd46e42687b6929cd584bffdf4
-  AEPSignal: d6473de3410183f1f0754b92b2938a571332362e
+  AEPRulesEngine: 354b4374edefaf5bdfa3336ab9a41a07cbae4afe
+  AEPServices: 79b5e33655bfaff53e360a0f59e4b59077b75dd0
+  AEPSignal: 5208f9c32e880394ed688d618703cd9ee43083d9
   AEPTarget: 90c732ef32cee5733897e395afdab7242df9762d
   AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
   boost: a7c83b31436843459a1961bfd74b96033dc77234
@@ -714,6 +724,7 @@ SPEC CHECKSUMS:
   RCTAEPCampaignClassic: 210ff4bddafe2987db76332f350a17200dfaeb27
   RCTAEPCore: 2c2e2711e00091d8abea6f5e7bffaf34367c363d
   RCTAEPEdge: 49d403c33981d1dd16085d586d561c736d9637e8
+  RCTAEPEdgeBridge: ddc941530ff1268dd4fa8a7f70b8c79404450198
   RCTAEPEdgeConsent: dc4de5eca23da4a4859fea12dca63e89a08f9d2e
   RCTAEPEdgeIdentity: 39ad6df51e1d15066ec6d6072b12ec78500e268a
   RCTAEPMessaging: d6d2cb608e45a428fb0198d5f78486889f15bd87

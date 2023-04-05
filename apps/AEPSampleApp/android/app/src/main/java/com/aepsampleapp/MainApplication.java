@@ -24,6 +24,7 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.UserProfile;
 import com.adobe.marketing.mobile.edge.consent.Consent;
+import com.adobe.marketing.mobile.edge.bridge.EdgeBridge;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.Places;
 import com.adobe.marketing.mobile.Target;
@@ -122,6 +123,7 @@ public class MainApplication extends Application implements ReactApplication {
           Signal.EXTENSION,
           Edge.EXTENSION,
           com.adobe.marketing.mobile.edge.identity.Identity.EXTENSION,
+          EdgeBridge.EXTENSION,
           Messaging.EXTENSION,
           UserProfile.EXTENSION,
           Assurance.EXTENSION,

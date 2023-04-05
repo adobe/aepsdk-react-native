@@ -55,9 +55,10 @@ iOS
                                     AEPMobileEdge.class
                                     ];
 
-    [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
+    [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
+      [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
     ...   
-   }]; 
+  }]; 
    return YES;   
  } 
 
@@ -82,7 +83,7 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     ...
     MobileCore.setApplication(this);
-    MobileCore.configureWithAppID("yourAppID");
+    MobileCore.configureWithAppID(ENVIRONMENT_FILE_ID);
 
     MobileCore.registerExtensions(
      Arrays.asList(Identity.EXTENSION, Edge.EXTENSION),

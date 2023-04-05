@@ -19,6 +19,7 @@
     "@adobe/react-native-aepcore": "^2.0.0",
     "@adobe/react-native-aepedge": "^2.0.0",
     "@adobe/react-native-aepedgeconsent": "^2.0.0",
+    "@adobe/react-native-aepedgebridge": "^1.0.0",
     "@adobe/react-native-aepedgeidentity": "^2.0.0",
     "@adobe/react-native-aepmessaging": "^1.0.0",
     "@adobe/react-native-aepoptimize": "^2.0.0",

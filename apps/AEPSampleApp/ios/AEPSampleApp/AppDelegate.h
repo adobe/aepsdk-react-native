@@ -23,6 +23,7 @@ governing permissions and limitations under the License.
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPEdgeConsent;
+@import AEPEdgeBridge;
 @import AEPAssurance;
 @import AEPOptimize;
 @import AEPPlaces;
