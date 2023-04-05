@@ -24,7 +24,7 @@ At this time, the following ACP-prefix libraries can be switched out with their 
 | @adobe/react-native-acpuserprofile | @adobe/react-native-aepuserprofile |
 | @adobe/react-native-acpplaces | @adobe/react-native-aepplaces |
 | @adobe/react-native-acpplaces-monitor | NA |
-| @adobe/react-native-acpanalytics | NA |
+| @adobe/react-native-acpanalytics | NA, workflows supported through [Edge Network](../packages/edge) or [Edge Bridge](../packages/edgebridge) extension. |
 | @adobe/react-native-acpmedia | NA |
 | @adobe/react-native-acpaudience | NA |
 | @adobe/react-native-acptarget | @adobe/react-native-aeptarget |
