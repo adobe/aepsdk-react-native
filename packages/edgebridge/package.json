@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepedgebridge",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Adobe Experience Platform Edge Bridge extension for AEP Mobile SDK. Written and maintained by Adobe.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
@@ -27,7 +27,7 @@
     "name": "Adobe Experience Platform SDK Team"
   },
   "peerDependencies": {
-    "@adobe/react-native-aepcore": "^2.0.0",
+    "@adobe/react-native-aepcore": "^3.0.0",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {

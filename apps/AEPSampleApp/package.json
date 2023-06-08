@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": {
-    "nohoist": ["**/*"]
+    "nohoist": [
+      "**/*"
+    ]
   },
   "scripts": {
     "cleanup": "rm -rf node_modules",
@@ -14,18 +16,18 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@adobe/react-native-aepassurance": "^4.0.0",
-    "@adobe/react-native-aepcampaignclassic": "^2.0.0",
-    "@adobe/react-native-aepcore": "^2.0.0",
-    "@adobe/react-native-aepedge": "^2.0.0",
-    "@adobe/react-native-aepedgeconsent": "^2.0.0",
-    "@adobe/react-native-aepedgebridge": "^1.0.0",
-    "@adobe/react-native-aepedgeidentity": "^2.0.0",
-    "@adobe/react-native-aepmessaging": "^1.0.0",
-    "@adobe/react-native-aepoptimize": "^2.0.0",
-    "@adobe/react-native-aepplaces": "^2.0.0",
-    "@adobe/react-native-aeptarget": "^2.0.0",
-    "@adobe/react-native-aepuserprofile": "^2.0.0",
+    "@adobe/react-native-aepassurance": "^5.0.0",
+    "@adobe/react-native-aepcampaignclassic": "^3.0.0",
+    "@adobe/react-native-aepcore": "^3.0.0",
+    "@adobe/react-native-aepedge": "^3.0.0",
+    "@adobe/react-native-aepedgebridge": "^3.0.0",
+    "@adobe/react-native-aepedgeconsent": "^3.0.0",
+    "@adobe/react-native-aepedgeidentity": "^3.0.0",
+    "@adobe/react-native-aepmessaging": "^3.0.0",
+    "@adobe/react-native-aepoptimize": "^3.0.0",
+    "@adobe/react-native-aepplaces": "^3.0.0",
+    "@adobe/react-native-aeptarget": "^3.0.0",
+    "@adobe/react-native-aepuserprofile": "^3.0.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/core": "^6.2.1",
