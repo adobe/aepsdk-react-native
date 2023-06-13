@@ -4168,13 +4168,13 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:^17":
-  version: 17.0.61
-  resolution: "@types/react@npm:17.0.61"
+  version: 17.0.62
+  resolution: "@types/react@npm:17.0.62"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 74b797343870eaf70276326bff701544c8a587283ada3d22215a2a85437345628af33dcd16325d594bc76ee780ac6a64e1d81c09699aa99ccb313696f090d623
+  checksum: 0b045fa5314a9c727fd5263ad7203fcbb57ac5b790f39c4c31c85375182f33fc8b0c1a2aa081757e8b1b1b7bb483eb99e750201eafc0148d9464d261dfae588d
   languageName: node
   linkType: hard
 
@@ -6961,9 +6961,9 @@ __metadata:
   linkType: hard
 
 "flow-parser@npm:0.*":
-  version: 0.208.0
-  resolution: "flow-parser@npm:0.208.0"
-  checksum: cfd292915122748a10a2798759efea22fdb63969f8e2b8bf3ad0cb95d40748c1a56b7c348e661db9a5117fbcfa27a1be95e54f2719148d5eab8a667fd907c770
+  version: 0.208.1
+  resolution: "flow-parser@npm:0.208.1"
+  checksum: 26c4c6c51ac83ff88d34b6a428ca3678b1395a3d420a7fcd97cb655896fb3b01aa11234e22f293f9d98e81152a1626937bc2023a4ff39cba79aa433b3d04126b
   languageName: node
   linkType: hard
 
