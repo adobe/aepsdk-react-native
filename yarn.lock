@@ -4345,6 +4345,7 @@ __metadata:
     "@react-navigation/native": "npm:^6.0.10"
     "@react-navigation/routers": "npm:^6.1.0"
     "@react-navigation/stack": "npm:^6.2.1"
+    lodash.isequal: "npm:^4.5.0"
     react: "npm:18.1.0"
     react-native: "npm:0.68.5"
     react-native-gesture-handler: "npm:^2.4.2"
@@ -6357,9 +6358,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.428":
-  version: 1.4.428
-  resolution: "electron-to-chromium@npm:1.4.428"
-  checksum: afcb4da7a31a5193e4a9cc84817644e322b8bd06ea03e7e1dff0e25b50d27207c89e00b5091430300590be9134baeab17f69f7bc7ddd31f92a4086bb50a78c9f
+  version: 1.4.429
+  resolution: "electron-to-chromium@npm:1.4.429"
+  checksum: 06775bec31d91c63279819693130e254c586b0d048c578f6c74d7fd1a48d8bd4374f7b463064d0be19af60516f29056b9e3822d3032f927b0238c67ed440eda6
   languageName: node
   linkType: hard
 
@@ -9451,6 +9452,13 @@ __metadata:
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: 960a803d892fc09976e7b559c36407000c3beb136cf20e88ae6a694b5d7cf64e31dde516079140a945ba695b7d5e5699444d61fd13a70ff7de409bbae7604005
+  languageName: node
+  linkType: hard
+
+"lodash.isequal@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.isequal@npm:4.5.0"
+  checksum: d413585fd1dbcb6ebed6d9d98a7fe5e10cc6f653b6676a61a69185aa1f6ae5b4aac1367a632db0ee46197ee1ab6aa5b7428c1721f9b5459a3623e0cc930b9b77
   languageName: node
   linkType: hard
 

@@ -81,6 +81,13 @@ jobs:
           command: yarn sampleapp:ios:pod:install
 
       - run:
+          name: Yoga fix
+          command: |
+            cd apps/AEPSampleApp
+            sed -i.bo 's/    node->getLayout()\.hadOverflow() |$/\0|/' ./node_modules/react-native/ReactCommon/yoga/yoga/Yoga.cpp
+            cd ../../
+
+      - run:
           name: Building iOS Sample App
           command: yarn sampleapp:ios:build
 workflows:
