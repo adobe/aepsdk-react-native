@@ -44,7 +44,7 @@ jobs:
 
   build-sample-app-ios:
     macos:
-      xcode: "13.0.0"
+      xcode: 14.1.0
 
     steps:
       - checkout
