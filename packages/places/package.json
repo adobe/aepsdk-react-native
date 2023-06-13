@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepplaces",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
@@ -26,10 +26,13 @@
     "name": "Adobe Experience Platform SDK Team"
   },
   "peerDependencies": {
-    "@adobe/react-native-aepcore": "^3.0.0",
+    "@adobe/react-native-aepcore": "^5.0.0",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
   }
 }

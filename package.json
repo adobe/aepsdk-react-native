@@ -6,21 +6,10 @@
     "packages": [
       "packages/*",
       "apps/*"
-    ],
-    "nohoist": [
-      "**/@adobe/**",
-      "**/react",
-      "**/@react-navigation/**",
-      "**/react/**",
-      "**/react-native",
-      "**/react-native/**",
-      "**/react-navigation/**",
-      "**/jest/**"
     ]
   },
   "scripts": {
     "clean": "rm yarn.lock & find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
-    "bootstrap": "npx lerna bootstrap",
     "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf js",
     "build": "npx lerna exec --ignore aepsampleapp -- tsc",
     "tests:jest": "jest",

@@ -17,17 +17,17 @@
   },
   "dependencies": {
     "@adobe/react-native-aepassurance": "^5.0.0",
-    "@adobe/react-native-aepcampaignclassic": "^3.0.0",
-    "@adobe/react-native-aepcore": "^3.0.0",
-    "@adobe/react-native-aepedge": "^3.0.0",
-    "@adobe/react-native-aepedgebridge": "^3.0.0",
-    "@adobe/react-native-aepedgeconsent": "^3.0.0",
-    "@adobe/react-native-aepedgeidentity": "^3.0.0",
-    "@adobe/react-native-aepmessaging": "^3.0.0",
-    "@adobe/react-native-aepoptimize": "^3.0.0",
-    "@adobe/react-native-aepplaces": "^3.0.0",
-    "@adobe/react-native-aeptarget": "^3.0.0",
-    "@adobe/react-native-aepuserprofile": "^3.0.0",
+    "@adobe/react-native-aepcampaignclassic": "^5.0.0",
+    "@adobe/react-native-aepcore": "^5.0.0",
+    "@adobe/react-native-aepedge": "^5.0.0",
+    "@adobe/react-native-aepedgebridge": "^5.0.0",
+    "@adobe/react-native-aepedgeconsent": "^5.0.0",
+    "@adobe/react-native-aepedgeidentity": "^5.0.0",
+    "@adobe/react-native-aepmessaging": "^1.0.0",
+    "@adobe/react-native-aepoptimize": "^5.0.0",
+    "@adobe/react-native-aepplaces": "^5.0.0",
+    "@adobe/react-native-aeptarget": "^5.0.0",
+    "@adobe/react-native-aepuserprofile": "^5.0.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/core": "^6.2.1",
@@ -59,5 +59,8 @@
       "json",
       "node"
     ]
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
   }
 }
