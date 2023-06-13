@@ -49,13 +49,6 @@ jobs:
     steps:
       - checkout
 
-      # CircleCI puts xcode app in consistent path, RN looks for versioned path
-      # - run:
-      #     name: Move xcode
-      #     command: |
-      #       cd /Applications && mv Xcode.app Xcode-13.0.app
-      #       /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f /Applications/Xcode-13.0.app/Contents/Developer/Applications/Simulator.app
-
       - run:
           name: Install latest NodeJS
           command: brew install node
@@ -86,6 +79,7 @@ jobs:
             cd apps/AEPSampleApp
             sed -i.bo 's/    node->getLayout()\.hadOverflow() |$/\0|/' ./node_modules/react-native/ReactCommon/yoga/yoga/Yoga.cpp
             cd ../../
+            rm -rf ~/Library/Developer/Xcode/DerivedData
 
       - run:
           name: Building iOS Sample App
