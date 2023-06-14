@@ -1,45 +1,45 @@
 PODS:
-  - AEPAssurance (3.1.0):
-    - AEPCore (>= 3.1.0)
-    - AEPServices (>= 3.1.0)
-  - AEPCampaignClassic (3.0.0):
-    - AEPCore (>= 3.7.0)
-    - AEPServices (>= 3.7.0)
-  - AEPCore (3.8.1):
-    - AEPRulesEngine (>= 1.2.2)
-    - AEPServices (>= 3.8.1)
-  - AEPEdge (1.6.0):
-    - AEPCore (>= 3.7.0)
-    - AEPEdgeIdentity (>= 1.2.0)
-  - AEPEdgeBridge (1.0.0):
-    - AEPCore (>= 3.5.0)
-  - AEPEdgeConsent (1.1.0):
-    - AEPCore (>= 3.7.0)
-    - AEPEdge (>= 1.6.0)
-  - AEPEdgeIdentity (1.2.0):
-    - AEPCore (>= 3.7.0)
-  - AEPIdentity (3.8.1):
-    - AEPCore (>= 3.8.1)
-  - AEPLifecycle (3.8.1):
-    - AEPCore (>= 3.8.1)
-  - AEPMessaging (1.1.3):
-    - AEPCore (>= 3.8.1)
-    - AEPEdge (>= 1.5.0)
-    - AEPEdgeIdentity (>= 1.1.0)
-    - AEPServices (>= 3.8.1)
-  - AEPOptimize (1.0.0):
-    - AEPCore (>= 3.2.0)
-    - AEPEdge (>= 1.2.0)
-  - AEPPlaces (3.0.3):
-    - AEPCore (>= 3.0.0)
-    - AEPServices (>= 3.0.0)
-  - AEPRulesEngine (1.2.2)
-  - AEPServices (3.8.1)
-  - AEPSignal (3.8.1):
-    - AEPCore (>= 3.8.1)
-  - AEPTarget (3.3.1):
-    - AEPCore (>= 3.1.0)
-  - AEPUserProfile (3.0.1):
+  - AEPAssurance (4.0.0):
+    - AEPCore (>= 4.0.0)
+    - AEPServices (>= 4.0.0)
+  - AEPCampaignClassic (4.0.0):
+    - AEPCore (>= 4.0.0)
+    - AEPServices (>= 4.0.0)
+  - AEPCore (4.0.0):
+    - AEPRulesEngine (>= 4.0.0)
+    - AEPServices (>= 4.0.0)
+  - AEPEdge (4.0.0):
+    - AEPCore (>= 4.0.0)
+    - AEPEdgeIdentity (>= 4.0.0)
+  - AEPEdgeBridge (4.0.0):
+    - AEPCore (>= 4.0.0)
+  - AEPEdgeConsent (4.0.0):
+    - AEPCore (>= 4.0.0)
+    - AEPEdge (>= 4.0.0)
+  - AEPEdgeIdentity (4.0.0):
+    - AEPCore (>= 4.0.0)
+  - AEPIdentity (4.0.0):
+    - AEPCore (>= 4.0.0)
+  - AEPLifecycle (4.0.0):
+    - AEPCore (>= 4.0.0)
+  - AEPMessaging (4.0.0):
+    - AEPCore (>= 4.0.0)
+    - AEPEdge (>= 4.0.0)
+    - AEPEdgeIdentity (>= 4.0.0)
+    - AEPServices (>= 4.0.0)
+  - AEPOptimize (4.0.0):
+    - AEPCore (>= 4.0.0)
+    - AEPEdge (>= 4.0.0)
+  - AEPPlaces (4.0.0):
+    - AEPCore (>= 4.0.0)
+    - AEPServices (>= 4.0.0)
+  - AEPRulesEngine (4.0.0)
+  - AEPServices (4.0.0)
+  - AEPSignal (4.0.0):
+    - AEPCore (>= 4.0.0)
+  - AEPTarget (4.0.0):
+    - AEPCore (>= 4.0.0)
+  - AEPUserProfile (4.0.0):
     - AEPCore
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
@@ -128,44 +128,44 @@ PODS:
     - DoubleConversion
     - fmt (~> 6.2.1)
     - glog
-  - RCTAEPAssurance (4.0.0):
-    - AEPAssurance (~> 3.0)
+  - RCTAEPAssurance (5.0.0):
+    - AEPAssurance (~> 4.0)
     - React
-  - RCTAEPCampaignClassic (2.0.0):
-    - AEPCampaignClassic (~> 3.0)
+  - RCTAEPCampaignClassic (5.0.0):
+    - AEPCampaignClassic (~> 4.0)
     - React
-  - RCTAEPCore (2.0.0):
-    - AEPCore (~> 3.0)
-    - AEPIdentity (~> 3.0)
-    - AEPLifecycle (~> 3.0)
-    - AEPSignal (~> 3.0)
+  - RCTAEPCore (5.0.0):
+    - AEPCore (~> 4.0)
+    - AEPIdentity (~> 4.0)
+    - AEPLifecycle (~> 4.0)
+    - AEPSignal (~> 4.0)
     - React
-  - RCTAEPEdge (2.0.0):
-    - AEPEdge (~> 1.0)
+  - RCTAEPEdge (5.0.0):
+    - AEPEdge (~> 4.0)
     - React
-  - RCTAEPEdgeBridge (1.0.0):
-    - AEPEdgeBridge (~> 1.0)
+  - RCTAEPEdgeBridge (5.0.0):
+    - AEPEdgeBridge (~> 4.0)
     - React
-  - RCTAEPEdgeConsent (2.0.0):
-    - AEPEdgeConsent (~> 1.0)
+  - RCTAEPEdgeConsent (5.0.0):
+    - AEPEdgeConsent (~> 4.0)
     - React
-  - RCTAEPEdgeIdentity (2.0.0):
-    - AEPEdgeIdentity (~> 1.0)
+  - RCTAEPEdgeIdentity (5.0.0):
+    - AEPEdgeIdentity (~> 4.0)
     - React
   - RCTAEPMessaging (1.0.0):
-    - AEPMessaging (~> 1.1)
+    - AEPMessaging (~> 4.0)
     - React
-  - RCTAEPOptimize (2.0.0):
-    - AEPOptimize (~> 1.0)
+  - RCTAEPOptimize (5.0.0):
+    - AEPOptimize (~> 4.0)
     - React
-  - RCTAEPPlaces (2.0.0):
-    - AEPPlaces (~> 3.0)
+  - RCTAEPPlaces (5.0.0):
+    - AEPPlaces (~> 4.0)
     - React
-  - RCTAEPTarget (2.0.0):
-    - AEPTarget (~> 3.2)
+  - RCTAEPTarget (5.0.0):
+    - AEPTarget (~> 4.0)
     - React
-  - RCTAEPUserProfile (2.0.0):
-    - AEPUserProfile (~> 3.0)
+  - RCTAEPUserProfile (5.0.0):
+    - AEPUserProfile (~> 4.0)
     - React
   - RCTRequired (0.68.5)
   - RCTTypeSafety (0.68.5):
@@ -434,7 +434,7 @@ PODS:
     - React-perflogger (= 0.68.5)
   - RNCMaskedView (0.1.11):
     - React
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.12.0):
     - React-Core
   - RNReanimated (2.2.4):
     - DoubleConversion
@@ -684,23 +684,23 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPAssurance: cea6c6b08a1ff6e5025f3ae79a68a1619c49cb4e
-  AEPCampaignClassic: cd20252606d9e12d5ee2c410df260762faa49d2c
-  AEPCore: 460eb0a7cc85180a4b77ac204cf8a7711d1341b8
-  AEPEdge: e4364a56d358c517f7d4cef87570ac4e7652d3a2
-  AEPEdgeBridge: de9813a9d8f44ee09f57240ab7626570d23fcd5f
-  AEPEdgeConsent: d10d4232615b880d484050edf47b2e3fbfb787bb
-  AEPEdgeIdentity: 6bb2c1e62d48cdc988b4d492e8e6d563f0ced73d
-  AEPIdentity: 8bf62ac575ce91f8063bb0154c398f0358fefb82
-  AEPLifecycle: 7b9dd2fd528035c4555ff838f89f9c45e62dbb64
-  AEPMessaging: 988ad59fa642c491aef4ebf2dc48283abe9fc722
-  AEPOptimize: 413690f88cb8ae574153a94081331788ca740a91
-  AEPPlaces: 561e22d5ee6570fcb0b721a47aa7cda2c4f00ec0
-  AEPRulesEngine: 354b4374edefaf5bdfa3336ab9a41a07cbae4afe
-  AEPServices: 79b5e33655bfaff53e360a0f59e4b59077b75dd0
-  AEPSignal: 5208f9c32e880394ed688d618703cd9ee43083d9
-  AEPTarget: 90c732ef32cee5733897e395afdab7242df9762d
-  AEPUserProfile: 2ddb5ba8e2c22dd8f942992306b050f4be2c2403
+  AEPAssurance: 4fa3138ddd7308c1f9923570f4d2b0b8526a916f
+  AEPCampaignClassic: 26935c92330f8550599075f6796bb800ce4ab24f
+  AEPCore: dd7cd69696c768c610e6adc0307032985a381c7e
+  AEPEdge: ffea1ada1e81c9cb239aac694efa5c8635b50c1f
+  AEPEdgeBridge: 9cf489f2ff34209d18e2ef4df86c74063d575b5b
+  AEPEdgeConsent: 54c1b6a30a3d646e3d4bc4bae1713755422b471e
+  AEPEdgeIdentity: c2396b9119abd6eb530ea11efc58ec019b163bd4
+  AEPIdentity: 45ee1c3717e08ff3ca60930caf4a869d60d7bf08
+  AEPLifecycle: 59be1b5381d8ec4939ece43516ea7d2de4aaba65
+  AEPMessaging: b5693ae07e7bfb27f375a2d86640b60989b8338f
+  AEPOptimize: 7478b0e3242dcda24246a998a25dcb3604b3c522
+  AEPPlaces: 80b2b11bef746cab3f5b66a5b7b533ba656a924c
+  AEPRulesEngine: 458450a34922823286ead045a0c2bd8c27e224c6
+  AEPServices: ca493988df250d84fda050124ff7549bcc43c65f
+  AEPSignal: b2b332adf4d8a9af6a1b57f5dd8c2e1ea6d5c112
+  AEPTarget: 439a4b2d91736c99943773f86f016d27d543e952
+  AEPUserProfile: 5c1d90014627cacff99efb193ce9acd287905661
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
@@ -720,18 +720,18 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
-  RCTAEPAssurance: 6a643e20716967f58ab982e734b1cb432424e253
-  RCTAEPCampaignClassic: 210ff4bddafe2987db76332f350a17200dfaeb27
-  RCTAEPCore: 2c2e2711e00091d8abea6f5e7bffaf34367c363d
-  RCTAEPEdge: 49d403c33981d1dd16085d586d561c736d9637e8
-  RCTAEPEdgeBridge: ddc941530ff1268dd4fa8a7f70b8c79404450198
-  RCTAEPEdgeConsent: dc4de5eca23da4a4859fea12dca63e89a08f9d2e
-  RCTAEPEdgeIdentity: 39ad6df51e1d15066ec6d6072b12ec78500e268a
-  RCTAEPMessaging: d6d2cb608e45a428fb0198d5f78486889f15bd87
-  RCTAEPOptimize: 4683ee837ea032dc99cbda0081e68ea8100f1477
-  RCTAEPPlaces: 280e50ef0a8fd73deb7e88e31734d7bc9a7cec4e
-  RCTAEPTarget: 8bed683d798c8aba89700fa4f22c8465615faeac
-  RCTAEPUserProfile: a3b540291d26782d2fe8f47c5ad058e94a3d4e8f
+  RCTAEPAssurance: 690918bca2bca158bf807c6d41053624eca981e6
+  RCTAEPCampaignClassic: 4843c7bf6f5eef1d55a90e9bca2f9bfc361cf95f
+  RCTAEPCore: e834b6eec84ec1de3404668778265e43db5e1ad6
+  RCTAEPEdge: 207126072a6467736e8fba6553152acb59c13dd3
+  RCTAEPEdgeBridge: ac3a4318f76f881b6a44f748d894d72bcc721230
+  RCTAEPEdgeConsent: dcbae4045ec6dd10291b34206d6b24fc472610f3
+  RCTAEPEdgeIdentity: 2127c9b4875b59c6acd4c1852f6a9bd1e0e44f19
+  RCTAEPMessaging: 038f78018874c6c7c01021781a737633817fb36a
+  RCTAEPOptimize: ecb1a175467f7beddc48306751544f9b753890de
+  RCTAEPPlaces: 6b32be999a278c315b996dc6b3fad2dc78ca50f2
+  RCTAEPTarget: c610eea241218100e26e9b993804141de1b36f71
+  RCTAEPUserProfile: 7c5f172fa05273e81161f6ee4b10e635374bacae
   RCTRequired: 0f06b6068f530932d10e1a01a5352fad4eaacb74
   RCTTypeSafety: b0ee81f10ef1b7d977605a2b266823dabd565e65
   React: 3becd12bd51ea8a43bdde7e09d0f40fba7820e03
@@ -759,13 +759,13 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b1f1995089b90696dbc2a7ffe0059a80db5c8eb1
   ReactCommon: 149e2c0acab9bac61378da0db5b2880a1b5ff59b
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
   RNReanimated: e7d8afaf8fed4b3bf1a46e06adb2e04a2b248f1c
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: c4d61225a466f250c35c1ee78d2d0b3d41fe661c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 13d57dc1d680859752a8fe6e191c0c3c4dd626cd
+PODFILE CHECKSUM: 98f13bbef753f068c15412f17f8b631ad28ff05c
 
 COCOAPODS: 1.11.3

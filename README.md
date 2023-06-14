@@ -56,10 +56,10 @@ The following code snippet shows for Mobile Core and Edge Network extensions as 
 ...
 "dependencies": {
     "react-native": "0.64.2",
-    "@adobe/react-native-aepcore": "^2.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
-    "@adobe/react-native-aepedge": "^2.0.0",
-    "@adobe/react-native-aepedgeidentity": "^2.0.0",
-    "@adobe/react-native-aepedgeconsent": "^2.0.0",
+    "@adobe/react-native-aepcore": "^5.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
+    "@adobe/react-native-aepedge": "^5.0.0",
+    "@adobe/react-native-aepedgeidentity": "^5.0.0",
+    "@adobe/react-native-aepedgeconsent": "^5.0.0",
 ...
 },
 ```

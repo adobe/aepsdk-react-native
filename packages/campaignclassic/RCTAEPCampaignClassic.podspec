@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/adobe/aepsdk-react-native"
 
   s.license      = "Apache 2.0 License"
-  s.platform     = :ios, '10.0'
+  s.platform     = :ios, '11.0'
 
   s.source       = { :git => "https://github.com/adobe/aepsdk-react-native.git", :tag => "#{s.version}" }
 
@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"  
-  s.dependency "AEPCampaignClassic", "~>3.0"
+  s.dependency "AEPCampaignClassic", "~> 4.0"
 end

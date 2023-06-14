@@ -10,15 +10,17 @@ jobs:
       - checkout
 
       - restore_cache:
-          keys: 
+          keys:
             - yarn-cache-{{ checksum "yarn.lock" }}
-      - run: yarn bootstrap 
+
+      - run: yarn install
+
       - save_cache:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
             - ./apps/AEPSampleApp/node_modules
-      
+
       - run:
           name: Unit Tests
           command: yarn tests:jest --watchAll=false --runInBand
@@ -29,7 +31,7 @@ jobs:
 
     steps:
       - checkout
-      
+
       - run:
           name: yarn install
           command: yarn install
@@ -39,29 +41,24 @@ jobs:
           command: |
             export NODE_OPTIONS=--max-old-space-size=8192
             yarn sampleapp:android:build
-          
+
   build-sample-app-ios:
     macos:
-      xcode: "13.0.0"
+      xcode: 14.1.0
 
     steps:
       - checkout
-
-      # CircleCI puts xcode app in consistent path, RN looks for versioned path
-      - run:
-          name: Move xcode
-          command: |
-            cd /Applications && mv Xcode.app Xcode-13.0.app
-            /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f /Applications/Xcode-13.0.app/Contents/Developer/Applications/Simulator.app
 
       - run:
           name: Install latest NodeJS
           command: brew install node
 
       - restore_cache:
-          keys: 
+          keys:
             - ios-yarn-cache-{{ checksum "yarn.lock" }}
-      - run: yarn bootstrap 
+
+      - run: yarn install
+
       - save_cache:
           key: ios-yarn-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -71,10 +68,18 @@ jobs:
       - run:
           name: Install latest Cocoapods
           command: sudo gem install cocoapods
-          
+
       - run:
           name: Install pods
           command: yarn sampleapp:ios:pod:install
+
+      - run:
+          name: Yoga fix
+          command: |
+            cd apps/AEPSampleApp
+            sed -i.bo 's/    node->getLayout()\.hadOverflow() |$/\0|/' ./node_modules/react-native/ReactCommon/yoga/yoga/Yoga.cpp
+            cd ../../
+            rm -rf ~/Library/Developer/Xcode/DerivedData
 
       - run:
           name: Building iOS Sample App

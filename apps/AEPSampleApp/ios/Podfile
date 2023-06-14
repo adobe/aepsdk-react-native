@@ -33,5 +33,13 @@ target 'AEPSampleApp' do
   post_install do |installer|
     react_native_post_install(installer)
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
+    installer.pods_project.targets.each do |t|
+        if t.name.start_with?("AEP")
+          t.build_configurations.each do |bc|
+              bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
+          end
+        end
+      end
   end
+  
 end
