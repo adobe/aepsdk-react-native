@@ -21,13 +21,17 @@ This repository is a monorepo and contains a collection of React Native modules 
 | [@adobe/react-native-aeptarget](./packages/target) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aeptarget.svg)](https://www.npmjs.com/package/@adobe/react-native-aeptarget) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aeptarget) | [Target](https://developer.adobe.com/client-sdks/documentation/adobe-target)
 | [@adobe/react-native-aepcampaignclassic](./packages/campaignclassic) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) |[CampaignClassic](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic)
 
-> Warning: Please always use the latest major versions of the above libraries to avoid incompatible issues.
+> Note: Since version 5.0.0 of the Adobe React Native SDK, all React Native libraries that share the same major version are compatible with each other.
 
 ## Requirements
 
-Requires React Native >= v0.60.0
+- Requires React Native >= v0.60.0
 
 > React Native v0.60.0 and above supports [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) which links the module while building the app.
+
+- Requires Xcode 14.1+
+
+> To submit iOS apps to the App Store, you must build them using Xcode 14.1 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
 
 ## Installation
 
