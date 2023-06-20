@@ -89,5 +89,6 @@ workflows:
   ci-workflow:
     jobs:
       - unit-test
-      - build-sample-app-ios
+      # Uncomment the following lines to build the ios code after this issue is fixed: https://github.com/adobe/aepsdk-react-native/issues/272
+      # - build-sample-app-ios
       - build-sample-app-android
