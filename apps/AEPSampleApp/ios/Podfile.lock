@@ -152,7 +152,7 @@ PODS:
   - RCTAEPEdgeIdentity (5.0.0):
     - AEPEdgeIdentity (~> 4.0)
     - React
-  - RCTAEPMessaging (1.0.0):
+  - RCTAEPMessaging (5.0.0):
     - AEPMessaging (~> 4.0)
     - React
   - RCTAEPOptimize (5.0.0):
@@ -465,7 +465,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.20.0):
+  - RNScreens (3.22.1):
     - React-Core
     - React-RCTImage
   - SocketRocket (0.6.0)
@@ -727,7 +727,7 @@ SPEC CHECKSUMS:
   RCTAEPEdgeBridge: ac3a4318f76f881b6a44f748d894d72bcc721230
   RCTAEPEdgeConsent: dcbae4045ec6dd10291b34206d6b24fc472610f3
   RCTAEPEdgeIdentity: 2127c9b4875b59c6acd4c1852f6a9bd1e0e44f19
-  RCTAEPMessaging: 038f78018874c6c7c01021781a737633817fb36a
+  RCTAEPMessaging: 497bfb861a6a819084fd0b4cd7c56994e3038e3b
   RCTAEPOptimize: ecb1a175467f7beddc48306751544f9b753890de
   RCTAEPPlaces: 6b32be999a278c315b996dc6b3fad2dc78ca50f2
   RCTAEPTarget: c610eea241218100e26e9b993804141de1b36f71
@@ -761,7 +761,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
   RNReanimated: e7d8afaf8fed4b3bf1a46e06adb2e04a2b248f1c
-  RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
+  RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: c4d61225a466f250c35c1ee78d2d0b3d41fe661c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
