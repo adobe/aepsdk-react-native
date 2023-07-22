@@ -90,5 +90,5 @@ workflows:
     jobs:
       - unit-test
       # Uncomment the following lines to build the ios code after this issue is fixed: https://github.com/adobe/aepsdk-react-native/issues/272
-      # - build-sample-app-ios
+      - build-sample-app-ios
       - build-sample-app-android
