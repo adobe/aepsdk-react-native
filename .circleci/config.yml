@@ -83,11 +83,8 @@ jobs:
 
       - run:
           name: Building iOS Sample App cd
-          command: cd apps/AEPSampleApp
+          command: cd apps/AEPSampleApp && npx react-native run-ios --verbose
 
-      - run:
-           name: Building iOS Sample App npx 
-           command: npx react-native run-ios --verbose
 workflows:
   version: 2.1
   ci-workflow:
