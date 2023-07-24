@@ -86,10 +86,6 @@ jobs:
           command: cd apps/AEPSampleApp
 
       - run:
-          name: Building iOS Sample App cd
-          command: rm -rf ~/Library/Developer/Xcode/DerivedData
-
-      - run:
            name: Building iOS Sample App npx 
            command: npx react-native run-ios --verbose
 workflows:
