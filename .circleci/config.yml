@@ -82,8 +82,8 @@ jobs:
             rm -rf ~/Library/Developer/Xcode/DerivedData
 
       - run:
-          name: Building iOS Sample App cd
-          command: yarn sampleapp:ios:build
+          name: Building iOS Sample App
+          command: cd apps/AEPSampleApp && npx react-native run-ios --verbose
 
 workflows:
   version: 2.1
