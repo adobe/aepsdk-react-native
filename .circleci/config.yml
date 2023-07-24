@@ -83,7 +83,7 @@ jobs:
 
       - run:
           name: Building iOS Sample App cd
-          command: cd apps/AEPSampleApp && npx react-native run-ios --verbose
+          command: yarn sampleapp:ios:build
 
 workflows:
   version: 2.1
