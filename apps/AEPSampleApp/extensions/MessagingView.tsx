@@ -12,14 +12,35 @@ governing permissions and limitations under the License.
 
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
-import {Messaging} from '@adobe/react-native-aepmessaging';
+import {Message, Messaging} from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 import {NavigationProps} from '../types/props';
 
-const messagingExtensionVersion = () =>
-  Messaging.extensionVersion().then(version =>
-    console.log('AdobeExperienceSDK: Messaging version: ' + version),
-  );
+const messagingExtensionVersion = async () => {
+  const version = await Messaging.extensionVersion();
+  console.log(`AdobeExperienceSDK: Messaging version: ${version}`);
+};
+
+const refreshInAppMessages = () => {
+  Messaging.refreshInAppMessages();
+  console.log('messages refreshed');
+};
+
+const setMessagingDelegate = () => {
+  Messaging.setMessagingDelegate({
+    onDismiss: () => console.log('dismissed!'),
+    onShow: () => console.log('show'),
+    shouldShowMessage: () => true,
+    urlLoaded: () => true,
+  });
+  console.log('messaging delegate set');
+};
+
+const saveMessage = () => {
+  const message = new Message('1', true);
+  Messaging.saveMessage(message);
+  console.log('message saved');
+};
 
 const MessagingView = ({navigation}: NavigationProps) => (
   <View style={styles.container}>
@@ -27,6 +48,9 @@ const MessagingView = ({navigation}: NavigationProps) => (
       <Button onPress={() => navigation.goBack()} title="Go to main page" />
       <Text style={styles.welcome}>Messaging</Text>
       <Button title="extensionVersion()" onPress={messagingExtensionVersion} />
+      <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
+      <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
+      <Button title="saveMessage()" onPress={saveMessage} />
     </ScrollView>
   </View>
 );

@@ -1,0 +1,359 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		21A8F65E229DC0680048DBBC /* AEPTargetRequestObjectDataBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 21A8F65C229DC0680048DBBC /* AEPTargetRequestObjectDataBridge.m */; };
+		21A8F662229DC1360048DBBC /* AEPTargetParametersDataBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 21A8F660229DC1360048DBBC /* AEPTargetParametersDataBridge.m */; };
+		21A8F666229DC22B0048DBBC /* AEPTargetPrefetchObjectDataBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 21A8F664229DC22B0048DBBC /* AEPTargetPrefetchObjectDataBridge.m */; };
+		21B741EF229F26B200CBC1F8 /* AEPTargetOrderDataBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B741ED229F26B200CBC1F8 /* AEPTargetOrderDataBridge.m */; };
+		21B741F3229F275C00CBC1F8 /* AEPTargetProductDataBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B741F1229F275C00CBC1F8 /* AEPTargetProductDataBridge.m */; };
+		B3E7B58A1CC2AC0600A0062D /* RCTAEPTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTAEPTarget.m */; };
+		D16B6152A9ABFBEC86C0F7ED /* libPods-RCTAEPTarget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B70C3A8440A6FEEF84CC902C /* libPods-RCTAEPTarget.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		58B511D91A9E6C8500147676 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		134814201AA4EA6300B7C361 /* libRCTAEPTarget.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTAEPTarget.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		21A8F65B229DC0680048DBBC /* AEPTargetRequestObjectDataBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "AEPTargetRequestObjectDataBridge.h"; path = "src/AEPTargetRequestObjectDataBridge.h"; sourceTree = "<group>"; };
+		21A8F65C229DC0680048DBBC /* AEPTargetRequestObjectDataBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "AEPTargetRequestObjectDataBridge.m"; path = "src/AEPTargetRequestObjectDataBridge.m"; sourceTree = "<group>"; };
+		21A8F65F229DC1360048DBBC /* AEPTargetParametersDataBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "AEPTargetParametersDataBridge.h"; path = "src/AEPTargetParametersDataBridge.h"; sourceTree = "<group>"; };
+		21A8F660229DC1360048DBBC /* AEPTargetParametersDataBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "AEPTargetParametersDataBridge.m"; path = "src/AEPTargetParametersDataBridge.m"; sourceTree = "<group>"; };
+		21A8F663229DC22B0048DBBC /* AEPTargetPrefetchObjectDataBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "AEPTargetPrefetchObjectDataBridge.h"; path = "src/AEPTargetPrefetchObjectDataBridge.h"; sourceTree = "<group>"; };
+		21A8F664229DC22B0048DBBC /* AEPTargetPrefetchObjectDataBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "AEPTargetPrefetchObjectDataBridge.m"; path = "src/AEPTargetPrefetchObjectDataBridge.m"; sourceTree = "<group>"; };
+		21B741EC229F26B200CBC1F8 /* AEPTargetOrderDataBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "AEPTargetOrderDataBridge.h"; path = "src/AEPTargetOrderDataBridge.h"; sourceTree = "<group>"; };
+		21B741ED229F26B200CBC1F8 /* AEPTargetOrderDataBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "AEPTargetOrderDataBridge.m"; path = "src/AEPTargetOrderDataBridge.m"; sourceTree = "<group>"; };
+		21B741F0229F275C00CBC1F8 /* AEPTargetProductDataBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "AEPTargetProductDataBridge.h"; path = "src/AEPTargetProductDataBridge.h"; sourceTree = "<group>"; };
+		21B741F1229F275C00CBC1F8 /* AEPTargetProductDataBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "AEPTargetProductDataBridge.m"; path = "src/AEPTargetProductDataBridge.m"; sourceTree = "<group>"; };
+		52DE96ABB1EF9316EE2725A6 /* Pods-RCTAEPTarget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RCTAEPTarget.release.xcconfig"; path = "Target Support Files/Pods-RCTAEPTarget/Pods-RCTAEPTarget.release.xcconfig"; sourceTree = "<group>"; };
+		B0446E032903A7830F644C9C /* Pods-RCTAEPTarget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RCTAEPTarget.debug.xcconfig"; path = "Target Support Files/Pods-RCTAEPTarget/Pods-RCTAEPTarget.debug.xcconfig"; sourceTree = "<group>"; };
+		B3E7B5881CC2AC0600A0062D /* RCTAEPTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTAEPTarget.h; path = src/RCTAEPTarget.h; sourceTree = "<group>"; };
+		B3E7B5891CC2AC0600A0062D /* RCTAEPTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTAEPTarget.m; path = src/RCTAEPTarget.m; sourceTree = "<group>"; };
+		B70C3A8440A6FEEF84CC902C /* libPods-RCTAEPTarget.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RCTAEPTarget.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		58B511D81A9E6C8500147676 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D16B6152A9ABFBEC86C0F7ED /* libPods-RCTAEPTarget.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		134814211AA4EA7D00B7C361 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				134814201AA4EA6300B7C361 /* libRCTAEPTarget.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		21A8F65A229DBEBD0048DBBC /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				21A8F65B229DC0680048DBBC /* AEPTargetRequestObjectDataBridge.h */,
+				21A8F65C229DC0680048DBBC /* AEPTargetRequestObjectDataBridge.m */,
+				21A8F65F229DC1360048DBBC /* AEPTargetParametersDataBridge.h */,
+				21A8F660229DC1360048DBBC /* AEPTargetParametersDataBridge.m */,
+				21A8F663229DC22B0048DBBC /* AEPTargetPrefetchObjectDataBridge.h */,
+				21A8F664229DC22B0048DBBC /* AEPTargetPrefetchObjectDataBridge.m */,
+				21B741EC229F26B200CBC1F8 /* AEPTargetOrderDataBridge.h */,
+				21B741ED229F26B200CBC1F8 /* AEPTargetOrderDataBridge.m */,
+				21B741F0229F275C00CBC1F8 /* AEPTargetProductDataBridge.h */,
+				21B741F1229F275C00CBC1F8 /* AEPTargetProductDataBridge.m */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		58B511D21A9E6C8500147676 = {
+			isa = PBXGroup;
+			children = (
+				B3E7B5881CC2AC0600A0062D /* RCTAEPTarget.h */,
+				B3E7B5891CC2AC0600A0062D /* RCTAEPTarget.m */,
+				21A8F65A229DBEBD0048DBBC /* Extensions */,
+				134814211AA4EA7D00B7C361 /* Products */,
+				92501F721D02CE102B4F3ABF /* Pods */,
+				F9D7293D8A9B309DDC56AFC0 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		92501F721D02CE102B4F3ABF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B0446E032903A7830F644C9C /* Pods-RCTAEPTarget.debug.xcconfig */,
+				52DE96ABB1EF9316EE2725A6 /* Pods-RCTAEPTarget.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F9D7293D8A9B309DDC56AFC0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B70C3A8440A6FEEF84CC902C /* libPods-RCTAEPTarget.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		58B511DA1A9E6C8500147676 /* RCTAEPTarget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTAEPTarget" */;
+			buildPhases = (
+				C30A4BA835E41A07A1B78F60 /* [CP] Check Pods Manifest.lock */,
+				58B511D91A9E6C8500147676 /* CopyFiles */,
+				58B511D71A9E6C8500147676 /* Sources */,
+				58B511D81A9E6C8500147676 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RCTAEPTarget;
+			productName = RCTDataManager;
+			productReference = 134814201AA4EA6300B7C361 /* libRCTAEPTarget.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		58B511D31A9E6C8500147676 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = Adobe;
+				TargetAttributes = {
+					58B511DA1A9E6C8500147676 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RCTAEPTarget" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+			);
+			mainGroup = 58B511D21A9E6C8500147676;
+			productRefGroup = 58B511D21A9E6C8500147676;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				58B511DA1A9E6C8500147676 /* RCTAEPTarget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C30A4BA835E41A07A1B78F60 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RCTAEPTarget-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		58B511D71A9E6C8500147676 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21B741F3229F275C00CBC1F8 /* AEPTargetProductDataBridge.m in Sources */,
+				B3E7B58A1CC2AC0600A0062D /* RCTAEPTarget.m in Sources */,
+				21A8F666229DC22B0048DBBC /* AEPTargetPrefetchObjectDataBridge.m in Sources */,
+				21B741EF229F26B200CBC1F8 /* AEPTargetOrderDataBridge.m in Sources */,
+				21A8F662229DC1360048DBBC /* AEPTargetParametersDataBridge.m in Sources */,
+				21A8F65E229DC0680048DBBC /* AEPTargetRequestObjectDataBridge.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		58B511ED1A9E6C8500147676 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		58B511EE1A9E6C8500147676 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		58B511F01A9E6C8500147676 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B0446E032903A7830F644C9C /* Pods-RCTAEPTarget.debug.xcconfig */;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../../React/**",
+					"$(SRCROOT)/../../react-native/React/**",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = RCTAEPTarget;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+			};
+			name = Debug;
+		};
+		58B511F11A9E6C8500147676 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 52DE96ABB1EF9316EE2725A6 /* Pods-RCTAEPTarget.release.xcconfig */;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../../React/**",
+					"$(SRCROOT)/../../react-native/React/**",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = RCTAEPTarget;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RCTAEPTarget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58B511ED1A9E6C8500147676 /* Debug */,
+				58B511EE1A9E6C8500147676 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTAEPTarget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58B511F01A9E6C8500147676 /* Debug */,
+				58B511F11A9E6C8500147676 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 58B511D31A9E6C8500147676 /* Project object */;
+}

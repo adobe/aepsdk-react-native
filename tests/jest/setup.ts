@@ -27,12 +27,17 @@ jest.doMock('react-native', () => {
                     getUrlVariables: jest.fn(() => new Promise(resolve => resolve(''))),
                     getIdentities: jest.fn(() => new Promise(resolve => resolve({"ABC":[{"id":"id1","authenticatedState":"ambiguous","primary":false}]}))),
                     updateIdentities: jest.fn(),
-                    removeIdentity: jest.fn(),
+                    removeIdentity: jest.fn()
                 },
                 AEPEdge: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     sendEvent: jest.fn(() => new Promise(resolve => resolve([{type: "example", payload: {sample: "data"}}]))),
+                    setLocationHint: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getLocationHint: jest.fn(() => new Promise(resolve => resolve('va6'))),
                 },
+                AEPEdgeBridge: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('')))
+                }, 
                 AEPAssurance: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
                     startSession: jest.fn()
@@ -106,6 +111,24 @@ jest.doMock('react-native', () => {
                     generateDisplayInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
                     generateTapInteractionXdm: jest.fn(() => new Promise(resolve => resolve(new Map()))),
                     generateReferenceXdm: jest.fn(() => new Promise(resolve => resolve(new Map())))
+                }, 
+                AEPTarget: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
+                    registerExtension: jest.fn(),
+                    clearPrefetchCache: jest.fn(),
+                    getSessionId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getThirdPartyId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    getTntId: jest.fn(() => new Promise(resolve => resolve(''))),
+                    resetExperience: jest.fn(),
+                    setPreviewRestartDeeplink: jest.fn(),
+                    setSessionId: jest.fn(),
+                    setThirdPartyId: jest.fn(),
+                    setTntId: jest.fn(),
+                    retrieveLocationContent: jest.fn(),
+                    prefetchContent: jest.fn(() => new Promise(resolve => resolve(''))),
+                    displayedLocations: jest.fn(),
+                    clickedLocation: jest.fn(),
+                    registerTargetRequests: jest.fn()
                 },   
                 AEPPlaces: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),
@@ -115,7 +138,13 @@ jest.doMock('react-native', () => {
                     getLastKnownLocation: () => jest.fn(() => new Promise(resolve => resolve({}))),
                     clear: jest.fn(),
                     setAuthorizationStatus: jest.fn(),
-                }                  
+                },
+                AEPCampaignClassic: {
+                    extensionVersion: jest.fn(() => new Promise(resolve => resolve('1.0.0'))),
+                    registerDeviceWithToken: jest.fn(),
+                    trackNotificationClickWithUserInfo: jest.fn(),
+                    trackNotificationReceiveWithUserInfo: jest.fn(),
+                }                       
             },            
             NativeEventEmitter: class {
                 addListener() {}

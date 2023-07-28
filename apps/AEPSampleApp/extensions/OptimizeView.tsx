@@ -33,7 +33,6 @@ const ViewTypes = {
   content: 1,
 };
 
-const TARGET_OFFER_TYPE_TEXT = 'text/plain';
 const TARGET_OFFER_TYPE_JSON = 'application/json';
 const TARGET_OFFER_TYPE_HTML = 'text/html';
 
@@ -113,26 +112,14 @@ export default ({navigation}: any) => {
           setImageProposition(propositions.get(decisionScopeImage.getName()));
           setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
           setJsonProposition(propositions.get(decisionScopeJson.getName()));
-          setTargetProposition(
-            propositions.get(decisionScopeTargetMbox.getName()),
-          );
+          setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
         }
       },
     });
 
   const renderTargetOffer = () => {
     if (targetProposition?.items) {
-      if (targetProposition.items[0].format === TARGET_OFFER_TYPE_TEXT) {
-        return (
-          <Text
-            style={{margin: 10, fontSize: 18}}
-            onPress={() => {
-              targetProposition?.items[0].tapped(targetProposition);
-            }}>
-            {targetProposition.items[0].content}
-          </Text>
-        );
-      } else if (targetProposition.items[0].format === TARGET_OFFER_TYPE_JSON) {
+      if (targetProposition.items[0].format === TARGET_OFFER_TYPE_JSON) {
         return (
           <Text
             style={{margin: 10, fontSize: 18}}

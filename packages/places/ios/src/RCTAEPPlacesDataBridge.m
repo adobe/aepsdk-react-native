@@ -15,15 +15,15 @@ specific language governing permissions and limitations under the License.
 
 // @{link PlacesAuthorizationStatus}
 static NSString *const AEP_PLACES_AUTH_STATUS_DENIED =
-    @"AEP_PLACES_AUTH_STATUS_DENIED";
+    @"PLACES_AUTH_STATUS_DENIED";
 static NSString *const AEP_PLACES_AUTH_STATUS_ALWAYS =
-    @"AEP_PLACES_AUTH_STATUS_ALWAYS";
+    @"PLACES_AUTH_STATUS_ALWAYS";
 static NSString *const AEP_PLACES_AUTH_STATUS_UNKNOWN =
-    @"AEP_PLACES_AUTH_STATUS_UNKNOWN";
+    @"PLACES_AUTH_STATUS_UNKNOWN";
 static NSString *const AEP_PLACES_AUTH_STATUS_RESTRICTED =
-    @"AEP_PLACES_AUTH_STATUS_RESTRICTED";
+    @"PLACES_AUTH_STATUS_RESTRICTED";
 static NSString *const AEP_PLACES_AUTH_STATUS_WHEN_IN_USE =
-    @"AEP_PLACES_AUTH_STATUS_WHEN_IN_USE";
+    @"PLACES_AUTH_STATUS_WHEN_IN_USE";
 
 // Location
 static NSString *const LOCATION_LATITUDE = @"latitude";

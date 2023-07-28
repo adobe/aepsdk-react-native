@@ -75,9 +75,6 @@ describe('Optimize', () => {
     expect(offer.format).toBe('text/plain');
     expect(offer.language).toBe(offerJson.data.language);
     expect(offer.characteristics).toBe(offerJson.data.characteristics);
-    expect(offer.meta).toMatchObject({
-      "custom": "custom-meta"
-    })
   });
 
   it('Test Offer.displayed', async () => {

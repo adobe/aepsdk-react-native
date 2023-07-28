@@ -23,8 +23,12 @@ governing permissions and limitations under the License.
 @import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPEdgeConsent;
+@import AEPEdgeBridge;
 @import AEPAssurance;
 @import AEPOptimize;
+@import AEPPlaces;
+@import AEPTarget;
+@import AEPCampaignClassic;
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 @property (nonatomic, strong) UIWindow *window;
 
