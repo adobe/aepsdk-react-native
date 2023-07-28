@@ -127,7 +127,7 @@ public class RCTAEPPlacesDataBridge {
     locationMap.putString(AEP_PLACES_POI_NAME, placesPOI.getName());
     locationMap.putDouble(AEP_PLACES_POI_LATITUDE, placesPOI.getLatitude());
     locationMap.putDouble(AEP_PLACES_POI_LONGITUDE, placesPOI.getLongitude());
-    locationMap.putDouble(AEP_PLACES_POI_RADIUS, placesPOI.getRadius());
+    locationMap.putInt(AEP_PLACES_POI_RADIUS, placesPOI.getRadius());
     locationMap.putBoolean(AEP_PLACES_POI_USER_IS_WITHIN, placesPOI.containsUser());
     locationMap.putString(AEP_PLACES_POI_LIBRARY, placesPOI.getLibrary());
     locationMap.putInt(AEP_PLACES_POI_WEIGHT, placesPOI.getWeight());
