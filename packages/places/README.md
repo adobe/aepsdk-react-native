@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepplaces.svg)](https://www.npmjs.com/package/@adobe/react-native-aepplaces)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepplaces)](https://www.npmjs.com/package/@adobe/react-native-aepplaces)
 
-`@adobe/react-native-aepplaces` is a wrapper around the iOS and Android [Adobe Experience Platform Places Extension](https://aep-sdks.gitbook.io/docs/using-mobile-extensions/adobe-places) to allow for integration with React Native applications. Functionality to enable Adobe Places is provided entirely through JavaScript documented below.
+`@adobe/react-native-aepplaces` is a wrapper around the iOS and Android [Adobe Experience Platform Places Extension](https://developer.adobe.com/client-sdks/documentation/places) to allow for integration with React Native applications. Functionality to enable Adobe Places is provided entirely through JavaScript documented below.
 
 ## Peer Dependencies
 
@@ -48,12 +48,16 @@ iOS
 
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [AEPMobileCore setLogLevel: AEPLogLevelTrace];
+  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore configureWithAppId:@"yourAppID"];
+
+  const UIApplicationState appState = application.applicationState;
+  
   [AEPMobileCore registerExtensions:@[AEPEdge.class, AEPMobilePlaces.class] completion:^{
-      [AEPMobileCore configureWithAppId:@"yourAppID"];
-      [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
+    if (appState != UIApplicationStateBackground) {
+       [AEPMobileCore lifecycleStart:nil];
     }
-  ];
+  }];
   return YES;
 }
 @end
@@ -80,18 +84,13 @@ public class MainApplication extends Application implements ReactApplication {
     ...
     MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG);
-    try {
-      Edge.registerExtension();
-      Places.registerExtension();
-      MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-          MobileCore.lifecycleStart(null);
-        }
-      });
-    } catch (InvalidInitException e) {
-      ...
-    }
+    MobileCore.configureWithAppID("your-app-ID");
+    List<Class<? extends Extension>> extensions = Arrays.asList(
+                Edge.EXTENSION,
+                Places.EXTENSION);
+    MobileCore.registerExtensions(extensions, o -> {
+      MobileCore.lifecycleStart(null);
+    });
   }
 }
 ```
@@ -99,14 +98,14 @@ public class MainApplication extends Application implements ReactApplication {
 ### Importing the extension:
 
 ```typescript
-import { 
+import {
   Places,
   PlacesAuthStatus,
   PlacesGeofence,
   PlacesGeofenceTransitionType,
   PlacesLocation,
-  PlacesPOI
-} from '@adobe/react-native-aepplaces';
+  PlacesPOI,
+} from "@adobe/react-native-aepplaces";
 ```
 
 ## API reference
@@ -114,11 +113,13 @@ import {
 #### Getting the extension version:
 
 **Syntax**
+
 ```typescript
 extensionVersion(): Promise<string>
 ```
 
 **Example**
+
 ```typescript
 const version = await Places.extensionVersion();
 console.log(`AdobeExperienceSDK: Places version: ${version}`);
@@ -127,11 +128,13 @@ console.log(`AdobeExperienceSDK: Places version: ${version}`);
 #### Get the nearby points of interest:
 
 **Syntax**
+
 ```typescript
 getNearbyPointsOfInterest(location, <limit>): Promise<Array<PlacesPOI>>
 ```
 
 **Example**
+
 ```typescript
 let location = new PlacesLocation(<latitude>, <longitude>, <optional altitude>, <optional speed>, <optional accuracy>);
 
@@ -146,11 +149,13 @@ try {
 #### Process geofence:
 
 **Syntax**
+
 ```typescript
 processGeofence(geofence, <transitionType>): void
 ```
 
 **Example**
+
 ```typescript
 // create a geofence
 let geofence = new PlacesGeofence("geofence Identifier", <latitude>, <longitude>, <radius>, <optional expiration-duration>);
@@ -161,11 +166,13 @@ Places.processGeofence(geofence, PlacesGeofenceTransitionType.EXIT);
 #### Get the current point of interests:
 
 **Syntax**
+
 ```typescript
 getCurrentPointsOfInterest(): Promise<Array<PlacesPOI>>
 ```
 
 **Example**
+
 ```typescript
 const pois = await Places.getCurrentPointsOfInterest();
 console.log('AdobeExperienceSDK: Places pois: ' + pois);
@@ -175,11 +182,13 @@ console.log('AdobeExperienceSDK: Places pois: ' + pois);
 #### Get the last known location
 
 **Syntax**
+
 ```typescript
 getLastKnownLocation(): Promise<PlacesLocation>
 ```
 
 **Example**
+
 ```typescript
 const location = await Places.getLastKnownLocation();
 console.log('AdobeExperienceSDK: Places location: ' + location)
@@ -189,11 +198,13 @@ console.log('AdobeExperienceSDK: Places location: ' + location)
 #### Clear
 
 **Syntax**
+
 ```typescript
 clear(): void
 ```
 
 **Example**
+
 ```typescript
 Places.clear();
 ```
@@ -201,11 +212,13 @@ Places.clear();
 #### Set Authorization status:
 
 **Syntax**
+
 ```typescript
 setAuthorizationStatus(authStatus?: PlacesAuthStatus): void;
 ```
 
 **Example**
+
 ```typescript
 Places.setAuthorizationStatus(PlacesAuthStatus.ALWAYS);
 Places.setAuthorizationStatus(PlacesAuthStatus.DENIED);

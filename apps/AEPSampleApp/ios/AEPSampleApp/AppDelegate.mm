@@ -73,15 +73,29 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [AEPMobileCore setLogLevel:AEPLogLevelTrace];
-  [AEPMobileCore registerExtensions:@[
-    AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
-    AEPMobileEdgeConsent.class, AEPMobileMessaging.class,
-    AEPMobileOptimize.class
-  ]
-                         completion:^{
-                           [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
-                         }];
+  [AEPMobileCore
+      configureWithAppId:@"YOUR-APP-ID"];
+  const UIApplicationState appState = application.applicationState;
+  [AEPMobileCore
+      registerExtensions:@[
+        AEPMobileLifecycle.class, AEPMobileIdentity.class, AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
+        AEPMobileEdgeConsent.class, AEPMobileEdgeBridge.class, AEPMobileMessaging.class,
+        AEPMobileOptimize.class, AEPMobilePlaces.class, AEPMobileTarget.class,
+        AEPMobileCampaignClassic.class, AEPMobileAssurance.class
+   ] completion:^{
+      if (appState != UIApplicationStateBackground) {
+        [AEPMobileCore lifecycleStart:nil];
+      }
+   }];
   return YES;
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    [AEPMobileCore lifecyclePause];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    [AEPMobileCore lifecycleStart:nil];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {

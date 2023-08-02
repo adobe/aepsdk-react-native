@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": {
-    "nohoist": ["**/*"]
+    "nohoist": [
+      "**/*"
+    ]
   },
   "scripts": {
     "cleanup": "rm -rf node_modules",
@@ -14,15 +16,18 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@adobe/react-native-aepassurance": "^3.0.0",
-    "@adobe/react-native-aepcore": "^1.0.0",
-    "@adobe/react-native-aepedge": "^1.0.0",
-    "@adobe/react-native-aepedgeconsent": "^1.0.0",
-    "@adobe/react-native-aepedgeidentity": "^1.1.0",
-    "@adobe/react-native-aepmessaging": "^1.0.0-beta.2",
-    "@adobe/react-native-aepoptimize": "^1.0.0-beta.1",
-    "@adobe/react-native-aepplaces": "^1.0.0-beta.1",
-    "@adobe/react-native-aepuserprofile": "^1.0.0",
+    "@adobe/react-native-aepassurance": "^5.0.0",
+    "@adobe/react-native-aepcampaignclassic": "^5.0.0",
+    "@adobe/react-native-aepcore": "^5.0.0",
+    "@adobe/react-native-aepedge": "^5.0.0",
+    "@adobe/react-native-aepedgebridge": "^5.0.0",
+    "@adobe/react-native-aepedgeconsent": "^5.0.0",
+    "@adobe/react-native-aepedgeidentity": "^5.0.0",
+    "@adobe/react-native-aepmessaging": "^5.0.0",
+    "@adobe/react-native-aepoptimize": "^5.0.0",
+    "@adobe/react-native-aepplaces": "^5.0.0",
+    "@adobe/react-native-aeptarget": "^5.0.0",
+    "@adobe/react-native-aepuserprofile": "^5.0.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/core": "^6.2.1",
@@ -30,8 +35,9 @@
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/routers": "^6.1.0",
     "@react-navigation/stack": "^6.2.1",
+    "lodash.isequal": "^4.5.0",
     "react": "18.1.0",
-    "react-native": "0.68.2",
+    "react-native": "0.68.5",
     "react-native-gesture-handler": "^2.4.2",
     "react-native-reanimated": "2.2.4",
     "react-native-safe-area-context": "^3.2.0",
@@ -54,5 +60,8 @@
       "json",
       "node"
     ]
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
   }
 }
