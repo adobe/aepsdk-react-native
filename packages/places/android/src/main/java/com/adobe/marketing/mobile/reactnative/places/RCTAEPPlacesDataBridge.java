@@ -100,7 +100,7 @@ public class RCTAEPPlacesDataBridge {
 
     WritableMap locationMap = new WritableNativeMap();
     locationMap.putDouble(AEP_PLACES_LOCATION_LATITUDE, location.getLatitude());
-    locationMap.putDouble(AEP_PLACES_LOCATION_LONGITUDE, location.getLatitude());
+    locationMap.putDouble(AEP_PLACES_LOCATION_LONGITUDE, location.getLongitude());
 
     return locationMap;
   }
