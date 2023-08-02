@@ -83,12 +83,13 @@ jobs:
 
       - run:
           name: Building iOS Sample App
-          command: yarn sampleapp:ios:build
+          command: cd apps/AEPSampleApp && npx react-native run-ios --verbose
+
 workflows:
   version: 2.1
   ci-workflow:
     jobs:
       - unit-test
       # Uncomment the following lines to build the ios code after this issue is fixed: https://github.com/adobe/aepsdk-react-native/issues/272
-      # - build-sample-app-ios
+      - build-sample-app-ios
       - build-sample-app-android
