@@ -235,7 +235,7 @@ MobileCore.setLogLevel(LogLevel.VERBOSE);
 - #### trackAction
 
 > [!IMPORTANT]  
-> trackAction is supported through [Edge Bridge](/packages/edgebridge) and [Edge Network](/packages/edge) extensions. 
+> trackAction is supported through [Edge Bridge](../edgebridge/) and [Edge Network](../edge/) extensions. 
 
 Track event actions that occur in your application.
 
@@ -254,7 +254,7 @@ MobileCore.trackAction("loginClicked", {"customKey": "value"});
 - #### trackState
 
 > [!IMPORTANT]  
-> trackAction is supported through [Edge Bridge](/packages/edgebridge) and [Edge Network](/packages/edge) extensions.  
+> trackState is supported through [Edge Bridge](../edgebridge/) and [Edge Network](../edge/) extensions.  
 
 Track states that represent screens or views in your application. 
 
