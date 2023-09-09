@@ -191,7 +191,7 @@ const MobileCore: IMobileCore = {
    *  be incremented each time the event occurs. For example, you may want to track when an user click on the login
    *  button or a certain article was viewed.
    *
-   *  note: when using the Adobe Analytics extension, calling this API will increment page views
+   *  note: this method is supported through Edge Bridge and Edge Network extensions with Data Prep mapping.
    * @param  {String?} action containing the name of the action to track
    * @param  {Record<string, string>} contextData containing context data to attach on this hit
    */
@@ -206,7 +206,7 @@ const MobileCore: IMobileCore = {
    *  a new track call should be sent with current state name. Tracking state name is typically called from a
    *  Component in the componentDidMount function.
    *
-   *  note: when using the Adobe Analytics extension, calling this API will increment page views
+   *  note:  this method is supported through Edge Bridge and Edge Network extensions with Data Prep mapping.
    * @param  {String?} state containing the name of the state to track
    * @param  {Record<string, string>} contextData containing context data to attach on this hit
    */
