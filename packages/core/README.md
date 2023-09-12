@@ -235,7 +235,7 @@ MobileCore.setLogLevel(LogLevel.VERBOSE);
 - #### trackAction
 
 > [!IMPORTANT]  
-> trackAction is supported through [Edge Bridge](../edgebridge) and [Edge Network](../edge) extensions. 
+> trackAction is supported through [Edge Bridge](../edgebridge/README.md) and [Edge Network](../edge/README.md) extensions. 
 
 Track event actions that occur in your application.
 
