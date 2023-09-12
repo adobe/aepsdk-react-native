@@ -27,11 +27,11 @@ At this time, the following ACP-prefix libraries can be switched out with their 
 | @adobe/react-native-acpanalytics | NA, workflows supported through [Edge Network](../packages/edge) or [Edge Bridge](../packages/edgebridge) extension. |
 | @adobe/react-native-acpmedia | NA |
 | @adobe/react-native-acpaudience | NA |
-| @adobe/react-native-acptarget | @adobe/react-native-aeptarget, for using Analytics for Target, workflows supported through [Edge Network](../packages/edge) and [Optimize](../packages/optimize) extensions. |
+| @adobe/react-native-acptarget | @adobe/react-native-aeptarget, <br> for using Analytics for Target, workflows supported through [Edge Network](../packages/edge) and [Optimize](../packages/optimize) extensions. |
 | @adobe/react-native-acpcampaign | NA |
 | @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/react-native-aepassurance:4.x (compatible with AEP libraries)|
 
-> Note: Analytics library is not supported in AEP React Native. For implementing the Analytics workflow, you need to use Edge or Edge Bridge Extensions. Please refer to [migrate to Edge Network](https://developer.adobe.com/client-sdks/documentation/adobe-analytics/migrate-to-edge-network/) for more info.
+> Note: Analytics library is not supported in AEP React Native. For implementing the Analytics workflow, register and configure the Edge Network or Edge Bridge libraries. Please refer to [migrate to Edge Network](https://developer.adobe.com/client-sdks/documentation/adobe-analytics/migrate-to-edge-network/) for more info.
 
 ## Update SDK initialization
 Remove the deprecated registration code and the extensions that are not supported in AEP React Native libraries.
