@@ -24,12 +24,14 @@ At this time, the following ACP-prefix libraries can be switched out with their 
 | @adobe/react-native-acpuserprofile | @adobe/react-native-aepuserprofile |
 | @adobe/react-native-acpplaces | @adobe/react-native-aepplaces |
 | @adobe/react-native-acpplaces-monitor | NA |
-| @adobe/react-native-acpanalytics | NA, workflows supported through [Edge Network](../packages/edge) or [Edge Bridge](../packages/edgebridge) extension. |
+| @adobe/react-native-acpanalytics | NA, Analytics workflows supported through [Edge Network](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edge) or [Edge Bridge](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgebridge) extensions. |
 | @adobe/react-native-acpmedia | NA |
 | @adobe/react-native-acpaudience | NA |
-| @adobe/react-native-acptarget | @adobe/react-native-aeptarget |
+| @adobe/react-native-acptarget | @adobe/react-native-aeptarget, <br> Analytics for Target (A4T) is not supported.  If you want to use the A4T workflow,  it is supported through [Edge Network](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edge) and [Optimize](https://github.com/adobe/aepsdk-react-native/tree/main/packages/optimize) extensions. |
 | @adobe/react-native-acpcampaign | NA |
 | @adobe/react-native-aepassurance:2.x (compatible with ACP libraries) | @adobe/react-native-aepassurance:4.x (compatible with AEP libraries)|
+
+> Note: Analytics library is not supported in AEP React Native. For implementing the Analytics workflow, register and configure the Edge Network or Edge Bridge libraries. Please refer to [migrate to Edge Network](https://developer.adobe.com/client-sdks/documentation/adobe-analytics/migrate-to-edge-network/) for more info.
 
 ## Update SDK initialization
 Remove the deprecated registration code and the extensions that are not supported in AEP React Native libraries.

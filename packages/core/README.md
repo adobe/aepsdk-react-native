@@ -234,6 +234,9 @@ MobileCore.setLogLevel(LogLevel.VERBOSE);
 
 - #### trackAction
 
+> [!IMPORTANT]  
+> trackAction is supported through [Edge Bridge](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgebridge) and [Edge Network](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edge) extensions. 
+
 Track event actions that occur in your application.
 
 **Syntax**
@@ -249,6 +252,9 @@ MobileCore.trackAction("loginClicked", {"customKey": "value"});
 ```
 
 - #### trackState
+
+> [!IMPORTANT]  
+> trackState is supported through [Edge Bridge](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgebridge) and [Edge Network](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edge) extensions.  
 
 Track states that represent screens or views in your application. 
 
