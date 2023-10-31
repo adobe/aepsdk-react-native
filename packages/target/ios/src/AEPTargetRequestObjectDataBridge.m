@@ -33,4 +33,23 @@ NSString *const DEFAULT_CONTENT_KEY = @"defaultContent";
           initWithMboxName:dict[REQUEST_NAME_KEY] defaultContent:dict[DEFAULT_CONTENT_KEY] targetParameters:parameters contentCallback:callback];
 }
 
++ (AEPTargetRequestObject *)
+    targetRequestObjectWithDataFromDict:(NSDictionary *)dict
+        contentWithDataCallback: (TargetRequestCallbackWithData) contentWithDataCallback {
+    
+  if (!dict || [dict isEqual:[NSNull null]]) {
+    return nil;
+  }
+
+  AEPTargetParameters *parameters = [AEPTargetParameters
+    targetParametersFromDict:dict[REQUEST_PARAMETERS_KEY]];
+    
+  return [[AEPTargetRequestObject alloc]
+          initWithMboxName:dict[REQUEST_NAME_KEY]
+          defaultContent:dict[DEFAULT_CONTENT_KEY]
+          targetParameters:parameters
+          contentWithDataCallback: contentWithDataCallback
+  ];
+}
+
 @end

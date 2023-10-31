@@ -182,4 +182,10 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
     registeredTargetRequests.put(requestMap.getString(REQUEST_ID_KEY), request);
   }
 
+@ReactMethod
+  public void registerTargetRequestsWithData(ReadableMap requestMap, Callback successCallback) {
+    TargetRequest request = RCTAEPTargetDataBridge.mapToRequestWithData(requestMap, successCallback);
+    registeredTargetRequests.put(requestMap.getString(REQUEST_ID_KEY), request);
+  }
+
 }

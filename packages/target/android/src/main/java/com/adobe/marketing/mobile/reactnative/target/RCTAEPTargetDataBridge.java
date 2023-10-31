@@ -11,7 +11,11 @@ governing permissions and limitations under the License.
 
 package com.adobe.marketing.mobile.reactnative.target;
 
+import android.util.Log;
+
 import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.AdobeError;
+import com.adobe.marketing.mobile.target.AdobeTargetDetailedCallback;
 import com.adobe.marketing.mobile.target.TargetOrder;
 import com.adobe.marketing.mobile.target.TargetParameters;
 import com.adobe.marketing.mobile.target.TargetPrefetch;
@@ -20,7 +24,9 @@ import com.adobe.marketing.mobile.target.TargetRequest;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +68,34 @@ public class RCTAEPTargetDataBridge {
             public void call(String content) {
                 successCallback.invoke(null, content);
             }
+        });
+    }
+
+    public static TargetRequest mapToRequestWithData(ReadableMap map, final Callback successCallback) {
+        if (map == null) {
+            return null;
+        }
+
+        TargetParameters parameters = mapToParameters(getNullableMap(map, TARGET_PARAMETERS_KEY));
+        return new TargetRequest(getNullableString(map, NAME_KEY), parameters, getNullableString(map, DEFAULT_CONTENT_KEY), new AdobeTargetDetailedCallback() {
+
+          @Override
+          public void call(String content, Map<String, Object> data) {
+            try {
+              // wrapped data in HashMap to ensure it is mutable
+              WritableMap metadata = data != null ? RCTAEPTargetMapUtil.toWritableMap(new HashMap<>(data)) : null;
+
+              successCallback.invoke(null, content, metadata);
+            }
+            catch (Exception exception) {
+              Log.e("RCTAEPTargetDataBridge", "Could not parse data", exception);
+            }
+          }
+
+          @Override
+          public void fail(AdobeError adobeError) {
+            successCallback.invoke(adobeError, null, null);
+          }
         });
     }
 

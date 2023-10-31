@@ -15,6 +15,7 @@ import TargetParameters from './models/TargetParameters';
 import TargetPrefetchObject from './models/TargetPrefetchObject';
 import TargetProduct from './models/TargetProduct';
 import TargetRequestObject from './models/TargetRequestObject';
+import TargetRequestObjectWithData from './models/TargetRequestObjectWithData';
 
 export {
   // Native models
@@ -23,6 +24,7 @@ export {
   TargetPrefetchObject,
   TargetProduct,
   TargetRequestObject,
+  TargetRequestObjectWithData,
   // Native modules
   Target
 };
