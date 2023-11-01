@@ -261,6 +261,48 @@ var parameters = new TargetParameters(
 Target.retrieveLocationContent(locationRequests, parameters);
 ```
 
+### Load Target requests with metadata:
+
+**Syntax**
+
+```typescript
+retrieveLocationContent(Array<TargetRequestObject>, <TargetParameters>): void
+```
+
+**Example**
+
+```typescript
+var mboxParameters = { status: "platinum" };
+var purchaseIDs = ["34", "125"];
+
+var targetOrder = new TargetOrder("ADCKKIM", 344.3, purchaseIDs);
+var targetProduct = new TargetProduct("24D3412", "Books");
+var parameters = new TargetParameters(mboxParameters, null, null, null);
+var requestWithData = new TargetRequestObjectWithData(
+  "mboxNameWithData",
+  parameters,
+  "defaultContent",
+  (error, content, data) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log("Adobe content and data:", content, data);
+    }
+  }
+);
+
+var locationRequests = [requestWithData];
+var profileParameters = { ageGroup: "20-32" };
+
+var parameters = new TargetParameters(
+  { parameters: "parametervalue" },
+  profileParameters,
+  targetProduct,
+  targetOrder
+);
+Target.retrieveLocationContent(locationRequests, parameters);
+```
+
 ### Using the prefetch APIs:
 
 **Syntax**
