@@ -17,20 +17,20 @@ export type TargetDataCallback = (
   error: Error | null,
   content: string | null,
   data: Record<string, any>
-) => void
+) => void;
 
 interface ITargetRequests {
   registerTargetRequestsWithData: (
     requestMap: TargetRequestObjectWithData,
     callback: TargetDataCallback
-  ) => void
+  ) => void;
 }
 
-const RCTTarget: ITargetRequests = NativeModules.AEPTarget
+const RCTTarget: ITargetRequests = NativeModules.AEPTarget;
 
 class TargetRequestObjectWithData extends TargetPrefetchObject {
-  defaultContent: string
-  id: string
+  defaultContent: string;
+  id: string;
 
   constructor(
     name: string,
@@ -38,12 +38,12 @@ class TargetRequestObjectWithData extends TargetPrefetchObject {
     defaultContent: string,
     callback: TargetDataCallback
   ) {
-    super(name, targetParameters)
+    super(name, targetParameters);
 
-    this.defaultContent = defaultContent
-    this.id = '_' + Math.random().toString(36).substr(2, 9)
+    this.defaultContent = defaultContent;
+    this.id = "_" + Math.random().toString(36).substr(2, 9);
 
-    RCTTarget.registerTargetRequestsWithData(this, callback)
+    RCTTarget.registerTargetRequestsWithData(this, callback);
   }
 }
 
