@@ -107,7 +107,8 @@ public class RCTAEPTargetMapUtil {
             } else if (value instanceof String) {
                 writableMap.putString((String) pair.getKey(), (String) value);
             } else if (value instanceof Map) {
-                writableMap.putMap((String) pair.getKey(), RCTAEPTargetMapUtil.toWritableMap((Map<String, Object>) value));
+                // wrapped value in HashMap to ensure it is mutable
+                writableMap.putMap((String) pair.getKey(), RCTAEPTargetMapUtil.toWritableMap((new HashMap<>((Map<String, Object>) value))));
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), RCTAEPTargetArrayUtil.toWritableArray((Object[]) value));
             }

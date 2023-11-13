@@ -128,7 +128,8 @@ jest.doMock('react-native', () => {
                     prefetchContent: jest.fn(() => new Promise(resolve => resolve(''))),
                     displayedLocations: jest.fn(),
                     clickedLocation: jest.fn(),
-                    registerTargetRequests: jest.fn()
+                    registerTargetRequests: jest.fn(),
+                    registerTargetRequestsWithData: jest.fn()
                 },   
                 AEPPlaces: {
                     extensionVersion: jest.fn(() => new Promise(resolve => resolve(''))),

@@ -13,6 +13,9 @@ import { NativeModules } from 'react-native';
 import Target from '../ts/Target';
 import TargetPrefetchObject from '../ts/models/TargetPrefetchObject';
 import TargetRequestObject from '../ts/models/TargetRequestObject';
+import TargetRequestObjectWithData, {
+  TargetDataCallback,
+} from '../ts/models/TargetRequestObjectWithData';
 import TargetOrder from '../ts/models/TargetOrder';
 import TargetProduct from '../ts/models/TargetProduct';
 import TargetParameters from '../ts/models/TargetParameters';
@@ -133,6 +136,80 @@ describe('Target', () => {
     expect(spy).toHaveBeenCalledWith(locationRequests, parameters);
   });
 
+  test('retrieveLocationContent is called with correct parameters and metadata', async () => {
+    const spy = jest.spyOn(NativeModules.AEPTarget, 'retrieveLocationContent');
+
+    const metadata = {
+      responseTokens: {
+        'activity.id': '42',
+        'activity.name': 'Adobe test',
+        'experience.id': '0',
+        'experience.name': 'Adobe test',
+      },
+    };
+
+    NativeModules.AEPTarget.registerTargetRequestsWithData = jest.fn(
+      (_, callback: TargetDataCallback) => {
+        console.log('registering callback');
+        callback(null, 'content', metadata);
+      }
+    );
+
+    var mboxParameters1 = { status: 'platinum' };
+    var purchaseIDs = ['34', '125'];
+
+    var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
+    var targetProduct = new TargetProduct('24D3412', 'Books');
+    var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
+    var request1 = new TargetRequestObjectWithData(
+      'mboxName2',
+      parameters1,
+      'defaultContent1',
+      (error, content, data) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log('Adobe content and metadata:', content, data);
+        }
+      }
+    );
+
+    var parameters2 = new TargetParameters(
+      mboxParameters1,
+      { profileParameters: 'parameterValue' },
+      targetProduct,
+      targetOrder
+    );
+    var request2 = new TargetRequestObjectWithData(
+      'mboxName2',
+      parameters2,
+      'defaultContent2',
+      (error, content, data) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log('Adobe content and metadata:', content, data);
+        }
+      }
+    );
+
+    var locationRequests = [request1, request2];
+    var profileParameters1 = { ageGroup: '20-32' };
+
+    var parameters = new TargetParameters(
+      { parameters: 'parametervalue' },
+      profileParameters1,
+      targetProduct,
+      targetOrder
+    );
+    await Target.retrieveLocationContent(locationRequests, parameters);
+
+    expect(spy).toHaveBeenCalledWith(locationRequests, parameters);
+    expect(
+      NativeModules.AEPTarget.registerTargetRequestsWithData
+    ).toHaveBeenCalled();
+  });
+
   test('displayedLocations is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPTarget, 'displayedLocations');
     var purchaseIDs = ['34', '125'];
@@ -176,8 +253,7 @@ describe('Target', () => {
     expect(spy).toHaveBeenCalledWith('locationName', parameters);
   });
 
- test('prefetchContent is called with correct parameters', async () => {
-   
+  test('prefetchContent is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPTarget, 'prefetchContent');
     var mboxParameters1 = { status: 'platinum' };
     var purchaseIDs = ['34', '125'];
@@ -205,11 +281,10 @@ describe('Target', () => {
       targetOrder
     );
 
-  
-   await Target.prefetchContent(prefetchList, parameters)
+    await Target.prefetchContent(prefetchList, parameters)
       .then((success) => console.log(success))
       .catch((err) => console.log(err));
 
     expect(spy).toHaveBeenCalledWith(prefetchList, parameters);
- });
+  });
 });

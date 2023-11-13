@@ -166,4 +166,24 @@ RCT_EXPORT_METHOD(registerTargetRequests
   _registeredTargetRequests[requestDict[@"id"]] = obj;
 }
 
+RCT_EXPORT_METHOD(registerTargetRequestsWithData
+                  : (nonnull NSDictionary *)requestDict callback
+                  : (RCTResponseSenderBlock)callback) {
+    
+ TargetRequestCallbackWithData contentWithDataCallback = ^void(NSString * _Nullable content, NSDictionary<NSString *,id> * _Nullable data) {
+     NSDictionary *test = [[NSDictionary alloc] initWithDictionary: data];
+     callback(@[ [NSNull null], content, test]);
+ };
+    
+  AEPTargetRequestObject *obj = [AEPTargetRequestObject
+             targetRequestObjectWithDataFromDict:requestDict
+                                 contentWithDataCallback: contentWithDataCallback];
+
+  if (!_registeredTargetRequests) {
+    _registeredTargetRequests = [NSMutableDictionary dictionary];
+  }
+
+  _registeredTargetRequests[requestDict[@"id"]] = obj;
+}
+
 @end

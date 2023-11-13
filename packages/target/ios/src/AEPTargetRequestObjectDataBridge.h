@@ -13,11 +13,17 @@
 @import AEPTarget;
 #import "AEPTargetRequestObjectDataBridge.h"
 
+typedef void (^TargetRequestCallbackWithData)(NSString * _Nullable, NSDictionary<NSString *,id> * _Nullable);
+
 @interface AEPTargetRequestObject (RCTBridge)
 
 + (AEPTargetRequestObject *)
     targetRequestObjectFromDict:(NSDictionary *)dict
                        callback:(nullable void (^)(
                                     NSString *__nullable content))callback;
+
++ (AEPTargetRequestObject *)
+    targetRequestObjectWithDataFromDict:(NSDictionary *)dict
+        contentWithDataCallback:(TargetRequestCallbackWithData)contentWithDataCallback;
 
 @end
