@@ -2,7 +2,7 @@
   "presets": ["@babel/preset-typescript", "react-native"],
     "plugins": [
       ["module-resolver", {
-        "root": [ "./ts/" ]
+        "root": [ "./src/" ]
       }]
     ]
 }

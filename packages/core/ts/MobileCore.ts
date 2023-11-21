@@ -27,7 +27,7 @@ interface IMobileCore {
   getSdkIdentities: () => Promise<string>;
   dispatchEvent: (event: Event) => Promise<boolean>;
   dispatchEventWithResponseCallback: (event: Event) => Promise<Event>;
-  trackAction: (action?: string, contextData?: Record<string, string>) => void;
+  trackAction: (action?: string, contextData?: Record<string, any>) => void;
   trackState: (state?: string, contextData?: Record<string, string>) => void;
   setAdvertisingIdentifier: (advertisingIdentifier?: string) => void;
   setPushIdentifier: (pushIdentifier?: string) => void;
