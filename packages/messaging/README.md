@@ -31,9 +31,23 @@ Yarn:
 yarn add @adobe/react-native-aepmessaging
 ```
 
-## Messaging - Beta
+## Code Based Propositions - Beta
 
-In order to set up your app for Messaging, add the following to your applications iOS podfile:
+To enable code based propositions, please use the beta version of the messaging extension 5.1.0-beta.1
+
+NPM:
+
+```bash
+npm install @adobe/react-native-aepmessaging@5.1.0-beta.1
+```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepmessaging@5.1.0-beta.1
+```
+
+Additionally, add the following to your applications iOS podfile:
 
 ```
 target 'YourApp' do
@@ -236,7 +250,7 @@ const messagingDelegate = {
 };
 ```
 
-### updatePropositionsForSurfaces
+### updatePropositionsForSurfaces - Beta (5.1.0-beta.1)
 
 Dispatches an event to fetch propositions for the provided surfaces from remote.
 
@@ -252,7 +266,7 @@ updatePropositionsForSurfaces(surfaces: string[])
 Messaging.updatePropositionsForSurfaces(["mobileapp://my-surface"])
 ```
 
-### getPropositionsForSurfaces
+### getPropositionsForSurfaces - Beta (5.1.0-beta.1)
 
 Retrieves the previously fetched (and cached) feeds content from the SDK for the provided surfaces. If the feeds content for one or more surfaces isn't previously cached in the SDK, it will not be retrieved from Adobe Journey Optimizer via the Experience Edge network.
 
@@ -269,7 +283,7 @@ const propositions = Messaging.getPropositionsForSurfaces(["mobileapp://my-surfa
 console.log(propositions)
 ```
 
-### getLatestMessage
+### getLatestMessage - Beta (5.1.0-beta.1)
 
 Retrieves the most recently displayed message object
 
@@ -286,7 +300,7 @@ const message = Messaging.getLatestMessage()
 console.log(message.id)
 ```
 
-### getCachedMessages
+### getCachedMessages - Beta (5.1.0-beta.1)
 
 Retrieves a list of all messages that have been cached in-memory
 
@@ -303,7 +317,7 @@ const messages = Messaging.getCachedMessages()
 messages.forEach(message => message.clear())
 ```
 
-### setMessageSettings
+### setMessageSettings - Beta (5.1.0-beta.1)
 
 Allows setting a global setting for `shouldSaveMessage` and `shouldShowMessage`. Use a messaging delegate defined in the `setMessagingDelegate` method for more fine-grained control of message settings
 
