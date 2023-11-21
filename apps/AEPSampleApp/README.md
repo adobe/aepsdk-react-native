@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
- * If you are new to React Native we suggest you follow the [React Native Setting up development environment](<https://reactnative.dev/docs/environment-setup>) React Native CLI Quickstart page before continuing.
+ * If you are new to React Native we suggest you follow the [React Native Setting up development environment](https://reactnative.dev/docs/environment-setup) React Native CLI Quickstart page before continuing.
  * Cocoapods version >= 1.11.3
  * Node version >= 18
 
