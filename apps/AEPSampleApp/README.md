@@ -62,7 +62,7 @@ Then navigate to apps/AEPSampleApp/android, double click on the `build.gradle` f
   Refer to [Sample App yarn scripts](https://github.com/adobe/aepsdk-react-native/blob/main/package.json#L11).
 
 * Where is the sample app React Native code? <br>
-  All the extension TypeScript code is located under AEPSampleApp > extensions
+  All the extension TypeScript code is located under AEPSampleApp > extensions.
 
 * I encountered errors while building the app. <br>
   Validate you have node installed, check your React Native development setup, refer to the doc under Prerequisites.
