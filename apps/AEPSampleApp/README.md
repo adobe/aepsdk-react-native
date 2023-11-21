@@ -44,7 +44,7 @@ In terminal > run `npx react-native start` <br>
 Double click `build.gradle` file. <br>
 Run the app in the Android Studio.
 
-## Information and Troubleshooting|
+## Resources and Troubleshooting
 * Where can we find the information about the Yarn scripts in the Sample App? <br>
   Refer to [Sample App yarn scripts](https://github.com/adobe/aepsdk-react-native/blob/main/package.json#L11).
 
