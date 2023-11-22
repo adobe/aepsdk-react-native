@@ -56,6 +56,14 @@ npx react-native start
 
 Then navigate to apps/AEPSampleApp/android, double click on the `build.gradle` file, and run the app in Android Studio.
 
+### Validate with Assurance:
+
+Assurance is integrated in the sample app for validating the events and flows. 
+
+1. Create an [Assurance Session](https://experienceleague.adobe.com/docs/experience-platform/assurance/tutorials/using-assurance.html#create-sessions).
+2. Copy the session link from `Copy Link` in the Assurance Session Details window. Paste it to the AEPSampleApp -> Assurance view, then Start Session.
+
+
 
 ## Resources and Troubleshooting
 * Where can we find the information about the Yarn scripts in the Sample App? <br>
