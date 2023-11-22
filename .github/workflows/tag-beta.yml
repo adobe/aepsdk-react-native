@@ -1,0 +1,34 @@
+# This is a basic workflow that is manually triggered
+
+name: npm-publish
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+jobs:
+  npm-tag-beta:
+    name: npm-tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate with Registry
+        run: |
+          echo "@adobe:registry=https://registry.npmjs.org/" > .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm whoami
+        env: # More info about the environment variables in the README
+          NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
+      - name: tag messaging
+        run: npm dist-tag add @adobe/react-native-aepmessaging@5.1.0-beta.1 beta
+        env: # More info about the environment variables in the README
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
+          NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
+      - name: tag messaging latest
+        run: npm dist-tag add @adobe/react-native-aepmessaging@5.0.0 latest
+        env: # More info about the environment variables in the README
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
+          NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
+
