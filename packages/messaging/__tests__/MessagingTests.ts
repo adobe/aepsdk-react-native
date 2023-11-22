@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Adobe. All rights reserved.
+Copyright 2023 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Messaging, Message, MessagingEdgeEventType } from '../ts';
+import { Messaging, Message, MessagingEdgeEventType } from '../src';
 
 describe('Messaging', () => {
   it('extensionVersion is called', async () => {
@@ -20,80 +20,101 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it("refreshInAppMessages is called", async () => {
+  it('refreshInAppMessages is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'refreshInAppMessages');
     await Messaging.refreshInAppMessages();
     expect(spy).toHaveBeenCalled();
   });
 
-  it("setMessagingDelegate is called", async () => {
+  it('setMessagingDelegate is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'setMessagingDelegate');
     let delegate = {
-      onShow(_: Message){},
-      onDismiss(_: Message){},
-      shouldShowMessage(_: Message){
+      onShow(_: Message) {},
+      onDismiss(_: Message) {},
+      shouldShowMessage(_: Message) {
         return true;
       },
-      urlLoaded(_: string, __: Message){}
+      urlLoaded(_: string, __: Message) {}
     };
     await Messaging.setMessagingDelegate(delegate);
     expect(spy).toHaveBeenCalled();
   });
 
-  it("setAutoTrack is called", async () => {
+  it('setAutoTrack is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'setAutoTrack');
-    let id = "id";
+    let id = 'id';
     let autoTrack = true;
-    let message = new Message(id, autoTrack);
+    let message = new Message({id, autoTrack});
     await message.setAutoTrack(false);
     expect(spy).toHaveBeenCalledWith(id, false);
   });
 
-  it("show is called", async () => {
+  it('show is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'show');
-    let id = "id";
+    let id = 'id';
     let autoTrack = true;
-    let message = new Message(id, autoTrack);
+    let message = new Message({id, autoTrack});
     await message.show();
     expect(spy).toHaveBeenCalledWith(id);
   });
 
-  it("dismiss is called", async () => {
+  it('dismiss is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'dismiss');
-    let id = "id";
+    let id = 'id';
     let autoTrack = true;
-    let message = new Message(id, autoTrack);
+    let message = new Message({id, autoTrack});
     await message.dismiss(true);
     expect(spy).toHaveBeenCalledWith(id, true);
   });
 
-  it("track is called", async () => {
+  it('track is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'track');
-    let id = "id";
+    let id = 'id';
     let autoTrack = true;
-    let message = new Message(id, autoTrack);
-    let interaction = "display";
+    let message = new Message({id, autoTrack});
+    let interaction = 'display';
     let eventType = MessagingEdgeEventType.IN_APP_DISPLAY;
     await message.track(interaction, eventType);
     expect(spy).toHaveBeenCalledWith(id, interaction, eventType);
   });
 
-  it("handleJavascriptMessage is called", async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'handleJavascriptMessage');
-    let id = "id";
+  it('handleJavascriptMessage is called', async () => {
+    const spy = jest.spyOn(
+      NativeModules.AEPMessaging,
+      'handleJavascriptMessage'
+    );
+    let id = 'id';
     let autoTrack = true;
-    let message = new Message(id, autoTrack);
-    let name = "test message";
+    let message = new Message({id, autoTrack});
+    let name = 'test message';
     await message.handleJavascriptMessage(name);
     expect(spy).toHaveBeenCalledWith(id, name);
   });
 
-  it("clear is called", async () => {
+  it('clear is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'clear');
-    let id = "id";
+    let id = 'id';
     let autoTrack = true;
-    let message = new Message(id, autoTrack);
+    let message = new Message({id, autoTrack});
     await message.clear();
     expect(spy).toHaveBeenCalledWith(id);
+  });
+
+  it('should call updatePropositionsForSurfaces', async () => {
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'updatePropositionsForSurfaces');
+    await Messaging.updatePropositionsForSurfaces([
+      'testSurface1',
+      'testSurface2'
+    ]);
+    expect(spy).toHaveBeenCalledWith(['testSurface1', 'testSurface2']);
+  });
+
+  it('should call getPropositionsForSurfaces', async () => {
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'getPropositionsForSurfaces');
+    await Messaging.getPropositionsForSurfaces([
+      'testSurface1',
+      'testSurface2'
+    ]);
+    expect(spy).toHaveBeenCalledWith(['testSurface1', 'testSurface2']);
   });
 });

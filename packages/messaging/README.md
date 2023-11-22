@@ -31,6 +31,30 @@ Yarn:
 yarn add @adobe/react-native-aepmessaging
 ```
 
+## Code Based Propositions - Beta
+
+To enable code based propositions, please use the beta version of the messaging extension 5.1.0-beta.1
+
+NPM:
+
+```bash
+npm install @adobe/react-native-aepmessaging@5.1.0-beta.1
+```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepmessaging@5.1.0-beta.1
+```
+
+Additionally, add the following to your applications iOS podfile:
+
+```
+target 'YourApp' do
+  ...
+  pod 'AEPMessaging', :git => 'https://github.com/adobe/aepsdk-messaging-ios.git', :branch => 'exd-cbe-beta' 
+```
+
 ## Usage
 
 ### [Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer)
@@ -211,15 +235,7 @@ const messagingDelegate = {
 Messaging.setMessagingDelegate(messagingDelegate)
 ```
 
-### saveMessage
 
-Natively caches the provided `Message` object in-memory. Cached `Message` objects can used at a later time to show the cached `Message` or perform other actions on the `Message` object. This function should be called from the `shouldShowMessage` function of the custom `MessagingDelegate`.
-
-**Syntax**
-
-```javascript
-saveMessage(message: Message)
-```
 
 **Example**
 
@@ -233,6 +249,90 @@ const messagingDelegate = {
   
 };
 ```
+
+### updatePropositionsForSurfaces - Beta (5.1.0-beta.1)
+
+Dispatches an event to fetch propositions for the provided surfaces from remote.
+
+**Syntax**
+
+```javascript
+updatePropositionsForSurfaces(surfaces: string[])
+```
+
+**Example**
+
+```javascript
+Messaging.updatePropositionsForSurfaces(["mobileapp://my-surface"])
+```
+
+### getPropositionsForSurfaces - Beta (5.1.0-beta.1)
+
+Retrieves the previously fetched (and cached) feeds content from the SDK for the provided surfaces. If the feeds content for one or more surfaces isn't previously cached in the SDK, it will not be retrieved from Adobe Journey Optimizer via the Experience Edge network.
+
+**Syntax**
+
+```javascript
+getPropositionsForSurfaces(surfaces: string[])
+```
+
+**Example**
+
+```javascript
+const propositions = Messaging.getPropositionsForSurfaces(["mobileapp://my-surface"])
+console.log(propositions)
+```
+
+### getLatestMessage - Beta (5.1.0-beta.1)
+
+Retrieves the most recently displayed message object
+
+**Syntax**
+
+```javascript
+Messaging.getLatestMessage()
+```
+
+**Example**
+
+```javascript
+const message = Messaging.getLatestMessage()
+console.log(message.id)
+```
+
+### getCachedMessages - Beta (5.1.0-beta.1)
+
+Retrieves a list of all messages that have been cached in-memory
+
+**Syntax**
+
+```javascript
+Messaging.getCachedMessages()
+```
+
+**Example**
+
+```javascript
+const messages = Messaging.getCachedMessages()
+messages.forEach(message => message.clear())
+```
+
+### setMessageSettings - Beta (5.1.0-beta.1)
+
+Allows setting a global setting for `shouldSaveMessage` and `shouldShowMessage`. Use a messaging delegate defined in the `setMessagingDelegate` method for more fine-grained control of message settings
+
+**Syntax**
+
+```javascript
+Messaging.setMessageSettings(shouldShowMessage: boolean, shouldSaveMessage: boolean)
+```
+
+**Example**
+
+```javascript
+Messaging.setMessageSettings(true, false)
+```
+
 
 ## Handling In App Messages using Message Object
 
@@ -340,7 +440,7 @@ var message: Message
 message.clear()
 ```
 
-## Programatically control the display of in-app messages
+## Programmatically control the display of in-app messages
 
 App developers can now create a type `MessagingDelegate` in order to be alerted when specific events occur during the lifecycle of an in-app message.
 
