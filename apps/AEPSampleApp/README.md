@@ -10,9 +10,9 @@
 
 ### Add your App Id:
 
-In `ios/**/AppDelegate.mm`, find the call to `configureWithAppId` and add your app id.
+In `apps/AEPSampleApp/ios/AEPSampleApp/AppDelegate.mm`, find the call to `configureWithAppId` and add your app id.
 
-In `android/**/MainApplication.java`, find the call to `configureWithAppId` and add your app id.
+In `apps/AEPSampleApp/android/app/src/main/java/com/aepsampleapp/MainApplication.java`, find the call to `configureWithAppId` and add your app id.
 
 > Note: App id is configured in a mobile property in Data Collection UI, in Tags.  Refer to [configure with App ID per environment](https://developer.adobe.com/client-sdks/home/base/mobile-core/configuration/#configure-with-app-id-per-environment) page for more information.
 
