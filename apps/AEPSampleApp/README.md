@@ -61,8 +61,7 @@ Then navigate to apps/AEPSampleApp/android, double click on the `build.gradle` f
 Assurance is integrated in the sample app for validating the events and flows. 
 
 1. Create an [Assurance Session](https://experienceleague.adobe.com/docs/experience-platform/assurance/tutorials/using-assurance.html#create-sessions).
-2. Copy the session link from `Copy Link` in the Assurance Session Details window. Paste it to the AEPSampleApp -> Assurance view, then Start Session.
-
+2. Copy the session link from `Copy Link` in the Assurance Session Details window. Paste it to the AEPSampleApp -> AssuranceView, then Start Session.
 
 
 ## Resources and Troubleshooting
