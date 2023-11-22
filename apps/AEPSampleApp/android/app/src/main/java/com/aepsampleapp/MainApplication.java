@@ -16,7 +16,6 @@ import android.app.Application;
 import com.adobe.marketing.mobile.Assurance;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.Extension;
-import com.adobe.marketing.mobile.Identity;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Messaging;
@@ -92,11 +91,19 @@ public class MainApplication extends Application implements ReactApplication {
     MobileCore.setLogLevel(LoggingMode.VERBOSE);
     MobileCore.configureWithAppID("YOUR-APP-ID");
     List<Class<? extends Extension>> extensions = Arrays.asList(
-        Lifecycle.EXTENSION, Signal.EXTENSION, Edge.EXTENSION,
-        com.adobe.marketing.mobile.edge.identity.Identity.EXTENSION,
-        EdgeBridge.EXTENSION, Messaging.EXTENSION, UserProfile.EXTENSION,
-        Assurance.EXTENSION, Places.EXTENSION, Target.EXTENSION,
-        Optimize.EXTENSION, Consent.EXTENSION, com.adobe.marketing.mobile.Identity.EXTENSION);
+            Lifecycle.EXTENSION,
+            Signal.EXTENSION,
+            Edge.EXTENSION,
+            com.adobe.marketing.mobile.edge.identity.Identity.EXTENSION,
+            Consent.EXTENSION,
+            EdgeBridge.EXTENSION,
+            Messaging.EXTENSION,
+            UserProfile.EXTENSION,
+            Assurance.EXTENSION,
+            Places.EXTENSION,
+            Target.EXTENSION,
+            Optimize.EXTENSION,
+            com.adobe.marketing.mobile.Identity.EXTENSION);
     MobileCore.registerExtensions(extensions,
                                   o -> { MobileCore.lifecycleStart(null); });
   }
