@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-#import <React/RCTBridgeDelegate.h>
+#import <RCTAppDelegate.h>
 #import <UIKit/UIKit.h>
 
 @import AEPCore;
@@ -29,7 +29,7 @@ governing permissions and limitations under the License.
 @import AEPPlaces;
 @import AEPTarget;
 @import AEPCampaignClassic;
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-@property (nonatomic, strong) UIWindow *window;
+
+@interface AppDelegate : RCTAppDelegate
 
 @end
