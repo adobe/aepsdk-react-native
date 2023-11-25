@@ -19,7 +19,7 @@ interface IEdge {
   sendEvent: (
     experienceEvent: ExperienceEvent
   ) => Promise<Array<EdgeEventHandle>>;
-  setLocationHint: (hint?: string) => void;
+  setLocationHint: (hint?: string |null) => void;
   getLocationHint: () => Promise<string|null>;
 }
 

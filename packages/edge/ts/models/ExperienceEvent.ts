@@ -14,15 +14,21 @@ class ExperienceEvent {
   xdmData?: Record<string, any>;
   data?: Record<string, any>;
   datasetIdentifier?: string;
+  datastreamIdOverride?: string;
+  datastreamConfigOverride?: Record<string, any>;
 
   constructor(
     xdmData?: Record<string, any>,
-    data?: Record<string, any>,
-    datasetIdentifier?: string
+    data?: Record<string, any> | null,
+    datasetIdentifier?: string | null,
+    datastreamIdOverride?: string | null,
+    datastreamConfigOverride?: Record<string, any> | null,
   ) {
     this.xdmData = xdmData;
     this.data = data;
     this.datasetIdentifier = datasetIdentifier;
+    this.datastreamIdOverride = datastreamIdOverride;
+    this.datastreamConfigOverride = datastreamConfigOverride;
   }
 }
 

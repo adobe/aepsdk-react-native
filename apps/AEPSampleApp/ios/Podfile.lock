@@ -5,10 +5,10 @@ PODS:
   - AEPCampaignClassic (4.0.0):
     - AEPCore (>= 4.0.0)
     - AEPServices (>= 4.0.0)
-  - AEPCore (4.1.0):
+  - AEPCore (4.2.0):
     - AEPRulesEngine (>= 4.0.0)
-    - AEPServices (>= 4.1.0)
-  - AEPEdge (4.2.0):
+    - AEPServices (>= 4.2.0)
+  - AEPEdge (4.3.0):
     - AEPCore (>= 4.1.0)
     - AEPEdgeIdentity (>= 4.0.0)
   - AEPEdgeBridge (4.1.0):
@@ -18,10 +18,10 @@ PODS:
     - AEPEdge (>= 4.0.0)
   - AEPEdgeIdentity (4.0.0):
     - AEPCore (>= 4.0.0)
-  - AEPIdentity (4.1.0):
-    - AEPCore (>= 4.1.0)
-  - AEPLifecycle (4.1.0):
-    - AEPCore (>= 4.1.0)
+  - AEPIdentity (4.2.0):
+    - AEPCore (>= 4.2.0)
+  - AEPLifecycle (4.2.0):
+    - AEPCore (>= 4.2.0)
   - AEPMessaging (4.2.0-beta):
     - AEPCore (>= 4.0.0)
     - AEPEdge (>= 4.0.0)
@@ -34,9 +34,9 @@ PODS:
     - AEPCore (>= 4.0.0)
     - AEPServices (>= 4.0.0)
   - AEPRulesEngine (4.0.0)
-  - AEPServices (4.1.0)
-  - AEPSignal (4.1.0):
-    - AEPCore (>= 4.1.0)
+  - AEPServices (4.2.0)
+  - AEPSignal (4.2.0):
+    - AEPCore (>= 4.2.0)
   - AEPTarget (4.0.2):
     - AEPCore (>= 4.0.0)
   - AEPUserProfile (4.0.0):
@@ -857,19 +857,19 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AEPAssurance: ee78c45752b29696f280854cfc4d4f8d11babad8
   AEPCampaignClassic: 26935c92330f8550599075f6796bb800ce4ab24f
-  AEPCore: 20fb832a7467b25ca4aca186c0a5a1e3c0c6abc3
-  AEPEdge: c31a1c31d8466f964efeb9a4f94eebc52a0b55a5
+  AEPCore: f80654e62b9cb776ae74df44dd24c82febc4d3fa
+  AEPEdge: 301fb849383fca513c1046fe90bac0bcd1f8e404
   AEPEdgeBridge: b10ee57eb1a7d8282ef79d980d11acebf6a9c411
   AEPEdgeConsent: 54c1b6a30a3d646e3d4bc4bae1713755422b471e
   AEPEdgeIdentity: c2396b9119abd6eb530ea11efc58ec019b163bd4
-  AEPIdentity: 88671626d6043a488896ee7d71483a8bcec80739
-  AEPLifecycle: 97693ea99ef9deb818b726a4e429ef96abb1353e
+  AEPIdentity: 350893792bed309edbfd3a9938ada8e30b615e25
+  AEPLifecycle: 0b5d9de839e71b04b0cd1e3b6b323924b0bc3048
   AEPMessaging: 75f4ef2359ca50f969c6cb74dbe6fbf5baabb99f
   AEPOptimize: 9254cbd352b18c01ef24a1ac8c5e5d4783ce2ae5
   AEPPlaces: 9c5e8ba1292e1d6bf09c743a9e56c7ef62c33d9a
   AEPRulesEngine: 458450a34922823286ead045a0c2bd8c27e224c6
-  AEPServices: d94555679870311d2f1391c5d7a5de590fd1f3c0
-  AEPSignal: 9152e68bae462276f57ac63666e879cc7ff7c302
+  AEPServices: 842c0f94e960754ce2ac50535d78349827c52c83
+  AEPSignal: eb8b9d7370dcf95650c20946868b3e982c65415e
   AEPTarget: 47d9cafafa5a90f67a26b7600edc37ccc0b98b77
   AEPUserProfile: 5c1d90014627cacff99efb193ce9acd287905661
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
@@ -946,4 +946,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: fa313cb7f76d4070579129d68eb0e539176232c2
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
