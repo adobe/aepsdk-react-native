@@ -19,8 +19,8 @@ interface IEdge {
   sendEvent: (
     experienceEvent: ExperienceEvent
   ) => Promise<Array<EdgeEventHandle>>;
-  setLocationHint: (hint?: string |null) => void;
-  getLocationHint: () => Promise<string|null>;
+  setLocationHint: (hint?: string | null) => void;
+  getLocationHint: () => Promise<string | null>;
 }
 
 const RCTAEPEdge: IEdge = NativeModules.AEPEdge;
