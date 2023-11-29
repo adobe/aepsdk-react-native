@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "AEPEdge", '~> 4.0'
+  s.dependency "AEPEdge", '>= 4.3.0'
 end

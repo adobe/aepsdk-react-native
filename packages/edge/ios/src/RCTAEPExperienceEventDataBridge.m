@@ -35,7 +35,7 @@ static NSString* const PAYLOAD_KEY = @"payload";
     NSString *datastreamIdOverride = [[dict objectForKey:DATASTREAM_ID_OVERRIDE_KEY] isKindOfClass:[NSString class]] ? [dict objectForKey:DATASTREAM_ID_OVERRIDE_KEY] : nil;
     NSDictionary *datastreamConfigOverride = [[dict objectForKey:DATASTREAM_CONFIG_OVERRIDE_KEY] isKindOfClass:[NSDictionary class]] ? [dict objectForKey:DATASTREAM_CONFIG_OVERRIDE_KEY] : nil;
     
-    if ((datastreamIdOverride) || (datastreamConfigOverride)) {
+    if (datastreamIdOverride || datastreamConfigOverride) {
         return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:data datastreamIdOverride:datastreamIdOverride datastreamConfigOverride:datastreamConfigOverride];
     } else {
         return [[AEPExperienceEvent alloc] initWithXdm:xdmdata data:data datasetIdentifier:datasetIdentifier];

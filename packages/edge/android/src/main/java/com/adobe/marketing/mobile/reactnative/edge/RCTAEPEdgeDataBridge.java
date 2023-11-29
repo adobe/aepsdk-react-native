@@ -45,7 +45,7 @@ final class RCTAEPEdgeDataBridge {
 
         Map<String, Object> xdmdata = RCTAEPEdgeMapUtil.toMap(getNullableMap(map, XDM_DATA_KEY));
         String datasetId = null;
-        String datastreamOverrideId = null;
+        String datastreamIdOverride = null;
         
         if (xdmdata != null) {
 
@@ -54,14 +54,14 @@ final class RCTAEPEdgeDataBridge {
 
             try {
                 datasetId = getNullableString(map, DATASET_IDENTIFIER_KEY);
-                datastreamOverrideId = getNullableString(map, DATASTREAM_ID_OVERRIDE_KEY);
+                datastreamIdOverride = getNullableString(map, DATASTREAM_ID_OVERRIDE_KEY);
             } catch (Exception e) {
                 Log.d(TAG, "experienceEventFromReadableMap: " + e);
             }
 
             ExperienceEvent event;
-            if (datastreamOverrideId != null || datastreamConfigOverride != null) {
-                event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).setDatastreamIdOverride(datastreamOverrideId).setDatastreamConfigOverride(datastreamConfigOverride).build();
+            if (datastreamIdOverride != null || datastreamConfigOverride != null) {
+                event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).setDatastreamIdOverride(datastreamIdOverride).setDatastreamConfigOverride(datastreamConfigOverride).build();
             } else {
                 event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).build();
             }
