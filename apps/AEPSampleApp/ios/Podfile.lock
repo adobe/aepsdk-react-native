@@ -147,7 +147,7 @@ PODS:
     - AEPSignal (~> 4.0)
     - React
   - RCTAEPEdge (5.0.0):
-    - AEPEdge (~> 4.0)
+    - AEPEdge (>= 4.3.0)
     - React
   - RCTAEPEdgeBridge (5.0.0):
     - AEPEdgeBridge (~> 4.0)
@@ -894,7 +894,7 @@ SPEC CHECKSUMS:
   RCTAEPAssurance: 690918bca2bca158bf807c6d41053624eca981e6
   RCTAEPCampaignClassic: 4843c7bf6f5eef1d55a90e9bca2f9bfc361cf95f
   RCTAEPCore: 9b2faad034280d77239ef975c675debb52660d27
-  RCTAEPEdge: 207126072a6467736e8fba6553152acb59c13dd3
+  RCTAEPEdge: b347daa4fa6740b803dd1f0545c87974b7ac1c8d
   RCTAEPEdgeBridge: ac3a4318f76f881b6a44f748d894d72bcc721230
   RCTAEPEdgeConsent: dcbae4045ec6dd10291b34206d6b24fc472610f3
   RCTAEPEdgeIdentity: 2127c9b4875b59c6acd4c1852f6a9bd1e0e44f19

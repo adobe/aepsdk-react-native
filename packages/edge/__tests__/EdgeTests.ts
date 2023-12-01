@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Adobe. All rights reserved.
+Copyright 2023 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -91,17 +91,18 @@ describe('Edge', () => {
   it('sendEvent is called with xdmData, datastreamId parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
     let xdmData = { eventType: 'SampleXDMEvent' };
+    let data = { dataKey: 'dataValue' };
     let datastreamId = 'datastreamId';
-    let experienceEvent = new ExperienceEvent(xdmData, datastreamId);
+    let experienceEvent = new ExperienceEvent({xdmData:xdmData, data:data, datastreamId: datastreamId});
     await Edge.sendEvent(experienceEvent);
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
 
-  it('sendEvent is called with xdmData, datastreamId, null datastreamConfig parameters', async () => {
+  it('sendEvent is called with xdmData, datastreamId parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
     let xdmData = { eventType: 'SampleXDMEvent' };
     let datastreamId = 'datastreamId';
-    let experienceEvent = new ExperienceEvent(xdmData, datastreamId, null);
+    let experienceEvent = new ExperienceEvent({xdmData:xdmData, datastreamId: datastreamId});
     await Edge.sendEvent(experienceEvent);
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
@@ -119,7 +120,7 @@ describe('Edge', () => {
       }
     };
 
-    let experienceEvent = new ExperienceEvent(xdmData, null, datastreamConfig);
+    let experienceEvent = new ExperienceEvent({xdmData:xdmData, datastreamConfig: datastreamConfig});
     await Edge.sendEvent(experienceEvent);
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
@@ -127,6 +128,7 @@ describe('Edge', () => {
   it('sendEvent is called with xdmData, datastreamId and datastreamConfig parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
     let xdmData = { eventType: 'SampleXDMEvent' };
+    let data = { dataKey: 'dataValue' };
     let datastreamConfig = {
       com_adobe_experience_platform: {
         datasets: {
@@ -137,7 +139,7 @@ describe('Edge', () => {
       }
     };
 
-    let experienceEvent = new ExperienceEvent(xdmData,'datastreamId', datastreamConfig);
+    let experienceEvent = new ExperienceEvent({xdmData:xdmData, data:data, datastreamId: 'datastreamId', datastreamConfig:datastreamConfig});
     await Edge.sendEvent(experienceEvent);
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
@@ -154,7 +156,7 @@ describe('Edge', () => {
         },
       }
     };
-    let experienceEvent = new ExperienceEvent(xdmData, ' ', datastreamConfig);
+    let experienceEvent = new ExperienceEvent({xdmData:xdmData, datastreamId:null, datastreamConfig:datastreamConfig});
     await Edge.sendEvent(experienceEvent);
     expect(spy).toHaveBeenCalledWith(experienceEvent);
   });
