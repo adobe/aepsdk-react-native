@@ -82,10 +82,10 @@ Assurance is integrated in the sample app for validating the events and flows.
    cd ../../
    rm -rf ~/Library/Developer/Xcode/DerivedData
   ```
-* Getting error in Android simulator: javax.net.ssl.SSLHandshakeException: Chain validation failed
-  Check the date and time on the simulator is current, if not, update these in Settings menu.
+* Getting this error in logcat logs when running in Android simulator: javax.net.ssl.SSLHandshakeException: Chain validation failed
+  Check the date and time on the simulator is current, if not, update these from the Settings menu.
 
-* Getting error when buildin app in Xcode 15 RCT-Folly hash - No template named 'unary_function' in namespace std.
-  This error may be thrown due to an incompatiblity between React Native version 0.68.x and Xcode 15, make sure you have latest updates from main branch, run [Install dependencies](#install-dependencies) again and make sure you are running with React Native 0.70 or above.
+* Getting error when building app in Xcode 15 RCT-Folly hash - No template named 'unary_function' in namespace std.
+  This error may be thrown due to an incompatiblity between React Native version 0.68.x and Xcode 15. Make sure you are running with React Native 0.70 or above, if needed pull the latest updates from main branch of this repo, and run [Install dependencies](#install-dependencies) again.
   
 
