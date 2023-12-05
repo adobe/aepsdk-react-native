@@ -86,6 +86,6 @@ Assurance is integrated in the sample app for validating the events and flows.
   Check the date and time on the simulator is current, if not, update these in Settings menu.
 
 * Getting error when buildin app in Xcode 15 RCT-Folly hash - No template named 'unary_function' in namespace std.
-  This error may be thrown due to an incompatiblity between React Native version 0.68.x and Xcode 15, make sure you have latest updates from main branch, run #install-dependencies again and make sure you are running with React Native 0.70 or above.
+  This error may be thrown due to an incompatiblity between React Native version 0.68.x and Xcode 15, make sure you have latest updates from main branch, run [Install dependencies](#install-dependencies) again and make sure you are running with React Native 0.70 or above.
   
 
