@@ -101,5 +101,4 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   // api "com.adobe.marketing.mobile:messaging:[2.1.0, 3.0["
   api "com.adobe.marketing.mobile:messaging:2.3.0-cbe-beta-SNAPSHOT"
-  implementation "com.facebook.react:react-native:+"
 }

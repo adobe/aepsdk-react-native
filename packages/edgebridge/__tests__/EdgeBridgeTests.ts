@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { EdgeBridge } from '../ts';
+import { EdgeBridge } from '../src';
 
 describe('Edge Bridge', () => {
   it('extensionVersion is called', async () => {

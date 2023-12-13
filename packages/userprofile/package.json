@@ -1,10 +1,10 @@
 {
   "name": "@adobe/react-native-aepuserprofile",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
-  "main": "./ts/index.ts",
+  "main": "./dist/index.js",
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "tsc": "tsc"

@@ -10,12 +10,12 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import Target from '../ts/Target';
-import TargetPrefetchObject from '../ts/models/TargetPrefetchObject';
-import TargetRequestObject from '../ts/models/TargetRequestObject';
-import TargetOrder from '../ts/models/TargetOrder';
-import TargetProduct from '../ts/models/TargetProduct';
-import TargetParameters from '../ts/models/TargetParameters';
+import Target from '../src/Target';
+import TargetPrefetchObject from '../src/models/TargetPrefetchObject';
+import TargetRequestObject from '../src/models/TargetRequestObject';
+import TargetOrder from '../src/models/TargetOrder';
+import TargetProduct from '../src/models/TargetProduct';
+import TargetParameters from '../src/models/TargetParameters';
 
 describe('Target', () => {
   test('extensionVersion is called', async () => {

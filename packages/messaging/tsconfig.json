@@ -6,5 +6,5 @@
     "outDir": "./dist",
     "noImplicitAny": false
   },
-  "exclude": ["__tests__", "js"]
+  "exclude": ["__tests__", "dist"]
 }
