@@ -12,7 +12,6 @@ governing permissions and limitations under the License.
 
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
-import {MobileCore} from '@adobe/react-native-aepcore';
 import {Messaging} from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 import {NavigationProps} from '../types/props';
@@ -32,36 +31,9 @@ const setMessagingDelegate = () => {
     onDismiss: msg => console.log('dismissed!', msg),
     onShow: msg => console.log('show', msg),
     shouldShowMessage: () => true,
-    shouldSaveMessage: () => true,
     urlLoaded: (url, message) => console.log(url, message),
   });
   console.log('messaging delegate set');
-};
-
-const getPropositionsForSurfaces = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces([
-    'codeBasedView#customHtmlOffer',
-  ]);
-  console.log(messages);
-};
-
-const trackAction = async () => {
-  MobileCore.trackAction('reactnative', {full: true});
-};
-
-const updatePropositionsForSurfaces = async () => {
-  Messaging.updatePropositionsForSurfaces(['codeBasedView#customHtmlOffer']);
-  console.log('Updated Propositions');
-};
-
-const getCachedMessages = async () => {
-  const messages = await Messaging.getCachedMessages();
-  console.log('Cached messages:', messages);
-};
-
-const getLatestMessage = async () => {
-  const message = await Messaging.getLatestMessage();
-  console.log('Latest Message:', message);
 };
 
 const MessagingView = ({navigation}: NavigationProps) => (
@@ -72,17 +44,6 @@ const MessagingView = ({navigation}: NavigationProps) => (
       <Button title="extensionVersion()" onPress={messagingExtensionVersion} />
       <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
       <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
-      <Button
-        title="getPropositionsForSurfaces()"
-        onPress={getPropositionsForSurfaces}
-      />
-      <Button
-        title="updatePropositionsForSurfaces()"
-        onPress={updatePropositionsForSurfaces}
-      />
-      <Button title="getCachedMessages()" onPress={getCachedMessages} />
-      <Button title="getLatestMessage()" onPress={getLatestMessage} />
-      <Button title="trackAction()" onPress={trackAction} />
     </ScrollView>
   </View>
 );

@@ -27,7 +27,8 @@ const config = {
           if (
             name &&
             name.startsWith &&
-            name.startsWith('@adobe/react-native-aep')
+            name.startsWith('@adobe/react-native-aep') &&
+            name !== '@adobe/react-native-aepmessaging'
           ) {
             const packageName = name.replace('@adobe/react-native-aep', '');
             console.log('------packageName -> ' + packageName);

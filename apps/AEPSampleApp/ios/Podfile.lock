@@ -22,7 +22,7 @@ PODS:
     - AEPCore (>= 4.1.0)
   - AEPLifecycle (4.1.0):
     - AEPCore (>= 4.1.0)
-  - AEPMessaging (4.2.0-beta):
+  - AEPMessaging (4.1.0):
     - AEPCore (>= 4.0.0)
     - AEPEdge (>= 4.0.0)
     - AEPEdgeIdentity (>= 4.0.0)
@@ -158,10 +158,9 @@ PODS:
   - RCTAEPEdgeIdentity (5.0.0):
     - AEPEdgeIdentity (~> 4.0)
     - React
-  - RCTAEPMessaging (5.1.0-beta.1):
+  - RCTAEPMessaging (5.0.0):
     - AEPMessaging (~> 4.0)
-    - RCT-Folly (= 2021.07.22.00)
-    - React-Core
+    - React
   - RCTAEPOptimize (5.0.0):
     - AEPOptimize (~> 4.0)
     - React
@@ -613,7 +612,6 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
-  - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, branch `exd-cbe-beta`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -707,6 +705,7 @@ SPEC REPOS:
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
+    - AEPMessaging
     - AEPOptimize
     - AEPPlaces
     - AEPRulesEngine
@@ -730,9 +729,6 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
-  AEPMessaging:
-    :branch: exd-cbe-beta
-    :git: https://github.com/adobe/aepsdk-messaging-ios.git
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -849,11 +845,6 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
-CHECKOUT OPTIONS:
-  AEPMessaging:
-    :commit: 343d8eda8d3cf04536f5ea86701d40ed6f0a1bb8
-    :git: https://github.com/adobe/aepsdk-messaging-ios.git
-
 SPEC CHECKSUMS:
   AEPAssurance: ee78c45752b29696f280854cfc4d4f8d11babad8
   AEPCampaignClassic: 26935c92330f8550599075f6796bb800ce4ab24f
@@ -864,7 +855,7 @@ SPEC CHECKSUMS:
   AEPEdgeIdentity: c2396b9119abd6eb530ea11efc58ec019b163bd4
   AEPIdentity: 88671626d6043a488896ee7d71483a8bcec80739
   AEPLifecycle: 97693ea99ef9deb818b726a4e429ef96abb1353e
-  AEPMessaging: 75f4ef2359ca50f969c6cb74dbe6fbf5baabb99f
+  AEPMessaging: 9cc9aaf74e414c266de81fcaf90eaadb6dfc92ca
   AEPOptimize: 9254cbd352b18c01ef24a1ac8c5e5d4783ce2ae5
   AEPPlaces: 9c5e8ba1292e1d6bf09c743a9e56c7ef62c33d9a
   AEPRulesEngine: 458450a34922823286ead045a0c2bd8c27e224c6
@@ -898,7 +889,7 @@ SPEC CHECKSUMS:
   RCTAEPEdgeBridge: ac3a4318f76f881b6a44f748d894d72bcc721230
   RCTAEPEdgeConsent: dcbae4045ec6dd10291b34206d6b24fc472610f3
   RCTAEPEdgeIdentity: 2127c9b4875b59c6acd4c1852f6a9bd1e0e44f19
-  RCTAEPMessaging: 232f7a72cc47982f0437edc0e081492c735b08ab
+  RCTAEPMessaging: 497bfb861a6a819084fd0b4cd7c56994e3038e3b
   RCTAEPOptimize: ecb1a175467f7beddc48306751544f9b753890de
   RCTAEPPlaces: 7369b40f3df72b31e20a49c2e62240659df0b3bc
   RCTAEPTarget: c610eea241218100e26e9b993804141de1b36f71
@@ -944,6 +935,6 @@ SPEC CHECKSUMS:
   Yoga: 86fed2e4d425ee4c6eab3813ba1791101ee153c6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: fa313cb7f76d4070579129d68eb0e539176232c2
+PODFILE CHECKSUM: 8043c8932eda3e438f877eb83be2856ca3d21ac4
 
 COCOAPODS: 1.11.3
