@@ -14,5 +14,14 @@ import Messaging from './Messaging';
 import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
 import MessagingEdgeEventType from './models/MessagingEdgeEventType';
+import { MessagingProposition } from './models/MessagingProposition';
+import { MessagingPropositionItem } from './models/MessagingPropositionItem';
 
-export { Messaging, Message, MessagingDelegate, MessagingEdgeEventType };
+export {
+  Messaging,
+  Message,
+  MessagingDelegate,
+  MessagingEdgeEventType,
+  MessagingProposition,
+  MessagingPropositionItem
+};
