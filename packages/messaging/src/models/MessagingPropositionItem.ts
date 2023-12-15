@@ -10,14 +10,11 @@
     language governing permissions and limitations under the License.
 */
 
-export class MessagingPropositionItem {
-  public content: string;
-  public schema: string;
-  public uniqueId: string;
-
-  constructor(uniqueId: string, schema: string, content: string) {
-    this.uniqueId = uniqueId;
-    this.schema = schema;
-    this.content = content;
-  }
+export interface MessagingPropositionItem {
+  htmlContent?: string;
+  jsonArrayContent?: string;
+  jsonContent?: string;
+  itemData?: Record<string, any>;
+  schema: string;
+  uniqueId: string;
 }
