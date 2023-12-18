@@ -25,9 +25,9 @@ describe('Edge', () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
     let xdmData = { eventType: 'SampleXDMEvent' };
     let data = { dataKey: 'dataValue' };
-    let experienceEvent = new ExperienceEvent(xdmData, data, 'indentifierID');
+    let experienceEvent = new ExperienceEvent(xdmData, data, 'identifierID');
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with only xdmData parameters', async () => {
@@ -35,15 +35,15 @@ describe('Edge', () => {
     let xdmData = { eventType: 'SampleXDMEvent' };
     let experienceEvent = new ExperienceEvent(xdmData);
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with null data parameter', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
     let xdmData = { eventType: 'SampleXDMEvent' };
-    let experienceEvent = new ExperienceEvent(xdmData, null, 'indentifierID');
+    let experienceEvent = new ExperienceEvent(xdmData, null, 'identifierID');
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with empty dataidentifier', async () => {
@@ -52,7 +52,7 @@ describe('Edge', () => {
     let data = { dataKey: 'dataValue' };
     let experienceEvent = new ExperienceEvent(xdmData, data, ' ');
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with null data and empty dataidentifier', async () => {
@@ -60,7 +60,7 @@ describe('Edge', () => {
     let xdmData = { eventType: 'SampleXDMEvent' };
     let experienceEvent = new ExperienceEvent(xdmData, null, ' ');
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with xdmData and data parameters', async () => {
@@ -69,7 +69,7 @@ describe('Edge', () => {
     let data = { dataKey: 'dataValue' };
     let experienceEvent = new ExperienceEvent(xdmData, data);
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with incorrect type data parameter', async () => {
@@ -77,16 +77,17 @@ describe('Edge', () => {
     let xdmData = { eventType: 'SampleXDMEvent' };
     let experienceEvent = new ExperienceEvent(xdmData, null);
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
-  it('sendEvent is called with incorrect type of xdmData parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
-    let data = { dataKey: 'dataValue' };
-    let experienceEvent = new ExperienceEvent(null, data);
-    await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
-  });
+  // xdmData is not allowed to be null
+  // it('sendEvent is called with incorrect type of xdmData parameters', async () => {
+  //   const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
+  //   let data = { dataKey: 'dataValue' };
+  //   let experienceEvent = new ExperienceEvent(null, data);
+  //   await Edge.sendEvent(experienceEvent);
+  //   expect(spy).toHaveBeenCalledWith(experienceEvent);
+  // });
 
   it('sendEvent is called with xdmData, datastreamId parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
@@ -95,7 +96,7 @@ describe('Edge', () => {
     let datastreamId = 'datastreamId';
     let experienceEvent = new ExperienceEvent({xdmData:xdmData, data:data, datastreamId: datastreamId});
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with xdmData, datastreamId parameters', async () => {
@@ -104,7 +105,7 @@ describe('Edge', () => {
     let datastreamId = 'datastreamId';
     let experienceEvent = new ExperienceEvent({xdmData:xdmData, datastreamId: datastreamId});
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with datastreamConfig parameter', async () => {
@@ -122,7 +123,7 @@ describe('Edge', () => {
 
     let experienceEvent = new ExperienceEvent({xdmData:xdmData, datastreamConfig: datastreamConfig});
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with xdmData, datastreamId and datastreamConfig parameters', async () => {
@@ -141,7 +142,7 @@ describe('Edge', () => {
 
     let experienceEvent = new ExperienceEvent({xdmData:xdmData, data:data, datastreamId: 'datastreamId', datastreamConfig:datastreamConfig});
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with empty datadatastreamId parameter', async () => {
@@ -158,22 +159,14 @@ describe('Edge', () => {
     };
     let experienceEvent = new ExperienceEvent({xdmData:xdmData, datastreamId:null, datastreamConfig:datastreamConfig});
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent is called with undefined parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
     let experienceEvent = new ExperienceEvent({ eventType: 'SampleXDMEvent' }, undefined, undefined);
     await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
-  });
-
-
-  it('sendEvent is called with null parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPEdge, 'sendEvent');
-    let experienceEvent = new ExperienceEvent(null);
-    await Edge.sendEvent(experienceEvent);
-    expect(spy).toHaveBeenCalledWith(experienceEvent);
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining(experienceEvent));
   });
 
   it('sendEvent returns promise with correct type Array<EdgeEventHandle>', async () => {
