@@ -28,12 +28,18 @@ public class RCTAEPMessagingDataBridge: NSObject {
         }
     }
 
-    static func transformToProposition(proposition: MessagingProposition) -> [String: Any] {
+    static func transformToProposition(proposition: MessagingProposition) -> [String: Any?] {
         return [
-            "scope": proposition.scope, "uniqueId": proposition.uniqueId,
+            "scope": proposition.scope,
+            "uniqueId": proposition.uniqueId,
             "items": proposition.items.map({ item in
                 [
-                    "content": item.content, "schema": item.schema, "uniqueId": item.uniqueId,
+                    "htmlContent": item.htmlContent,
+                    "jsonContentArray": item.jsonContentArray,
+                    "jsonContent": item.jsonContentDictionary,
+                    "itemData": item.itemData as Any?,
+                    "schema": item.schema,
+                    "itemId": item.itemId
                 ]
             }),
         ]
