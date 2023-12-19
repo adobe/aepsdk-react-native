@@ -26,7 +26,47 @@ const EdgeView = ({navigation}: NavigationProps) => {
   function sendEvent(datasetId?: string) {
     var xdmData = {eventType: 'SampleXDMEvent'};
     var data = {free: 'form', data: 'example'};
-    var experienceEvent = new ExperienceEvent(xdmData, data, datasetId);
+
+ // Previous methods
+    // var experienceEvent = new ExperienceEvent(xdmData, data, datasetId);
+
+ // experienceEvent with datasetIdentifier with new constructor
+    let experienceEvent = new ExperienceEvent({
+      xdmData: xdmData,
+      data: data,
+      datasetIdentifier: datasetId,
+    });
+
+  // experienceEvent datastreamIdOverride with new constructor
+    // let datastreamIdOverride = 'sampleDatastreamID';
+    // let experienceEvent = new ExperienceEvent({
+    //   xdmData: xdmData,
+    //   data: data,
+    //   datastreamIdOverride: datastreamIdOverride,
+    // });
+
+  // experienceEvent datastreamConfOverride with new constructor
+    // let configOverrides = {
+    //   'com_adobe_experience_platform': {
+    //     'datasets': {
+    //       'event': {
+    //         'datasetId': 'sampleDatasetID'
+    //       }
+    //     }
+    //   },
+    //   'com_adobe_analytics': {
+    //     'reportSuites': [
+    //       'sampleReportSuiteID',
+    //     ]
+    //   }
+    // };
+
+    // let experienceEvent = new ExperienceEvent({
+    //   xdmData: xdmData,
+    //   data: data,
+    //   datastreamConfigOverride: configOverrides,
+    // });
+
 
     Edge.sendEvent(experienceEvent).then(eventHandles => {
       let eventHandlesStr = JSON.stringify(eventHandles);
