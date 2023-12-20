@@ -196,7 +196,7 @@ public class MainApplication extends Application implements ReactApplication {
 
 See [migration.md](./docs/migration.md) for guidance on migrating from ACP React Native libraries.
 
-## troubleshooting and Known issues
+## Troubleshooting and Known issues
 
 1. Getting error when building on iOS Xcode
 
