@@ -210,7 +210,7 @@ Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues
 ```xcode
 Underlying Objective-C module 'AEPRulesEngine' not found
 ```
-Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770)
+Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770).
 
 ## Contributing
 
