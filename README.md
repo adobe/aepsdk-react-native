@@ -196,6 +196,22 @@ public class MainApplication extends Application implements ReactApplication {
 
 See [migration.md](./docs/migration.md) for guidance on migrating from ACP React Native libraries.
 
+## troubleshooting and Known issues
+
+1. Getting error when building on iOS Xcode
+
+```xcode
+Use of '@import' when C++ modules are disabled, consider using -fmodules and -fcxx-modules
+```
+Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/247#issuecomment-1642944117).
+
+2. Getting error when building on iOS
+
+```xcode
+Underlying Objective-C module 'AEPRulesEngine' not found
+```
+Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770)
+
 ## Contributing
 
 Contributions are welcomed! See [CONTRIBUTING](CONTRIBUTING.md) and [development.md](./docs/development.md) guides for more information.
