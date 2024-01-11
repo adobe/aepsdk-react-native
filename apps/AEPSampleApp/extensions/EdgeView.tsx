@@ -23,18 +23,77 @@ const EdgeView = ({navigation}: NavigationProps) => {
 
   Edge.extensionVersion().then(version => setVersion(version));
 
-  function sendEvent(datasetId?: string) {
-    var xdmData = {eventType: 'SampleXDMEvent'};
-    var data = {free: 'form', data: 'example'};
-    var experienceEvent = new ExperienceEvent(xdmData, data, datasetId);
-
+  function sendEvent(experienceEvent: any) {
     Edge.sendEvent(experienceEvent).then(eventHandles => {
       let eventHandlesStr = JSON.stringify(eventHandles);
       console.log('AdobeExperienceSDK: EdgeEventHandles = ' + eventHandlesStr);
       setEventHandles(eventHandlesStr);
-    })
+    });
   }
-  
+
+  function sendEventWithParams(datasetId?: string) {
+    var xdmData = {eventType: 'SampleXDMEvent'};
+    var data = {free: 'form', data: 'example'};
+
+    // Method using params
+    var experienceEvent = new ExperienceEvent(xdmData, data, datasetId);
+
+    sendEvent(experienceEvent);
+  }
+
+  function sendEventAsObject(datasetId?: string) {
+    var xdmData = {eventType: 'SampleXDMEvent'};
+    var data = {free: 'form', data: 'example'};
+
+    // Method using object
+    let experienceEvent = new ExperienceEvent({
+      xdmData: xdmData,
+      data: data,
+      datasetIdentifier: datasetId,
+    });
+
+    sendEvent(experienceEvent);
+  }
+
+  function sendEventDataStreamIdOverride() {
+    var xdmData = {eventType: 'SampleXDMEvent'};
+    var data = {free: 'form', data: 'example'};
+
+    let datastreamIdOverride = 'sampleDatastreamID';
+    let experienceEvent = new ExperienceEvent({
+      xdmData: xdmData,
+      data: data,
+      datastreamIdOverride: datastreamIdOverride,
+    });
+
+    sendEvent(experienceEvent);
+  }
+
+  function sendEventDataStreamConfigOverride() {
+    var xdmData = {eventType: 'SampleXDMEvent'};
+    var data = {free: 'form', data: 'example'};
+
+    let configOverrides = {
+      com_adobe_experience_platform: {
+        datasets: {
+          event: {
+            datasetId: 'sampleDatasetID',
+          },
+        },
+      },
+      com_adobe_analytics: {
+        reportSuites: ['sampleReportSuiteID'],
+      },
+    };
+    let experienceEvent = new ExperienceEvent({
+      xdmData: xdmData,
+      data: data,
+      datastreamConfigOverride: configOverrides,
+    });
+
+    sendEvent(experienceEvent);
+  }
+
   function getLocationHint() {
     Edge.getLocationHint().then(hint => {
       let locationStr = hint;
@@ -43,7 +102,7 @@ const EdgeView = ({navigation}: NavigationProps) => {
        locationStr = "null";
       }
       getlocationHintText(locationStr);
-  })
+    });
   }
 
   return (
@@ -51,21 +110,37 @@ const EdgeView = ({navigation}: NavigationProps) => {
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Edge v{version}</Text>
-        <Button title="sendEvent()" onPress={() => sendEvent()} />
         <Button
-          title="sendEvent() to Dataset"
-          onPress={() => sendEvent('datasetIdExample')}
+          title="sendEventWithParams"
+          onPress={() => sendEventWithParams()}
+        />
+        <Button title="sendEventAsObject" onPress={() => sendEventAsObject()} />
+        <Button
+          title="sendEvent(params) to Dataset"
+          onPress={() => sendEventWithParams('datasetIdExample')}
+        />
+        <Button
+          title="sendEvent(object) to Dataset"
+          onPress={() => sendEventAsObject('datasetIdExample')}
+        />
+        <Button
+          title="sendEvent() with DatastreamIdOverride"
+          onPress={() => sendEventDataStreamIdOverride()}
+        />
+        <Button
+          title="sendEvent() with DatastreamConfigOverride"
+          onPress={() => sendEventDataStreamConfigOverride()}
         />
         <Text style={styles.text}>Response event handles: {eventHandles}</Text>
         <Button
           title="setLocationHint(va6)"
-          onPress={() => Edge.setLocationHint('va6')} 
+          onPress={() => Edge.setLocationHint('va6')}
         />
         <Button
           title="setLocationHint(null))"
-          onPress={() => Edge.setLocationHint(null)} 
+          onPress={() => Edge.setLocationHint(null)}
         />
-        <Button title="getLocationHint()" onPress={() => getLocationHint()}  />
+        <Button title="getLocationHint()" onPress={() => getLocationHint()} />
         <Text style={styles.text}>Location Hint: {locationHint}</Text>
       </ScrollView>
     </View>
