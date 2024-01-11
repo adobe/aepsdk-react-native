@@ -31,21 +31,21 @@ const EdgeView = ({navigation}: NavigationProps) => {
     });
   }
 
-  function sendEventV1(datasetId?: string) {
+  function sendEventWithParams(datasetId?: string) {
     var xdmData = {eventType: 'SampleXDMEvent'};
     var data = {free: 'form', data: 'example'};
 
-    // Previous methods
+    // Method using params
     var experienceEvent = new ExperienceEvent(xdmData, data, datasetId);
 
     sendEvent(experienceEvent);
   }
 
-  function sendEventV2(datasetId?: string) {
+  function sendEventAsObject(datasetId?: string) {
     var xdmData = {eventType: 'SampleXDMEvent'};
     var data = {free: 'form', data: 'example'};
 
-    // experienceEvent with datasetIdentifier with new constructor
+    // Method using object
     let experienceEvent = new ExperienceEvent({
       xdmData: xdmData,
       data: data,
@@ -110,17 +110,20 @@ const EdgeView = ({navigation}: NavigationProps) => {
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Edge v{version}</Text>
-        <Button title="sendEvent() v1" onPress={() => sendEventV1()} />
-        <Button title="sendEvent() v2" onPress={() => sendEventV2()} />
         <Button
-          title="sendEvent() v1 to Dataset"
-          onPress={() => sendEventV1('datasetIdExample')}
+          title="sendEventWithParams"
+          onPress={() => sendEventWithParams()}
         />
-         <Button
-          title="sendEvent() v2 to Dataset"
-          onPress={() => sendEventV2('datasetIdExample')}
+        <Button title="sendEventAsObject" onPress={() => sendEventAsObject()} />
+        <Button
+          title="sendEvent(params) to Dataset"
+          onPress={() => sendEventWithParams('datasetIdExample')}
         />
-         <Button
+        <Button
+          title="sendEvent(object) to Dataset"
+          onPress={() => sendEventAsObject('datasetIdExample')}
+        />
+        <Button
           title="sendEvent() with DatastreamIdOverride"
           onPress={() => sendEventDataStreamIdOverride()}
         />
