@@ -16,7 +16,7 @@ In `apps/AEPSampleApp/android/app/src/main/java/com/aepsampleapp/MainApplication
 
 > Note: App id is configured in a mobile property in Data Collection UI, in Tags.  Refer to [configure with App ID per environment](https://developer.adobe.com/client-sdks/home/base/mobile-core/configuration/#configure-with-app-id-per-environment) page for more information.
 
-### Install dependecies 
+### Install dependencies 
 > Note: Commands are assuming you're in the root directory of the repository.
 
 ```
@@ -82,5 +82,10 @@ Assurance is integrated in the sample app for validating the events and flows.
    cd ../../
    rm -rf ~/Library/Developer/Xcode/DerivedData
   ```
+* Getting this error in logcat logs when running in Android simulator: javax.net.ssl.SSLHandshakeException: Chain validation failed <br>
+  Check the date and time on the simulator is current, if not, update these from the Settings menu.
+
+* Getting error when building app in Xcode 15 RCT-Folly hash - No template named 'unary_function' in namespace std <br>
+  This error may be thrown due to an incompatiblity between React Native version 0.68.x and Xcode 15. Make sure you are running with React Native 0.70 or above, if needed pull the latest updates from main branch of this repo, and run [Install dependencies](#install-dependencies) again.
   
 
