@@ -148,6 +148,15 @@ See [MobileCore.resetIdentities](../core/README.md#resetidentities) for more det
 
 ### sendEvent
 
+Sends an Experience event to Edge Network.
+
+Starting with **@adobe/react-native-aepedge v5.1.0**, the sendEvent API supports optional Datastream overrides. This allows you to adjust your datastreams without the need for new ones or modifications to existing settings. The process involves two steps:
+
+1. Define your Datastream configuration overrides on the [datastream configuration page](https://experienceleague.adobe.com/docs/experience-platform/datastreams/configure.html).
+2. Send these overrides to the Edge Network using the sendEvent API.
+
+>Note: You can find a tutorial for Datastream config overrides using rules [here](https://developer.adobe.com/client-sdks/edge/edge-network/tutorials/datastream-config-override-rules/).
+
 **Syntax**
 ```typescript
 sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>
@@ -157,13 +166,47 @@ sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>
 ```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"free": "form", "data": "example"};
-let experienceEvent = new ExperienceEvent(xdmData, data);
+let experienceEvent = new ExperienceEvent({xdmData: xdmData , data: data});
 
 // send ExperienceEvent ignoring the promise
 Edge.sendEvent(experienceEvent);
 
 // send ExperienceEvent with promise
 Edge.sendEvent(experienceEvent).then(eventHandles => console.log("Edge.sentEvent returned EdgeEventHandles = " + JSON.stringify(eventHandles)));
+```
+
+**Example with Datastream ID override**
+```typescript
+var xdmData  = {"eventType" : "SampleXDMEvent"};
+var data  = {"free": "form", "data": "example"};
+
+let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamIdOverride: 'datastreamId'});
+
+// send ExperienceEvent ignoring the promise
+Edge.sendEvent(experienceEvent);
+```
+
+**Example with Datastream config override**
+```typescript
+var xdmData = { eventType: 'SampleXDMEvent' };
+let configOverrides = {
+    com_adobe_experience_platform: {
+      datasets: {
+        event: {
+          datasetId: 'SampleEventDatasetIdOverride',
+        },
+      },
+    },
+    com_adobe_analytics: {
+      reportSuites: ['sampleRSID'],
+    }
+   };
+
+let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamConfigOverride: configOverrides});
+
+
+// send ExperienceEvent ignoring the promise
+Edge.sendEvent(experienceEvent);
 ```
 
 ### Public classes
@@ -185,30 +228,19 @@ class EdgeEventHandle {
 export default EdgeEventHandle;
 ```
 
-
 #### ExperienceEvent
 
 Experience Event is the event to be sent to Adobe Experience Platform Edge Network. The XDM data is required for any Experience Event being sent using the Edge extension.
 
-**Syntax**
+**Usage**
 ```typescript
-class ExperienceEvent {
-  xdmData?: Record<string, any>;
-  data?: Record<string, any>;
-  datasetIdentifier?: string;
+  //Experience Event setting with objects, recommended way to create experience event
+  ExperienceEvent({xdmData: xdmData, data: data, datasetIdentifier: datasetIdentifier});
+  ExperienceEvent({xdmData: xdmData, data: data, datastreamIdOverride: datastreamIdOverride});
+  ExperienceEvent({xdmData: xdmData, data: data, datastreamConfigOverride: datastreamConfigOverride});
 
-  constructor(
-    xdmData?: Record<string, any>,
-    data?: Record<string, any>,
-    datasetIdentifier?: string
-  ) {
-    this.xdmData = xdmData;
-    this.data = data;
-    this.datasetIdentifier = datasetIdentifier;
-  }
-}
-
-export default ExperienceEvent;
+  //Experience Event setting with parameters, previously supported
+  ExperienceEvent(xdmData: xdmData, data: data, datasetIdentifier: datasetIdentifier);
 ```
 
 **Example**
@@ -217,13 +249,36 @@ export default ExperienceEvent;
 // set freeform data to the Experience event
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"free": "form", "data": "example"};
-let experienceEvent = new ExperienceEvent(xdmData, data);
+
+let experienceEvent = new ExperienceEvent({xdmData: xdmData, data: data});
 ```
 ```typescript
 //Example 2
-// Set the destination Dataset identifier to the current Experience event:
-var xdmData  = {"eventType" : "SampleXDMEvent"};
-let experienceEvent = new ExperienceEvent(xdmData, null, "datasetIdExample")
+// Set free form data and datastream id override to the current Experience event:
+var xdmData = { eventType: 'SampleXDMEvent' };
+var data  = {"free": "form", "data": "example"};
+
+let experienceEvent = new ExperienceEvent({xdmData: xdmData, data: data, datastreamIdOverride: 'datastreamId'});
+```
+
+```typescript
+//Example 3
+// Set datastream config override to the current Experience event:
+var xdmData = { eventType: 'SampleXDMEvent' };
+let configOverrides = {
+    com_adobe_experience_platform: {
+      datasets: {
+        event: {
+          datasetId: 'SampleEventDatasetIdOverride',
+        },
+      },
+    },
+    com_adobe_analytics: {
+      reportSuites: ['sampleRSID'],
+    }
+   };
+
+let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamConfigOverride: configOverrides});
 ```
 
 ## Next steps - Schemas setup and validation with Assurance
