@@ -33,6 +33,10 @@ Requires React Native (0.60.0 ~ 0.72.x)
 
 To submit iOS apps to the App Store, you must build them using Xcode 14.1 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
 
+## React Native New Architecture Support
+
+We're constantly evaluating our roadmap. Although there are no immediate plans to adopt the new architecture, we remain open to changes based on customer requirements and market evolution.
+
 ## Installation
 
 You need to install Adobe Experience Platform Mobile SDK with [npm](https://www.npmjs.com/) packages and configure the native Android/iOS project in your React Native project.
