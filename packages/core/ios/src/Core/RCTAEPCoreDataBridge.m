@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -15,15 +15,15 @@ governing permissions and limitations under the License.
 @implementation RCTAEPCoreDataBridge
 
 // Logging mode
-static NSString* const AEP_LOG_LEVEL_ERROR = @"AEP_LOG_LEVEL_ERROR";
-static NSString* const AEP_LOG_LEVEL_WARNING = @"AEP_LOG_LEVEL_WARNING";
-static NSString* const AEP_LOG_LEVEL_DEBUG = @"AEP_LOG_LEVEL_DEBUG";
-static NSString* const AEP_LOG_LEVEL_VERBOSE = @"AEP_LOG_LEVEL_VERBOSE";
+static NSString* const ERROR_MODE = @"ERROR";
+static NSString* const WARNING_MODE = @"WARNING";
+static NSString* const DEBUG_MODE = @"DEBUG";
+static NSString* const VERBOSE_MODE = @"VERBOSE";
 
 // Privacy Status
-static NSString* const AEP_PRIVACY_STATUS_OPT_IN = @"AEP_PRIVACY_STATUS_OPT_IN";
-static NSString* const AEP_PRIVACY_STATUS_OPT_OUT = @"AEP_PRIVACY_STATUS_OPT_OUT";
-static NSString* const AEP_PRIVACY_STATUS_UNKNOWN = @"AEP_PRIVACY_STATUS_UNKNOWN";
+static NSString* const OPT_IN = @"OPT_IN";
+static NSString* const OPT_OUT = @"OPT_OUT";
+static NSString* const UNKNOWN = @"UNKNOWN";
 
 
 static NSString* const EVENT_NAME_KEY = @"eventName";
@@ -54,9 +54,9 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 }
 
 + (AEPPrivacyStatus)privacyStatusFromString: (NSString *) statusString {
-    if ([statusString isEqualToString:AEP_PRIVACY_STATUS_OPT_IN]) {
+    if ([statusString isEqualToString:OPT_IN]) {
         return AEPPrivacyStatusOptedIn;
-    } else if ([statusString isEqualToString:AEP_PRIVACY_STATUS_OPT_OUT]) {
+    } else if ([statusString isEqualToString:OPT_OUT]) {
         return AEPPrivacyStatusOptedOut;
     }
 
@@ -64,13 +64,13 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 }
 
 + (AEPLogLevel) logLevelFromString: (NSString *) logLevelString {
-    if ([logLevelString isEqualToString:AEP_LOG_LEVEL_ERROR]) {
+    if ([logLevelString isEqualToString:ERROR_MODE]) {
         return AEPLogLevelError;
-    } else if ([logLevelString isEqualToString:AEP_LOG_LEVEL_WARNING]) {
+    } else if ([logLevelString isEqualToString:WARNING_MODE]) {
         return AEPLogLevelWarning;
-    } else if ([logLevelString isEqualToString:AEP_LOG_LEVEL_DEBUG]) {
+    } else if ([logLevelString isEqualToString:DEBUG_MODE]) {
         return AEPLogLevelDebug;
-    } else if ([logLevelString isEqualToString:AEP_LOG_LEVEL_VERBOSE]) {
+    } else if ([logLevelString isEqualToString:VERBOSE_MODE]) {
         return AEPLogLevelTrace;
     }
 
@@ -80,13 +80,13 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 + (NSString *)stringFromPrivacyStatus: (AEPPrivacyStatus) status {
     switch (status) {
         case AEPPrivacyStatusOptedIn:
-            return AEP_PRIVACY_STATUS_OPT_IN;
+            return OPT_IN;
             break;
         case AEPPrivacyStatusOptedOut:
-            return AEP_PRIVACY_STATUS_OPT_OUT;
+            return OPT_OUT;
             break;
         case AEPPrivacyStatusUnknown:
-            return AEP_PRIVACY_STATUS_UNKNOWN;
+            return UNKNOWN;
             break;
     }
 }
@@ -94,13 +94,13 @@ static NSString* const EVENT_DATA_KEY = @"eventData";
 + (NSString *)stringFromLogLevel: (AEPLogLevel) logLevel {
     switch (logLevel) {
         case AEPLogLevelError:
-            return AEP_LOG_LEVEL_ERROR;
+            return ERROR_MODE;
         case AEPLogLevelWarning:
-            return AEP_LOG_LEVEL_WARNING;
+            return WARNING_MODE;
         case AEPLogLevelDebug:
-            return AEP_LOG_LEVEL_DEBUG;
+            return DEBUG_MODE;
         case AEPLogLevelTrace:
-            return AEP_LOG_LEVEL_VERBOSE;
+            return VERBOSE_MODE;
     }
 }
 

@@ -1,0 +1,39 @@
+{
+  "name": "@adobe/react-native-aepedgeconsent",
+  "version": "5.0.0",
+  "description": "Adobe Experience Platform Consent Collection extension for AEP Mobile SDK. Written and maintained by Adobe.",
+  "homepage": "https://developer.adobe.com/client-sdks/documentation/",
+  "license": "Apache-2.0",
+  "main": "./ts/index.ts",
+  "scripts": {
+    "cleanup": "rm -rf node_modules",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adobe/aepsdk-react-native",
+    "directory": "packages/edgeconsent"
+  },
+  "keywords": [
+    "react-native",
+    "adobe",
+    "adobe experience platform",
+    "consent",
+    "edge",
+    "ios",
+    "android"
+  ],
+  "author": {
+    "name": "Adobe Experience Platform SDK Team"
+  },
+  "peerDependencies": {
+    "@adobe/react-native-aepcore": "^5.0.0",
+    "react-native": ">=0.60.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  }
+}

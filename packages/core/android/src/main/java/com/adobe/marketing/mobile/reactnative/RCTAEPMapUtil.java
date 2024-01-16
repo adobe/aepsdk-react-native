@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -19,11 +19,12 @@ import com.facebook.react.bridge.WritableMap;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-public class RCTAEPMapUtil {
+class RCTAEPMapUtil {
 
-    public static Map<String, Object> toMap(ReadableMap readableMap) {
+    static Map<String, Object> toMap(ReadableMap readableMap) {
         if (readableMap == null) {
             return null;
         }
@@ -60,7 +61,7 @@ public class RCTAEPMapUtil {
         return map;
     }
 
-    public static Map<String, String> toStringMap(ReadableMap readableMap) {
+    static Map<String, String> toStringMap(ReadableMap readableMap) {
         if (readableMap == null) {
             return null;
         }
@@ -85,7 +86,7 @@ public class RCTAEPMapUtil {
         return map;
     }
 
-    public static WritableMap toWritableMap(Map<String, Object> map) {
+    static WritableMap toWritableMap(Map<String, Object> map) {
         if (map == null) {
             return null;
         }
@@ -109,6 +110,8 @@ public class RCTAEPMapUtil {
                 writableMap.putString((String) pair.getKey(), (String) value);
             } else if (value instanceof Map) {
                 writableMap.putMap((String) pair.getKey(), RCTAEPMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableMap.putArray((String) pair.getKey(), RCTAEPArrayUtil.toWritableArray((List) value));
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), RCTAEPArrayUtil.toWritableArray((Object[]) value));
             }

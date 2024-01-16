@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -60,6 +60,10 @@ RCT_EXPORT_METHOD(updateConfiguration: (NSDictionary* __nullable) config) {
     [AEPMobileCore updateConfiguration:config];
 }
 
+RCT_EXPORT_METHOD(clearUpdatedConfiguration) {
+     [AEPMobileCore clearUpdatedConfiguration];
+}
+
 RCT_EXPORT_METHOD(setLogLevel: (NSString *) logLevelString) {
     [AEPMobileCore setLogLevel:[RCTAEPCoreDataBridge logLevelFromString:logLevelString]];
 }
@@ -101,7 +105,11 @@ RCT_EXPORT_METHOD(setPrivacyStatus: (NSString *) statusString) {
 
 RCT_EXPORT_METHOD(getSdkIdentities: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileCore getSdkIdentities:^(NSString * _Nullable content, NSError * _Nullable error) {
-        resolve(content);
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getSdkIdentities"];
+        } else {
+            resolve(content);
+        }
     }];
 }
 
@@ -178,6 +186,24 @@ RCT_EXPORT_METHOD(resetIdentities) {
     reject([NSString stringWithFormat: @"%lu", (long)error.code],
            errorString,
            error);
+}
+
+- (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {
+    NSString *errorTimeOut = [NSString stringWithFormat:@"%@ call timed out", location];
+    NSString *errorUnexpected = [NSString stringWithFormat:@"%@ call returned an unexpected error", location];
+
+    if (!error || !reject) {
+        return;
+    }
+
+    if (error && error.code != AEPErrorNone) {
+        if (error.code == AEPErrorCallbackTimeout) {
+        reject(EXTENSION_NAME, errorTimeOut, error);
+        }
+    } else {
+        reject(EXTENSION_NAME, errorUnexpected, error);
+    }
+
 }
 
 @end

@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -25,7 +25,7 @@ governing permissions and limitations under the License.
 
 @implementation AEPSampleAppTests
 
-- (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
+- (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {
   if (test(view)) {
     return YES;
@@ -46,23 +46,25 @@ governing permissions and limitations under the License.
 
   __block NSString *redboxError = nil;
 #ifdef DEBUG
-  RCTSetLogFunction(^(RCTLogLevel level, RCTLogSource source, NSString *fileName, NSNumber *lineNumber, NSString *message) {
-    if (level >= RCTLogLevelError) {
-      redboxError = message;
-    }
-  });
+  RCTSetLogFunction(
+      ^(RCTLogLevel level, RCTLogSource source, NSString *fileName, NSNumber *lineNumber, NSString *message) {
+        if (level >= RCTLogLevelError) {
+          redboxError = message;
+        }
+      });
 #endif
 
   while ([date timeIntervalSinceNow] > 0 && !foundElement && !redboxError) {
     [[NSRunLoop mainRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     [[NSRunLoop mainRunLoop] runMode:NSRunLoopCommonModes beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
-    foundElement = [self findSubviewInView:vc.view matching:^BOOL(UIView *view) {
-      if ([view.accessibilityLabel isEqualToString:TEXT_TO_LOOK_FOR]) {
-        return YES;
-      }
-      return NO;
-    }];
+    foundElement = [self findSubviewInView:vc.view
+                                  matching:^BOOL(UIView *view) {
+                                    if ([view.accessibilityLabel isEqualToString:TEXT_TO_LOOK_FOR]) {
+                                      return YES;
+                                    }
+                                    return NO;
+                                  }];
   }
 
 #ifdef DEBUG
@@ -72,6 +74,5 @@ governing permissions and limitations under the License.
   XCTAssertNil(redboxError, @"RedBox error: %@", redboxError);
   XCTAssertTrue(foundElement, @"Couldn't find element with text '%@' in %d seconds", TEXT_TO_LOOK_FOR, TIMEOUT_SECONDS);
 }
-
 
 @end

@@ -1,5 +1,5 @@
 /*
- Copyright 2021 Adobe. All rights reserved.
+ Copyright 2022 Adobe. All rights reserved.
  This file is licensed to you under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -44,5 +44,38 @@ RCT_EXPORT_METHOD(sendEvent: (nonnull NSDictionary*) experienceEventDict resolve
         resolve([RCTAEPExperienceEventDataBridge dictionaryFromEdgeEventHandler:handles]);
     }];
 }
+
+RCT_EXPORT_METHOD(getLocationHint: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    [AEPMobileEdge getLocationHint:^(NSString * _Nullable content, NSError * _Nullable error) {
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getLocationHint"];
+        } else {
+            resolve(content);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(setLocationHint: (nullable NSString*) hint) {
+    [AEPMobileEdge setLocationHint:hint];
+}
+
+- (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {
+    NSString *errorTimeOut = [NSString stringWithFormat:@"%@ call timed out", location];
+    NSString *errorUnexpected = [NSString stringWithFormat:@"%@ call returned an unexpected error", location];
+
+    if (!error || !reject) {
+        return;
+    }
+
+    if (error && error.code != AEPErrorNone) {
+        if (error.code == AEPErrorCallbackTimeout) {
+        reject(EXTENSION_NAME, errorTimeOut, error);
+        }
+    } else {
+        reject(EXTENSION_NAME, errorUnexpected, error);
+    }
+
+}
+
 
 @end

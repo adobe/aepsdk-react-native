@@ -1,5 +1,5 @@
 /*
- Copyright 2021 Adobe. All rights reserved.
+ Copyright 2022 Adobe. All rights reserved.
  This file is licensed to you under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -10,27 +10,25 @@
  */
 package com.adobe.marketing.mobile.reactnative.edge;
 
-import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.Edge;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.adobe.marketing.mobile.EdgeCallback;
 import com.adobe.marketing.mobile.EdgeEventHandle;
 import com.adobe.marketing.mobile.ExperienceEvent;
+import com.adobe.marketing.mobile.AdobeCallbackWithError;
+import com.adobe.marketing.mobile.AdobeError;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableNativeArray;
 
 import java.util.List;
-import java.util.Map;
 
 public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
-
   private final ReactApplicationContext reactContext;
-  private static String FAILED_TO_CONVERT_EXPERIENCE_EVENT = "Failed to convert map to Experience Event,  Experience Event could be null.";
+  private static final String FAILED_TO_CONVERT_EXPERIENCE_EVENT = "Failed to convert map to Experience Event, Experience Event could be null.";
 
   public RCTAEPEdgeModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -58,8 +56,13 @@ public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
 
       Edge.sendEvent(experienceEvent, new EdgeCallback() {
           @Override
-          public void onComplete(List<EdgeEventHandle> handles) {
+          public void onComplete(final List<EdgeEventHandle> handles) {
               WritableArray arr = new WritableNativeArray();
+              if (handles == null) {
+                  promise.resolve(arr);
+                  return;
+              }
+
               for (EdgeEventHandle handle: handles) {
                   arr.pushMap(RCTAEPEdgeDataBridge.mapFromEdgeEventHandle(handle));
               }
@@ -67,4 +70,32 @@ public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
           }
       });
   }
+
+  @ReactMethod
+  public void setLocationHint(final String hint) {
+      Edge.setLocationHint(hint);
+  }
+
+  @ReactMethod
+  public void getLocationHint(final Promise promise) {
+      Edge.getLocationHint(new AdobeCallbackWithError<String>() {
+         @Override
+         public void fail(AdobeError adobeError) {
+             handleError(promise, adobeError, "getLocationHint");
+         }
+
+         @Override
+         public void call(String value) {
+             promise.resolve(value);
+        }
+     });
+   }
+
+    private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
+        if (error == null || promise == null) {
+            return;
+        }
+
+        promise.reject(getName(), String.format("%s returned an unexpected error: %s", errorLocation, error.getErrorName()), new Error(error.getErrorName()));
+    }
 }

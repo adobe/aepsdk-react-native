@@ -1,20 +1,20 @@
 
-# React Native AEP Edge Network
+# React Native Adobe Experience Platform Edge Network extension
 
-[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedge.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedge) 
+[![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepedge.svg)](https://www.npmjs.com/package/@adobe/react-native-aepedge)
 [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepedge)](https://www.npmjs.com/package/@adobe/react-native-aepedge)
 
-`@adobe/react-native-aepedge` is a wrapper around the iOS and Android [Adobe Experience Platform Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension) to allow for integration with React Native applications.
+`@adobe/react-native-aepedge` is a wrapper around the iOS and Android [Adobe Experience Platform Edge Network](https://developer.adobe.com/client-sdks/documentation/edge-network) to allow for integration with React Native applications.
 
 ## Prerequisites
 
-The Edge Network extension has the following peer dependencies, which must be installed prior to installing the messaging extension:
+The Edge Network extension has the following peer dependencies, which must be installed prior to installing the Edge extension:
 - [Core](../core/README.md)
 - [Identity for Edge Network](../edgeidentity/README.md)
 
 ## Installation
 
-See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page 
+See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native#requirements) instructions on the main page
 
 Install the `@adobe/react-native-aepedge` package:
 
@@ -24,126 +24,207 @@ npm install @adobe/react-native-aepedge
 ```
 ## Usage
 
-### [Adobe Experience Platform Edge Network](https://aep-sdks.gitbook.io/docs/foundation-extensions/experience-platform-extension)
+### Installing and registering the extension with the AEP Mobile Core
 
-### Initializing:
+Install the Adobe Experience Platform Edge Network extension in your mobile property and configure the default Datastream ID by following the steps in the [Edge Network extension documentation](https://developer.adobe.com/client-sdks/documentation/edge-network).
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing). 
+Then follow the same document for registering the Edge extension with the Mobile Core.
+Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
 
-Example:
+
+**Initialization Example**
 
 iOS
-```objectivec
+```objc
+// AppDelegate.h
 @import AEPCore;
-@import AEPLifecycle;
 @import AEPEdge;
 @import AEPEdgeIdentity;
 ...
 @implementation AppDelegate
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"yourAppID"];
-  [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileEdge.class, AEPMobileEdgeIdentity.class
-    ] completion:^{
-    [AEPMobileCore lifecycleStart:@{@"contextDataKey": @"contextDataVal"}];
-  }
-  ];
 
-  return YES;
-}
+// AppDelegate.m
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+
+   // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+   NSString* ENVIRONMENT_FILE_ID = @"YOUR-APP-ID";
+
+   NSArray *extensionsToRegister = @[AEPMobileEdgeIdentity.class, 
+                                     AEPMobileEdge.class
+                                     ];
+
+  [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
+    [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
+    ...   
+  }]; 
+  return YES;   
+ } 
 
 @end
 ```
 
 Android
 ```java
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
-import com.adobe.marketing.mobile.edge.identity;
-  
+import com.adobe.marketing.mobile.edge.identity.Identity;
+
 ...
 import android.app.Application;
 ...
 public class MainApplication extends Application implements ReactApplication {
   ...
+  // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+  private final String ENVIRONMENT_FILE_ID = "YOUR-APP-ID";
+
   @Override
   public void on Create(){
     super.onCreate();
     ...
+  
     MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+    MobileCore.configureWithAppID(ENVIRONMENT_FILE_ID);
 
-    try {
-      Edge.registerExtension();
-      Identity.registerExtension();
-      Lifecycle.registerExtension();
-      MobileCore.configureWithAppID("yourAppID");
-      MobileCore.start(new AdobeCallback() {
-        @Override
-        public void call(Object o) {
-          MobileCore.lifecycleStart(null);
-        }
-      });
-    } catch (InvalidInitException e) {
-      ...
-    }
+    MobileCore.registerExtensions(
+      Arrays.asList(Identity.EXTENSION, Edge.EXTENSION),
+      o -> Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
+    );
   }
-}     
+}  
 ```
 
-#### Importing the extension:
-```javascript
-import {AEPEdge, AEPExperienceEvent} from '@adobe/react-native-aepedge';
+### Importing the extension
+In your React Native application, import the Edge extension as follows:
+```typescript
+import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
 ```
 
-##### Getting the extension version:
+## API reference
+### extensionVersion
+Returns the version of the client-side Edge extension.
 
-```javascript
-AEPEdge.extensionVersion().then(version => console.log("AdobeExperienceSDK: AEPEdge version: " + version));
-```
-##### Create Experience Event from Dictionary:
-
-```javascript
-var xdmData  = {"eventType" : "SampleXDMEvent"};
-let experienceEvent = new AEPExperienceEvent(xdmData);
+**Syntax**
+```typescript
+extensionVersion(): Promise<string>
 ```
 
-##### Add free form data to the Experience event:
+**Example**
+```typescript
+Edge.extensionVersion().then(version => console.log("AdobeExperienceSDK: Edge version: " + version));
+```
+### getLocationHint
+Gets the Edge Network location hint used in requests to the Adobe Experience Platform Edge Network. The Edge Network location hint may be used when building the URL for Adobe Experience Platform Edge Network requests to hint at the server cluster to use.
 
-```javascript
+**Syntax**
+```typescript
+getLocationHint(): Promise<string|null>
+```
+
+**Example**
+```typescript
+Edge.getLocationHint().then(hint =>
+    console.log('AdobeExperienceSDK: location hint = ' + hint),
+);
+```
+
+### setLocationHint
+Sets the Edge Network location hint used in requests to the Adobe Experience Platform Edge Network. Passing null or an empty string clears the existing location hint. Edge Network responses may overwrite the location hint to a new value when necessary to manage network traffic.
+
+>Warning: Use caution when setting the location hint. Only use location hints for the "EdgeNetwork" scope. An incorrect location hint value will cause all Edge Network requests to fail with 404 response code.
+
+**Syntax**
+```typescript
+setLocationHint(hint?: string)
+```
+
+**Example**
+```typescript
+Edge.setLocationHint('va6');
+```
+
+### resetIdentity
+Resets current state of the AEP Edge extension and clears previously cached content related to current identity, if any.
+See [MobileCore.resetIdentities](../core/README.md#resetidentities) for more details.
+
+### sendEvent
+
+**Syntax**
+```typescript
+sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>
+```
+
+**Example**
+```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"free": "form", "data": "example"};
-let experienceEvent = new AEPExperienceEvent(xdmData, data);
+let experienceEvent = new ExperienceEvent(xdmData, data);
+
+// send ExperienceEvent ignoring the promise
+Edge.sendEvent(experienceEvent);
+
+// send ExperienceEvent with promise
+Edge.sendEvent(experienceEvent).then(eventHandles => console.log("Edge.sentEvent returned EdgeEventHandles = " + JSON.stringify(eventHandles)));
 ```
 
-##### Set the destination Dataset identifier to the current Experience event:
+### Public classes
 
-```javascript
+#### EdgeEventHandle
+The EdgeEventHandle is a response fragment from Adobe Experience Platform Edge Network for a sent XDM Experience Event. One event can receive none, one or multiple EdgeEventHandle(s) as response.
+
+```typescript
+class EdgeEventHandle {
+  type?: string;
+  payload?: Array<Record<string, any>>;
+
+  constructor(type?: string, payload?: Array<Record<string, any>>) {
+    this.type = type;
+    this.payload = payload;
+  }
+}
+
+export default EdgeEventHandle;
+```
+
+
+#### ExperienceEvent
+
+Experience Event is the event to be sent to Adobe Experience Platform Edge Network. The XDM data is required for any Experience Event being sent using the Edge extension.
+
+**Syntax**
+```typescript
+class ExperienceEvent {
+  xdmData?: Record<string, any>;
+  data?: Record<string, any>;
+  datasetIdentifier?: string;
+
+  constructor(
+    xdmData?: Record<string, any>,
+    data?: Record<string, any>,
+    datasetIdentifier?: string
+  ) {
+    this.xdmData = xdmData;
+    this.data = data;
+    this.datasetIdentifier = datasetIdentifier;
+  }
+}
+
+export default ExperienceEvent;
+```
+
+**Example**
+```typescript
+//Example 1
+// set freeform data to the Experience event
 var xdmData  = {"eventType" : "SampleXDMEvent"};
-let experienceEvent = new AEPExperienceEvent(xdmData, null, "datasetIdExample")
+var data  = {"free": "form", "data": "example"};
+let experienceEvent = new ExperienceEvent(xdmData, data);
 ```
-
-##### Create Experience Event with xdmdata, free form data and the destination Dataset identifier:
-
-```javascript
+```typescript
+//Example 2
+// Set the destination Dataset identifier to the current Experience event:
 var xdmData  = {"eventType" : "SampleXDMEvent"};
-var data  = {"dataKey" : "dataValue"};
-let experienceEvent = new AEPExperienceEvent(xdmData, data, "datasetIdExample")
+let experienceEvent = new ExperienceEvent(xdmData, null, "datasetIdExample")
 ```
 
-#### Send an Experience Event:
-
-```javascript
-AEPEdge.sendEvent(experienceEvent)
-```
-
-#### Send an Experience Event with Event Handle Promise:
-
-```javascript
-AEPEdge.sendEvent(experienceEvent).then(eventHandle => console.log("AdobeExperienceSDK: AEPEdgeEventHandle = " + JSON.stringify(eventHandle)));
-```
+## Next steps - Schemas setup and validation with Assurance
+For examples on XDM schemas and datasets setup and tips on validating with Assurance, refer to the [Edge Network tutorial](https://github.com/adobe/aepsdk-edge-ios/blob/main/Documentation/Tutorials).

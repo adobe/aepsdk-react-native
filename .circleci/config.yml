@@ -4,32 +4,49 @@ version: 2.1
 jobs:
   unit-test:
     docker:
-      - image: cimg/node:16.6.2
+      - image: cimg/node:19.7.0
 
     steps:
       - checkout
 
       - restore_cache:
-          keys: 
+          keys:
             - yarn-cache-{{ checksum "yarn.lock" }}
-      - run: yarn bootstrap 
+
+      - run: yarn install
+
       - save_cache:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
             - ./apps/AEPSampleApp/node_modules
-      
+
       - run:
           name: Unit Tests
-          command: yarn tests:jest
+          command: yarn test --watchAll=false --runInBand
 
   build-sample-app-android:
     docker:
       - image: circleci/android:api-30-node
 
+    resource_class: large
+
     steps:
       - checkout
-      
+
+      - run:
+          name: Swap node versions
+          command: |
+            set +e
+            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+            nvm install v18
+            nvm alias default 18
+            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+
       - run:
           name: yarn install
           command: yarn install
@@ -39,10 +56,12 @@ jobs:
           command: |
             export NODE_OPTIONS=--max-old-space-size=8192
             yarn sampleapp:android:build
-          
+
   build-sample-app-ios:
     macos:
-      xcode: "12.0"
+      xcode: 14.1.0
+
+    resource_class: macos.m1.large.gen1
 
     steps:
       - checkout
@@ -52,9 +71,11 @@ jobs:
           command: brew install node
 
       - restore_cache:
-          keys: 
+          keys:
             - ios-yarn-cache-{{ checksum "yarn.lock" }}
-      - run: yarn bootstrap 
+
+      - run: yarn install
+
       - save_cache:
           key: ios-yarn-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -64,18 +85,28 @@ jobs:
       - run:
           name: Install latest Cocoapods
           command: sudo gem install cocoapods
-          
+
       - run:
-          name: intall pods
+          name: Install pods
           command: yarn sampleapp:ios:pod:install
 
       - run:
+          name: Yoga fix
+          command: |
+            cd apps/AEPSampleApp
+            sed -i.bo 's/    node->getLayout()\.hadOverflow() |$/\0|/' ./node_modules/react-native/ReactCommon/yoga/yoga/Yoga.cpp
+            cd ../../
+            rm -rf ~/Library/Developer/Xcode/DerivedData
+
+      - run:
           name: Building iOS Sample App
-          command: yarn sampleapp:ios:build
+          command: cd apps/AEPSampleApp && npx react-native run-ios --verbose
+
 workflows:
   version: 2.1
   ci-workflow:
     jobs:
       - unit-test
+      # Uncomment the following lines to build the ios code after this issue is fixed: https://github.com/adobe/aepsdk-react-native/issues/272
       - build-sample-app-ios
       - build-sample-app-android

@@ -1,13 +1,12 @@
 /**
  * Metro configuration for React Native
  * https://github.com/facebook/react-native
- *
- * @format
  */
 
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 const {resolve, join} = require('path');
 
-module.exports = {
+const config = {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
@@ -16,9 +15,7 @@ module.exports = {
       },
     }),
   },
-  watchFolders: [
-    resolve(__dirname, '../../packages'),
-  ],
+  watchFolders: [resolve(__dirname, '../../packages')],
   resolver: {
     extraNodeModules: new Proxy(
       {},
@@ -33,7 +30,7 @@ module.exports = {
             name.startsWith('@adobe/react-native-aep')
           ) {
             const packageName = name.replace('@adobe/react-native-aep', '');
-            console.log("------packageName -> " + packageName);
+            console.log('------packageName -> ' + packageName);
             return join(__dirname, `../../packages/${packageName}`);
           }
           return join(__dirname, `node_modules/${name}`);
@@ -42,3 +39,5 @@ module.exports = {
     ),
   },
 };
+
+module.exports = mergeConfig(getDefaultConfig(__dirname), config);

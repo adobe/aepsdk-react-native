@@ -1,5 +1,5 @@
 /*
- Copyright 2021 Adobe. All rights reserved.
+ Copyright 2022 Adobe. All rights reserved.
  This file is licensed to you under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -9,10 +9,15 @@
  governing permissions and limitations under the License.
  */
 
-#import "RCTAEPEdgeIdentity.h"
 @import AEPEdgeIdentity;
+@import AEPCore;
+#import "RCTAEPEdgeIdentity.h"
+#import "RCTAEPEdgeIdentityDataBridge.h"
+
 
 @implementation RCTAEPEdgeIdentity
+
+static NSString* const EXTENSION_NAME = @"AEPEdgeIdentity";
 
 RCT_EXPORT_MODULE(AEPEdgeIdentity);
 
@@ -27,8 +32,74 @@ RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(R
 
 RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileEdgeIdentity getExperienceCloudId:^(NSString * _Nullable experienceCloudId, NSError * _Nullable error) {
-        resolve(experienceCloudId);
+        
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getExperienceCloudId"];
+            } else {
+              resolve(experienceCloudId);
+            }
     }];
 }
+
+RCT_EXPORT_METHOD(getIdentities:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    
+    [AEPMobileEdgeIdentity getIdentities:^(AEPIdentityMap * _Nullable IdentityMap, NSError * _Nullable error) {
+        
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getIdentities"];
+        } else {
+            resolve([RCTAEPEdgeIdentityDataBridge dictionaryFromIdentityMap:IdentityMap]);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(getUrlVariables:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    [AEPMobileEdgeIdentity getUrlVariables:^(NSString * _Nullable urlVariables, NSError * _Nullable error) {
+        
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getUrlVariables"];
+            } else {
+              resolve(urlVariables);
+            }
+    }];
+}
+
+RCT_EXPORT_METHOD(updateIdentities:(nonnull NSDictionary*) map) {
+    AEPIdentityMap *convertMap = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityMap:map];
+
+    [AEPMobileEdgeIdentity updateIdentities:(AEPIdentityMap * _Nonnull) convertMap];
+}
+
+RCT_EXPORT_METHOD(removeIdentity:(nonnull NSDictionary*)item
+                  namespace:(NSString *)namespace) {
+    
+    AEPIdentityItem *convertItem = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityItem:item];
+    
+    if (!convertItem || !namespace) {
+    return;
+    }
+
+    [AEPMobileEdgeIdentity removeIdentityItem:(AEPIdentityItem * _Nonnull) convertItem withNamespace:(NSString * _Nonnull) namespace];
+}
+
+#pragma mark - Helper methods
+
+- (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {
+    NSString *errorTimeOut = [NSString stringWithFormat:@"%@ call timed out", location];
+    NSString *errorUnexpected = [NSString stringWithFormat:@"%@ call returned an unexpected error", location];
+    
+    if (!error || !reject) {
+        return;
+    }
+
+    if (error && error.code != AEPErrorNone) {
+        if (error.code == AEPErrorCallbackTimeout) {
+            reject(EXTENSION_NAME, errorTimeOut, error);
+        }else {
+            reject(EXTENSION_NAME, errorUnexpected, error);
+        }
+    } 
+
+}
+
 @end
-  

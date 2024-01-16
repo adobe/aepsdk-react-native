@@ -1,39 +1,72 @@
 {
   "name": "aepsampleapp",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "private": true,
+  "workspaces": {
+    "nohoist": [
+      "**/*"
+    ]
+  },
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@adobe/react-native-aepcore": "^1.0.0-alpha.2",
-    "@adobe/react-native-aepuserprofile": "^1.0.0-alpha.3",
-    "@adobe/react-native-aepedge": "^1.0.0-alpha.2",
-    "@adobe/react-native-aepedgeidentity": "^1.0.0-alpha.2",
-    "@adobe/react-native-aepmessaging": "^1.0.0-alpha.2",
-    "@adobe/react-native-aepassurance": "^3.0.0-alpha.0",
+    "@adobe/react-native-aepassurance": "^5.0.0",
+    "@adobe/react-native-aepcampaignclassic": "^5.0.0",
+    "@adobe/react-native-aepcore": "^5.0.1",
+    "@adobe/react-native-aepedge": "^5.0.0",
+    "@adobe/react-native-aepedgebridge": "^5.0.0",
+    "@adobe/react-native-aepedgeconsent": "^5.0.0",
+    "@adobe/react-native-aepedgeidentity": "^5.0.0",
+    "@adobe/react-native-aepmessaging": "^5.1.0-beta.1",
+    "@adobe/react-native-aepoptimize": "^5.0.0",
+    "@adobe/react-native-aepplaces": "^5.0.2",
+    "@adobe/react-native-aeptarget": "^5.0.0",
+    "@adobe/react-native-aepuserprofile": "^5.0.0",
     "@react-native-community/masked-view": "^0.1.11",
-    "@react-navigation/bottom-tabs": "^5.8.0",
-    "@react-navigation/core": "^5.12.3",
-    "@react-navigation/drawer": "^5.9.0",
-    "@react-navigation/native": "^5.7.3",
-    "@react-navigation/routers": "^5.7.2",
-    "@react-navigation/stack": "^5.9.0",
-    "react": "17.0.1",
-    "react-native": "0.64.2",
-    "react-native-gesture-handler": "^1.10.3",
-    "react-native-reanimated": "^2.2.0",
-    "react-native-safe-area-context": "^3.2.0",
-    "react-native-screens": "^3.4.0"
+    "@react-navigation/bottom-tabs": "^6.5.9",
+    "@react-navigation/core": "^6.4.9",
+    "@react-navigation/drawer": "^6.6.4",
+    "@react-navigation/native": "^6.1.8",
+    "@react-navigation/routers": "^6.1.9",
+    "@react-navigation/stack": "^6.3.18",
+    "lodash.isequal": "^4.5.0",
+    "react": "18.2.0",
+    "react-native": "0.72.5",
+    "react-native-gesture-handler": "^2.13.1",
+    "react-native-reanimated": "3.5.4",
+    "react-native-safe-area-context": "^4.7.2",
+    "react-native-screens": "^3.25.0",
+    "react-native-webview": "^13.6.2",
+    "recyclerlistview": "^4.2.0",
+    "ts-object-utils": "0.0.5"
   },
   "devDependencies": {
-    "metro-react-native-babel-preset": "^0.64.0",
-    "react-test-renderer": "17.0.1"
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "@babel/runtime": "^7.20.0",
+    "@react-native/eslint-config": "^0.72.2",
+    "@react-native/metro-config": "^0.72.11",
+    "@tsconfig/react-native": "^3.0.0",
+    "@types/react": "^18.0.24",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-jest": "^29.2.1",
+    "eslint": "^8.19.0",
+    "jest": "^29.2.1",
+    "metro-react-native-babel-preset": "0.76.8",
+    "prettier": "^2.4.1",
+    "react-test-renderer": "18.2.0",
+    "typescript": "4.8.4"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
   }
 }
-
