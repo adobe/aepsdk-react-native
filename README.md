@@ -35,7 +35,7 @@ To submit iOS apps to the App Store, you must build them using Xcode 14.1 or lat
 
 ## React Native New Architecture Support
 
-We're constantly evaluating our roadmap. Although there are no immediate plans to adopt the new architecture, we remain open to changes based on customer requirements and market evolution.
+React Naive 0.7x introduced support for a new architecture. We don't yet support the new architecture.
 
 ## Installation
 
