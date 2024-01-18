@@ -178,7 +178,6 @@ Edge.sendEvent(experienceEvent).then(eventHandles => console.log("Edge.sentEvent
 **Example with Datastream ID override**
 ```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
-var data  = {"free": "form", "data": "example"};
 
 let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamIdOverride: 'datastreamId'});
 
@@ -246,7 +245,7 @@ Experience Event is the event to be sent to Adobe Experience Platform Edge Netwo
 **Example**
 ```typescript
 //Example 1
-// set freeform data to the Experience event
+// set free form data to the Experience event
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 var data  = {"free": "form", "data": "example"};
 
