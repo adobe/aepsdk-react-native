@@ -25,13 +25,17 @@ This repository is a monorepo and contains a collection of React Native modules 
 
 ## Requirements
 
-- Requires React Native >= v0.60.0
+- React Native
 
-> React Native v0.60.0 and above supports [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) which links the module while building the app.
+Requires React Native (0.60.0 - 0.72.x)
 
-- Requires Xcode 14.1+
+- Xcode
 
-> To submit iOS apps to the App Store, you must build them using Xcode 14.1 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
+To submit iOS apps to the App Store, you must build them using Xcode 14.1 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
+
+## React Native New Architecture Support
+
+React Native 0.7x introduced support for a new architecture. We don't yet support the new architecture.
 
 ## Installation
 
