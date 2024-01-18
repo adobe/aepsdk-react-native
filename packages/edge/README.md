@@ -152,7 +152,7 @@ Sends an Experience event to Edge Network.
 
 Starting with **@adobe/react-native-aepedge v5.1.0**, the sendEvent API supports optional Datastream overrides. This allows you to adjust your datastreams without the need for new ones or modifications to existing settings. The process involves two steps:
 
-1. Define your Datastream configuration overrides on the [datastream configuration page](https://experienceleague.adobe.com/docs/experience-platform/datastreams/configure.html).
+1. Define your Datastream configuration overrides on the [datastream configuration page](https://experienceleague.adobe.com/docs/experience-platform/datastreams/overrides.html).
 2. Send these overrides to the Edge Network using the sendEvent API.
 
 >Note: You can find a tutorial for Datastream config overrides using rules [here](https://developer.adobe.com/client-sdks/edge/edge-network/tutorials/datastream-config-override-rules/).
@@ -179,7 +179,7 @@ Edge.sendEvent(experienceEvent).then(eventHandles => console.log("Edge.sentEvent
 ```typescript
 var xdmData  = {"eventType" : "SampleXDMEvent"};
 
-let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamIdOverride: 'datastreamId'});
+let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamIdOverride: 'SampleDataStreamId'});
 
 // send ExperienceEvent ignoring the promise
 Edge.sendEvent(experienceEvent);
@@ -257,7 +257,7 @@ let experienceEvent = new ExperienceEvent({xdmData: xdmData, data: data});
 var xdmData = { eventType: 'SampleXDMEvent' };
 var data  = {"free": "form", "data": "example"};
 
-let experienceEvent = new ExperienceEvent({xdmData: xdmData, data: data, datastreamIdOverride: 'datastreamId'});
+let experienceEvent = new ExperienceEvent({xdmData: xdmData, data: data, datastreamIdOverride: 'SampleDataStreamId'});
 ```
 
 ```typescript
