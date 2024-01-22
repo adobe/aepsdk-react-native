@@ -1,5 +1,5 @@
 PODS:
-  - AEPAssurance (4.1.0):
+  - AEPAssurance (4.1.1):
     - AEPCore (>= 4.0.0)
     - AEPServices (>= 4.0.0)
   - AEPCampaignClassic (4.0.0):
@@ -146,7 +146,7 @@ PODS:
     - AEPLifecycle (~> 4.0)
     - AEPSignal (~> 4.0)
     - React
-  - RCTAEPEdge (5.0.0):
+  - RCTAEPEdge (5.1.0):
     - AEPEdge (>= 4.3.0)
     - React
   - RCTAEPEdgeBridge (5.0.0):
@@ -855,7 +855,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/adobe/aepsdk-messaging-ios.git
 
 SPEC CHECKSUMS:
-  AEPAssurance: ee78c45752b29696f280854cfc4d4f8d11babad8
+  AEPAssurance: 765587ef65481bab544aa25efcfa294e14161d49
   AEPCampaignClassic: 26935c92330f8550599075f6796bb800ce4ab24f
   AEPCore: cc4ff17cfb5744b75cf41b72d4a68d93cc903696
   AEPEdge: 301fb849383fca513c1046fe90bac0bcd1f8e404
@@ -894,7 +894,7 @@ SPEC CHECKSUMS:
   RCTAEPAssurance: 690918bca2bca158bf807c6d41053624eca981e6
   RCTAEPCampaignClassic: 4843c7bf6f5eef1d55a90e9bca2f9bfc361cf95f
   RCTAEPCore: 9b2faad034280d77239ef975c675debb52660d27
-  RCTAEPEdge: b347daa4fa6740b803dd1f0545c87974b7ac1c8d
+  RCTAEPEdge: 767dfec8bd5d0646af8f3e54ecad560677bc7ff4
   RCTAEPEdgeBridge: ac3a4318f76f881b6a44f748d894d72bcc721230
   RCTAEPEdgeConsent: dcbae4045ec6dd10291b34206d6b24fc472610f3
   RCTAEPEdgeIdentity: 2127c9b4875b59c6acd4c1852f6a9bd1e0e44f19
