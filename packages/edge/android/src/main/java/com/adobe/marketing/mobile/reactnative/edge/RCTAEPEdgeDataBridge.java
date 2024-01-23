@@ -26,6 +26,8 @@ final class RCTAEPEdgeDataBridge {
     private static final String XDM_DATA_KEY = "xdmData";
     private static final String DATA_KEY = "data";
     private static final String DATASET_IDENTIFIER_KEY = "datasetIdentifier";
+    private static final String DATASTREAM_ID_OVERRIDE_KEY = "datastreamIdOverride";
+    private static final String DATASTREAM_CONFIG_OVERRIDE_KEY = "datastreamConfigOverride";
     private static final String TYPE_KEY = "type";
     private static final String PAYLOAD_KEY = "payload";
     private static final String TAG = "RCTAEPEdgeDataBridge";
@@ -43,19 +45,26 @@ final class RCTAEPEdgeDataBridge {
 
         Map<String, Object> xdmdata = RCTAEPEdgeMapUtil.toMap(getNullableMap(map, XDM_DATA_KEY));
         String datasetId = null;
-
+        String datastreamIdOverride = null;
+        
         if (xdmdata != null) {
 
             Map<String, Object> data = RCTAEPEdgeMapUtil.toMap(getNullableMap(map, DATA_KEY));
+            Map<String, Object> datastreamConfigOverride = RCTAEPEdgeMapUtil.toMap(getNullableMap(map, DATASTREAM_CONFIG_OVERRIDE_KEY));
 
             try {
                 datasetId = getNullableString(map, DATASET_IDENTIFIER_KEY);
+                datastreamIdOverride = getNullableString(map, DATASTREAM_ID_OVERRIDE_KEY);
             } catch (Exception e) {
                 Log.d(TAG, "experienceEventFromReadableMap: " + e);
             }
 
-            ExperienceEvent event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).build();
-
+            ExperienceEvent event;
+            if (datastreamIdOverride != null || datastreamConfigOverride != null) {
+                event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).setDatastreamIdOverride(datastreamIdOverride).setDatastreamConfigOverride(datastreamConfigOverride).build();
+            } else {
+                event = new ExperienceEvent.Builder().setXdmSchema(xdmdata, datasetId).setData(data).build();
+            }
             return event;
         }
 
