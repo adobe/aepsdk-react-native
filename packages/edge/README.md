@@ -164,9 +164,9 @@ sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>
 
 **Example**
 ```typescript
-var xdmData  = {"eventType" : "SampleXDMEvent"};
-var data  = {"free": "form", "data": "example"};
-let experienceEvent = new ExperienceEvent({xdmData: xdmData , data: data});
+const sampleXdmData  = {"eventType" : "SampleXDMEvent"};
+const freeFormData  = {"free": "form", "data": "example"};
+let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData , data: freeFormData});
 
 // send ExperienceEvent ignoring the promise
 Edge.sendEvent(experienceEvent);
@@ -177,9 +177,9 @@ Edge.sendEvent(experienceEvent).then(eventHandles => console.log("Edge.sentEvent
 
 **Example with Datastream ID override**
 ```typescript
-var xdmData  = {"eventType" : "SampleXDMEvent"};
+const sampleXdmData  = {"eventType" : "SampleXDMEvent"};
 
-let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamIdOverride: 'SampleDataStreamId'});
+let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, datastreamIdOverride: 'SampleDataStreamId'});
 
 // send ExperienceEvent ignoring the promise
 Edge.sendEvent(experienceEvent);
@@ -187,8 +187,8 @@ Edge.sendEvent(experienceEvent);
 
 **Example with Datastream config override**
 ```typescript
-var xdmData = { eventType: 'SampleXDMEvent' };
-let configOverrides = {
+const sampleXdmData = { eventType: 'SampleXDMEvent' };
+const configOverrides = {
     com_adobe_experience_platform: {
       datasets: {
         event: {
@@ -201,7 +201,7 @@ let configOverrides = {
     }
    };
 
-let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamConfigOverride: configOverrides});
+let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, datastreamConfigOverride: configOverrides});
 
 
 // send ExperienceEvent ignoring the promise
@@ -246,25 +246,25 @@ Experience Event is the event to be sent to Adobe Experience Platform Edge Netwo
 ```typescript
 //Example 1
 // set free form data to the Experience event
-var xdmData  = {"eventType" : "SampleXDMEvent"};
-var data  = {"free": "form", "data": "example"};
+const sampleXdmData  = {"eventType" : "SampleXDMEvent"};
+const freeFormData  = {"free": "form", "data": "example"};
 
-let experienceEvent = new ExperienceEvent({xdmData: xdmData, data: data});
+let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, data: freeFormData});
 ```
 ```typescript
 //Example 2
 // Set free form data and datastream id override to the current Experience event:
-var xdmData = { eventType: 'SampleXDMEvent' };
-var data  = {"free": "form", "data": "example"};
+const sampleXdmData = { eventType: 'SampleXDMEvent' };
+const freeFormData  = {"free": "form", "data": "example"};
 
-let experienceEvent = new ExperienceEvent({xdmData: xdmData, data: data, datastreamIdOverride: 'SampleDataStreamId'});
+let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, data: freeFormData, datastreamIdOverride: 'SampleDataStreamId'});
 ```
 
 ```typescript
 //Example 3
 // Set datastream config override to the current Experience event:
-var xdmData = { eventType: 'SampleXDMEvent' };
-let configOverrides = {
+const sampleXdmData = { eventType: 'SampleXDMEvent' };
+const configOverrides = {
     com_adobe_experience_platform: {
       datasets: {
         event: {
@@ -277,7 +277,7 @@ let configOverrides = {
     }
    };
 
-let experienceEvent = new ExperienceEvent({xdmData: xdmData, datastreamConfigOverride: configOverrides});
+let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, datastreamConfigOverride: configOverrides});
 ```
 
 ## Next steps - Schemas setup and validation with Assurance

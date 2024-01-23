@@ -32,23 +32,23 @@ const EdgeView = ({navigation}: NavigationProps) => {
   }
 
   function sendEventWithParams(datasetId?: string) {
-    var xdmData = {eventType: 'SampleXDMEvent'};
-    var data = {free: 'form', data: 'example'};
+    const sampleXdmData = {eventType: 'SampleXDMEvent'};
+    const freeFormData = {free: 'form', data: 'example'};
 
     // Method using params
-    var experienceEvent = new ExperienceEvent(xdmData, data, datasetId);
+    let experienceEvent = new ExperienceEvent(sampleXdmData, freeFormData, datasetId);
 
     sendEvent(experienceEvent);
   }
 
   function sendEventAsObject(datasetId?: string) {
-    var xdmData = {eventType: 'SampleXDMEvent'};
-    var data = {free: 'form', data: 'example'};
+    const sampleXdmData = {eventType: 'SampleXDMEvent'};
+    const freeFormData = {free: 'form', data: 'example'};
 
     // Method using object
     let experienceEvent = new ExperienceEvent({
-      xdmData: xdmData,
-      data: data,
+      xdmData: sampleXdmData,
+      data: freeFormData,
       datasetIdentifier: datasetId,
     });
 
@@ -56,13 +56,13 @@ const EdgeView = ({navigation}: NavigationProps) => {
   }
 
   function sendEventDataStreamIdOverride() {
-    var xdmData = {eventType: 'SampleXDMEvent'};
-    var data = {free: 'form', data: 'example'};
+    const sampleXdmData = {eventType: 'SampleXDMEvent'};
+    const freeFormData = {free: 'form', data: 'example'};
 
     let datastreamIdOverride = 'sampleDatastreamID';
     let experienceEvent = new ExperienceEvent({
-      xdmData: xdmData,
-      data: data,
+      xdmData: sampleXdmData,
+      data: freeFormData,
       datastreamIdOverride: datastreamIdOverride,
     });
 
@@ -70,8 +70,8 @@ const EdgeView = ({navigation}: NavigationProps) => {
   }
 
   function sendEventDataStreamConfigOverride() {
-    var xdmData = {eventType: 'SampleXDMEvent'};
-    var data = {free: 'form', data: 'example'};
+    const sampleXdmData = {eventType: 'SampleXDMEvent'};
+    const freeFormData = {free: 'form', data: 'example'};
 
     let configOverrides = {
       com_adobe_experience_platform: {
@@ -86,8 +86,8 @@ const EdgeView = ({navigation}: NavigationProps) => {
       },
     };
     let experienceEvent = new ExperienceEvent({
-      xdmData: xdmData,
-      data: data,
+      xdmData: sampleXdmData,
+      data: freeFormData,
       datastreamConfigOverride: configOverrides,
     });
 
