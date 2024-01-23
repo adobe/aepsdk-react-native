@@ -166,7 +166,7 @@ sendEvent(experienceEvent: ExperienceEvent): Promise<Array<EdgeEventHandle>>
 ```typescript
 const sampleXdmData  = {"eventType" : "SampleXDMEvent"};
 const freeFormData  = {"free": "form", "data": "example"};
-let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData , data: freeFornData});
+let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData , data: freeFormData});
 
 // send ExperienceEvent ignoring the promise
 Edge.sendEvent(experienceEvent);
@@ -249,7 +249,7 @@ Experience Event is the event to be sent to Adobe Experience Platform Edge Netwo
 const sampleXdmData  = {"eventType" : "SampleXDMEvent"};
 const freeFormData  = {"free": "form", "data": "example"};
 
-let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, data: data});
+let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, data: freeFormData});
 ```
 ```typescript
 //Example 2
