@@ -255,7 +255,7 @@ let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, data: freeFor
 //Example 2
 // Set free form data and datastream id override to the current Experience event:
 const sampleXdmData = { eventType: 'SampleXDMEvent' };
-const data  = {"free": "form", "data": "example"};
+const freeFormData  = {"free": "form", "data": "example"};
 
 let experienceEvent = new ExperienceEvent({xdmData: sampleXdmData, data: freeFormData, datastreamIdOverride: 'SampleDataStreamId'});
 ```
