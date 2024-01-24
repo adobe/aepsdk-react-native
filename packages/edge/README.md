@@ -239,7 +239,7 @@ Experience Event is the event to be sent to Adobe Experience Platform Edge Netwo
   ExperienceEvent({xdmData: xdmData, data: data, datastreamConfigOverride: datastreamConfigOverride});
 
   //Experience Event setting with parameters, previously supported
-  ExperienceEvent(xdmData: xdmData, data: data, datasetIdentifier: datasetIdentifier);
+  ExperienceEvent(xdmData, data, datasetIdentifier);
 ```
 
 **Example**
