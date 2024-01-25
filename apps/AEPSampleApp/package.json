@@ -19,7 +19,7 @@
     "@adobe/react-native-aepassurance": "^5.0.0",
     "@adobe/react-native-aepcampaignclassic": "^5.0.0",
     "@adobe/react-native-aepcore": "^5.0.1",
-    "@adobe/react-native-aepedge": "^5.0.0",
+    "@adobe/react-native-aepedge": "^5.1.0",
     "@adobe/react-native-aepedgebridge": "^5.0.0",
     "@adobe/react-native-aepedgeconsent": "^5.0.0",
     "@adobe/react-native-aepedgeidentity": "^5.0.0",
