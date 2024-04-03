@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}"
   s.swift_version = '5.0'
 
-  s.dependency "AEPMessaging", "~> 4.0"
+  s.dependency "AEPMessaging", ">= 5.0.0", "< 6.0.0"
 
   if respond_to?(:install_modules_dependencies, true)
     install_modules_dependencies(s)
