@@ -21,7 +21,7 @@
   self.initialProps = @{};
 
   [AEPMobileCore setLogLevel:AEPLogLevelTrace];
-  [AEPMobileCore configureWithAppId:@"94f571f308d5/959a617a4a15/launch-de09b8b97921-development"];
+  [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
   const UIApplicationState appState = application.applicationState;
   [AEPMobileCore registerExtensions:@[
     AEPMobileLifecycle.class, AEPMobileIdentity.class,
