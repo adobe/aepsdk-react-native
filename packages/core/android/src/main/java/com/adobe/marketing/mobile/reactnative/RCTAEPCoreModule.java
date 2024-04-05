@@ -89,9 +89,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     public void log(final String mode, final String tag, final String message) {
         LoggingMode logMode = RCTAEPCoreDataBridge.loggingModeFromString(mode);
         switch (logMode) {
-            case DEBUG:
-                Log.debug(tag, tag, message);
-                break;
             case VERBOSE:
                 Log.trace(tag, tag, message);
                 break;
@@ -168,7 +165,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             }
         };
 
-        AdobeCallbackWithError<Event> extensionErrorExtensionErrorCallback = new AdobeCallbackWithError<Event>() {
+        AdobeCallbackWithError<Event> adobeErrorCallback = new AdobeCallbackWithError<Event>() {
             @Override
             public void fail(AdobeError adobeError) {
                 handleError(promise, adobeError, "dispatchEventWithResponseCallback");
@@ -179,14 +176,8 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
                 eventAdobeCallback.call(event);
             }
         };
-//        ExtensionErrorCallback<ExtensionError> extensionErrorExtensionErrorCallback = new ExtensionErrorCallback<ExtensionError>() {
-//            @Override
-//            public void error(ExtensionError extensionError) {
-//                handleError(promise, extensionError);
-//            }
-//        };
 
-        MobileCore.dispatchEventWithResponseCallback(event,5000L ,extensionErrorExtensionErrorCallback);
+        MobileCore.dispatchEventWithResponseCallback(event,5000L , adobeErrorCallback);
     }
 
     @ReactMethod
