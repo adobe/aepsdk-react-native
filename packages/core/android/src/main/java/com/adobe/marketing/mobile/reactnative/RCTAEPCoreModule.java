@@ -189,21 +189,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         MobileCore.dispatchEventWithResponseCallback(event,5000L ,extensionErrorExtensionErrorCallback);
     }
 
-//    @ReactMethod
-//    public void dispatchResponseEvent(final ReadableMap responseEvent, final ReadableMap requestEvent,
-//                                      final Promise promise) {
-//        MobileCore.dispatchResponseEvent(RCTAEPCoreDataBridge.eventFromReadableMap(responseEvent), RCTAEPCoreDataBridge.eventFromReadableMap(requestEvent), new ExtensionErrorCallback<ExtensionError>() {
-//            @Override
-//            public void error(ExtensionError extensionError) {
-//                if (extensionError != null) {
-//                    promise.resolve(true);
-//                } else {
-//                    handleError(promise, extensionError);
-//                }
-//            }
-//        });
-//    }
-
     @ReactMethod
     public void trackAction(final String action, final ReadableMap contextData) {
         MobileCore.trackAction(action, RCTAEPMapUtil.toStringMap(contextData));
@@ -253,15 +238,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
      public void resetIdentities() {
         MobileCore.resetIdentities();
      }
-
-    // Helper method/s
-//    private void handleError(Promise promise, ExtensionError error) {
-//        if (error == null || promise == null) {
-//            return;
-//        }
-//
-//        promise.reject(String.valueOf(error.getErrorCode()), error.getErrorName(), new RuntimeException(error.getErrorName()));
-//    }
 
     private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
         if (error == null || promise == null) {
