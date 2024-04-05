@@ -15,6 +15,7 @@ import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.Event;
+import com.adobe.marketing.mobile.services.Log;
 import com.adobe.marketing.mobile.ExtensionError;
 import com.adobe.marketing.mobile.ExtensionErrorCallback;
 import com.adobe.marketing.mobile.LoggingMode;
@@ -87,7 +88,22 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void log(final String mode, final String tag, final String message) {
         LoggingMode logMode = RCTAEPCoreDataBridge.loggingModeFromString(mode);
-        MobileCore.log(logMode, tag, message);
+        switch (logMode) {
+            case DEBUG:
+                Log.debug(tag, tag, message);
+                break;
+            case VERBOSE:
+                Log.trace(tag, tag, message);
+                break;
+            case WARNING:
+                Log.warning(tag, tag, message);
+            case ERROR:
+                Log.error(tag, tag, message);
+                break;
+            default:
+                Log.debug(tag, tag, message);
+                break;
+        }
     }
 
     @ReactMethod
@@ -133,16 +149,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        MobileCore.dispatchEvent(event, new ExtensionErrorCallback<ExtensionError>() {
-            @Override
-            public void error(ExtensionError extensionError) {
-                if (extensionError != null) {
-                    promise.resolve(true);
-                } else {
-                    handleError(promise, extensionError);
-                }
-            }
-        });
+        MobileCore.dispatchEvent(event);
     }
 
     @ReactMethod
@@ -168,7 +175,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             }
         };
 
-        MobileCore.dispatchEventWithResponseCallback(event, eventAdobeCallback, extensionErrorExtensionErrorCallback);
+        MobileCore.dispatchEventWithResponseCallback(event,123 ,extensionErrorExtensionErrorCallback);
     }
 
     @ReactMethod
@@ -223,12 +230,12 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setAppGroup(final String appGroup) {
-        MobileCore.log(LoggingMode.DEBUG, getName(), "setAppGroup() cannot be invoked on Android");
+        Log.debug(getName(), "RCTAEPCoreModule", "setAppGroup() cannot be invoked on Android");
     }
 
     @ReactMethod
     public void downloadRules() {
-        MobileCore.log(LoggingMode.DEBUG, getName(), "downloadRules() cannot be invoked on Android");
+        Log.debug(getName(), "RCTAEPCoreModule", "downloadRules() cannot be invoked on Android");
     }
 
     @ReactMethod

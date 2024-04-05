@@ -22,6 +22,11 @@ PODS:
     - AEPCore (< 6.0.0, >= 5.0.0)
   - AEPLifecycle (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
+  - AEPMessaging (4.2.0-beta):
+    - AEPCore (>= 4.1.0)
+    - AEPEdge (>= 4.2.0)
+    - AEPEdgeIdentity (>= 4.0.0)
+    - AEPServices (>= 4.1.0)
   - AEPPlaces (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
@@ -598,6 +603,7 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
+  - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, branch `exd-cbe-beta`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -711,6 +717,9 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
+  AEPMessaging:
+    :branch: exd-cbe-beta
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -823,6 +832,11 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
+CHECKOUT OPTIONS:
+  AEPMessaging:
+    :commit: 6e1b6b4b50bd774e2cb0854061608081006adc56
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
+
 SPEC CHECKSUMS:
   AEPAssurance: 7f260ded4df38a70a06efebade8c33a3e3221984
   AEPCampaignClassic: bb177cc477846b15c38cfba77b8ec5127abf2105
@@ -833,6 +847,7 @@ SPEC CHECKSUMS:
   AEPEdgeIdentity: 3161ff33434586962946912d6b8e9e8fca1c4d23
   AEPIdentity: a65c1eba43a06f01b0dab191b27a53a81adada57
   AEPLifecycle: d4e0e1e86d6225d87203875d67f56c48f7ab7f67
+  AEPMessaging: bde135b0b372c966a9c8de671e559ce04dfe99a0
   AEPPlaces: 9eec5f88306033ce8190ec30727cbdd4008cc018
   AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
   AEPServices: e42e5118128e81c0f797fdfb1dc9c4a714d644b8
@@ -909,6 +924,6 @@ SPEC CHECKSUMS:
   Yoga: 86fed2e4d425ee4c6eab3813ba1791101ee153c6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: ee3e4d4c2d0500753aec728d45e5e6fbd9af64fd
+PODFILE CHECKSUM: fa313cb7f76d4070579129d68eb0e539176232c2
 
 COCOAPODS: 1.14.3
