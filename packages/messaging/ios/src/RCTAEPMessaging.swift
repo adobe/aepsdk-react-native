@@ -205,7 +205,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         let msg = messageCache[id]
         let eventType =
             MessagingEdgeEventType.init(rawValue: eventType)
-            ?? MessagingEdgeEventType.inappDismiss
+                ?? MessagingEdgeEventType.dismiss
         if msg != nil {
             msg!.track(interaction, withEdgeEventType: eventType)
             resolve(nil)

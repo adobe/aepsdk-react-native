@@ -22,11 +22,14 @@ PODS:
     - AEPCore (< 6.0.0, >= 5.0.0)
   - AEPLifecycle (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
-  - AEPMessaging (4.2.0-beta):
-    - AEPCore (>= 4.1.0)
-    - AEPEdge (>= 4.2.0)
-    - AEPEdgeIdentity (>= 4.0.0)
-    - AEPServices (>= 4.1.0)
+  - AEPMessaging (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPEdge (< 6.0.0, >= 5.0.0)
+    - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.0.0)
+  - AEPOptimize (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPEdge (< 6.0.0, >= 5.0.0)
   - AEPPlaces (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
@@ -154,6 +157,13 @@ PODS:
     - React
   - RCTAEPEdgeIdentity (6.0.0):
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPMessaging (6.0.0):
+    - AEPMessaging (< 6.0.0, >= 5.0.0)
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+  - RCTAEPOptimize (6.0.0):
+    - AEPOptimize (< 6.0.0, >= 5.0.0)
     - React
   - RCTAEPPlaces (6.0.0):
     - AEPPlaces (< 6.0.0, >= 5.0.0)
@@ -640,6 +650,8 @@ DEPENDENCIES:
   - "RCTAEPEdgeBridge (from `../node_modules/@adobe/react-native-aepedgebridge`)"
   - "RCTAEPEdgeConsent (from `../node_modules/@adobe/react-native-aepedgeconsent`)"
   - "RCTAEPEdgeIdentity (from `../node_modules/@adobe/react-native-aepedgeidentity`)"
+  - "RCTAEPMessaging (from `../node_modules/@adobe/react-native-aepmessaging`)"
+  - "RCTAEPOptimize (from `../node_modules/@adobe/react-native-aepoptimize`)"
   - "RCTAEPPlaces (from `../node_modules/@adobe/react-native-aepplaces`)"
   - "RCTAEPTarget (from `../node_modules/@adobe/react-native-aeptarget`)"
   - "RCTAEPUserProfile (from `../node_modules/@adobe/react-native-aepuserprofile`)"
@@ -695,6 +707,8 @@ SPEC REPOS:
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
+    - AEPMessaging
+    - AEPOptimize
     - AEPPlaces
     - AEPRulesEngine
     - AEPServices
@@ -749,6 +763,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@adobe/react-native-aepedgeconsent"
   RCTAEPEdgeIdentity:
     :path: "../node_modules/@adobe/react-native-aepedgeidentity"
+  RCTAEPMessaging:
+    :path: "../node_modules/@adobe/react-native-aepmessaging"
+  RCTAEPOptimize:
+    :path: "../node_modules/@adobe/react-native-aepoptimize"
   RCTAEPPlaces:
     :path: "../node_modules/@adobe/react-native-aepplaces"
   RCTAEPTarget:
@@ -847,7 +865,8 @@ SPEC CHECKSUMS:
   AEPEdgeIdentity: 3161ff33434586962946912d6b8e9e8fca1c4d23
   AEPIdentity: a65c1eba43a06f01b0dab191b27a53a81adada57
   AEPLifecycle: d4e0e1e86d6225d87203875d67f56c48f7ab7f67
-  AEPMessaging: bde135b0b372c966a9c8de671e559ce04dfe99a0
+  AEPMessaging: 63ea36bff1476ee61578df6f9f439df02a7283c9
+  AEPOptimize: 0bd0c157671cda3abed1c7d92ae653d2e44af07c
   AEPPlaces: 9eec5f88306033ce8190ec30727cbdd4008cc018
   AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
   AEPServices: e42e5118128e81c0f797fdfb1dc9c4a714d644b8
@@ -880,6 +899,8 @@ SPEC CHECKSUMS:
   RCTAEPEdgeBridge: 6fad185e271de8db02c60b20aefe054ae64e0c48
   RCTAEPEdgeConsent: d1d49242ed91e4c55761fc12df4c4cd533906d40
   RCTAEPEdgeIdentity: 5f90e102a329fe57a880c47eabcf67d6275d3400
+  RCTAEPMessaging: 086fe7d46e34361f8246fc9bcce689295594b5ce
+  RCTAEPOptimize: 373684945eb5db791ccdfdc275adeaae4ca6bb58
   RCTAEPPlaces: 5447379a7df2133e7c2a5c2e2ef2af031e2a23ce
   RCTAEPTarget: 88d9f77193e9061841fcd9535dd07b2486091f0d
   RCTAEPUserProfile: f8217b94279f779738342297cc6d069cff5a7128
@@ -924,6 +945,6 @@ SPEC CHECKSUMS:
   Yoga: 86fed2e4d425ee4c6eab3813ba1791101ee153c6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: fa313cb7f76d4070579129d68eb0e539176232c2
+PODFILE CHECKSUM: 2cbce5214630fb2dc5f072cd371fb67547c931e6
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.11.3
