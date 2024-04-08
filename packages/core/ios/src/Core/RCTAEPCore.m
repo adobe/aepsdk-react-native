@@ -119,15 +119,6 @@ RCT_EXPORT_METHOD(trackState: (nullable NSString*) state data: (nullable NSDicti
     [AEPMobileCore trackState:state data:data];
 }
 
-RCT_EXPORT_METHOD(dispatchEvent: (nonnull NSDictionary*) eventDict resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    AEPEvent *event = [RCTAEPCoreDataBridge eventFromDictionary:eventDict];
-    if (!event) {
-        reject(EXTENSION_NAME, FAILED_TO_CONVERT_EVENT_MESSAGE, nil);
-        return;
-    }
-    [AEPMobileCore dispatch:event];
-}
-
 RCT_EXPORT_METHOD(dispatchEventWithResponseCallback: (nonnull NSDictionary*) requestEventDict resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     AEPEvent *requestEvent = [RCTAEPCoreDataBridge eventFromDictionary:requestEventDict];
     if (!requestEvent) {

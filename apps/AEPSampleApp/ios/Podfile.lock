@@ -613,7 +613,6 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
-  - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, branch `exd-cbe-beta`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -650,8 +649,8 @@ DEPENDENCIES:
   - "RCTAEPEdgeBridge (from `../node_modules/@adobe/react-native-aepedgebridge`)"
   - "RCTAEPEdgeConsent (from `../node_modules/@adobe/react-native-aepedgeconsent`)"
   - "RCTAEPEdgeIdentity (from `../node_modules/@adobe/react-native-aepedgeidentity`)"
-  - "RCTAEPMessaging (from `../node_modules/@adobe/react-native-aepmessaging`)"
-  - "RCTAEPOptimize (from `../node_modules/@adobe/react-native-aepoptimize`)"
+  - "RCTAEPMessaging (from `../../../node_modules/@adobe/react-native-aepmessaging`)"
+  - "RCTAEPOptimize (from `../../../node_modules/@adobe/react-native-aepoptimize`)"
   - "RCTAEPPlaces (from `../node_modules/@adobe/react-native-aepplaces`)"
   - "RCTAEPTarget (from `../node_modules/@adobe/react-native-aeptarget`)"
   - "RCTAEPUserProfile (from `../node_modules/@adobe/react-native-aepuserprofile`)"
@@ -731,9 +730,6 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
-  AEPMessaging:
-    :branch: exd-cbe-beta
-    :git: https://github.com/adobe/aepsdk-messaging-ios.git
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -764,9 +760,9 @@ EXTERNAL SOURCES:
   RCTAEPEdgeIdentity:
     :path: "../node_modules/@adobe/react-native-aepedgeidentity"
   RCTAEPMessaging:
-    :path: "../node_modules/@adobe/react-native-aepmessaging"
+    :path: "../../../node_modules/@adobe/react-native-aepmessaging"
   RCTAEPOptimize:
-    :path: "../node_modules/@adobe/react-native-aepoptimize"
+    :path: "../../../node_modules/@adobe/react-native-aepoptimize"
   RCTAEPPlaces:
     :path: "../node_modules/@adobe/react-native-aepplaces"
   RCTAEPTarget:
@@ -849,11 +845,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
-
-CHECKOUT OPTIONS:
-  AEPMessaging:
-    :commit: 6e1b6b4b50bd774e2cb0854061608081006adc56
-    :git: https://github.com/adobe/aepsdk-messaging-ios.git
 
 SPEC CHECKSUMS:
   AEPAssurance: 7f260ded4df38a70a06efebade8c33a3e3221984
@@ -945,6 +936,6 @@ SPEC CHECKSUMS:
   Yoga: 86fed2e4d425ee4c6eab3813ba1791101ee153c6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 2cbce5214630fb2dc5f072cd371fb67547c931e6
+PODFILE CHECKSUM: 8043c8932eda3e438f877eb83be2856ca3d21ac4
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.14.3

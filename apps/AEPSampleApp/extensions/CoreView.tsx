@@ -40,13 +40,6 @@ function collectPii() {
   MobileCore.collectPii({myPii: 'data'});
 }
 
-function dispatchEvent() {
-  var event = new Event('eventName', 'eventType', 'eventSource', {
-    testDataKey: 'testDataValue',
-  });
-  MobileCore.dispatchEvent(event);
-}
-
 function dispatchEventWithResponseCallback() {
   var event = new Event('eventName', 'eventType', 'eventSource', {
     testDataKey: 'testDataValue',
@@ -117,10 +110,6 @@ function getPrivacyStatus() {
   );
 }
 
-function log() {
-  MobileCore.log(LogLevel.ERROR, 'React Native Tag', 'React Native Message');
-}
-
 function resetIdentities() {
   MobileCore.resetIdentities();
 }
@@ -136,7 +125,6 @@ const CoreView = ({navigation}: NavigationProps) => {
         <Button title="clearUpdatedConfiguration" onPress={clearUpdatedConfiguration} />
         <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn} />
         <Button title="getPrivacyStatus()" onPress={getPrivacyStatus} />
-        <Button title="log(...)" onPress={log} />
         <Button title="setLogLevel(LogLevel.VERBOSE)" onPress={setLogLevel} />
         <Button title="getLogLevel()" onPress={getLogLevel} />
         <Button title="setPushIdentifier()" onPress={setPushIdentifier} />
@@ -148,7 +136,6 @@ const CoreView = ({navigation}: NavigationProps) => {
         <Button title="collectPii()" onPress={collectPii} />
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackState()" onPress={trackState} />
-        <Button title="dispatchEvent()" onPress={dispatchEvent} />
         <Button
           title="dispatchEventWithResponseCallback()"
           onPress={dispatchEventWithResponseCallback}

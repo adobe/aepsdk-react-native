@@ -16,8 +16,6 @@ import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.Event;
 import com.adobe.marketing.mobile.services.Log;
-//import com.adobe.marketing.mobile.ExtensionError;
-//import com.adobe.marketing.mobile.ExtensionErrorCallback;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.MobilePrivacyStatus;
@@ -119,18 +117,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             }
         });
     }
-
-    @ReactMethod
-    public void dispatchEvent(final ReadableMap eventMap, final Promise promise) {
-        Event event = RCTAEPCoreDataBridge.eventFromReadableMap(eventMap);
-        if (event == null) {
-            promise.reject(getName(), FAILED_TO_CONVERT_EVENT_MESSAGE, new Error(FAILED_TO_CONVERT_EVENT_MESSAGE));
-            return;
-        }
-
-        MobileCore.dispatchEvent(event);
-    }
-
 
     @ReactMethod
 
