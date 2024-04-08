@@ -21,11 +21,9 @@ interface IMobileCore {
   updateConfiguration: (configMap?: Record<string, any>) => void;
   setLogLevel: (mode: LogLevel) => void;
   getLogLevel: () => Promise<LogLevel>;
-  log: (logLevel: LogLevel, tag: string, message: string) => void;
   setPrivacyStatus: (privacyStatus: PrivacyStatus) => void;
   getPrivacyStatus: () => Promise<PrivacyStatus>;
   getSdkIdentities: () => Promise<string>;
-  dispatchEvent: (event: Event) => Promise<boolean>;
   dispatchEventWithResponseCallback: (event: Event) => Promise<Event>;
   trackAction: (action?: string, contextData?: Record<string, any>) => void;
   trackState: (state?: string, contextData?: Record<string, string>) => void;
@@ -121,19 +119,6 @@ const MobileCore: IMobileCore = {
   },
 
   /**
-   * Sends a log message of the given {@code LogLevel}. If the specified {@code mode} is
-   * more verbose than the current {@link LogLevel} set from {@link #setLogLevel(LogLevel)}
-   * then the message is not printed.
-   *
-   * @param logLevel the {@link LogLevel} used to print the message
-   * @param tag used to identify the source of the log message
-   * @param message the message to log
-   */
-  log(logLevel: LogLevel, tag: string, message: string) {
-    RCTAEPCore.log(logLevel, tag, message);
-  },
-
-  /**
    * Set the Adobe Mobile Privacy status
    *
    * @param privacyStatus {@linkPrivacyStatus} to be set to the SDK
@@ -158,17 +143,6 @@ const MobileCore: IMobileCore = {
    */
   getSdkIdentities(): Promise<string> {
     return RCTAEPCore.getSdkIdentities();
-  },
-
-  /**
-   * Called by the extension public API to dispatch an event for other extensions or the internal SDK to consume.
-   * Any events dispatched by this call will not be processed until after `start` has been called.
-   *
-   * @param event Required parameter with {@link Event} instance to be dispatched. Should not be nil
-   * @return true if the the event dispatching operation succeeded, otherwise the promise will return an error
-   */
-  dispatchEvent(event: Event): Promise<boolean> {
-    return RCTAEPCore.dispatchEvent(event);
   },
 
   /**

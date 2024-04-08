@@ -73,26 +73,6 @@ RCT_EXPORT_METHOD(getLogLevel: (RCTPromiseResolveBlock) resolve rejecter:(RCTPro
     resolve(logLevelString);
 }
 
-RCT_EXPORT_METHOD(log: (NSString *) logLevel tag: (nonnull NSString*) tag message: (nonnull NSString*) message) {
-    AEPLogLevel logLevelType = [RCTAEPCoreDataBridge logLevelFromString:logLevel];
-    switch (logLevelType) {
-        case AEPLogLevelTrace:
-            [AEPLog traceWithLabel:tag message:message];
-            break;
-        case AEPLogLevelDebug:
-            [AEPLog debugWithLabel:tag message:message];
-            break;
-        case AEPLogLevelWarning:
-            [AEPLog warningWithLabel:tag message:message];
-            break;
-        case AEPLogLevelError:
-            [AEPLog errorWithLabel:tag message:message];
-            break;
-        default:
-            break;
-    }
-}
-
 RCT_EXPORT_METHOD(getPrivacyStatus: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileCore getPrivacyStatus:^(enum AEPPrivacyStatus status) {
         resolve([RCTAEPCoreDataBridge stringFromPrivacyStatus:status]);
@@ -137,15 +117,6 @@ RCT_EXPORT_METHOD(trackAction: (nullable NSString*) action data: (nullable NSDic
 
 RCT_EXPORT_METHOD(trackState: (nullable NSString*) state data: (nullable NSDictionary*) data) {
     [AEPMobileCore trackState:state data:data];
-}
-
-RCT_EXPORT_METHOD(dispatchEvent: (nonnull NSDictionary*) eventDict resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    AEPEvent *event = [RCTAEPCoreDataBridge eventFromDictionary:eventDict];
-    if (!event) {
-        reject(EXTENSION_NAME, FAILED_TO_CONVERT_EVENT_MESSAGE, nil);
-        return;
-    }
-    [AEPMobileCore dispatch:event];
 }
 
 RCT_EXPORT_METHOD(dispatchEventWithResponseCallback: (nonnull NSDictionary*) requestEventDict resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {

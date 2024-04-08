@@ -16,10 +16,10 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-    compileSdkVersion safeExtGet('compileSdkVersion', 33)
+    compileSdk safeExtGet('compileSdkVersion', 33)
 
     defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', 19)
+        minSdkVersion safeExtGet('minSdkVersion', 21)
         targetSdkVersion safeExtGet('targetSdkVersion', 33)
         versionCode 1
         versionName "1.0"
@@ -36,8 +36,8 @@ repositories {
 
 dependencies {
     implementation "com.facebook.react:react-native:+"
-    api "com.adobe.marketing.mobile:core:2.+"
-    api "com.adobe.marketing.mobile:signal:2.+"
-    api "com.adobe.marketing.mobile:identity:2.+"
-    api "com.adobe.marketing.mobile:lifecycle:2.+"
+    api "com.adobe.marketing.mobile:core:3.+"
+    api "com.adobe.marketing.mobile:signal:3.+"
+    api "com.adobe.marketing.mobile:identity:3.+"
+    api "com.adobe.marketing.mobile:lifecycle:3.+"
 }
