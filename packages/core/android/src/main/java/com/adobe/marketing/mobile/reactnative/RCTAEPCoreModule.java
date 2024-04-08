@@ -149,7 +149,9 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         MobileCore.dispatchEvent(event);
     }
 
+
     @ReactMethod
+
     public void dispatchEventWithResponseCallback(final ReadableMap eventMap,
                                                   final Promise promise) {
         Event event = RCTAEPCoreDataBridge.eventFromReadableMap(eventMap);
@@ -158,14 +160,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        AdobeCallback<Event> eventAdobeCallback = new AdobeCallback<Event>() {
-            @Override
-            public void call(Event event) {
-                promise.resolve(RCTAEPCoreDataBridge.readableMapFromEvent(event));
-            }
-        };
-
-        AdobeCallbackWithError<Event> adobeErrorCallback = new AdobeCallbackWithError<Event>() {
+        MobileCore.dispatchEventWithResponseCallback(event, 5000, new AdobeCallbackWithError<Event>(){
             @Override
             public void fail(AdobeError adobeError) {
                 handleError(promise, adobeError, "dispatchEventWithResponseCallback");
@@ -173,11 +168,9 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(Event event) {
-                eventAdobeCallback.call(event);
+                promise.resolve(RCTAEPCoreDataBridge.readableMapFromEvent(event));
             }
-        };
-
-        MobileCore.dispatchEventWithResponseCallback(event,5000L , adobeErrorCallback);
+        });
     }
 
     @ReactMethod
