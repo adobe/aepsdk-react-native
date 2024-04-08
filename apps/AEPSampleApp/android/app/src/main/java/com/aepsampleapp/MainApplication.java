@@ -18,7 +18,7 @@ import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.Extension;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
-//import com.adobe.marketing.mobile.Messaging;
+import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Places;
 import com.adobe.marketing.mobile.Signal;
@@ -26,7 +26,7 @@ import com.adobe.marketing.mobile.Target;
 import com.adobe.marketing.mobile.UserProfile;
 import com.adobe.marketing.mobile.edge.bridge.EdgeBridge;
 import com.adobe.marketing.mobile.edge.consent.Consent;
-//import com.adobe.marketing.mobile.optimize.Optimize;
+import com.adobe.marketing.mobile.optimize.Optimize;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -97,12 +97,12 @@ public class MainApplication extends Application implements ReactApplication {
             com.adobe.marketing.mobile.edge.identity.Identity.EXTENSION,
             Consent.EXTENSION,
             EdgeBridge.EXTENSION,
-            //Messaging.EXTENSION,
+            Messaging.EXTENSION,
             UserProfile.EXTENSION,
             Assurance.EXTENSION,
             Places.EXTENSION,
             Target.EXTENSION,
-            //Optimize.EXTENSION,
+            Optimize.EXTENSION,
             com.adobe.marketing.mobile.Identity.EXTENSION);
     MobileCore.registerExtensions(extensions,
                                   o -> { MobileCore.lifecycleStart(null); });
