@@ -73,26 +73,6 @@ RCT_EXPORT_METHOD(getLogLevel: (RCTPromiseResolveBlock) resolve rejecter:(RCTPro
     resolve(logLevelString);
 }
 
-RCT_EXPORT_METHOD(log: (NSString *) logLevel tag: (nonnull NSString*) tag message: (nonnull NSString*) message) {
-    AEPLogLevel logLevelType = [RCTAEPCoreDataBridge logLevelFromString:logLevel];
-    switch (logLevelType) {
-        case AEPLogLevelTrace:
-            [AEPLog traceWithLabel:tag message:message];
-            break;
-        case AEPLogLevelDebug:
-            [AEPLog debugWithLabel:tag message:message];
-            break;
-        case AEPLogLevelWarning:
-            [AEPLog warningWithLabel:tag message:message];
-            break;
-        case AEPLogLevelError:
-            [AEPLog errorWithLabel:tag message:message];
-            break;
-        default:
-            break;
-    }
-}
-
 RCT_EXPORT_METHOD(getPrivacyStatus: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileCore getPrivacyStatus:^(enum AEPPrivacyStatus status) {
         resolve([RCTAEPCoreDataBridge stringFromPrivacyStatus:status]);

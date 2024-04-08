@@ -21,7 +21,6 @@ interface IMobileCore {
   updateConfiguration: (configMap?: Record<string, any>) => void;
   setLogLevel: (mode: LogLevel) => void;
   getLogLevel: () => Promise<LogLevel>;
-  log: (logLevel: LogLevel, tag: string, message: string) => void;
   setPrivacyStatus: (privacyStatus: PrivacyStatus) => void;
   getPrivacyStatus: () => Promise<PrivacyStatus>;
   getSdkIdentities: () => Promise<string>;

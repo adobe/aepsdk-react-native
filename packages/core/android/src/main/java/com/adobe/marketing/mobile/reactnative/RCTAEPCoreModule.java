@@ -86,24 +86,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void log(final String mode, final String tag, final String message) {
-        LoggingMode logMode = RCTAEPCoreDataBridge.loggingModeFromString(mode);
-        switch (logMode) {
-            case VERBOSE:
-                Log.trace(tag, tag, message);
-                break;
-            case WARNING:
-                Log.warning(tag, tag, message);
-            case ERROR:
-                Log.error(tag, tag, message);
-                break;
-            default:
-                Log.debug(tag, tag, message);
-                break;
-        }
-    }
-
-    @ReactMethod
     public void setPrivacyStatus(final String privacyStatus) {
         MobileCore.setPrivacyStatus(RCTAEPCoreDataBridge.privacyStatusFromString(privacyStatus));
     }
