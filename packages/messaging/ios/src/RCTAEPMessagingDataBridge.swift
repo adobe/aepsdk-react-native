@@ -19,7 +19,7 @@ public class RCTAEPMessagingDataBridge: NSObject {
         ]
     }
 
-    static func transformPropositionDict(dict: [Surface: [MessagingProposition]]) -> [String: [Any]]
+    static func transformPropositionDict(dict: [Surface: [Proposition]]) -> [String: [Any]]
     {
         let bundleID = "mobileapp://" + Bundle.main.bundleIdentifier! + "/"
         return dict.reduce(into: [:]) { result, element in
@@ -28,7 +28,7 @@ public class RCTAEPMessagingDataBridge: NSObject {
         }
     }
 
-    static func transformToProposition(proposition: MessagingProposition) -> [String: Any?] {
+    static func transformToProposition(proposition: Proposition) -> [String: Any?] {
         return [
             "scope": proposition.scope,
             "uniqueId": proposition.uniqueId,
