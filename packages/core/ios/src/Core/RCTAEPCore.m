@@ -128,15 +128,28 @@ RCT_EXPORT_METHOD(dispatchEvent: (nonnull NSDictionary*) eventDict resolver:(RCT
      [AEPMobileCore dispatch:event];
  }
 
-RCT_EXPORT_METHOD(dispatchEventWithResponseCallback: (nonnull NSDictionary*) requestEventDict withTimeout:(nonnull NSNumber*) timeout resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(dispatchEventWithResponseCallback: (nonnull NSDictionary*) requestEventDict timeoutDuration:(nonnull NSNumber*) timeoutNumber resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    
     AEPEvent *requestEvent = [RCTAEPCoreDataBridge eventFromDictionary:requestEventDict];
     if (!requestEvent) {
         reject(EXTENSION_NAME, FAILED_TO_CONVERT_EVENT_MESSAGE, nil);
         return;
     }
+    
+    if (![timeoutNumber respondsToSelector:@selector(intValue)]) {
+            reject(EXTENSION_NAME, @"Invalid timeout value", nil);
+           return;
+    }
+    
+    double timeout = [timeoutNumber intValue] / 1000.0;
 
-    [AEPMobileCore dispatch:requestEvent timeout:[timeout doubleValue] responseCallback:^(AEPEvent * _Nullable responseEvent) {
-        resolve([RCTAEPCoreDataBridge dictionaryFromEvent:responseEvent]);
+    [AEPMobileCore dispatch:requestEvent timeout:timeout responseCallback:^(AEPEvent * _Nullable responseEvent) {
+         if (responseEvent == nil) {
+             reject(EXTENSION_NAME, @"general.callback.timeout", nil);
+         } else {
+             resolve([RCTAEPCoreDataBridge dictionaryFromEvent:responseEvent]);
+         }
+        
     }];
 }
 

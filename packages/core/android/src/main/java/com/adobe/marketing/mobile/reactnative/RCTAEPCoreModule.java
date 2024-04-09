@@ -34,6 +34,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
     private static String FAILED_TO_CONVERT_EVENT_MESSAGE = "Failed to convert map to Event";
+    private static String INVALID_TIMEOUT_VALUE_MESSAGE = "Invalid timeout value. Timeout must be a positive integer.";
     private static AtomicBoolean hasStarted = new AtomicBoolean(false);
 
     public RCTAEPCoreModule(ReactApplicationContext reactContext) {
@@ -138,6 +139,11 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             return;
         }
 
+        if (timeout <= 0) {
+            promise.reject(getName(), INVALID_TIMEOUT_VALUE_MESSAGE, new Error(INVALID_TIMEOUT_VALUE_MESSAGE));
+            return;
+        }
+ 
         MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>(){
             @Override
             public void fail(AdobeError adobeError) {

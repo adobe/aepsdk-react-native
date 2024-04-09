@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.author       = "Adobe Experience Platform SDK Team"
   s.homepage     = "https://github.com/adobe/aepsdk-react-native"
   s.license      = "Apache 2.0 License"
-  s.platform     = :ios, '11.0'
+  s.platform     = :ios, '12.0'
   s.source       = { :git => "https://github.com/adobe/aepsdk-react-native.git", :tag => "#{s.version}" }
   s.source_files = "ios/**/*.{h,m,mm,swift}"
   s.swift_version = '5.0'

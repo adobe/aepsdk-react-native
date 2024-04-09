@@ -101,7 +101,7 @@ const EdgeView = ({navigation}: NavigationProps) => {
       if (hint == null) {
        locationStr = "null";
       }
-      getlocationHintText(locationStr);
+      getlocationHintText(locationStr || '');
     });
   }
 

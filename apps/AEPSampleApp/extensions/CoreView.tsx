@@ -51,7 +51,7 @@ function dispatchEventWithResponseCallback() {
   var event = new Event('eventName', 'eventType', 'eventSource', {
     testDataKey: 'testDataValue',
   });
-  MobileCore.dispatchEventWithResponseCallback(event, 1000).then(responseEvent =>
+  MobileCore.dispatchEventWithResponseCallback(event, 1500).then(responseEvent =>
     console.log('AdobeExperienceSDK: responseEvent = ' + responseEvent),
   );
 }

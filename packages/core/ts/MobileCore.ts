@@ -166,8 +166,8 @@ const MobileCore: IMobileCore = {
    * @return Promise a promise that resolves with {@link Event}
    *
    */
-  dispatchEventWithResponseCallback(event: Event, timeout: Number): Promise<Event> {
-    return RCTAEPCore.dispatchEventWithResponseCallback(event, timeout);
+  dispatchEventWithResponseCallback(event: Event, timeoutMS: Number): Promise<Event> {
+    return RCTAEPCore.dispatchEventWithResponseCallback(event, timeoutMS);
   },
 
   /**
