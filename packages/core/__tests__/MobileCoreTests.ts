@@ -68,6 +68,15 @@ describe('MobileCore', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('dispatchEvent is called with correct parameters', async () => {
+    const spy = jest.spyOn(NativeModules.AEPCore, 'dispatchEvent');
+    let testEvent = new Event('eventName', 'eventType', 'eventSource', {
+      testDataKey: 'testDataValue'
+    });
+    await MobileCore.dispatchEvent(testEvent);
+    expect(spy).toHaveBeenCalledWith(testEvent);
+  });
+
   it('dispatchEventWithResponseCallback is called with correct parameters', async () => {
     const spy = jest.spyOn(
       NativeModules.AEPCore,
@@ -76,7 +85,7 @@ describe('MobileCore', () => {
     let testEvent = new Event('eventName', 'eventType', 'eventSource', {
       testDataKey: 'testDataValue'
     });
-    await MobileCore.dispatchEventWithResponseCallback(testEvent);
+    await MobileCore.dispatchEventWithResponseCallback(testEvent, 5000);
     expect(spy).toHaveBeenCalledWith(testEvent);
   });
 
