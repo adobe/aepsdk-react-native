@@ -163,6 +163,7 @@ const MobileCore: IMobileCore = {
    * <p>
    *
    * @param event required parameter, {@link Event} instance to be dispatched, used as a trigger
+   * @param timeoutMS the timeout specified in milliseconds
    * @return Promise a promise that resolves with {@link Event}
    *
    */
