@@ -144,23 +144,6 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     }
 
     @objc
-    func handleJavascriptMessage(
-        _ id: String,
-        withName name: String,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
-    ) {
-        let msg = messageCache[id]
-        if msg != nil {
-            msg!.handleJavascriptMessage(name) { content in
-                resolve(content)
-                return
-            }
-        }
-        reject(Constants.CACHE_MISS, nil, nil)
-    }
-
-    @objc
     func setAutoTrack(
         _ id: String,
         withSuppressAutoTrack suppressAutoTrack: Bool,

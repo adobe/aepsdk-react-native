@@ -35,6 +35,6 @@ repositories {
 }
 
 dependencies {
-    api "com.adobe.marketing.mobile:optimize:2.+"
+    api "com.adobe.marketing.mobile:optimize:3.+"
     implementation "com.facebook.react:react-native:+"
 }

@@ -60,18 +60,6 @@ class Message {
   }
 
   /**
-   * Adds a handler for Javascript messages sent from the message's webview.
-   * The parameter passed to `handler` will contain the body of the message passed from the webview's Javascript.
-   * @param {string} name: the name of the message that should be handled by `handler`
-   * @return {Promise<any?>}: the Promise to be resolved with the body of the message passed by the Javascript message in the WebView
-   */
-  handleJavascriptMessage(name: string): Promise<any> {
-    return Promise.resolve(
-      RCTAEPMessaging.handleJavascriptMessage(this.id, name)
-    );
-  }
-
-  /**
    * Clears the cached reference to the Message object.
    * This function must be called if Message was saved by calling "MessagingDelegate.shouldSaveMessage" but no longer needed.
    * Failure to call this function leads to memory leaks.
