@@ -10,7 +10,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules, NativeEventEmitter, NativeModule } from 'react-native';
+import {
+  NativeModules,
+  NativeEventEmitter,
+  NativeModule,
+  Platform
+} from 'react-native';
 import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
 import { MessagingProposition } from './models/MessagingProposition';
@@ -61,7 +66,7 @@ class Messaging {
    */
   static async getCachedMessages(): Promise<Message[]> {
     const messages = await RCTAEPMessaging.getCachedMessages();
-    return messages.map(msg => new Message(msg));
+    return messages.map((msg) => new Message(msg));
   }
 
   /**
@@ -110,9 +115,17 @@ class Messaging {
       RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
     });
 
-    eventEmitter.addListener('urlLoaded', (event) =>
-      messagingDelegate?.urlLoaded?.(event.url, event.message)
-    );
+    if (Platform.OS === 'ios') {
+      eventEmitter.addListener('urlLoaded', (event) =>
+        messagingDelegate?.urlLoaded?.(event.url, event.message)
+      );
+    }
+
+    if (Platform.OS === 'android') {
+      eventEmitter.addListener('onContentLoaded', (event) =>
+        messagingDelegate?.onContentLoaded?.(event.message)
+      );
+    }
 
     RCTAEPMessaging.setMessagingDelegate();
 
@@ -121,6 +134,7 @@ class Messaging {
       eventEmitter.removeAllListeners('onShow');
       eventEmitter.removeAllListeners('shouldShowMessage');
       eventEmitter.removeAllListeners('urlLoaded');
+      eventEmitter.removeAllListeners('onContentLoaded');
     };
   }
 
@@ -131,7 +145,10 @@ class Messaging {
    * @param shouldShowMessage Whether or not a message should be displayed
    * @param shouldSaveMessage Whether or not a message should be cached
    */
-  static setMessageSettings(shouldShowMessage: boolean, shouldSaveMessage: boolean) {
+  static setMessageSettings(
+    shouldShowMessage: boolean,
+    shouldSaveMessage: boolean
+  ) {
     RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
   }
 

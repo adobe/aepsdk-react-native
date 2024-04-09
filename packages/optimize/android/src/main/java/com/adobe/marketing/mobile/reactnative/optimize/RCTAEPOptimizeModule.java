@@ -19,7 +19,7 @@ import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OfferType;
 import com.adobe.marketing.mobile.optimize.Optimize;
-import com.adobe.marketing.mobile.optimize.Proposition;
+import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -52,8 +52,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void offerDisplayed(final String offerId, final ReadableMap propositionMap) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final Proposition proposition = Proposition.fromEventData(eventData);
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "OFFER Displayed");
+        final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
         for (Offer offer : proposition.getOffers()) {
             if (offer.getId().equalsIgnoreCase(offerId)) {
                 offer.displayed();
@@ -85,16 +84,16 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     public void getPropositions(final ReadableArray decisionScopesArray, final Promise promise) {
         final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
-        Optimize.getPropositions(decisionScopeList, new AdobeCallbackWithError<Map<DecisionScope, Proposition>>() {
+        Optimize.getPropositions(decisionScopeList, new AdobeCallbackWithError<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void fail(final AdobeError adobeError) {
                 promise.reject(String.valueOf(adobeError.getErrorCode()), adobeError.getErrorName());
             }
 
             @Override
-            public void call(final Map<DecisionScope, Proposition> decisionScopePropositionMap) {
+            public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
                 final WritableMap writableMap = new WritableNativeMap();
-                for (final Map.Entry<DecisionScope, Proposition> entry : decisionScopePropositionMap.entrySet()) {
+                for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
                     writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
                 }
                 promise.resolve(writableMap);
@@ -104,9 +103,9 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void onPropositionsUpdate() {
-        Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, Proposition>>() {
+        Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
-            public void call(final Map<DecisionScope, Proposition> decisionScopePropositionMap) {
+            public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
                 sendUpdatedPropositionsEvent(decisionScopePropositionMap);
             }
         });
@@ -115,8 +114,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void offerTapped(final String offerId, final ReadableMap propositionMap) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final Proposition proposition = Proposition.fromEventData(eventData);
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "OFFER TAPPED");
+        final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
         for (Offer offer : proposition.getOffers()) {
             if (offer.getId().equalsIgnoreCase(offerId)) {
                 offer.tapped();
@@ -128,8 +126,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void generateDisplayInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final Proposition proposition = Proposition.fromEventData(eventData);
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "generateDisplayInteractionXdm");
+        final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
         Offer offerDisplayed = null;
         for (Offer offer : proposition.getOffers()) {
             if (offer.getId().equalsIgnoreCase(offerId)) {
@@ -150,8 +147,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void generateTapInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final Proposition proposition = Proposition.fromEventData(eventData);
-        MobileCore.log(LoggingMode.VERBOSE, TAG, "generateTapInteractionXdm");
+        final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
         Offer offerTapped = null;
         for (Offer offer : proposition.getOffers()) {
             if (offer.getId().equalsIgnoreCase(offerId)) {
@@ -172,7 +168,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void generateReferenceXdm(final ReadableMap propositionMap, final Promise promise) {
         final Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final Proposition proposition = Proposition.fromEventData(propositionEventData);
+        final OptimizeProposition proposition = OptimizeProposition.fromEventData(propositionEventData);
         if (proposition != null) {
             Map<String, Object> referenceXdm = proposition.generateReferenceXdm();
             final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(referenceXdm);
@@ -203,9 +199,9 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         return offer;
     }
 
-    private void sendUpdatedPropositionsEvent(final Map<DecisionScope, Proposition> decisionScopePropositionMap) {
+    private void sendUpdatedPropositionsEvent(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
         final WritableMap writableMap = new WritableNativeMap();
-        for (final Map.Entry<DecisionScope, Proposition> entry : decisionScopePropositionMap.entrySet()) {
+        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
             writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
         }
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("onPropositionsUpdate", writableMap);

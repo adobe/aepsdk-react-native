@@ -12,6 +12,9 @@
 package com.adobe.marketing.mobile.reactnative.messaging;
 
 import android.app.Activity;
+
+import androidx.annotation.NonNull;
+
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
@@ -20,10 +23,13 @@ import com.adobe.marketing.mobile.Message;
 import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MessagingEdgeEventType;
 import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.messaging.MessagingProposition;
+import com.adobe.marketing.mobile.messaging.MessagingUtils;
+import com.adobe.marketing.mobile.messaging.Proposition;
 import com.adobe.marketing.mobile.messaging.Surface;
-import com.adobe.marketing.mobile.services.MessagingDelegate;
-import com.adobe.marketing.mobile.services.ui.FullscreenMessage;
+import com.adobe.marketing.mobile.services.ServiceProvider;
+import com.adobe.marketing.mobile.services.ui.InAppMessage;
+import com.adobe.marketing.mobile.services.ui.Presentable;
+import com.adobe.marketing.mobile.services.ui.PresentationDelegate;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -38,7 +44,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public final class RCTAEPMessagingModule
-    extends ReactContextBaseJavaModule implements MessagingDelegate {
+    extends ReactContextBaseJavaModule implements PresentationDelegate {
 
   private static final String TAG = "RCTAEPMessagingModule";
   private final Map<String, Message> messageCache = new HashMap<>();
@@ -67,7 +73,6 @@ public final class RCTAEPMessagingModule
 
   @ReactMethod
   public void extensionVersion(final Promise promise) {
-    MobileCore.log(LoggingMode.VERBOSE, TAG, "extensionVersion is called");
     promise.resolve(Messaging.extensionVersion());
   }
 
@@ -88,7 +93,7 @@ public final class RCTAEPMessagingModule
     String bundleId = this.reactContext.getPackageName();
     Messaging.getPropositionsForSurfaces(
         RCTAEPMessagingUtil.convertSurfaces(surfaces),
-        new AdobeCallbackWithError<Map<Surface, List<MessagingProposition>>>() {
+        new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
           @Override
           public void fail(final AdobeError adobeError) {
             promise.reject(adobeError.getErrorName(),
@@ -97,7 +102,7 @@ public final class RCTAEPMessagingModule
 
           @Override
           public void call(
-              Map<Surface, List<MessagingProposition>> propositionsMap) {
+              Map<Surface, List<Proposition>> propositionsMap) {
             promise.resolve(RCTAEPMessagingUtil.convertSurfacePropositions(
                 propositionsMap, bundleId));
           }
@@ -106,14 +111,12 @@ public final class RCTAEPMessagingModule
 
   @ReactMethod
   public void refreshInAppMessages() {
-    MobileCore.log(LoggingMode.VERBOSE, TAG, "refreshInAppMessages is called");
     Messaging.refreshInAppMessages();
   }
 
   @ReactMethod
   public void setMessagingDelegate() {
-    MobileCore.log(LoggingMode.VERBOSE, TAG, "setMessagingDelegate is called");
-    MobileCore.setMessagingDelegate(this);
+    ServiceProvider.getInstance().getUIService().setPresentationDelegate(this);
   }
 
   @ReactMethod
@@ -127,58 +130,20 @@ public final class RCTAEPMessagingModule
   @ReactMethod
   public void clear(final String messageId) {
     if (messageId != null) {
-      MobileCore.log(
-          LoggingMode.VERBOSE, TAG,
-          String.format("clear is called with message id: %s", messageId));
       messageCache.remove(messageId);
     }
   }
 
   @ReactMethod
-  public void dismiss(final String messageId, final boolean suppressAutoTrack) {
+  public void dismiss(final String messageId) {
     if (messageId != null && messageCache.get(messageId) != null) {
-      MobileCore.log(
-          LoggingMode.VERBOSE, TAG,
-          String.format(
-              "dismiss is called with message id: %s and suppressAutoTrack: %b",
-              messageId, suppressAutoTrack));
-      messageCache.get(messageId).dismiss(suppressAutoTrack);
-    }
-  }
-
-  @ReactMethod
-  public void handleJavascriptMessage(final String messageId,
-                                      final String messageName,
-                                      final Promise promise) {
-    if (messageId != null && messageCache.get(messageId) != null) {
-      MobileCore.log(
-          LoggingMode.VERBOSE, TAG,
-          String.format(
-              "handleJavascriptMessage is called with message id: %s and messageName: %s",
-              messageId, messageName));
-      messageCache.get(messageId).handleJavascriptMessage(
-          messageName, new AdobeCallback<String>() {
-            @Override
-            public void call(final String s) {
-              if (s != null) {
-                promise.resolve(s);
-              } else {
-                promise.reject("error", "error in handling javascriptMessage " +
-                                            messageName);
-              }
-            }
-          });
+      messageCache.get(messageId).dismiss();
     }
   }
 
   @ReactMethod
   public void setAutoTrack(final String messageId, final boolean autoTrack) {
     if (messageId != null && messageCache.get(messageId) != null) {
-      MobileCore.log(
-          LoggingMode.VERBOSE, TAG,
-          String.format(
-              "setAutoTrack is called with message id: %s and autoTrack: %b",
-              messageId, autoTrack));
       messageCache.get(messageId).setAutoTrack(autoTrack);
     }
   }
@@ -186,9 +151,6 @@ public final class RCTAEPMessagingModule
   @ReactMethod
   public void show(final String messageId) {
     if (messageId != null && messageCache.get(messageId) != null) {
-      MobileCore.log(
-          LoggingMode.VERBOSE, TAG,
-          String.format("show is called with message id: %s", messageId));
       messageCache.get(messageId).show();
     }
   }
@@ -197,30 +159,19 @@ public final class RCTAEPMessagingModule
   public void track(final String messageId, final String interaction,
                     final int eventType) {
     if (messageId != null && messageCache.get(messageId) != null) {
-      MobileCore.log(
-          LoggingMode.VERBOSE, TAG,
-          String.format(
-              "track is called with message id: %s, interaction: %s and eventType: %d",
-              messageId, interaction, eventType));
       MessagingEdgeEventType edgeEventType =
           RCTAEPMessagingUtil.getEventType(eventType);
       if (edgeEventType != null) {
         messageCache.get(messageId).track(interaction, edgeEventType);
-      } else {
-        MobileCore.log(
-            LoggingMode.DEBUG, TAG,
-            String.format(
-                "Unable to track interaction (%s) because edgeEventType (%d) is invalid ",
-                interaction, eventType));
       }
     }
   }
 
   // Messaging Delegate functions
   @Override
-  public void onShow(final FullscreenMessage fullscreenMessage) {
-    MobileCore.log(LoggingMode.VERBOSE, TAG, "onShow is called");
-    final Message message = (Message)fullscreenMessage.getParent();
+  public void onShow(final Presentable<?> presentable) {
+    if (!(presentable.getPresentation() instanceof InAppMessage)) return;
+    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
           RCTAEPMessagingUtil.convertMessageToMap(message);
@@ -229,9 +180,9 @@ public final class RCTAEPMessagingModule
   }
 
   @Override
-  public void onDismiss(final FullscreenMessage fullscreenMessage) {
-    MobileCore.log(LoggingMode.VERBOSE, TAG, "onDismiss is called");
-    final Message message = (Message)fullscreenMessage.getParent();
+  public void onDismiss(final Presentable<?> presentable) {
+    if (!(presentable.getPresentation() instanceof InAppMessage)) return;
+    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
           RCTAEPMessagingUtil.convertMessageToMap(message);
@@ -240,9 +191,20 @@ public final class RCTAEPMessagingModule
   }
 
   @Override
-  public boolean shouldShowMessage(final FullscreenMessage fullscreenMessage) {
-    MobileCore.log(LoggingMode.VERBOSE, TAG, "shouldShowMessage is called");
-    final Message message = (Message)fullscreenMessage.getParent();
+  public void onHide(final Presentable<?> presentable) {
+    if (!(presentable.getPresentation() instanceof InAppMessage)) return;
+    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
+    if (message != null) {
+      Map<String, String> data =
+              RCTAEPMessagingUtil.convertMessageToMap(message);
+      emitEvent("onHide", data);
+    }
+  }
+
+  @Override
+  public boolean canShow(final Presentable<?> presentable) {
+    if (!(presentable.getPresentation() instanceof InAppMessage)) return false;
+    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
           RCTAEPMessagingUtil.convertMessageToMap(message);
@@ -250,17 +212,10 @@ public final class RCTAEPMessagingModule
       // Latch stops the thread until the shouldShowMessage value is received
       // from the JS side on thread dedicated to run JS code. The function
       // called from JS that resumes the thread is "shouldShowMessage".
-      MobileCore.log(LoggingMode.VERBOSE, TAG,
-                     "shouldShowMessage: Thread is locked.");
       try {
         latch.await();
       } catch (final InterruptedException e) {
-        MobileCore.log(LoggingMode.ERROR, TAG,
-                       String.format("CountDownLatch await Interrupted: (%s)",
-                                     e.getLocalizedMessage()));
       }
-      MobileCore.log(LoggingMode.VERBOSE, TAG,
-                     "shouldShowMessage: Thread is resumed.");
     }
 
     if (shouldShowMessage) {
@@ -274,17 +229,13 @@ public final class RCTAEPMessagingModule
     return shouldShowMessage;
   }
 
-  @Override
-  public void urlLoaded(String url, FullscreenMessage fullscreenMessage) {
-    MobileCore.log(
-        LoggingMode.VERBOSE, TAG,
-        String.format("overrideUrlLoad is called with url: (%s)", url));
-    final Message message = (Message)fullscreenMessage.getParent();
+  public void onContentLoaded(final Presentable<?> presentable, PresentationContent presentationContent) {
+    if (!(presentable.getPresentation() instanceof InAppMessage)) return;
+    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
-      Map data = new HashMap<>();
-      data.put("message", RCTAEPMessagingUtil.convertMessageToMap(message));
-      data.put("url", url);
-      emitEvent("urlLoaded", data);
+      Map<String, String> data =
+              RCTAEPMessagingUtil.convertMessageToMap(message);
+      emitEvent("onContentLoaded", data);
     }
   }
 
@@ -292,11 +243,6 @@ public final class RCTAEPMessagingModule
   @ReactMethod(isBlockingSynchronousMethod = true)
   public void setMessageSettings(final boolean shouldShowMessage,
                                  final boolean shouldSaveMessage) {
-    MobileCore.log(
-        LoggingMode.VERBOSE, TAG,
-        String.format(
-            "shouldShowMessage is called with message id: %b and shouldSaveMessage: %b",
-            shouldShowMessage, shouldSaveMessage));
     this.shouldShowMessage = shouldShowMessage;
     this.shouldSaveMessage = shouldSaveMessage;
     latch.countDown();
