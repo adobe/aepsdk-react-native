@@ -131,7 +131,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-
     public void dispatchEventWithResponseCallback(final ReadableMap eventMap, final int timeout, final Promise promise) {
         Event event = RCTAEPCoreDataBridge.eventFromReadableMap(eventMap);
         if (event == null) {
@@ -139,11 +138,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        if (timeout <= 0) {
-            promise.reject(getName(), INVALID_TIMEOUT_VALUE_MESSAGE, new Error(INVALID_TIMEOUT_VALUE_MESSAGE));
-            return;
-        }
- 
         MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>(){
             @Override
             public void fail(AdobeError adobeError) {

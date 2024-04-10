@@ -86,7 +86,7 @@ describe('MobileCore', () => {
       testDataKey: 'testDataValue'
     });
     await MobileCore.dispatchEventWithResponseCallback(testEvent, 5000);
-    expect(spy).toHaveBeenCalledWith(testEvent);
+    expect(spy).toHaveBeenCalledWith(testEvent, 5000);
   });
 
   it('trackAction is called with correct parameters', async () => {
