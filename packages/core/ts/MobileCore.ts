@@ -25,7 +25,7 @@ interface IMobileCore {
   getPrivacyStatus: () => Promise<PrivacyStatus>;
   getSdkIdentities: () => Promise<string>;
   dispatchEvent: (event: Event) => Promise<boolean>;
-  dispatchEventWithResponseCallback: (event: Event, timeout:Number) => Promise<Event>;
+  dispatchEventWithResponseCallback: (event: Event, timeoutMS:Number) => Promise<Event>;
   trackAction: (action?: string, contextData?: Record<string, any>) => void;
   trackState: (state?: string, contextData?: Record<string, string>) => void;
   setAdvertisingIdentifier: (advertisingIdentifier?: string) => void;
