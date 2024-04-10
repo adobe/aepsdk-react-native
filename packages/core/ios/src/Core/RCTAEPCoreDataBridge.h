@@ -22,7 +22,7 @@ governing permissions and limitations under the License.
 
 + (NSString *_Nonnull)stringFromPrivacyStatus: (AEPPrivacyStatus) status;
 
-+ (NSString *_Nullable)stringFromLogLevel: (AEPLogLevel) logLevel;
++ (NSString *_Nonnull)stringFromLogLevel: (AEPLogLevel) logLevel;
 
 + (NSDictionary *_Nonnull)sanitizeDictionaryToContainClass: (Class _Nonnull ) type WithDictionary:(NSDictionary *)dict;
 
