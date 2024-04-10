@@ -150,10 +150,10 @@ const MobileCore: IMobileCore = {
    * Called by the extension public API to dispatch an event for other extensions or the internal SDK to consume.
    * Any events dispatched by this call will not be processed until after `start` has been called.
    *
-   * @param event Required parameter with {@link Event} instance to be dispatched. Should not be nil
-   * @return true if the the event dispatching operation succeeded, otherwise the promise will return an error
+   * @param event Required parameter with {@link Event} instance to be dispatched. Should not be nil.
+   * @return true if the the event dispatching operation succeeded, otherwise the promise will return an error.
    */
-   dispatchEvent(event: Event): Promise<boolean> {
+  dispatchEvent(event: Event): Promise<boolean> {
     return RCTAEPCore.dispatchEvent(event);
   },
 
