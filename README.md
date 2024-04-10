@@ -31,7 +31,7 @@ Requires React Native (0.60.0 - 0.72.x)
 
 - Xcode
 
-To submit iOS apps to the App Store, you must build them using Xcode 14.1 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
+To submit iOS apps to the App Store, you must build them using Xcode 15 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
 
 ## React Native New Architecture Support
 
@@ -63,11 +63,11 @@ The following code snippet shows for Mobile Core and Edge Network extensions as 
 ```bash
 ...
 "dependencies": {
-    "react-native": "0.64.2",
-    "@adobe/react-native-aepcore": "^5.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
-    "@adobe/react-native-aepedge": "^5.0.0",
-    "@adobe/react-native-aepedgeidentity": "^5.0.0",
-    "@adobe/react-native-aepedgeconsent": "^5.0.0",
+    "react-native": "0.72.5",
+    "@adobe/react-native-aepcore": "^6.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
+    "@adobe/react-native-aepedge": "^6.0.0",
+    "@adobe/react-native-aepedgeidentity": "^6.0.0",
+    "@adobe/react-native-aepedgeconsent": "^6.0.0",
 ...
 },
 ```

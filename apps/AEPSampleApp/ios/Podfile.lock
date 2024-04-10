@@ -649,8 +649,8 @@ DEPENDENCIES:
   - "RCTAEPEdgeBridge (from `../node_modules/@adobe/react-native-aepedgebridge`)"
   - "RCTAEPEdgeConsent (from `../node_modules/@adobe/react-native-aepedgeconsent`)"
   - "RCTAEPEdgeIdentity (from `../node_modules/@adobe/react-native-aepedgeidentity`)"
-  - "RCTAEPMessaging (from `../../../node_modules/@adobe/react-native-aepmessaging`)"
-  - "RCTAEPOptimize (from `../../../node_modules/@adobe/react-native-aepoptimize`)"
+  - "RCTAEPMessaging (from `../node_modules/@adobe/react-native-aepmessaging`)"
+  - "RCTAEPOptimize (from `../node_modules/@adobe/react-native-aepoptimize`)"
   - "RCTAEPPlaces (from `../node_modules/@adobe/react-native-aepplaces`)"
   - "RCTAEPTarget (from `../node_modules/@adobe/react-native-aeptarget`)"
   - "RCTAEPUserProfile (from `../node_modules/@adobe/react-native-aepuserprofile`)"
@@ -760,9 +760,9 @@ EXTERNAL SOURCES:
   RCTAEPEdgeIdentity:
     :path: "../node_modules/@adobe/react-native-aepedgeidentity"
   RCTAEPMessaging:
-    :path: "../../../node_modules/@adobe/react-native-aepmessaging"
+    :path: "../node_modules/@adobe/react-native-aepmessaging"
   RCTAEPOptimize:
-    :path: "../../../node_modules/@adobe/react-native-aepoptimize"
+    :path: "../node_modules/@adobe/react-native-aepoptimize"
   RCTAEPPlaces:
     :path: "../node_modules/@adobe/react-native-aepplaces"
   RCTAEPTarget:
@@ -890,7 +890,7 @@ SPEC CHECKSUMS:
   RCTAEPEdgeBridge: 6fad185e271de8db02c60b20aefe054ae64e0c48
   RCTAEPEdgeConsent: d1d49242ed91e4c55761fc12df4c4cd533906d40
   RCTAEPEdgeIdentity: 5f90e102a329fe57a880c47eabcf67d6275d3400
-  RCTAEPMessaging: 086fe7d46e34361f8246fc9bcce689295594b5ce
+  RCTAEPMessaging: 9b8a77cc52c71494630ed30334a4e55f89d473b6
   RCTAEPOptimize: 373684945eb5db791ccdfdc275adeaae4ca6bb58
   RCTAEPPlaces: 5447379a7df2133e7c2a5c2e2ef2af031e2a23ce
   RCTAEPTarget: 88d9f77193e9061841fcd9535dd07b2486091f0d
