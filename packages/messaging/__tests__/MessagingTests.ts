@@ -73,22 +73,9 @@ describe('Messaging', () => {
     let autoTrack = true;
     let message = new Message({id, autoTrack});
     let interaction = 'display';
-    let eventType = MessagingEdgeEventType.IN_APP_DISPLAY;
+    let eventType = MessagingEdgeEventType.DISPLAY;
     await message.track(interaction, eventType);
     expect(spy).toHaveBeenCalledWith(id, interaction, eventType);
-  });
-
-  it('handleJavascriptMessage is called', async () => {
-    const spy = jest.spyOn(
-      NativeModules.AEPMessaging,
-      'handleJavascriptMessage'
-    );
-    let id = 'id';
-    let autoTrack = true;
-    let message = new Message({id, autoTrack});
-    let name = 'test message';
-    await message.handleJavascriptMessage(name);
-    expect(spy).toHaveBeenCalledWith(id, name);
   });
 
   it('clear is called', async () => {
