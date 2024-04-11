@@ -34,6 +34,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
     private static String FAILED_TO_CONVERT_EVENT_MESSAGE = "Failed to convert map to Event";
+    private static String INVALID_TIMEOUT_VALUE_MESSAGE = "Invalid timeout value. Timeout must be a positive integer.";
     private static AtomicBoolean hasStarted = new AtomicBoolean(false);
 
     public RCTAEPCoreModule(ReactApplicationContext reactContext) {
@@ -119,16 +120,25 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-
-    public void dispatchEventWithResponseCallback(final ReadableMap eventMap,
-                                                  final Promise promise) {
+    public void dispatchEvent(final ReadableMap eventMap, final Promise promise) {
         Event event = RCTAEPCoreDataBridge.eventFromReadableMap(eventMap);
         if (event == null) {
             promise.reject(getName(), FAILED_TO_CONVERT_EVENT_MESSAGE, new Error(FAILED_TO_CONVERT_EVENT_MESSAGE));
             return;
         }
 
-        MobileCore.dispatchEventWithResponseCallback(event, 5000, new AdobeCallbackWithError<Event>(){
+        MobileCore.dispatchEvent(event);
+    }
+
+    @ReactMethod
+    public void dispatchEventWithResponseCallback(final ReadableMap eventMap, final int timeout, final Promise promise) {
+        Event event = RCTAEPCoreDataBridge.eventFromReadableMap(eventMap);
+        if (event == null) {
+            promise.reject(getName(), FAILED_TO_CONVERT_EVENT_MESSAGE, new Error(FAILED_TO_CONVERT_EVENT_MESSAGE));
+            return;
+        }
+
+        MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>(){
             @Override
             public void fail(AdobeError adobeError) {
                 handleError(promise, adobeError, "dispatchEventWithResponseCallback");

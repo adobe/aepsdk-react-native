@@ -27,11 +27,13 @@ body:
     label: Environment
     description: |
       Please provide the Platform, OS version, SDK version(s) used, IDE version, and any other specific settings that could help us narrow down the problem.
+      Run `npx react-native info` and paste the output here.
       Example:
-        - **Platform**: React Native
-        - **OS**: Android 13
-        - **SDK(s)**: Edge, EdgeIdentity, EdgeConsent
-        - **IDE**: Android Studio 2021.3.1 Patch 1, vscode 1.87.2
+        System:
+          OS: macOS 14.2.1
+          CPU: (10) arm64 Apple M1 Max
+          Memory: 47.45 MB / 25.00 GB
+
   validations:
     required: true
 

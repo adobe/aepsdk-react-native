@@ -40,11 +40,18 @@ function collectPii() {
   MobileCore.collectPii({myPii: 'data'});
 }
 
+function dispatchEvent() {
+  var event = new Event('eventName', 'eventType', 'eventSource', {
+    testDataKey: 'testDataValue',
+  });
+  MobileCore.dispatchEvent(event);
+}
+
 function dispatchEventWithResponseCallback() {
   var event = new Event('eventName', 'eventType', 'eventSource', {
     testDataKey: 'testDataValue',
   });
-  MobileCore.dispatchEventWithResponseCallback(event).then(responseEvent =>
+  MobileCore.dispatchEventWithResponseCallback(event, 1500).then(responseEvent =>
     console.log('AdobeExperienceSDK: responseEvent = ' + responseEvent),
   );
 }
@@ -136,6 +143,7 @@ const CoreView = ({navigation}: NavigationProps) => {
         <Button title="collectPii()" onPress={collectPii} />
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackState()" onPress={trackState} />
+        <Button title="dispatchEvent()" onPress={dispatchEvent} />
         <Button
           title="dispatchEventWithResponseCallback()"
           onPress={dispatchEventWithResponseCallback}

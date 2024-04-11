@@ -24,7 +24,8 @@ interface IMobileCore {
   setPrivacyStatus: (privacyStatus: PrivacyStatus) => void;
   getPrivacyStatus: () => Promise<PrivacyStatus>;
   getSdkIdentities: () => Promise<string>;
-  dispatchEventWithResponseCallback: (event: Event) => Promise<Event>;
+  dispatchEvent: (event: Event) => Promise<boolean>;
+  dispatchEventWithResponseCallback: (event: Event, timeoutMS:Number) => Promise<Event>;
   trackAction: (action?: string, contextData?: Record<string, any>) => void;
   trackState: (state?: string, contextData?: Record<string, string>) => void;
   setAdvertisingIdentifier: (advertisingIdentifier?: string) => void;
@@ -145,17 +146,29 @@ const MobileCore: IMobileCore = {
     return RCTAEPCore.getSdkIdentities();
   },
 
+   /**
+   * Called by the extension public API to dispatch an event for other extensions or the internal SDK to consume.
+   * Any events dispatched by this call will not be processed until after `start` has been called.
+   *
+   * @param event Required parameter with {@link Event} instance to be dispatched. Should not be nil.
+   * @return true if the the event dispatching operation succeeded, otherwise the promise will return an error.
+   */
+  dispatchEvent(event: Event): Promise<boolean> {
+    return RCTAEPCore.dispatchEvent(event);
+  },
+
   /**
    * This method will be used when the provided {@code Event} is used as a trigger and a response event
    * is expected in return.
    * <p>
    *
    * @param event required parameter, {@link Event} instance to be dispatched, used as a trigger
+   * @param timeoutMS the timeout specified in milliseconds
    * @return Promise a promise that resolves with {@link Event}
    *
    */
-  dispatchEventWithResponseCallback(event: Event): Promise<Event> {
-    return RCTAEPCore.dispatchEventWithResponseCallback(event);
+  dispatchEventWithResponseCallback(event: Event, timeoutMS: Number): Promise<Event> {
+    return RCTAEPCore.dispatchEventWithResponseCallback(event, timeoutMS);
   },
 
   /**
