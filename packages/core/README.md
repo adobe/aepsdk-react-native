@@ -70,7 +70,7 @@ MobileCore.dispatchEvent(event);
 **Syntax**
 
 ```typescript
-dispatchEventWithResponseCallback(event: Event): Promise<Event>
+dispatchEventWithResponseCallback: (event: Event, timeoutMS:Number) => Promise<Event>;
 ```
 
 **Example**
@@ -79,7 +79,7 @@ dispatchEventWithResponseCallback(event: Event): Promise<Event>
 import {Event} from '@adobe/react-native-aepcore';
 
 var event = new Event("eventName", "eventType", "eventSource", {"testDataKey": "testDataValue"});
-MobileCore.dispatchEventWithResponseCallback(event).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
+MobileCore.dispatchEventWithResponseCallback(event, 1500).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
 ```
 
 - #### extensionVersion
