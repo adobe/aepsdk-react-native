@@ -73,7 +73,7 @@ describe('Messaging', () => {
     let autoTrack = true;
     let message = new Message({id, autoTrack});
     let interaction = 'display';
-    let eventType = MessagingEdgeEventType.IN_APP_DISPLAY;
+    let eventType = MessagingEdgeEventType.DISPLAY;
     await message.track(interaction, eventType);
     expect(spy).toHaveBeenCalledWith(id, interaction, eventType);
   });
