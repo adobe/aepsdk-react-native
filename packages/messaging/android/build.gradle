@@ -87,8 +87,6 @@ android {
 repositories {
   mavenCentral()
   google()
-  maven { url "https://plugins.gradle.org/m2/" }
-  maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
@@ -99,7 +97,6 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  // api "com.adobe.marketing.mobile:messaging:[2.1.0, 3.0["
-  api "com.adobe.marketing.mobile:messaging:2.3.0-cbe-beta-SNAPSHOT"
+  api "com.adobe.marketing.mobile:messaging:3.+"
   implementation "com.facebook.react:react-native:+"
 }

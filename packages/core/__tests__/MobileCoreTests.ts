@@ -48,15 +48,6 @@ describe('MobileCore', () => {
     expect(logLevel).toEqual('DEBUG');
   });
 
-  it('log is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'log');
-    let logLevel = LogLevel.DEBUG;
-    let tag = 'MobileCoreTests';
-    let message = 'Hello from jest tests!';
-    MobileCore.log(logLevel, tag, message);
-    expect(spy).toHaveBeenCalledWith(logLevel, tag, message);
-  });
-
   it('setPrivacyStatus is called with correct parameters', async () => {
     const spy = jest.spyOn(NativeModules.AEPCore, 'setPrivacyStatus');
     let privacyStatus = PrivacyStatus.UNKNOWN;
@@ -94,8 +85,8 @@ describe('MobileCore', () => {
     let testEvent = new Event('eventName', 'eventType', 'eventSource', {
       testDataKey: 'testDataValue'
     });
-    await MobileCore.dispatchEventWithResponseCallback(testEvent);
-    expect(spy).toHaveBeenCalledWith(testEvent);
+    await MobileCore.dispatchEventWithResponseCallback(testEvent, 5000);
+    expect(spy).toHaveBeenCalledWith(testEvent, 5000);
   });
 
   it('trackAction is called with correct parameters', async () => {

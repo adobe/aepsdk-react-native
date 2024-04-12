@@ -31,30 +31,6 @@ Yarn:
 yarn add @adobe/react-native-aepmessaging
 ```
 
-## Code Based Propositions - Beta
-
-To enable code based propositions, please use the beta version of the messaging extension 5.1.0-beta.1
-
-NPM:
-
-```bash
-npm install @adobe/react-native-aepmessaging@5.1.0-beta.1
-```
-
-Yarn:
-
-```bash
-yarn add @adobe/react-native-aepmessaging@5.1.0-beta.1
-```
-
-Additionally, add the following to your applications iOS podfile:
-
-```
-target 'YourApp' do
-  ...
-  pod 'AEPMessaging', :git => 'https://github.com/adobe/aepsdk-messaging-ios.git', :branch => 'exd-cbe-beta' 
-```
-
 ## Usage
 
 ### [Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer)
@@ -250,7 +226,7 @@ const messagingDelegate = {
 };
 ```
 
-### updatePropositionsForSurfaces - Beta (5.1.0-beta.1)
+### updatePropositionsForSurfaces
 
 Dispatches an event to fetch propositions for the provided surfaces from remote.
 
@@ -266,7 +242,7 @@ updatePropositionsForSurfaces(surfaces: string[])
 Messaging.updatePropositionsForSurfaces(["mobileapp://my-surface"])
 ```
 
-### getPropositionsForSurfaces - Beta (5.1.0-beta.1)
+### getPropositionsForSurfaces
 
 Retrieves the previously fetched (and cached) feeds content from the SDK for the provided surfaces. If the feeds content for one or more surfaces isn't previously cached in the SDK, it will not be retrieved from Adobe Journey Optimizer via the Experience Edge network.
 
@@ -283,7 +259,7 @@ const propositions = Messaging.getPropositionsForSurfaces(["mobileapp://my-surfa
 console.log(propositions)
 ```
 
-### getLatestMessage - Beta (5.1.0-beta.1)
+### getLatestMessage
 
 Retrieves the most recently displayed message object
 
@@ -300,7 +276,7 @@ const message = Messaging.getLatestMessage()
 console.log(message.id)
 ```
 
-### getCachedMessages - Beta (5.1.0-beta.1)
+### getCachedMessages
 
 Retrieves a list of all messages that have been cached in-memory
 
@@ -317,7 +293,7 @@ const messages = Messaging.getCachedMessages()
 messages.forEach(message => message.clear())
 ```
 
-### setMessageSettings - Beta (5.1.0-beta.1)
+### setMessageSettings
 
 Allows setting a global setting for `shouldSaveMessage` and `shouldShowMessage`. Use a messaging delegate defined in the `setMessagingDelegate` method for more fine-grained control of message settings
 
@@ -454,7 +430,9 @@ type MessagingDelegate = {
 
   shouldShowMessage(message: Message): boolean,
 
-  urlLoaded(url: string, message: Message): void,
+  urlLoaded(url: string, message: Message): void, // iOS Only
+
+  onContentLoaded(message: Message): void, // Android Only
 };
 ```
 
@@ -477,7 +455,12 @@ const messagingDelegate = {
   urlLoaded(url: string, message: Message) {
     // Action after message loads an URL
   },
+
+  onContentLoaded(message: Message) {
+    // Action after message loads content
+  },
 };
+
 ```
 
 ### Controlling when the message should be shown to the end user.

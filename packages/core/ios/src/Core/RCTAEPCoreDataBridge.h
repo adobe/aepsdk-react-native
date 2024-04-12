@@ -16,18 +16,18 @@ governing permissions and limitations under the License.
 
 @interface RCTAEPCoreDataBridge : NSObject
 
-+ (AEPPrivacyStatus)privacyStatusFromString: (NSString *) statusString;
++ (AEPPrivacyStatus)privacyStatusFromString: (NSString *_Nonnull) statusString;
 
-+ (AEPLogLevel) logLevelFromString: (NSString *) logLevelString;
++ (AEPLogLevel) logLevelFromString: (NSString *_Nonnull) logLevelString;
 
-+ (NSString *)stringFromPrivacyStatus: (AEPPrivacyStatus) status;
++ (NSString *_Nonnull)stringFromPrivacyStatus: (AEPPrivacyStatus) status;
 
-+ (NSString *)stringFromLogLevel: (AEPLogLevel) logLevel;
++ (NSString *_Nonnull)stringFromLogLevel: (AEPLogLevel) logLevel;
 
-+ (NSDictionary *)sanitizeDictionaryToContainClass: (Class) type WithDictionary:(NSDictionary *)dict;
++ (NSDictionary *_Nonnull)sanitizeDictionaryToContainClass: (Class _Nonnull ) type WithDictionary:(nonnull NSDictionary *) dict;
 
-+ (AEPEvent *)eventFromDictionary: (nonnull NSDictionary *) dict;
++ (AEPEvent *_Nullable)eventFromDictionary: (nonnull NSDictionary *) dict;
 
-+ (NSDictionary *)dictionaryFromEvent: (nonnull AEPEvent *) event;
++ (NSDictionary *_Nonnull)dictionaryFromEvent: (nonnull AEPEvent *) event;
 
 @end

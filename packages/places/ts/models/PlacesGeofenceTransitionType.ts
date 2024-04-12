@@ -14,8 +14,8 @@ governing permissions and limitations under the License.
  * The event status of the geofence trigger, specifies whether geofence was entered or exited
  */
 enum PlacesGeofenceTransitionType {
-  ENTER = 1,
-  EXIT = 2,
+  ENTER,
+  EXIT,
 }
 
 export default PlacesGeofenceTransitionType;
