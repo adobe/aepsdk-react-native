@@ -73,7 +73,7 @@ RCT_EXPORT_METHOD(getPropositions
       [self createDecisionScopesArray:decisionScopes];
   [AEPMobileOptimize
       getPropositions:decisionScopesArray
-           completion:^(NSDictionary<AEPDecisionScope *, AEPProposition *>
+           completion:^(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *>
                             *decisionScopePropositionDict,
                         NSError *error) {
              if (error) {
@@ -84,7 +84,7 @@ RCT_EXPORT_METHOD(getPropositions
                    *propositionDictionary = [[NSMutableDictionary alloc] init];
 
                for (AEPDecisionScope *key in decisionScopePropositionDict) {
-                 AEPProposition *proposition =
+                   AEPOptimizeProposition *proposition =
                      decisionScopePropositionDict[key];
                  [propositionDictionary
                      setValue:[self convertPropositionToDict:proposition]
@@ -98,13 +98,13 @@ RCT_EXPORT_METHOD(getPropositions
 RCT_EXPORT_METHOD(onPropositionsUpdate) {
   [AEPLog traceWithLabel:TAG message:@"onPropositionsUpdate is called."];
   [AEPMobileOptimize onPropositionsUpdate:^(
-                         NSDictionary<AEPDecisionScope *, AEPProposition *>
+                         NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *>
                              *decisionScopePropositionDict) {
     NSDictionary<NSString *, NSDictionary<NSString *, id> *>
         *propositionDictionary = [[NSMutableDictionary alloc] init];
 
     for (AEPDecisionScope *key in decisionScopePropositionDict) {
-      AEPProposition *proposition = decisionScopePropositionDict[key];
+        AEPOptimizeProposition *proposition = decisionScopePropositionDict[key];
       [propositionDictionary
           setValue:[self convertPropositionToDict:proposition]
             forKey:key.name];
@@ -118,7 +118,7 @@ RCT_EXPORT_METHOD(offerTapped
                   : (NSString *)offerId propositionDictionary
                   : (NSDictionary<NSString *, id> *)dictionary) {
   [AEPLog debugWithLabel:TAG message:@"Offer Tapped"];
-  AEPProposition *proposition = [AEPProposition initFromData:dictionary];
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
   for (AEPOffer *offer in offers) {
     if ([[offer id] isEqualToString:offerId]) {
@@ -132,7 +132,7 @@ RCT_EXPORT_METHOD(offerDisplayed
                   : (NSString *)offerId propositionDictionary
                   : (NSDictionary<NSString *, id> *)dictionary) {
   [AEPLog debugWithLabel:TAG message:@"Offer Displayed"];
-  AEPProposition *proposition = [AEPProposition initFromData:dictionary];
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
   for (AEPOffer *offer in offers) {
     if ([[offer id] isEqualToString:offerId]) {
@@ -147,7 +147,7 @@ RCT_EXPORT_METHOD(generateReferenceXdm
                   : (RCTPromiseResolveBlock)resolve rejector
                   : (RCTPromiseRejectBlock)reject) {
   [AEPLog debugWithLabel:TAG message:@"Proposition generateReferenceXdm"];
-  AEPProposition *proposition = [AEPProposition initFromData:dictionary];
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSDictionary<NSString *, id> *referenceXDM =
       [proposition generateReferenceXdm];
   resolve(referenceXDM);
@@ -159,7 +159,7 @@ RCT_EXPORT_METHOD(generateTapInteractionXdm
                   : (RCTPromiseResolveBlock)resolve rejector
                   : (RCTPromiseRejectBlock)reject) {
   [AEPLog debugWithLabel:TAG message:@"generateTapInteractionXdm"];
-  AEPProposition *proposition = [AEPProposition initFromData:dictionary];
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
   AEPOffer *offerInteracted = nil;
   for (AEPOffer *offer in offers) {
@@ -188,7 +188,7 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
                   : (RCTPromiseResolveBlock)resolve rejector
                   : (RCTPromiseRejectBlock)reject) {
   [AEPLog debugWithLabel:TAG message:@"generateDisplayInteractionXdm"];
-  AEPProposition *proposition = [AEPProposition initFromData:dictionary];
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
   AEPOffer *offerDisplayed = nil;
   for (AEPOffer *offer in offers) {
@@ -225,7 +225,7 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
 }
 
 - (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)
-    convertPropositionToDict:(AEPProposition *)proposition {
+    convertPropositionToDict:(AEPOptimizeProposition *)proposition {
   NSDictionary<NSString *, id> *propositionDict =
       [[NSMutableDictionary alloc] init];
   if (!proposition) {

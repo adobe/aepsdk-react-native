@@ -17,7 +17,7 @@ import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
-import com.adobe.marketing.mobile.optimize.Proposition;
+import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
@@ -42,10 +42,9 @@ class RCTAEPOptimizeUtil {
 
     private RCTAEPOptimizeUtil() {}
 
-    static WritableMap convertPropositionToWritableMap(final Proposition proposition) {
+    static WritableMap convertPropositionToWritableMap(final OptimizeProposition proposition) {
         final WritableMap propositionWritableMap = new WritableNativeMap();
         if (proposition == null) {
-            MobileCore.log(LoggingMode.DEBUG, TAG, "Unable to convert Proposition to WritableMap. Passed Proposition is null.");
             return propositionWritableMap;
         }
         propositionWritableMap.putString("id", proposition.getId());
@@ -63,7 +62,6 @@ class RCTAEPOptimizeUtil {
     static WritableMap convertOfferToWritableMap(final Offer offer) {
         final WritableMap offerWritableMap = new WritableNativeMap();
         if (offer == null) {
-            MobileCore.log(LoggingMode.DEBUG, TAG, "Unable to convert Offer to WritableMap. Passed Offer is null.");
             return offerWritableMap;
         }
         offerWritableMap.putString("id", offer.getId());

@@ -59,7 +59,7 @@ jobs:
 
   build-sample-app-ios:
     macos:
-      xcode: 14.1.0
+      xcode: 15.0.1
 
     resource_class: macos.m1.large.gen1
 

@@ -24,11 +24,15 @@ const EdgeBridgeView = ({navigation}: NavigationProps) => {
 
 
 function trackAction() {
-  MobileCore.trackAction('add_to_cart', {"product.id": "12345", "product.add.event": "1", "product.name": "wide_brim_sunhat", "product.units": "1"});
+  MobileCore.trackAction("purchase", { "&&products": ";Running Shoes;1;69.95;event1|event2=55.99;eVar1=12345,;Running Socks;10;29.99;event2=10.95;eVar1=54321",
+  "&&events": "event5,purchase",
+  "myapp.promotion": "a0138"});
 }
 
 function trackState() {
-  MobileCore.trackState('hats/sunhat/wide_brim_sunhat_id12345', {"product.name": "wide_brim_sunhat", "product.id": "12345",  "product.view.event": "1"});
+  MobileCore.trackState("products/189025/runningshoes/12345", {"&&products": ";Running Shoes;1;69.95;prodView|event2=55.99;eVar1=12345",
+  "myapp.category": "189025",
+  "myapp.promotion": "a0138"});
 }
 
   return (

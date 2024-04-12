@@ -15,8 +15,8 @@ package com.adobe.marketing.mobile.reactnative.messaging;
 import android.app.Activity;
 import com.adobe.marketing.mobile.Message;
 import com.adobe.marketing.mobile.MessagingEdgeEventType;
-import com.adobe.marketing.mobile.messaging.MessagingProposition;
-import com.adobe.marketing.mobile.messaging.MessagingPropositionItem;
+import com.adobe.marketing.mobile.messaging.Proposition;
+import com.adobe.marketing.mobile.messaging.PropositionItem;
 import com.adobe.marketing.mobile.messaging.Surface;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -45,13 +45,13 @@ class RCTAEPMessagingUtil {
   static MessagingEdgeEventType getEventType(final int eventType) {
     switch (eventType) {
     case 0:
-      return MessagingEdgeEventType.IN_APP_DISMISS;
+      return MessagingEdgeEventType.DISMISS;
     case 1:
-      return MessagingEdgeEventType.IN_APP_INTERACT;
+      return MessagingEdgeEventType.INTERACT;
     case 2:
-      return MessagingEdgeEventType.IN_APP_TRIGGER;
+      return MessagingEdgeEventType.TRIGGER;
     case 3:
-      return MessagingEdgeEventType.IN_APP_DISPLAY;
+      return MessagingEdgeEventType.DISPLAY;
     case 4:
       return MessagingEdgeEventType.PUSH_APPLICATION_OPENED;
     case 5:
@@ -92,18 +92,21 @@ class RCTAEPMessagingUtil {
   }
 
   static Map
-  convertMessagingPropositionToJS(final MessagingProposition proposition) {
+  convertMessagingPropositionToJS(final Proposition proposition) {
     Map data = new HashMap<>();
     ArrayList<Map> propositionItems = new ArrayList();
-    ListIterator<MessagingPropositionItem> it =
+    ListIterator<PropositionItem> it =
         proposition.getItems().listIterator();
 
     while (it.hasNext()) {
       Map item = new HashMap<>();
-      item.put("uniqueId", it.next().getUniqueId());
-      item.put("uniqueId", it.next().getContent());
-      item.put("uniqueId", it.next().getSchema());
-
+      PropositionItem prop = it.next();
+      item.put("itemId", prop.getItemId());
+      item.put("htmlContent", prop.getHtmlContent());
+      item.put("jsonContentArray", prop.getJsonContentArrayList());
+      item.put("jsonContent", prop.getJsonContentMap());
+      item.put("schema", prop.getSchema().toString());
+      item.put("itemData", prop.getItemData());
       propositionItems.add(item);
     }
 
@@ -115,11 +118,11 @@ class RCTAEPMessagingUtil {
   }
 
   static Map convertSurfacePropositions(
-      final Map<Surface, List<MessagingProposition>> propositionMap,
+      final Map<Surface, List<Proposition>> propositionMap,
       String packageName) {
     Map data = new HashMap<>();
 
-    for (Map.Entry<Surface, List<MessagingProposition>> entry :
+    for (Map.Entry<Surface, List<Proposition>> entry :
          propositionMap.entrySet()) {
       data.put(entry.getKey().getUri().replace(
                    "mobileapp://" + packageName + "/", ""),

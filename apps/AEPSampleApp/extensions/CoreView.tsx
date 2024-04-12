@@ -51,7 +51,7 @@ function dispatchEventWithResponseCallback() {
   var event = new Event('eventName', 'eventType', 'eventSource', {
     testDataKey: 'testDataValue',
   });
-  MobileCore.dispatchEventWithResponseCallback(event).then(responseEvent =>
+  MobileCore.dispatchEventWithResponseCallback(event, 1500).then(responseEvent =>
     console.log('AdobeExperienceSDK: responseEvent = ' + responseEvent),
   );
 }
@@ -117,10 +117,6 @@ function getPrivacyStatus() {
   );
 }
 
-function log() {
-  MobileCore.log(LogLevel.ERROR, 'React Native Tag', 'React Native Message');
-}
-
 function resetIdentities() {
   MobileCore.resetIdentities();
 }
@@ -136,7 +132,6 @@ const CoreView = ({navigation}: NavigationProps) => {
         <Button title="clearUpdatedConfiguration" onPress={clearUpdatedConfiguration} />
         <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn} />
         <Button title="getPrivacyStatus()" onPress={getPrivacyStatus} />
-        <Button title="log(...)" onPress={log} />
         <Button title="setLogLevel(LogLevel.VERBOSE)" onPress={setLogLevel} />
         <Button title="getLogLevel()" onPress={getLogLevel} />
         <Button title="setPushIdentifier()" onPress={setPushIdentifier} />
