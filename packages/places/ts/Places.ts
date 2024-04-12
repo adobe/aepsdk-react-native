@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 import PlacesAuthStatus from './models/PlacesAuthStatus';
 import PlacesGeofence from './models/PlacesGeofence';
 import PlacesLocation from './models/PlacesLocation';
@@ -65,7 +65,7 @@ const Places: IPlaces = {
    * @param transitionType {@link PlacesGeofenceTransitionType} value indicating whether the device entered or exited the provided region
    */
   processGeofence(geofence: PlacesGeofence, transitionType: number): void {
-    AEPPlaces.processGeofence(geofence, transitionType);
+    AEPPlaces.processGeofence(geofence, Platform.OS === 'android' ? transitionType + 1 : transitionType); // Enums are not equal across platforms
   },
 
   /**
