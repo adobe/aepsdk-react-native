@@ -33,6 +33,11 @@ Requires React Native (0.60.0 - 0.72.x)
 
 To submit iOS apps to the App Store, you must build them using Xcode 14.1 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
 
+## iOS Privacy Manifest
+
+The Adobe Experience Platform React Native plugins `v6.0.0` and above have been updated to align with Apple's latest [guidelines](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files), now using version 5 of the Experience Platform SDKs for iOS which includes the mandatory `privacy manifest`. To learn more details of how Apple's privacy related announcements affect the Experience Platform SDKs for iOS, please read this [document](https://developer.adobe.com/client-sdks/resources/privacy-manifest/).
+
+
 ## React Native New Architecture Support
 
 React Native 0.7x introduced support for a new architecture. We don't yet support the new architecture.
