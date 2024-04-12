@@ -35,7 +35,8 @@ To submit iOS apps to the App Store, you must build them using Xcode 14.1 or lat
 
 ## iOS Privacy Manifest
 
-The Adobe Experience Platform React Native plugins `v6.0.0` and above have been updated to align with Apple's latest [guidelines](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files), now using version 5 of the Experience Platform SDKs for iOS which includes the mandatory `privacy manifest`. To learn more details of how Apple's privacy related announcements affect the Experience Platform SDKs for iOS, please read this [document](https://developer.adobe.com/client-sdks/resources/privacy-manifest/).
+> [!IMPORTANT]  
+> Adobe Experience Platform React Native **6.x** libraries now depend on Experience Platform iOS 5.x SDKs, which have been updated to align with Apple's latest guidelines on [privacy manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files). For further details on how Apple's privacy-related announcements affect the Adobe mobile SDK for iOS, please refer to this [document](https://developer.adobe.com/client-sdks/resources/privacy-manifest/).
 
 
 ## React Native New Architecture Support
