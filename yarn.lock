@@ -7944,12 +7944,12 @@ __metadata:
   linkType: hard
 
 "find-babel-config@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "find-babel-config@npm:1.2.0"
+  version: 1.2.1
+  resolution: "find-babel-config@npm:1.2.1"
   dependencies:
-    json5: "npm:^0.5.1"
+    json5: "npm:^2.2.3"
     path-exists: "npm:^3.0.0"
-  checksum: 20fbfba54675dda52ae8e29acdc19228598053d28f1dffd3fddc748a9d849c930b9cbdb1576b547fd6d12ca7883f5dba4208d99dfb6fc7c53840ad3b6e2781a8
+  checksum: 6a39bb27e02d1277eb4846b2bb933319204c84a58863c064f251a6bf49f1d5ed1d8e4fd30ba72c65a1afa0e6eebbf9df06e3b561d93d86f3e1e1afa14431ee2b
   languageName: node
   linkType: hard
 
@@ -10199,15 +10199,6 @@ __metadata:
   version: 5.0.1
   resolution: "json-stringify-safe@npm:5.0.1"
   checksum: e86f7bb748bb84f73b171bb68c8209a1e68f40d41f943952f746fa4ca3802c1edf4602e86977c2de44eba1e64e4cabe2498f4499003cc471e99db83bfba95898
-  languageName: node
-  linkType: hard
-
-"json5@npm:^0.5.1":
-  version: 0.5.1
-  resolution: "json5@npm:0.5.1"
-  bin:
-    json5: lib/cli.js
-  checksum: 72201befd014e40ee453ee05eed9df01e180fc2baca9be06316a0189ef6ae54d72f0504109d8270e5aedebd0570587b3c360c5aa9293a7ec777c4ecbd908adb8
   languageName: node
   linkType: hard
 
@@ -12697,15 +12688,15 @@ __metadata:
   linkType: hard
 
 "react-native-webview@npm:^13.8.2":
-  version: 13.8.5
-  resolution: "react-native-webview@npm:13.8.5"
+  version: 13.8.6
+  resolution: "react-native-webview@npm:13.8.6"
   dependencies:
     escape-string-regexp: "npm:2.0.0"
     invariant: "npm:2.2.4"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 59862140e220d315a7df26e3658a709368fa47ec5f54ef0e1fdc9a3471b2d3a27400b106094b0d67ea5ef86704677c1360aa33ace70be16cf907bb3ed2797b75
+  checksum: d0cd453649e3bcae4d686167ed83d8bc7acae04718ad11603e9e54088bc570caa41e74cd365902c019200bc9568ef841b8cb6664dfc6ba311c587364368ca558
   languageName: node
   linkType: hard
 

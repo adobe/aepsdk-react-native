@@ -1,79 +1,90 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# AEPSampleApp
 
-# Getting Started
+## Prerequisites
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+ * If you are new to React Native we suggest you follow the [React Native Setting up development environment](https://reactnative.dev/docs/environment-setup) React Native CLI Quickstart page before continuing.
+ * Cocoapods version >= 1.11.3
+ * Node version >= 18
 
-## Step 1: Start the Metro Server
+## How to run the sample app:
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### Add your App Id:
 
-To start Metro, run the following command from the _root_ of your React Native project:
+In `apps/AEPSampleApp/ios/AEPSampleApp/AppDelegate.mm`, find the call to `configureWithAppId` and add your app id.
 
-```bash
-# using npm
-npm start
+In `apps/AEPSampleApp/android/app/src/main/java/com/aepsampleapp/MainApplication.java`, find the call to `configureWithAppId` and add your app id.
 
-# OR using Yarn
-yarn start
+> Note: App id is configured in a mobile property in Data Collection UI, in Tags.  Refer to [configure with App ID per environment](https://developer.adobe.com/client-sdks/home/base/mobile-core/configuration/#configure-with-app-id-per-environment) page for more information.
+
+### Install dependencies 
+> Note: Commands are assuming you're in the root directory of the repository.
+
+```
+yarn install && yarn sampleapp:ios:pod:install
 ```
 
-## Step 2: Start your Application
+### Run instructions for iOS:
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+```
+yarn sampleapp:ios:run
+```
+Alternatively, you can run the iOS app from Xcode by executing the following command in your terminal:
 
-### For Android
+```
+npx react-native start
+```
+Then navigate to apps/AEPSampleApp/ios and double click on the `AEPSampleApp.xcworkspace` file, or from the terminal:
 
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```
+cd apps/AEPSampleApp/ios
+open AEPSampleApp.xcworkspace
 ```
 
-### For iOS
+### Run instructions for Android:
 
-```bash
-# using npm
-npm run ios
+Have an Android emulator running (quickest way to get started), or a device connected. https://developer.android.com/studio/run/emulator-commandline
 
-# OR using Yarn
-yarn ios
+```
+yarn sampleapp:android:run
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+Alternatively, you can run the Android app from Android Studio by executing the following command in your terminal
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+```
+npx react-native start
+```
 
-## Step 3: Modifying your App
+Then navigate to apps/AEPSampleApp/android, double click on the `build.gradle` file, and run the app in Android Studio.
 
-Now that you have successfully run the app, let's modify it.
+### Validate with Assurance:
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+Assurance is integrated in the sample app for validating the events and flows. 
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+1. Create an [Assurance Session](https://experienceleague.adobe.com/docs/experience-platform/assurance/tutorials/using-assurance.html#create-sessions).
+2. Copy the session link from `Copy Link` in the Assurance Session Details window. Paste it to the AEPSampleApp -> AssuranceView, then Start Session.
 
-## Congratulations! :tada:
 
-You've successfully run and modified your React Native App. :partying_face:
+## Resources and Troubleshooting
+* Where can we find the information about the Yarn scripts in the Sample App? <br>
+  Refer to [Sample App yarn scripts](https://github.com/adobe/aepsdk-react-native/blob/main/package.json#L11).
 
-### Now what?
+* Where is the sample app React Native code? <br>
+  All the extension TypeScript code is located under AEPSampleApp > extensions.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+* I encountered errors while building the app. <br>
+  Validate you have node installed, check your React Native development setup, refer to the doc under Prerequisites.
 
-# Troubleshooting
+* Getting error regarding to Yoga.cpp when building the Sample App <br>
+  Run below code in the Terminal:
+  ```bash
+   cd apps/AEPSampleApp
+   sed -i.bo 's/    node->getLayout()\.hadOverflow() |$/\0|/' ./node_modules/react-native/ReactCommon/yoga/yoga/Yoga.cpp
+   cd ../../
+   rm -rf ~/Library/Developer/Xcode/DerivedData
+  ```
+* Getting this error in logcat logs when running in Android simulator: javax.net.ssl.SSLHandshakeException: Chain validation failed <br>
+  Check the date and time on the simulator is current, if not, update these from the Settings menu.
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+* Getting error when building app in Xcode 15 RCT-Folly hash - No template named 'unary_function' in namespace std <br>
+  This error may be thrown due to an incompatiblity between React Native version 0.68.x and Xcode 15. Make sure you are running with React Native 0.70 or above, if needed pull the latest updates from main branch of this repo, and run [Install dependencies](#install-dependencies) again.
+  

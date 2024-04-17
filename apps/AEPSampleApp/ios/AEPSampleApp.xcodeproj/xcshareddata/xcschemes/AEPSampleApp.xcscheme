@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
                BuildableName = "aepsampleapp.app"
-               BlueprintName = "AEPSampleApp"
+               BlueprintName = "aepsampleapp"
                ReferencedContainer = "container:AEPSampleApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,7 +45,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "aepsampleapp.app"
-            BlueprintName = "AEPSampleApp"
+            BlueprintName = "aepsampleapp"
             ReferencedContainer = "container:AEPSampleApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,7 +62,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "aepsampleapp.app"
-            BlueprintName = "AEPSampleApp"
+            BlueprintName = "aepsampleapp"
             ReferencedContainer = "container:AEPSampleApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
