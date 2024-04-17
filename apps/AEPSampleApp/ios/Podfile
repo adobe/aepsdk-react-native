@@ -25,17 +25,11 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'AEPSampleApp' do
+target 'aepsampleapp' do
   config = use_native_modules!
-
-  # Flags change depending on the env values.
-  flags = get_default_flags()
 
   use_react_native!(
     :path => config[:reactNativePath],
-    # Hermes is now enabled by default. Disable by setting this flag to false.
-    :hermes_enabled => flags[:hermes_enabled],
-    :fabric_enabled => flags[:fabric_enabled],
     # Enables Flipper.
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
@@ -45,11 +39,11 @@ target 'AEPSampleApp' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'AEPSampleAppTests' do
+  target 'aepsampleappTests' do
     inherit! :complete
     # Pods for testing
   end
-  
+
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
@@ -57,10 +51,6 @@ target 'AEPSampleApp' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false
     )
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
-    installer.pods_project.build_configurations.each do |config|
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-    end
     installer.pods_project.targets.each do |t|
       if t.name.start_with?("AEP")
         t.build_configurations.each do |bc|
@@ -68,5 +58,6 @@ target 'AEPSampleApp' do
         end
       end
     end
+
   end
 end
