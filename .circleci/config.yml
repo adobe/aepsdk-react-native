@@ -8,7 +8,8 @@ orbs:
 jobs:
   unit-test:
     docker:
-      - image: cimg/node:19.7.0
+      # switch to use node v18.x becaseu of the error: the engine "node" is incompatible with this module. Expected version "^16.10.0 || ^18.0.0 || >=20.0.0". Got "19.7.0"
+      - image: cimg/node:18.20
 
     steps:
       - checkout
@@ -87,4 +88,4 @@ workflows:
     jobs:
       - unit-test
       - build-sample-app-ios
-      # - build-sample-app-android
+      - build-sample-app-android
