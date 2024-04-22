@@ -19,7 +19,7 @@ android {
     compileSdkVersion safeExtGet('compileSdkVersion', 34)
 
     def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
-    if (agpVersion >= 7) {
+    if (agpVersion >= 8) {
         namespace = "com.adobe.marketing.mobile.reactnative.edge"
     }
 
