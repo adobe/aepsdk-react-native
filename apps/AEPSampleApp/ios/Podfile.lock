@@ -137,45 +137,45 @@ PODS:
     - fmt (~> 6.2.1)
     - glog
     - libevent
-  - RCTAEPAssurance (6.0.0):
+  - RCTAEPAssurance (6.0.1):
     - AEPAssurance (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPCampaignClassic (6.0.0):
+  - RCTAEPCampaignClassic (6.0.1):
     - AEPCampaignClassic (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPCore (6.0.0):
+  - RCTAEPCore (6.0.1):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPIdentity (< 6.0.0, >= 5.0.0)
     - AEPLifecycle (< 6.0.0, >= 5.0.0)
     - AEPSignal (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPEdge (6.0.0):
+  - RCTAEPEdge (6.0.1):
     - AEPEdge (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPEdgeBridge (6.0.0):
+  - RCTAEPEdgeBridge (6.0.1):
     - AEPEdgeBridge (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPEdgeConsent (6.0.0):
+  - RCTAEPEdgeConsent (6.0.1):
     - AEPEdgeConsent (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPEdgeIdentity (6.0.0):
+  - RCTAEPEdgeIdentity (6.0.1):
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPMessaging (6.0.0):
+  - RCTAEPMessaging (6.0.1):
     - AEPMessaging (< 6.0.0, >= 5.0.0)
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - RCTAEPOptimize (6.0.0):
+  - RCTAEPOptimize (6.0.1):
     - AEPOptimize (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPPlaces (6.0.0):
+  - RCTAEPPlaces (6.0.1):
     - AEPPlaces (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPTarget (6.0.0):
+  - RCTAEPTarget (6.0.1):
     - AEPTarget (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPUserProfile (6.0.0):
+  - RCTAEPUserProfile (6.0.1):
     - AEPUserProfile (< 6.0.0, >= 5.0.0)
     - React
   - RCTRequired (0.73.6)
@@ -1516,18 +1516,18 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
-  RCTAEPAssurance: d7e25129daf77220e3f4037e4999c5803911dd94
-  RCTAEPCampaignClassic: e282a490f037b64061f742e154c507e47be2b977
-  RCTAEPCore: 243018c3a45d96ff7251afd94c8b6510c3006fdf
-  RCTAEPEdge: 48fc889b7c39688bc97c74e507fa90c8a32203ba
-  RCTAEPEdgeBridge: 6fad185e271de8db02c60b20aefe054ae64e0c48
-  RCTAEPEdgeConsent: d1d49242ed91e4c55761fc12df4c4cd533906d40
-  RCTAEPEdgeIdentity: 5f90e102a329fe57a880c47eabcf67d6275d3400
-  RCTAEPMessaging: 36d1abe359717fdbb78ba3b9fd53327216ad0f3f
-  RCTAEPOptimize: 373684945eb5db791ccdfdc275adeaae4ca6bb58
-  RCTAEPPlaces: 5447379a7df2133e7c2a5c2e2ef2af031e2a23ce
-  RCTAEPTarget: 88d9f77193e9061841fcd9535dd07b2486091f0d
-  RCTAEPUserProfile: f8217b94279f779738342297cc6d069cff5a7128
+  RCTAEPAssurance: 2d52c139f09cff35246efe5e98c796c1fd370879
+  RCTAEPCampaignClassic: 17701ea04372f69e4757cc9168dc587916916966
+  RCTAEPCore: afc43da4c34177576a47592aad18c222865e9019
+  RCTAEPEdge: 309cbae2ccc7cc522b6a812987b8a5319f4cdb86
+  RCTAEPEdgeBridge: f0e058d9c40344208bb757bd3300519d8907874a
+  RCTAEPEdgeConsent: 56f47777ee1f3d05fb74cd5fe44d659636bdcbd2
+  RCTAEPEdgeIdentity: 1233f5637d171fb8cc6ec146372133faf26b03d3
+  RCTAEPMessaging: 47180b0f6e1df378d8b58954a96918682e45d1d1
+  RCTAEPOptimize: 7eeeb8bf5643005af70fc337ce2345b5dcca75bf
+  RCTAEPPlaces: f872e5aa1d7e8f9f660efa6df1a879296bdd499c
+  RCTAEPTarget: 0e88abd5d1dabc81f8797f315cefc8e99b052333
+  RCTAEPUserProfile: 2d3d96fd3425bc213bac32e9413dd0fa4552d9a0
   RCTRequired: ca1d7414aba0b27efcfa2ccd37637edb1ab77d96
   RCTTypeSafety: 678e344fb976ff98343ca61dc62e151f3a042292
   React: e296bcebb489deaad87326067204eb74145934ab
