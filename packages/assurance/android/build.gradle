@@ -17,7 +17,7 @@ def safeExtGet(prop, fallback) {
 
 android {
 
-    compileSdk safeExtGet('compileSdkVersion', 34)
+    compileSdk safeExtGet('compileSdk', 34)
 
     def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
     if (agpVersion >= 8) {

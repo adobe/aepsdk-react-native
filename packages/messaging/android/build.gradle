@@ -43,7 +43,7 @@ android {
     namespace = "com.adobe.marketing.mobile.reactnative.messaging"
   }
 
-  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
+  compileSdk getExtOrIntegerDefault("compileSdk")
 
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
