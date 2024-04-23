@@ -144,34 +144,6 @@ getPrivacyStatus(): Promise<string>
 MobileCore.getPrivacyStatus().then(status => console.log("AdobeExperienceSDK: Privacy Status = " + status));
 ```
 
-
-- #### log
-
-This is the API used to log from the SDK.
-
-**Syntax**
-
-```typescript
-log(logLevel: LogLevel, tag: string, message: string)
-```
-
-**Example**
-
-```typescript
-import {LogLevel} from '@adobe/react-native-aepcore';
-
-MobileCore.log(LogLevel.ERROR, "React Native Tag", "React Native Message");
-```
-
-Note: `LogLevel` contains the following getters:
-
-```typescript
-const ERROR = "ERROR";
-const WARNING = "WARNING";
-const DEBUG = "DEBUG";
-const VERBOSE = "VERBOSE";
-```
-
 - #### resetIdentities
 
 The `resetIdentities` method requests that each extension resets the identities it owns and each extension responds to this request uniquely.

@@ -88,4 +88,3 @@ Assurance is integrated in the sample app for validating the events and flows.
 * Getting error when building app in Xcode 15 RCT-Folly hash - No template named 'unary_function' in namespace std <br>
   This error may be thrown due to an incompatiblity between React Native version 0.68.x and Xcode 15. Make sure you are running with React Native 0.70 or above, if needed pull the latest updates from main branch of this repo, and run [Install dependencies](#install-dependencies) again.
   
-
