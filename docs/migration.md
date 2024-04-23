@@ -11,7 +11,7 @@ Open your app's package.json file and replace the ACP-prefixed packages with the
 "dependencies": {
     "react-native": "0.64.2",
 -   "@adobe/react-native-acpcore": "^2.0.0"
-+   "@adobe/react-native-aepcore": "^2.0.0",
++   "@adobe/react-native-aepcore": "^6.0.0",
     ...
 },
 
@@ -206,7 +206,7 @@ ACPCore.dispatchEventWithResponseCallback(event: ACPExtensionEvent): Promise<ACP
 ```
 - [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#dispatcheventwithresponsecallback)
 ```typescript
-MobileCore.dispatchEventWithResponseCallback(event: Event): Promise<Event>
+MobileCore.dispatchEventWithResponseCallback(event: Event, timeoutMS:Number): Promise<Event>
 ```
 
 #### extensionVersion
@@ -254,10 +254,9 @@ MobileCore.getPrivacyStatus(): Promise<string>
 ```javascript
 ACPCore.log(logLevel: string, tag: string, message: string)
 ```
-- [AEP](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#log)
-```typescript
-MobileCore.log(logLevel: LogLevel, tag: string, message: string)
-```
+- AEP
+
+  Not Supported.
 
 #### resetIdentities
 - ACP
