@@ -21,7 +21,12 @@ This repository is a monorepo and contains a collection of React Native modules 
 | [@adobe/react-native-aeptarget](./packages/target) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aeptarget.svg)](https://www.npmjs.com/package/@adobe/react-native-aeptarget) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aeptarget) | [Target](https://developer.adobe.com/client-sdks/documentation/adobe-target)
 | [@adobe/react-native-aepcampaignclassic](./packages/campaignclassic) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) |[CampaignClassic](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic)
 
-> Note: Since version 5.0.0 of the Adobe React Native SDK, all React Native libraries that share the same major version are compatible with each other.
+> [!NOTE]   
+> Since version 5.0.0 of the Adobe React Native SDK, all React Native libraries that share the same major version are compatible with each other.
+
+> [!NOTE]  
+> The React Native libraries within this repository are specifically designed to support the Android and iOS platforms only.
+
 
 ## Requirements
 
