@@ -226,6 +226,12 @@ Underlying Objective-C module 'AEPRulesEngine' not found
 ```
 Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770).
 
+3. Getting error when building Expo app
+```xcode
+Use of undeclared identifier 'AEPMobileCore'
+```
+Refer to the discussion [here](https://github.com/adobe/aepsdk-react-native/issues/346#issuecomment-2109949661).
+
 ## Contributing
 
 Contributions are welcomed! See [CONTRIBUTING](CONTRIBUTING.md) and [development.md](./docs/development.md) guides for more information.
