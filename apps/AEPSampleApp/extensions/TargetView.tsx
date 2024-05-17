@@ -63,7 +63,7 @@ function TargetView({navigation}: NavigationProps) {
 
     const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     const targetProduct = new TargetProduct('24D3412', 'Books');
-    const parameters1 = new TargetParameters(mboxParameters1, null, null, null);
+    const parameters1 = new TargetParameters(mboxParameters1);
     const request1 = new TargetRequestObject(
       'clickTestRyan',
       parameters1,
@@ -109,7 +109,7 @@ function TargetView({navigation}: NavigationProps) {
   };
 
   const displayedLocations = () =>
-    Target.displayedLocations(['clickTestRyan', 'clickTestRyan'], null);
+    Target.displayedLocations(['clickTestRyan', 'clickTestRyan']);
 
   const clickedLocation = () => {
     const purchaseIDs = ['34', '125'];
@@ -134,7 +134,7 @@ function TargetView({navigation}: NavigationProps) {
 
     const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     const targetProduct = new TargetProduct('24D3412', 'Books');
-    const parameters1 = new TargetParameters(mboxParameters1, null, null, null);
+    const parameters1 = new TargetParameters(mboxParameters1);
     const prefetch1 = new TargetPrefetchObject('clickTestRyan', parameters1);
 
     const parameters2 = new TargetParameters(
