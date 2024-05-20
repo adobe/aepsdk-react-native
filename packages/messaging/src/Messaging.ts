@@ -73,7 +73,7 @@ class Messaging {
    * Retrieves the last message that has been shown in the UI
    * @returns The latest message to have been displayed
    */
-  static async getLatestMessage(): Promise<Message> {
+  static async getLatestMessage(): Promise<Message | null | undefined> {
     const message = await RCTAEPMessaging.getLatestMessage();
     return message ? new Message(message) : undefined;
   }

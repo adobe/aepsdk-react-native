@@ -47,11 +47,11 @@ class Offer {
         return this.data.format;
     }
 
-    get language(): Array<string> {
+    get language(): Array<string> | null | undefined {
         return this.data.language;
     }
 
-    get characteristics(): Record<string, string> {
+    get characteristics(): Record<string, string> | null | undefined {
         return this.data.characteristics;
     }    
 

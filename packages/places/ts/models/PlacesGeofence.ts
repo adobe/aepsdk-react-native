@@ -25,7 +25,7 @@ class PlacesGeofence {
     latitude: number,
     longitude: number,
     radius: number,
-    expirationDuration?: number
+    expirationDuration: number
   ) {
     this.identifier = identifier;
     this.latitude = latitude;
