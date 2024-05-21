@@ -30,7 +30,7 @@ describe('Places', () => {
       NativeModules.AEPPlaces,
       'getNearbyPointsOfInterest'
     );
-    let placesLocation = new PlacesLocation(37.33, -121.89, null, null, null);
+    let placesLocation = new PlacesLocation(37.33, -121.89, 0, 0, 0);
     await Places.getNearbyPointsOfInterest(placesLocation, 10);
     expect(spy).toHaveBeenCalled();
   });
