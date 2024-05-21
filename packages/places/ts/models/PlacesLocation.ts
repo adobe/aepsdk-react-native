@@ -22,10 +22,10 @@ class PlacesLocation {
 
   constructor(
     longitude: number,
-    latitude?: number,
-    altitude?: number,
-    speed?: number,
-    accuracy?: number
+    latitude: number,
+    altitude: number,
+    speed: number,
+    accuracy: number
   ) {
     this.latitude = latitude;
     this.longitude = longitude;

@@ -86,7 +86,7 @@ describe('Target', () => {
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     var targetProduct = new TargetProduct('24D3412', 'Books');
-    var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
+    var parameters1 = new TargetParameters(mboxParameters1);
     var request1 = new TargetRequestObject(
       'mboxName2',
       parameters1,
@@ -184,7 +184,7 @@ describe('Target', () => {
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     var targetProduct = new TargetProduct('24D3412', 'Books');
-    var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
+    var parameters1 = new TargetParameters(mboxParameters1);
     var prefetch1 = new TargetPrefetchObject('mboxName2', parameters1);
 
     var parameters2 = new TargetParameters(
