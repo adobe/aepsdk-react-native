@@ -3,15 +3,15 @@
   "version": "6.0.1",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
-  "main": "./js/index.js",
-  "types": "./js/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "tsc": "tsc"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/adobe/react-native-aepassurance",
+    "url": "https://github.com/adobe/aepsdk-react-native",
     "directory": "packages/assurance"
   },
   "keywords": [

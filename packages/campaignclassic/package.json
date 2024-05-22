@@ -4,8 +4,8 @@
   "description": "Experience Platform Campaign Classic extension for Adobe Experience Platform Mobile SDK. Written and Supported by Adobe.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
-  "main": "./js/index.js",
-  "types": "./js/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "tsc": "tsc"
