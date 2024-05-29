@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Consent } from '../ts';
+import { Consent } from '../src';
 
 describe('Consent', () => {
   it('extensionVersion is called', async () => {

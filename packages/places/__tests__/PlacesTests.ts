@@ -16,7 +16,7 @@ import {
   PlacesGeofence,
   PlacesGeofenceTransitionType,
   PlacesLocation
-} from '../ts';
+} from '../src';
 
 describe('Places', () => {
   test('extensionVersion is called', async () => {
