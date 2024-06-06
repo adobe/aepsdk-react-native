@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Signal } from '../ts';
+import { Signal } from '../src';
 
 describe('Signal', () => {
   it('extensionVersion is called', async () => {

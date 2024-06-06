@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { AuthenticatedState, IdentityItem, IdentityMap } from '../ts';
+import { AuthenticatedState, IdentityItem, IdentityMap } from '../src';
 
 describe('IdentityMap', () => {
   it('IdentityMap addItem is validated', async () => {

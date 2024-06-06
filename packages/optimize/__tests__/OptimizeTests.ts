@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Optimize, Proposition, DecisionScope, Offer } from '../ts';
+import { Optimize, Proposition, DecisionScope, Offer } from '../src';
 import offerJson from './offer.json';
 import propositionJson from './proposition.json';
 
@@ -43,7 +43,7 @@ describe('Optimize', () => {
 
   it('AEPOptimize getPropositions is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPOptimize, 'getPropositions');
-    let decisionScopes = [new DecisionScope('abcdef', null, null, null)];
+    let decisionScopes = [new DecisionScope('abcdef')];
     await Optimize.getPropositions(decisionScopes);
     expect(spy).toHaveBeenCalledWith(
       decisionScopes.map((decisionScope) => decisionScope.getName())
@@ -52,7 +52,7 @@ describe('Optimize', () => {
 
   it('AEPOptimize updateProposition is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPOptimize, 'updatePropositions');
-    let decisionScopes = [new DecisionScope('abcdef', null, null, null)];
+    let decisionScopes = [new DecisionScope('abcdef')];
     let xdm = new Map();
     let data = new Map();
     await Optimize.updatePropositions(decisionScopes, xdm, data);
@@ -164,7 +164,7 @@ describe('Optimize', () => {
 
   it('Test DecisionScope getName', async () => {
     const decisionScope = new DecisionScope(
-      null,
+      undefined,
       'xcore:offer-activity:1111111111111111',
       'xcore:offer-placement:1111111111111111',
       10

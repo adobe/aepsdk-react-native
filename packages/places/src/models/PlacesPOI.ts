@@ -29,10 +29,10 @@ class PlacesPOI {
     library: string,
     weight: number,
     metadata: { [key: string]: string },
-    identifier?: string,
-    latitude?: number,
-    longitude?: number,
-    radius?: number,
+    identifier: string,
+    latitude: number,
+    longitude: number,
+    radius: number,
   ) {
     this.identifier = identifier;
     this.name = name;

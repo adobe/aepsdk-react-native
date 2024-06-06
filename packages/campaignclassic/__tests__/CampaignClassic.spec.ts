@@ -1,5 +1,5 @@
 import { NativeModules } from 'react-native';
-import { CampaignClassic } from '../ts';
+import { CampaignClassic } from '../src';
 
 describe('Campaign Classic', () => {
   it('should return extension version', async () => {

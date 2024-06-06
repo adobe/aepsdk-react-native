@@ -10,7 +10,7 @@
   },
   "scripts": {
     "clean": "rm yarn.lock & find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
-    "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf js",
+    "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf dist",
     "build": "npx lerna exec --ignore aepsampleapp -- tsc",
     "test": "jest",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
