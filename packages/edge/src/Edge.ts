@@ -67,7 +67,7 @@ const Edge: IEdge = {
    * @param {string?} hint the Edge Network location hint to use when connecting to the Adobe Experience Platform Edge Network
    */
 
-  setLocationHint(hint?: string) {
+  setLocationHint(hint?: string | null) {
     RCTAEPEdge.setLocationHint(hint);
   },
 

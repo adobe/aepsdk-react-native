@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { MobileCore, LogLevel, PrivacyStatus, Event } from '../ts';
+import { MobileCore, LogLevel, PrivacyStatus, Event } from '../src';
 
 describe('MobileCore', () => {
   it('extensionVersion is called', async () => {

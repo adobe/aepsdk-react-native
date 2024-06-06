@@ -10,14 +10,29 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
-import { Lifecycle } from '../src';
+/**
+ * Represents a location returned by the places SDK that includes data about what location was provided to the SDK
+ */
+class PlacesLocation {
+  longitude: number;
+  latitude: number;
+  altitude: number;
+  speed: number;
+  accuracy: number;
 
-describe('Lifecycle', () => {
-  it('extensionVersion is called', async () => {
-    expect(Lifecycle.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPLifecycle, 'extensionVersion');
-    await Lifecycle.extensionVersion();
-    expect(spy).toHaveBeenCalled();
-  });
-});
+  constructor(
+    longitude: number,
+    latitude: number,
+    altitude: number,
+    speed: number,
+    accuracy: number
+  ) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.altitude = altitude;
+    this.speed = speed;
+    this.accuracy = accuracy;
+  }
+}
+
+export default PlacesLocation;

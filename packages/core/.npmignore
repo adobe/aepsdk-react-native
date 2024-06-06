@@ -68,3 +68,4 @@ CONTRIBUTING.md
 CODE_OF_CONDUCT.md
 Makefile
 *.tgz
+tsconfig.json

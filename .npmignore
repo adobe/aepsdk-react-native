@@ -61,8 +61,6 @@ __tests__
 .circleci/
 .opensource/
 jest/
-acp-sdks/
-update-android-sdk.sh
 CONTRIBUTING.md
 CODE_OF_CONDUCT.md
 Makefile

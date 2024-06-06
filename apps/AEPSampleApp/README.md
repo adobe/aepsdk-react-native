@@ -23,6 +23,12 @@ In `apps/AEPSampleApp/android/app/src/main/java/com/aepsampleapp/MainApplication
 yarn install && yarn sampleapp:ios:pod:install
 ```
 
+### Build packages
+
+```
+yarn run build
+```
+
 ### Run instructions for iOS:
 
 ```
