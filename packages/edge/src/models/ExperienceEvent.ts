@@ -29,11 +29,11 @@ type ExperienceEventArguments =
     };
 
 class ExperienceEvent {
-  xdmData?: Record<string, any>;
-  data?: Record<string, any>;
-  datasetIdentifier?: string;
-  datastreamIdOverride?: string;
-  datastreamConfigOverride?: Record<string, any>;
+  xdmData?: Record<string, any> | null;
+  data?: Record<string, any> | null;
+  datasetIdentifier?: string | null;
+  datastreamIdOverride?: string | null;
+  datastreamConfigOverride?: Record<string, any> | null;
 
   constructor(args: ExperienceEventArguments);
   // preserve backwards compatibility with the old constructor

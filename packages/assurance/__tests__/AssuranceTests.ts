@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Assurance } from '../ts';
+import { Assurance } from '../src';
 
 describe('Assurance', () => {
   it('extensionVersion is called', async () => {

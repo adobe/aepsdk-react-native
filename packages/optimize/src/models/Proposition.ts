@@ -33,7 +33,9 @@ class Proposition {
         this.scopeDetails = eventData['scopeDetails'];
         if(eventData['items']) {
             this.items = eventData['items'].map((offer) => new Offer(offer));                
-        }                
+        }else {
+            this.items = new Array();
+        }           
     }    
         
     /**

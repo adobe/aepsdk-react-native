@@ -108,7 +108,7 @@ build/
 xcuserdata/
 packages/.DS_Store
 
-js/
+dist/
 test/.DS_Store
 
 .yarn/

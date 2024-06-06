@@ -47,11 +47,11 @@ const defaultPropositions = {
 
 export default ({navigation}: any) => {
   const [version, setVersion] = useState('0.0.0');
-  const [textProposition, setTextProposition] = useState<Proposition>(null);
-  const [imageProposition, setImageProposition] = useState<Proposition>(null);
+  const [textProposition, setTextProposition] = useState<Proposition>();
+  const [imageProposition, setImageProposition] = useState<Proposition>();
   const [htmlProposition, setHtmlProposition] = useState<Proposition>();
-  const [jsonProposition, setJsonProposition] = useState<Proposition>(null);
-  const [targetProposition, setTargetProposition] = useState<Proposition>(null);
+  const [jsonProposition, setJsonProposition] = useState<Proposition>();
+  const [targetProposition, setTargetProposition] = useState<Proposition | undefined>();
 
   const decisionScopeText = new DecisionScope(
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9',
@@ -82,7 +82,7 @@ export default ({navigation}: any) => {
   };
 
   const updatePropositions = () => {
-    Optimize.updatePropositions(decisionScopes, null, null);
+    Optimize.updatePropositions(decisionScopes);
     console.log('Updated Propositions');
   };
 

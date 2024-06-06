@@ -11,28 +11,28 @@ governing permissions and limitations under the License.
 */
 
 /**
- * Represents a location returned by the places SDK that includes data about what location was provided to the SDK
+ * Represents a geofence location that will emit events when exited and entered
  */
-class PlacesLocation {
-  longitude: number;
+class PlacesGeofence {
+  identifier: string;
   latitude: number;
-  altitude: number;
-  speed: number;
-  accuracy: number;
+  longitude: number;
+  radius: number;
+  expirationDuration: number;
 
   constructor(
+    identifier: string,
+    latitude: number,
     longitude: number,
-    latitude?: number,
-    altitude?: number,
-    speed?: number,
-    accuracy?: number
+    radius: number,
+    expirationDuration: number
   ) {
+    this.identifier = identifier;
     this.latitude = latitude;
     this.longitude = longitude;
-    this.altitude = altitude;
-    this.speed = speed;
-    this.accuracy = accuracy;
+    this.radius = radius;
+    this.expirationDuration = expirationDuration;
   }
 }
 
-export default PlacesLocation;
+export default PlacesGeofence;

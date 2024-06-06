@@ -10,29 +10,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-/**
- * Represents a geofence location that will emit events when exited and entered
- */
-class PlacesGeofence {
-  identifier: string;
-  latitude: number;
-  longitude: number;
-  radius: number;
-  expirationDuration: number;
-
-  constructor(
-    identifier: string,
-    latitude: number,
-    longitude: number,
-    radius: number,
-    expirationDuration?: number
-  ) {
-    this.identifier = identifier;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.radius = radius;
-    this.expirationDuration = expirationDuration;
+export class UserInfo {
+  _mId: string;
+  _dId: string;
+  [key: string]: any;
+  constructor(mId: string, dId: string) {
+    this._mId = mId;
+    this._dId = dId;
   }
 }
-
-export default PlacesGeofence;

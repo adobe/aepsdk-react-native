@@ -10,12 +10,12 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import Target from '../ts/Target';
-import TargetPrefetchObject from '../ts/models/TargetPrefetchObject';
-import TargetRequestObject from '../ts/models/TargetRequestObject';
-import TargetOrder from '../ts/models/TargetOrder';
-import TargetProduct from '../ts/models/TargetProduct';
-import TargetParameters from '../ts/models/TargetParameters';
+import Target from '../src/Target';
+import TargetPrefetchObject from '../src/models/TargetPrefetchObject';
+import TargetRequestObject from '../src/models/TargetRequestObject';
+import TargetOrder from '../src/models/TargetOrder';
+import TargetProduct from '../src/models/TargetProduct';
+import TargetParameters from '../src/models/TargetParameters';
 
 describe('Target', () => {
   test('extensionVersion is called', async () => {
@@ -86,7 +86,7 @@ describe('Target', () => {
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     var targetProduct = new TargetProduct('24D3412', 'Books');
-    var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
+    var parameters1 = new TargetParameters(mboxParameters1);
     var request1 = new TargetRequestObject(
       'mboxName2',
       parameters1,
@@ -184,7 +184,7 @@ describe('Target', () => {
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     var targetProduct = new TargetProduct('24D3412', 'Books');
-    var parameters1 = new TargetParameters(mboxParameters1, null, null, null);
+    var parameters1 = new TargetParameters(mboxParameters1);
     var prefetch1 = new TargetPrefetchObject('mboxName2', parameters1);
 
     var parameters2 = new TargetParameters(

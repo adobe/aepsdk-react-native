@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { MobileVisitorAuthenticationState, Identity } from '../ts';
+import { MobileVisitorAuthenticationState, Identity } from '../src';
 
 describe('Identity', () => {
   it('extensionVersion is called', async () => {

@@ -58,3 +58,4 @@ android/build
 android/gradlew.bat
 android/gradle/
 __tests__
+tsconfig.json

@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { Identity, AuthenticatedState, IdentityItem, IdentityMap } from '../ts';
+import { Identity, AuthenticatedState, IdentityItem, IdentityMap } from '../src';
 
 afterEach(() => {
   jest.clearAllMocks();
