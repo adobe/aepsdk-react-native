@@ -110,7 +110,9 @@ RCT_EXPORT_METHOD(onPropositionsUpdate) {
             forKey:key.name];
     }
 
-    [self sendEventWithName:@"onPropositionsUpdate" body:propositionDictionary];
+    if (self->hasListeners) {
+      [self sendEventWithName:@"onPropositionsUpdate" body:propositionDictionary];
+    }
   }];
 }
 

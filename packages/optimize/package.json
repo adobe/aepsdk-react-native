@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepoptimize",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
