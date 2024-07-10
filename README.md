@@ -21,10 +21,10 @@ This repository is a monorepo and contains a collection of React Native modules 
 | [@adobe/react-native-aeptarget](./packages/target) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aeptarget.svg)](https://www.npmjs.com/package/@adobe/react-native-aeptarget) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aeptarget) | [Target](https://developer.adobe.com/client-sdks/documentation/adobe-target)
 | [@adobe/react-native-aepcampaignclassic](./packages/campaignclassic) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) |[CampaignClassic](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic)
 
-> [!NOTE]   
+> [!NOTE]
 > Since version 5.0.0 of the Adobe React Native SDK, all React Native libraries that share the same major version are compatible with each other.
 
-> [!NOTE]  
+> [!NOTE]
 > The React Native libraries within this repository are specifically designed to support the Android and iOS platforms only.
 
 
@@ -40,7 +40,7 @@ To submit iOS apps to the App Store, you must build them using Xcode 15 or later
 
 ## iOS Privacy Manifest
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Adobe Experience Platform React Native **6.x** libraries now depend on Experience Platform iOS 5.x SDKs, which have been updated to align with Apple's latest guidelines on [privacy manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files). For further details on how Apple's privacy-related announcements affect the Adobe mobile SDK for iOS, please refer to this [document](https://developer.adobe.com/client-sdks/resources/privacy-manifest/).
 
 ## React Native New Architecture Support
@@ -225,6 +225,25 @@ Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues
 Underlying Objective-C module 'AEPRulesEngine' not found
 ```
 Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770).
+
+## Integration with Expo
+
+The Adobe Experience Platform SDK is not supported in Expo managed workflow. However, you can use the SDK in the bare workflow. For more information, see the [Expo documentation](https://docs.expo.dev/bare/exploring-bare-workflow/).
+
+### Steps to work with Bare React Native workflow
+
+1. Install expo-modules using the following command:
+
+```bash
+npx install-expo-modules@latest
+```
+
+2. Make sure the changes are reflected in the desired platform files. For example, in iOS, the changes should be reflected in the `Podfile`. Use this link to verify the changes: https://docs.expo.dev/bare/installing-expo-modules/#configuration-for-ios
+3. Clean Xcode build folder and rebuild.
+4. If you get an error “Import of C++ module 'Foundation' appears within extern "C" language linkage specification” in EXDefines.h file, then modify the following code snippet in the `EXDefines.h` file:
+
+    1. Move the `#import <Foundation/Foundation.h>` from line 82 and move it to end of file at line 115.
+
 
 ## Contributing
 
