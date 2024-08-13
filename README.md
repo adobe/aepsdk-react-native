@@ -47,6 +47,10 @@ To submit iOS apps to the App Store, you must build them using Xcode 15 or later
 
 React Native 0.7x introduced support for a new architecture. We don't yet support the new architecture.
 
+## Expo Support
+
+See [expo.md](./docs/expo.md) on guidance on integrating the SDK with Expo projects.
+
 ## Installation
 
 You need to install Adobe Experience Platform Mobile SDK with [npm](https://www.npmjs.com/) packages and configure the native Android/iOS project in your React Native project.
