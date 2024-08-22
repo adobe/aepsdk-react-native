@@ -49,7 +49,7 @@ React Native 0.7x introduced support for a new architecture. We don't yet suppor
 
 ## Expo Support
 
-See [expo.md](./docs/expo.md) on guidance on integrating the SDK with Expo projects.
+Please refer to the [Expo Integration](./docs/expo.md) document for guidance on integrating the SDK with Expo projects.
 
 ## Installation
 
@@ -118,7 +118,7 @@ cd ios && pod update && cd ..
 
 Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. Documentation on how to initialize each extension can be found in _./packages/{extension}/README.md_.
 
-###### **iOS**
+##### **iOS**
 
 ```objective-c
 //AppDelegate.h
@@ -166,7 +166,9 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 > "ld: warning: Could not find or use auto-linked library 'swiftCoreFoundation'"
 > This is because Adobe Experience Platform SDK now requires the app uses swift interfaces. Add a dummy .swift file to your project to embed the swift standard libs. See the SampleApp presented in this repo for example.
 
-###### **Android:**
+##### **Android:**
+
+###### **Java:**
 
 ```java
 //MainApplication.java
@@ -204,6 +206,47 @@ public class MainApplication extends Application implements ReactApplication {
       MobileCore.lifecycleStart(null);
       //enable this for Lifecycle. See Note for collecting Lifecycle metrics.
     });
+  }
+}
+```
+
+###### **Kotlin:**
+
+```kotlin
+// MainApplication.kt
+mport com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Extension;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Edge;
+import com.adobe.marketing.mobile.edge.consent.Consent;
+```
+
+```kotlin
+class MainApplication : Application(), ReactApplication {
+  ...
+  override fun onCreate() {
+    super.onCreate()
+    ...
+
+    MobileCore.setApplication(this)
+    MobileCore.setLogLevel(LoggingMode.VERBOSE)
+    MobileCore.configureWithAppID("YOUR-APP-ID")
+    val extensions: List<Class<out Extension?>> = Arrays.asList(
+      Lifecycle.EXTENSION,
+      Signal.EXTENSION,
+      Edge.EXTENSION,
+      Consent.EXTENSION,
+      com.adobe.marketing.mobile.Identity.EXTENSION
+    )
+    MobileCore.registerExtensions(extensions,
+      AdobeCallback { o: Any? ->
+        MobileCore.lifecycleStart(
+          null
+        )
+      })
   }
 }
 ```

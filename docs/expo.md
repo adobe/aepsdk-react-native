@@ -1,15 +1,20 @@
-## Guide for apps created using the Expo CLI
+# Integrating the SDK with Expo projects
+
+- [Guide for Expo apps](#guide-for-expo-apps)
+- [Guide for Bare React Native apps using Expo modules](#guide-for-bare-react-native-apps-using-expo-modules)
+
+## Guide for Expo apps
 
 ### Overview
-Expo projects can use both third-party React Native libraries with native code and your own custom native code. Creating a development build allows you to include your specific native dependencies and customisations.
+Expo projects can use both third-party React Native libraries with native code and your own custom native code. Creating a development build with Expo CLI allows you to include your specific native dependencies and customizations.
 
-- Initializing the SDKs should be done in native code inside your AppDelegate (iOS) and MainApplication (Android). 
+When initializing the Adobe Mobile SDKs, it is required to initialize the SDKs in the native code inside your AppDelegate file for iOS and the MainApplication file for Android.
 
-- By default, Expo projects use Continuous Native Generation (CNG). This means that projects do not have android and ios directories containing the native code and configuration. You can opt out of CNG and directly manage the code and configuration inside your android and ios directories.
+By default, Expo projects use Continuous Native Generation (CNG). This means that projects do not have android and ios directories containing the native code and configuration. You can opt out of CNG and directly manage the code and configuration inside your android and ios directories.
 
 ### Installation
 
-- To generate these directories, run `npx expo prebuild` or compile your app locally (`npx expo run android` or `npx expo run ios`).
+- To generate these directories, run `npx expo prebuild` or compile your app locally (`npx expo run:android` or `npx expo run:ios`).
 
 ```bash
 # Build your native Android project
@@ -18,9 +23,11 @@ npx expo run:android
 npx expo run:ios
 ```
 
+### Install Adobe Mobile SDKs
+
 Follow the [Installation Guide](../README.md#Installation) to install Adobe SDKs once the the android and ios directories are generated.
 
-## Guide for React Native Apps to integrate Expo Modules
+## Guide for Bare React Native apps using Expo modules
 
 ### Overview
 Bare React Native workflows can be integrated with Expo SDKs by using the `install-expo-modules` command. This allows you to use Expo modules in your app.
@@ -34,6 +41,8 @@ Bare React Native workflows can be integrated with Expo SDKs by using the `insta
 npx install-expo-modules@latest
 ```
 - If the command fails, please follow the manual installation [instructions](https://docs.expo.dev/bare/installing-expo-modules/#manual-installation).
+
+### Install Adobe Mobile SDKs
 
 Follow the [Installation Guide](../README.md#Installation) to install Adobe SDKs.
 
