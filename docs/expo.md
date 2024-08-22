@@ -52,3 +52,5 @@ Follow the [Installation Guide](../README.md#Installation) to install Adobe SDKs
 error: import of C++ module 'Foundation' appears within extern "C" language linkage specification [-Wmodule-import-in-extern-c]
 ```
 **Fix**: In XCode, add `-Wno-module-import-in-extern-c` to `Apple CLang - Custom Compiler Flags -> Other C++`
+<img width="936" alt="Screenshot 2024-08-23 at 1 15 03 AM" src="https://github.com/user-attachments/assets/518b0e39-a2dd-4f37-94c2-c7663cb4edcd">
+
