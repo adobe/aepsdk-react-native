@@ -138,8 +138,7 @@ extensionVersion(): Promise<string>
 **Example**
 
 ```typescript
-Optimize.extensionVersion().then(newVersion => console.log("AdobeExperienceSDK: Optimize version: " + newVersion);
-```
+Optimize.extensionVersion().then(newVersion => console.log("AdobeExperienceSDK: Optimize version: " + newVersion));```
 
 ### Getting the Cached Propositions:
 
