@@ -95,7 +95,7 @@ public class MainApplication extends Application implements ReactApplication {
 ### Importing the extension:
 
 ```typescript
-import { CampaignClassic } from "@adobe/react-native-AEPCampaignClassic";
+import { CampaignClassic } from "@adobe/react-native-aepcampaignclassic";
 ```
 
 ## API reference
