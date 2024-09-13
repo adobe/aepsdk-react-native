@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import * as React from 'react';
-import {Button, View} from 'react-native';
+import {Button, View, Text} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import OptimizeView from './extensions/OptimizeView';
@@ -28,10 +28,12 @@ import TargetView from './extensions/TargetView';
 import PlacesView from './extensions/PlacesView';
 import {NavigationProps} from './types/props';
 import CampaignClassicView from './extensions/CampaignClassicView';
+import Constants from 'expo-constants';
 
 function HomeScreen({navigation}: NavigationProps) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Device Name: {Constants.deviceName}</Text>
       <Button
         onPress={() => navigation.navigate('CoreView')}
         title="Core/Lifecycle/Signal"
@@ -64,7 +66,7 @@ function HomeScreen({navigation}: NavigationProps) {
         onPress={() => navigation.navigate('ConsentView')}
         title="Consent"
       />
-       <Button
+      <Button
         onPress={() => navigation.navigate('EdgeBridgeView')}
         title="Edge Bridge"
       />
@@ -97,7 +99,10 @@ export default function App() {
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="CoreView" component={CoreView} />
         <Drawer.Screen name="AssuranceView" component={AssuranceView} />
-        <Drawer.Screen name="CampaignClassicView" component={CampaignClassicView} />
+        <Drawer.Screen
+          name="CampaignClassicView"
+          component={CampaignClassicView}
+        />
         <Drawer.Screen name="ConsentView" component={ConsentView} />
         <Drawer.Screen name="EdgeBridgeView" component={EdgeBridgeView} />
         <Drawer.Screen name="EdgeView" component={EdgeView} />

@@ -10,6 +10,7 @@ governing permissions and limitations under the License.
 */
 
 #import <RCTAppDelegate.h>
+#import <Expo/Expo.h>
 #import <UIKit/UIKit.h>
 
 @import AEPCore;
@@ -29,6 +30,6 @@ governing permissions and limitations under the License.
 @import AEPTarget;
 @import AEPCampaignClassic;
 
-@interface AppDelegate : RCTAppDelegate
+@interface AppDelegate : EXAppDelegateWrapper
 
 @end
