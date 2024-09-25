@@ -5263,10 +5263,10 @@ __metadata:
     prettier: "npm:2.8.8"
     react: "npm:18.3.1"
     react-native: "npm:0.75.3"
-    react-native-gesture-handler: "npm:^2.16.0"
-    react-native-reanimated: "npm:^3.8.1"
+    react-native-gesture-handler: "npm:^2.3.0"
+    react-native-reanimated: "npm:^3.15.0"
     react-native-safe-area-context: "npm:^4.9.0"
-    react-native-screens: "npm:^3.30.1"
+    react-native-screens: "npm:^3.33.0"
     react-native-webview: "npm:^13.8.2"
     react-test-renderer: "npm:18.3.1"
     recyclerlistview: "npm:^4.2.0"
@@ -7244,9 +7244,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.4":
-  version: 1.5.27
-  resolution: "electron-to-chromium@npm:1.5.27"
-  checksum: 10c0/4a057f469a01829884f2a51f3fc60af7e6a718b15009e4875df122fcdf13babea475ba029af1652a6875b4acfca730c48b13caac5d477d648e622699d3b662bf
+  version: 1.5.28
+  resolution: "electron-to-chromium@npm:1.5.28"
+  checksum: 10c0/6e2f4150ba03ce53ca128955c7d2da071d3774362a10c68848a85b71c29857915e2256cb53cd2de17fdbf0f56bf76ec174d24965abef7430d8c414ec733030b2
   languageName: node
   linkType: hard
 
@@ -12722,7 +12722,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:^2.16.0":
+"react-native-gesture-handler@npm:^2.3.0":
   version: 2.19.0
   resolution: "react-native-gesture-handler@npm:2.19.0"
   dependencies:
@@ -12737,7 +12737,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:^3.8.1":
+"react-native-reanimated@npm:^3.15.0":
   version: 3.15.3
   resolution: "react-native-reanimated@npm:3.15.3"
   dependencies:
@@ -12770,7 +12770,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^3.30.1":
+"react-native-screens@npm:^3.33.0":
   version: 3.34.0
   resolution: "react-native-screens@npm:3.34.0"
   dependencies:
