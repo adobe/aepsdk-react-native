@@ -11,17 +11,30 @@ governing permissions and limitations under the License.
 */
 
 import Messaging from './Messaging';
+import { ContentCard } from './models/ContentCard';
+import { HTMLProposition } from './models/HTMLProposition';
+import { InAppMessage } from './models/InAppMessage';
+import { JSONPropositionItem } from './models/JSONPropositionItem';
 import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
 import MessagingEdgeEventType from './models/MessagingEdgeEventType';
 import { MessagingProposition } from './models/MessagingProposition';
 import { MessagingPropositionItem } from './models/MessagingPropositionItem';
+import { PersonalizationSchema } from './models/PersonalizationSchema';
+import { Activity, Characteristics } from './models/ScopeDetails';
 
 export {
+  Activity,
+  Characteristics,
+  ContentCard,
+  HTMLProposition,
+  InAppMessage,
+  JSONPropositionItem,
   Messaging,
   Message,
   MessagingDelegate,
   MessagingEdgeEventType,
   MessagingProposition,
-  MessagingPropositionItem
+  MessagingPropositionItem,
+  PersonalizationSchema,
 };

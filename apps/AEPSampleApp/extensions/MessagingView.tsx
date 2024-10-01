@@ -17,6 +17,8 @@ import {Messaging} from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 import {NavigationProps} from '../types/props';
 
+const SURFACES = ['surface1', 'surface2'];
+
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
   console.log(`AdobeExperienceSDK: Messaging version: ${version}`);
@@ -39,10 +41,8 @@ const setMessagingDelegate = () => {
 };
 
 const getPropositionsForSurfaces = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces([
-    'codeBasedView#customHtmlOffer',
-  ]);
-  console.log(messages);
+  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
+  console.log(JSON.stringify(messages));
 };
 
 const trackAction = async () => {
@@ -50,7 +50,7 @@ const trackAction = async () => {
 };
 
 const updatePropositionsForSurfaces = async () => {
-  Messaging.updatePropositionsForSurfaces(['codeBasedView#customHtmlOffer']);
+  Messaging.updatePropositionsForSurfaces(SURFACES);
   console.log('Updated Propositions');
 };
 

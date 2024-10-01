@@ -17,7 +17,7 @@ class Message {
   id: string;
   autoTrack: boolean;
 
-  constructor({id, autoTrack = false}: {id: string; autoTrack: boolean}) {
+  constructor({ id, autoTrack = false }: { id: string; autoTrack: boolean }) {
     this.id = id;
     this.autoTrack = autoTrack;
   }

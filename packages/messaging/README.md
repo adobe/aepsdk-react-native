@@ -114,8 +114,8 @@ import {
   Messaging,
   MessagingDelegate,
   MessagingEdgeEventType,
-  Message,
-} from "@adobe/react-native-aepmessaging";
+  Message
+} from '@adobe/react-native-aepmessaging';
 ```
 
 ## API reference
@@ -134,7 +134,7 @@ extensionVersion(): Promise<string>
 
 ```javascript
 Messaging.extensionVersion().then((version) =>
-  console.log("AdobeExperienceSDK: Messaging version: " + version)
+  console.log('AdobeExperienceSDK: Messaging version: ' + version)
 );
 ```
 
@@ -153,11 +153,11 @@ Handling push notifications must be done in native (Android/iOS) code for the Re
 
 The AEPMessaging extension's push messaging APIs must be called from the native Android/iOS project of React Native app.
 
-###### [iOS API usage](https://github.com/adobe/aepsdk-messaging-ios/blob/main/Documentation/sources/usage.md)
+###### [iOS API usage](https://github.com/adobe/aepsdk-messaging-ios/blob/main/Documentation/sources/push-messaging/developer-documentation/api-usage.md)
 
 ##### [Android API usage](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/sources/api-usage.md)
 
-In Android, [MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/sources/messaging-push-payload.md#messagingpushpayload-usage) can be used for getting the notification attributes like title, body, and action. These are useful for push notification creation.
+In Android, [MessagingPushPayload](https://github.com/adobe/aepsdk-messaging-android/blob/main/Documentation/sources/push-notification/manual-handling-and-tracking.md) can be used for getting the notification attributes like title, body, and action. These are useful for push notification creation.
 
 ## In-app messages API reference
 
@@ -168,13 +168,13 @@ Initiates a network call to retrieve remote in-app message definitions.
 **Syntax**
 
 ```javascript
-refreshInAppMessages()
+refreshInAppMessages();
 ```
 
 **Example**
 
 ```javascript
-Messaging.refreshInAppMessages()
+Messaging.refreshInAppMessages();
 ```
 
 ### setMessagingDelegate
@@ -205,24 +205,20 @@ const messagingDelegate = {
 
   urlLoaded(url: string, message: Message) {
     // Action after message loads an URL
-  },
+  }
 };
 
-Messaging.setMessagingDelegate(messagingDelegate)
+Messaging.setMessagingDelegate(messagingDelegate);
 ```
-
-
 
 **Example**
 
 ```javascript
 const messagingDelegate = {
-  
   shouldShowMessage(message: Message) {
-    Messaging.saveMessage(message)
+    Messaging.saveMessage(message);
     return false;
-  },
-  
+  }
 };
 ```
 
@@ -239,12 +235,13 @@ updatePropositionsForSurfaces(surfaces: string[])
 **Example**
 
 ```javascript
-Messaging.updatePropositionsForSurfaces(["mobileapp://my-surface"])
+Messaging.updatePropositionsForSurfaces(['mobileapp://my-surface']);
 ```
 
 ### getPropositionsForSurfaces
 
-Retrieves the previously fetched (and cached) feeds content from the SDK for the provided surfaces. If the feeds content for one or more surfaces isn't previously cached in the SDK, it will not be retrieved from Adobe Journey Optimizer via the Experience Edge network.
+Retrieves the previously fetched (and cached) feeds content from the SDK for the provided surfaces. If the feeds content for one or more surfaces isn't previously cached in the SDK, it will not be retrieved from Adobe Journey Optimizer via the Experience Edge network. This can be used in order to retrieve code based experiences, content
+cards and other proposition types.
 
 **Syntax**
 
@@ -255,8 +252,19 @@ getPropositionsForSurfaces(surfaces: string[])
 **Example**
 
 ```javascript
-const propositions = Messaging.getPropositionsForSurfaces(["mobileapp://my-surface"])
-console.log(propositions)
+const propositions = Messaging.getPropositionsForSurfaces(['my-surface']);
+console.log(propositions);
+```
+
+Once propositions have been retrieved, their items will be typed to allow you to easily figure out what type they are using their schema property
+
+```javascript
+for (let item in proposition.items) {
+  if (item.schema === PersonalizationSchema.CONTENT_CARD) {
+    // Proposition Item is a content card, and will be fully typed
+    console.log(item.data.content);
+  }
+}
 ```
 
 ### getLatestMessage
@@ -266,14 +274,14 @@ Retrieves the most recently displayed message object
 **Syntax**
 
 ```javascript
-Messaging.getLatestMessage()
+Messaging.getLatestMessage();
 ```
 
 **Example**
 
 ```javascript
-const message = Messaging.getLatestMessage()
-console.log(message.id)
+const message = Messaging.getLatestMessage();
+console.log(message.id);
 ```
 
 ### getCachedMessages
@@ -283,14 +291,14 @@ Retrieves a list of all messages that have been cached in-memory
 **Syntax**
 
 ```javascript
-Messaging.getCachedMessages()
+Messaging.getCachedMessages();
 ```
 
 **Example**
 
 ```javascript
-const messages = Messaging.getCachedMessages()
-messages.forEach(message => message.clear())
+const messages = Messaging.getCachedMessages();
+messages.forEach((message) => message.clear());
 ```
 
 ### setMessageSettings
@@ -306,9 +314,8 @@ Messaging.setMessageSettings(shouldShowMessage: boolean, shouldSaveMessage: bool
 **Example**
 
 ```javascript
-Messaging.setMessageSettings(true, false)
+Messaging.setMessageSettings(true, false);
 ```
-
 
 ## Handling In App Messages using Message Object
 
@@ -321,14 +328,14 @@ Signals to the `UIService` that the message should be shown.
 **Syntax**
 
 ```javascript
-show()
+show();
 ```
 
 **Example**
 
 ```javascript
-var message: Message
-message.show()
+var message: Message;
+message.show();
 ```
 
 ### dismiss
@@ -344,8 +351,8 @@ dismiss(((suppressAutoTrack: ?boolean) = false))
 **Example**
 
 ```javascript
-var message: Message
-message.dismiss(true)
+var message: Message;
+message.dismiss(true);
 ```
 
 ### track
@@ -362,7 +369,7 @@ track(interaction: ?string, eventType: MessagingEdgeEventType)
 
 ```javascript
 var message: Message;
-message.track("sample text", MessagingEdgeEventType.IN_APP_DISMISS)
+message.track('sample text', MessagingEdgeEventType.IN_APP_DISMISS);
 ```
 
 ### handleJavascriptMessage
@@ -379,7 +386,7 @@ handleJavascriptMessage(name: string) : Promise<?any>
 
 ```javascript
 var message: Message;
-message.handleJavascriptMessage("test").then((data) => {})
+message.handleJavascriptMessage('test').then((data) => {});
 ```
 
 ### setAutoTrack
@@ -396,7 +403,7 @@ setAutoTrack(autoTrack: boolean)
 
 ```javascript
 var message: Message;
-message.setAutoTrack(true)
+message.setAutoTrack(true);
 ```
 
 ### clear
@@ -406,14 +413,14 @@ Clears the reference to the in-memory cached `Message` object. This function mus
 **Syntax**
 
 ```javascript
-clear()
+clear();
 ```
 
 **Example**
 
 ```javascript
-var message: Message
-message.clear()
+var message: Message;
+message.clear();
 ```
 
 ## Programmatically control the display of in-app messages
@@ -432,7 +439,7 @@ type MessagingDelegate = {
 
   urlLoaded(url: string, message: Message): void, // iOS Only
 
-  onContentLoaded(message: Message): void, // Android Only
+  onContentLoaded(message: Message): void // Android Only
 };
 ```
 
@@ -458,9 +465,8 @@ const messagingDelegate = {
 
   onContentLoaded(message: Message) {
     // Action after message loads content
-  },
+  }
 };
-
 ```
 
 ### Controlling when the message should be shown to the end user.
@@ -471,7 +477,7 @@ Below is an example of when the developer may choose to suppress an in-app messa
 
 ```javascript
 function shouldShowMessage(message: Message): boolean {
-  if (someOtherWorkflowStatus == "inProgress") {
+  if (someOtherWorkflowStatus == 'inProgress') {
     return false;
   }
 
@@ -486,12 +492,12 @@ Continuing with the above example, the developer has stored the message that was
 var cachedMessage: Message;
 
 function otherWorkflowFinished() {
-  anotherWorkflowStatus = "complete";
+  anotherWorkflowStatus = 'complete';
   cachedMessage.show();
 }
 
 function shouldShowMessage(message: Message): boolean {
-  if (anotherWorkflowStatus === "inProgress") {
+  if (anotherWorkflowStatus === 'inProgress') {
     // store the current message for later use
     Messaging.saveMessage(message);
     cachedMessage = message;
@@ -506,9 +512,8 @@ function shouldShowMessage(message: Message): boolean {
 
 ```javascript
 function otherWorkflowFinished() {
-  anotherWorkflowStatus = "complete";
+  anotherWorkflowStatus = 'complete';
   currentMessage.show();
   currentMessage.clearMessage();
 }
 ```
-

@@ -1,15 +1,15 @@
 PODS:
-  - AEPAssurance (5.0.0):
+  - AEPAssurance (5.0.1):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
   - AEPCampaignClassic (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
-  - AEPCore (5.0.0):
+  - AEPCore (5.2.0):
     - AEPRulesEngine (< 6.0.0, >= 5.0.0)
-    - AEPServices (< 6.0.0, >= 5.0.0)
-  - AEPEdge (5.0.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.2.0)
+  - AEPEdge (5.0.2):
+    - AEPCore (< 6.0.0, >= 5.1.0)
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
   - AEPEdgeBridge (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
@@ -18,25 +18,25 @@ PODS:
     - AEPEdge (< 6.0.0, >= 5.0.0)
   - AEPEdgeIdentity (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
-  - AEPIdentity (5.0.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
-  - AEPLifecycle (5.0.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
-  - AEPMessaging (5.0.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
-    - AEPEdge (< 6.0.0, >= 5.0.0)
+  - AEPIdentity (5.2.0):
+    - AEPCore (< 6.0.0, >= 5.2.0)
+  - AEPLifecycle (5.2.0):
+    - AEPCore (< 6.0.0, >= 5.2.0)
+  - AEPMessaging (5.3.0):
+    - AEPCore (< 6.0.0, >= 5.2.0)
+    - AEPEdge (< 6.0.0, >= 5.0.2)
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
-    - AEPServices (< 6.0.0, >= 5.0.0)
-  - AEPOptimize (5.0.0):
+    - AEPServices (< 6.0.0, >= 5.2.0)
+  - AEPOptimize (5.0.1):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPEdge (< 6.0.0, >= 5.0.0)
   - AEPPlaces (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
   - AEPRulesEngine (5.0.0)
-  - AEPServices (5.0.0)
-  - AEPSignal (5.0.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
+  - AEPServices (5.2.0)
+  - AEPSignal (5.2.0):
+    - AEPCore (< 6.0.0, >= 5.2.0)
   - AEPTarget (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
   - AEPUserProfile (5.0.0):
@@ -161,12 +161,10 @@ PODS:
   - RCTAEPEdgeIdentity (6.0.2):
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPMessaging (6.0.2):
-    - AEPMessaging (< 6.0.0, >= 5.0.0)
-    - glog
-    - RCT-Folly (= 2022.05.16.00)
-    - React-Core
-  - RCTAEPOptimize (6.0.2):
+  - RCTAEPMessaging (6.0.4):
+    - AEPMessaging (< 6.0.0, >= 5.3.0)
+    - React
+  - RCTAEPOptimize (6.0.3):
     - AEPOptimize (< 6.0.0, >= 5.0.0)
     - React
   - RCTAEPPlaces (6.0.2):
@@ -1027,9 +1025,9 @@ PODS:
   - React-Mapbuffer (0.73.6):
     - glog
     - React-debug
-  - react-native-safe-area-context (4.10.1):
+  - react-native-safe-area-context (4.11.0):
     - React-Core
-  - react-native-webview (13.10.2):
+  - react-native-webview (13.12.2):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1202,16 +1200,28 @@ PODS:
     - React-perflogger (= 0.73.6)
   - RNCMaskedView (0.3.1):
     - React-Core
-  - RNGestureHandler (2.16.2):
+  - RNGestureHandler (2.19.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - RNReanimated (3.11.0):
+  - RNReanimated (3.15.2):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
     - ReactCommon/turbomodule/core
-  - RNScreens (3.31.1):
+    - RNReanimated/reanimated (= 3.15.2)
+    - RNReanimated/worklets (= 3.15.2)
+  - RNReanimated/reanimated (3.15.2):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - RNReanimated/worklets (3.15.2):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - RNScreens (3.34.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1481,21 +1491,21 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AEPAssurance: 7f260ded4df38a70a06efebade8c33a3e3221984
+  AEPAssurance: df04baeace42befb0cc213fd6cdfe51651d11ba6
   AEPCampaignClassic: bb177cc477846b15c38cfba77b8ec5127abf2105
-  AEPCore: f1c3e9238bb12e7e1103f4407c341ebc65aeab5b
-  AEPEdge: 6bc7c3f6573fdf0a12fb3ddfd32420112a89c80b
+  AEPCore: db53082c207c28166ed6aa9ae6262a55e95c78aa
+  AEPEdge: edf73ae8900016940cd7fcb29a89a576a1c6b0ae
   AEPEdgeBridge: be78be4885ae420ef21bda91707d5eff9510ef70
   AEPEdgeConsent: d7db1d19eb4c1e2146360ed3c8df315f671b26d5
   AEPEdgeIdentity: 3161ff33434586962946912d6b8e9e8fca1c4d23
-  AEPIdentity: a65c1eba43a06f01b0dab191b27a53a81adada57
-  AEPLifecycle: d4e0e1e86d6225d87203875d67f56c48f7ab7f67
-  AEPMessaging: 63ea36bff1476ee61578df6f9f439df02a7283c9
-  AEPOptimize: 0bd0c157671cda3abed1c7d92ae653d2e44af07c
+  AEPIdentity: 3c597ef3d734d726f6a48ae10cdecb36fbeb28ca
+  AEPLifecycle: 0e2ddb26751320b88ea7471e63751f38c4ccdc10
+  AEPMessaging: dbefc300309d0d779d5caff07e305be00b4db749
+  AEPOptimize: 0ee77adf3e30e6961e06dda85ad2ce132da9eb4c
   AEPPlaces: 9eec5f88306033ce8190ec30727cbdd4008cc018
   AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
-  AEPServices: e42e5118128e81c0f797fdfb1dc9c4a714d644b8
-  AEPSignal: b146a3d4e5af51ff588f4f1ffbd40f1541325143
+  AEPServices: d959143d13fde7e8464c19527df6baacdef765ce
+  AEPSignal: 3b9052359e25bdea9fa677955ed20db7702e17d5
   AEPTarget: 78197ae0f5455eeb837f8ed9fdc4f3f697cb3dd8
   AEPUserProfile: cf36305d683d993d528337a46b7a269029b63e5d
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
@@ -1524,8 +1534,8 @@ SPEC CHECKSUMS:
   RCTAEPEdgeBridge: 6b2c46794e433f46037d3841c808fa15d1ec22db
   RCTAEPEdgeConsent: 15a69df3f757e648164948bed5832d6063a360eb
   RCTAEPEdgeIdentity: edf4bd7150e5afbcb4d28e80fa8c1e1872a93b86
-  RCTAEPMessaging: c53a3249f51bed62b085239fa878e13e8e9f018e
-  RCTAEPOptimize: 8e4bffa750ec968d2309a7788cca10ca9e4228da
+  RCTAEPMessaging: 49244eea86cecc0570c57eef173b8bc3a121bbd5
+  RCTAEPOptimize: bf52819291aa6d1ad709749e731719aff868924b
   RCTAEPPlaces: 6682b683ebc9debaf959d358d2522ce6e90b825e
   RCTAEPTarget: dfa4808f76f46c3df23fe55298229f11f6467036
   RCTAEPUserProfile: 894fb60774881d062a4dacf035017c13eca2a13b
@@ -1549,8 +1559,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 85583ef014ce53d731a98c66a0e24496f7a83066
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
-  react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
-  react-native-webview: c461fed0b58be5ee5180c3c3092a1d5dcb214a94
+  react-native-safe-area-context: 851c62c48dce80ccaa5637b6aa5991a1bc36eca9
+  react-native-webview: 8600348afad520e40ac629eb7963a514f16cdd17
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
   React-NativeModulesApple: cd26e56d56350e123da0c1e3e4c76cb58a05e1ee
   React-perflogger: 5f49905de275bac07ac7ea7f575a70611fa988f2
@@ -1572,12 +1582,12 @@ SPEC CHECKSUMS:
   React-utils: d16c1d2251c088ad817996621947d0ac8167b46c
   ReactCommon: 2aa35648354bd4c4665b9a5084a7d37097b89c10
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
-  RNGestureHandler: 96439cf6543defdde87459e48cd1a3f0e45a008e
-  RNReanimated: 6cfa556540186ce7ae7a0b048f369236b1d86ebb
-  RNScreens: 134a7511b12b8eb440b87aac21e36a71295d6024
+  RNGestureHandler: 75e2ebf4e8ac521f2b3c9afdc048fcbc2e2c9ea4
+  RNReanimated: 1b616055693239fb2607dac505f08f45573247c6
+  RNScreens: 29418ceffb585b8f0ebd363de304288c3dce8323
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
 
 PODFILE CHECKSUM: 28c6df2071ba56279db6503a2577505ae5b10b15
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.11.3

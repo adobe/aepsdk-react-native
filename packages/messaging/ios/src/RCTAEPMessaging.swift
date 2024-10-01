@@ -71,13 +71,17 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         withResolver resolve: @escaping RCTPromiseResolveBlock,
         withRejecter reject: @escaping RCTPromiseRejectBlock
     ) {
-        let surfacePaths = surfaces.map { Surface(path: $0) }
-        Messaging.getPropositionsForSurfaces(surfacePaths) { propositionsDict, error in
+        let surfacePaths = surfaces.map { $0.isEmpty ? Surface() : Surface(path: $0) }
+        Messaging.getPropositionsForSurfaces(surfacePaths) { propositions, error in
             guard error == nil else {
                 reject("Unable to Retrieve Propositions", nil, nil)
                 return
             }
-            resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositionsDict!))
+            if (propositions != nil && propositions!.isEmpty) {
+                resolve([String: Any]());
+                return;
+            }
+            resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositions!))
         }
     }
 
