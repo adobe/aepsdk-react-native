@@ -214,7 +214,7 @@ public class MainApplication extends Application implements ReactApplication {
 
 ```kotlin
 // MainApplication.kt
-mport com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.Extension;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
