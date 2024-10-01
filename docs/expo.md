@@ -8,7 +8,7 @@
 ### Overview
 Expo projects can use both third-party React Native libraries with native code and your own custom native code. Creating a development build with Expo CLI allows you to include your specific native dependencies and customizations.
 
-When initializing the Adobe Mobile SDKs, it is required to initialize the SDKs in the native code inside your AppDelegate file for iOS and the MainApplication file for Android.
+When initializing the Adobe Mobile SDKs, it is required to initialize the SDKs in the native code inside your `AppDelegate` file for iOS and the `MainApplication` file for Android.
 
 By default, Expo projects use Continuous Native Generation (CNG). This means that projects do not have android and ios directories containing the native code and configuration. You can opt out of CNG and directly manage the code and configuration inside your android and ios directories.
 
