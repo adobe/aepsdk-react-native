@@ -5,13 +5,13 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "apps/*"
+      "apps/AEPSampleAppNewArch"
     ]
   },
   "scripts": {
     "clean": "rm yarn.lock & find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf dist",
-    "build": "npx lerna exec --ignore aepsampleapp -- tsc",
+    "build": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarch -- tsc",
     "test": "jest",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
     "sampleapp:ios:pod:install": "cd apps/AEPSampleApp/ios && pod install",
@@ -39,5 +39,6 @@
     "ts-jest": "^29.1.1",
     "tslib": "^2.3.1",
     "typescript": "^4.5.5"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
