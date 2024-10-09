@@ -7,6 +7,66 @@
   resolved "https://registry.yarnpkg.com/@0no-co/graphql.web/-/graphql.web-1.0.8.tgz#20682c7839b0b5b7728ad944a8602ca46d983e75"
   integrity sha512-8BG6woLtDMvXB9Ajb/uE+Zr/U7y4qJ3upXi0JQHZmsKUJa7HjF/gFvmL2f3/mSmfZoQGRr9VoY97LCX2uaFMzA==
 
+"@adobe/react-native-aepassurance@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepassurance/-/react-native-aepassurance-6.0.2.tgz#84471265c4086fce6b1dae72bbd851b65f14c411"
+  integrity sha512-+8hnqZxQ+iqOqcaPhv3PdnGvMxPKwlcTJfFcYPw+N4Qd6UbV3r5lLeyLhBxLqpT5+gJ3RsGOVLBFQzHjMb+1bA==
+
+"@adobe/react-native-aepcampaignclassic@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepcampaignclassic/-/react-native-aepcampaignclassic-6.0.2.tgz#193859f16b0222218025024e265e0546bef09c18"
+  integrity sha512-9olDnIAmIZ7X4YckbaUySkWKHmipgtF2i7X2P1v7nshl+qdr0DE7CfzlOUMv6elTcnctLQmf1Q0bPvwlXAISDw==
+
+"@adobe/react-native-aepcore@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepcore/-/react-native-aepcore-6.0.2.tgz#e4bc3d3fa1d5332d716bea35bbd5bf73b689aaf6"
+  integrity sha512-satSCDhwsmfXIldQv7lAjKypDkkpF7fgNijrfC02bLib2RLf1AkGOR8IRVF1zy1THkGGyW0G1K/7n2SynZFaVg==
+
+"@adobe/react-native-aepedge@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepedge/-/react-native-aepedge-6.0.2.tgz#9b76a0daed05a6c74c46c186b3b01510bd2154c1"
+  integrity sha512-AIcK8AksHvBP9ZM8zvWcFns4SaUI43XSEICUf1FiCqxyj3ZVRax+YszQiBeuJFPvK8crP3VjTvC4c/zWYWL3Fg==
+
+"@adobe/react-native-aepedgebridge@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepedgebridge/-/react-native-aepedgebridge-6.0.2.tgz#c3c1b47ee297f10ad99f5e90dc7fa4c0d35565a2"
+  integrity sha512-hXXpIO8Eli5Z4KTN9K5AIPLWsrWUgEdwL4lrVgPKNqVvZLC0X39SEibMPSBwTOg4C64jxwLna6ELtXxxjL99cA==
+
+"@adobe/react-native-aepedgeconsent@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepedgeconsent/-/react-native-aepedgeconsent-6.0.2.tgz#644d98f5baf2fdddd8ea65fdb60465cb9a7af8b1"
+  integrity sha512-CMaGQBocNjUGGhgcnaF/v6LhKDgU9gAb+dqvmW8zqboznGI7p5PUI0saho9eGOjnL6z5mHZeeu2jeZz4B5z+6w==
+
+"@adobe/react-native-aepedgeidentity@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepedgeidentity/-/react-native-aepedgeidentity-6.0.2.tgz#078b429633b67d118c685edbe97bae692bb11622"
+  integrity sha512-yYHsLhHbC/zhR9yYL4d8UTmEw2CHkAmMTVt+e87caD8BJmnS8/YBw/L/pfO4l1flRBw+EVbntDlppdi1sTDEGg==
+
+"@adobe/react-native-aepmessaging@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepmessaging/-/react-native-aepmessaging-6.0.3.tgz#cb9ecbad39e102c9e67ba6fcd29ba4e5d219e179"
+  integrity sha512-/ekEwv3unvMPdvyKLjMILEUR5u8hZ/ws6TpzhMA51oar0rsFXg1VQ+7yu+WjjSba4fauesag4LzRL4DrA44/9Q==
+
+"@adobe/react-native-aepoptimize@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepoptimize/-/react-native-aepoptimize-6.0.3.tgz#3cc9a89f60ca72c6b3c160ae5f23afeab681f29e"
+  integrity sha512-uwxmdQTjCQa7YqrMrla/ETU1ynuC9iSZzwPvvAWMOuVoSmNwbsN2znqg9nLZJo7AhU5Ay3qJNKnmFkSNPcXOJA==
+
+"@adobe/react-native-aepplaces@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepplaces/-/react-native-aepplaces-6.0.2.tgz#f719718a66caaa50dab2864b5ddbabadb04e26ba"
+  integrity sha512-z1xIlS3Ub2LvqXDDQVB0fnsWaWhFK0KxVKeL6+bAxwBQ1cPB5CMn9r3yd7jYnqyktsmILb/ndUj34MqFWTXtcg==
+
+"@adobe/react-native-aeptarget@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aeptarget/-/react-native-aeptarget-6.0.2.tgz#5d66aeb441fce2db483a3cda2bbc58e542822806"
+  integrity sha512-4b9IOThbxzDAO9GZfwEAMBMG+jLguRJAN5gh34tghzJQJe7IAJl6BGQWRvqS1iNjtVcQ1L5zaHhs9KgvsRflGg==
+
+"@adobe/react-native-aepuserprofile@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepuserprofile/-/react-native-aepuserprofile-6.0.2.tgz#daa143c137bdfff7fb8537f580d116e5fa4265a7"
+  integrity sha512-5btukvFy8MMr9Y9WekfZ/MJH+2jm16X/KbfW+08pKcTxQpvkJFpqcRYjgTDgTqpBAGTJWBRyqsYfG4OQEpTZZw==
+
 "@ampproject/remapping@^2.2.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.3.0.tgz#ed441b6fa600072520ce18b43d2c8cc8caecc7f4"
@@ -2025,6 +2085,15 @@
     invariant "^2.2.4"
     nullthrows "^1.1.1"
 
+"@react-navigation/bottom-tabs@^6.5.9":
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-6.6.1.tgz#589edc9c8fbf652c485b3c37d344faafe3cd4cc4"
+  integrity sha512-9oD4cypEBjPuaMiu9tevWGiQ4w/d6l3HNhcJ1IjXZ24xvYDSs0mqjUcdt8SWUolCvRrYc/DmNBLlT83bk0bHTw==
+  dependencies:
+    "@react-navigation/elements" "^1.3.31"
+    color "^4.2.3"
+    warn-once "^0.1.0"
+
 "@react-navigation/bottom-tabs@~6.5.7":
   version "6.5.20"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-6.5.20.tgz#5335e75b02c527ef0569bd97d4f9185d65616e49"
@@ -2034,7 +2103,7 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@react-navigation/core@^6.4.17":
+"@react-navigation/core@^6.4.17", "@react-navigation/core@^6.4.9":
   version "6.4.17"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-6.4.17.tgz#f277a196b578c8a456efcc563d1c9bd87eb4ab04"
   integrity sha512-Nd76EpomzChWAosGqWOYE3ItayhDzIEzzZsT7PfGcRFDgW5miHV2t4MZcq9YIK4tzxZjVVpYbIynOOQQd1e0Cg==
@@ -2046,7 +2115,16 @@
     react-is "^16.13.0"
     use-latest-callback "^0.2.1"
 
-"@react-navigation/elements@^1.3.30":
+"@react-navigation/drawer@^6.6.4":
+  version "6.7.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-6.7.2.tgz#3c85298c73af915f3cd5e6ca26a1a26d61010256"
+  integrity sha512-o4g2zgTZa2+oLd+8V33etrSM38KIqu8S/zCBTsdsHUoQyVE7JNRiv3Qgq/jMvEb8PZCqWmm7jHItcgzrBuwyOQ==
+  dependencies:
+    "@react-navigation/elements" "^1.3.31"
+    color "^4.2.3"
+    warn-once "^0.1.0"
+
+"@react-navigation/elements@^1.3.30", "@react-navigation/elements@^1.3.31":
   version "1.3.31"
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.31.tgz#28dd802a0787bb03fc0e5be296daf1804dbebbcf"
   integrity sha512-bUzP4Awlljx5RKEExw8WYtif8EuQni2glDaieYROKTnaxsu9kEIA515sXQgUDZU4Ob12VoL7+z70uO3qrlfXcQ==
@@ -2075,6 +2153,15 @@
   integrity sha512-lTM8gSFHSfkJvQkxacGM6VJtBt61ip2XO54aNfswD+KMw6eeZ4oehl7m0me3CR9hnDE4+60iAZR8sAhvCiI3NA==
   dependencies:
     nanoid "^3.1.23"
+
+"@react-navigation/stack@^6.3.18":
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-6.4.1.tgz#a158350637f5298292202ce854e5c5c9688f23f9"
+  integrity sha512-upMEHOKMtuMu4c9gmoPlO/JqI6mDlSqwXg1aXKOTQLXAF8H5koOLRfrmi7AkdiE9A7lDXWUAZoGuD9O88cYvDQ==
+  dependencies:
+    "@react-navigation/elements" "^1.3.31"
+    color "^4.2.3"
+    warn-once "^0.1.0"
 
 "@remix-run/node@^2.7.2":
   version "2.12.1"
