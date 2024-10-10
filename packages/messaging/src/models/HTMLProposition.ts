@@ -1,5 +1,5 @@
 /*
-    Copyright 2023 Adobe. All rights reserved.
+    Copyright 2024 Adobe. All rights reserved.
     This file is licensed to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -10,13 +10,12 @@
     language governing permissions and limitations under the License.
 */
 
-import { ContentCard } from './ContentCard';
-import { HTMLProposition } from './HTMLProposition';
-import { JSONPropositionItem } from './JSONPropositionItem';
-import { InAppMessage } from './InAppMessage';
+import { PersonalizationSchema } from './PersonalizationSchema';
 
-export type MessagingPropositionItem =
-  | ContentCard
-  | HTMLProposition
-  | InAppMessage
-  | JSONPropositionItem;
+export interface HTMLProposition {
+  id: string;
+  data: {
+    content: string;
+  };
+  schema: PersonalizationSchema.HTML_CONTENT;
+}
