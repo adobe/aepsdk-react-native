@@ -49,5 +49,5 @@ export interface MessagingDelegate {
    * Android Only - Called when message loads
    * @param {Message} message: the Message loaded
    */
-  onContentLoaded?( message: Message): void;
+  onContentLoaded?(message: Message): void;
 }
