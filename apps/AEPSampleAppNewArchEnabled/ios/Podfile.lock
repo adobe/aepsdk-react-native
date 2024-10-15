@@ -1,9 +1,51 @@
 PODS:
+  - AEPAssurance (5.0.1):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.0.0)
+  - AEPCampaignClassic (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.0.0)
+  - AEPCore (5.3.0):
+    - AEPRulesEngine (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.3.0)
+  - AEPEdge (5.0.2):
+    - AEPCore (< 6.0.0, >= 5.1.0)
+    - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
+  - AEPEdgeBridge (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+  - AEPEdgeConsent (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPEdge (< 6.0.0, >= 5.0.0)
+  - AEPEdgeIdentity (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+  - AEPIdentity (5.3.0):
+    - AEPCore (< 6.0.0, >= 5.3.0)
+  - AEPLifecycle (5.3.0):
+    - AEPCore (< 6.0.0, >= 5.3.0)
+  - AEPMessaging (5.4.0):
+    - AEPCore (< 6.0.0, >= 5.3.0)
+    - AEPEdge (< 6.0.0, >= 5.0.2)
+    - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.3.0)
+  - AEPOptimize (5.1.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPEdge (< 6.0.0, >= 5.0.0)
+  - AEPPlaces (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.0.0)
+  - AEPRulesEngine (5.0.0)
+  - AEPServices (5.3.0)
+  - AEPSignal (5.3.0):
+    - AEPCore (< 6.0.0, >= 5.3.0)
+  - AEPTarget (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+  - AEPUserProfile (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
   - EXConstants (16.0.2):
     - ExpoModulesCore
-  - Expo (51.0.36):
+  - Expo (51.0.37):
     - ExpoModulesCore
   - ExpoAsset (10.0.10):
     - ExpoModulesCore
@@ -86,6 +128,45 @@ PODS:
     - DoubleConversion
     - fmt (= 9.1.0)
     - glog
+  - RCTAEPAssurance (6.0.2):
+    - AEPAssurance (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPCampaignClassic (6.0.2):
+    - AEPCampaignClassic (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPCore (6.0.2):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPIdentity (< 6.0.0, >= 5.0.0)
+    - AEPLifecycle (< 6.0.0, >= 5.0.0)
+    - AEPSignal (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPEdge (6.0.2):
+    - AEPEdge (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPEdgeBridge (6.0.2):
+    - AEPEdgeBridge (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPEdgeConsent (6.0.2):
+    - AEPEdgeConsent (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPEdgeIdentity (6.0.2):
+    - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPMessaging (6.0.4):
+    - AEPMessaging (< 6.0.0, >= 5.3.0)
+    - React
+  - RCTAEPOptimize (6.0.3):
+    - AEPOptimize (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPPlaces (6.0.2):
+    - AEPPlaces (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPTarget (6.0.2):
+    - AEPTarget (< 6.0.0, >= 5.0.0)
+    - React
+  - RCTAEPUserProfile (6.0.2):
+    - AEPUserProfile (< 6.0.0, >= 5.0.0)
+    - React
   - RCTDeprecation (0.75.4)
   - RCTRequired (0.75.4)
   - RCTTypeSafety (0.75.4):
@@ -1647,7 +1728,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated (3.15.4):
+  - RNReanimated (3.15.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1667,10 +1748,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.15.4)
-    - RNReanimated/worklets (= 3.15.4)
+    - RNReanimated/reanimated (= 3.15.5)
+    - RNReanimated/worklets (= 3.15.5)
     - Yoga
-  - RNReanimated/reanimated (3.15.4):
+  - RNReanimated/reanimated (3.15.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1691,7 +1772,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.15.4):
+  - RNReanimated/worklets (3.15.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1780,6 +1861,18 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
+  - "RCTAEPAssurance (from `../node_modules/@adobe/react-native-aepassurance`)"
+  - "RCTAEPCampaignClassic (from `../node_modules/@adobe/react-native-aepcampaignclassic`)"
+  - "RCTAEPCore (from `../node_modules/@adobe/react-native-aepcore`)"
+  - "RCTAEPEdge (from `../node_modules/@adobe/react-native-aepedge`)"
+  - "RCTAEPEdgeBridge (from `../node_modules/@adobe/react-native-aepedgebridge`)"
+  - "RCTAEPEdgeConsent (from `../node_modules/@adobe/react-native-aepedgeconsent`)"
+  - "RCTAEPEdgeIdentity (from `../node_modules/@adobe/react-native-aepedgeidentity`)"
+  - "RCTAEPMessaging (from `../node_modules/@adobe/react-native-aepmessaging`)"
+  - "RCTAEPOptimize (from `../node_modules/@adobe/react-native-aepoptimize`)"
+  - "RCTAEPPlaces (from `../node_modules/@adobe/react-native-aepplaces`)"
+  - "RCTAEPTarget (from `../node_modules/@adobe/react-native-aeptarget`)"
+  - "RCTAEPUserProfile (from `../node_modules/@adobe/react-native-aepuserprofile`)"
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
   - RCTRequired (from `../node_modules/react-native/Libraries/Required`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -1843,6 +1936,23 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AEPAssurance
+    - AEPCampaignClassic
+    - AEPCore
+    - AEPEdge
+    - AEPEdgeBridge
+    - AEPEdgeConsent
+    - AEPEdgeIdentity
+    - AEPIdentity
+    - AEPLifecycle
+    - AEPMessaging
+    - AEPOptimize
+    - AEPPlaces
+    - AEPRulesEngine
+    - AEPServices
+    - AEPSignal
+    - AEPTarget
+    - AEPUserProfile
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1883,6 +1993,30 @@ EXTERNAL SOURCES:
     :tag: hermes-2024-08-15-RNv0.75.1-4b3bf912cc0f705b51b71ce1a5b8bd79b93a451b
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
+  RCTAEPAssurance:
+    :path: "../node_modules/@adobe/react-native-aepassurance"
+  RCTAEPCampaignClassic:
+    :path: "../node_modules/@adobe/react-native-aepcampaignclassic"
+  RCTAEPCore:
+    :path: "../node_modules/@adobe/react-native-aepcore"
+  RCTAEPEdge:
+    :path: "../node_modules/@adobe/react-native-aepedge"
+  RCTAEPEdgeBridge:
+    :path: "../node_modules/@adobe/react-native-aepedgebridge"
+  RCTAEPEdgeConsent:
+    :path: "../node_modules/@adobe/react-native-aepedgeconsent"
+  RCTAEPEdgeIdentity:
+    :path: "../node_modules/@adobe/react-native-aepedgeidentity"
+  RCTAEPMessaging:
+    :path: "../node_modules/@adobe/react-native-aepmessaging"
+  RCTAEPOptimize:
+    :path: "../node_modules/@adobe/react-native-aepoptimize"
+  RCTAEPPlaces:
+    :path: "../node_modules/@adobe/react-native-aepplaces"
+  RCTAEPTarget:
+    :path: "../node_modules/@adobe/react-native-aeptarget"
+  RCTAEPUserProfile:
+    :path: "../node_modules/@adobe/react-native-aepuserprofile"
   RCTDeprecation:
     :path: "../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation"
   RCTRequired:
@@ -2003,10 +2137,27 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AEPAssurance: df04baeace42befb0cc213fd6cdfe51651d11ba6
+  AEPCampaignClassic: bb177cc477846b15c38cfba77b8ec5127abf2105
+  AEPCore: 588f335fd085973436f9417cb81b03a82f9e8549
+  AEPEdge: edf73ae8900016940cd7fcb29a89a576a1c6b0ae
+  AEPEdgeBridge: be78be4885ae420ef21bda91707d5eff9510ef70
+  AEPEdgeConsent: d7db1d19eb4c1e2146360ed3c8df315f671b26d5
+  AEPEdgeIdentity: 3161ff33434586962946912d6b8e9e8fca1c4d23
+  AEPIdentity: 5039e51ba7e91f6a416aeeb3ec8b64173a8da893
+  AEPLifecycle: f1eabb71198d160a34ba39859468626a092fc204
+  AEPMessaging: 03422e902fc0e30c39c6f62e36a81146a766a3da
+  AEPOptimize: 2ad6258dbe0f6555e74a55fa6b16bb11ce3f54a9
+  AEPPlaces: 9eec5f88306033ce8190ec30727cbdd4008cc018
+  AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
+  AEPServices: 7704bdac78fe8b76322dd546010ab5152d30d686
+  AEPSignal: 1b40e0ea20d8323ca8bdb418c0c902843e4e2e4e
+  AEPTarget: 78197ae0f5455eeb837f8ed9fdc4f3f697cb3dd8
+  AEPUserProfile: cf36305d683d993d528337a46b7a269029b63e5d
   boost: 4cb898d0bf20404aab1850c656dcea009429d6c1
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   EXConstants: 409690fbfd5afea964e5e9d6c4eb2c2b59222c59
-  Expo: 51c2d7fee7a8c7195ac257c9f9503378800d334e
+  Expo: 67b60b3b80a3c8e9f3bcaaa84d06d140229a246d
   ExpoAsset: 323700f291684f110fb55f0d4022a3362ea9f875
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
   ExpoFont: 00756e6c796d8f7ee8d211e29c8b619e75cbf238
@@ -2021,6 +2172,18 @@ SPEC CHECKSUMS:
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   hermes-engine: ea92f60f37dba025e293cbe4b4a548fd26b610a0
   RCT-Folly: 4464f4d875961fce86008d45f4ecf6cef6de0740
+  RCTAEPAssurance: 3d4b85f170ed9279110b1542dbfb6e5d5d0a5cc1
+  RCTAEPCampaignClassic: 02efa05ebad01b8c17726e6e37bccb10b62174dd
+  RCTAEPCore: 6153158b90917c9354e9b5fe838b3c4dfd7f3bda
+  RCTAEPEdge: e3ce0e7f80516f51f95920384ac2fa9a9432935d
+  RCTAEPEdgeBridge: 6b2c46794e433f46037d3841c808fa15d1ec22db
+  RCTAEPEdgeConsent: 15a69df3f757e648164948bed5832d6063a360eb
+  RCTAEPEdgeIdentity: edf4bd7150e5afbcb4d28e80fa8c1e1872a93b86
+  RCTAEPMessaging: 49244eea86cecc0570c57eef173b8bc3a121bbd5
+  RCTAEPOptimize: bf52819291aa6d1ad709749e731719aff868924b
+  RCTAEPPlaces: 6682b683ebc9debaf959d358d2522ce6e90b825e
+  RCTAEPTarget: dfa4808f76f46c3df23fe55298229f11f6467036
+  RCTAEPUserProfile: 894fb60774881d062a4dacf035017c13eca2a13b
   RCTDeprecation: 726d24248aeab6d7180dac71a936bbca6a994ed1
   RCTRequired: a94e7febda6db0345d207e854323c37e3a31d93b
   RCTTypeSafety: 28e24a6e44f5cbf912c66dde6ab7e07d1059a205
@@ -2077,7 +2240,7 @@ SPEC CHECKSUMS:
   ReactCodegen: 4bcb34e6b5ebf6eef5cee34f55aa39991ea1c1f1
   ReactCommon: 6a952e50c2a4b694731d7682aaa6c79bc156e4ad
   RNGestureHandler: f769e1b9057085db07546aa3e259daa85c898dc7
-  RNReanimated: e94c6ad6b7a23ff641da13ada7d405c65f2c45f1
+  RNReanimated: 879fb9842e45340799f45f5c6d9f483f45e76bc2
   RNScreens: de6e57426ba0e6cbc3fb5b4f496e7f08cb2773c2
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: aa3df615739504eebb91925fc9c58b4922ea9a08
