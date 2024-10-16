@@ -38,6 +38,7 @@ target 'AEPSampleAppNewArchEnabled' do
   use_expo_modules!
   config = use_native_modules!
 
+  use_frameworks! :linkage => :static
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
 
@@ -64,6 +65,15 @@ target 'AEPSampleAppNewArchEnabled' do
       target_installation_result.resource_bundle_targets.each do |resource_bundle_target|
         resource_bundle_target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        end
+      end
+    end
+
+    # Adding -no-verify-emitted-module-interface flag to AEP library targets to avoid verification failure.
+    installer.pods_project.targets.each do |t|
+      if t.name.start_with?("AEP")
+        t.build_configurations.each do |bc|
+          bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
         end
       end
     end
