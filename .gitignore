@@ -112,3 +112,16 @@ dist/
 test/.DS_Store
 
 .yarn/
+
+# Ignore all .properties, .lock, .bin, and other build output files inside the .gradle directory
+**/android/gradle/**/*.properties
+**/android/gradle/**/*.lock
+**/android/gradle/**/*.bin
+
+# Ignore Gradle build directories and cache files
+.gradle/
+**/build/
+**/.gradle/
+
+# Ignore all Eclipse settings and metadata files
+**/.settings/
