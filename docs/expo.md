@@ -5,16 +5,16 @@ We ensure compatibility with the latest stable version of Expo. Please make sure
 - [Guide for Expo apps](#guide-for-expo-apps)
 - [Guide for Bare React Native apps using Expo modules](#guide-for-bare-react-native-apps-using-expo-modules)
 
-## Guide for Expo apps
+# Guide for Expo apps
 
-### Overview
+## Overview
 Expo projects can use both third-party React Native libraries with native code and your own custom native code. Creating a development build with Expo CLI allows you to include your specific native dependencies and customizations.
 
 When initializing the Adobe Mobile SDKs, it is required to initialize the SDKs in the native code inside your `AppDelegate` file for iOS and the `MainApplication` file for Android.
 
 By default, Expo projects use Continuous Native Generation (CNG). This means that projects do not have android and ios directories containing the native code and configuration. You can opt out of CNG and directly manage the code and configuration inside your android and ios directories.
 
-### Installation
+## Installation
 
 To generate these directories, run 
 ```bash
@@ -28,11 +28,11 @@ npx expo run:android
 npx expo run:ios
 ```
 
-### Install Adobe Mobile SDKs
+## Install Adobe Mobile SDKs
 
-Follow the [Installation Guide](../README.md#Installation) to install Adobe SDKs once the the android and ios directories are generated.
+Follow the [Installation Guide](../README.md#Installation) to install Adobe SDKs after the android and ios directories are generated.
 
-### Initialize Adobe Mobile SDKs
+## Initialize Adobe Mobile SDKs
 Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. Documentation on how to initialize each extension can be found in _./packages/{extension}/README.md_.
 
 ##### **iOS**
@@ -53,24 +53,26 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 //AppDelegate.m
 ...
 @implementation AppDelegate
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"yourAppID"];
-
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  self.moduleName = @"AEPSampleApp";
+  self.initialProps = @{};
+  
+  [AEPMobileCore setLogLevel:AEPLogLevelTrace];
+  [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
   const UIApplicationState appState = application.applicationState;
-
-  [AEPMobileCore registerExtensions: @[
-      AEPMobileLifecycle.class,
-      AEPMobileSignal.class,
-      AEPMobileEdge.class,
-      AEPMobileEdgeIdentity.class,
-      AEPMobileEdgeConsent.class,
-  ] completion:^{
+  [AEPMobileCore registerExtensions:@[
+      AEPMobileLifecycle.class, AEPMobileIdentity.class,
+      AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
+      AEPMobileEdgeConsent.class, AEPMobileEdgeBridge.class
+    ]
+  completion:^{
     if (appState != UIApplicationStateBackground) {
-       [AEPMobileCore lifecycleStart:nil}];
-    }
-  }];
-  return YES;
+      [AEPMobileCore lifecycleStart:nil];
+      }
+      }];
+
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 @end
@@ -126,30 +128,30 @@ class MainApplication : Application(), ReactApplication {
 
 > To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
 
-## Guide for Bare React Native apps using Expo modules
+# Guide for Bare React Native apps using Expo modules
 
-### Overview
+## Overview
 Bare React Native workflows can be integrated with Expo SDKs by using the `install-expo-modules` command. This allows you to use Expo modules in your app.
 - To use Expo modules in your app, you will need to install and configure the expo package.
 - The expo package has a small footprint; it includes only a minimal set of packages that are needed in nearly every app and the module and autolinking infrastructure that other Expo SDK packages are built with.
 - Once the expo package is installed and configured in your project, you can use `npx expo install` to add any other Expo module from the SDK.
 
-### Installation
+## Installation
 - To install and use Expo modules, the easiest way to get up and running is with the `install-expo-modules` command.
 ```bash
 npx install-expo-modules@latest
 ```
 - If the command fails, please follow the manual installation [instructions](https://docs.expo.dev/bare/installing-expo-modules/#manual-installation).
 
-### Install Adobe Mobile SDKs
+## Install Adobe Mobile SDKs
 
 Follow the [Installation Guide](../README.md#Installation) to install Adobe SDKs.
 
-### Initialize Adobe Mobile SDKs
+## Initialize Adobe Mobile SDKs
 
 Follow the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
 
-### Troubleshooting and Known Issues
+# Troubleshooting and Known Issues
 1. Getting error when building on iOS
 ```xcode
 error: import of C++ module 'Foundation' appears within extern "C" language linkage specification [-Wmodule-import-in-extern-c]
