@@ -20,6 +20,7 @@ import {
 } from '@adobe/react-native-aepedgeidentity';
 import styles from '../styles/styles';
 import {NavigationProps} from '../types/props';
+import { useRouter } from 'expo-router';
 
 function updateIdentities() {
   var namespace1 = 'namespace1';
@@ -83,11 +84,12 @@ const EdgeIdentityView = ({navigation}: NavigationProps) => {
         console.log('AdobeExperienceSDK: urlVariables = ' + urlVariables);
       })
   }
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
-        <Button onPress={() => navigation.goBack()} title="Go to main page" />
+        <Button onPress={() => router.back()} title="Go to main page" />
         <Text style={styles.welcome}>EdgeIdentity v{version}</Text>
         <Button title="getExperienceCloudId()" onPress={getExperienceCloudId} />
         <Button title="updateIdentities()" onPress={updateIdentities} />
