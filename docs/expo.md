@@ -1,18 +1,16 @@
 # Integrating the SDK with Expo projects
 
-We ensure compatibility with the latest stable version of Expo. Please make sure you are using the most recent version of Expo to avoid any issues.
+The Adobe Experience Platform Mobile SDK for React Native is compatible with the latest stable version of Expo. Using the most recent version of Expo is recommended to avoid any issues.
 
 - [Guide for Expo apps](#guide-for-expo-apps)
-- [Guide for Bare React Native apps using Expo modules](#guide-for-bare-react-native-apps-using-expo-modules)
+- [Guide for bare React Native apps using Expo modules](#guide-for-bare-react-native-apps-using-expo-modules)
 
 # Guide for Expo apps
 
 ## Overview
-Expo projects can use both third-party React Native libraries with native code and your own custom native code. Creating a development build with Expo CLI allows you to include your specific native dependencies and customizations.
+Expo projects can use both third-party React Native libraries with native code and custom native code. Creating a development build with Expo CLI allows inclusion of specific native dependencies and customizations.
 
-When initializing the Adobe Mobile SDKs, it is required to initialize the SDKs in the native code inside your `AppDelegate` file for iOS and the `MainApplication` file for Android.
-
-By default, Expo projects use Continuous Native Generation (CNG). This means that projects do not have android and ios directories containing the native code and configuration. You can opt out of CNG and directly manage the code and configuration inside your android and ios directories.
+Initializing the Adobe Mobile SDK requires native code implementation. In Expo projects, Continuous Native Generation (CNG) is enabled by default, meaning the `Android` and `iOS` directories for native code and configuration are not included. To integrate the Mobile SDK, CNG must be disabled, and the `Android` and `iOS` directories must be generated and managed manually.
 
 ## Installation
 
@@ -20,7 +18,7 @@ To generate these directories, run
 ```bash
 npx expo prebuild
 ```
-Or compile your app locally.
+Alternatively, compile the app locally:
 ```bash
 # Build your native Android project
 npx expo run:android
@@ -30,60 +28,84 @@ npx expo run:ios
 
 ## Install Adobe Mobile SDKs
 
-Follow the [Installation Guide](../README.md#Installation) to install Adobe SDKs after the android and ios directories are generated.
+Refer to the [Installation Guide](../README.md#Installation) to install Adobe SDKs after the android and ios directories are generated.
 
 ## Initialize Adobe Mobile SDKs
-Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. Documentation on how to initialize each extension can be found in _./packages/{extension}/README.md_.
+Initializing the Mobile SDK involves implementing native code. The following code snippets show how to install and register the Mobile Core and Edge Network extensions. Documentation on how to initialize each extension can be found in _./packages/{extension}/README.md_.
 
 ##### **iOS**
 
+Create a separate header and Objective-C file to handle the Adobe SDK setup, then import this file into the AppDelegate to initialize the SDK when the app launches.
+
+AdobeBridge.h
 ```objective-c
-//AppDelegate.h
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+@interface AdobeBridge : NSObject
++ (void)configure: (UIApplicationState)state;
+@end
+```
+
+AdobeBridge.m
+```objective-c
+#import "AdobeBridge.h"
+#import <UIKit/UIKit.h>
 @import AEPCore;
-@import AEPServices;
-@import AEPLifecycle;
-@import AEPSignal;
-@import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPEdgeConsent;
-...
+@import AEPAssurance;
+@import AEPEdge;
+@import AEPIdentity;
+@import AEPLifecycle;
+@import AEPSignal;
+@import AEPServices;
+@import AEPUserProfile;
+@import AEPOptimize;
+@implementation AdobeBridge
++ (void)configure: (UIApplicationState)appState
+{
+  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  NSArray *extensionsToRegister = @[
+      AEPMobileEdgeIdentity.class,
+      AEPMobileEdgeConsent.class,
+      AEPMobileAssurance.class,
+      AEPMobileEdge.class,
+      AEPMobileIdentity.class,
+      AEPMobileLifecycle.class,
+      AEPMobileOptimize.class,
+      AEPMobileSignal.class,
+      AEPMobileUserProfile.class
+      ];
+      [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
+        [AEPMobileCore configureWithAppId: @"KEY"];
+        if (appState != UIApplicationStateBackground) {
+            [AEPMobileCore lifecycleStart:@{@"": @""}];
+        }
+    }];
+}
+@end
 ```
 
+AppDelegate.mm
 ```objective-c
-//AppDelegate.m
+#import "AdobeBridge.h" // add this import
 ...
-@implementation AppDelegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  self.moduleName = @"AEPSampleApp";
-  self.initialProps = @{};
-  
-  [AEPMobileCore setLogLevel:AEPLogLevelTrace];
-  [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
-  const UIApplicationState appState = application.applicationState;
-  [AEPMobileCore registerExtensions:@[
-      AEPMobileLifecycle.class, AEPMobileIdentity.class,
-      AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
-      AEPMobileEdgeConsent.class, AEPMobileEdgeBridge.class
-    ]
-  completion:^{
-    if (appState != UIApplicationStateBackground) {
-      [AEPMobileCore lifecycleStart:nil];
-      }
-      }];
-
+  ...
+  [AdobeBridge configure: application.applicationState]; // Add this line
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
-
-@end
-
 ```
 
-> To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
-
-> Hint : While running iOS application after Adobe Experience Platform SDK installation. If you have build error that states:
-> "ld: warning: Could not find or use auto-linked library 'swiftCoreFoundation'"
-> This is because Adobe Experience Platform SDK now requires the app uses swift interfaces. Add a dummy .swift file to your project to embed the swift standard libs. See the SampleApp presented in this repo for example.
+> [!TIP]
+> If the following build error occurs when running the iOS application after Mobile SDK installation:
+>
+> ```
+> ld: warning: Could not find or use auto-linked library 'swiftCoreFoundation'
+> ```
+>
+> This is because the Mobile SDK now requires the app to use Swift interfaces. Adding a placeholder `.swift` file to the project embeds the Swift standard libraries. See the SampleApp in this repository for an example.
 
 ##### **Android:** _(Kotlin)_
 
@@ -93,8 +115,6 @@ import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.Extension;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.Edge;
 import com.adobe.marketing.mobile.edge.consent.Consent;
 ```
@@ -110,8 +130,6 @@ class MainApplication : Application(), ReactApplication {
     MobileCore.setLogLevel(LoggingMode.VERBOSE)
     MobileCore.configureWithAppID("YOUR-APP-ID")
     val extensions: List<Class<out Extension?>> = Arrays.asList(
-      Lifecycle.EXTENSION,
-      Signal.EXTENSION,
       Edge.EXTENSION,
       Consent.EXTENSION,
       com.adobe.marketing.mobile.Identity.EXTENSION
@@ -126,15 +144,13 @@ class MainApplication : Application(), ReactApplication {
 }
 ```
 
-> To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
-
-# Guide for Bare React Native apps using Expo modules
+# Guide for bare React Native apps using Expo modules
 
 ## Overview
 Bare React Native workflows can be integrated with Expo SDKs by using the `install-expo-modules` command. This allows you to use Expo modules in your app.
-- To use Expo modules in your app, you will need to install and configure the expo package.
-- The expo package has a small footprint; it includes only a minimal set of packages that are needed in nearly every app and the module and autolinking infrastructure that other Expo SDK packages are built with.
-- Once the expo package is installed and configured in your project, you can use `npx expo install` to add any other Expo module from the SDK.
+
+To use Expo modules in an app, installation and configuration of the `expo` package is required. The `expo` package has a small footprint; it includes only a minimal set of packages needed in nearly every app and the module and autolinking infrastructure that other Expo SDK packages are built with. After the `expo` package is installed and configured in the project, `npx expo install` can be used to add any other Expo module from the SDK.
+
 
 ## Installation
 - To install and use Expo modules, the easiest way to get up and running is with the `install-expo-modules` command.
@@ -145,19 +161,32 @@ npx install-expo-modules@latest
 
 ## Install Adobe Mobile SDKs
 
-Follow the [Installation Guide](../README.md#Installation) to install Adobe SDKs.
+Refer to the [Installation Guide](../README.md#Installation) to install Adobe SDKs.
 
 ## Initialize Adobe Mobile SDKs
 
-Follow the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
+Refer to the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
 
 # Troubleshooting and Known Issues
-1. Getting error when building on iOS
+1. `Import of C++ module` error when building on iOS
+
+When facing the following error:
 ```xcode
 error: import of C++ module 'Foundation' appears within extern "C" language linkage specification [-Wmodule-import-in-extern-c]
 ```
-**Fix**: In XCode, add `-Wno-module-import-in-extern-c` to `Apple CLang - Custom Compiler Flags -> Other C++`
-<img width="936" alt="Screenshot 2024-08-23 at 1 15 03 AM" src="https://github.com/user-attachments/assets/518b0e39-a2dd-4f37-94c2-c7663cb4edcd">
+**Fix**: In XCode, select your app target, go to **Build Settings** and under `Apple CLang - Custom Compiler Flags`, locate `Other C++ Flags`, and add:
+```bash
+-Wno-module-import-in-extern-c
+```
+<img width="936" alt="Xcode Screenshot" src="./resources/xcode c++ flag screenshot.png">
 
-#### Other Known Issues with React Native
-Please refer [here](../README.md#troubleshooting-and-known-issues) for other known issues with React Native integration.
+2. `Use of undeclared identifier 'AEPMobileCore'` error when building on iOS
+
+When facing the following error:
+```xcode
+error: Use of undeclared identifier 'AEPMobileCore'
+```
+Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/346#issuecomment-2109949661).
+
+#### Other known issues with React Native
+Refer to [Troubleshooting and Known Issues](../README.md#troubleshooting-and-known-issues) for other known issues with React Native integration.
