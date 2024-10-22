@@ -75,7 +75,7 @@ class MainApplication : Application(), ReactApplication {
 
       MobileCore.setApplication(this);
     MobileCore.setLogLevel(LoggingMode.DEBUG)
-    MobileCore.configureWithAppID("94f571f308d5/12dfd4531236/launch-7560fa0e7fdd-development")
+    MobileCore.configureWithAppID("example")
     val extensions: List<Class<out Extension?>> = Arrays.asList(
       Lifecycle.EXTENSION,
       Signal.EXTENSION,
