@@ -73,26 +73,6 @@ RCT_EXPORT_METHOD(getLogLevel: (RCTPromiseResolveBlock) resolve rejecter:(RCTPro
     resolve(logLevelString);
 }
 
-RCT_EXPORT_METHOD(log: (NSString *) logLevel tag: (nonnull NSString*) tag message: (nonnull NSString*) message) {
-    AEPLogLevel logLevelType = [RCTAEPCoreDataBridge logLevelFromString:logLevel];
-    switch (logLevelType) {
-        case AEPLogLevelTrace:
-            [AEPLog traceWithLabel:tag message:message];
-            break;
-        case AEPLogLevelDebug:
-            [AEPLog debugWithLabel:tag message:message];
-            break;
-        case AEPLogLevelWarning:
-            [AEPLog warningWithLabel:tag message:message];
-            break;
-        case AEPLogLevelError:
-            [AEPLog errorWithLabel:tag message:message];
-            break;
-        default:
-            break;
-    }
-}
-
 RCT_EXPORT_METHOD(getPrivacyStatus: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AEPMobileCore getPrivacyStatus:^(enum AEPPrivacyStatus status) {
         resolve([RCTAEPCoreDataBridge stringFromPrivacyStatus:status]);
@@ -140,23 +120,36 @@ RCT_EXPORT_METHOD(trackState: (nullable NSString*) state data: (nullable NSDicti
 }
 
 RCT_EXPORT_METHOD(dispatchEvent: (nonnull NSDictionary*) eventDict resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    AEPEvent *event = [RCTAEPCoreDataBridge eventFromDictionary:eventDict];
-    if (!event) {
-        reject(EXTENSION_NAME, FAILED_TO_CONVERT_EVENT_MESSAGE, nil);
-        return;
-    }
-    [AEPMobileCore dispatch:event];
-}
+     AEPEvent *event = [RCTAEPCoreDataBridge eventFromDictionary:eventDict];
+     if (!event) {
+         reject(EXTENSION_NAME, FAILED_TO_CONVERT_EVENT_MESSAGE, nil);
+         return;
+     }
+     [AEPMobileCore dispatch:event];
+ }
 
-RCT_EXPORT_METHOD(dispatchEventWithResponseCallback: (nonnull NSDictionary*) requestEventDict resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(dispatchEventWithResponseCallback: (nonnull NSDictionary*) requestEventDict timeoutDuration:(nonnull NSNumber*) timeoutNumber resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    
     AEPEvent *requestEvent = [RCTAEPCoreDataBridge eventFromDictionary:requestEventDict];
     if (!requestEvent) {
         reject(EXTENSION_NAME, FAILED_TO_CONVERT_EVENT_MESSAGE, nil);
         return;
     }
+    
+    if (![timeoutNumber respondsToSelector:@selector(intValue)]) {
+            reject(EXTENSION_NAME, @"Invalid timeout value", nil);
+           return;
+    }
+    
+    double timeout = [timeoutNumber intValue] / 1000.0;
 
-    [AEPMobileCore dispatch:requestEvent timeout:1 responseCallback:^(AEPEvent * _Nullable responseEvent) {
-        resolve([RCTAEPCoreDataBridge dictionaryFromEvent:responseEvent]);
+    [AEPMobileCore dispatch:requestEvent timeout:timeout responseCallback:^(AEPEvent * _Nullable responseEvent) {
+         if (responseEvent == nil) {
+             reject(EXTENSION_NAME, @"general.callback.timeout", nil);
+         } else {
+             resolve([RCTAEPCoreDataBridge dictionaryFromEvent:responseEvent]);
+         }
+        
     }];
 }
 

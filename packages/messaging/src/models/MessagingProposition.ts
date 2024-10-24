@@ -1,7 +1,5 @@
-import { MessagingPropositionItem } from './MessagingPropositionItem';
-
 /*
-    Copyright 2023 Adobe. All rights reserved.
+    Copyright 2024 Adobe. All rights reserved.
     This file is licensed to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -12,21 +10,12 @@ import { MessagingPropositionItem } from './MessagingPropositionItem';
     language governing permissions and limitations under the License.
 */
 
-export class MessagingProposition {
-  public items: MessagingPropositionItem[];
-  public uniqueId: string;
-  public scope: string;
-  public scopeDetails: Record<string, any>;
+import { MessagingPropositionItem } from './MessagingPropositionItem';
+import { ScopeDetails } from './ScopeDetails';
 
-  constructor(
-    uniqueId: string,
-    scope: string,
-    scopeDetails: Record<string, any>,
-    items: MessagingPropositionItem[]
-  ) {
-    this.uniqueId = uniqueId;
-    this.scope = scope;
-    this.scopeDetails = scopeDetails;
-    this.items = items;
-  }
+export interface MessagingProposition {
+  id: string;
+  scope: string;
+  scopeDetails: ScopeDetails;
+  items: MessagingPropositionItem[];
 }

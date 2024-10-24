@@ -70,7 +70,7 @@ MobileCore.dispatchEvent(event);
 **Syntax**
 
 ```typescript
-dispatchEventWithResponseCallback(event: Event): Promise<Event>
+dispatchEventWithResponseCallback: (event: Event, timeoutMS:Number) => Promise<Event>;
 ```
 
 **Example**
@@ -79,7 +79,7 @@ dispatchEventWithResponseCallback(event: Event): Promise<Event>
 import {Event} from '@adobe/react-native-aepcore';
 
 var event = new Event("eventName", "eventType", "eventSource", {"testDataKey": "testDataValue"});
-MobileCore.dispatchEventWithResponseCallback(event).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
+MobileCore.dispatchEventWithResponseCallback(event, 1500).then(responseEvent => console.log("AdobeExperienceSDK: responseEvent = " + responseEvent));
 ```
 
 - #### extensionVersion
@@ -142,34 +142,6 @@ getPrivacyStatus(): Promise<string>
 
 ```typescript
 MobileCore.getPrivacyStatus().then(status => console.log("AdobeExperienceSDK: Privacy Status = " + status));
-```
-
-
-- #### log
-
-This is the API used to log from the SDK.
-
-**Syntax**
-
-```typescript
-log(logLevel: LogLevel, tag: string, message: string)
-```
-
-**Example**
-
-```typescript
-import {LogLevel} from '@adobe/react-native-aepcore';
-
-MobileCore.log(LogLevel.ERROR, "React Native Tag", "React Native Message");
-```
-
-Note: `LogLevel` contains the following getters:
-
-```typescript
-const ERROR = "ERROR";
-const WARNING = "WARNING";
-const DEBUG = "DEBUG";
-const VERBOSE = "VERBOSE";
 ```
 
 - #### resetIdentities

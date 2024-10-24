@@ -10,17 +10,17 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/adobe/aepsdk-react-native"
 
   s.license      = "Apache 2.0 License"
-  s.platforms    = { :ios => "11.0", :tvos => "11.0" }
+  s.platforms    = { :ios => "12.0", :tvos => "12.0" }
 
   s.source       = { :git => "https://github.com/adobe/aepsdk-react-native.git", :tag => "#{s.version}" }
 
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "AEPCore", '~> 4.0'
-  s.dependency "AEPLifecycle", '~> 4.0'
-  s.dependency "AEPIdentity", '~> 4.0'
-  s.dependency "AEPSignal", '~> 4.0'
+  s.dependency "AEPCore", ">= 5.0.0", "< 6.0.0"
+  s.dependency "AEPLifecycle", ">= 5.0.0", "< 6.0.0"
+  s.dependency "AEPIdentity", ">= 5.0.0", "< 6.0.0"
+  s.dependency "AEPSignal", ">= 5.0.0", "< 6.0.0"
 
   s.source_files  = "ios/src/**/*.{h,m}"
 

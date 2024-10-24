@@ -10,31 +10,11 @@ Pod::Spec.new do |s|
   s.author       = "Adobe Experience Platform SDK Team"
   s.homepage     = "https://github.com/adobe/aepsdk-react-native"
   s.license      = "Apache 2.0 License"
-  s.platform     = :ios, '11.0'
+  s.platform     = :ios, '12.0'
   s.source       = { :git => "https://github.com/adobe/aepsdk-react-native.git", :tag => "#{s.version}" }
   s.source_files = "ios/**/*.{h,m,mm,swift}"
-  s.swift_version = '5.0'
+  s.swift_version = '5.1'
 
-  s.dependency "AEPMessaging", "~> 4.0"
-
-  if respond_to?(:install_modules_dependencies, true)
-    install_modules_dependencies(s)
-  else
-  s.dependency "React-Core"
-
-  # Don't install the dependencies when we run `pod install` in the old architecture.
-  if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
-    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
-    s.pod_target_xcconfig    = {
-        "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
-        "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-        "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
-    }
-    s.dependency "React-Codegen"
-    s.dependency "RCT-Folly"
-    s.dependency "RCTRequired"
-    s.dependency "RCTTypeSafety"
-    s.dependency "ReactCommon/turbomodule/core"
-  end
-end
+  s.dependency "React"
+  s.dependency "AEPMessaging", ">= 5.3.0", "< 6.0.0"
 end

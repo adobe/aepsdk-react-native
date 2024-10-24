@@ -8,11 +8,10 @@
 
 The Edge Bridge mobile extension provides seamless routing of data to the Adobe Experience Platform Edge Network for existing SDK implementations. For applications which already make use of the [MobileCore.trackAction](../core/README.md#trackaction) and/or [MobileCore.trackState](../core/README.md#trackstate) APIs to send data to Adobe Analytics, this extension will automatically route those API calls to the Edge Network, making the data available for mapping to a user's XDM schema using the [Data Prep for Data Collection](https://experienceleague.adobe.com/docs/experience-platform/data-prep/home.html).
 
-> **Note**  
-> For new implementations of the Adobe Experience Platform SDK, it's highly recommended to send event data that is already XDM formatted using the [`Edge.sendEvent`](../edge/README.md#api-reference) API instead of converting events from the `MobileCore.trackState` and `MobileCore.trackAction` APIs using Edge Bridge. 
-> 
-> However, in cases where it is not easy to refactor an existing application, the Edge Bridge extension exists as a drop-in solution to send converted `trackState` and `trackAction` events to the Edge Network.
-
+> [!IMPORTANT]
+> Edge Bridge serves primarily as a migration aid for applications that are already using Adobe Analytics within their implementation. 
+>
+> For new applications being developed with the Adobe Experience Platform Mobile SDKs, it is strongly recommended to use the [`Edge.sendEvent`](../edge/README.md#api-reference) API of the Edge Network extension.
 
 ## Prerequisites
 
@@ -115,9 +114,13 @@ In your React Native application, import the Edge Bridge extension as follows:
 import {EdgeBridge} from '@adobe/react-native-aepedgebridge';
 ```
 
-### Next steps - Data Prep mapping and validation with Assurance
+### Edge Bridge tutorials
 
-For Data Prep mapping examples and tips on validating with Assurance, refer to the [Edge Bridge tutorials](https://github.com/adobe/aepsdk-edgebridge-ios/tree/main/Documentation/tutorials).
+For tutorials on implementing Edge Bridge and Data Prep mapping, refer to the [Edge Bridge tutorials](https://github.com/adobe/aepsdk-edgebridge-ios/tree/main/Documentation/tutorials).
+
+### Validation
+
+Validating Edge Bridge events through Edge workflow using the [Event Transations](https://developer.adobe.com/client-sdks/edge/edge-network/validation/#use-the-event-transactions-view) view or [Analytics Events 2.0](https://experienceleague.adobe.com/en/docs/experience-platform/assurance/view/adobe-analytics-edge) view in Assurance.
 
 ## API reference
 ### extensionVersion

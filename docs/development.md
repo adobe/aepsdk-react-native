@@ -6,7 +6,7 @@
 - Xcode 15.0 (or newer), to submit iOS apps to the App Store, the user must build them using Xcode 15 or later
 - Swift 5.1 (or newer)
 - Android Studio
-- Node.js 12 TLS (or newer)
+- Node.js 16 TLS (or newer)
 - React Native >= v0.60
 - Yarn
 

@@ -39,9 +39,15 @@ export interface MessagingDelegate {
   shouldShowMessage?(message: Message): boolean;
 
   /**
-   * Called when message loads a URL
+   * IOS Only - Called when message loads a URL
    * @param {string} url: the URL being loaded by the message
    * @param {Message} message: the Message loading a URL
    */
   urlLoaded?(url: string, message: Message): void;
+
+  /**
+   * Android Only - Called when message loads
+   * @param {Message} message: the Message loaded
+   */
+  onContentLoaded?(message: Message): void;
 }

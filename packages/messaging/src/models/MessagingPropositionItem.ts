@@ -10,14 +10,13 @@
     language governing permissions and limitations under the License.
 */
 
-export class MessagingPropositionItem {
-  public content: string;
-  public schema: string;
-  public uniqueId: string;
+import { ContentCard } from './ContentCard';
+import { HTMLProposition } from './HTMLProposition';
+import { JSONPropositionItem } from './JSONPropositionItem';
+import { InAppMessage } from './InAppMessage';
 
-  constructor(uniqueId: string, schema: string, content: string) {
-    this.uniqueId = uniqueId;
-    this.schema = schema;
-    this.content = content;
-  }
-}
+export type MessagingPropositionItem =
+  | ContentCard
+  | HTMLProposition
+  | InAppMessage
+  | JSONPropositionItem;

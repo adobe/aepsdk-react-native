@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { UserProfile } from '../ts';
+import { UserProfile } from '../src';
 
 describe('UserProfile', () => {
   it('extensionVersion is called', async () => {

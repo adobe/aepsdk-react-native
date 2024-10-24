@@ -17,7 +17,7 @@ class Message {
   id: string;
   autoTrack: boolean;
 
-  constructor({id, autoTrack = false}: {id: string; autoTrack: boolean}) {
+  constructor({ id, autoTrack = false }: { id: string; autoTrack: boolean }) {
     this.id = id;
     this.autoTrack = autoTrack;
   }
@@ -57,18 +57,6 @@ class Message {
    */
   track(interaction: string, eventType: number) {
     RCTAEPMessaging.track(this.id, interaction, eventType);
-  }
-
-  /**
-   * Adds a handler for Javascript messages sent from the message's webview.
-   * The parameter passed to `handler` will contain the body of the message passed from the webview's Javascript.
-   * @param {string} name: the name of the message that should be handled by `handler`
-   * @return {Promise<any?>}: the Promise to be resolved with the body of the message passed by the Javascript message in the WebView
-   */
-  handleJavascriptMessage(name: string): Promise<any> {
-    return Promise.resolve(
-      RCTAEPMessaging.handleJavascriptMessage(this.id, name)
-    );
   }
 
   /**

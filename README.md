@@ -21,17 +21,31 @@ This repository is a monorepo and contains a collection of React Native modules 
 | [@adobe/react-native-aeptarget](./packages/target) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aeptarget.svg)](https://www.npmjs.com/package/@adobe/react-native-aeptarget) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aeptarget) | [Target](https://developer.adobe.com/client-sdks/documentation/adobe-target)
 | [@adobe/react-native-aepcampaignclassic](./packages/campaignclassic) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) |[CampaignClassic](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic)
 
-> Note: Since version 5.0.0 of the Adobe React Native SDK, all React Native libraries that share the same major version are compatible with each other.
+> [!NOTE]   
+> Since version 5.0.0 of the Adobe React Native SDK, all React Native libraries that share the same major version are compatible with each other.
+
+> [!NOTE]  
+> The React Native libraries within this repository are specifically designed to support the Android and iOS platforms only.
+
 
 ## Requirements
 
-- Requires React Native >= v0.60.0
+- React Native
 
-> React Native v0.60.0 and above supports [CLI autolink feature](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) which links the module while building the app.
+Requires React Native (0.60.0 and above)
 
-- Requires Xcode 14.1+
+- Xcode
 
-> To submit iOS apps to the App Store, you must build them using Xcode 14.1 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
+To submit iOS apps to the App Store, you must build them using Xcode 15 or later, as required by [Apple](https://developer.apple.com/ios/submit/).
+
+## iOS Privacy Manifest
+
+> [!IMPORTANT]  
+> Adobe Experience Platform React Native **6.x** libraries now depend on Experience Platform iOS 5.x SDKs, which have been updated to align with Apple's latest guidelines on [privacy manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files). For further details on how Apple's privacy-related announcements affect the Adobe mobile SDK for iOS, please refer to this [document](https://developer.adobe.com/client-sdks/resources/privacy-manifest/).
+
+## React Native New Architecture Support
+
+React Native 0.7x introduced support for a new architecture. We don't yet support the new architecture.
 
 ## Installation
 
@@ -59,11 +73,11 @@ The following code snippet shows for Mobile Core and Edge Network extensions as 
 ```bash
 ...
 "dependencies": {
-    "react-native": "0.64.2",
-    "@adobe/react-native-aepcore": "^5.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
-    "@adobe/react-native-aepedge": "^5.0.0",
-    "@adobe/react-native-aepedgeidentity": "^5.0.0",
-    "@adobe/react-native-aepedgeconsent": "^5.0.0",
+    "react-native": "0.72.5",
+    "@adobe/react-native-aepcore": "^6.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
+    "@adobe/react-native-aepedge": "^6.0.0",
+    "@adobe/react-native-aepedgeidentity": "^6.0.0",
+    "@adobe/react-native-aepedgeconsent": "^6.0.0",
 ...
 },
 ```
@@ -195,6 +209,22 @@ public class MainApplication extends Application implements ReactApplication {
 ## Migration guide
 
 See [migration.md](./docs/migration.md) for guidance on migrating from ACP React Native libraries.
+
+## Troubleshooting and Known issues
+
+1. Getting error when building on iOS Xcode
+
+```xcode
+Use of '@import' when C++ modules are disabled, consider using -fmodules and -fcxx-modules
+```
+Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/247#issuecomment-1642944117).
+
+2. Getting error when building on iOS
+
+```xcode
+Underlying Objective-C module 'AEPRulesEngine' not found
+```
+Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770).
 
 ## Contributing
 

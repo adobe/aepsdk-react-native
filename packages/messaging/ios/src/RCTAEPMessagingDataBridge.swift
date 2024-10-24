@@ -15,27 +15,16 @@ import AEPMessaging
 public class RCTAEPMessagingDataBridge: NSObject {
     static func transformToMessage(message: Message) -> [String: Any] {
         return [
-            "id": message.id, "autoTrack": message.autoTrack,
+            "id": message.id, "autoTrack": message.autoTrack
         ]
     }
 
-    static func transformPropositionDict(dict: [Surface: [MessagingProposition]]) -> [String: [Any]]
+    static func transformPropositionDict(dict: [Surface: [Proposition]]) -> [String: [Any?]]
     {
         let bundleID = "mobileapp://" + Bundle.main.bundleIdentifier! + "/"
         return dict.reduce(into: [:]) { result, element in
             result[element.key.uri.replacingOccurrences(of: bundleID, with: "")] = element.value
-                .map({ self.transformToProposition(proposition: $0) })
+                .map({ $0.asDictionary() })
         }
-    }
-
-    static func transformToProposition(proposition: MessagingProposition) -> [String: Any] {
-        return [
-            "scope": proposition.scope, "uniqueId": proposition.uniqueId,
-            "items": proposition.items.map({ item in
-                [
-                    "content": item.content, "schema": item.schema, "uniqueId": item.uniqueId,
-                ]
-            }),
-        ]
     }
 }

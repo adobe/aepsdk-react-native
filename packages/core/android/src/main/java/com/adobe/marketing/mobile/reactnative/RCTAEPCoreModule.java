@@ -15,8 +15,7 @@ import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.Event;
-import com.adobe.marketing.mobile.ExtensionError;
-import com.adobe.marketing.mobile.ExtensionErrorCallback;
+import com.adobe.marketing.mobile.services.Log;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.MobilePrivacyStatus;
@@ -35,6 +34,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
     private static String FAILED_TO_CONVERT_EVENT_MESSAGE = "Failed to convert map to Event";
+    private static String INVALID_TIMEOUT_VALUE_MESSAGE = "Invalid timeout value. Timeout must be a positive integer.";
     private static AtomicBoolean hasStarted = new AtomicBoolean(false);
 
     public RCTAEPCoreModule(ReactApplicationContext reactContext) {
@@ -85,12 +85,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void log(final String mode, final String tag, final String message) {
-        LoggingMode logMode = RCTAEPCoreDataBridge.loggingModeFromString(mode);
-        MobileCore.log(logMode, tag, message);
-    }
-
-    @ReactMethod
     public void setPrivacyStatus(final String privacyStatus) {
         MobileCore.setPrivacyStatus(RCTAEPCoreDataBridge.privacyStatusFromString(privacyStatus));
     }
@@ -133,55 +127,26 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        MobileCore.dispatchEvent(event, new ExtensionErrorCallback<ExtensionError>() {
-            @Override
-            public void error(ExtensionError extensionError) {
-                if (extensionError != null) {
-                    promise.resolve(true);
-                } else {
-                    handleError(promise, extensionError);
-                }
-            }
-        });
+        MobileCore.dispatchEvent(event);
     }
 
     @ReactMethod
-    public void dispatchEventWithResponseCallback(final ReadableMap eventMap,
-                                                  final Promise promise) {
+    public void dispatchEventWithResponseCallback(final ReadableMap eventMap, final int timeout, final Promise promise) {
         Event event = RCTAEPCoreDataBridge.eventFromReadableMap(eventMap);
         if (event == null) {
             promise.reject(getName(), FAILED_TO_CONVERT_EVENT_MESSAGE, new Error(FAILED_TO_CONVERT_EVENT_MESSAGE));
             return;
         }
 
-        AdobeCallback<Event> eventAdobeCallback = new AdobeCallback<Event>() {
+        MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>(){
+            @Override
+            public void fail(AdobeError adobeError) {
+                handleError(promise, adobeError, "dispatchEventWithResponseCallback");
+            }
+
             @Override
             public void call(Event event) {
                 promise.resolve(RCTAEPCoreDataBridge.readableMapFromEvent(event));
-            }
-        };
-
-        ExtensionErrorCallback<ExtensionError> extensionErrorExtensionErrorCallback = new ExtensionErrorCallback<ExtensionError>() {
-            @Override
-            public void error(ExtensionError extensionError) {
-                handleError(promise, extensionError);
-            }
-        };
-
-        MobileCore.dispatchEventWithResponseCallback(event, eventAdobeCallback, extensionErrorExtensionErrorCallback);
-    }
-
-    @ReactMethod
-    public void dispatchResponseEvent(final ReadableMap responseEvent, final ReadableMap requestEvent,
-                                      final Promise promise) {
-        MobileCore.dispatchResponseEvent(RCTAEPCoreDataBridge.eventFromReadableMap(responseEvent), RCTAEPCoreDataBridge.eventFromReadableMap(requestEvent), new ExtensionErrorCallback<ExtensionError>() {
-            @Override
-            public void error(ExtensionError extensionError) {
-                if (extensionError != null) {
-                    promise.resolve(true);
-                } else {
-                    handleError(promise, extensionError);
-                }
             }
         });
     }
@@ -223,27 +188,18 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setAppGroup(final String appGroup) {
-        MobileCore.log(LoggingMode.DEBUG, getName(), "setAppGroup() cannot be invoked on Android");
+        Log.debug(getName(), "RCTAEPCoreModule", "setAppGroup() cannot be invoked on Android");
     }
 
     @ReactMethod
     public void downloadRules() {
-        MobileCore.log(LoggingMode.DEBUG, getName(), "downloadRules() cannot be invoked on Android");
+        Log.debug(getName(), "RCTAEPCoreModule", "downloadRules() cannot be invoked on Android");
     }
 
     @ReactMethod
      public void resetIdentities() {
         MobileCore.resetIdentities();
      }
-
-    // Helper method/s
-    private void handleError(Promise promise, ExtensionError error) {
-        if (error == null || promise == null) {
-            return;
-        }
-
-        promise.reject(String.valueOf(error.getErrorCode()), error.getErrorName(), new RuntimeException(error.getErrorName()));
-    }
 
     private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
         if (error == null || promise == null) {

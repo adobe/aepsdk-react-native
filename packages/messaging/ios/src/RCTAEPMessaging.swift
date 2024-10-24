@@ -71,13 +71,17 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         withResolver resolve: @escaping RCTPromiseResolveBlock,
         withRejecter reject: @escaping RCTPromiseRejectBlock
     ) {
-        let surfacePaths = surfaces.map { Surface(path: $0) }
-        Messaging.getPropositionsForSurfaces(surfacePaths) { propositionsDict, error in
+        let surfacePaths = surfaces.map { $0.isEmpty ? Surface() : Surface(path: $0) }
+        Messaging.getPropositionsForSurfaces(surfacePaths) { propositions, error in
             guard error == nil else {
                 reject("Unable to Retrieve Propositions", nil, nil)
                 return
             }
-            resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositionsDict!))
+            if (propositions != nil && propositions!.isEmpty) {
+                resolve([String: Any]());
+                return;
+            }
+            resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositions!))
         }
     }
 
@@ -144,23 +148,6 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     }
 
     @objc
-    func handleJavascriptMessage(
-        _ id: String,
-        withName name: String,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
-    ) {
-        let msg = messageCache[id]
-        if msg != nil {
-            msg!.handleJavascriptMessage(name) { content in
-                resolve(content)
-                return
-            }
-        }
-        reject(Constants.CACHE_MISS, nil, nil)
-    }
-
-    @objc
     func setAutoTrack(
         _ id: String,
         withSuppressAutoTrack suppressAutoTrack: Bool,
@@ -205,7 +192,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         let msg = messageCache[id]
         let eventType =
             MessagingEdgeEventType.init(rawValue: eventType)
-            ?? MessagingEdgeEventType.inappDismiss
+                ?? MessagingEdgeEventType.dismiss
         if msg != nil {
             msg!.track(interaction, withEdgeEventType: eventType)
             resolve(nil)

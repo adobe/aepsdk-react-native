@@ -1,10 +1,11 @@
 {
   "name": "@adobe/react-native-aepoptimize",
-  "version": "5.0.0",
+  "version": "6.0.3",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
-  "main": "./ts/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "tsc": "tsc"
@@ -27,9 +28,9 @@
     "name": "Adobe Experience Platform SDK Team"
   },
   "peerDependencies": {
-    "@adobe/react-native-aepcore": "^5.0.0",
-    "@adobe/react-native-aepedge": "^5.0.0",
-    "@adobe/react-native-aepedgeidentity": "^5.0.0",
+    "@adobe/react-native-aepcore": "^6.0.0",
+    "@adobe/react-native-aepedge": "^6.0.0",
+    "@adobe/react-native-aepedgeidentity": "^6.0.0",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {
