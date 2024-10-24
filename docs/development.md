@@ -3,7 +3,7 @@
 
 ## Requirements
 
-- Xcode 12.0 (or newer)
+- Xcode 15.0 (or newer), to submit iOS apps to the App Store, the user must build them using Xcode 15 or later
 - Swift 5.1 (or newer)
 - Android Studio
 - Node.js 12 TLS (or newer)
@@ -12,14 +12,16 @@
 
 ## Install dependencies 
 
-Run `yarn bootstrap` to install the npm dependencies.
+Run `yarn install` to install the npm dependencies.
 
 ## Tests
 
 To run the (Jest) unit tests locally:
 
+Browser to the root folder of `aepsdk-react-native`
+
 ```
-yarn tests:jest
+yarn test
 ```
 > The `setupFiles` to configure or set up the (Jest) testing environment is located in [tests/jest/setup.js](../tests/jest/setup.js)
 
