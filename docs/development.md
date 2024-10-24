@@ -12,14 +12,16 @@
 
 ## Install dependencies 
 
-Run `yarn bootstrap` to install the npm dependencies.
+Run `yarn install` to install the npm dependencies.
 
 ## Tests
 
 To run the (Jest) unit tests locally:
 
+Browser to the root folder of `aepsdk-react-native`
+
 ```
-yarn tests:jest
+yarn test
 ```
 > The `setupFiles` to configure or set up the (Jest) testing environment is located in [tests/jest/setup.js](../tests/jest/setup.js)
 
