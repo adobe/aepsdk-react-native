@@ -35,7 +35,7 @@ Initializing the Mobile SDK involves implementing native code. The following cod
 
 ##### **iOS**
 
-Create a separate header and Objective-C file to handle the Adobe SDK setup, then import this file into the AppDelegate to initialize the SDK when the app launches.
+Create a separate header and Objective-C file to handle the Adobe SDK setup, then import this file into the `AppDelegate` to initialize the SDK when the app launches.
 
 AdobeBridge.h
 ```objective-c
@@ -53,14 +53,8 @@ AdobeBridge.m
 @import AEPCore;
 @import AEPEdgeIdentity;
 @import AEPEdgeConsent;
-@import AEPAssurance;
 @import AEPEdge;
 @import AEPIdentity;
-@import AEPLifecycle;
-@import AEPSignal;
-@import AEPServices;
-@import AEPUserProfile;
-@import AEPOptimize;
 @implementation AdobeBridge
 + (void)configure: (UIApplicationState)appState
 {
@@ -111,12 +105,8 @@ AppDelegate.mm
 
 ```kotlin
 // MainApplication.kt
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Extension;
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Edge;
-import com.adobe.marketing.mobile.edge.consent.Consent;
 ```
 
 ```kotlin
@@ -188,5 +178,5 @@ error: Use of undeclared identifier 'AEPMobileCore'
 ```
 Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/346#issuecomment-2109949661).
 
-#### Other known issues with React Native
+## Other known issues with React Native
 Refer to [Troubleshooting and Known Issues](../README.md#troubleshooting-and-known-issues) for other known issues with React Native integration.
