@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-package com.anonymous.AEPSampleAppNewArchEnabled
+package com.AEPSampleAppNewArchEnabled
 
 import android.app.Application
 import android.content.res.Configuration
@@ -44,7 +44,7 @@ import com.adobe.marketing.mobile.edge.bridge.EdgeBridge
 import com.adobe.marketing.mobile.edge.consent.Consent
 import com.adobe.marketing.mobile.edge.identity.Identity
 import com.adobe.marketing.mobile.optimize.Optimize
-
+import com.anonymous.AEPSampleAppNewArchEnabled.BuildConfig
 
 
 class MainApplication : Application(), ReactApplication {

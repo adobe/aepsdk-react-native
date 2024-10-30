@@ -9,10 +9,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-package com.anonymous.AEPSampleAppNewArchEnabled
+package com.AEPSampleAppNewArchEnabled
 
 import android.os.Build
 import android.os.Bundle
+import com.anonymous.AEPSampleAppNewArchEnabled.BuildConfig
+import com.anonymous.AEPSampleAppNewArchEnabled.R
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -43,7 +45,7 @@ class MainActivity : ReactActivity() {
   override fun createReactActivityDelegate(): ReactActivityDelegate {
     return ReactActivityDelegateWrapper(
           this,
-          BuildConfig.IS_NEW_ARCHITECTURE_ENABLED,
+        BuildConfig.IS_NEW_ARCHITECTURE_ENABLED,
           object : DefaultReactActivityDelegate(
               this,
               mainComponentName,
