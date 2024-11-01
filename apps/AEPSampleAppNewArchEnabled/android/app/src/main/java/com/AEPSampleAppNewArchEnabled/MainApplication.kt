@@ -44,7 +44,7 @@ import com.adobe.marketing.mobile.edge.bridge.EdgeBridge
 import com.adobe.marketing.mobile.edge.consent.Consent
 import com.adobe.marketing.mobile.edge.identity.Identity
 import com.adobe.marketing.mobile.optimize.Optimize
-import com.anonymous.AEPSampleAppNewArchEnabled.BuildConfig
+import com.AEPSampleAppNewArchEnabled.BuildConfig
 
 
 class MainApplication : Application(), ReactApplication {

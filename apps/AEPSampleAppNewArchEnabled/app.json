@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.AEPSampleAppNewArchEnabled"
+      "bundleIdentifier": "com.AEPSampleAppNewArchEnabled"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.AEPSampleAppNewArchEnabled"
+      "package": "com.AEPSampleAppNewArchEnabled"
     },
     "web": {
       "bundler": "metro",

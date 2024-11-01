@@ -109,9 +109,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.AEPSampleAppNewArchEnabled'
+    namespace 'com.AEPSampleAppNewArchEnabled'
     defaultConfig {
-        applicationId 'com.anonymous.AEPSampleAppNewArchEnabled'
+        applicationId 'com.AEPSampleAppNewArchEnabled'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

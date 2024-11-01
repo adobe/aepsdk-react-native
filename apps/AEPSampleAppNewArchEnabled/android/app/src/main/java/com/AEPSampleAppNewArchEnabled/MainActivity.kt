@@ -14,8 +14,8 @@ import com.adobe.marketing.mobile.MobileCore
 
 import android.os.Build
 import android.os.Bundle
-import com.anonymous.AEPSampleAppNewArchEnabled.BuildConfig
-import com.anonymous.AEPSampleAppNewArchEnabled.R
+import com.AEPSampleAppNewArchEnabled.BuildConfig
+import com.AEPSampleAppNewArchEnabled.R
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

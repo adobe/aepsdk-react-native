@@ -116,7 +116,6 @@ test/.DS_Store
 .yarn/
 
 # Ignore all .properties, .lock, .bin, and other build output files inside the .gradle directory
-**/android/gradle/**/*.properties
 **/android/gradle/**/*.lock
 **/android/gradle/**/*.bin
 
@@ -130,18 +129,6 @@ test/.DS_Store
 
 # IntelliJ IDEA project files
 .idea/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/dictionaries
-.idea/libraries
-.idea/vcs.xml
-.idea/modules.xml
-.idea/misc.xml
-.idea/*.iml
-.idea/.name
-.idea/gradle.xml
-.idea/other.xml
-.idea/compiler.xml
 
 # File-based project format
 *.iws
