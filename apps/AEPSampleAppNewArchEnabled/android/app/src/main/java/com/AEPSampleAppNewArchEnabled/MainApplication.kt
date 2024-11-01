@@ -12,6 +12,8 @@ governing permissions and limitations under the License.
 package com.AEPSampleAppNewArchEnabled
 
 import android.app.Application
+import android.app.Activity
+import android.os.Bundle
 import android.content.res.Configuration
 
 import com.facebook.react.PackageList
@@ -27,7 +29,6 @@ import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
 
 import java.util.Arrays
-//MainApplication.java
 import com.adobe.marketing.mobile.AdobeCallback
 import com.adobe.marketing.mobile.Assurance
 import com.adobe.marketing.mobile.Edge
@@ -45,7 +46,6 @@ import com.adobe.marketing.mobile.edge.consent.Consent
 import com.adobe.marketing.mobile.edge.identity.Identity
 import com.adobe.marketing.mobile.optimize.Optimize
 import com.AEPSampleAppNewArchEnabled.BuildConfig
-
 
 class MainApplication : Application(), ReactApplication {
 
@@ -72,10 +72,10 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
-
-      MobileCore.setApplication(this);
+    MobileCore.setApplication(this)
     MobileCore.setLogLevel(LoggingMode.DEBUG)
     MobileCore.configureWithAppID("example")
+    
     val extensions: List<Class<out Extension?>> = Arrays.asList(
       Lifecycle.EXTENSION,
       Signal.EXTENSION,
@@ -91,19 +91,33 @@ class MainApplication : Application(), ReactApplication {
       Optimize.EXTENSION,
       com.adobe.marketing.mobile.Identity.EXTENSION
     )
-    MobileCore.registerExtensions(extensions,
-      AdobeCallback { o: Any? ->
-        MobileCore.lifecycleStart(
-          null
-        )
-      })
+    MobileCore.registerExtensions(extensions, AdobeCallback { o: Any? ->
+      MobileCore.lifecycleStart(null)
+    })
     SoLoader.init(this, false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
+
+    // Register activity lifecycle callbacks to handle onResume and onPause
+    registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+      override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+      override fun onActivityStarted(activity: Activity) {}
+      override fun onActivityResumed(activity: Activity) {
+        MobileCore.setApplication(this@MainApplication)
+        MobileCore.lifecycleStart(null)
+      }
+      override fun onActivityPaused(activity: Activity) {
+        MobileCore.lifecyclePause()
+      }
+      override fun onActivityStopped(activity: Activity) {}
+      override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+      override fun onActivityDestroyed(activity: Activity) {}
+    })
   }
+
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
