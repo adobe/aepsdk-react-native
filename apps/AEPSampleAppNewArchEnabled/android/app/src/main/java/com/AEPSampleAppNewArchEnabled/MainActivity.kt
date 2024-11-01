@@ -10,6 +10,7 @@ governing permissions and limitations under the License.
 */
 
 package com.AEPSampleAppNewArchEnabled
+import com.adobe.marketing.mobile.MobileCore
 
 import android.os.Build
 import android.os.Bundle
@@ -52,6 +53,17 @@ class MainActivity : ReactActivity() {
               fabricEnabled
           ){})
   }
+
+     override fun onResume() {
+        super.onResume()
+        MobileCore.setApplication(application);
+        MobileCore.lifecycleStart(null);
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MobileCore.lifecyclePause();
+    }
 
   /**
     * Align the back button behavior with Android S
