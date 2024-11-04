@@ -53,12 +53,13 @@ governing permissions and limitations under the License.
     }];
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    [AEPMobileCore lifecyclePause]; // Added method for background handling
-}
+// to do add lifecycle methods
+// - (void)applicationDidEnterBackground:(UIApplication *)application {
+//     [AEPMobileCore lifecyclePause]; // Added method for background handling
+// }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    [AEPMobileCore lifecycleStart:nil]; // Added method for foreground handling
-}
+// - (void)applicationWillEnterForeground:(UIApplication *)application {
+//     [AEPMobileCore lifecycleStart:nil]; // Added method for foreground handling
+// }
 
 @end

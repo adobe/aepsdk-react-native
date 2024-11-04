@@ -101,21 +101,23 @@ class MainApplication : Application(), ReactApplication {
     }
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
 
+    //to do add lifecycle methods
+
     // Register activity lifecycle callbacks to handle onResume and onPause
-    registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-      override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-      override fun onActivityStarted(activity: Activity) {}
-      override fun onActivityResumed(activity: Activity) {
-        MobileCore.setApplication(this@MainApplication)
-        MobileCore.lifecycleStart(null)
-      }
-      override fun onActivityPaused(activity: Activity) {
-        MobileCore.lifecyclePause()
-      }
-      override fun onActivityStopped(activity: Activity) {}
-      override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-      override fun onActivityDestroyed(activity: Activity) {}
-    })
+  //    registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+//      override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+//      override fun onActivityStarted(activity: Activity) {}
+//      override fun onActivityResumed(activity: Activity) {
+//        MobileCore.setApplication(this@MainApplication)
+//        MobileCore.lifecycleStart(null)
+//      }
+//      override fun onActivityPaused(activity: Activity) {
+//        MobileCore.lifecyclePause()
+//      }
+//      override fun onActivityStopped(activity: Activity) {}
+//      override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+//      override fun onActivityDestroyed(activity: Activity) {}
+//    })
   }
 
 

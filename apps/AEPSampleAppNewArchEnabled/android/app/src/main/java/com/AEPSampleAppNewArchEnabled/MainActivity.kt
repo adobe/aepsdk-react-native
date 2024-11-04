@@ -54,16 +54,17 @@ class MainActivity : ReactActivity() {
           ){})
   }
 
-     override fun onResume() {
-        super.onResume()
-        MobileCore.setApplication(application);
-        MobileCore.lifecycleStart(null);
-    }
+    // to do - add lifecycle methods
+//     override fun onResume() {
+//        super.onResume()
+//        MobileCore.setApplication(application);
+//        MobileCore.lifecycleStart(null);
+//    }
 
-    override fun onPause() {
-        super.onPause()
-        MobileCore.lifecyclePause();
-    }
+//    override fun onPause() {
+//        super.onPause()
+//        MobileCore.lifecyclePause();
+//    }
 
   /**
     * Align the back button behavior with Android S
