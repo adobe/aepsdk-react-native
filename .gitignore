@@ -84,7 +84,7 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby and *not* Next.js
+# Comment in the public line below if your project uses Gatsby and *not* Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
@@ -103,7 +103,9 @@ dist
 # TernJS port file
 .tern-port
 
+# Build output
 build/
+
 ## User settings
 xcuserdata/
 packages/.DS_Store
@@ -112,3 +114,36 @@ dist/
 test/.DS_Store
 
 .yarn/
+
+# Ignore all .properties, .lock, .bin, and other build output files inside the .gradle directory
+**/android/gradle/**/*.lock
+**/android/gradle/**/*.bin
+
+# Ignore Gradle build directories and cache files
+.gradle/
+**/build/
+**/.gradle/
+
+# Ignore all Eclipse settings and metadata files
+**/.settings/
+
+# IntelliJ IDEA project files
+.idea/
+
+# File-based project format
+*.iws
+
+# IntelliJ
+out/
+
+# Exclude all Android Studio/IntelliJ generated files
+**/android/.idea/
+**/android/.gradle/
+**/android/build/
+
+# Ignore all .idea directories across the project
+**/.idea/
+
+# Ignore VSCode settings
+.vscode/
+.vscode/settings.json
