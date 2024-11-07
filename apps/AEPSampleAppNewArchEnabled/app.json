@@ -40,15 +40,8 @@
             "newArchEnabled": true
           }
         }
-      ],
-      [
-        "/Users/namarora/Documents/DevDemos/Actual-Sdk/aepsdk-expo-plugin/plugin/app.plugin.js",
-        {
-          "environmentFileId": "example",
-          "logLevel": "DEBUG"
-        }
       ]
-    ],
+     ],
     "experiments": {
       "typedRoutes": true
     }
