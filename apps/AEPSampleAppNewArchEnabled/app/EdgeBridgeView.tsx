@@ -15,11 +15,10 @@ import {Button, Text, View, ScrollView} from 'react-native';
 import {EdgeBridge} from '@adobe/react-native-aepedgebridge';
 import {MobileCore} from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
-import {NavigationProps} from '../types/props';
-import { Stack, useRouter } from 'expo-router';
+import {  useRouter } from 'expo-router';
 
 
-const EdgeBridgeView = ({navigation}: NavigationProps) => {
+const EdgeBridgeView = () => {
   const [version, setVersion] = useState('');
   EdgeBridge.extensionVersion().then(version => setVersion(version));
 
@@ -40,7 +39,7 @@ function trackState() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
-        <Button onPress={() => router.back()} title="Go to main page" />
+        <Button onPress={router.back} title="Go to main page" />
         <Text style={styles.welcome}>Edge Bridge v{version}</Text>
         <Button title="MobileCore.trackAction()" onPress={trackAction} />
         <Button title="MobileCore.trackState()" onPress={trackState} />

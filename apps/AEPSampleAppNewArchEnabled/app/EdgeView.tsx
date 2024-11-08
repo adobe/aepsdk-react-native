@@ -14,12 +14,14 @@ import React, {useState} from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
 import styles from '../styles/styles';
-import {NavigationProps} from '../types/props';
+import {  useRouter } from 'expo-router';
 
-const EdgeView = ({navigation}: NavigationProps) => {
+const EdgeView = () => {
+
   const [version, setVersion] = useState('');
   const [eventHandles, setEventHandles] = useState('');
   const [locationHint, getlocationHintText] = useState('');
+  const router = useRouter();
 
   Edge.extensionVersion().then(version => setVersion(version));
 
@@ -108,7 +110,7 @@ const EdgeView = ({navigation}: NavigationProps) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
-        <Button onPress={() => navigation.goBack()} title="Go to main page" />
+        <Button  onPress={router.back} title="Go to main page" />
         <Text style={styles.welcome}>Edge v{version}</Text>
         <Button
           title="sendEventWithParams"

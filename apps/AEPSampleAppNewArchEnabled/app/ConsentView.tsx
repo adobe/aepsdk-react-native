@@ -15,7 +15,7 @@ import {Button, Text, View, ScrollView} from 'react-native';
 import {Consent} from '@adobe/react-native-aepedgeconsent';
 import {MobileCore} from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
-import {NavigationProps} from '../types/props';
+import {  useRouter } from 'expo-router';
 
 function updateCollectConsent(allowed: boolean) {
   var collectConsentStatus = allowed ? {val: 'y'} : {val: 'n'};
@@ -38,10 +38,11 @@ function setDefaultConsent(allowed: boolean) {
   MobileCore.updateConfiguration(defaultConsents);
 }
 
-const ConsentView = ({navigation}: NavigationProps) => {
+const ConsentView = () => {
   const [version, setVersion] = useState('');
   const [consents, setConsents] = useState('');
   Consent.extensionVersion().then(version => setVersion(version));
+  const router = useRouter();
 
   function getConsents() {
     var consents = {consents: {collect: {val: 'n'}}};
@@ -65,7 +66,7 @@ const ConsentView = ({navigation}: NavigationProps) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
-        <Button onPress={() => navigation.goBack()} title="Go to main page" />
+        <Button onPress={router.back} title="Go to main page" />
         <Text style={styles.welcome}>Consent v{version}</Text>
         <Button
           title="Set Default Consent - Yes"

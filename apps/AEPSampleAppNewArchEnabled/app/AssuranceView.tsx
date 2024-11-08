@@ -20,11 +20,13 @@ import {
   ScrollView,
 } from 'react-native';
 import {Assurance} from '@adobe/react-native-aepassurance';
-import { NavigationProps } from '../types/props';
+import {  useRouter } from 'expo-router';
 
-const AssuranceView = ({navigation}: NavigationProps) => {
+const AssuranceView = () => {
   const [version, setVersion] = useState('');
   const [sessionURL, setsessionURL] = useState('your-assurance-url');
+
+  const router = useRouter();
 
   Assurance.extensionVersion().then(version => {
     setVersion(version);
@@ -33,7 +35,7 @@ const AssuranceView = ({navigation}: NavigationProps) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
-        <Button onPress={() => navigation.goBack()} title="Go to main page" />
+        <Button onPress={router.back}  title="Go to main page" />
         <Text style={styles.welcome}>Assurance v{version}</Text>
         <Button title="Start Session" onPress={startSessionClicked} />
         <TextInput
