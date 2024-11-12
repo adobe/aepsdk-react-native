@@ -46,7 +46,6 @@ import com.adobe.marketing.mobile.edge.consent.Consent
 import com.adobe.marketing.mobile.edge.identity.Identity
 import com.adobe.marketing.mobile.optimize.Optimize
 import com.AEPSampleAppNewArchEnabled.BuildConfig
-import com.adobe.marketing.mobile.MobileCore.getApplication
 
 class MainApplication : Application(), ReactApplication {
 
@@ -76,7 +75,7 @@ class MainApplication : Application(), ReactApplication {
     MobileCore.setApplication(this)
     MobileCore.setLogLevel(LoggingMode.DEBUG)
     MobileCore.configureWithAppID("example")
-    
+
     val extensions: List<Class<out Extension?>> = Arrays.asList(
       Lifecycle.EXTENSION,
       Signal.EXTENSION,
@@ -93,7 +92,6 @@ class MainApplication : Application(), ReactApplication {
       com.adobe.marketing.mobile.Identity.EXTENSION
     )
     MobileCore.registerExtensions(extensions, AdobeCallback { o: Any? ->
-      MobileCore.lifecycleStart(null)
     })
     SoLoader.init(this, false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
@@ -102,18 +100,6 @@ class MainApplication : Application(), ReactApplication {
     }
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
 
-    // Enable Lifecycle Start (application.launch)
-
-  }
-
-  fun onResume() {
-    MobileCore.setApplication(getApplication()!!)
-    MobileCore.lifecycleStart(null)
-  }
-
-  // Enable Lifecycle Pause (application.close)
-  fun onPause() {
-    MobileCore.lifecyclePause()
   }
 
 

@@ -10,6 +10,8 @@ governing permissions and limitations under the License.
 */
 
 package com.AEPSampleAppNewArchEnabled
+import android.app.Activity
+import android.app.Application
 import com.adobe.marketing.mobile.MobileCore
 
 import android.os.Build
@@ -31,6 +33,26 @@ class MainActivity : ReactActivity() {
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
     super.onCreate(null)
+
+      application.registerActivityLifecycleCallbacks(object :
+          Application.ActivityLifecycleCallbacks {
+          override fun onActivityResumed(activity: Activity) {
+              MobileCore.setApplication(application)
+              MobileCore.lifecycleStart(null)
+          }
+
+          override fun onActivityPaused(activity: Activity) {
+              MobileCore.lifecyclePause()
+          }
+
+          // the following methods aren't needed for our lifecycle purposes, but are
+          // required to be implemented by the ActivityLifecycleCallbacks object
+          override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+          override fun onActivityStarted(activity: Activity) {}
+          override fun onActivityStopped(activity: Activity) {}
+          override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+          override fun onActivityDestroyed(activity: Activity) {}
+      })
   }
 
   /**
@@ -54,17 +76,6 @@ class MainActivity : ReactActivity() {
           ){})
   }
 
-    // Called when the main activity start interacting
-    override fun onResume() {
-        super.onResume()
-        (application as MainApplication).onResume()
-    }
-
-    // Called when the activity pauses
-    override fun onPause() {
-        super.onPause()
-        (application as MainApplication).onPause()
-    }
 
 
   /**
