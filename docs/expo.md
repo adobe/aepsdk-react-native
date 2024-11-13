@@ -7,6 +7,9 @@ The Adobe Experience Platform Mobile SDK for React Native is compatible with the
 
 # Guide for Expo apps
 
+> [!NOTE]
+> A simplified solution for SDK integrated with Expo is currently in development and expected to be available in the next couple of months. You may proceed with the current steps or choose to wait for the updated version if you prefer a more streamlined setup.
+
 ## Overview
 Expo projects can use both third-party React Native libraries with native code and custom native code. Creating a development build with Expo CLI allows inclusion of specific native dependencies and customizations.
 
@@ -43,6 +46,8 @@ AdobeBridge.h
 #import <Foundation/Foundation.h>
 @interface AdobeBridge : NSObject
 + (void)configure: (UIApplicationState)state;
++ (void)lifecycleStart;
++ (void)lifecyclePause;
 @end
 ```
 
@@ -50,32 +55,41 @@ AdobeBridge.m
 ```objective-c
 #import "AdobeBridge.h"
 #import <UIKit/UIKit.h>
+
 @import AEPCore;
+@import AEPLifecycle;
+@import AEPEdge;
 @import AEPEdgeIdentity;
 @import AEPEdgeConsent;
-@import AEPEdge;
-@import AEPIdentity;
+@import AEPServices;
+
 @implementation AdobeBridge
+
 + (void)configure: (UIApplicationState)appState
 {
-  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
+  [AEPMobileCore setLogLevel:AEPLogLevelTrace];
   NSArray *extensionsToRegister = @[
-      AEPMobileEdgeIdentity.class,
-      AEPMobileEdgeConsent.class,
-      AEPMobileAssurance.class,
+      AEPMobileLifecycle.class, 
       AEPMobileEdge.class,
-      AEPMobileIdentity.class,
-      AEPMobileLifecycle.class,
-      AEPMobileOptimize.class,
-      AEPMobileSignal.class,
-      AEPMobileUserProfile.class
+      AEPMobileEdgeIdentity.class,
+      AEPMobileEdgeConsent.class
       ];
       [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
-        [AEPMobileCore configureWithAppId: @"KEY"];
+        [AEPMobileCore configureWithAppId: @"YOUR-APP-ID" ];
         if (appState != UIApplicationStateBackground) {
-            [AEPMobileCore lifecycleStart:@{@"": @""}];
+            [AEPMobileCore lifecycleStart:nil];
         }
     }];
+}
+
++ (void)lifecycleStart
+{
+    [AEPMobileCore lifecycleStart:nil];
+}
+
++ (void)lifecyclePause
+{
+    [AEPMobileCore lifecyclePause];
 }
 @end
 ```
@@ -83,13 +97,37 @@ AdobeBridge.m
 AppDelegate.mm
 ```objective-c
 #import "AdobeBridge.h" // add this import
-...
+
+@implementation AppDelegate 
+
+UIApplicationState appState = [UIApplication sharedApplication].applicationState;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  ...
-  [AdobeBridge configure: application.applicationState]; // Add this line
+  self.moduleName = @"main";
+
+  // You can add your custom initial props in the dictionary below.
+  // They will be passed down to the ViewController used by React Native.
+  self.initialProps = @{};
+
+  [AdobeBridge configure: application.applicationState];
+
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
+
+// Setup for Lifecycle Start when entering foreground
+- (void)applicationWillEnterForeground:(UIApplication *)application{
+  appState = application.applicationState;
+  [AdobeBridge lifecycleStart];
+}
+
+// Setup for Lifecycle Start when entering background
+- (void)applicationDidEnterBackground:(UIApplication *)application{
+  appState = application.applicationState;
+  [AdobeBridge lifecyclePause];
+}
+
+@end
 ```
 
 > [!TIP]
@@ -103,36 +141,7 @@ AppDelegate.mm
 
 ##### **Android:** _(Kotlin)_
 
-```kotlin
-// MainApplication.kt
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Edge;
-```
-
-```kotlin
-class MainApplication : Application(), ReactApplication {
-  ...
-  override fun onCreate() {
-    super.onCreate()
-    ...
-
-    MobileCore.setApplication(this)
-    MobileCore.setLogLevel(LoggingMode.VERBOSE)
-    MobileCore.configureWithAppID("YOUR-APP-ID")
-    val extensions: List<Class<out Extension?>> = Arrays.asList(
-      Edge.EXTENSION,
-      Consent.EXTENSION,
-      com.adobe.marketing.mobile.Identity.EXTENSION
-    )
-    MobileCore.registerExtensions(extensions,
-      AdobeCallback { o: Any? ->
-        MobileCore.lifecycleStart(
-          null
-        )
-      })
-  }
-}
-```
+Please refer to the [Android section](../README.md#kotlin) for initialization code.
 
 # Guide for bare React Native apps using Expo modules
 

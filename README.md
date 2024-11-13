@@ -213,42 +213,80 @@ public class MainApplication extends Application implements ReactApplication {
 ###### **Kotlin:**
 
 ```kotlin
-// MainApplication.kt
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Extension;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.Edge;
-import com.adobe.marketing.mobile.edge.consent.Consent;
+ // MainApplication.kt
+import com.adobe.marketing.mobile.Edge
+import com.adobe.marketing.mobile.Lifecycle
+import com.adobe.marketing.mobile.LoggingMode
+import com.adobe.marketing.mobile.MobileCore
+import com.adobe.marketing.mobile.MobileCore.getApplication
+import com.adobe.marketing.mobile.edge.consent.Consent
+import com.adobe.marketing.mobile.edge.identity.Identity
 ```
 
 ```kotlin
-class MainApplication : Application(), ReactApplication {
-  ...
-  override fun onCreate() {
+// MainApplication.kt
+ class MainApplication : Application(), ReactApplication {
+   ...
+ override fun onCreate() {
     super.onCreate()
-    ...
+    
+    MobileCore.setApplication(this);
+    MobileCore.setLogLevel(LoggingMode.DEBUG)
+    MobileCore.configureWithAppID("YOUR-APP-ID");
+    MobileCore.registerExtensions(
+      listOf(
+        Lifecycle.EXTENSION,
+        Edge.EXTENSION,
+        Identity.EXTENSION,
+        Consent.EXTENSION
+      ),
+    ) {
+      Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
+    }
 
-    MobileCore.setApplication(this)
-    MobileCore.setLogLevel(LoggingMode.VERBOSE)
-    MobileCore.configureWithAppID("YOUR-APP-ID")
-    val extensions: List<Class<out Extension?>> = Arrays.asList(
-      Lifecycle.EXTENSION,
-      Signal.EXTENSION,
-      Edge.EXTENSION,
-      Consent.EXTENSION,
-      com.adobe.marketing.mobile.Identity.EXTENSION
-    )
-    MobileCore.registerExtensions(extensions,
-      AdobeCallback { o: Any? ->
-        MobileCore.lifecycleStart(
-          null
-        )
-      })
+    SoLoader.init(this, false)
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      // If you opted-in for the New Architecture, we load the native entry point for this app.
+      load()
+    }
+    ApplicationLifecycleDispatcher.onApplicationCreate(this)
   }
-}
+```
+
+```kotlin
+// MainActivity.kt
+
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
+import com.adobe.marketing.mobile.MobileCore
+
+// Implementing global lifecycle callbacks
+override fun onCreate(savedInstanceState: Bundle?) {
+    // Set the theme to AppTheme BEFORE onCreate to support
+    // coloring the background, status bar, and navigation bar.
+    // This is required for expo-splash-screen.
+    setTheme(R.style.AppTheme);
+    super.onCreate(null)
+
+    application.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+        override fun onActivityResumed(activity: Activity) {
+            MobileCore.setApplication(application)
+            MobileCore.lifecycleStart(null)
+        }
+
+        override fun onActivityPaused(activity: Activity) {
+            MobileCore.lifecyclePause()
+        }
+
+        // the following methods aren't needed for our lifecycle purposes, but are
+        // required to be implemented by the ActivityLifecycleCallbacks object
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+        override fun onActivityStarted(activity: Activity) {}
+        override fun onActivityStopped(activity: Activity) {}
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        override fun onActivityDestroyed(activity: Activity) {}
+    })
+  }
 ```
 
 > To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
