@@ -65,7 +65,7 @@ function TargetView() {
     const targetProduct = new TargetProduct('24D3412', 'Books');
     const parameters1 = new TargetParameters(mboxParameters1);
     const request1 = new TargetRequestObject(
-      'clickTestRyan',
+      'sdk_smoke_tests_target',
       parameters1,
       'defaultContent1',
       (error, content) => {
@@ -84,7 +84,7 @@ function TargetView() {
       targetOrder,
     );
     const request2 = new TargetRequestObject(
-      'mboxName2',
+      'aep-loc-2',
       parameters2,
       'defaultContent2',
       (error, content) => {
@@ -109,7 +109,7 @@ function TargetView() {
   };
 
   const displayedLocations = () =>
-    Target.displayedLocations(['clickTestRyan', 'clickTestRyan']);
+    Target.displayedLocations(['sdk_smoke_tests_target', 'aep-loc-2', 'sdk_smoke_tests_target_a4t']);
 
   const clickedLocation = () => {
     const purchaseIDs = ['34', '125'];
@@ -124,7 +124,7 @@ function TargetView() {
       targetOrder,
     );
 
-    Target.clickedLocation('clickTestRyan', parameters);
+    Target.clickedLocation('sdk_smoke_tests_target', parameters);
   };
 
   const prefetchContent = () => {
@@ -135,7 +135,7 @@ function TargetView() {
     const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     const targetProduct = new TargetProduct('24D3412', 'Books');
     const parameters1 = new TargetParameters(mboxParameters1);
-    const prefetch1 = new TargetPrefetchObject('clickTestRyan', parameters1);
+    const prefetch1 = new TargetPrefetchObject('sdk_smoke_tests_target', parameters1);
 
     const parameters2 = new TargetParameters(
       mboxParameters2,
@@ -143,7 +143,7 @@ function TargetView() {
       targetProduct,
       targetOrder,
     );
-    const prefetch2 = new TargetPrefetchObject('mboxName2', parameters2);
+    const prefetch2 = new TargetPrefetchObject('aep-loc-2', parameters2);
 
     const prefetchList = [prefetch1, prefetch2];
     const profileParameters1 = {ageGroup: '20-32'};
