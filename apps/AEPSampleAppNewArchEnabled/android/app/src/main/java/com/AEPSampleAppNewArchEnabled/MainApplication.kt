@@ -75,7 +75,7 @@ class MainApplication : Application(), ReactApplication {
     MobileCore.setApplication(this)
     MobileCore.setLogLevel(LoggingMode.DEBUG)
     MobileCore.configureWithAppID("example")
-    
+
     val extensions: List<Class<out Extension?>> = Arrays.asList(
       Lifecycle.EXTENSION,
       Signal.EXTENSION,
@@ -92,7 +92,6 @@ class MainApplication : Application(), ReactApplication {
       com.adobe.marketing.mobile.Identity.EXTENSION
     )
     MobileCore.registerExtensions(extensions, AdobeCallback { o: Any? ->
-      MobileCore.lifecycleStart(null)
     })
     SoLoader.init(this, false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
@@ -101,23 +100,6 @@ class MainApplication : Application(), ReactApplication {
     }
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
 
-    //to do add lifecycle methods
-
-    // Register activity lifecycle callbacks to handle onResume and onPause
-  //    registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-//      override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-//      override fun onActivityStarted(activity: Activity) {}
-//      override fun onActivityResumed(activity: Activity) {
-//        MobileCore.setApplication(this@MainApplication)
-//        MobileCore.lifecycleStart(null)
-//      }
-//      override fun onActivityPaused(activity: Activity) {
-//        MobileCore.lifecyclePause()
-//      }
-//      override fun onActivityStopped(activity: Activity) {}
-//      override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-//      override fun onActivityDestroyed(activity: Activity) {}
-//    })
   }
 
 

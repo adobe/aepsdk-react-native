@@ -15,7 +15,9 @@ governing permissions and limitations under the License.
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
 
-@implementation AppDelegate
+@implementation AppDelegate {
+  UIApplicationState appState;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -72,6 +74,19 @@ governing permissions and limitations under the License.
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
   return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+}
+
+
+// Setup for Lifecycle Start when entering foreground
+- (void)applicationWillEnterForeground:(UIApplication *)application{
+  appState = application.applicationState;
+  [AdobeBridge lifecycleStart];
+}
+
+// Setup for Lifecycle Start when entering background
+- (void)applicationDidEnterBackground:(UIApplication *)application{
+  appState = application.applicationState;
+  [AdobeBridge lifecyclePause];
 }
 
 @end
