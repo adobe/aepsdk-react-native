@@ -13,4 +13,6 @@ governing permissions and limitations under the License.
 #import <Foundation/Foundation.h>
 @interface AdobeBridge : NSObject
 + (void)configure: (UIApplicationState)state;
++ (void)lifecycleStart;
++ (void)lifecyclePause;
 @end
