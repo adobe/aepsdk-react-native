@@ -130,6 +130,8 @@ UIApplicationState appState = [UIApplication sharedApplication].applicationState
 @end
 ```
 
+> For further details on Lifecycle implementation, please refer to the [Lifecycle API documentation](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#lifecycle).
+
 > [!TIP]
 > If the following build error occurs when running the iOS application after Mobile SDK installation:
 >

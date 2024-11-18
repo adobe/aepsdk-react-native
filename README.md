@@ -289,7 +289,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
   }
 ```
 
-> To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
+> For further details on Lifecycle implementation, please refer to the [Lifecycle API documentation](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#lifecycle).
 
 ## Migration guide
 
