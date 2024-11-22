@@ -45,7 +45,7 @@ governing permissions and limitations under the License.
     ];
 
     [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
-        [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
+        [AEPMobileCore configureWithAppId:@"3149c49c3910/473386a6e5b0/launch-6099493a8c97-development"];
 
         if (appState != UIApplicationStateBackground) {
             [AEPMobileCore lifecycleStart:nil]; // Added for foreground handling
