@@ -24,7 +24,7 @@ jobs:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-            - ./apps/AEPSampleApp/node_modules
+            - ./apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
           name: Unit Tests
@@ -46,7 +46,7 @@ jobs:
 
       - run:
           name: Building Android Sample App
-          command: yarn sampleapp:android:build
+          command: yarn sampleappnewarchenabled:android:build
 
           environment:
             _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
@@ -68,7 +68,7 @@ jobs:
           key: ios-yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-            - ./apps/AEPSampleApp/node_modules
+            - ./apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
           name: Install latest Cocoapods
@@ -76,11 +76,11 @@ jobs:
 
       - run:
           name: Install pods
-          command: yarn sampleapp:ios:pod:install
+          command: yarn sampleappnewarchenabled:ios:pod:install
 
       - run:
           name: Building iOS Sample App
-          command: cd apps/AEPSampleApp && npx react-native run-ios --verbose --terminal terminal
+          command: cd apps/AEPSampleAppNewArchEnabled && npx expo run:ios --verbose --terminal terminal
 
 workflows:
   version: 2.1
