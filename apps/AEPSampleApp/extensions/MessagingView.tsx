@@ -46,7 +46,7 @@ const getPropositionsForSurfaces = async () => {
 };
 
 const trackAction = async () => {
-  MobileCore.trackAction('reactnative', {full: true});
+  MobileCore.trackAction('tuesday', {full: true});
 };
 
 const updatePropositionsForSurfaces = async () => {
