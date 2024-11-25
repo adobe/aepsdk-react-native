@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import React from 'react';
-import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import {
   Target,
   TargetOrder,
@@ -20,7 +20,7 @@ import {
   TargetProduct,
   TargetRequestObject,
 } from '@adobe/react-native-aeptarget';
-import {  useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 function TargetView() {
   const targetExtensionVersion = async () => {
@@ -55,19 +55,18 @@ function TargetView() {
   const setTntId = () => Target.setTntId('tntId');
 
   const setThirdPartyId = () => Target.setThirdPartyId('thirdPartyId');
-
+  const targetParameters1 = new TargetParameters(
+    { mbox_parameter_key: 'mbox_parameter_value' },
+    { profile_parameter_key: 'profile_parameter_value' },
+    new TargetProduct('764334', 'Footwear'),
+    new TargetOrder('223d24411', 445.12, ['ppId1']),
+  );
   const retrieveLocationContent = () => {
-    const mboxParameters1 = {status: 'platinum'};
-    const mboxParameters2 = {userType: 'Paid'};
-    const purchaseIDs = ['34', '125'];
 
-    const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
-    const targetProduct = new TargetProduct('24D3412', 'Books');
-    const parameters1 = new TargetParameters(mboxParameters1);
     const request1 = new TargetRequestObject(
       'sdk_smoke_tests_target',
-      parameters1,
-      'defaultContent1',
+      new TargetParameters(),
+      'DefaultValue1',
       (error, content) => {
         if (error) {
           console.error(error);
@@ -77,16 +76,10 @@ function TargetView() {
       },
     );
 
-    const parameters2 = new TargetParameters(
-      mboxParameters2,
-      {profileParameters: 'parameterValue'},
-      targetProduct,
-      targetOrder,
-    );
     const request2 = new TargetRequestObject(
       'aep-loc-2',
-      parameters2,
-      'defaultContent2',
+      new TargetParameters(),
+      'DefaultValue2',
       (error, content) => {
         if (error) {
           console.error(error);
@@ -96,73 +89,61 @@ function TargetView() {
       },
     );
 
-    const locationRequests = [request1, request2];
-    const profileParameters1 = {ageGroup: '20-32'};
 
-    const parameters = new TargetParameters(
-      {parameters: 'parametervalue'},
-      profileParameters1,
-      targetProduct,
-      targetOrder,
+    const request3 = new TargetRequestObject(
+      'sdk_smoke_tests_target_a4t',
+      targetParameters1,
+      'DefaultValuex',
+      (error, content) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log('Adobe content:' + content);
+        }
+      },
     );
-    Target.retrieveLocationContent(locationRequests, parameters);
+
+    const locationRequests = [request1, request2, request3];
+
+    Target.retrieveLocationContent(locationRequests, targetParameters1);
   };
 
   const displayedLocations = () =>
-    Target.displayedLocations(['sdk_smoke_tests_target', 'aep-loc-2', 'sdk_smoke_tests_target_a4t']);
+    Target.displayedLocations([
+      'sdk_smoke_tests_target',
+      'aep-loc-2',
+      'sdk_smoke_tests_target_a4t',
+    ], targetParameters1);
 
   const clickedLocation = () => {
-    const purchaseIDs = ['34', '125'];
 
-    const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
-    const targetProduct = new TargetProduct('24D3412', 'Books');
-    const profileParameters1 = {ageGroup: '20-32'};
-    const parameters = new TargetParameters(
-      {parameters: 'parametervalue'},
-      profileParameters1,
-      targetProduct,
-      targetOrder,
-    );
-
-    Target.clickedLocation('sdk_smoke_tests_target', parameters);
+    Target.clickedLocation('sdk_smoke_tests_target_a4t', targetParameters1);
   };
 
   const prefetchContent = () => {
-    const mboxParameters1 = {status: 'platinum'};
-    const mboxParameters2 = {userType: 'Paid'};
-    const purchaseIDs = ['34', '125'];
-
-    const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
-    const targetProduct = new TargetProduct('24D3412', 'Books');
-    const parameters1 = new TargetParameters(mboxParameters1);
-    const prefetch1 = new TargetPrefetchObject('sdk_smoke_tests_target', parameters1);
-
-    const parameters2 = new TargetParameters(
-      mboxParameters2,
-      {profileParameters: 'parameterValue'},
-      targetProduct,
-      targetOrder,
+    const prefetch1 = new TargetPrefetchObject(
+      'sdk_smoke_tests_target',
+      new TargetParameters(),
     );
-    const prefetch2 = new TargetPrefetchObject('aep-loc-2', parameters2);
+
+    const prefetch2 = new TargetPrefetchObject(
+      'aep-loc-2',
+      targetParameters1
+    );
 
     const prefetchList = [prefetch1, prefetch2];
-    const profileParameters1 = {ageGroup: '20-32'};
+ 
 
-    const parameters = new TargetParameters(
-      {parameters: 'parametervalue'},
-      profileParameters1,
-      targetProduct,
-      targetOrder,
-    );
-    Target.prefetchContent(prefetchList, parameters)
+    Target.prefetchContent(prefetchList, targetParameters1)
       .then(success => console.log(success))
       .catch(err => console.log(err));
   };
+
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{marginTop: 75}}>
+      <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={router.back} title="Go to main page" />
         <Text style={styles.welcome}>Target Test App</Text>
         <Button title="extensionVersion()" onPress={targetExtensionVersion} />
@@ -187,10 +168,7 @@ function TargetView() {
         />
         <Button title="prefetchContent(...)" onPress={prefetchContent} />
         <Button title="displayedLocations(...)" onPress={displayedLocations} />
-        <Button
-          title="clickedLocation(...)"
-          onPress={clickedLocation}
-        />
+        <Button title="clickedLocation(...)" onPress={clickedLocation} />
       </ScrollView>
     </View>
   );
