@@ -13,10 +13,6 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-            - yarn-cache-{{ checksum "yarn.lock" }}
-
       - run:
           name: Install Node.js and Yarn Dependencies
           command: yarn install
@@ -24,12 +20,6 @@ jobs:
       - run:
           name: Build the Project
           command: yarn run build
-
-      - save_cache:
-          key: yarn-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-            - ./apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
           name: Unit Tests
@@ -53,19 +43,9 @@ jobs:
             export PATH=$JAVA_HOME/bin:$PATH
             java -version
 
-      - restore_cache:
-          keys:
-            - android-yarn-cache-{{ checksum "yarn.lock" }}
-
       - run:
           name: Install Node.js and Yarn Dependencies
           command: yarn install
-
-      - save_cache:
-          key: android-yarn-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-            - ./apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
           name: Verify Gradle Java Version
