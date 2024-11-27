@@ -79,6 +79,23 @@ jobs:
           command: yarn sampleappnewarchenabled:ios:pod:install
 
       - run:
+          name: Install iOS Simulator Runtime
+          command: |
+            xcrun simctl list runtimes
+            xcrun simctl runtime install "com.apple.CoreSimulator.SimRuntime.iOS-17-5"
+
+      - run:
+          name: Create iPhone 15 Simulator
+          command: |
+            xcrun simctl list devices
+            xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-5"
+
+      - run:
+          name: Boot iPhone 15 Simulator
+          command: |
+            xcrun simctl boot "iPhone 15"
+
+      - run:
           name: Building iOS Sample App
           command: cd apps/AEPSampleAppNewArchEnabled && npx expo run:ios
 
