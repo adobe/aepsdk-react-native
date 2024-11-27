@@ -48,6 +48,10 @@ jobs:
           command: yarn install
 
       - run:
+          name: Build the Project
+          command: yarn run build
+
+      - run:
           name: Verify Gradle Java Version
           command: |
             cd apps/AEPSampleAppNewArchEnabled/android
