@@ -87,7 +87,7 @@ jobs:
           name: Build Android Sample App
           command: |
             cd apps/AEPSampleAppNewArchEnabled/android
-            ./gradlew assembleRelease
+            ./gradlew assemble --stacktrace
           environment:
             _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
