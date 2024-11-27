@@ -17,7 +17,9 @@ jobs:
           keys:
             - yarn-cache-{{ checksum "yarn.lock" }}
 
-      - run: yarn install
+      - run:
+          name: Install Node.js and Yarn Dependencies
+          command: yarn install
 
       - save_cache:
           key: yarn-cache-{{ checksum "yarn.lock" }}
@@ -43,6 +45,8 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y openjdk-17-jdk
+            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+            export PATH=$JAVA_HOME/bin:$PATH
             java -version
 
       - restore_cache:
@@ -60,10 +64,16 @@ jobs:
             - ./apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
+          name: Verify Gradle Java Version
+          command: |
+            cd apps/AEPSampleAppNewArchEnabled/android
+            ./gradlew -version
+
+      - run:
           name: Build Android Sample App
           command: |
-            cd apps/AEPSampleAppNewArchEnabled/android && ./gradlew assembleRelease
-
+            cd apps/AEPSampleAppNewArchEnabled/android
+            ./gradlew assembleRelease
           environment:
             _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
