@@ -21,6 +21,10 @@ jobs:
           name: Install Node.js and Yarn Dependencies
           command: yarn install
 
+      - run:
+          name: Build the Project
+          command: yarn run build
+
       - save_cache:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
