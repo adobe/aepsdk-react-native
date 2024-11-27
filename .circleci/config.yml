@@ -8,7 +8,7 @@ orbs:
 jobs:
   unit-test:
     docker:
-      # switch to use node v18.x becaseu of the error: the engine "node" is incompatible with this module. Expected version "^16.10.0 || ^18.0.0 || >=20.0.0". Got "19.7.0"
+      # switch to use node v18.x because of the error: the engine "node" is incompatible with this module. Expected version "^16.10.0 || ^18.0.0 || >=20.0.0". Got "19.7.0"
       - image: cimg/node:18.20
 
     steps:
@@ -51,45 +51,9 @@ jobs:
           environment:
             _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
-  build-sample-app-ios:
-    macos:
-      xcode: 15.2 # Specify the Xcode version to use
-
-    steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - ios-yarn-cache-{{ checksum "yarn.lock" }}
-
-      - run: yarn install
-
-      - save_cache:
-          key: ios-yarn-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-            - ./apps/AEPSampleAppNewArchEnabled/node_modules
-
-      - run:
-          name: Install latest Cocoapods
-          command: sudo gem install cocoapods
-
-      - run:
-          name: Install pods
-          command: yarn sampleappnewarchenabled:ios:pod:install
-
-      - run:
-          name: Building iOS Sample App
-          command: cd apps/AEPSampleAppNewArchEnabled && npx expo run:ios
-
 workflows:
   version: 2.1
   ci-workflow:
     jobs:
       - unit-test
-      - build-sample-app-ios
-      # - build-sample-app-android
-      # Disable the Android build job because of the error below:
-      # Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'.
-      # > [CXX1210] /root/project/apps/AEPSampleApp/node_modules/react-native-reanimated/android/CMakeLists.txt debug|arm64-v8a : No compatible library found
-      # The Android build job will be enabled once the issue is resolved.
+      - build-sample-app-android
