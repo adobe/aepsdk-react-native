@@ -8,7 +8,7 @@ orbs:
 jobs:
   unit-test:
     docker:
-      # switch to use node v18.x becaseu of the error: the engine "node" is incompatible with this module. Expected version "^16.10.0 || ^18.0.0 || >=20.0.0". Got "19.7.0"
+      # Use Node.js 18.x for compatibility with the project dependencies
       - image: cimg/node:18.20
 
     steps:
@@ -18,7 +18,9 @@ jobs:
           keys:
             - yarn-cache-{{ checksum "yarn.lock" }}
 
-      - run: yarn install
+      - run:
+          name: Install Node.js and Yarn Dependencies
+          command: yarn install
 
       - run:
           name: Build the Project
@@ -37,7 +39,6 @@ jobs:
   build-sample-app-android:
     executor:
       name: rn/linux_android
-      # the installed tools within the image: https://hub.docker.com/r/reactnativecommunity/react-native-android/tags
       build_image_version: v13.0
       resource_class: large
 
@@ -45,7 +46,7 @@ jobs:
       - checkout
 
       - run:
-          name: yarn install
+          name: Install Node.js and Yarn Dependencies
           command: yarn install
 
       - run:
@@ -70,7 +71,9 @@ jobs:
           keys:
             - ios-yarn-cache-{{ checksum "yarn.lock" }}
 
-      - run: yarn install
+      - run:
+          name: Install Node.js and Yarn Dependencies
+          command: yarn install
 
       - run:
           name: Build the Project
@@ -83,30 +86,12 @@ jobs:
             - ./apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
-          name: Install latest Cocoapods
+          name: Install Cocoapods
           command: sudo gem install cocoapods
 
       - run:
-          name: Install pods
+          name: Install Pods
           command: yarn sampleappnewarchenabled:ios:pod:install
-
-      - run:
-          name: Install iOS Simulator Runtime
-          command: |
-            xcrun simctl list runtimes
-            xcrun simctl runtime install "com.apple.CoreSimulator.SimRuntime.iOS-17-2"
-
-
-      - run:
-          name: Create iPhone 15 Simulator
-          command: |
-            xcrun simctl list devices
-            xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-2"
-
-      - run:
-          name: Boot iPhone 15 Simulator
-          command: |
-            xcrun simctl boot "iPhone 15"
 
       - run:
           name: Building iOS Sample App
