@@ -20,6 +20,10 @@ jobs:
 
       - run: yarn install
 
+      - run:
+          name: Build the Project
+          command: yarn run build
+
       - save_cache:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -45,6 +49,10 @@ jobs:
           command: yarn install
 
       - run:
+          name: Build the Project
+          command: yarn run build
+
+      - run:
           name: Building Android Sample App
           command: yarn sampleappnewarchenabled:android:build
 
@@ -64,6 +72,10 @@ jobs:
 
       - run: yarn install
 
+      - run:
+          name: Build the Project
+          command: yarn run build
+
       - save_cache:
           key: ios-yarn-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -82,13 +94,14 @@ jobs:
           name: Install iOS Simulator Runtime
           command: |
             xcrun simctl list runtimes
-            xcrun simctl runtime install "com.apple.CoreSimulator.SimRuntime.iOS-17-5"
+            xcrun simctl runtime install "com.apple.CoreSimulator.SimRuntime.iOS-17-2"
+
 
       - run:
           name: Create iPhone 15 Simulator
           command: |
             xcrun simctl list devices
-            xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-5"
+            xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-2"
 
       - run:
           name: Boot iPhone 15 Simulator
