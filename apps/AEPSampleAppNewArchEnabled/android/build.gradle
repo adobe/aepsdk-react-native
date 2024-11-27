@@ -8,10 +8,9 @@ buildscript {
         targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '34')
         kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.23'
 
-        // ndkVersion = "26.1.10909125"
-
+        // Specify NDK and CMake versions
         ndkVersion = "25.2.9519653"
-
+        cmakeVersion = "2.10" // Add the CMake version here
     }
     repositories {
         google()
