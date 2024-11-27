@@ -72,6 +72,10 @@ jobs:
             - ios-yarn-cache-{{ checksum "yarn.lock" }}
 
       - run:
+          name: Set Xcode Path
+          command: sudo xcode-select -s /Applications/Xcode.app
+
+      - run:
           name: Install Node.js and Yarn Dependencies
           command: yarn install
 
