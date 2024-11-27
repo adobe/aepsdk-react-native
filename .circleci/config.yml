@@ -80,7 +80,7 @@ jobs:
 
       - run:
           name: Building iOS Sample App
-          command: cd apps/AEPSampleAppNewArchEnabled && npx expo run:ios --verbose --terminal terminal
+          command: cd apps/AEPSampleAppNewArchEnabled && npx expo run:ios
 
 workflows:
   version: 2.1
