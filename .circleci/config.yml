@@ -35,24 +35,17 @@ jobs:
       - checkout
 
       - run:
-          name: Install Java 17CHECK
+          name: Install Java 17
           command: |
             sudo apt-get update
             sudo apt-get install -y openjdk-17-jdk
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
             export PATH=$JAVA_HOME/bin:$PATH
             java -version
-
-      - run:
-          name: Remove _JAVA_OPTIONS
-          command: |
-            unset _JAVA_OPTIONS
-
       - run:
           name: Install wget
           command: |
             sudo apt-get update && sudo apt-get install -y wget
-
       - run:
           name: Install Node.js and Yarn Dependencies
           command: yarn install
@@ -89,16 +82,12 @@ jobs:
             ./gradlew -version
 
       - run:
-          name: Build Android Debug APK
-          command: |
-            cd apps/AEPSampleAppNewArchEnabled/android
-            ./gradlew assembleDebug
-
-      - run:
-          name: Build Android Release APK
+          name: Build Android Sample App
           command: |
             cd apps/AEPSampleAppNewArchEnabled/android
             ./gradlew assembleRelease
+          environment:
+            _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
 workflows:
   version: 2.1
