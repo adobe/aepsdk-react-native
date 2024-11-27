@@ -35,7 +35,7 @@ jobs:
       - checkout
 
       - run:
-          name: Install Java 17
+          name: Install Java 17 CHECK
           command: |
             sudo apt-get update
             sudo apt-get install -y openjdk-17-jdk
@@ -44,8 +44,34 @@ jobs:
             java -version
 
       - run:
+          name: Install wget
+          command: |
+            sudo apt-get update && sudo apt-get install -y wget
+
+      - run:
           name: Install Node.js and Yarn Dependencies
           command: yarn install
+
+      - run:
+          name: Install Ninja
+          command: |
+            sudo apt-get update && sudo apt-get install -y ninja-build
+
+      - run:
+          name: Install CMake
+          command: |
+            wget https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1-Linux-x86_64.tar.gz
+            tar -xzvf cmake-3.22.1-Linux-x86_64.tar.gz -C $HOME
+            export PATH=$HOME/ninja:$HOME/cmake-3.22.1-Linux-x86_64/bin:$PATH
+
+      - run:
+          name: Set CMake and Ninja Paths
+          command: |
+            export PATH=$HOME/ninja:$HOME/cmake-3.22.1-Linux-x86_64/bin:$PATH
+
+      - run:
+          name: Accept Android SDK Licenses
+          command: yes | sdkmanager --licenses || if [ $? -ne '141' ]; then exit $?; fi;
 
       - run:
           name: Build the Project
