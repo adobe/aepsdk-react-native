@@ -99,7 +99,14 @@ jobs:
 
       - run:
           name: Building iOS Sample App
-          command: cd apps/AEPSampleAppNewArchEnabled && npx expo run:ios
+          command: |
+            cd apps/AEPSampleAppNewArchEnabled/ios
+            xcodebuild \
+              -workspace AEPSampleAppNewArchEnabled.xcworkspace \
+              -scheme AEPSampleAppNewArchEnabled \
+              -sdk iphonesimulator \
+              -destination "generic/platform=iOS Simulator" \
+              clean build
 
 workflows:
   version: 2.1
