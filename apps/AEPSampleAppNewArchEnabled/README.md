@@ -1,4 +1,4 @@
-# Welcome to Your Expo AEPSample App with New Architecture Enabled 👍
+# Welcome to Your Expo AEPSample App with New Architecture Enabled
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -26,13 +26,13 @@ Ensure that your environment meets the following requirements before running thi
 
 
 ## Installation
-To install **AEPSample App**, follow these steps:
+To install **AEPSampleAppNewArchEnabled App**, follow these steps:
 
 ### Install dependencies
 > Note: Commands are assuming you're in the root directory of the repository.
 
 ```
-yarn install && yarn sampleapp:ios:pod:install
+yarn install && yarn sampleappnewarchenabled:ios:pod:install
 ```
 
 ### Build packages
@@ -46,41 +46,59 @@ yarn run build
 ### Configure the App ID
 
 - **iOS**: In `apps/AEPSampleAppNewArchEnabled/ios/AEPSampleAppNewArchEnabled/AdobeBridge.m`, find the `configureWithAppId` call and add your app ID.
-- **Android**: In `apps/AEPSampleApp/android/app/src/main/java/com/aepsampleapp/MainApplication.kt`, find the `configureWithAppId` call and add your app ID.
+- **Android**: In `apps/AEPSampleAppNewArchEnabled/android/app/src/main/java/com/AEPSampleAppNewArchEnabled/MainApplication.kt`, find the `configureWithAppId` call and add your app ID.
 
 > **Note**: The App ID should be configured in a mobile property in the Data Collection UI, in Tags. Refer to [Adobe documentation](https://developer.adobe.com/client-sdks/home/base/mobile-core/configuration/#configure-with-app-id-per-environment) for more information.
 
 ## Run Instructions
 
-### Run Instructions for iOS
-1. Ensure you are in the root directory.
+### Run Instructions for iOS  
+
+1. **Run Using Yarn**  
+   Ensure you are in the root directory of the project and execute the following command:  
    ```bash
    yarn sampleappnewarchenabled:ios:run
    ```
 
-2. Alternatively, run the iOS app from Xcode:
-   ```bash
-   npx expo start
-   ```
-   Navigate to `apps/AEPSampleAppNewArchEnabled/ios` and open `AEPSampleAppNewArchEnabled.xcworkspace`:
-   ```bash
-   cd apps/AEPSampleAppNewArchEnabled/ios
-   open AEPSampleAppNewArchEnabled.xcworkspace
-   ```
+2. **Run the iOS App from Xcode**  
+   Alternatively, follow these steps to run the app using Xcode:  
+   - Start the Expo server by running the following command in the terminal:  
+     ```bash
+     cd apps/AEPSampleAppNewArchEnabled
+     npx expo start
+     ```
+   - Navigate to the iOS directory:  
+     ```bash
+     cd ios
+     ```
+   - Open the Xcode workspace:  
+     ```bash
+     open AEPSampleAppNewArchEnabled.xcworkspace
+     ```
+   - Once Xcode opens, build and run the app on your desired simulator or device.
 
-### Run Instructions for Android
+### Run Instructions for Android  
 
-1. Ensure an Android emulator is running or a device is connected. For guidance, refer to [Android Emulator Command Line](https://developer.android.com/studio/run/emulator-commandline).
+1. **Run Using Yarn**  
+   Ensure an Android emulator is running or a physical device is connected. For guidance, refer to the [Android Emulator Command Line Documentation](https://developer.android.com/studio/run/emulator-commandline). Then, execute the following command from the root directory:  
    ```bash
    yarn sampleappnewarchenabled:android:run
    ```
 
-2. Alternatively, run the app from Android Studio:
-   ```bash
-   npx expo start
-   ```
-   Navigate to `apps/AEPSampleAppNewArchEnabled/android`, open `build.gradle`, and run the app in Android Studio.
-
+2. **Run the Android App from Android Studio**  
+   Alternatively, follow these steps to run the app using Android Studio:  
+   - Start the Expo server by running the following command in the terminal:  
+     ```bash
+     cd apps/AEPSampleAppNewArchEnabled
+     npx expo start
+     ```
+   - Navigate to the `android` directory:  
+     ```bash
+     cd android
+     ```
+   - Open the project in Android Studio by launching `build.gradle` located in the `apps/AEPSampleAppNewArchEnabled/android` directory.  
+   - Once Android Studio opens, build and run the app on your connected device or emulator.
+   
 ## Validate with Assurance
 Assurance is integrated into the sample app for event and flow validation.
 
