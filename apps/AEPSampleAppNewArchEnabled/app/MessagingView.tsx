@@ -13,12 +13,11 @@ governing permissions and limitations under the License.
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {MobileCore} from '@adobe/react-native-aepcore';
-import {Messaging} from '@adobe/react-native-aepmessaging';
+import {Messaging} from '@adobe/react-native-aepmessaging'
 import styles from '../styles/styles';
-import {NavigationProps} from '../types/props';
+import { useRouter } from 'expo-router';
 
-// const SURFACES = ['cbe/json', 'android-cbe-preview'];
-const SURFACES = ['surface1', 'surface2'];
+const SURFACES = ['android-cb-preview'];
 
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
@@ -47,7 +46,7 @@ const getPropositionsForSurfaces = async () => {
 };
 
 const trackAction = async () => {
-  MobileCore.trackAction('reactnative', {full: true});
+  MobileCore.trackAction('tuesday', {full: true});
 };
 
 const updatePropositionsForSurfaces = async () => {
@@ -64,11 +63,12 @@ const getLatestMessage = async () => {
   const message = await Messaging.getLatestMessage();
   console.log('Latest Message:', message);
 };
+const router = useRouter();
 
-const MessagingView = ({navigation}: NavigationProps) => (
+const MessagingView = () => (
   <View style={styles.container}>
     <ScrollView contentContainerStyle={{marginTop: 75}}>
-      <Button onPress={() => navigation.goBack()} title="Go to main page" />
+      <Button onPress={router.back} title="Go to main page" />
       <Text style={styles.welcome}>Messaging</Text>
       <Button title="extensionVersion()" onPress={messagingExtensionVersion} />
       <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
