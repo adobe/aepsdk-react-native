@@ -12,11 +12,9 @@
 
 package com.adobe.marketing.mobile.reactnative.messaging;
 
-import android.app.Activity;
 import com.adobe.marketing.mobile.Message;
 import com.adobe.marketing.mobile.MessagingEdgeEventType;
 import com.adobe.marketing.mobile.messaging.Proposition;
-import com.adobe.marketing.mobile.messaging.PropositionItem;
 import com.adobe.marketing.mobile.messaging.Surface;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
@@ -30,7 +28,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -172,20 +169,19 @@ class RCTAEPMessagingUtil {
     return writableArr;
   }
 
-  static Map convertMessageToMap(final Message message) {
-    Map data = new HashMap<>();
+  static Map<String, String> convertMessageToMap(final Message message) {
+    Map<String, String> data = new HashMap<>();
     data.put("id", message.getId());
-    data.put("autoTrack", message.getAutoTrack());
+    data.put("autoTrack", String.valueOf(message.getAutoTrack()));
     return data;
   }
 
   static ReadableArray convertMessagesToJS(final Collection<Message> messages) {
     WritableArray result = new WritableNativeArray();
 
-    for (Iterator<Message> iterator = messages.iterator();
-         iterator.hasNext();) {
-      result.pushMap((ReadableMap)convertMessageToMap(iterator.next()));
-    }
+      for (Message message : messages) {
+          result.pushMap(convertToReadableMap(convertMessageToMap(message)));
+      }
 
     return result;
   }
@@ -210,5 +206,14 @@ class RCTAEPMessagingUtil {
     }
 
     return data;
+  }
+
+  static ReadableMap convertToReadableMap(Map<String, String> map) {
+    WritableMap writableMap = Arguments.createMap();
+
+    for (Map.Entry<String, String> entry : map.entrySet()) {
+      writableMap.putString(entry.getKey(), entry.getValue());
+    }
+    return writableMap;
   }
 }

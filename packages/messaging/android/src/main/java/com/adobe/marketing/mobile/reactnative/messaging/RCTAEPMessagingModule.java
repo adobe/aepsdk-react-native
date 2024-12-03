@@ -11,6 +11,8 @@
  */
 package com.adobe.marketing.mobile.reactnative.messaging;
 
+import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertMessageToMap;
+
 import android.app.Activity;
 
 import androidx.annotation.NonNull;
@@ -84,7 +86,11 @@ public final class RCTAEPMessagingModule
 
   @ReactMethod
   public void getLatestMessage(final Promise promise) {
-    promise.resolve(this.latestMessage);
+    if (this.latestMessage != null) {
+      promise.resolve(RCTAEPMessagingUtil.convertToReadableMap(convertMessageToMap(this.latestMessage)));
+    } else {
+      promise.resolve(null);
+    }
   }
 
   @ReactMethod
@@ -174,7 +180,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-          RCTAEPMessagingUtil.convertMessageToMap(message);
+          convertMessageToMap(message);
       emitEvent("onShow", data);
     }
   }
@@ -185,7 +191,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-          RCTAEPMessagingUtil.convertMessageToMap(message);
+          convertMessageToMap(message);
       emitEvent("onDismiss", data);
     }
   }
@@ -196,7 +202,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-              RCTAEPMessagingUtil.convertMessageToMap(message);
+              convertMessageToMap(message);
       emitEvent("onHide", data);
     }
   }
@@ -207,7 +213,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-          RCTAEPMessagingUtil.convertMessageToMap(message);
+          convertMessageToMap(message);
       emitEvent("shouldShowMessage", data);
       // Latch stops the thread until the shouldShowMessage value is received
       // from the JS side on thread dedicated to run JS code. The function
@@ -234,7 +240,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-              RCTAEPMessagingUtil.convertMessageToMap(message);
+              convertMessageToMap(message);
       emitEvent("onContentLoaded", data);
     }
   }
