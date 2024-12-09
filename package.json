@@ -26,8 +26,8 @@
      
     "sampleappnewarchenabled:ios:pod:update": "cd apps/AEPSampleAppNewArchEnabled/ios && pod update",
     "sampleappnewarchenabled:ios:pod:install": "cd apps/AEPSampleAppNewArchEnabled/ios && pod install",
-    "sampleappnewarchenabled:ios:build": "cd apps/AEPSampleAppNewArchEnabled && npx react-native run-ios --verbose",
-    "sampleappnewarchenabled:android:build": "cd apps/AEPSampleAppNewArchEnabled/android && npx react-native build-android",
+    "sampleappnewarchenabled:ios:build": "cd apps/AEPSampleAppNewArchEnabled && expo run:ios",
+    "sampleappnewarchenabled:android:build": "cd apps/AEPSampleAppNewArchEnabled && expo run:android",
     "sampleappnewarchenabled:start": "cd apps/AEPSampleAppNewArchEnabled && npx expo start",
     "sampleappnewarchenabled:ios:run": "cd apps/AEPSampleAppNewArchEnabled && yarn install && npx expo run:ios",
     "sampleappnewarchenabled:android:run": "cd apps/AEPSampleAppNewArchEnabled && yarn install && npx expo run:android"
@@ -49,6 +49,7 @@
     "metro-react-native-babel-preset": "^0.70.1",
     "ts-jest": "^29.1.1",
     "tslib": "^2.3.1",
+    "@types/node": "^22.9.0",
     "typescript": "^4.5.5"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
