@@ -23,10 +23,15 @@ import {NavigationProps} from '../types/props';
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
-const EXAMPLE_LATITUDE = 37.3325958;
-const EXAMPLE_LONGITUDE = -121.8910217;
-const EXAMPLE_GEOFENCE_ID = '82e2eb52-e925-41a3-9d50-418a2e015608';
+const EXAMPLE_LATITUDE = 37.3285;
+const EXAMPLE_LONGITUDE = -121.8882;
+const EXAMPLE_GEOFENCE_ID = '97d04448-87fb-45d5-a02f-ad436a24afbe';
 const EXAMPLE_RADIUS = 50;
+
+
+const CURRENT_EXAMPLE_LATITUDE = 37.3305;
+const CURRENT_EXAMPLE_LONGITUDE = -121.8940;
+
 
 const extensionVersion = async () => {
   const version = await Places.extensionVersion();
@@ -34,9 +39,9 @@ const extensionVersion = async () => {
 };
 
 const getNearbyPointsOfInterest = async () => {
-  const location = new PlacesLocation(EXAMPLE_LONGITUDE, EXAMPLE_LATITUDE);
+  const location = new PlacesLocation(CURRENT_EXAMPLE_LONGITUDE, CURRENT_EXAMPLE_LATITUDE);
   try {
-    const pois = await Places.getNearbyPointsOfInterest(location, 2);
+    const pois = await Places.getNearbyPointsOfInterest(location, 5);
     console.log(
       `AdobeExperienceSDK: Places pois: ${pois[0]?.['name'] || '[]'}`,
     );
@@ -75,7 +80,7 @@ const clear = () => {
 };
 
 const setAuthorizationStatus = () => {
-  Places.setAuthorizationStatus(PlacesAuthStatus.ALWAYS);
+  Places.setAuthorizationStatus(PlacesAuthStatus.WHEN_IN_USE);
   console.log('Authorization status set');
 };
 
