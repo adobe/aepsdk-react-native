@@ -63,29 +63,32 @@ const getLatestMessage = async () => {
   const message = await Messaging.getLatestMessage();
   console.log('Latest Message:', message);
 };
-const router = useRouter();
 
-const MessagingView = () => (
-  <View style={styles.container}>
-    <ScrollView contentContainerStyle={{marginTop: 75}}>
-      <Button onPress={router.back} title="Go to main page" />
-      <Text style={styles.welcome}>Messaging</Text>
-      <Button title="extensionVersion()" onPress={messagingExtensionVersion} />
-      <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
-      <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
-      <Button
-        title="getPropositionsForSurfaces()"
-        onPress={getPropositionsForSurfaces}
-      />
-      <Button
-        title="updatePropositionsForSurfaces()"
-        onPress={updatePropositionsForSurfaces}
-      />
-      <Button title="getCachedMessages()" onPress={getCachedMessages} />
-      <Button title="getLatestMessage()" onPress={getLatestMessage} />
-      <Button title="trackAction()" onPress={trackAction} />
-    </ScrollView>
-  </View>
-);
+function MessagingView() {
+  const router = useRouter();
+
+  return (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={{marginTop: 75}}>
+        <Button onPress={router.back} title="Go to main page" />
+        <Text style={styles.welcome}>Messaging</Text>
+        <Button title="extensionVersion()" onPress={messagingExtensionVersion} />
+        <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
+        <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
+        <Button
+          title="getPropositionsForSurfaces()"
+          onPress={getPropositionsForSurfaces}
+        />
+        <Button
+          title="updatePropositionsForSurfaces()"
+          onPress={updatePropositionsForSurfaces}
+        />
+        <Button title="getCachedMessages()" onPress={getCachedMessages} />
+        <Button title="getLatestMessage()" onPress={getLatestMessage} />
+        <Button title="trackAction()" onPress={trackAction} />
+      </ScrollView>
+    </View>
+  );
+}
 
 export default MessagingView;
