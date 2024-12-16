@@ -50,10 +50,6 @@ To submit iOS apps to the App Store, you must build them using Xcode 15 or later
 
 React Native 0.7x introduced support for a new architecture. We don't yet support the new architecture.
 
-## Expo Support
-
-Please refer to the [Expo Integration](./docs/expo.md) document for guidance on integrating the SDK with Expo projects.
-
 ## Installation
 
 You need to install Adobe Experience Platform Mobile SDK with [npm](https://www.npmjs.com/) packages and configure the native Android/iOS project in your React Native project.
@@ -121,7 +117,7 @@ cd ios && pod update && cd ..
 
 Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. Documentation on how to initialize each extension can be found in _./packages/{extension}/README.md_.
 
-##### **iOS**
+###### **iOS**
 
 ```objective-c
 //AppDelegate.h
@@ -169,9 +165,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 > "ld: warning: Could not find or use auto-linked library 'swiftCoreFoundation'"
 > This is because Adobe Experience Platform SDK now requires the app uses swift interfaces. Add a dummy .swift file to your project to embed the swift standard libs. See the SampleApp presented in this repo for example.
 
-##### **Android:**
-
-###### **Java:**
+###### **Android:**
 
 ```java
 //MainApplication.java
@@ -213,86 +207,7 @@ public class MainApplication extends Application implements ReactApplication {
 }
 ```
 
-###### **Kotlin:**
-
-```kotlin
- // MainApplication.kt
-import com.adobe.marketing.mobile.Edge
-import com.adobe.marketing.mobile.Lifecycle
-import com.adobe.marketing.mobile.LoggingMode
-import com.adobe.marketing.mobile.MobileCore
-import com.adobe.marketing.mobile.MobileCore.getApplication
-import com.adobe.marketing.mobile.edge.consent.Consent
-import com.adobe.marketing.mobile.edge.identity.Identity
-```
-
-```kotlin
-// MainApplication.kt
- class MainApplication : Application(), ReactApplication {
-   ...
- override fun onCreate() {
-    super.onCreate()
-    
-    MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG)
-    MobileCore.configureWithAppID("YOUR-APP-ID");
-    MobileCore.registerExtensions(
-      listOf(
-        Lifecycle.EXTENSION,
-        Edge.EXTENSION,
-        Identity.EXTENSION,
-        Consent.EXTENSION
-      ),
-    ) {
-      Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
-    }
-
-    SoLoader.init(this, false)
-    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-      // If you opted-in for the New Architecture, we load the native entry point for this app.
-      load()
-    }
-    ApplicationLifecycleDispatcher.onApplicationCreate(this)
-  }
-```
-
-```kotlin
-// MainActivity.kt
-
-import android.app.Activity
-import android.app.Application.ActivityLifecycleCallbacks
-import com.adobe.marketing.mobile.MobileCore
-
-// Implementing global lifecycle callbacks
-override fun onCreate(savedInstanceState: Bundle?) {
-    // Set the theme to AppTheme BEFORE onCreate to support
-    // coloring the background, status bar, and navigation bar.
-    // This is required for expo-splash-screen.
-    setTheme(R.style.AppTheme);
-    super.onCreate(null)
-
-    application.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-        override fun onActivityResumed(activity: Activity) {
-            MobileCore.setApplication(application)
-            MobileCore.lifecycleStart(null)
-        }
-
-        override fun onActivityPaused(activity: Activity) {
-            MobileCore.lifecyclePause()
-        }
-
-        // the following methods aren't needed for our lifecycle purposes, but are
-        // required to be implemented by the ActivityLifecycleCallbacks object
-        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-        override fun onActivityStarted(activity: Activity) {}
-        override fun onActivityStopped(activity: Activity) {}
-        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-        override fun onActivityDestroyed(activity: Activity) {}
-    })
-  }
-```
-
-> For further details on Lifecycle implementation, please refer to the [Lifecycle API documentation](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#lifecycle).
+> To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
 
 ## Migration guide
 
