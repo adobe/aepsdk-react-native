@@ -25,6 +25,19 @@ export default function HomeScreen() {
       <Button onPress={() => navigation.navigate('ConsentView')} title="Consent" />
       <Button onPress={() => navigation.navigate('EdgeBridgeView')} title="Edge Bridge" />
       <Button onPress={() => navigation.navigate('AssuranceView')} title="Assurance" />
+      <Button
+        onPress={() => navigation.navigate('MessagingView')}
+        title="Messaging"
+      />
+       <Button
+        onPress={() => navigation.navigate('OptimizeView')}
+        title="Optimize"
+      />
+         <Button
+        onPress={() => navigation.navigate('IdentityView')}
+        title="Identity"
+      />
+
     </View>
   );
 }
