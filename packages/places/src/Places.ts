@@ -28,24 +28,8 @@ interface IPlaces {
   clear: () => void;
   setAuthorizationStatus: (authStatus?: PlacesAuthStatus) => void;
 }
- 
-const logNativeModules = () => {
-  console.log("Listing all NativeModules available:", NativeModules);
-
-  Object.keys(NativeModules).forEach((moduleName) => {
-    console.log(`Module: ${moduleName}`);
-  });
-
-  console.log("Finished listing NativeModules.LOOOOL");
-};
-logNativeModules();
-
 
 const AEPPlaces: IPlaces = NativeModules.AEPPlaces;
-
-
-
-// Call the function to log the NativeModules
 
 const Places: IPlaces = {
   /**
@@ -53,9 +37,6 @@ const Places: IPlaces = {
    * @param  {string} Promise a promise that resolves with the extension version
    */
   async extensionVersion(): Promise<string> {
-    console.log("extension version new RCTAEPPlaces OLDA RC",NativeModules.AEPPlaces, JSON.stringify(NativeModules) )
-    logNativeModules();
-
     return await AEPPlaces.extensionVersion();
   },
 
