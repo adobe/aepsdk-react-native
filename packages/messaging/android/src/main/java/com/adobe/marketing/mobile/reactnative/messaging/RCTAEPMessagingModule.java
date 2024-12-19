@@ -11,18 +11,18 @@
  */
 package com.adobe.marketing.mobile.reactnative.messaging;
 
-import android.app.Activity;
+import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertMessageToMap;
+import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertMessagesToJS;
+import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertSurfacePropositions;
+import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertSurfaces;
+import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertToReadableMap;
+import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.getEventType;
 
-import androidx.annotation.NonNull;
-
-import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Message;
 import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MessagingEdgeEventType;
-import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.messaging.MessagingUtils;
 import com.adobe.marketing.mobile.messaging.Proposition;
 import com.adobe.marketing.mobile.messaging.Surface;
@@ -79,12 +79,16 @@ public final class RCTAEPMessagingModule
   @ReactMethod
   public void getCachedMessages(final Promise promise) {
     promise.resolve(
-        RCTAEPMessagingUtil.convertMessagesToJS(this.messageCache.values()));
+        convertMessagesToJS(this.messageCache.values()));
   }
 
   @ReactMethod
   public void getLatestMessage(final Promise promise) {
-    promise.resolve(this.latestMessage);
+    if (this.latestMessage != null) {
+      promise.resolve(convertToReadableMap(convertMessageToMap(this.latestMessage)));
+    } else {
+      promise.resolve(null);
+    }
   }
 
   @ReactMethod
@@ -92,7 +96,7 @@ public final class RCTAEPMessagingModule
                                          final Promise promise) {
     String bundleId = this.reactContext.getPackageName();
     Messaging.getPropositionsForSurfaces(
-        RCTAEPMessagingUtil.convertSurfaces(surfaces),
+        convertSurfaces(surfaces),
         new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
           @Override
           public void fail(final AdobeError adobeError) {
@@ -103,7 +107,7 @@ public final class RCTAEPMessagingModule
           @Override
           public void call(
               Map<Surface, List<Proposition>> propositionsMap) {
-            promise.resolve(RCTAEPMessagingUtil.convertSurfacePropositions(
+            promise.resolve(convertSurfacePropositions(
                 propositionsMap, bundleId));
           }
         });
@@ -122,7 +126,7 @@ public final class RCTAEPMessagingModule
   @ReactMethod
   public void updatePropositionsForSurfaces(ReadableArray surfaces) {
     Messaging.updatePropositionsForSurfaces(
-        RCTAEPMessagingUtil.convertSurfaces(surfaces));
+        convertSurfaces(surfaces));
   }
 
   // Message Methods
@@ -160,7 +164,7 @@ public final class RCTAEPMessagingModule
                     final int eventType) {
     if (messageId != null && messageCache.get(messageId) != null) {
       MessagingEdgeEventType edgeEventType =
-          RCTAEPMessagingUtil.getEventType(eventType);
+          getEventType(eventType);
       if (edgeEventType != null) {
         messageCache.get(messageId).track(interaction, edgeEventType);
       }
@@ -174,7 +178,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-          RCTAEPMessagingUtil.convertMessageToMap(message);
+          convertMessageToMap(message);
       emitEvent("onShow", data);
     }
   }
@@ -185,7 +189,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-          RCTAEPMessagingUtil.convertMessageToMap(message);
+          convertMessageToMap(message);
       emitEvent("onDismiss", data);
     }
   }
@@ -196,7 +200,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-              RCTAEPMessagingUtil.convertMessageToMap(message);
+              convertMessageToMap(message);
       emitEvent("onHide", data);
     }
   }
@@ -207,7 +211,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-          RCTAEPMessagingUtil.convertMessageToMap(message);
+          convertMessageToMap(message);
       emitEvent("shouldShowMessage", data);
       // Latch stops the thread until the shouldShowMessage value is received
       // from the JS side on thread dedicated to run JS code. The function
@@ -234,7 +238,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
     if (message != null) {
       Map<String, String> data =
-              RCTAEPMessagingUtil.convertMessageToMap(message);
+              convertMessageToMap(message);
       emitEvent("onContentLoaded", data);
     }
   }
