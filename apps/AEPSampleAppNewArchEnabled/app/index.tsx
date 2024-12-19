@@ -15,7 +15,6 @@ import { useNavigation } from 'expo-router';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button onPress={() => navigation.navigate('CoreView')} title="Core/Lifecycle/Signal" />
