@@ -17,7 +17,10 @@ Welcome to the **Expo AEPSample App with New Architecture Enabled**. This projec
 ## Prerequisites
 Before running the example app, ensure your environment meets the following requirements. These prerequisites are specific to the example app:
 
+- Familiarity with [React Native development environment setup](https://reactnative.dev/docs/environment-setup) is recommended.
 - **Cocoapods**: [Version 1.11.3 or higher](https://guides.cocoapods.org/using/getting-started.html).
+- **Android Studio**: Requires version 2024.2.1 Patch 1 (Ladybug) or higher.
+- **Xcode**: Requires version 16.1 (16B40) or higher.
 - **Node.js**: [Version 18 or higher](https://nodejs.org/en/download/).
 - **React Native**: [Tested with version 0.75.x](https://reactnative.dev/).
 - **Expo**: [Tested with version 51](https://docs.expo.dev/).
