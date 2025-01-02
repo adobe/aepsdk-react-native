@@ -15,9 +15,8 @@
 Welcome to the **Expo AEPSample App with New Architecture Enabled**. This project is an [Expo](https://expo.dev) app created using [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). It demonstrates the integration of Adobe SDKs with a React Native app using Expo, with the new architecture enabled by default.
 
 ## Prerequisites
-Ensure that your environment meets the following requirements before running this project:
+Before running the example app, ensure your environment meets the following requirements. These prerequisites are specific to the example app:
 
-- Familiarity with [React Native development environment setup](https://reactnative.dev/docs/environment-setup) is recommended (preferably with the React Native CLI Quickstart).
 - **Cocoapods**: [Version 1.11.3 or higher](https://guides.cocoapods.org/using/getting-started.html).
 - **Node.js**: [Version 18 or higher](https://nodejs.org/en/download/).
 - **React Native**: [Tested with version 0.75.x](https://reactnative.dev/).
