@@ -1,4 +1,4 @@
-# Welcome to Your Expo AEPSample App with New Architecture Enabled
+# Welcome to the Expo AEPSample App with New Architecture Enabled
 
 ## Table of Contents
 - [Introduction](#introduction)
