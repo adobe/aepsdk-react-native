@@ -43,7 +43,7 @@ public class RCTAEPPlacesModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "AEPPlaces";
+    return "RCTAEPPlaces";
   }
 
   @ReactMethod
