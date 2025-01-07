@@ -40,6 +40,7 @@ repositories {
 }
 
 dependencies {
-    api "com.adobe.marketing.mobile:campaignclassic:3.+"
+    implementation platform("com.adobe.marketing.mobile:sdk-bom:3.+")
+    api "com.adobe.marketing.mobile:campaignclassic"
     implementation "com.facebook.react:react-native:+"
 }
