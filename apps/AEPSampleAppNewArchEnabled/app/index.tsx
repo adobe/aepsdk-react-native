@@ -18,7 +18,7 @@ export default function HomeScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button onPress={() => navigation.navigate('CoreView')} title="Core/Lifecycle/Signal" />
-     <Button onPress={() => navigation.navigate('ProfileView')} title="UserProfile" />
+      <Button onPress={() => navigation.navigate('ProfileView')} title="UserProfile" />
       <Button onPress={() => navigation.navigate('EdgeView')} title="Edge" />
       <Button onPress={() => navigation.navigate('EdgeIdentityView')} title="EdgeIdentity" />
       <Button onPress={() => navigation.navigate('ConsentView')} title="Consent" />
@@ -28,13 +28,22 @@ export default function HomeScreen() {
         onPress={() => navigation.navigate('MessagingView')}
         title="Messaging"
       />
-       <Button
+      <Button
         onPress={() => navigation.navigate('OptimizeView')}
         title="Optimize"
       />
-         <Button
+      <Button
         onPress={() => navigation.navigate('IdentityView')}
         title="Identity"
+      />
+      <Button
+        onPress={() => navigation.navigate('PlacesView')}
+        title="Places"
+      />
+
+      <Button
+        onPress={() => navigation.navigate('TargetView')}
+        title="Target"
       />
 
     </View>
