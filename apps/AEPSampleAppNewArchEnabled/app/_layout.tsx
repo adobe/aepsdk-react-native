@@ -8,21 +8,26 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {  
+export default function RootLayout() {
   const scheme = useColorScheme();
 
   return (
     <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-    <Drawer>
-      <Drawer.Screen name="index" options={{ title: 'Home Screen' }} />
-      <Drawer.Screen name="CoreView" options={{ title: 'Core/Lifecycle/Signal' }} />
-      <Drawer.Screen name="ProfileView" options={{ title: 'UserProfile' }} />
-      <Drawer.Screen name="EdgeView" options={{ title: 'Edge' }} />
-      <Drawer.Screen name="EdgeIdentityView" options={{ title: 'EdgeIdentity' }} />
-      <Drawer.Screen name="ConsentView" options={{ title: 'Consent' }} />
-      <Drawer.Screen name="EdgeBridgeView" options={{ title: 'Edge Bridge' }} />
-      <Drawer.Screen name="AssuranceView" options={{ title: 'Assurance' }} />
-    </Drawer>
-  </ThemeProvider>
+      <Drawer>
+        <Drawer.Screen name="index" options={{ title: 'Home' }} />
+        <Drawer.Screen name="CoreView" options={{ title: 'CoreView' }} />
+        <Drawer.Screen name="AssuranceView" options={{ title: 'AssuranceView' }} />
+        <Drawer.Screen name="ConsentView" options={{ title: 'ConsentView' }} />
+        <Drawer.Screen name="EdgeBridgeView" options={{ title: 'EdgeBridgeView' }} />
+        <Drawer.Screen name="EdgeView" options={{ title: 'EdgeView' }} />
+        <Drawer.Screen name="EdgeIdentityView" options={{ title: 'EdgeIdentityView' }} />
+        <Drawer.Screen name="IdentityView" options={{ title: 'IdentityView' }} />
+        <Drawer.Screen name="MessagingView" options={{ title: 'MessagingView' }} />
+        <Drawer.Screen name="OptimizeView" options={{ title: 'OptimizeView' }} />
+        <Drawer.Screen name="PlacesView" options={{ title: 'PlacesView' }} />
+        <Drawer.Screen name="ProfileView" options={{ title: 'ProfileView' }} />
+        <Drawer.Screen name="TargetView" options={{ title: 'TargetView' }} />
+      </Drawer>
+    </ThemeProvider>
   );
 }
