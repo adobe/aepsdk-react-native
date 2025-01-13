@@ -314,7 +314,7 @@ Underlying Objective-C module 'AEPRulesEngine' not found
 Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770).
 
 ## Sample Apps
-Refer to the [sample apps](https://github.com/namArora3112/aepsdk-react-native/tree/update-read-me/apps) for example implementations.
+Refer to the [sample apps](https://github.com/adobe/aepsdk-react-native/tree/main/apps) for example implementations.
 
 ## Contributing
 
