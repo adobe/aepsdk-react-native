@@ -8,7 +8,7 @@ orbs:
 jobs:
   unit-test:
     docker:
-      # switch to use node v18.x becaseu of the error: the engine "node" is incompatible with this module. Expected version "^16.10.0 || ^18.0.0 || >=20.0.0". Got "19.7.0"
+      # Use Node.js 18.x for compatibility with the project dependencies
       - image: cimg/node:18.20
 
     steps:
@@ -18,13 +18,19 @@ jobs:
           keys:
             - yarn-cache-{{ checksum "yarn.lock" }}
 
-      - run: yarn install
+      - run:
+          name: Install Node.js and Yarn Dependencies
+          command: yarn install
+
+      - run:
+          name: Build the Project
+          command: yarn run build
 
       - save_cache:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-            - ./apps/AEPSampleApp/node_modules
+            - ./apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
           name: Unit Tests
@@ -33,7 +39,6 @@ jobs:
   build-sample-app-android:
     executor:
       name: rn/linux_android
-      # the installed tools within the image: https://hub.docker.com/r/reactnativecommunity/react-native-android/tags
       build_image_version: v13.0
       resource_class: large
 
@@ -41,12 +46,16 @@ jobs:
       - checkout
 
       - run:
-          name: yarn install
+          name: Install Node.js and Yarn Dependencies
           command: yarn install
 
       - run:
+          name: Build the Project
+          command: yarn run build
+
+      - run:
           name: Building Android Sample App
-          command: yarn sampleapp:android:build
+          command: yarn sampleappnewarchenabled:android:build
 
           environment:
             _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
@@ -62,25 +71,42 @@ jobs:
           keys:
             - ios-yarn-cache-{{ checksum "yarn.lock" }}
 
-      - run: yarn install
+      - run:
+          name: Set Xcode Path
+          command: sudo xcode-select -s /Applications/Xcode.app
+
+      - run:
+          name: Install Node.js and Yarn Dependencies
+          command: yarn install
+
+      - run:
+          name: Build the Project
+          command: yarn run build
 
       - save_cache:
           key: ios-yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-            - ./apps/AEPSampleApp/node_modules
+            - ./apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
-          name: Install latest Cocoapods
+          name: Install Cocoapods
           command: sudo gem install cocoapods
 
       - run:
-          name: Install pods
-          command: yarn sampleapp:ios:pod:install
+          name: Install Pods
+          command: yarn sampleappnewarchenabled:ios:pod:install
 
       - run:
           name: Building iOS Sample App
-          command: cd apps/AEPSampleApp && npx react-native run-ios --verbose --terminal terminal
+          command: |
+            cd apps/AEPSampleAppNewArchEnabled/ios
+            xcodebuild \
+              -workspace AEPSampleAppNewArchEnabled.xcworkspace \
+              -scheme AEPSampleAppNewArchEnabled \
+              -sdk iphonesimulator \
+              -destination "generic/platform=iOS Simulator" \
+              clean build
 
 workflows:
   version: 2.1

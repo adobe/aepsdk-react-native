@@ -1,8 +1,18 @@
 # AEPSampleApp
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
+- [Get Started](#how-to-run-the-sample-app)
+- [Validate with Assurance](#validate-with-assurance)
+- [Resources and Troubleshooting](#resources-and-troubleshooting)
+
+## Introduction
+This project is a React Native app set up using `react-native-cli`. It serves as a demonstrates of the integration Adobe SDKs with a React Native application.
+
 ## Prerequisites
 
- * If you are new to React Native we suggest you follow the [React Native Setting up development environment](https://reactnative.dev/docs/environment-setup) React Native CLI Quickstart page before continuing.
+ * If you are new to React Native we suggest you follow the older version [React Native Setting up development environment](https://reactnative.dev/docs/0.74/getting-started-without-a-framework) React Native CLI before continuing.
  * Cocoapods version >= 1.11.3
  * Node version >= 18
 
@@ -17,6 +27,14 @@ In `apps/AEPSampleApp/android/app/src/main/java/com/aepsampleapp/MainApplication
 > Note: App id is configured in a mobile property in Data Collection UI, in Tags.  Refer to [configure with App ID per environment](https://developer.adobe.com/client-sdks/home/base/mobile-core/configuration/#configure-with-app-id-per-environment) page for more information.
 
 ### Install dependencies 
+Go to the **AEPSampleApp** folder and run
+
+```
+yarn install
+```
+
+Go to the **root directory** and run scripts
+
 > Note: Commands are assuming you're in the root directory of the repository.
 
 ```
