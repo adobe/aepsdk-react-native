@@ -36,9 +36,9 @@
     "@react-navigation/stack": "^6.3.18",
     "lodash.isequal": "^4.5.0",
     "react": "18.3.1",
-    "react-native": "0.75.3",
+    "react-native": "0.76.6",
     "react-native-gesture-handler": "^2.3.0",
-    "react-native-reanimated": "^3.15.0",
+    "react-native-reanimated": "3.16.0",
     "react-native-safe-area-context": "^4.9.0",
     "react-native-screens": "^3.33.0",
     "react-native-webview": "^13.8.2",
@@ -46,26 +46,29 @@
     "ts-object-utils": "0.0.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@babel/preset-env": "^7.20.0",
-    "@babel/runtime": "^7.20.0",
-    "@react-native/babel-preset": "0.75.3",
-    "@react-native/eslint-config": "0.75.3",
-    "@react-native/metro-config": "0.75.3",
-    "@react-native/typescript-config": "0.75.3",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
+    "@react-native-community/cli": "15.0.1",
+    "@react-native-community/cli-platform-android": "15.0.1",
+    "@react-native-community/cli-platform-ios": "15.0.1",
+    "@react-native/babel-preset": "0.76.6",
+    "@react-native/eslint-config": "0.76.6",
+    "@react-native/metro-config": "0.76.6",
+    "@react-native/typescript-config": "0.76.6",
     "@types/react": "^18.2.6",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
+    "react-native-clean-project": "^4.0.3",
     "react-test-renderer": "18.3.1",
     "typescript": "5.0.4"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
-  "packageManager": "yarn@3.6.4",
   "installConfig": {
     "hoistingLimits": "dependencies"
   }

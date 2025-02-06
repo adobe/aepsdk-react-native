@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import * as React from 'react';
-import {Button, View} from 'react-native';
+import {Button, Text, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import OptimizeView from './extensions/OptimizeView';
@@ -28,10 +28,14 @@ import TargetView from './extensions/TargetView';
 import PlacesView from './extensions/PlacesView';
 import {NavigationProps} from './types/props';
 import CampaignClassicView from './extensions/CampaignClassicView';
+// import { multiply } from 'newturbomoduletest';
+// const result = multiply(3, 7);
 
 function HomeScreen({navigation}: NavigationProps) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            {/* <Text>Result: {result}</Text> */}
+
       <Button
         onPress={() => navigation.navigate('CoreView')}
         title="Core/Lifecycle/Signal"
