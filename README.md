@@ -131,7 +131,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 ```
 
 ```objective-c
-//AppDelegate.m
+//AppDelegate.mm
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -148,7 +148,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
       AEPMobileEdgeConsent.class,
   ] completion:^{
     if (appState != UIApplicationStateBackground) {
-       [AEPMobileCore lifecycleStart:nil}];
+       [AEPMobileCore lifecycleStart:nil];
     }
   }];
   return YES;
