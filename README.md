@@ -131,7 +131,7 @@ Initializing the SDK should be done in native code inside your `AppDelegate` (iO
 ```
 
 ```objective-c
-//AppDelegate.mm
+//AppDelegate.m or AppDelegate.mm
 ...
 @implementation AppDelegate
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
