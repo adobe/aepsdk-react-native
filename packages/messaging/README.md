@@ -372,23 +372,6 @@ var message: Message;
 message.track('sample text', MessagingEdgeEventType.IN_APP_DISMISS);
 ```
 
-### handleJavascriptMessage
-
-Adds a handler for Javascript messages sent from the message's webview.
-
-**Syntax**
-
-```javascript
-handleJavascriptMessage(name: string) : Promise<?any>
-```
-
-**Example**
-
-```javascript
-var message: Message;
-message.handleJavascriptMessage('test').then((data) => {});
-```
-
 ### setAutoTrack
 
 Enables/Disables autotracking for message events.
