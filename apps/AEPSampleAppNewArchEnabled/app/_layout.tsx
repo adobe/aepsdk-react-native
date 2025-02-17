@@ -4,10 +4,16 @@ import 'react-native-reanimated';
 import { Drawer } from 'expo-router/drawer';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { MobileCore } from '@adobe/react-native-aepcore';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+MobileCore.initializeWithAppId("94f571f308d5/cbd0aa0847bc/launch-10aaa7").then(()=>{
+  console.log("i am in the callback")
+}).catch((error)=>{ 
+  console.log("error", error)
+})
 export default function RootLayout() {
   const scheme = useColorScheme();
 
