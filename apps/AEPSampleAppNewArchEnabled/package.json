@@ -23,7 +23,7 @@
     "@adobe/react-native-aepedgeconsent": "^6.0.2",
     "@adobe/react-native-aepedgeidentity": "^6.0.2",
     "@adobe/react-native-aepmessaging": "^6.0.3",
-    "@adobe/react-native-aepoptimize": "^6.0.3",
+    "@adobe/react-native-aepoptimize": "^6.1.0",
     "@adobe/react-native-aepplaces": "^6.0.2",
     "@adobe/react-native-aeptarget": "^6.0.2",
     "@adobe/react-native-aepuserprofile": "^6.0.2",
