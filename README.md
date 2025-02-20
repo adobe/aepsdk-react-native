@@ -21,6 +21,9 @@ This repository is a monorepo and contains a collection of React Native modules 
 | [@adobe/react-native-aeptarget](./packages/target) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aeptarget.svg)](https://www.npmjs.com/package/@adobe/react-native-aeptarget) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aeptarget) | [Target](https://developer.adobe.com/client-sdks/documentation/adobe-target) | Supported |
 | [@adobe/react-native-aepcampaignclassic](./packages/campaignclassic) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) |[CampaignClassic](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic) | Not Supported |
 
+> [!NOTE]  
+> The `@adobe/react-native-aepoptimize` package introduced a **breaking change** affecting the `score` data type, causing a build failure due to a lossy conversion from `double` to `int`. To resolve this, **upgrade to version 6.1.0 or later**. Refer to the [Adobe SDK Release Notes](https://developer.adobe.com/client-sdks/home/release-notes/) for details.
+
 > [!NOTE]   
 > Since version 5.0.0 of the Adobe React Native SDK, all React Native libraries that share the same major version are compatible with each other.
 
