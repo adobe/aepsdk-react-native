@@ -309,6 +309,14 @@ Underlying Objective-C module 'AEPRulesEngine' not found
 ```
 Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770).
 
+3. **Fixing Android Build Error in `@adobe/react-native-aepoptimize`**  
+
+```java
+    TestReactNativeApp/node_modules/@adobe/react-native-aepoptimize/android/src/main/java/com/adobe/marketing/mobile/reactnative/optimize/RCTAEPOptimizeUtil.java:75: error: incompatible types: possible lossy conversion from double to int
+            offerWritableMap.putInt("score", offer.getScore());
+```
+This is caused by a breaking change in the `@adobe/react-native-aepoptimize` wrapper. Update to **version 6.1.0 or later** to resolve the type mismatch. For more details, see the [Adobe SDK Release Notes](#).
+
 ## Sample Apps
 Refer to the [sample apps](https://github.com/adobe/aepsdk-react-native/tree/main/apps) for example implementations.
 
