@@ -14,6 +14,7 @@ import { NativeModules } from 'react-native';
 import Event from './models/Event';
 import { LogLevel } from './models/LogLevel';
 import { PrivacyStatus } from './models/PrivacyStatus';
+import { InitOptions } from './models/InitOptions';
 
 interface IMobileCore {
   extensionVersion: () => Promise<string>;
@@ -36,6 +37,7 @@ interface IMobileCore {
   setAppGroup: (appGroup?: string) => void;
   resetIdentities: () => void;
   clearUpdatedConfiguration: () => void;
+  initialize: (initOptions: InitOptions, callback: (error: any, result: any) => void) => void;
 }
 
 const RCTAEPCore: IMobileCore = NativeModules.AEPCore;
@@ -48,7 +50,11 @@ const MobileCore: IMobileCore = {
   extensionVersion(): Promise<string> {
     return Promise.resolve(RCTAEPCore.extensionVersion());
   },
-
+  
+  initialize(initOptions: any, callback: (error: any, result: any) => void): void {
+    RCTAEPCore.initialize(initOptions, callback);
+  },
+  
   /**
    * Load remote configuration specified by the given application ID
    *

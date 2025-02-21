@@ -41,7 +41,7 @@ repositories {
 
 dependencies {
     implementation "com.facebook.react:react-native:+"
-    api "com.adobe.marketing.mobile:core:3.+"
+    api "com.adobe.marketing.mobile:core:3.3.0"
     api "com.adobe.marketing.mobile:signal:3.+"
     api "com.adobe.marketing.mobile:identity:3.+"
     api "com.adobe.marketing.mobile:lifecycle:3.+"

@@ -8,12 +8,17 @@ import { MobileCore } from '@adobe/react-native-aepcore';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-MobileCore.initializeWithAppId("94f571f308d5/cbd0aa0847bc/launch-10aaa7").then(()=>{
-  console.log("i am in the callback")
-}).catch((error)=>{ 
-  console.log("error", error)
-})
+const initOptions = {
+  appId: "94f571f308d5/bc09a100649b/launch-6df8e3eea690-development",
+  lifecycleAutomaticTrackingEnabled: true, //optional
+};
+MobileCore.initialize(initOptions, (error, result) => {
+  if (error) {
+    console.log("Initialization error:", error);
+  } else {
+    console.log("Initialization successful:", result);
+  }
+});
 export default function RootLayout() {
   const scheme = useColorScheme();
 

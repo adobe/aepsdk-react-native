@@ -34,27 +34,8 @@ class MainActivity : ReactActivity() {
     setTheme(R.style.AppTheme);
     super.onCreate(null)
 
-      application.registerActivityLifecycleCallbacks(object :
-          Application.ActivityLifecycleCallbacks {
-          override fun onActivityResumed(activity: Activity) {
-              MobileCore.setApplication(application)
-              MobileCore.lifecycleStart(null)
-          }
-
-          override fun onActivityPaused(activity: Activity) {
-              MobileCore.lifecyclePause()
-          }
-
-          // the following methods aren't needed for our lifecycle purposes, but are
-          // required to be implemented by the ActivityLifecycleCallbacks object
-          override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-          override fun onActivityStarted(activity: Activity) {}
-          override fun onActivityStopped(activity: Activity) {}
-          override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-          override fun onActivityDestroyed(activity: Activity) {}
-      })
   }
-
+   
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
