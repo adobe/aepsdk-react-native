@@ -72,27 +72,7 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
-    MobileCore.setApplication(this)
     MobileCore.setLogLevel(LoggingMode.DEBUG)
-   // MobileCore.configureWithAppID("YOUR-APP-ID")
-
-//    val extensions: List<Class<out Extension?>> = Arrays.asList(
-//      Lifecycle.EXTENSION,
-//      Signal.EXTENSION,
-//      Edge.EXTENSION,
-//      Identity.EXTENSION,
-//      Consent.EXTENSION,
-//      EdgeBridge.EXTENSION,
-//      Messaging.EXTENSION,
-//      UserProfile.EXTENSION,
-//      Assurance.EXTENSION,
-//      Places.EXTENSION,
-//      Target.EXTENSION,
-//      Optimize.EXTENSION,
-//      com.adobe.marketing.mobile.Identity.EXTENSION
-//    )
-//    MobileCore.registerExtensions(extensions, AdobeCallback { o: Any? ->
-//    })
     SoLoader.init(this, false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
