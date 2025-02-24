@@ -9,10 +9,8 @@
     governing permissions and limitations under the License.
  */
 
-package com.adobe.marketing.mobile.reactnative.optimize;
-
+ package com.adobe.marketing.mobile.reactnative.optimize;
 import android.util.Log;
-
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
@@ -26,22 +24,16 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
  * Utility class for converting data models to {@link com.facebook.react.bridge.WritableMap}
  */
-
 class RCTAEPOptimizeUtil {
-
     private static final String TAG = "RCTAEPOptimize";
-
     private RCTAEPOptimizeUtil() {}
-
     static WritableMap convertPropositionToWritableMap(final OptimizeProposition proposition) {
         final WritableMap propositionWritableMap = new WritableNativeMap();
         if (proposition == null) {
@@ -55,10 +47,8 @@ class RCTAEPOptimizeUtil {
             offersWritableArray.pushMap(convertOfferToWritableMap(offer));
         }
         propositionWritableMap.putArray("items", offersWritableArray);
-
         return propositionWritableMap;
     }
-
     static WritableMap convertOfferToWritableMap(final Offer offer) {
         final WritableMap offerWritableMap = new WritableNativeMap();
         if (offer == null) {
@@ -73,7 +63,6 @@ class RCTAEPOptimizeUtil {
             offerWritableMap.putMap("meta", convertMapToWritableMap(new HashMap<String, Object>(offer.getMeta())));
         }
         offerWritableMap.putDouble("score", offer.getScore());
-
         final WritableMap dataWritableMap = new WritableNativeMap();
         dataWritableMap.putString("id", offer.getId());
         dataWritableMap.putString("format", offer.getType().toString());
@@ -81,15 +70,12 @@ class RCTAEPOptimizeUtil {
         if (offer.getLanguage() != null) {
             dataWritableMap.putArray("language", convertListToWritableArray(new ArrayList<Object>(offer.getLanguage())));
         }
-
         if (offer.getCharacteristics() != null) {
             dataWritableMap.putMap("characteristics", convertMapToWritableMap(new HashMap<String, Object>(offer.getCharacteristics())));
         }
-
         offerWritableMap.putMap("data", dataWritableMap);
         return offerWritableMap;
     }
-
     static WritableArray convertListToWritableArray(final List<Object> objectList) {
         final WritableArray writableArray = new WritableNativeArray();
         for (final Object object : objectList) {
@@ -109,7 +95,6 @@ class RCTAEPOptimizeUtil {
         }
         return writableArray;
     }
-
     static WritableMap convertMapToWritableMap(final Map<String, Object> map) {
         final WritableMap writableMap = new WritableNativeMap();
         for (final Map.Entry<String, Object> entry : map.entrySet()) {
@@ -130,7 +115,6 @@ class RCTAEPOptimizeUtil {
         }
         return writableMap;
     }
-
     static List<DecisionScope> createDecisionScopes(final ReadableArray decisionScopesArray) {
         final List<DecisionScope> decisionScopeList = new ArrayList<>(decisionScopesArray.size());
         for (int i = 0; i < decisionScopesArray.size(); i++) {
@@ -141,7 +125,6 @@ class RCTAEPOptimizeUtil {
         }
         return decisionScopeList;
     }
-
     /**
      * Converts {@link ReadableMap} Map to {@link Map}
      *
@@ -173,11 +156,9 @@ class RCTAEPOptimizeUtil {
                 default:
                     break;
             }
-
         }
         return map;
     }
-
     private static List<Object> convertReadableArrayToList(final ReadableArray readableArray) {
         final List<Object> list = new ArrayList<>(readableArray.size());
         for (int i = 0; i < readableArray.size(); i++) {

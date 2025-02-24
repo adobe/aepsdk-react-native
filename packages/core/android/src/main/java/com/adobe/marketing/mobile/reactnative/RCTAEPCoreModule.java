@@ -202,7 +202,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>() {
+        MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>(){
             @Override
             public void fail(AdobeError adobeError) {
                 handleError(promise, adobeError, "dispatchEventWithResponseCallback");
@@ -242,12 +242,12 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public static void setSmallIconResourceID(final int resourceID) {
-        MobileCore.setSmallIconResourceID(resourceID);
+      MobileCore.setSmallIconResourceID(resourceID);
     }
 
     @ReactMethod
     public static void setLargeIconResourceID(final int resourceID) {
-        MobileCore.setLargeIconResourceID(resourceID);
+      MobileCore.setLargeIconResourceID(resourceID);
     }
 
     @ReactMethod
@@ -261,7 +261,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void resetIdentities() {
+     public void resetIdentities() {
         MobileCore.resetIdentities();
     }
 

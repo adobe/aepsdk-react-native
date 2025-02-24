@@ -9,7 +9,7 @@ import { MobileCore } from '@adobe/react-native-aepcore';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 const initOptions = {
-  appId: "94f571f308d5/bc09a100649b/launch-6df8e3eea690-development",
+  appId: "YOUR-APP-ID",
   lifecycleAutomaticTrackingEnabled: true, //optional
   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
 };
