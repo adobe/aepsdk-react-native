@@ -11,6 +11,7 @@ SplashScreen.preventAutoHideAsync();
 const initOptions = {
   appId: "94f571f308d5/bc09a100649b/launch-6df8e3eea690-development",
   lifecycleAutomaticTrackingEnabled: true, //optional
+  lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
 };
 MobileCore.initialize(initOptions, (error, result) => {
   if (error) {
