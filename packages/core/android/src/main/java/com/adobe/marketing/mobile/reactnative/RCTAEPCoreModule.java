@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative;
 
-import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.Event;
@@ -38,10 +37,16 @@ import java.util.Map;
 
 public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
+    private final static String TAG = "RCTAEPCoreModule";
+
     private final ReactApplicationContext reactContext;
     private static String FAILED_TO_CONVERT_EVENT_MESSAGE = "Failed to convert map to Event";
     private static String INVALID_TIMEOUT_VALUE_MESSAGE = "Invalid timeout value. Timeout must be a positive integer.";
     private static AtomicBoolean hasStarted = new AtomicBoolean(false);
+    private final static String APP_ID_KEY = "appId";
+    private final static String LIFECYCLE_ADDITIONAL_CONTEXT_DATA = "lifecycleAdditionalContextData";
+    private final static String LIFECYCLE_AUTOMATIC_TACKING_ENABLED = "lifecycleAutomaticTrackingEnabled";
+    private final static String ERROR_MESSAGE = "Error parsing lifecycleAdditionalContextData";
 
     public RCTAEPCoreModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -96,21 +101,9 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             return null;
         }
 
-        String appId = initOptionsMap.hasKey("appId") ? initOptionsMap.getString("appId") : null;
-        Boolean lifecycleAutomaticTrackingEnabled = initOptionsMap.hasKey("lifecycleAutomaticTrackingEnabled") ? initOptionsMap.getBoolean("lifecycleAutomaticTrackingEnabled") : null;
-        Map<String, String> lifecycleAdditionalContextData = new HashMap<>();
-
-        if (initOptionsMap.hasKey("lifecycleAdditionalContextData")) {
-            ReadableMap contextDataMap = initOptionsMap.getMap("lifecycleAdditionalContextData");
-            if (contextDataMap != null) {
-                ReadableMapKeySetIterator iterator = contextDataMap.keySetIterator();
-                while (iterator.hasNextKey()) {
-                    String key = iterator.nextKey();
-                    lifecycleAdditionalContextData.put(key, contextDataMap.getString(key));
-                }
-            }
-        }
-
+        String appId = initOptionsMap.hasKey(APP_ID_KEY)
+                ? initOptionsMap.getString(APP_ID_KEY)
+                : null;
         InitOptions options;
         if (appId != null) {
             options = InitOptions.configureWithAppID(appId);
@@ -118,13 +111,43 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             options = new InitOptions();
         }
 
+        Boolean lifecycleAutomaticTrackingEnabled = initOptionsMap.hasKey(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)
+                ? initOptionsMap.getBoolean(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)
+                : null;
         if (lifecycleAutomaticTrackingEnabled != null) {
             options.setLifecycleAutomaticTrackingEnabled(lifecycleAutomaticTrackingEnabled);
         }
 
+        // Use the helper method to extract lifecycleAdditionalContextData
+        Map<String, String> lifecycleAdditionalContextData = getLifecycleAdditionalContextData(initOptionsMap);
         options.setLifecycleAdditionalContextData(lifecycleAdditionalContextData);
 
         return options;
+    }
+
+    /**
+     * Extracts lifecycleAdditionalContextData from the initOptionsMap.
+     * If the key exists but does not contain a valid ReadableMap,
+     * the method catches the exception and returns an empty map.
+     */
+    private Map<String, String> getLifecycleAdditionalContextData(ReadableMap initOptionsMap) {
+        Map<String, String> lifecycleAdditionalContextData = new HashMap<>();
+
+        if (initOptionsMap.hasKey(LIFECYCLE_ADDITIONAL_CONTEXT_DATA)) {
+            try {
+                ReadableMap contextDataMap = initOptionsMap.getMap(LIFECYCLE_ADDITIONAL_CONTEXT_DATA);
+                if (contextDataMap != null) {
+                    ReadableMapKeySetIterator iterator = contextDataMap.keySetIterator();
+                    while (iterator.hasNextKey()) {
+                        String key = iterator.nextKey();
+                        lifecycleAdditionalContextData.put(key, contextDataMap.getString(key));
+                    }
+                }
+            } catch (Exception e) {
+                Log.error(getName(), TAG, ERROR_MESSAGE);
+            }
+        }
+        return lifecycleAdditionalContextData;
     }
 
     @ReactMethod
