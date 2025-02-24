@@ -33,6 +33,8 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import android.app.Application;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
@@ -54,7 +56,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     }
 
     public static void setApplication(final Application application) {
-      MobileCore.setApplication(application);
+        MobileCore.setApplication(application);
     }
 
     @ReactMethod
@@ -67,43 +69,13 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         MobileCore.configureWithAppID(appId);
     }
 
-@ReactMethod
-public void initializeWithAppId(String appId, final Promise promise) {
-//    Log.debug(LOG_TAG, "Initializing with appId: " + appId);
-    Log.debug(getName(), "Initializing with appId" ,appId);
-    MobileCore.initialize((Application) reactContext.getApplicationContext(), appId, o -> promise.resolve(null));
-    }
-
     @ReactMethod
     public void initialize(ReadableMap initOptionsMap, final Callback callback) {
-        InitOptions initOptions = null;
-
-        if (initOptionsMap.hasKey("appId")) {
-
-            String appId = initOptionsMap.getString("appId");
-            Log.debug(getName(), "Initializing with appId" ,appId);
-
-            initOptions = InitOptions.configureWithAppID(appId);
-        } 
+        InitOptions initOptions = initOptionsFromMap(initOptionsMap);
 
         if (initOptions == null) {
             callback.invoke("InitOptions must contain either an appId or a filePath", null);
             return;
-        }
-
-        if (initOptionsMap.hasKey("lifecycleAutomaticTrackingEnabled")) {
-            initOptions.setLifecycleAutomaticTrackingEnabled(initOptionsMap.getBoolean("lifecycleAutomaticTrackingEnabled"));
-        }
-
-        if (initOptionsMap.hasKey("lifecycleAdditionalContextData")) {
-            ReadableMap contextDataMap = initOptionsMap.getMap("lifecycleAdditionalContextData");
-            if (contextDataMap != null) {
-                ReadableMapKeySetIterator iterator = contextDataMap.keySetIterator();
-                while (iterator.hasNextKey()) {
-                    String key = iterator.nextKey();
-                    initOptions.getLifecycleAdditionalContextData().put(key, contextDataMap.getString(key));
-                }
-            }
         }
 
         MobileCore.initialize((Application) reactContext.getApplicationContext(), initOptions, new AdobeCallbackWithError<Void>() {
@@ -111,12 +83,48 @@ public void initializeWithAppId(String appId, final Promise promise) {
             public void call(Void value) {
                 callback.invoke(null, null);
             }
-            // should we override this fail method or not?
+
             @Override
             public void fail(AdobeError adobeError) {
                 callback.invoke(adobeError.getErrorName(), null);
             }
         });
+    }
+
+    private InitOptions initOptionsFromMap(final ReadableMap initOptionsMap) {
+        if (initOptionsMap == null) {
+            return null;
+        }
+
+        String appId = initOptionsMap.hasKey("appId") ? initOptionsMap.getString("appId") : null;
+        Boolean lifecycleAutomaticTrackingEnabled = initOptionsMap.hasKey("lifecycleAutomaticTrackingEnabled") ? initOptionsMap.getBoolean("lifecycleAutomaticTrackingEnabled") : null;
+        Map<String, String> lifecycleAdditionalContextData = new HashMap<>();
+
+        if (initOptionsMap.hasKey("lifecycleAdditionalContextData")) {
+            ReadableMap contextDataMap = initOptionsMap.getMap("lifecycleAdditionalContextData");
+            if (contextDataMap != null) {
+                ReadableMapKeySetIterator iterator = contextDataMap.keySetIterator();
+                while (iterator.hasNextKey()) {
+                    String key = iterator.nextKey();
+                    lifecycleAdditionalContextData.put(key, contextDataMap.getString(key));
+                }
+            }
+        }
+
+        InitOptions options;
+        if (appId != null) {
+            options = InitOptions.configureWithAppID(appId);
+        } else {
+            options = new InitOptions();
+        }
+
+        if (lifecycleAutomaticTrackingEnabled != null) {
+            options.setLifecycleAutomaticTrackingEnabled(lifecycleAutomaticTrackingEnabled);
+        }
+
+        options.setLifecycleAdditionalContextData(lifecycleAdditionalContextData);
+
+        return options;
     }
 
     @ReactMethod
@@ -194,7 +202,7 @@ public void initializeWithAppId(String appId, final Promise promise) {
             return;
         }
 
-        MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>(){
+        MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>() {
             @Override
             public void fail(AdobeError adobeError) {
                 handleError(promise, adobeError, "dispatchEventWithResponseCallback");
@@ -234,12 +242,12 @@ public void initializeWithAppId(String appId, final Promise promise) {
 
     @ReactMethod
     public static void setSmallIconResourceID(final int resourceID) {
-      MobileCore.setSmallIconResourceID(resourceID);
+        MobileCore.setSmallIconResourceID(resourceID);
     }
 
     @ReactMethod
     public static void setLargeIconResourceID(final int resourceID) {
-      MobileCore.setLargeIconResourceID(resourceID);
+        MobileCore.setLargeIconResourceID(resourceID);
     }
 
     @ReactMethod
@@ -253,9 +261,9 @@ public void initializeWithAppId(String appId, final Promise promise) {
     }
 
     @ReactMethod
-     public void resetIdentities() {
+    public void resetIdentities() {
         MobileCore.resetIdentities();
-     }
+    }
 
     private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
         if (error == null || promise == null) {
@@ -264,5 +272,4 @@ public void initializeWithAppId(String appId, final Promise promise) {
 
         promise.reject(getName(), String.format("%s returned an unexpected error: %s", errorLocation, error.getErrorName()), new Error(error.getErrorName()));
     }
-
 }
