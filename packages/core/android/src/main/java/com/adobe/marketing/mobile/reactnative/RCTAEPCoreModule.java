@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative;
 
+import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.Event;
@@ -75,55 +76,56 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void initialize(ReadableMap initOptionsMap, final Callback callback) {
+    public void initialize(ReadableMap initOptionsMap, final Promise promise) {
         InitOptions initOptions = initOptionsFromMap(initOptionsMap);
 
         if (initOptions == null) {
-            callback.invoke("InitOptions must contain either an appId or a filePath", null);
+            promise.reject(getName(), "InitOptions must contain either an appId or a filePath");
             return;
         }
 
-        MobileCore.initialize((Application) reactContext.getApplicationContext(), initOptions, new AdobeCallbackWithError<Void>() {
+        MobileCore.initialize((Application) reactContext.getApplicationContext(), initOptions, new AdobeCallback<Object>() {
             @Override
-            public void call(Void value) {
-                callback.invoke(null, null);
-            }
-
-            @Override
-            public void fail(AdobeError adobeError) {
-                callback.invoke(adobeError.getErrorName(), null);
+            public void call(Object o) {
+                promise.resolve(null);
             }
         });
     }
-
     private InitOptions initOptionsFromMap(final ReadableMap initOptionsMap) {
         if (initOptionsMap == null) {
             return null;
         }
+    
+        try {
+            String appId = initOptionsMap.hasKey(APP_ID_KEY) ? initOptionsMap.getString(APP_ID_KEY) : null;
+            InitOptions options;
+    
+            if (appId != null) {
+                options = InitOptions.configureWithAppID(appId);
+            } else {
+                options = new InitOptions();
+            }
+    
+            Boolean lifecycleAutomaticTrackingEnabled = initOptionsMap.hasKey(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)
+                    ? initOptionsMap.getBoolean(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)
+                    : null;
+            if (lifecycleAutomaticTrackingEnabled != null) {
+                options.setLifecycleAutomaticTrackingEnabled(lifecycleAutomaticTrackingEnabled);
+            }
+            // Use the helper method to extract lifecycleAdditionalContextData
+            Map<String, String> lifecycleAdditionalContextData = getLifecycleAdditionalContextData(initOptionsMap);
+            if (lifecycleAdditionalContextData != null) {
+                options.setLifecycleAdditionalContextData(lifecycleAdditionalContextData);
+            }
+            return options;
+        } catch (Exception e) {
+//            Log.e("InitOptions", "Error parsing initOptionsMap: " + e.getMessage(), e);
+            Log.error(getName(), TAG, "Error parsing initOptionsMap:");
 
-        String appId = initOptionsMap.hasKey(APP_ID_KEY)
-                ? initOptionsMap.getString(APP_ID_KEY)
-                : null;
-        InitOptions options;
-        if (appId != null) {
-            options = InitOptions.configureWithAppID(appId);
-        } else {
-            options = new InitOptions();
+            return null; // Return null or consider throwing a custom exception based on your use case
         }
-
-        Boolean lifecycleAutomaticTrackingEnabled = initOptionsMap.hasKey(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)
-                ? initOptionsMap.getBoolean(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)
-                : null;
-        if (lifecycleAutomaticTrackingEnabled != null) {
-            options.setLifecycleAutomaticTrackingEnabled(lifecycleAutomaticTrackingEnabled);
-        }
-
-        // Use the helper method to extract lifecycleAdditionalContextData
-        Map<String, String> lifecycleAdditionalContextData = getLifecycleAdditionalContextData(initOptionsMap);
-        options.setLifecycleAdditionalContextData(lifecycleAdditionalContextData);
-
-        return options;
     }
+    
 
     /**
      * Extracts lifecycleAdditionalContextData from the initOptionsMap.
@@ -146,8 +148,9 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             } catch (Exception e) {
                 Log.error(getName(), TAG, ERROR_MESSAGE);
             }
+            return lifecycleAdditionalContextData;
         }
-        return lifecycleAdditionalContextData;
+            return null;
     }
 
     @ReactMethod
@@ -286,7 +289,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     @ReactMethod
      public void resetIdentities() {
         MobileCore.resetIdentities();
-    }
+     }
 
     private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
         if (error == null || promise == null) {
