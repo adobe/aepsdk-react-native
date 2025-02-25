@@ -16,12 +16,6 @@ import { LogLevel } from './models/LogLevel';
 import { PrivacyStatus } from './models/PrivacyStatus';
 import { InitOptions } from './models/InitOptions';
 
-/**
- * Initializes the MobileCore with the provided initialization options.
- *
- * @param {InitOptions} initOptions - The options to use for initialization.
- * @returns {Promise<void>} A promise that resolves when the initialization is complete.
- */
 interface IMobileCore {
   extensionVersion: () => Promise<string>;
   configureWithAppId: (appId?: String) => void;
@@ -44,6 +38,7 @@ interface IMobileCore {
   resetIdentities: () => void;
   clearUpdatedConfiguration: () => void;
   initialize: (initOptions: InitOptions) => Promise<void>;
+  initializeWithAppId: (appId: string) => Promise<void>;
 }
 
 const RCTAEPCore: IMobileCore = NativeModules.AEPCore;
@@ -57,10 +52,36 @@ const MobileCore: IMobileCore = {
     return Promise.resolve(RCTAEPCore.extensionVersion());
   },
   
+ /**
+ * Initializes the MobileCore with the provided initialization options.
+ *
+ * This method sets up the Adobe Mobile Services SDK with the specified configuration.
+ * The initialization process includes setting the Adobe Mobile Services App ID, enabling 
+ * or disabling automatic lifecycle tracking, and passing additional lifecycle context data.
+ *
+ * @param {InitOptions} initOptions - The options to use for initialization.
+ *   - `appId` (string, required): A unique identifier assigned to the app instance by Adobe Mobile Services.
+ *   - `lifecycleAutomaticTrackingEnabled` (boolean, optional): Determines whether automatic lifecycle 
+ *      tracking should be enabled. Defaults to `true` if not provided.
+ *   - `lifecycleAdditionalContextData` (object, optional): Key-value pairs of additional context data 
+ *      to be included with lifecycle events.
+ *   - `appGroupIOS` (string, optional): The application group identifier for iOS, enabling data sharing 
+ *      between the main app and its extensions.
+ *
+ * @returns {Promise<void>} A promise that resolves when the initialization is complete.
+ */
   initialize(initOptions: InitOptions): Promise<void> {
     return RCTAEPCore.initialize(initOptions);
   },
-  
+
+/**
+ * Initializes the MobileCore with the provided application ID.
+ * 
+ * @param appId - a unique identifier assigned to the app instance by the Adobe Mobile Services.
+ */
+  initializeWithAppId(appId: string): Promise<void> {
+    return RCTAEPCore.initializeWithAppId(appId);
+  },
   /**
    * Load remote configuration specified by the given application ID
    *
