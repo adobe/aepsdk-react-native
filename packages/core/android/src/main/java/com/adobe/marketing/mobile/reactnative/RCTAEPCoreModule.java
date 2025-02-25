@@ -91,6 +91,26 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             }
         });
     }
+    @ReactMethod
+    public void initializeWithAppId(final String appId, final Promise promise) {
+        if (appId == null || appId.isEmpty()) {
+            promise.reject(getName(), "App ID cannot be null or empty");
+            return;
+        }
+
+        InitOptions initOptions = InitOptions.configureWithAppID(appId);
+
+        MobileCore.initialize(
+                (Application) reactContext.getApplicationContext(),
+                initOptions,
+                new AdobeCallback<Object>() {
+                    @Override
+                    public void call(Object o) {
+                        promise.resolve(null);
+                    }
+                }
+        );
+    }
     private InitOptions initOptionsFromMap(final ReadableMap initOptionsMap) {
         if (initOptionsMap == null) {
             return null;
@@ -119,7 +139,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
             }
             return options;
         } catch (Exception e) {
-//            Log.e("InitOptions", "Error parsing initOptionsMap: " + e.getMessage(), e);
             Log.error(getName(), TAG, "Error parsing initOptionsMap:");
 
             return null; // Return null or consider throwing a custom exception based on your use case
