@@ -13,12 +13,12 @@ const initOptions = {
   lifecycleAutomaticTrackingEnabled: true, //optional
   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
 };
-MobileCore.initialize(initOptions, (error, result) => {
-  if (error) {
-    console.log("Initialization error:", error);
-  } else {
-    console.log("Initialization successful:", result);
-  }
+
+MobileCore.initialize(initOptions).then((succsess) => {  
+  console.log("Initialization sucess:", succsess);
+
+}).catch((error) => { 
+  console.log("Initialization error:", error);            
 });
 export default function RootLayout() {
   const scheme = useColorScheme();

@@ -10,9 +10,33 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+/**
+ * Interface representing the initialization options for the SDK.
+ */
 export interface InitOptions {
-    appId: string;
-    lifecycleAutomaticTrackingEnabled?: boolean;
-    lifecycleAdditionalContextData?: { [key: string]: string };
-    appGroupIOS?: string;
+  /**
+   * A unique identifier assigned to the app instance by Adobe Mobile Services.
+   * This is the Adobe Mobile Services App ID.
+   * A `null` value has no effect.
+   */
+  appId: string;
+
+  /**
+   * Optional flag to enable or disable automatic lifecycle tracking.
+   * If not provided, the default value is `true`.
+   */
+  lifecycleAutomaticTrackingEnabled?: boolean;
+
+  /**
+   * Optional additional context data to be included with lifecycle events.
+   * This is a key-value pair object where both key and value are strings.
+   */
+  lifecycleAdditionalContextData?: { [key: string]: string };
+
+  /**
+   * Optional application group identifier for iOS.
+   *
+   * Used to share user defaults and files between the main app and its extension apps on iOS.
+   */
+  appGroupIOS?: string;
 }

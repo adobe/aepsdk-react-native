@@ -16,6 +16,12 @@ import { LogLevel } from './models/LogLevel';
 import { PrivacyStatus } from './models/PrivacyStatus';
 import { InitOptions } from './models/InitOptions';
 
+/**
+ * Initializes the MobileCore with the provided initialization options.
+ *
+ * @param {InitOptions} initOptions - The options to use for initialization.
+ * @returns {Promise<void>} A promise that resolves when the initialization is complete.
+ */
 interface IMobileCore {
   extensionVersion: () => Promise<string>;
   configureWithAppId: (appId?: String) => void;
@@ -37,7 +43,7 @@ interface IMobileCore {
   setAppGroup: (appGroup?: string) => void;
   resetIdentities: () => void;
   clearUpdatedConfiguration: () => void;
-  initialize: (initOptions: InitOptions, callback: (error: any, result: any) => void) => void;
+  initialize: (initOptions: InitOptions) => Promise<void>;
 }
 
 const RCTAEPCore: IMobileCore = NativeModules.AEPCore;
@@ -51,8 +57,8 @@ const MobileCore: IMobileCore = {
     return Promise.resolve(RCTAEPCore.extensionVersion());
   },
   
-  initialize(initOptions: any, callback: (error: any, result: any) => void): void {
-    RCTAEPCore.initialize(initOptions, callback);
+  initialize(initOptions: InitOptions): Promise<void> {
+    return RCTAEPCore.initialize(initOptions);
   },
   
   /**
