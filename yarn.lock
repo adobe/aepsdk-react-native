@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@adobe/react-native-aepoptimize@^6.1.0":
+  version "6.1.0"
+  resolved "https://artifactory.corp.adobe.com/artifactory/api/npm/npm-adobe-platform-release/@adobe/react-native-aepoptimize/-/react-native-aepoptimize-6.1.0.tgz#3864d376952cf8bdd58848451d3820293c673259"
+  integrity sha512-cBwn5FKVux+5fBSBZUoQH5a+Fid9lx9DGxSRDU01c6zr2xYPVYl4vs0H8Uyw1bwZUde2/QUUJiXe/8YD5Sw5XA==
+
 "@ampproject/remapping@^2.2.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.3.0.tgz#ed441b6fa600072520ce18b43d2c8cc8caecc7f4"
