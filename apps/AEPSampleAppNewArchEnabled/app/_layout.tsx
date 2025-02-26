@@ -9,17 +9,7 @@ import { useEffect } from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-const initOptions = {
-  appId: "94f571f308d5/bc09a100649b/launch-6df8e3eea690-development",
-  lifecycleAutomaticTrackingEnabled: true, //optional
-};
-MobileCore.initialize(initOptions, (error, result) => {
-  if (error) {
-    console.log("Initialization error:", error);
-  } else {
-    console.log("Initialization successful:", result);
-  }
-});
+
 export default function RootLayout() {
   const scheme = useColorScheme();
 
