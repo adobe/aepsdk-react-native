@@ -8,18 +8,29 @@ import { MobileCore } from '@adobe/react-native-aepcore';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-const initOptions = {
-  appId: "YOUR-APP-ID",
-  lifecycleAutomaticTrackingEnabled: true, //optional
-  lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
-};
 
-MobileCore.initialize(initOptions).then((succsess) => {  
-  console.log("Initialization sucess:", succsess);
 
-}).catch((error) => { 
-  console.log("Initialization error:", error);            
-});
+// If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
+
+// const initOptions = {
+//   appId: "YOUR-APP-ID" //required,
+//   lifecycleAutomaticTrackingEnabled: true, //optional
+//   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
+// };
+
+// MobileCore.initialize(initOptions).then(() => {  
+//   console.log("AEP SDK Initialized");
+
+// }).catch((error) => { 
+//   console.log("AEP SDK Initialization error", error);            
+// });
+
+
+MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
+  console.log("AEP SDK Initialized");
+}).catch((error) => {  
+  console.log("AEP SDK Initialization error", error);
+ });
 export default function RootLayout() {
   const scheme = useColorScheme();
 
