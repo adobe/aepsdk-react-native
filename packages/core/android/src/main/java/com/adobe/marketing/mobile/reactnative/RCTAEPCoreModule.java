@@ -80,7 +80,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         InitOptions initOptions = initOptionsFromMap(initOptionsMap);
 
         if (initOptions == null) {
-            promise.reject(getName(), "InitOptions must contain either an appId or a filePath");
+            promise.reject(getName(), "InitOptions is null or invalid.");
             return;
         }
 
@@ -90,26 +90,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
                 promise.resolve(null);
             }
         });
-    }
-    @ReactMethod
-    public void initializeWithAppId(final String appId, final Promise promise) {
-        if (appId == null || appId.isEmpty()) {
-            promise.reject(getName(), "App ID cannot be null or empty");
-            return;
-        }
-
-        InitOptions initOptions = InitOptions.configureWithAppID(appId);
-
-        MobileCore.initialize(
-                (Application) reactContext.getApplicationContext(),
-                initOptions,
-                new AdobeCallback<Object>() {
-                    @Override
-                    public void call(Object o) {
-                        promise.resolve(null);
-                    }
-                }
-        );
     }
     private InitOptions initOptionsFromMap(final ReadableMap initOptionsMap) {
         if (initOptionsMap == null) {

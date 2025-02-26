@@ -80,7 +80,7 @@ const MobileCore: IMobileCore = {
  * @param appId - a unique identifier assigned to the app instance by the Adobe Mobile Services.
  */
   initializeWithAppId(appId: string): Promise<void> {
-    return RCTAEPCore.initializeWithAppId(appId);
+    return this.initialize({appId});
   },
   /**
    * Load remote configuration specified by the given application ID
