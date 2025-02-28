@@ -166,6 +166,52 @@ RCT_EXPORT_METHOD(resetIdentities) {
      [AEPMobileCore resetIdentities];
 }
 
+
+RCT_EXPORT_METHOD(initialize:(NSDictionary *)initOptionsDict 
+                  resolver:(RCTPromiseResolveBlock)resolve 
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    
+    if (!initOptionsDict || ![initOptionsDict isKindOfClass:[NSDictionary class]]) {
+        reject(EXTENSION_NAME, @"InitOptions must be a valid dictionary.", nil);
+        return;
+    }
+
+    @try {
+        // Extract appId safely
+        NSString *appId = initOptionsDict[@"appId"];
+        if (![appId isKindOfClass:[NSString class]] || appId.length == 0) {
+            reject(EXTENSION_NAME, @"Invalid or missing appId.", nil);
+            return;
+        }
+
+        // Initialize AEPInitOptions with appId
+        AEPInitOptions *options = [[AEPInitOptions alloc] initWithAppId:appId];
+
+        // Extract lifecycleAutomaticTrackingEnabled safely
+        NSNumber *lifecycleTrackingEnabled = initOptionsDict[@"lifecycleAutomaticTrackingEnabled"];
+        if ([lifecycleTrackingEnabled isKindOfClass:[NSNumber class]]) {
+            options.lifecycleAutomaticTrackingEnabled = [lifecycleTrackingEnabled boolValue];
+        }
+
+        // Extract lifecycleAdditionalContextData safely
+        NSDictionary *lifecycleAdditionalContextData = initOptionsDict[@"lifecycleAdditionalContextData"];
+        if ([lifecycleAdditionalContextData isKindOfClass:[NSDictionary class]]) {
+            options.lifecycleAdditionalContextData = lifecycleAdditionalContextData;
+            NSLog(@"Lifecycle Additional Context Data: %@", lifecycleAdditionalContextData);
+        }
+
+        // Initialize AEP SDK
+        [AEPMobileCore initializeWithOptions:options completion:^{
+            NSLog(@"AEP Mobile SDK initialized successfully.");
+            resolve(nil);
+        }];
+
+    } @catch (NSException *exception) {
+        [AEPLog errorWithLabel:EXTENSION_NAME message:[NSString stringWithFormat:@"Error initializing AEP SDK: %@", exception.reason]];
+        reject(EXTENSION_NAME, @"Exception occurred while initializing AEP SDK.", nil);
+    }
+}
+
 #pragma mark - Helper methods
 
 - (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject {
