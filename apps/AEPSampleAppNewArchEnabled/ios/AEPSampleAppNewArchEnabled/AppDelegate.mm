@@ -10,7 +10,6 @@ governing permissions and limitations under the License.
 */
 
 #import "AppDelegate.h"
-#import "AdobeBridge.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
@@ -27,7 +26,6 @@ governing permissions and limitations under the License.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
-  [AdobeBridge configure: application.applicationState];
   
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
@@ -80,13 +78,11 @@ governing permissions and limitations under the License.
 // Setup for Lifecycle Start when entering foreground
 - (void)applicationWillEnterForeground:(UIApplication *)application{
   appState = application.applicationState;
-  [AdobeBridge lifecycleStart];
 }
 
 // Setup for Lifecycle Start when entering background
 - (void)applicationDidEnterBackground:(UIApplication *)application{
   appState = application.applicationState;
-  [AdobeBridge lifecyclePause];
 }
 
 @end
