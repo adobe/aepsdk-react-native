@@ -22,6 +22,11 @@ RCT_EXPORT_MODULE(AEPCore);
 static NSString* const EXTENSION_NAME = @"AEPCore";
 static NSString* const FAILED_TO_CONVERT_EVENT_MESSAGE = @"Failed to convert dictionary to Event";
 
+// Define dictionary keys as constants
+static NSString* const APP_ID_KEY = @"appId";
+static NSString* const LIFECYCLE_AUTOMATIC_TRACKING_ENABLED_KEY = @"lifecycleAutomaticTrackingEnabled";
+static NSString* const LIFECYCLE_ADDITIONAL_CONTEXT_DATA_KEY = @"lifecycleAdditionalContextData";
+
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
@@ -167,6 +172,17 @@ RCT_EXPORT_METHOD(resetIdentities) {
 }
 
 
+/**
+ * Initializes the AEP Mobile SDK with the provided initialization options.
+ * @param {NSDictionary} initOptionsDict - The options to use for initialization.
+ *   - `appId` (NSString, required): A unique identifier assigned to the app instance by Adobe Experience Platform.
+ *   - `lifecycleAutomaticTrackingEnabled` (NSNumber, optional): Determines whether automatic lifecycle 
+ *      tracking should be enabled. Defaults to `true` if not provided.
+ *   - `lifecycleAdditionalContextData` (NSDictionary, optional): Key-value pairs of additional context data 
+ *      to be included with lifecycle events.
+ * @param {RCTPromiseResolveBlock} resolve - The promise resolve block.
+ * @param {RCTPromiseRejectBlock} reject - The promise reject block.
+ */
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)initOptionsDict 
                   resolver:(RCTPromiseResolveBlock)resolve 
                   rejecter:(RCTPromiseRejectBlock)reject) {
@@ -178,7 +194,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)initOptionsDict
 
     @try {
         // Extract appId safely
-        NSString *appId = initOptionsDict[@"appId"];
+        NSString *appId = initOptionsDict[APP_ID_KEY];
         if (![appId isKindOfClass:[NSString class]] || appId.length == 0) {
             reject(EXTENSION_NAME, @"Invalid or missing appId.", nil);
             return;
@@ -188,13 +204,13 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)initOptionsDict
         AEPInitOptions *options = [[AEPInitOptions alloc] initWithAppId:appId];
 
         // Extract lifecycleAutomaticTrackingEnabled safely
-        NSNumber *lifecycleTrackingEnabled = initOptionsDict[@"lifecycleAutomaticTrackingEnabled"];
+        NSNumber *lifecycleTrackingEnabled = initOptionsDict[LIFECYCLE_AUTOMATIC_TRACKING_ENABLED_KEY];
         if ([lifecycleTrackingEnabled isKindOfClass:[NSNumber class]]) {
             options.lifecycleAutomaticTrackingEnabled = [lifecycleTrackingEnabled boolValue];
         }
 
         // Extract lifecycleAdditionalContextData safely
-        NSDictionary *lifecycleAdditionalContextData = initOptionsDict[@"lifecycleAdditionalContextData"];
+        NSDictionary *lifecycleAdditionalContextData = initOptionsDict[LIFECYCLE_ADDITIONAL_CONTEXT_DATA_KEY];
         if ([lifecycleAdditionalContextData isKindOfClass:[NSDictionary class]]) {
             options.lifecycleAdditionalContextData = lifecycleAdditionalContextData;
             NSLog(@"Lifecycle Additional Context Data: %@", lifecycleAdditionalContextData);
