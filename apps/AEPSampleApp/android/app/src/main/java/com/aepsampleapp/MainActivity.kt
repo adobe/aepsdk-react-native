@@ -31,14 +31,4 @@ class MainActivity : ReactActivity() {
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
-    override fun onResume() {
-        super.onResume()
-        MobileCore.setApplication(application);
-        MobileCore.lifecycleStart(null);
-    }
-
-    override fun onPause() {
-        super.onPause()
-        MobileCore.lifecyclePause();
-    }
 }
