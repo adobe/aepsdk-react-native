@@ -42,10 +42,10 @@
   resolved "https://registry.yarnpkg.com/@adobe/react-native-aepmessaging/-/react-native-aepmessaging-6.0.4.tgz#71c98eb17d8b9184434f3fc226426de3d7882d71"
   integrity sha512-Mm7GW+3t+TU6C7scxhO2oWUvvIDdzsMmr5gL5G2K0OExUuqaeyZKfv7JG9Y5EkfTn+wOjomsQuKGmJnKvF4EHA==
 
-"@adobe/react-native-aepoptimize@^6.0.0":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepoptimize/-/react-native-aepoptimize-6.0.3.tgz#3cc9a89f60ca72c6b3c160ae5f23afeab681f29e"
-  integrity sha512-uwxmdQTjCQa7YqrMrla/ETU1ynuC9iSZzwPvvAWMOuVoSmNwbsN2znqg9nLZJo7AhU5Ay3qJNKnmFkSNPcXOJA==
+"@adobe/react-native-aepoptimize@^6.1.0":
+  version "6.1.0"
+  resolved "https://artifactory.corp.adobe.com/artifactory/api/npm/npm-adobe-platform-release/@adobe/react-native-aepoptimize/-/react-native-aepoptimize-6.1.0.tgz#3864d376952cf8bdd58848451d3820293c673259"
+  integrity sha512-cBwn5FKVux+5fBSBZUoQH5a+Fid9lx9DGxSRDU01c6zr2xYPVYl4vs0H8Uyw1bwZUde2/QUUJiXe/8YD5Sw5XA==
 
 "@adobe/react-native-aepplaces@^6.0.0":
   version "6.0.2"
