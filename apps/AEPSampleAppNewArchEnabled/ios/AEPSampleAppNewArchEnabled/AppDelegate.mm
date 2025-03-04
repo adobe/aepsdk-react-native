@@ -74,15 +74,4 @@ governing permissions and limitations under the License.
   return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 }
 
-
-// Setup for Lifecycle Start when entering foreground
-- (void)applicationWillEnterForeground:(UIApplication *)application{
-  appState = application.applicationState;
-}
-
-// Setup for Lifecycle Start when entering background
-- (void)applicationDidEnterBackground:(UIApplication *)application{
-  appState = application.applicationState;
-}
-
 @end
