@@ -61,10 +61,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         return "AEPCore";
     }
 
-    public static void setApplication(final Application application) {
-        MobileCore.setApplication(application);
-    }
-
     @ReactMethod
     public void extensionVersion(final Promise promise) {
         promise.resolve(MobileCore.extensionVersion());
