@@ -102,12 +102,10 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
                 options = new InitOptions();
             }
     
-            Boolean lifecycleAutomaticTrackingEnabled = initOptionsMap.hasKey(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)
-                    ? initOptionsMap.getBoolean(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)
-                    : null;
-            if (lifecycleAutomaticTrackingEnabled != null) {
-                options.setLifecycleAutomaticTrackingEnabled(lifecycleAutomaticTrackingEnabled);
+            if (initOptionsMap.hasKey(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)) {
+                options.setLifecycleAutomaticTrackingEnabled(initOptionsMap.getBoolean(LIFECYCLE_AUTOMATIC_TACKING_ENABLED));
             }
+            
             // Use the helper method to extract lifecycleAdditionalContextData
             Map<String, String> lifecycleAdditionalContextData = getLifecycleAdditionalContextData(initOptionsMap);
             if (lifecycleAdditionalContextData != null) {
