@@ -28,9 +28,10 @@ SplashScreen.preventAutoHideAsync();
 
 MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
   console.log("AEP SDK Initialized");
-}).catch((error) => {  
-  console.log("AEP SDK Initialization error", error);
- });
+}).catch((error) => { 
+  console.log("AEP SDK Initialization error", error);            
+});
+
 export default function RootLayout() {
   const scheme = useColorScheme();
 

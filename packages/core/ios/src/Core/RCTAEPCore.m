@@ -22,6 +22,11 @@ RCT_EXPORT_MODULE(AEPCore);
 static NSString* const EXTENSION_NAME = @"AEPCore";
 static NSString* const FAILED_TO_CONVERT_EVENT_MESSAGE = @"Failed to convert dictionary to Event";
 
+// Define dictionary keys as constants
+static NSString* const APP_ID_KEY = @"appId";
+static NSString* const LIFECYCLE_AUTOMATIC_TRACKING_ENABLED_KEY = @"lifecycleAutomaticTrackingEnabled";
+static NSString* const LIFECYCLE_ADDITIONAL_CONTEXT_DATA_KEY = @"lifecycleAdditionalContextData";
+
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
@@ -164,6 +169,63 @@ RCT_EXPORT_METHOD(setLargeIconResourceID: (NSInteger) resourceID) {
 
 RCT_EXPORT_METHOD(resetIdentities) {
      [AEPMobileCore resetIdentities];
+}
+
+
+/**
+ * Initializes the AEP Mobile SDK with the provided initialization options.
+ * @param {NSDictionary} initOptionsDict - The options to use for initialization.
+ *   - `appId` (NSString, required): A unique identifier assigned to the app instance by Adobe Experience Platform.
+ *   - `lifecycleAutomaticTrackingEnabled` (NSNumber, optional): Determines whether automatic lifecycle 
+ *      tracking should be enabled. Defaults to `true` if not provided.
+ *   - `lifecycleAdditionalContextData` (NSDictionary, optional): Key-value pairs of additional context data 
+ *      to be included with lifecycle events.
+ * @param {RCTPromiseResolveBlock} resolve - The promise resolve block.
+ * @param {RCTPromiseRejectBlock} reject - The promise reject block.
+ */
+RCT_EXPORT_METHOD(initialize:(NSDictionary *)initOptionsDict 
+                  resolver:(RCTPromiseResolveBlock)resolve 
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    
+    if (!initOptionsDict || ![initOptionsDict isKindOfClass:[NSDictionary class]]) {
+        reject(EXTENSION_NAME, @"InitOptions must be a valid dictionary.", nil);
+        return;
+    }
+
+    @try {
+        // Extract appId safely
+        NSString *appId = initOptionsDict[APP_ID_KEY];
+        if (![appId isKindOfClass:[NSString class]] || appId.length == 0) {
+            reject(EXTENSION_NAME, @"Invalid or missing appId.", nil);
+            return;
+        }
+
+        // Initialize AEPInitOptions with appId
+        AEPInitOptions *options = [[AEPInitOptions alloc] initWithAppId:appId];
+
+        // Extract lifecycleAutomaticTrackingEnabled safely
+        NSNumber *lifecycleTrackingEnabled = initOptionsDict[LIFECYCLE_AUTOMATIC_TRACKING_ENABLED_KEY];
+        if ([lifecycleTrackingEnabled isKindOfClass:[NSNumber class]]) {
+            options.lifecycleAutomaticTrackingEnabled = [lifecycleTrackingEnabled boolValue];
+        }
+
+        // Extract lifecycleAdditionalContextData safely
+        NSDictionary *lifecycleAdditionalContextData = initOptionsDict[LIFECYCLE_ADDITIONAL_CONTEXT_DATA_KEY];
+        if ([lifecycleAdditionalContextData isKindOfClass:[NSDictionary class]]) {
+            options.lifecycleAdditionalContextData = lifecycleAdditionalContextData;
+            NSLog(@"Lifecycle Additional Context Data: %@", lifecycleAdditionalContextData);
+        }
+
+        // Initialize AEP SDK
+        [AEPMobileCore initializeWithOptions:options completion:^{
+            NSLog(@"AEP Mobile SDK initialized successfully.");
+            resolve(nil);
+        }];
+
+    } @catch (NSException *exception) {
+        [AEPLog errorWithLabel:EXTENSION_NAME message:[NSString stringWithFormat:@"Error initializing AEP SDK: %@", exception.reason]];
+        reject(EXTENSION_NAME, @"Exception occurred while initializing AEP SDK.", nil);
+    }
 }
 
 #pragma mark - Helper methods
