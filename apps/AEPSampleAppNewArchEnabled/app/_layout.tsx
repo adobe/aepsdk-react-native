@@ -13,7 +13,7 @@ SplashScreen.preventAutoHideAsync();
 // If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
 
 // const initOptions = {
-//   appId: "YOUR-APP-ID" //required,
+//   appId: "YOUR-APP-ID" //optional,
 //   lifecycleAutomaticTrackingEnabled: true, //optional
 //   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
 // };

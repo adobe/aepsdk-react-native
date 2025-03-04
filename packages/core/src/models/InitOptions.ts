@@ -19,7 +19,7 @@ export interface InitOptions {
    * This is the Adobe Mobile Services App ID.
    * A `null` value has no effect.
    */
-  appId: string;
+  appId?: string;
 
   /**
    * Optional flag to enable or disable automatic lifecycle tracking.
