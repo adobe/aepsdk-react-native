@@ -28,13 +28,6 @@ governing permissions and limitations under the License.
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-
-}
-
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
   return [self getBundleURL];
