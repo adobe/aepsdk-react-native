@@ -193,32 +193,37 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)initOptionsDict
     }
 
     @try {
-        // Extract appId safely
+        // Extract and validate appId
         NSString *appId = initOptionsDict[APP_ID_KEY];
-        if (![appId isKindOfClass:[NSString class]] || appId.length == 0) {
-            reject(EXTENSION_NAME, @"Invalid or missing appId.", nil);
-            return;
+        AEPInitOptions *options;
+        
+        if (!appId || ![appId isKindOfClass:[NSString class]]) {
+            [AEPLog debugWithLabel:EXTENSION_NAME message:@"No appId provided, initializing with default options."];
+            options = [[AEPInitOptions alloc] init];
+        } else {
+            options = [[AEPInitOptions alloc] initWithAppId:appId];
+            [AEPLog debugWithLabel:EXTENSION_NAME message:[NSString stringWithFormat:@"Initializing with appId: %@", appId]];
         }
-
-        // Initialize AEPInitOptions with appId
-        AEPInitOptions *options = [[AEPInitOptions alloc] initWithAppId:appId];
 
         // Extract lifecycleAutomaticTrackingEnabled safely
         NSNumber *lifecycleTrackingEnabled = initOptionsDict[LIFECYCLE_AUTOMATIC_TRACKING_ENABLED_KEY];
-        if ([lifecycleTrackingEnabled isKindOfClass:[NSNumber class]]) {
+        if (!lifecycleTrackingEnabled || ![lifecycleTrackingEnabled isKindOfClass:[NSNumber class]]) {
+            [AEPLog debugWithLabel:EXTENSION_NAME message:@"Lifecycle tracking not specified, using default value."];
+        } else {
             options.lifecycleAutomaticTrackingEnabled = [lifecycleTrackingEnabled boolValue];
+            [AEPLog debugWithLabel:EXTENSION_NAME message:[NSString stringWithFormat:@"Setting lifecycle tracking to: %@", lifecycleTrackingEnabled.boolValue ? @"enabled" : @"disabled"]];
         }
 
         // Extract lifecycleAdditionalContextData safely
         NSDictionary *lifecycleAdditionalContextData = initOptionsDict[LIFECYCLE_ADDITIONAL_CONTEXT_DATA_KEY];
         if ([lifecycleAdditionalContextData isKindOfClass:[NSDictionary class]]) {
-            options.lifecycleAdditionalContextData = lifecycleAdditionalContextData;
-            NSLog(@"Lifecycle Additional Context Data: %@", lifecycleAdditionalContextData);
+            [AEPLog traceWithLabel:@"RCTAEPCore" message:[NSString stringWithFormat:@"Lifecycle Additional Context Data: %@", lifecycleAdditionalContextData]];
+            [options setLifecycleAdditionalContextData:lifecycleAdditionalContextData];
         }
 
         // Initialize AEP SDK
         [AEPMobileCore initializeWithOptions:options completion:^{
-            NSLog(@"AEP Mobile SDK initialized successfully.");
+            [AEPLog traceWithLabel:@"RCTAEPCore" message:@"AEP Mobile SDK initialized successfully."];
             resolve(nil);
         }];
 
