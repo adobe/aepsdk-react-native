@@ -36,7 +36,6 @@ import com.adobe.marketing.mobile.Extension
 import com.adobe.marketing.mobile.Lifecycle
 import com.adobe.marketing.mobile.LoggingMode
 import com.adobe.marketing.mobile.Messaging
-import com.adobe.marketing.mobile.MobileCore
 import com.adobe.marketing.mobile.Places
 import com.adobe.marketing.mobile.Signal
 import com.adobe.marketing.mobile.Target
@@ -72,7 +71,6 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
-    MobileCore.setLogLevel(LoggingMode.DEBUG)
     SoLoader.init(this, false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.

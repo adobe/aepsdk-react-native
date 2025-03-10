@@ -18,7 +18,6 @@ import com.adobe.marketing.mobile.Extension
 import com.adobe.marketing.mobile.Lifecycle
 import com.adobe.marketing.mobile.LoggingMode
 import com.adobe.marketing.mobile.Messaging
-import com.adobe.marketing.mobile.MobileCore
 import com.adobe.marketing.mobile.Places
 import com.adobe.marketing.mobile.Signal
 import com.adobe.marketing.mobile.Target
@@ -70,7 +69,6 @@ class MainApplication : Application(), ReactApplication {
     }
     ReactNativeFlipper.initializeFlipper(this, reactNativeHost.reactInstanceManager)
     
-    MobileCore.setLogLevel(LoggingMode.VERBOSE)
  
   }
 }

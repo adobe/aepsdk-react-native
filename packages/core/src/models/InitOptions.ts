@@ -15,9 +15,7 @@ governing permissions and limitations under the License.
  */
 export interface InitOptions {
   /**
-   * A unique identifier assigned to the app instance by Adobe Mobile Services.
-   * This is the Adobe Mobile Services App ID.
-   * A `null` value has no effect.
+   * A unique identifier assigned to the app instance by Adobe tags.
    */
   appId?: string;
 
