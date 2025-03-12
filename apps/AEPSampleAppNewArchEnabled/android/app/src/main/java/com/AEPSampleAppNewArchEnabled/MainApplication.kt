@@ -12,10 +12,7 @@ governing permissions and limitations under the License.
 package com.AEPSampleAppNewArchEnabled
 
 import android.app.Application
-import android.app.Activity
-import android.os.Bundle
 import android.content.res.Configuration
-
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactNativeHost
@@ -24,26 +21,8 @@ import com.facebook.react.ReactHost
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
-
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
-
-import java.util.Arrays
-import com.adobe.marketing.mobile.AdobeCallback
-import com.adobe.marketing.mobile.Assurance
-import com.adobe.marketing.mobile.Edge
-import com.adobe.marketing.mobile.Extension
-import com.adobe.marketing.mobile.Lifecycle
-import com.adobe.marketing.mobile.LoggingMode
-import com.adobe.marketing.mobile.Messaging
-import com.adobe.marketing.mobile.Places
-import com.adobe.marketing.mobile.Signal
-import com.adobe.marketing.mobile.Target
-import com.adobe.marketing.mobile.UserProfile
-import com.adobe.marketing.mobile.edge.bridge.EdgeBridge
-import com.adobe.marketing.mobile.edge.consent.Consent
-import com.adobe.marketing.mobile.edge.identity.Identity
-import com.adobe.marketing.mobile.optimize.Optimize
 import com.AEPSampleAppNewArchEnabled.BuildConfig
 
 class MainApplication : Application(), ReactApplication {
