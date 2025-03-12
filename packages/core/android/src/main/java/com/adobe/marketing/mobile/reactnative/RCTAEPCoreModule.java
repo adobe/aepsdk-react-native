@@ -15,27 +15,39 @@ import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.Event;
+import com.adobe.marketing.mobile.InitOptions;
 import com.adobe.marketing.mobile.services.Log;
+
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.MobilePrivacyStatus;
 import com.adobe.marketing.mobile.WrapperType;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 
 import android.app.Application;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
+
+    private final static String TAG = "RCTAEPCoreModule";
 
     private final ReactApplicationContext reactContext;
     private static String FAILED_TO_CONVERT_EVENT_MESSAGE = "Failed to convert map to Event";
     private static String INVALID_TIMEOUT_VALUE_MESSAGE = "Invalid timeout value. Timeout must be a positive integer.";
     private static AtomicBoolean hasStarted = new AtomicBoolean(false);
+    private final static String APP_ID_KEY = "appId";
+    private final static String LIFECYCLE_ADDITIONAL_CONTEXT_DATA = "lifecycleAdditionalContextData";
+    private final static String LIFECYCLE_AUTOMATIC_TACKING_ENABLED = "lifecycleAutomaticTrackingEnabled";
+    private final static String ERROR_MESSAGE = "Error parsing lifecycleAdditionalContextData";
 
     public RCTAEPCoreModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -49,10 +61,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         return "AEPCore";
     }
 
-    public static void setApplication(final Application application) {
-      MobileCore.setApplication(application);
-    }
-
     @ReactMethod
     public void extensionVersion(final Promise promise) {
         promise.resolve(MobileCore.extensionVersion());
@@ -61,6 +69,81 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void configureWithAppId(final String appId) {
         MobileCore.configureWithAppID(appId);
+    }
+
+    @ReactMethod
+    public void initialize(ReadableMap initOptionsMap, final Promise promise) {
+        InitOptions initOptions = initOptionsFromMap(initOptionsMap);
+
+        if (initOptions == null) {
+            promise.reject(getName(), "InitOptions is null or invalid.");
+            return;
+        }
+
+        MobileCore.initialize((Application) reactContext.getApplicationContext(), initOptions, new AdobeCallback<Object>() {
+            @Override
+            public void call(Object o) {
+                promise.resolve(null);
+            }
+        });
+    }
+    private InitOptions initOptionsFromMap(final ReadableMap initOptionsMap) {
+        if (initOptionsMap == null) {
+            return null;
+        }
+    
+        try {
+            String appId = initOptionsMap.hasKey(APP_ID_KEY) ? initOptionsMap.getString(APP_ID_KEY) : null;
+            InitOptions options;
+    
+            if (appId != null) {
+                options = InitOptions.configureWithAppID(appId);
+            } else {
+                options = new InitOptions();
+            }
+    
+            if (initOptionsMap.hasKey(LIFECYCLE_AUTOMATIC_TACKING_ENABLED)) {
+                options.setLifecycleAutomaticTrackingEnabled(initOptionsMap.getBoolean(LIFECYCLE_AUTOMATIC_TACKING_ENABLED));
+            }
+            
+            // Use the helper method to extract lifecycleAdditionalContextData
+            Map<String, String> lifecycleAdditionalContextData = getLifecycleAdditionalContextData(initOptionsMap);
+            if (lifecycleAdditionalContextData != null) {
+                options.setLifecycleAdditionalContextData(lifecycleAdditionalContextData);
+            }
+            return options;
+        } catch (Exception e) {
+            Log.error(getName(), TAG, "Error parsing initOptionsMap:");
+
+            return null; // Return null or consider throwing a custom exception based on your use case
+        }
+    }
+    
+
+    /**
+     * Extracts lifecycleAdditionalContextData from the initOptionsMap.
+     * If the key exists but does not contain a valid ReadableMap,
+     * the method catches the exception and returns an empty map.
+     */
+    private Map<String, String> getLifecycleAdditionalContextData(ReadableMap initOptionsMap) {
+        Map<String, String> lifecycleAdditionalContextData = new HashMap<>();
+
+        if (initOptionsMap.hasKey(LIFECYCLE_ADDITIONAL_CONTEXT_DATA)) {
+            try {
+                ReadableMap contextDataMap = initOptionsMap.getMap(LIFECYCLE_ADDITIONAL_CONTEXT_DATA);
+                if (contextDataMap != null) {
+                    ReadableMapKeySetIterator iterator = contextDataMap.keySetIterator();
+                    while (iterator.hasNextKey()) {
+                        String key = iterator.nextKey();
+                        lifecycleAdditionalContextData.put(key, contextDataMap.getString(key));
+                    }
+                }
+            } catch (Exception e) {
+                Log.error(getName(), TAG, ERROR_MESSAGE);
+            }
+            return lifecycleAdditionalContextData;
+        }
+            return null;
     }
 
     @ReactMethod
@@ -208,5 +291,4 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
 
         promise.reject(getName(), String.format("%s returned an unexpected error: %s", errorLocation, error.getErrorName()), new Error(error.getErrorName()));
     }
-
 }

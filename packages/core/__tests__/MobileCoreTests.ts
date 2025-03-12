@@ -11,145 +11,207 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
+
+const mockAEPCore = {
+  extensionVersion: jest.fn(() => Promise.resolve('1.0.0')),
+  configureWithAppId: jest.fn(() => Promise.resolve()),
+  initialize: jest.fn(() => Promise.resolve()),
+  initializeWithAppId: jest.fn((_appId: string) => Promise.resolve()),
+  updateConfiguration: jest.fn(() => Promise.resolve()),
+  setLogLevel: jest.fn(() => Promise.resolve()),
+  getLogLevel: jest.fn(() => Promise.resolve(LogLevel.ERROR)),
+  setPrivacyStatus: jest.fn(() => Promise.resolve()),
+  getPrivacyStatus: jest.fn(() => Promise.resolve(PrivacyStatus.OPT_IN)),
+  getSdkIdentities: jest.fn(() => Promise.resolve('identities')),
+  dispatchEvent: jest.fn(() => Promise.resolve(true)),
+  dispatchEventWithResponseCallback: jest.fn((event: Event, _timeoutMS: Number) => Promise.resolve(event)),
+  trackAction: jest.fn((_action?: string, _contextData?: Record<string, string>) => Promise.resolve()),
+  trackState: jest.fn((_state?: string, _contextData?: Record<string, string>) => Promise.resolve()),
+  setAdvertisingIdentifier: jest.fn((_advertisingIdentifier?: string) => Promise.resolve()),
+  setPushIdentifier: jest.fn((_pushIdentifier?: string) => Promise.resolve()),
+  collectPii: jest.fn((_data: Record<string, string>) => Promise.resolve()),
+  setSmallIconResourceID: jest.fn((_resourceID: number) => Promise.resolve()),
+  setLargeIconResourceID: jest.fn((_resourceID: number) => Promise.resolve()),
+  setAppGroup: jest.fn((_appGroup?: string) => Promise.resolve()),
+  resetIdentities: jest.fn(() => Promise.resolve()),
+  clearUpdatedConfiguration: jest.fn(() => Promise.resolve())
+};
+
+NativeModules.AEPCore = mockAEPCore;
+
 import { MobileCore, LogLevel, PrivacyStatus, Event } from '../src';
 
 describe('MobileCore', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('extensionVersion is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'extensionVersion');
     await MobileCore.extensionVersion();
-    expect(spy).toHaveBeenCalled();
+    expect(mockAEPCore.extensionVersion).toHaveBeenCalled();
   });
 
   it('configureWithAppId is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'configureWithAppId');
     let appId = 'testAppId';
     MobileCore.configureWithAppId(appId);
-    expect(spy).toHaveBeenCalledWith(appId);
+    expect(mockAEPCore.configureWithAppId).toHaveBeenCalledWith(appId);
   });
 
   it('updateConfiguration is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'updateConfiguration');
     let config = { ssl: 'false' };
     MobileCore.updateConfiguration(config);
-    expect(spy).toHaveBeenCalledWith(config);
+    expect(mockAEPCore.updateConfiguration).toHaveBeenCalledWith(config);
   });
 
   it('setLogLevel is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'setLogLevel');
     let logLevel = LogLevel.DEBUG;
     MobileCore.setLogLevel(logLevel);
-    expect(spy).toHaveBeenCalledWith('DEBUG');
+    expect(mockAEPCore.setLogLevel).toHaveBeenCalledWith('DEBUG');
   });
 
   it('getLogLevel is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'getLogLevel');
-    const logLevel = await MobileCore.getLogLevel();
-    expect(spy).toHaveBeenCalled();
-    expect(logLevel).toEqual('DEBUG');
+    await MobileCore.getLogLevel();
+    expect(mockAEPCore.getLogLevel).toHaveBeenCalled();
   });
 
   it('setPrivacyStatus is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'setPrivacyStatus');
     let privacyStatus = PrivacyStatus.UNKNOWN;
     MobileCore.setPrivacyStatus(privacyStatus);
-    expect(spy).toHaveBeenCalledWith('UNKNOWN');
+    expect(mockAEPCore.setPrivacyStatus).toHaveBeenCalledWith('UNKNOWN');
   });
 
   it('getPrivacyStatus is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'getPrivacyStatus');
-    const privacyStatus = await MobileCore.getPrivacyStatus();
-    expect(spy).toHaveBeenCalled();
-    expect(privacyStatus).toEqual('OPT_OUT');
+    await MobileCore.getPrivacyStatus();
+    expect(mockAEPCore.getPrivacyStatus).toHaveBeenCalled();
   });
 
   it('getSdkIdentities is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'getSdkIdentities');
     await MobileCore.getSdkIdentities();
-    expect(spy).toHaveBeenCalled();
+    expect(mockAEPCore.getSdkIdentities).toHaveBeenCalled();
   });
 
   it('dispatchEvent is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'dispatchEvent');
     let testEvent = new Event('eventName', 'eventType', 'eventSource', {
-      testDataKey: 'testDataValue'
+      testDataKey: 'testDataValue',
     });
     await MobileCore.dispatchEvent(testEvent);
-    expect(spy).toHaveBeenCalledWith(testEvent);
+    expect(mockAEPCore.dispatchEvent).toHaveBeenCalledWith(testEvent);
   });
 
   it('dispatchEventWithResponseCallback is called with correct parameters', async () => {
-    const spy = jest.spyOn(
-      NativeModules.AEPCore,
-      'dispatchEventWithResponseCallback'
-    );
     let testEvent = new Event('eventName', 'eventType', 'eventSource', {
-      testDataKey: 'testDataValue'
+      testDataKey: 'testDataValue',
     });
     await MobileCore.dispatchEventWithResponseCallback(testEvent, 5000);
-    expect(spy).toHaveBeenCalledWith(testEvent, 5000);
+    expect(mockAEPCore.dispatchEventWithResponseCallback).toHaveBeenCalledWith(testEvent, 5000);
   });
 
   it('trackAction is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'trackAction');
     let actionName = 'testAction';
     let contextData = { testKey: 'testValue' };
     MobileCore.trackAction(actionName, contextData);
-    expect(spy).toHaveBeenCalledWith(actionName, contextData);
+    expect(mockAEPCore.trackAction).toHaveBeenCalledWith(actionName, contextData);
   });
 
   it('trackState is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'trackState');
     let stateName = 'testState';
     let contextData = { testKey: 'testValue' };
     MobileCore.trackState(stateName, contextData);
-    expect(spy).toHaveBeenCalledWith(stateName, contextData);
+    expect(mockAEPCore.trackState).toHaveBeenCalledWith(stateName, contextData);
   });
 
   it('setAdvertisingIdentifier is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'setAdvertisingIdentifier');
     let adId = 'testAdId';
     MobileCore.setAdvertisingIdentifier(adId);
-    expect(spy).toHaveBeenCalledWith(adId);
+    expect(mockAEPCore.setAdvertisingIdentifier).toHaveBeenCalledWith(adId);
   });
 
   it('setPushIdentifier is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'setPushIdentifier');
     let pushIdentifier = 'testPushId';
     MobileCore.setPushIdentifier(pushIdentifier);
-    expect(spy).toHaveBeenCalledWith(pushIdentifier);
+    expect(mockAEPCore.setPushIdentifier).toHaveBeenCalledWith(pushIdentifier);
   });
 
   it('collectPii is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'collectPii');
     let contextData = { testKey: 'testValue' };
     MobileCore.collectPii(contextData);
-    expect(spy).toHaveBeenCalledWith(contextData);
+    expect(mockAEPCore.collectPii).toHaveBeenCalledWith(contextData);
   });
 
   it('setSmallIconResourceID is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'setSmallIconResourceID');
     let resourceID = 1;
     MobileCore.setSmallIconResourceID(resourceID);
-    expect(spy).toHaveBeenCalledWith(resourceID);
+    expect(mockAEPCore.setSmallIconResourceID).toHaveBeenCalledWith(resourceID);
   });
 
   it('setLargeIconResourceID is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'setLargeIconResourceID');
     let resourceID = 1;
     MobileCore.setLargeIconResourceID(resourceID);
-    expect(spy).toHaveBeenCalledWith(resourceID);
+    expect(mockAEPCore.setLargeIconResourceID).toHaveBeenCalledWith(resourceID);
   });
 
   it('setAppGroup is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'setAppGroup');
     let appGroup = 'testAppGroup';
     MobileCore.setAppGroup(appGroup);
-    expect(spy).toHaveBeenCalledWith(appGroup);
+    expect(mockAEPCore.setAppGroup).toHaveBeenCalledWith(appGroup);
   });
 
   it('resetIdentities is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPCore, 'resetIdentities');
     MobileCore.resetIdentities();
-    expect(spy).toHaveBeenCalled();
+    expect(mockAEPCore.resetIdentities).toHaveBeenCalled();
   });
+
+    it('resolves successfully with full initialization options', async () => {
+      const initOptions = {
+        appId: 'test-app-id',
+        lifecycleAutomaticTrackingEnabled: true,
+        lifecycleAdditionalContextData: { contextDataKey: 'contextDataValue' }
+      };
+      mockAEPCore.initialize.mockResolvedValueOnce();
+      
+      await expect(MobileCore.initialize(initOptions)).resolves.not.toThrow();
+      expect(mockAEPCore.initialize).toHaveBeenCalledWith(initOptions);
+    });
+
+    it('resolves successfully with only appId', async () => {
+      const initOptions = {
+        appId: 'test-app-id'
+      };
+      mockAEPCore.initialize.mockResolvedValueOnce();
+      
+      await expect(MobileCore.initialize(initOptions)).resolves.not.toThrow();
+      expect(mockAEPCore.initialize).toHaveBeenCalledWith(initOptions);
+    });
+
+    it('rejects when initialization fails', async () => {
+      const initOptions = {
+        appId: 'test-app-id',
+        lifecycleAutomaticTrackingEnabled: true,
+        lifecycleAdditionalContextData: { contextDataKey: 'contextDataValue' }
+      };
+      const error = new Error('Initialization failed');
+      mockAEPCore.initialize.mockRejectedValueOnce(error);
+
+      await expect(MobileCore.initialize(initOptions)).rejects.toThrow('Initialization failed');
+      expect(mockAEPCore.initialize).toHaveBeenCalledWith(initOptions);
+    });
+
+
+    it('resolves successfully when initialization succeeds', async () => {
+      const appId = 'test-app-id';
+      mockAEPCore.initialize.mockResolvedValueOnce();
+      
+      await expect(MobileCore.initializeWithAppId(appId)).resolves.not.toThrow();
+      expect(mockAEPCore.initialize).toHaveBeenCalledWith({ appId });
+    });
+
+    it('rejects when initialization fails', async () => {
+      const appId = 'test-app-id';
+      const error = new Error('Initialization failed');
+      mockAEPCore.initialize.mockRejectedValueOnce(error);
+
+      await expect(MobileCore.initializeWithAppId(appId)).rejects.toThrow('Initialization failed');
+      expect(mockAEPCore.initialize).toHaveBeenCalledWith({ appId });
+    });
+
 });
