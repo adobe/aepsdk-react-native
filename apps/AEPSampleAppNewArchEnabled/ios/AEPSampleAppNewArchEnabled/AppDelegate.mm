@@ -14,9 +14,7 @@ governing permissions and limitations under the License.
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
 
-@implementation AppDelegate {
-  UIApplicationState appState;
-}
+@implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
