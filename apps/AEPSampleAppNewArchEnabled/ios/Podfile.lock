@@ -135,10 +135,10 @@ PODS:
     - AEPCampaignClassic (< 6.0.0, >= 5.0.0)
     - React
   - RCTAEPCore (6.0.2):
-    - AEPCore (< 6.0.0, >= 5.0.0)
-    - AEPIdentity (< 6.0.0, >= 5.0.0)
-    - AEPLifecycle (< 6.0.0, >= 5.0.0)
-    - AEPSignal (< 6.0.0, >= 5.0.0)
+    - AEPCore (< 6.0.0, >= 5.4.0)
+    - AEPIdentity (< 6.0.0, >= 5.4.0)
+    - AEPLifecycle (< 6.0.0, >= 5.4.0)
+    - AEPSignal (< 6.0.0, >= 5.4.0)
     - React
   - RCTAEPEdge (6.0.2):
     - AEPEdge (< 6.0.0, >= 5.0.0)
@@ -2198,7 +2198,7 @@ SPEC CHECKSUMS:
   RCT-Folly: 4464f4d875961fce86008d45f4ecf6cef6de0740
   RCTAEPAssurance: 3d4b85f170ed9279110b1542dbfb6e5d5d0a5cc1
   RCTAEPCampaignClassic: 02efa05ebad01b8c17726e6e37bccb10b62174dd
-  RCTAEPCore: 6153158b90917c9354e9b5fe838b3c4dfd7f3bda
+  RCTAEPCore: 0048fe0703b5e73f9c806245c8b8792fbc0193b4
   RCTAEPEdge: e3ce0e7f80516f51f95920384ac2fa9a9432935d
   RCTAEPEdgeBridge: 6b2c46794e433f46037d3841c808fa15d1ec22db
   RCTAEPEdgeConsent: 15a69df3f757e648164948bed5832d6063a360eb
