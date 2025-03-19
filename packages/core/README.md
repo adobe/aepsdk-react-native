@@ -23,7 +23,7 @@ To initialize the SDK, use the following methods:
 - [MobileCore.initializeWithAppId(appId)](#initializewithappid)
 - [MobileCore.initialize(initOptions)](#initialize)
 
-Refer to the root [Readme](https://github.com/adobe/aepsdk_flutter/blob/main/README.md) for more information about the SDK setup.
+Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
 ### Importing the Mobile Core package:
 In your React Native application, import the core/lifecycle/signal/identity extension as follows:
@@ -70,7 +70,7 @@ MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
 ```
 
 > [!NOTE]  
-> Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk_flutter/tree/v4.x?tab=readme-ov-file#usage), as was required in earlier versions.
+> Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk-react-native/blob/main/README.md#initializing), as was required in earlier versions.
 
 - #### initialize
 Initialize the AEP SDK by automatically registering all extensions bundled with the application and enabling automatic lifecycle tracking. This API also allows further customization by accepting InitOptions.
