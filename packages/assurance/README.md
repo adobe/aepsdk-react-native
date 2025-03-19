@@ -26,65 +26,13 @@ npm install @adobe/react-native-aepassurance
 
 ### [Assurance](https://developer.adobe.com/client-sdks/documentation/platform-assurance/tutorials)
 
-### Initializing:
+### Initializing with SDK:
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
+Then, initialize the SDK using the following methods:
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/docs-v7/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk_flutter/tree/main/plugins/flutter_aepcore#initialize)
 
-Example:
-
-iOS
-
-```objective-c
-@import AEPAssurance;
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-  [AEPMobileCore configureWithAppId:@"your-app-ID"];
-
-  const UIApplicationState appState = application.applicationState;
-
-  [AEPMobileCore registerExtensions: @[AEPMobileLifecycle.class, AEPMobileAssurance.class] completion:^{
-      if (appState != UIApplicationStateBackground) {
-         [AEPMobileCore lifecycleStart:nil];
-      }
-  }];
-  return YES;
-}
-```
-
-To connect to an Assurance session by scanning the QR code, follow [Apple developer](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) documentation to set custom URL scheme for your application. Finally, implement the `openURL` delegate method and pass the deeplink URL to startSessionWithURL API.
-
-```objective-c
--(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-  [AEPMobileAssurance startSessionWithUrl:url];
-  return true;
-}
-```
-
-Android
-
-```java
-import com.adobe.marketing.mobile.Assurance;
-
-public class MainApplication extends Application implements ReactApplication {
-
-  @Override
-  public void onCreate() {
-    super.onCreate();
-
-    MobileCore.setApplication(this);
-    MobileCore.configureWithAppID("your-app-ID");
-    List<Class<? extends Extension>> extensions = Arrays.asList(
-                Lifecycle.EXTENSION,
-                Assurance.EXTENSION);
-    MobileCore.registerExtensions(extensions, o -> {
-      Log.d(LOG_TAG, "Adobe Experience Platform Mobile SDK is initialized");
-      MobileCore.lifecycleStart(null);
-      //enable this for Lifecycle. See Note for collecting Lifecycle metrics.
-    });
-  }
-}
-```
+Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
 To connect to an Assurance session by scanning the QR code, follow the [Android documentation](https://developer.android.com/training/app-links/deep-linking) for more information about how to setup a deeplink.
 
