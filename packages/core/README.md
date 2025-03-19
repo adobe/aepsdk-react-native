@@ -50,7 +50,7 @@ collectPii(data: Record<string, string>)
 MobileCore.collectPii({"myPii": "data"});
 ```
 
-### initializeWithAppId
+- #### initializeWithAppId
 Initialize the AEP SDK by automatically registering all extensions bundled with the application and enabling automatic lifecycle tracking.
 
 appId: Configures the SDK with the provided mobile property environment ID configured from the Data Collection UI.
@@ -72,7 +72,7 @@ MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
 > [!NOTE]  
 > Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk_flutter/tree/v4.x?tab=readme-ov-file#usage), as was required in earlier versions.
 
-### initialize
+- #### initialize
 Initialize the AEP SDK by automatically registering all extensions bundled with the application and enabling automatic lifecycle tracking. This API also allows further customization by accepting InitOptions.
 
 InitOptions: Allow customization of the default initialization behavior. Refer to the [InitOptions](#initoptions).
@@ -103,7 +103,7 @@ MobileCore.initialize(initOptions)
 
 ```
 
-#### InitOptions
+- #### InitOptions
 The InitOptions class defines the options for initializing the AEP SDK. It currently supports the following options:
 
 * appID – The App ID used to retrieve remote configurations from Adobe servers.
