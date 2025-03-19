@@ -57,7 +57,7 @@ appId: Configures the SDK with the provided mobile property environment ID confi
 
 **Syntax**
 ```typescript
-initializeWithAppId(appId: string): Promise<null> 
+initializeWithAppId(appId: string): Promise<void> 
 ```
 
 **Example**
