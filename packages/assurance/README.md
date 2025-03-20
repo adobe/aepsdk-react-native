@@ -29,8 +29,8 @@ npm install @adobe/react-native-aepassurance
 ### Initializing with SDK:
 
 To initialize the SDK, use the following methods:
-- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/docs-v7/packages/core#initializewithappid)
-- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk_flutter/tree/main/plugins/flutter_aepcore#initialize)
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
 Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
