@@ -24,74 +24,13 @@ npm install @adobe/react-native-aepedge
 ```
 ## Usage
 
-### Installing and registering the extension with the AEP Mobile Core
+### Initializing with SDK:
 
-Install the Adobe Experience Platform Edge Network extension in your mobile property and configure the default Datastream ID by following the steps in the [Edge Network extension documentation](https://developer.adobe.com/client-sdks/documentation/edge-network).
+To initialize the SDK, use the following methods:
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
-Then follow the same document for registering the Edge extension with the Mobile Core.
-Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
-
-
-**Initialization Example**
-
-iOS
-```objc
-// AppDelegate.h
-@import AEPCore;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-...
-@implementation AppDelegate
-
-// AppDelegate.m
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-   // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
-   NSString* ENVIRONMENT_FILE_ID = @"YOUR-APP-ID";
-
-   NSArray *extensionsToRegister = @[AEPMobileEdgeIdentity.class, 
-                                     AEPMobileEdge.class
-                                     ];
-
-  [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
-    [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
-    ...   
-  }]; 
-  return YES;   
- } 
-
-@end
-```
-
-Android
-```java
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Edge;
-import com.adobe.marketing.mobile.edge.identity.Identity;
-
-...
-import android.app.Application;
-...
-public class MainApplication extends Application implements ReactApplication {
-  ...
-  // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
-  private final String ENVIRONMENT_FILE_ID = "YOUR-APP-ID";
-
-  @Override
-  public void on Create(){
-    super.onCreate();
-    ...
-  
-    MobileCore.setApplication(this);
-    MobileCore.configureWithAppID(ENVIRONMENT_FILE_ID);
-
-    MobileCore.registerExtensions(
-      Arrays.asList(Identity.EXTENSION, Edge.EXTENSION),
-      o -> Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
-    );
-  }
-}  
-```
+Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
 ### Importing the extension
 In your React Native application, import the Edge extension as follows:
