@@ -23,63 +23,13 @@ npm install @adobe/react-native-aepuserprofile
 
 ## Usage
 
-### Initializing and registering the extension
+### Initializing with SDK:
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
+To initialize the SDK, use the following methods:
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
-**Initialization Example**
-
-iOS
-
-```objc
-// AppDelegate.h
-@import AEPCore;
-@import AEPUserProfile;
-...
-@implementation AppDelegate
-
-// AppDelegate.m
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-    // register UserProfile extension
-    [AEPMobileCore registerExtensions:@[AEPMobileUserProfile.class] completion:^{
-        [AEPMobileCore configureWithAppId:@"yourAppID"];
-    ...
-   }];
-   return YES;
- }
-
-@end
-```
-
-Android
-
-```java
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.UserProfile;
-
-...
-import android.app.Application;
-...
-public class MainApplication extends Application implements ReactApplication {
-  ...
-  @Override
-  public void on Create(){
-    super.onCreate();
-    ...
-    MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.configureWithAppID("yourAppID");
-
-    // register UserProfile extension
-    MobileCore.registerExtensions(
-        Arrays.asList(UserProfile.EXTENSION),
-        o -> Log.d("MainApp", "Adobe UserProfile Mobile SDK was initialized.")
-    )
-  }
-}
-```
+Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
 #### Importing the extension:
 
