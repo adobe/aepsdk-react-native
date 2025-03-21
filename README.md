@@ -30,7 +30,7 @@ This repository is a monorepo and contains a collection of React Native modules 
 > [!IMPORTANT]  
 > The Adobe React Native SDK utilizes the React Native interop layer to ensure compatibility with new architecture.
 
-## Requirements
+## Requirements 
 
 - React Native
 
@@ -76,10 +76,10 @@ The following code snippet shows for Mobile Core and Edge Network extensions as 
 ...
 "dependencies": {
     "react-native": "0.72.5",
-    "@adobe/react-native-aepcore": "^6.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
-    "@adobe/react-native-aepedge": "^6.0.0",
-    "@adobe/react-native-aepedgeidentity": "^6.0.0",
-    "@adobe/react-native-aepedgeconsent": "^6.0.0",
+    "@adobe/react-native-aepcore": "^7.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
+    "@adobe/react-native-aepedge": "^7.0.0",
+    "@adobe/react-native-aepedgeidentity": "^7.0.0",
+    "@adobe/react-native-aepedgeconsent": "^7.0.0",
 ...
 },
 ```
