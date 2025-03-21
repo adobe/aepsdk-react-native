@@ -121,6 +121,9 @@ Then, initialize the SDK using the following methods:
 > [!NOTE]  
 > Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk-react-native/tree/main#initializing), as was required in earlier versions.
 
+> [!NOTE] 
+> The [link here](https://github.com/adobe/aepsdk-react-native/tree/main#initializing) is for users who want to refer back to the old registering instructions for Adobe Experience Platform React Native **6.x**.
+
 ## Importing the extension:
 In your React Native application, import the core/lifecycle/signal/identity extension as follows:
 ```typescript
