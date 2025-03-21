@@ -121,6 +121,47 @@ Then, initialize the SDK using the following methods:
 > [!NOTE]  
 > Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk-react-native/tree/main#initializing), as was required in earlier versions.
 
+## Importing the extension:
+In your React Native application, import the core/lifecycle/signal/identity extension as follows:
+```typescript
+import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, Event } from '@adobe/react-native-aepcore'
+import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
+import {EdgeBridge} from '@adobe/react-native-aepedgebridge';
+import {Consent} from "@adobe/react-native-aepedgeconsent";
+import {Identity} from '@adobe/react-native-aepedgeidentity';
+import {
+  Messaging,
+  MessagingDelegate,
+  MessagingEdgeEventType,
+  Message
+} from '@adobe/react-native-aepmessaging';
+import {
+  Optimize,
+  Offer,
+  Proposition,
+  DecisionScope,
+} from "@adobe/react-native-aepoptimize";
+import {
+  Places,
+  PlacesAuthStatus,
+  PlacesGeofence,
+  PlacesGeofenceTransitionType,
+  PlacesLocation,
+  PlacesPOI,
+} from "@adobe/react-native-aepplaces";
+import {
+  Target,
+  TargetOrder,
+  TargetParameters,
+  TargetPrefetchObject,
+  TargetProduct,
+  TargetRequestObject,
+} from "@adobe/react-native-aeptarget";
+import { UserProfile } from "@adobe/react-native-aepuserprofile";
+import { Assurance } from "@adobe/react-native-aepassurance";
+import { CampaignClassic } from "@adobe/react-native-aepcampaignclassic";
+```
+
 ## Migration guide
 
 See [migration.md](./docs/migration.md) for guidance on migrating from ACP React Native libraries.
