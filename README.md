@@ -115,11 +115,11 @@ cd ios && pod update && cd ..
 ## Initializing
 
 Then, initialize the SDK using the following methods:
-- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/docs-v7/packages/core#initializewithappid)
-- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/docs-v7/packages/core#initialize)
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
 > [!NOTE]  
-> Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk-react-native/tree/docs-v7#initializing), as was required in earlier versions.
+> Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk-react-native/tree/main#initializing), as was required in earlier versions.
 
 ## Migration guide
 
