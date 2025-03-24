@@ -26,6 +26,7 @@ static NSString* const FAILED_TO_CONVERT_EVENT_MESSAGE = @"Failed to convert dic
 static NSString* const APP_ID_KEY = @"appId";
 static NSString* const LIFECYCLE_AUTOMATIC_TRACKING_ENABLED_KEY = @"lifecycleAutomaticTrackingEnabled";
 static NSString* const LIFECYCLE_ADDITIONAL_CONTEXT_DATA_KEY = @"lifecycleAdditionalContextData";
+static NSString* const APP_GROUP_IOS_KEY = @"appGroupIOS";
 
 - (dispatch_queue_t)methodQueue
 {
@@ -219,6 +220,13 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)initOptionsDict
         if ([lifecycleAdditionalContextData isKindOfClass:[NSDictionary class]]) {
             [AEPLog traceWithLabel:@"RCTAEPCore" message:[NSString stringWithFormat:@"Lifecycle Additional Context Data: %@", lifecycleAdditionalContextData]];
             [options setLifecycleAdditionalContextData:lifecycleAdditionalContextData];
+        }
+
+        // Extract and set appGroupIOS if provided
+        NSString *appGroupIOS = initOptionsDict[APP_GROUP_IOS_KEY];
+        if ([appGroupIOS isKindOfClass:[NSString class]]) {
+            [AEPLog debugWithLabel:EXTENSION_NAME message:[NSString stringWithFormat:@"Setting app group: %@", appGroupIOS]];
+            options.appGroup = appGroupIOS;
         }
 
         // Initialize AEP SDK
