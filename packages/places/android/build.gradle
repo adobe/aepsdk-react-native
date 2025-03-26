@@ -8,12 +8,27 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.1'
     }
+
+    ext {
+        // Add these codegen configs
+        reactNativeCodegenDir = "$rootDir/../node_modules/react-native-codegen"
+        reactNativeRootDir = "$rootDir/../node_modules/react-native"
+    }
+}
+
+def isNewArchitectureEnabled() {
+  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+if (isNewArchitectureEnabled()) {
+  apply plugin: 'com.facebook.react'
 }
 
 android {
@@ -29,9 +44,23 @@ android {
         targetSdkVersion safeExtGet('targetSdkVersion', 34)
         versionCode 1
         versionName "1.0"
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     }
     lintOptions {
         abortOnError false
+    }
+    sourceSets {
+        main {
+            if (isNewArchitectureEnabled()) {
+            java.srcDirs += [
+                "generated/java",
+                "generated/jni"
+            ]
+            java.srcDirs += ["src/newarch"]
+            } else {
+                java.srcDirs += ["src/oldarch"]
+            }
+        }
     }
 }
 
@@ -44,4 +73,12 @@ dependencies {
     implementation 'com.facebook.react:react-native:+'
     api "com.adobe.marketing.mobile:places:3.+"
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+}
+
+if (isNewArchitectureEnabled()) {
+  react {
+    jsRootDir = file("../src/")
+    libraryName = "AEPPlaces"
+    codegenJavaPackageName = "com.adobe.marketing.mobile.reactnative.places"
+  }
 }

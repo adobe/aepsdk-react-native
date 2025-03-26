@@ -29,7 +29,7 @@ interface IPlaces {
   setAuthorizationStatus: (authStatus?: PlacesAuthStatus) => void;
 }
 
-const AEPPlaces: IPlaces = NativeModules.AEPPlaces;
+const AEPPlaces: IPlaces = require('./specs/NativeAEPPlaces').default;
 
 const Places: IPlaces = {
   /**
