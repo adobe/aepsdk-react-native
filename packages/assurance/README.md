@@ -17,9 +17,16 @@ See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native
 
 Install the `@adobe/react-native-aepassurance` package:
 
+NPM:
+
 ```bash
-cd MyReactApp
 npm install @adobe/react-native-aepassurance
+```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepassurance
 ```
 
 ## Usage
@@ -36,9 +43,14 @@ Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/mai
 
 To connect to an Assurance session by scanning the QR code, follow the [Android documentation](https://developer.android.com/training/app-links/deep-linking) for more information about how to setup a deeplink.
 
-##### Start Assurance session:
+### Importing the extension:
 
 ```typescript
 import { Assurance } from "@adobe/react-native-aepassurance";
+```
+
+##### Start Assurance session:
+
+```typescript
 Assurance.startSession("{your-assurance-session-url}");
 ```
