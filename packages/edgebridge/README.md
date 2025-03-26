@@ -26,10 +26,18 @@ See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native
 
 Install the `@adobe/react-native-aepedgebridge` package:
 
+NPM:
+
 ```bash
-cd MyReactApp
 npm install @adobe/react-native-aepedgebridge
 ```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepedgebridge
+```
+
 ## Usage
 
 ### Initializing with SDK:
