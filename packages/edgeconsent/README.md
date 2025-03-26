@@ -17,9 +17,16 @@ See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native
 
 Install the `@adobe/react-native-aepedgeconsent` package:
 
+NPM:
+
 ```bash
-cd MyReactApp
 npm install @adobe/react-native-aepedgeconsent
+```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepedgeconsent
 ```
 
 ## Usage
