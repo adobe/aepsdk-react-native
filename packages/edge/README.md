@@ -18,10 +18,18 @@ See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native
 
 Install the `@adobe/react-native-aepedge` package:
 
+NPM:
+
 ```bash
-cd MyReactApp
 npm install @adobe/react-native-aepedge
 ```
+
+Yarn:
+
+```bash
+yarn add@adobe/react-native-aepedge
+```
+
 ## Usage
 
 ### Initializing with SDK:
