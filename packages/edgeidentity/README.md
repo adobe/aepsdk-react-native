@@ -17,9 +17,16 @@ See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native
 
 Install the `@adobe/react-native-aepedgeidentity` package:
 
+NPM:
+
 ```bash
-cd MyReactApp
 npm install @adobe/react-native-aepedgeidentity
+```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepedgeidentity
 ```
 
 ## Usage
