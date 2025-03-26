@@ -11,7 +11,7 @@ Open your app's package.json file and replace the ACP-prefixed packages with the
 "dependencies": {
     "react-native": "0.64.2",
 -   "@adobe/react-native-acpcore": "^2.0.0"
-+   "@adobe/react-native-aepcore": "^6.0.0",
++   "@adobe/react-native-aepcore": "^7.0.0",
     ...
 },
 
