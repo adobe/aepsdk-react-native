@@ -33,8 +33,6 @@ yarn add @adobe/react-native-aepmessaging
 
 ## Usage
 
-### [Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer)
-
 ### Initializing with SDK:
 
 To initialize the SDK, use the following methods:
