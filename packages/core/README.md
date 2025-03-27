@@ -63,6 +63,12 @@ Initialize the AEP SDK by automatically registering all extensions bundled with 
 
 appId: Configures the SDK with the provided mobile property environment ID configured from the Data Collection UI.
 
+To initialize the SDK, call `initializeWithAppId` in your main component, typically `App.tsx` (or any custom entry file). Make sure it’s invoked only once using:  
+- `componentDidMount` for class-based components.  
+- `useEffect(() => {}, [])` for functional components.  
+
+Although the SDK ignores repeated initialization calls, it’s best practice to avoid multiple invocations.
+
 **Syntax**
 ```typescript
 initializeWithAppId(appId: string): Promise<void> 
@@ -70,11 +76,14 @@ initializeWithAppId(appId: string): Promise<void>
 
 **Example**
 ```typescript
+useEffect(()=>{
 MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
   console.log("AEP SDK Initialized");
 }).catch((error) => { 
   console.log("AEP SDK Initialization error", error);            
 });
+},[])
+
 ```
 
 > [!NOTE]  
@@ -84,6 +93,10 @@ MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
 Initialize the AEP SDK by automatically registering all extensions bundled with the application and enabling automatic lifecycle tracking. This API also allows further customization by accepting InitOptions.
 
 InitOptions: Allow customization of the default initialization behavior. Refer to the [InitOptions](#initoptions).
+
+To initialize the SDK, call `initialize` in your main component, typically `App.tsx` (or any custom entry file). Make sure it’s invoked only once using:  
+- `componentDidMount` for class-based components.  
+- `useEffect(() => {}, [])` for functional components.  
 
 **Syntax**
 ```typescript
@@ -101,6 +114,7 @@ const initOptions = {
 };
 
 // Initialize the SDK
+useEffect(()=>{
 MobileCore.initialize(initOptions)
   .then(() => {
     console.log("AdobeExperienceSDK: AEP SDK Initialized");
@@ -108,6 +122,7 @@ MobileCore.initialize(initOptions)
   .catch((error) => {
     console.error("AdobeExperienceSDK: AEP SDK Initialization error:", error);
   });
+},[])
 
 ```
 
