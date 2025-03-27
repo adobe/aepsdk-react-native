@@ -4,6 +4,11 @@ import com.facebook.react.bridge.*
 
 class AEPPlacesModule(reactContext: ReactApplicationContext): NativeAEPPlacesSpec(reactContext) {
     val placesImpl = AEPPlacesModule(reactContext)
+    
+    companion object {
+        const val NAME = "AEPPlaces"
+    }
+
     override fun getName(): String {
         return AEPPlacesImpl.NAME
     }

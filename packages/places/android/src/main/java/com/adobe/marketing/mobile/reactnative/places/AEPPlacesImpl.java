@@ -71,4 +71,8 @@ public class AEPPlacesImpl {
     public void setAuthorizationStatus(String authStatus) {
         Places.setAuthorizationStatus(RCTAEPPlacesDataBridge.placesAuthorizationStatusFromString(authStatus));
     }
+
+    companion object {
+        const val NAME = "AEPPlaces"
+    }
 }
