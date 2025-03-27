@@ -4,7 +4,7 @@ import com.facebook.react.bridge.*
 
 class AEPPlacesModule(reactContext: ReactApplicationContext): NativeAEPPlacesSpec(reactContext) {
     val placesImpl = AEPPlacesModule(reactContext)
-    
+
     companion object {
         const val NAME = "AEPPlaces"
     }
@@ -17,11 +17,11 @@ class AEPPlacesModule(reactContext: ReactApplicationContext): NativeAEPPlacesSpe
         placesImpl.extensionVersion(promise)
     }
 
-    override fun getNearbyPointsOfInterest(locationMap: ReadableMap, limit: Int, promise: Promise) {
+    override fun getNearbyPointsOfInterest(locationMap: ReadableMap, limit: Double, promise: Promise) {
         placesImpl.getNearbyPointsOfInterest(locationMap, limit, promise)
     }
 
-    override fun processGeofence(geofence: ReadableMap, transitionType: Int) {
+    override fun processGeofence(geofence: ReadableMap, transitionType: Double) {
         placesImpl.processGeofence(geofence, transitionType)
     }
 
@@ -37,7 +37,7 @@ class AEPPlacesModule(reactContext: ReactApplicationContext): NativeAEPPlacesSpe
         placesImpl.clear()
     }
 
-    override fun setAuthorizationStatus(authStatus: String) {
+    override fun setAuthorizationStatus(authStatus: String?) {
         placesImpl.setAuthorizationStatus(authStatus)
-    }
+    }   
 }

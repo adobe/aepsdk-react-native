@@ -1,13 +1,13 @@
 package com.adobe.marketing.mobile.reactnative.places;
 
-import com.facebook.react.BaseReactPackage
+import com.facebook.react.TurboReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
 import java.util.HashMap
 
-class AEPPlacesPackage : BaseReactPackage() {
+class AEPPlacesPackage : TurboReactPackage() {
   override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
     return if (name == AEPPlacesImpl.NAME) {
       AEPPlacesModule(reactContext)
@@ -25,7 +25,6 @@ class AEPPlacesPackage : BaseReactPackage() {
         AEPPlacesImpl.NAME,
         false,  // canOverrideExistingModule
         false,  // needsEagerInit
-        false,  // hasConstants
         false,  // isCxxModule
         isTurboModule // isTurboModule
       )

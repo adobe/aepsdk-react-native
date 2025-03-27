@@ -14,12 +14,12 @@ class AEPPlacesModule(reactContext: ReactApplicationContext): ReactContextBaseJa
     }
 
     @ReactMethod
-    fun getNearbyPointsOfInterest(locationMap: ReadableMap, limit: Int, promise: Promise) {
+    fun getNearbyPointsOfInterest(locationMap: ReadableMap, limit: Double, promise: Promise) {
         placesImpl.getNearbyPointsOfInterest(locationMap, limit, promise)
     }
 
     @ReactMethod
-    fun processGeofence(geofence: ReadableMap, transitionType: Int) {
+    fun processGeofence(geofence: ReadableMap, transitionType: Double) {
         placesImpl.processGeofence(geofence, transitionType)
     }
 
@@ -39,7 +39,7 @@ class AEPPlacesModule(reactContext: ReactApplicationContext): ReactContextBaseJa
     }
 
     @ReactMethod
-    fun setAuthorizationStatus(authStatus: String) {
+    fun setAuthorizationStatus(authStatus: String?) {
         placesImpl.setAuthorizationStatus(authStatus)
     }
 }
