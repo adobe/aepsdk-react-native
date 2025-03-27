@@ -5,18 +5,23 @@ import { Drawer } from 'expo-router/drawer';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MobileCore } from '@adobe/react-native-aepcore';
+import { useEffect } from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+export default function RootLayout() {
+  const scheme = useColorScheme();
 
-// If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
+  useEffect(() => {
+    // If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
 
-// const initOptions = {
-//   appId: "YOUR-APP-ID", //optional,
-//   lifecycleAutomaticTrackingEnabled: true, //optional
-//   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
-// };
+    // const initOptions = {
+    //   appId: "YOUR-APP-ID", //optional,
+    //   lifecycleAutomaticTrackingEnabled: true, //optional
+    //   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
+    //   appGroupIOS: "group.com.your.app.identifier" //optional, for iOS app groups
+    // };
 
 // MobileCore.initialize(initOptions).then(() => {  
 //   console.log("AEP SDK Initialized");
@@ -27,16 +32,15 @@ SplashScreen.preventAutoHideAsync();
 
 
 MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
-  console.log("AEP SDK Initialized");
+        console.log("AEP SDK Initialized");
 }).catch((error) => { 
-  console.log("AEP SDK Initialization error", error);            
-});
+        console.log("AEP SDK Initialization error", error);
+      });
 
-export default function RootLayout() {
-  const scheme = useColorScheme();
+  }, []);
 
   return (
-    <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={scheme === "dark" ? DarkTheme : DefaultTheme}>
       <Drawer>
         <Drawer.Screen name="index" options={{ title: 'Home' }} />
         <Drawer.Screen name="CoreView" options={{ title: 'CoreView' }} />
