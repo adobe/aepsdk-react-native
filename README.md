@@ -30,7 +30,7 @@ This repository is a monorepo and contains a collection of React Native modules 
 > [!IMPORTANT]  
 > The Adobe React Native SDK utilizes the React Native interop layer to ensure compatibility with new architecture.
 
-## Requirements
+## Requirements 
 
 - React Native
 
@@ -76,10 +76,10 @@ The following code snippet shows for Mobile Core and Edge Network extensions as 
 ...
 "dependencies": {
     "react-native": "0.72.5",
-    "@adobe/react-native-aepcore": "^6.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
-    "@adobe/react-native-aepedge": "^6.0.0",
-    "@adobe/react-native-aepedgeidentity": "^6.0.0",
-    "@adobe/react-native-aepedgeconsent": "^6.0.0",
+    "@adobe/react-native-aepcore": "^7.0.0", //core is required and includes aepcore, aepsignal, aeplifecycle, aepidentity libraries
+    "@adobe/react-native-aepedge": "^7.0.0",
+    "@adobe/react-native-aepedgeidentity": "^7.0.0",
+    "@adobe/react-native-aepedgeconsent": "^7.0.0",
 ...
 },
 ```
@@ -112,182 +112,25 @@ To update native dependencies to latest available versions, run the following co
 cd ios && pod update && cd ..
 ```
 
+## Importing the extension:
+In your React Native application, import the extensions.
+
+The following example demonstrates how to import core extensions from the Adobe Experience Platform SDK in your React Native application:
+
+```typescript
+import { MobileCore, Lifecycle, Signal, LogLevel, PrivacyStatus, Event } from '@adobe/react-native-aepcore'
+```
+
+Refer to each package's documentation for specific import details.
+
 ## Initializing
 
-Initializing the SDK should be done in native code inside your `AppDelegate` (iOS) and `MainApplication` (Android). The following code snippets demonstrate how to install and register the AEP Mobile Core and Edge Network extensions. Documentation on how to initialize each extension can be found in _./packages/{extension}/README.md_.
+Then, initialize the SDK using the following methods:
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
-##### **iOS**
-
-```objective-c
-//AppDelegate.h
-@import AEPCore;
-@import AEPServices;
-@import AEPLifecycle;
-@import AEPSignal;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPEdgeConsent;
-...
-```
-
-```objective-c
-//AppDelegate.m
-...
-@implementation AppDelegate
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"yourAppID"];
-
-  const UIApplicationState appState = application.applicationState;
-
-  [AEPMobileCore registerExtensions: @[
-      AEPMobileLifecycle.class,
-      AEPMobileSignal.class,
-      AEPMobileEdge.class,
-      AEPMobileEdgeIdentity.class,
-      AEPMobileEdgeConsent.class,
-  ] completion:^{
-    if (appState != UIApplicationStateBackground) {
-       [AEPMobileCore lifecycleStart:nil}];
-    }
-  }];
-  return YES;
-}
-
-@end
-
-```
-
-> To enable the Lifecycle metrics, [implement the Lifecycle APIs](./packages/core/README.md#lifecycle)
-
-> Hint : While running iOS application after Adobe Experience Platform SDK installation. If you have build error that states:
-> "ld: warning: Could not find or use auto-linked library 'swiftCoreFoundation'"
-> This is because Adobe Experience Platform SDK now requires the app uses swift interfaces. Add a dummy .swift file to your project to embed the swift standard libs. See the SampleApp presented in this repo for example.
-
-##### **Android:**
-
-###### **Java:**
-
-```java
-//MainApplication.java
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Extension;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.Edge;
-import com.adobe.marketing.mobile.edge.consent.Consent;
-...
-import android.app.Application;
-```
-
-```java
-...
-public class MainApplication extends Application implements ReactApplication {
-  ...
-  @Override
-  public void on Create(){
-    super.onCreate();
-    ...
-    MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.configureWithAppID("yourAppID");
-    List<Class<? extends Extension>> extensions = Arrays.asList(
-                Lifecycle.EXTENSION,
-                Signal.EXTENSION,
-                Edge.EXTENSION,
-                com.adobe.marketing.mobile.edge.identity.Identity.EXTENSION,
-                Consent.EXTENSION);
-    MobileCore.registerExtensions(extensions, o -> {
-      Log.d(LOG_TAG, "AEP Mobile SDK is initialized");
-      MobileCore.lifecycleStart(null);
-      //enable this for Lifecycle. See Note for collecting Lifecycle metrics.
-    });
-  }
-}
-```
-
-###### **Kotlin:**
-
-```kotlin
- // MainApplication.kt
-import com.adobe.marketing.mobile.Edge
-import com.adobe.marketing.mobile.Lifecycle
-import com.adobe.marketing.mobile.LoggingMode
-import com.adobe.marketing.mobile.MobileCore
-import com.adobe.marketing.mobile.MobileCore.getApplication
-import com.adobe.marketing.mobile.edge.consent.Consent
-import com.adobe.marketing.mobile.edge.identity.Identity
-```
-
-```kotlin
-// MainApplication.kt
- class MainApplication : Application(), ReactApplication {
-   ...
- override fun onCreate() {
-    super.onCreate()
-    
-    MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG)
-    MobileCore.configureWithAppID("YOUR-APP-ID");
-    MobileCore.registerExtensions(
-      listOf(
-        Lifecycle.EXTENSION,
-        Edge.EXTENSION,
-        Identity.EXTENSION,
-        Consent.EXTENSION
-      ),
-    ) {
-      Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
-    }
-
-    SoLoader.init(this, false)
-    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-      // If you opted-in for the New Architecture, we load the native entry point for this app.
-      load()
-    }
-    ApplicationLifecycleDispatcher.onApplicationCreate(this)
-  }
-```
-
-```kotlin
-// MainActivity.kt
-
-import android.app.Activity
-import android.app.Application.ActivityLifecycleCallbacks
-import com.adobe.marketing.mobile.MobileCore
-
-// Implementing global lifecycle callbacks
-override fun onCreate(savedInstanceState: Bundle?) {
-    // Set the theme to AppTheme BEFORE onCreate to support
-    // coloring the background, status bar, and navigation bar.
-    // This is required for expo-splash-screen.
-    setTheme(R.style.AppTheme);
-    super.onCreate(null)
-
-    application.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-        override fun onActivityResumed(activity: Activity) {
-            MobileCore.setApplication(application)
-            MobileCore.lifecycleStart(null)
-        }
-
-        override fun onActivityPaused(activity: Activity) {
-            MobileCore.lifecyclePause()
-        }
-
-        // the following methods aren't needed for our lifecycle purposes, but are
-        // required to be implemented by the ActivityLifecycleCallbacks object
-        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-        override fun onActivityStarted(activity: Activity) {}
-        override fun onActivityStopped(activity: Activity) {}
-        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-        override fun onActivityDestroyed(activity: Activity) {}
-    })
-  }
-```
-
-> For further details on Lifecycle implementation, please refer to the [Lifecycle API documentation](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#lifecycle).
+> [!NOTE]  
+> Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk-react-native/tree/v6.x/#initializing), as was required in earlier versions.
 
 ## Migration guide
 

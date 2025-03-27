@@ -35,77 +35,13 @@ yarn add @adobe/react-native-aepmessaging
 
 ### [Messaging](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer)
 
-### Installing and registering the extension with the AEP Mobile Core
+### Initializing with SDK:
 
-### Initialization
+To initialize the SDK, use the following methods:
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
-Initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
-
-Example:
-
-iOS
-
-```objectivec
-@import AEPCore;
-@import AEPLifecycle;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-@import AEPMessaging;
-
-...
-@implementation AppDelegate
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-  [AEPMobileCore configureWithAppId:@"yourAppID"];
-
-  const UIApplicationState appState = application.applicationState;
-
-  [AEPMobileCore registerExtensions: @[AEPMobileEdgeIdentity.class, AEPMobileEdge.class, AEPMobileMessaging.class, AEPMobileOptimize.class] completion:^{
-    if (appState != UIApplicationStateBackground) {
-        [AEPMobileCore lifecycleStart:nil}];
-    }
-  }];
-  return YES;
-}
-
-@end
-```
-
-Android
-
-```java
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Edge;
-import com.adobe.marketing.mobile.edge.identity.Identity;
-import com.adobe.marketing.mobile.Messaging;
-
-...
-import android.app.Application;
-...
-public class MainApplication extends Application implements ReactApplication {
-  ...
-  @Override
-  public void on Create(){
-    super.onCreate();
-    ...
-    MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.configureWithAppID("yourAppID");
-    List<Class<? extends Extension>> extensions = Arrays.asList(
-                Edge.EXTENSION,
-                Identity.EXTENSION,
-                Messaging.EXTENSION,
-    						Lifecycle.EXTENSION);
-    MobileCore.registerExtensions(extensions, o -> {
-      MobileCore.lifecycleStart(null);
-    });
-  }
-}
-```
+Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
 ### Importing the extension:
 

@@ -17,10 +17,13 @@ npm install @adobe/react-native-aepcore
 
 ## Usage
 
-### Initializing and registering the extension
+### Initializing
 
-Initializing the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
+To initialize the SDK, use the following methods:
+- [MobileCore.initializeWithAppId(appId)](#initializewithappid)
+- [MobileCore.initialize(initOptions)](#initialize)
 
+Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
 ### Importing the Mobile Core package:
 In your React Native application, import the core/lifecycle/signal/identity extension as follows:
@@ -46,6 +49,67 @@ collectPii(data: Record<string, string>)
 ```typescript
 MobileCore.collectPii({"myPii": "data"});
 ```
+
+- #### initializeWithAppId
+Initialize the AEP SDK by automatically registering all extensions bundled with the application and enabling automatic lifecycle tracking.
+
+appId: Configures the SDK with the provided mobile property environment ID configured from the Data Collection UI.
+
+**Syntax**
+```typescript
+initializeWithAppId(appId: string): Promise<void> 
+```
+
+**Example**
+```typescript
+MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
+  console.log("AEP SDK Initialized");
+}).catch((error) => { 
+  console.log("AEP SDK Initialization error", error);            
+});
+```
+
+> [!NOTE]  
+> Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk-react-native/blob/main/README.md#initializing), as was required in earlier versions.
+
+- #### initialize
+Initialize the AEP SDK by automatically registering all extensions bundled with the application and enabling automatic lifecycle tracking. This API also allows further customization by accepting InitOptions.
+
+InitOptions: Allow customization of the default initialization behavior. Refer to the [InitOptions](#initoptions).
+
+**Syntax**
+```typescript
+initialize(initOptions?: InitOptions): Promise<void>
+```
+
+**Example**
+```typescript
+
+// Define the initialization options
+const initOptions = {
+  appId: "YOUR-APP-ID", // optional
+  lifecycleAutomaticTrackingEnabled: true, // optional
+  lifecycleAdditionalContextData: { contextDataKey: "contextDataValue" }, // optional
+};
+
+// Initialize the SDK
+MobileCore.initialize(initOptions)
+  .then(() => {
+    console.log("AdobeExperienceSDK: AEP SDK Initialized");
+  })
+  .catch((error) => {
+    console.error("AdobeExperienceSDK: AEP SDK Initialization error:", error);
+  });
+
+```
+
+- #### InitOptions
+The InitOptions class defines the options for initializing the AEP SDK. It currently supports the following options:
+
+* appID – The App ID used to retrieve remote configurations from Adobe servers.
+* lifecycleAutomaticTrackingEnabled – A boolean flag to enable or disable automatic lifecycle tracking
+* lifecycleAdditionalContextData – A map containing extra context data to be sent with the lifecycle start event.
+* appGroup (iOS only) – A string representing the App Group identifier for sharing data between app extensions and the main application.
 
 - #### dispatchEvent
 Dispatch an event for other extensions or the internal SDK to consume.
