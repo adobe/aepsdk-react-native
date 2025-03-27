@@ -47,7 +47,7 @@ yarn run build
 
 ### Add your App Id:
 
-In `apps/AEPSampleAppNewArchEnabled/app/layout.tsx`, locate the call to `MobileCore.initializeWithAppId(appId:"YOUR_APP_ID")` and replace `"YOUR_APP_ID"` with your property App Id.
+In `apps/AEPSampleAppNewArchEnabled/app/_layout.tsx`, locate the call to `MobileCore.initializeWithAppId(appId:"YOUR_APP_ID")` and replace `"YOUR_APP_ID"` with your property App Id.
 
 > **Note**: The App ID should be configured in a mobile property in the Data Collection UI, in Tags. Refer to [Adobe documentation](https://developer.adobe.com/client-sdks/home/base/mobile-core/configuration/#configure-with-app-id-per-environment) for more information.
 
