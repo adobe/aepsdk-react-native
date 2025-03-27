@@ -29,6 +29,7 @@ import PlacesView from './extensions/PlacesView';
 import {NavigationProps} from './types/props';
 import CampaignClassicView from './extensions/CampaignClassicView';
 import { MobileCore } from '@adobe/react-native-aepcore';
+import { useEffect } from 'react';
 
 function HomeScreen({navigation}: NavigationProps) {
   return (
@@ -93,28 +94,35 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
 
-
-// If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
-
-// const initOptions = {
-//   appId: "YOUR-APP-ID", //optional,
-//   lifecycleAutomaticTrackingEnabled: true, //optional
-//   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
-// };
-
-// MobileCore.initialize(initOptions).then(() => {  
-//   console.log("AEP SDK Initialized");
-
-// }).catch((error) => { 
-//   console.log("AEP SDK Initialization error", error);            
-// });
-
-MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
-  console.log("AEP SDK Initialized");
-}).catch((error) => {  
-  console.log("AEP SDK Initialization error", error);
- });
-
+  useEffect(() => {
+    // If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
+  
+    // const initOptions = {
+    //   appId: "YOUR-APP-ID", //optional,
+    //   lifecycleAutomaticTrackingEnabled: true, //optional
+    //   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
+    //   appGroupIOS: "group.com.your.app.identifier" //optional, for iOS app groups
+    // };
+  
+    // MobileCore.initialize(initOptions).then(() => {  
+    //   console.log("AEP SDK Initialized");
+    // }).catch((error) => { 
+    //   console.log("AEP SDK Initialization error", error);            
+    // });
+  
+    // Initialize SDK once in App.tsx or the entry file.
+    // For functional components, use useEffect with an empty dependency array.
+    // For class components, call initializeWithAppId inside componentDidMount.
+  
+    MobileCore.initializeWithAppId("YOUR-APP-ID")
+      .then(() => {
+        console.log("AEP SDK Initialized");
+      })
+      .catch((error) => {
+        console.error("AEP SDK Initialization error:", error);
+      });
+  }, []);
+  
   
   return (
     <NavigationContainer>
