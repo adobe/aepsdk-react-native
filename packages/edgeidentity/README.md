@@ -17,9 +17,16 @@ See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native
 
 Install the `@adobe/react-native-aepedgeidentity` package:
 
+NPM:
+
 ```bash
-cd MyReactApp
 npm install @adobe/react-native-aepedgeidentity
+```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepedgeidentity
 ```
 
 ## Usage
@@ -31,8 +38,6 @@ To initialize the SDK, use the following methods:
 - [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
 Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
-
-### [Identity for Edge Network](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network)
 
 ### Importing the extension:
 In your React Native application, import the Identity extension as follows:

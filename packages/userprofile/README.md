@@ -17,8 +17,16 @@ See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native
 
 Install the `@adobe/react-native-aepuserprofile` package:
 
+NPM:
+
 ```bash
 npm install @adobe/react-native-aepuserprofile
+```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepuserprofile
 ```
 
 ## Usage
@@ -31,7 +39,7 @@ To initialize the SDK, use the following methods:
 
 Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
-#### Importing the extension:
+### Importing the extension:
 
 In your React Native application, import the UserProfile extension as follows:
 
