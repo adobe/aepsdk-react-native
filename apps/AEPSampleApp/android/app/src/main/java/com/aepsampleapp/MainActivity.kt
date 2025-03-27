@@ -10,7 +10,6 @@ governing permissions and limitations under the License.
 */
 package com.aepsampleapp
 
-import com.adobe.marketing.mobile.MobileCore
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -31,14 +30,4 @@ class MainActivity : ReactActivity() {
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
-    override fun onResume() {
-        super.onResume()
-        MobileCore.setApplication(application);
-        MobileCore.lifecycleStart(null);
-    }
-
-    override fun onPause() {
-        super.onPause()
-        MobileCore.lifecyclePause();
-    }
 }

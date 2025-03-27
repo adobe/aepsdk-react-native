@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepcampaignclassic",
-  "version": "6.0.2",
+  "version": "7.0.0",
   "description": "Experience Platform Campaign Classic extension for Adobe Experience Platform Mobile SDK. Written and Supported by Adobe.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
@@ -28,7 +28,7 @@
     "name": "Adobe Experience Platform SDK Team"
   },
   "peerDependencies": {
-    "@adobe/react-native-aepcore": "^6.0.0",
+    "@adobe/react-native-aepcore": "^7.0.0",
     "react-native": ">=0.60.0"
   },
   "publishConfig": {
