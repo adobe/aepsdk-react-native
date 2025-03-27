@@ -20,9 +20,7 @@ This project is a React Native app set up using `react-native-cli`. It serves as
 
 ### Add your App Id:
 
-In `apps/AEPSampleApp/ios/AEPSampleApp/AppDelegate.mm`, find the call to `configureWithAppId` and add your app id.
-
-In `apps/AEPSampleApp/android/app/src/main/java/com/aepsampleapp/MainApplication.java`, find the call to `configureWithAppId` and add your app id.
+In `App.tsx`, locate the call to `MobileCore.initializeWithAppId(appId:"YOUR_APP_ID")` and replace `"YOUR_APP_ID"` with your property App Id.
 
 > Note: App id is configured in a mobile property in Data Collection UI, in Tags.  Refer to [configure with App ID per environment](https://developer.adobe.com/client-sdks/home/base/mobile-core/configuration/#configure-with-app-id-per-environment) page for more information.
 
