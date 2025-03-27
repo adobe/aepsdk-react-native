@@ -13,6 +13,10 @@ specific language governing permissions and limitations under the License.
 #import "RCTAEPPlacesDataBridge.h"
 #import <CoreLocation/CoreLocation.h>
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import <AEPPlacesSpec/AEPPlacesSpec.h>
+#endif
+
 // @{link PlacesAuthorizationStatus}
 static NSString *const AEP_PLACES_AUTH_STATUS_DENIED =
     @"PLACES_AUTH_STATUS_DENIED";
@@ -129,5 +133,11 @@ static NSString *const AEP_PLACES_GEOFENCE_EXPIRATION_DURATION =
     return typeInt;
   }
 }
+
+#ifdef RCT_NEW_ARCH_ENABLED
+  - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule: (const facebook::react::ObjCTurboModule::InitParams &)params {
+      return std::make_shared<facebook::react::NativeAEPPlacesSpecJSI>(params);
+    }
+#endif
 
 @end
