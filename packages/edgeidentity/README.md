@@ -39,8 +39,6 @@ To initialize the SDK, use the following methods:
 
 Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
-### [Identity for Edge Network](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network)
-
 ### Importing the extension:
 In your React Native application, import the Identity extension as follows:
 ```typescript
