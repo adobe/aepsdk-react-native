@@ -68,13 +68,15 @@ initializeWithAppId(appId: string): Promise<void>
 
 **Example**
 ```typescript
-useEffect(()=>{
-MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
-  console.log("AEP SDK Initialized");
-}).catch((error) => { 
-  console.log("AEP SDK Initialization error", error);            
-});
-},[])
+useEffect(() => {
+  MobileCore.initializeWithAppId("YOUR-APP-ID")
+    .then(() => {
+      console.log("AEP SDK Initialized");
+    })
+    .catch((error) => {
+      console.log("AEP SDK Initialization error", error);
+    });
+}, []);
 
 ```
 
@@ -106,15 +108,15 @@ const initOptions = {
 };
 
 // Initialize the SDK
-useEffect(()=>{
-MobileCore.initialize(initOptions)
-  .then(() => {
-    console.log("AdobeExperienceSDK: AEP SDK Initialized");
-  })
-  .catch((error) => {
-    console.error("AdobeExperienceSDK: AEP SDK Initialization error:", error);
-  });
-},[])
+useEffect(() => {
+  MobileCore.initialize(initOptions)
+    .then(() => {
+      console.log("AdobeExperienceSDK: AEP SDK Initialized");
+    })
+    .catch((error) => {
+      console.error("AdobeExperienceSDK: AEP SDK Initialization error:", error);
+    });
+}, []);
 
 ```
 
