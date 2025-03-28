@@ -3,7 +3,7 @@ package com.adobe.marketing.mobile.reactnative.places;
 import com.facebook.react.bridge.*;
 
 class AEPPlacesModule(reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
-    val placesImpl = AEPPlacesModule(reactContext)
+    val placesImpl = AEPPlacesImpl(reactContext)
     override fun getName(): String {
         return AEPPlacesImpl.NAME
     }

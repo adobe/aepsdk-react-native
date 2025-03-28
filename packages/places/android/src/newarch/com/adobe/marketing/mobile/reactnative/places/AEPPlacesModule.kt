@@ -3,7 +3,7 @@ package com.adobe.marketing.mobile.reactnative.places;
 import com.facebook.react.bridge.*
 
 class AEPPlacesModule(reactContext: ReactApplicationContext): NativeAEPPlacesSpec(reactContext) {
-    val placesImpl = AEPPlacesModule(reactContext)
+    val placesImpl = AEPPlacesImpl(reactContext)
 
     companion object {
         const val NAME = "AEPPlaces"
