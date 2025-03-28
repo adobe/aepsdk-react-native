@@ -11,7 +11,7 @@ Open your app's package.json file and replace the ACP-prefixed packages with the
 "dependencies": {
     "react-native": "0.64.2",
 -   "@adobe/react-native-acpcore": "^2.0.0"
-+   "@adobe/react-native-aepcore": "^6.0.0",
++   "@adobe/react-native-aepcore": "^7.0.0",
     ...
 },
 
@@ -34,147 +34,25 @@ At this time, the following ACP-prefix libraries can be switched out with their 
 > **Note**: Analytics library is not supported in AEP React Native. For implementing the Analytics workflow, register and configure the Edge Network or Edge Bridge libraries. Please refer to [migrate to Edge Network](https://developer.adobe.com/client-sdks/documentation/adobe-analytics/migrate-to-edge-network/) for more info.
 
 ## Update SDK initialization
+
+> [!NOTE]  
+> Starting from Adobe Experience Platform React native **7.x**,  there is no longer a need to initialize the SDK on the [native platforms](https://github.com/adobe/aepsdk-react-native/tree/v6.x/#initializing), as was required in earlier versions.
+
 Remove the deprecated registration code and the extensions that are not supported in AEP React Native libraries.
 
-### Android
-```diff
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Identity;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.UserProfile;
-import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.Places;
-import com.adobe.marketing.mobile.Assurance;
-...
-import android.app.Application;
-...
-public class MainApplication extends Application implements ReactApplication {
-  ...
-  @Override
-  public void on Create(){
-    super.onCreate();
-    ...
-    MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
--   MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+Initialize AEP SDK in the React native application:
 
--    try {
--     UserProfile.registerExtension();
--     Identity.registerExtension();
--     Lifecycle.registerExtension();
--     Signal.registerExtension();
--     Analytics.registerExtension();
--     Target.registerExtension();
--     Places.registerExtension();
--     Campaign.registerExtension();
--     Assurance.registerExtension();
--     MobileCore.start(new AdobeCallback () {
--          @Override
--          public void call(Object o) {
--            MobileCore.configureWithAppID("yourAppID");
--         }
--      });
--    } catch (InvalidInitException e) {
-
-  List<Class<? extends Extension>> extensions = Arrays.asList(
-      UserProfile.EXTENSION
-      Identity.EXTENSION,
-      Lifecycle.EXTENSION,
-      Signal.EXTENSION,
-      Target.EXTENSION,
-      Places.EXTENSION,
-      Assurance.EXTENSION,
-  );
-  MobileCore.registerExtensions(extensions, o -> MobileCore.configureWithAppID("YourEnvironmentFileID"));
-        ...
-    }
-  }
-}
+**Example**
+```typescript
+MobileCore.initializeWithAppId ("YOUR-APP-ID").then(() => {
+  console.log("AEP SDK Initialized");
+}).catch((error) => { 
+  console.log("AEP SDK Initialization error", error);            
+});
 ```
-### iOS
+ 
+Refer to the initializing details info [here](https://github.com/adobe/aepsdk-react-native/tree/main#initializing).
 
-> Note: For iOS app, after installing the AEP-prefixed packages, please update native dependecies by running the following command: `cd ios && pod update && cd ..`
-
-```objectivec
-
-// 1. remove the following header files
-//#import "ACPCore.h"
-//#import "ACPUserProfile.h"
-//#import "ACPIdentity.h"
-//#import "ACPLifecycle.h"
-//#import "ACPSignal.h"
-//#import "ACPTarget.h"
-//#import "ACPCampaign.h"
-//#import "ACPPlaces.h"
-//#import "AEPAssurance.h"
-
-// 2. import AEP extensions
-@import AEPCore;
-@import AEPUserProfile;
-@import AEPServices;
-@import AEPIdentity;
-@import AEPLifecycle;
-@import AEPSignal;
-@import AEPTarget;
-@import AEPPlaces;
-@import AEPAssurance;
-//  --- 2. end ----
-
-...
-@implementation AppDelegate
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // 3. remove the following code for initializing ACP SDKs
-
-    // [ACPCore setLogLevel:ACPMobileLogLevelDebug];
-    // [ACPCore configureWithAppId:@"yourAppID"];
-    // [ACPUserProfile registerExtension];
-    // [ACPIdentity registerExtension];
-    // [ACPLifecycle registerExtension];
-    // [ACPSignal registerExtension];
-    // [ACPAnalytics registerExtension];
-    // [ACPTarget registerExtension];
-    // [ACPCampaign registerExtension];
-    // [ACPPlaces registerExtension];
-
-    // const UIApplicationState appState = application.applicationState;
-    // [ACPCore start:^{
-    //   if (appState != UIApplicationStateBackground) {
-    //     [ACPCore lifecycleStart:nil];
-    //   }
-    // }];
-
-    // 4. add code to initializing AEP SDKs
-
-    [AEPMobileCore setLogLevel: AEPLogLevelDebug];
-    [AEPMobileCore configureWithAppId:@"yourAppID"];
-
-    const UIApplicationState appState = application.applicationState;
-
-    [AEPMobileCore registerExtensions: @[
-        AEPMobileUserProfile.class,
-        AEPMobileIdentity.class,
-        AEPMobileLifecycle.class,
-        AEPMobileSignal.class,
-        AEPMobileTarget.class,
-        AEPMobilePlaces.class,
-        AEPMobileAssurance.class,
-    ] completion:^{
-      if (appState != UIApplicationStateBackground) {
-       [AEPMobileCore lifecycleStart:nil];
-      }
-    }];
-  //  --- 4. end ----
-
-    ...
-  return YES;
-}
-
-@end
-```
 ## Update API usage and references for each extension
 
 ### Core
