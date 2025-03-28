@@ -31,8 +31,6 @@ yarn add @adobe/react-native-aepassurance
 
 ## Usage
 
-### [Assurance](https://developer.adobe.com/client-sdks/documentation/platform-assurance/tutorials)
-
 ### Initializing with SDK:
 
 To initialize the SDK, use the following methods:
@@ -49,7 +47,7 @@ To connect to an Assurance session by scanning the QR code, follow the [Android 
 import { Assurance } from "@adobe/react-native-aepassurance";
 ```
 
-##### Start Assurance session:
+### Start Assurance session:
 
 ```typescript
 Assurance.startSession("{your-assurance-session-url}");
