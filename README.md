@@ -43,7 +43,7 @@ To submit iOS apps to the App Store, you must build them using Xcode 15 or later
 ## iOS Privacy Manifest
 
 > [!IMPORTANT]  
-> Adobe Experience Platform React Native **6.x** libraries now depend on Experience Platform iOS 5.x SDKs, which have been updated to align with Apple's latest guidelines on [privacy manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files). For further details on how Apple's privacy-related announcements affect the Adobe mobile SDK for iOS, please refer to this [document](https://developer.adobe.com/client-sdks/resources/privacy-manifest/).
+> Starting from Adobe Experience Platform React Native **6.x**, the libraries depend on Experience Platform iOS 5.x SDKs, which have been updated to align with Apple's latest guidelines on [privacy manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files). For further details on how Apple's privacy-related announcements affect the Adobe mobile SDK for iOS, please refer to this [document](https://developer.adobe.com/client-sdks/resources/privacy-manifest/).
 
 ## Expo Support
 

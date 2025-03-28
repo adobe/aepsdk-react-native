@@ -28,7 +28,7 @@ import TargetView from './extensions/TargetView';
 import PlacesView from './extensions/PlacesView';
 import {NavigationProps} from './types/props';
 import CampaignClassicView from './extensions/CampaignClassicView';
-import { MobileCore } from '@adobe/react-native-aepcore';
+import { MobileCore , LogLevel} from '@adobe/react-native-aepcore';
 import { useEffect } from 'react';
 
 function HomeScreen({navigation}: NavigationProps) {
@@ -113,7 +113,7 @@ export default function App() {
     // Initialize SDK once in App.tsx or the entry file.
     // For functional components, use useEffect with an empty dependency array.
     // For class components, call initializeWithAppId inside componentDidMount.
-  
+    MobileCore.setLogLevel(LogLevel.DEBUG);
     MobileCore.initializeWithAppId("YOUR-APP-ID")
       .then(() => {
         console.log("AEP SDK Initialized");

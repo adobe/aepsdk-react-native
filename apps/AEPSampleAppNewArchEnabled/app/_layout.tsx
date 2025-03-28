@@ -4,7 +4,7 @@ import 'react-native-reanimated';
 import { Drawer } from 'expo-router/drawer';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { MobileCore } from '@adobe/react-native-aepcore';
+import { MobileCore , LogLevel} from '@adobe/react-native-aepcore';
 import { useEffect } from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -32,7 +32,8 @@ export default function RootLayout() {
     // Initialize SDK once in App.tsx or the entry file.
     // For functional components, use useEffect with an empty dependency array.
     // For class components, call initializeWithAppId inside componentDidMount.
-  
+
+    MobileCore.setLogLevel(LogLevel.DEBUG);
     MobileCore.initializeWithAppId("YOUR-APP-ID")
       .then(() => {
         console.log("AEP SDK Initialized");
