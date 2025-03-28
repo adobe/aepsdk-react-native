@@ -77,6 +77,7 @@ initializeWithAppId(appId: string): Promise<void>
 **Example**
 ```typescript
 useEffect(() => {
+  MobileCore.setLogLevel(LogLevel.DEBUG);
   MobileCore.initializeWithAppId("YOUR-APP-ID")
     .then(() => {
       console.log("AEP SDK Initialized");
@@ -117,6 +118,7 @@ const initOptions = {
 
 // Initialize the SDK
 useEffect(() => {
+  MobileCore.setLogLevel(LogLevel.DEBUG);
   MobileCore.initialize(initOptions)
     .then(() => {
       console.log("AdobeExperienceSDK: AEP SDK Initialized");
