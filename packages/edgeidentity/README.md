@@ -17,86 +17,27 @@ See [Requirements and Installation](https://github.com/adobe/aepsdk-react-native
 
 Install the `@adobe/react-native-aepedgeidentity` package:
 
+NPM:
+
 ```bash
-cd MyReactApp
 npm install @adobe/react-native-aepedgeidentity
+```
+
+Yarn:
+
+```bash
+yarn add @adobe/react-native-aepedgeidentity
 ```
 
 ## Usage
 
-### Installing and registering the extension with the AEP Mobile Core
+### Initializing with SDK:
 
-The Identity for Edge Network is required for providing the identity information to the Edge Network extension when sending Experience events.
+To initialize the SDK, use the following methods:
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
-Install the Identity extension in your mobile property by following the steps in the [Identity for Edge Network extension documentation](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network).
-
-Then follow the same document for registering the Identity extension with the Mobile Core.
-Note that initializing the SDK should be done in native code, additional documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
-
-
-**Initialization Example**
-
-iOS
-```objc
-// AppDelegate.h
-@import AEPCore;
-@import AEPEdge;
-@import AEPEdgeIdentity;
-...
-@implementation AppDelegate
-
-// AppDelegate.m
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-    // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
-    NSString* ENVIRONMENT_FILE_ID = @"YOUR-APP-ID";
-
-    NSArray *extensionsToRegister = @[AEPMobileEdgeIdentity.class, 
-                                    AEPMobileEdge.class
-                                    ];
-
-    [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
-      [AEPMobileCore configureWithAppId: ENVIRONMENT_FILE_ID];  
-    ...   
-  }]; 
-   return YES;   
- } 
-
-@end
-```
-
-Android
-```java
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Edge;
-import com.adobe.marketing.mobile.edge.identity.Identity;  
-...
-import android.app.Application;
-...
-public class MainApplication extends Application implements ReactApplication {
-  ...
-  // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
-  private final String ENVIRONMENT_FILE_ID = "YOUR-APP-ID";
-
-  @Override
-  public void on Create(){
-    super.onCreate();
-    ...
-    MobileCore.setApplication(this);
-    MobileCore.configureWithAppID(ENVIRONMENT_FILE_ID);
-
-    MobileCore.registerExtensions(
-     Arrays.asList(Identity.EXTENSION, Edge.EXTENSION),
-     o -> Log.d("MainApp", "Adobe Experience Platform Mobile SDK was initialized")
-    );
-  }
-}  
-```
-
-:information_source: If your use-case covers both Edge Network and Adobe Experience Cloud Solutions extensions, you need to register Identity for Edge Network and Identity from Mobile Core for Experience Cloud Identity Service extensions. For more details, see the [Frequently asked questions](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network/faq/#q-i-am-using-aep-edge-and-adobe-solutions-extensions-which-identity-extension-should-i-install-and-register).
-
-
-### [Identity for Edge Network](https://developer.adobe.com/client-sdks/documentation/identity-for-edge-network)
+Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
 ### Importing the extension:
 In your React Native application, import the Identity extension as follows:

@@ -31,66 +31,13 @@ yarn add @adobe/react-native-aepcampaignclassic
 
 ## Usage
 
-### Initializing and registering the extension
+### Initializing with SDK:
 
-Initialization of the SDK should be done in native code, documentation on how to initialize the SDK can be found [here](https://github.com/adobe/aepsdk-react-native#initializing).
+To initialize the SDK, use the following methods:
+- [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
+- [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
-Example:
-
-iOS
-
-```objectivec
-@import AEPCore;
-@import AEPLifecycle;
-@import AEPCampaignClassic;
-
-@implementation AppDelegate
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [AEPMobileCore setLogLevel: AEPLogLevelTrace];
-  [AEPMobileCore configureWithAppId:@"yourAppID"];
-
-  const UIApplicationState appState = application.applicationState;
-
-  [AEPMobileCore registerExtensions: @[ AEPCampaignClassic.class] completion:^{
-    if (appState != UIApplicationStateBackground) {
-    [AEPMobileCore lifecycleStart:nil}];
-    }
-  }];
-  return YES;
-}
-@end
-```
-
-Android
-
-```java
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.CampaignClassic;
-
-...
-import android.app.Application;
-...
-public class MainApplication extends Application implements ReactApplication {
-  ...
-  @Override
-  public void on Create(){
-    super.onCreate();
-    ...
-    MobileCore.setApplication(this);
-    MobileCore.setLogLevel(LoggingMode.DEBUG);
-    MobileCore.configureWithAppID("yourAppID");
-    List<Class<? extends Extension>> extensions = Arrays.asList(
-                CampaignClassic.EXTENSION);
-    MobileCore.registerExtensions(extensions, o -> {
-      MobileCore.lifecycleStart(null);
-    });
-  }
-}
-```
+Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
 ### Importing the extension:
 

@@ -22,32 +22,8 @@ governing permissions and limitations under the License.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
   
-  [AEPMobileCore setLogLevel:AEPLogLevelTrace];
-  [AEPMobileCore configureWithAppId:@"YOUR-APP-ID"];
-  const UIApplicationState appState = application.applicationState;
-  [AEPMobileCore registerExtensions:@[
-      AEPMobileLifecycle.class, AEPMobileIdentity.class,
-      AEPMobileEdgeIdentity.class, AEPMobileEdge.class,
-      AEPMobileEdgeConsent.class, AEPMobileEdgeBridge.class,
-      AEPMobileMessaging.class, AEPMobileOptimize.class, AEPMobilePlaces.class,
-      AEPMobileTarget.class, AEPMobileCampaignClassic.class,
-      AEPMobileAssurance.class
-    ]
-                          completion:^{
-                             if (appState != UIApplicationStateBackground) {
-                               [AEPMobileCore lifecycleStart:nil];
-                             }
-                           }];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-  [AEPMobileCore lifecyclePause];
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-  [AEPMobileCore lifecycleStart:nil];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

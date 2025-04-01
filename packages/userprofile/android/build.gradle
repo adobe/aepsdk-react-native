@@ -41,5 +41,6 @@ repositories {
 
 dependencies {
     implementation "com.facebook.react:react-native:+"
-    api "com.adobe.marketing.mobile:userprofile:3.+"
+    implementation platform("com.adobe.marketing.mobile:sdk-bom:3.+")
+    api "com.adobe.marketing.mobile:userprofile"
 }

@@ -4,6 +4,8 @@ import 'react-native-reanimated';
 import { Drawer } from 'expo-router/drawer';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { MobileCore , LogLevel} from '@adobe/react-native-aepcore';
+import { useEffect } from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -11,8 +13,38 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const scheme = useColorScheme();
 
+  useEffect(() => {
+    // If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
+  
+    // const initOptions = {
+    //   appId: "YOUR-APP-ID", //optional,
+    //   lifecycleAutomaticTrackingEnabled: true, //optional
+    //   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
+    //   appGroupIOS: "group.com.your.app.identifier" //optional, for iOS app groups
+    // };
+  
+    // MobileCore.initialize(initOptions).then(() => {  
+    //   console.log("AEP SDK Initialized");
+    // }).catch((error) => { 
+    //   console.log("AEP SDK Initialization error", error);            
+    // });
+  
+    // Initialize SDK once in App.tsx or the entry file.
+    // For functional components, use useEffect with an empty dependency array.
+    // For class components, call initializeWithAppId inside componentDidMount.
+
+    MobileCore.setLogLevel(LogLevel.DEBUG);
+    MobileCore.initializeWithAppId("YOUR-APP-ID")
+      .then(() => {
+        console.log("AEP SDK Initialized");
+      })
+      .catch((error) => {
+        console.error("AEP SDK Initialization error:", error);
+      });
+  }, []);
+
   return (
-    <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={scheme === "dark" ? DarkTheme : DefaultTheme}>
       <Drawer>
         <Drawer.Screen name="index" options={{ title: 'Home' }} />
         <Drawer.Screen name="CoreView" options={{ title: 'CoreView' }} />
