@@ -71,58 +71,6 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
         MobileCore.configureWithAppID(appId);
     }
 
-@ReactMethod
-public void initializeWithAppId(String appId, final Promise promise) {
-//    Log.debug(LOG_TAG, "Initializing with appId: " + appId);
-    Log.debug(getName(), "Initializing with appId" ,appId);
-    MobileCore.initialize((Application) reactContext.getApplicationContext(), appId, o -> promise.resolve(null));
-    }
-
-    @ReactMethod
-    public void initialize(ReadableMap initOptionsMap, final Callback callback) {
-        InitOptions initOptions = null;
-
-        if (initOptionsMap.hasKey("appId")) {
-
-            String appId = initOptionsMap.getString("appId");
-            Log.debug(getName(), "Initializing with appId" ,appId);
-
-            initOptions = InitOptions.configureWithAppID(appId);
-        } 
-
-        if (initOptions == null) {
-            callback.invoke("InitOptions must contain either an appId or a filePath", null);
-            return;
-        }
-
-        if (initOptionsMap.hasKey("lifecycleAutomaticTrackingEnabled")) {
-            initOptions.setLifecycleAutomaticTrackingEnabled(initOptionsMap.getBoolean("lifecycleAutomaticTrackingEnabled"));
-        }
-
-        if (initOptionsMap.hasKey("lifecycleAdditionalContextData")) {
-            ReadableMap contextDataMap = initOptionsMap.getMap("lifecycleAdditionalContextData");
-            if (contextDataMap != null) {
-                ReadableMapKeySetIterator iterator = contextDataMap.keySetIterator();
-                while (iterator.hasNextKey()) {
-                    String key = iterator.nextKey();
-                    initOptions.getLifecycleAdditionalContextData().put(key, contextDataMap.getString(key));
-                }
-            }
-        }
-
-        MobileCore.initialize((Application) reactContext.getApplicationContext(), initOptions, new AdobeCallbackWithError<Void>() {
-            @Override
-            public void call(Void value) {
-                callback.invoke(null, null);
-            }
-            // should we override this fail method or not?
-            @Override
-            public void fail(AdobeError adobeError) {
-                callback.invoke(adobeError.getErrorName(), null);
-            }
-        });
-    }
-
     @ReactMethod
     public void initialize(ReadableMap initOptionsMap, final Promise promise) {
         InitOptions initOptions = initOptionsFromMap(initOptionsMap);
@@ -273,7 +221,7 @@ public void initializeWithAppId(String appId, final Promise promise) {
             return;
         }
 
-        MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>() {
+        MobileCore.dispatchEventWithResponseCallback(event, timeout, new AdobeCallbackWithError<Event>(){
             @Override
             public void fail(AdobeError adobeError) {
                 handleError(promise, adobeError, "dispatchEventWithResponseCallback");
@@ -313,12 +261,12 @@ public void initializeWithAppId(String appId, final Promise promise) {
 
     @ReactMethod
     public static void setSmallIconResourceID(final int resourceID) {
-        MobileCore.setSmallIconResourceID(resourceID);
+      MobileCore.setSmallIconResourceID(resourceID);
     }
 
     @ReactMethod
     public static void setLargeIconResourceID(final int resourceID) {
-        MobileCore.setLargeIconResourceID(resourceID);
+      MobileCore.setLargeIconResourceID(resourceID);
     }
 
     @ReactMethod
@@ -332,7 +280,7 @@ public void initializeWithAppId(String appId, final Promise promise) {
     }
 
     @ReactMethod
-    public void resetIdentities() {
+     public void resetIdentities() {
         MobileCore.resetIdentities();
      }
 
