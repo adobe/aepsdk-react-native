@@ -109,3 +109,4 @@ Assurance is integrated into the sample app for event and flow validation.
 
 
 Thank you for using **Expo AEPSample App with New Architecture Enabled**! Feel free to star this repository and provide feedback!
+
