@@ -19,5 +19,4 @@ Pod::Spec.new do |s|
 
   s.dependency "React"
   s.dependency "AEPPlaces", ">= 5.0.0", "< 6.0.0"
-  install_modules_dependencies(s)
 end
