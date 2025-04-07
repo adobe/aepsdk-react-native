@@ -26,6 +26,14 @@
   "author": {
     "name": "Adobe Experience Platform SDK Team"
   },
+  "codegenConfig": {
+     "name": "AEPPlacesSpec",
+     "type": "all",
+     "jsSrcsDir": "src/specs",
+     "android": {
+       "javaPackageName": "com.adobe.marketing.mobile.reactnative.places"
+     }
+   },
   "peerDependencies": {
     "@adobe/react-native-aepcore": "^7.0.0",
     "react-native": ">=0.60.0"
