@@ -114,13 +114,7 @@ export default function App() {
     // For functional components, use useEffect with an empty dependency array.
     // For class components, call initializeWithAppId inside componentDidMount.
     MobileCore.setLogLevel(LogLevel.DEBUG);
-    MobileCore.initializeWithAppId("YOUR-APP-ID")
-      .then(() => {
-        console.log("AEP SDK Initialized");
-      })
-      .catch((error) => {
-        console.error("AEP SDK Initialization error:", error);
-      });
+    MobileCore.configureWithAppId("YOUR-APP-ID")
   }, []);
   
   
