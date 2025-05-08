@@ -8,7 +8,6 @@ orbs:
 jobs:
   unit-test:
     docker:
-      # Use Node.js 18.x for compatibility with the project dependencies
       - image: cimg/node:18.20
 
     steps:
@@ -55,14 +54,17 @@ jobs:
 
       - run:
           name: Building Android Sample App
-          command: yarn sampleappnewarchenabled:android:build
+          command: |
+            cd apps/AEPSampleAppNewArchEnabled/android
+            ./gradlew clean
+            ./gradlew assembleDebug --no-daemon
 
           environment:
             _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
   build-sample-app-ios:
     macos:
-      xcode: 15.2 # Specify the Xcode version to use
+      xcode: 15.2
 
     steps:
       - checkout
@@ -109,13 +111,8 @@ jobs:
               clean build
 
 workflows:
-  version: 2.1
   ci-workflow:
     jobs:
       - unit-test
-      - build-sample-app-ios
-      # - build-sample-app-android
-      # Disable the Android build job because of the error below:
-      # Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'.
-      # > [CXX1210] /root/project/apps/AEPSampleApp/node_modules/react-native-reanimated/android/CMakeLists.txt debug|arm64-v8a : No compatible library found
-      # The Android build job will be enabled once the issue is resolved.
+      # - build-sample-app-ios
+      - build-sample-app-android
