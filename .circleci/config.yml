@@ -1,9 +1,7 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
 orbs:
   macos: circleci/macos@2.4.1
-  rn: react-native-community/react-native@8.0.1
 
 jobs:
   unit-test:
@@ -36,13 +34,19 @@ jobs:
           command: yarn test --watchAll=false --runInBand
 
   build-sample-app-android:
-    executor:
-      name: rn/linux_android
-      build_image_version: v14.0
-      resource_class: large
-
+    macos:
+      xcode: 15.2
+    environment:
+      JAVA_HOME: /Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home
+      ANDROID_HOME: /usr/local/share/android-sdk
     steps:
       - checkout
+
+      - run:
+          name: Accept Android Licenses & Install SDK Components
+          command: |
+            echo "y" | sdkmanager --licenses
+            sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2" "ndk;25.1.8937393" "cmake;3.22.1"
 
       - run:
           name: Install Node.js and Yarn Dependencies
@@ -58,8 +62,6 @@ jobs:
             cd apps/AEPSampleAppNewArchEnabled/android
             ./gradlew clean
             ./gradlew assembleDebug --no-daemon
-          environment:
-            _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
   build-sample-app-ios:
     macos:
@@ -113,5 +115,5 @@ workflows:
   ci-workflow:
     jobs:
       - unit-test
-      # - build-sample-app-ios
       - build-sample-app-android
+      # - build-sample-app-ios
