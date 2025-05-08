@@ -24,8 +24,6 @@ governing permissions and limitations under the License.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
-  
-
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
