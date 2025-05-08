@@ -5,7 +5,6 @@ orbs:
   macos: circleci/macos@2.4.1
   rn: react-native-community/react-native@8.0.1
 
-
 jobs:
   unit-test:
     docker:
@@ -59,9 +58,6 @@ jobs:
             cd apps/AEPSampleAppNewArchEnabled/android
             ./gradlew clean
             ./gradlew assembleDebug --no-daemon
-
-          environment:
-            _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
   build-sample-app-ios:
     macos:
