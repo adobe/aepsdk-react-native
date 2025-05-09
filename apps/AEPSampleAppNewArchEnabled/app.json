@@ -34,14 +34,17 @@
         "expo-build-properties",
         {
           "ios": {
-            "newArchEnabled": true
+            "newArchEnabled": true, 
+            "useFrameworks": "static"
           },
           "android": {
             "newArchEnabled": true
           }
         }
-      ]
-     ],
+      ],
+      "expo-font",
+      "./plugins/withGradleProperties"
+    ],
     "experiments": {
       "typedRoutes": true
     }
