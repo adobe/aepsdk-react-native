@@ -20,4 +20,6 @@ expo-env.d.ts
 # @end expo-cli
 
 .idea/*
-!/.idea/file_to_keep.xml
+!/.idea/file_to_keep.xml# Exclude native builds
+android/
+ios/
