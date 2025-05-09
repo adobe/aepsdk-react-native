@@ -42,7 +42,8 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "./plugins/withGradleProperties"
     ],
     "experiments": {
       "typedRoutes": true
