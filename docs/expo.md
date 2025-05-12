@@ -1,21 +1,43 @@
 # Integrating the SDK with Expo projects
-
 The Adobe Experience Platform Mobile SDK for React Native is compatible with the latest stable version of Expo. Using the most recent version of Expo is recommended to avoid any issues.
-
 - [Guide for Expo apps](#guide-for-expo-apps)
 - [Guide for bare React Native apps using Expo modules](#guide-for-bare-react-native-apps-using-expo-modules)
 
 # Guide for Expo apps
 
 > [!NOTE]
-> A simplified solution for SDK integrated with Expo is currently in development and expected to be available in the next couple of months. You may proceed with the current steps or choose to wait for the updated version if you prefer a more streamlined setup.
+> To support Expo CNG and use Mobile Core's initialize API (simplification SDK support), All aep sdks should have 7.x versions except places should have 7.0.1 version or higher.
+
 
 ## Overview
-Expo projects can use both third-party React Native libraries with native code and custom native code. Creating a development build with Expo CLI allows inclusion of specific native dependencies and customizations.
-
-Initializing the Adobe Mobile SDK requires native code implementation. In Expo projects, Continuous Native Generation (CNG) is enabled by default, meaning the `Android` and `iOS` directories for native code and configuration are not included. To integrate the Mobile SDK, CNG must be disabled, and the `Android` and `iOS` directories must be generated and managed manually.
+With the release of the simplification SDK support, Expo projects now support Continuous Native Generation (CNG) without requiring native code modifications. The SDK extensions are now registered through Mobile Core's initialize API, eliminating the need to disable CNG or manually manage native directories.
 
 ## Installation
+
+### Prerequisites
+First, install the required `expo-build-properties` package:
+```bash
+npx expo install expo-build-properties
+```
+
+### Configuration
+Add the following plugin configuration to your `app.json` or `app.config.json`:
+```json
+{
+  "plugins": [
+    [
+      "expo-build-properties", 
+      {
+        "ios": {
+          "useFrameworks": "static"
+        }
+      }
+    ]
+  ]
+}
+```
+
+**Important**: The `useFrameworks: "static"` setting is required for iOS to prevent C++ module import errors during the build process.
 
 To generate these directories, run 
 ```bash
@@ -30,20 +52,16 @@ npx expo run:ios
 ```
 
 ## Install Adobe Mobile SDKs
-
-Refer to the [Installation Guide](../README.md#Installation) to install Adobe SDKs after the android and ios directories are generated.
+After configuring the build properties, refer to the [Installation Guide](../README.md#Installation) to install Adobe SDKs.
 
 ## Initialize Adobe Mobile SDKs
-Refer to the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
-
+Extensions are now registered through Mobile Core's initialize API (no native code required). Refer to the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
 
 # Guide for bare React Native apps using Expo modules
-
 ## Overview
 Bare React Native workflows can be integrated with Expo SDKs by using the `install-expo-modules` command. This allows you to use Expo modules in your app.
 
 To use Expo modules in an app, installation and configuration of the `expo` package is required. The `expo` package has a small footprint; it includes only a minimal set of packages needed in nearly every app and the module and autolinking infrastructure that other Expo SDK packages are built with. After the `expo` package is installed and configured in the project, `npx expo install` can be used to add any other Expo module from the SDK.
-
 
 ## Installation
 - To install and use Expo modules, the easiest way to get up and running is with the `install-expo-modules` command.
@@ -53,33 +71,32 @@ npx install-expo-modules@latest
 - If the command fails, please follow the manual installation [instructions](https://docs.expo.dev/bare/installing-expo-modules/#manual-installation).
 
 ## Install Adobe Mobile SDKs
-
 Refer to the [Installation Guide](../README.md#Installation) to install Adobe SDKs.
 
 ## Initialize Adobe Mobile SDKs
-
-Refer to the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
+Extensions are now registered through Mobile Core's initialize API (no native code required). Refer to the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
 
 # Troubleshooting and Known Issues
-1. `Import of C++ module` error when building on iOS
+## iOS Build Issues (Legacy)
+The following issues are automatically resolved when using the `expo-build-properties` plugin with `useFrameworks: "static"`:
 
-When facing the following error:
+### 1. `Import of C++ module` error when building on iOS
+**Note**: This error is automatically resolved with the static frameworks configuration.
+
+For legacy projects not using the recommended configuration, the error appears as:
 ```xcode
 error: import of C++ module 'Foundation' appears within extern "C" language linkage specification [-Wmodule-import-in-extern-c]
 ```
-**Fix**: In XCode, select your app target, go to **Build Settings** and under `Apple CLang - Custom Compiler Flags`, locate `Other C++ Flags`, and add:
+**Legacy Fix**: In XCode, select your app target, go to **Build Settings** and under `Apple CLang - Custom Compiler Flags`, locate `Other C++ Flags`, and add:
 ```bash
 -Wno-module-import-in-extern-c
 ```
 <img width="936" alt="Xcode Screenshot" src="./resources/xcode c++ flag screenshot.png">
 
-2. `Use of undeclared identifier 'AEPMobileCore'` error when building on iOS
+### 2. `Use of undeclared identifier 'AEPMobileCore'` error when building on iOS
+**Note**: This error is automatically resolved with the static frameworks configuration.
 
-When facing the following error:
-```xcode
-error: Use of undeclared identifier 'AEPMobileCore'
-```
-Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/346#issuecomment-2109949661).
+For legacy projects, refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/346#issuecomment-2109949661).
 
 ## Other known issues with React Native
 Refer to [Troubleshooting and Known Issues](../README.md#troubleshooting-and-known-issues) for other known issues with React Native integration.
