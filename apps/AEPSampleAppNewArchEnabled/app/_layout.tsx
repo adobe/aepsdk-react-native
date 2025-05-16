@@ -3,6 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { Drawer } from 'expo-router/drawer';
 
+
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MobileCore , LogLevel} from '@adobe/react-native-aepcore';
 import { useEffect } from 'react';
@@ -13,6 +14,10 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const scheme = useColorScheme();
 
+  setTimeout(() => {
+    SplashScreen.hideAsync();
+  }, 3000);
+  
   useEffect(() => {
     // If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
   
@@ -32,7 +37,6 @@ export default function RootLayout() {
     // Initialize SDK once in App.tsx or the entry file.
     // For functional components, use useEffect with an empty dependency array.
     // For class components, call initializeWithAppId inside componentDidMount.
-
     MobileCore.setLogLevel(LogLevel.DEBUG);
     MobileCore.initializeWithAppId("YOUR-APP-ID")
       .then(() => {

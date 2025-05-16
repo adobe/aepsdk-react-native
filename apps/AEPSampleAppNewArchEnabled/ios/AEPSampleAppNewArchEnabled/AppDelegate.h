@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 
 #import <RCTAppDelegate.h>
 #import <UIKit/UIKit.h>
-#import <ExpoModulesCore/EXAppDelegateWrapper.h>
+#import <Expo/Expo.h>
 
 @interface AppDelegate : EXAppDelegateWrapper
 
