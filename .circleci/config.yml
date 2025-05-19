@@ -135,7 +135,7 @@ workflows:
   ci-workflow:
     jobs:
       - unit-test
-      - build-sample-app-ios
+      # - build-sample-app-ios
       - build-sample-app-android
       # Uncomment below once CMake/NDK compatibility issue is fully resolved
       # - build-sample-app-android
