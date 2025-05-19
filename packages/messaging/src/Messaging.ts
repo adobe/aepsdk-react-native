@@ -19,6 +19,9 @@ import {
 import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
 import { MessagingProposition } from './models/MessagingProposition';
+import { ContentCard } from './models/ContentCard';
+import MessagingEdgeEventType from './models/MessagingEdgeEventType';
+import { MessagingPropositionItem } from './models/MessagingPropositionItem';
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -34,6 +37,13 @@ export interface NativeMessagingModule {
     shouldSaveMessage: boolean
   ) => void;
   updatePropositionsForSurfaces: (surfaces: string[]) => void;
+  trackPropositionInteraction: (
+    proposition: MessagingProposition,
+    item: MessagingPropositionItem,
+    eventType: MessagingEdgeEventType,
+    interaction: string | null,
+    tokens: string[] | null
+  ) => void;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -159,6 +169,59 @@ class Messaging {
   static updatePropositionsForSurfaces(surfaces: string[]) {
     RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
+
+  /**
+   * Tracks interaction with a Content Card proposition item for a display event.
+   * @param {MessagingProposition} proposition - The parent MessagingProposition containing the item.
+   * @param {ContentCard} item - The specific ContentCard object to track.
+   * @memberof Messaging
+   */
+  static trackContentCardDisplay(proposition: MessagingProposition, item: ContentCard) {
+    RCTAEPMessaging.trackPropositionInteraction(
+      proposition,
+      item,
+      MessagingEdgeEventType.DISPLAY,
+      null,
+      null
+    );
+  }
+
+  /**
+   * Tracks interaction with a Content Card proposition item for an interaction event.
+   * @param {MessagingProposition} proposition - The parent MessagingProposition containing the item.
+   * @param {ContentCard} item - The specific ContentCard object to track.
+   * @param {string} interaction - A string describing the interaction (e.g., 'button tapped', 'card clicked'). Required for interact events.
+   * @memberof Messaging
+   */
+  static trackContentCardInteract(proposition: MessagingProposition, item: ContentCard, interaction: string) {
+     if (!interaction) {
+       console.warn('[AEPMessaging] Interaction string is required for trackContentCardInteract.');
+       return;
+     }
+    RCTAEPMessaging.trackPropositionInteraction(
+      proposition,
+      item,
+      MessagingEdgeEventType.INTERACT,
+      interaction,
+      null
+    );
+  }
+
+  /**
+   * Tracks interaction with a Content Card proposition item for a dismiss event.
+   * @param {MessagingProposition} proposition - The parent MessagingProposition containing the item.
+   * @param {ContentCard} item - The specific ContentCard object to track.
+   * @memberof Messaging
+   */
+  static trackContentCardDismiss(proposition: MessagingProposition, item: ContentCard) {
+     RCTAEPMessaging.trackPropositionInteraction(
+       proposition,
+       item,
+       MessagingEdgeEventType.DISMISS,
+       null,
+       null
+     );
+   }
 }
 
 export default Messaging;
