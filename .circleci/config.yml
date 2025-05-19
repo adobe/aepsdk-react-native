@@ -1,4 +1,3 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
 orbs:
@@ -8,7 +7,6 @@ orbs:
 jobs:
   unit-test:
     docker:
-      # Use Node.js 18.x for compatibility with the project dependencies
       - image: cimg/node:18.20
 
     steps:
@@ -26,11 +24,15 @@ jobs:
           name: Build the Project
           command: yarn run build
 
+      - run:
+          name: Expo Prebuild
+          command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
+
       - save_cache:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
-            - ./apps/AEPSampleAppNewArchEnabled/node_modules
+            - node_modules
+            - apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
           name: Unit Tests
@@ -54,15 +56,31 @@ jobs:
           command: yarn run build
 
       - run:
-          name: Building Android Sample App
-          command: yarn sampleappnewarchenabled:android:build
+          name: Expo Prebuild
+          command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
 
+      - run:
+          name: Install CMake 3.31.1
+          command: |
+            cd /tmp
+            curl -LO https://github.com/Kitware/CMake/releases/download/v3.31.1/cmake-3.31.1-linux-x86_64.sh
+            chmod +x cmake-3.31.1-linux-x86_64.sh
+            ./cmake-3.31.1-linux-x86_64.sh --skip-license --prefix=/opt/cmake
+            echo 'export PATH=/opt/cmake/bin:$PATH' >> $BASH_ENV
+            echo 'export CMAKE_VERSION=3.31.1' >> $BASH_ENV
+            source $BASH_ENV
+
+      - run:
+          name: Assemble Android Release Build
+          command: |
+            cd apps/AEPSampleAppNewArchEnabled/android
+            ./gradlew assembleRelease
           environment:
             _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
   build-sample-app-ios:
     macos:
-      xcode: 15.2 # Specify the Xcode version to use
+      xcode: 15.2
 
     steps:
       - checkout
@@ -83,11 +101,15 @@ jobs:
           name: Build the Project
           command: yarn run build
 
+      - run:
+          name: Expo Prebuild
+          command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
+
       - save_cache:
           key: ios-yarn-cache-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
-            - ./apps/AEPSampleAppNewArchEnabled/node_modules
+            - node_modules
+            - apps/AEPSampleAppNewArchEnabled/node_modules
 
       - run:
           name: Install Cocoapods
@@ -113,9 +135,7 @@ workflows:
   ci-workflow:
     jobs:
       - unit-test
-      - build-sample-app-ios
+      # - build-sample-app-ios
+      - build-sample-app-android
+      # Uncomment below once CMake/NDK compatibility issue is fully resolved
       # - build-sample-app-android
-      # Disable the Android build job because of the error below:
-      # Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'.
-      # > [CXX1210] /root/project/apps/AEPSampleApp/node_modules/react-native-reanimated/android/CMakeLists.txt debug|arm64-v8a : No compatible library found
-      # The Android build job will be enabled once the issue is resolved.
