@@ -5,22 +5,20 @@ The Adobe Experience Platform Mobile SDK for React Native is compatible with the
 
 # Guide for Expo apps
 
-> [!NOTE]
-> To support Expo CNG and use Mobile Core's initialize API (simplification SDK support), All aep sdks should have 7.x versions except places should have 7.0.1 version or higher.
-
-
 ## Overview
 With the release of the simplification SDK support, Expo projects now support Continuous Native Generation (CNG) without requiring native code modifications. The SDK extensions are now registered through Mobile Core's initialize API, eliminating the need to disable CNG or manually manage native directories.
 
 ## Installation
 
 ### Prerequisites
-First, install the required `expo-build-properties` package:
+To prevent C++ module import errors during the iOS build process, we need to configure useFrameworks: "static" using the expo-build-properties package. This is a required step for proper Adobe SDK integration with Expo.
+
+#### Install the required package:
 ```bash
 npx expo install expo-build-properties
 ```
 
-### Configuration
+#### Configuration
 Add the following plugin configuration to your `app.json` or `app.config.json`:
 ```json
 {
@@ -39,23 +37,33 @@ Add the following plugin configuration to your `app.json` or `app.config.json`:
 
 **Important**: The `useFrameworks: "static"` setting is required for iOS to prevent C++ module import errors during the build process.
 
-To generate these directories, run 
+### Install Adobe Mobile SDKs
+
+> [!NOTE]
+> To support Expo CNG and use Mobile Core's initialize API (simplification SDK support), All aep sdks should have 7.x versions except places should have 7.0.1 version or higher.
+
+After configuring the build properties, refer to the [Installation Guide](../README.md#Installation) to install Adobe SDKs.
+
+### Initialize Adobe Mobile SDKs
+Extensions are now registered through Mobile Core's initialize API (no native code required). Refer to the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
+
+### Generate and Run Native Projects
+
+To apply these build properties and include the installed SDKs in your native projects, run:
 ```bash
 npx expo prebuild
 ```
-Alternatively, compile the app locally:
+
+This will generate the native iOS and Android projects with the configured build properties and SDKs.
+
+After generating the native projects, you can build and run the app:
+
 ```bash
-# Build your native Android project
+# Build and run on Android
 npx expo run:android
-# Build your native iOS project
+# Build and run on iOS
 npx expo run:ios
 ```
-
-## Install Adobe Mobile SDKs
-After configuring the build properties, refer to the [Installation Guide](../README.md#Installation) to install Adobe SDKs.
-
-## Initialize Adobe Mobile SDKs
-Extensions are now registered through Mobile Core's initialize API (no native code required). Refer to the [Initialization Guide](../README.md#initializing) to initialize Adobe SDKs.
 
 # Guide for bare React Native apps using Expo modules
 ## Overview
@@ -78,7 +86,7 @@ Extensions are now registered through Mobile Core's initialize API (no native co
 
 # Troubleshooting and Known Issues
 ## iOS Build Issues (Legacy)
-The following issues are automatically resolved when using the `expo-build-properties` plugin with `useFrameworks: "static"`:
+The following issues are automatically resolved when using the `expo-build-properties` plugin with `useFrameworks: "static"`  as described in the [Prerequisites](../README.md#prerequisites) section:
 
 ### 1. `Import of C++ module` error when building on iOS
 **Note**: This error is automatically resolved with the static frameworks configuration.
