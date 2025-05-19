@@ -63,9 +63,9 @@ jobs:
           name: Assemble Android Release Build
           command: |
             cd apps/AEPSampleAppNewArchEnabled/android
+            unset _JAVA_OPTIONS
             ./gradlew assembleRelease
-          environment:
-            _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
+         
 
   build-sample-app-ios:
     macos:
