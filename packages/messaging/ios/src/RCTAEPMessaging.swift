@@ -267,4 +267,68 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     private func emitNativeEvent(name: String, body: Any) {
         RCTAEPMessaging.emitter.sendEvent(withName: name, body: body)
     }
+
+    @objc(trackPropositionInteraction:itemId:eventType:interaction:tokens:)
+    func trackPropositionInteraction(propositionData: [String: Any]?, itemId: String?, eventTypeIntFromJS: Int, interaction: String?, tokensArray: [String]?) {
+        guard let propositionData = propositionData, let itemId = itemId, !itemId.isEmpty else {
+            Log.debug(label:Self.EXTENSION_NAME, "trackPropositionInteraction - Proposition data or item ID is nil/empty. Cannot track interaction.")
+            return
+        }
+
+        // 1. Map JS eventTypeInt to native Swift MessagingEdgeEventType
+        var nativeEventType: MessagingEdgeEventType?
+        switch eventTypeIntFromJS {
+            case 0: // Corresponds to JS MessagingEdgeEventType.DISMISS
+                nativeEventType = .dismiss
+            case 1: // Corresponds to JS MessagingEdgeEventType.INTERACT
+                nativeEventType = .interact
+            case 3: // Corresponds to JS MessagingEdgeEventType.DISPLAY
+                nativeEventType = .display
+            // Note: Add other cases if new tracking methods are added in JS that use other event types from MessagingEdgeEventType.ts
+            default:
+                Log.debug(label:Self.EXTENSION_NAME, "trackPropositionInteraction - Unsupported event type integer from JS: \(eventTypeIntFromJS).")
+                return
+        }
+
+        guard let eventType = nativeEventType else {
+             // This case should ideally not be hit if the switch is exhaustive for supported JS values
+            Log.debug(label:Self.EXTENSION_NAME, "trackPropositionInteraction - Native event type could not be determined.")
+            return
+        }
+
+        // 2. Decode Proposition
+        var nativeProposition: Proposition?
+        do {
+            // Convert the [String: Any] dictionary to JSON Data
+            let jsonData = try JSONSerialization.data(withJSONObject: propositionData, options: [])
+            // Decode the JSON Data into a Proposition object
+            nativeProposition = try JSONDecoder().decode(Proposition.self, from: jsonData)
+        } catch {
+            Log.debug(label:Self.EXTENSION_NAME, "trackPropositionInteraction - Failed to decode Proposition from event data: \(error.localizedDescription)")
+            return
+        }
+
+        guard let unwrappedProposition = nativeProposition else {
+            Log.debug(label:Self.EXTENSION_NAME, "trackPropositionInteraction - Reconstructed native Proposition is nil.")
+            return
+        }
+
+        // 3. Find Target Item
+        var targetItem: PropositionItem? = nil
+        for item in unwrappedProposition.items { // Accesses the lazy var 'items' which sets up parent proposition reference
+            if item.itemId == itemId { // Assuming PropositionItem has 'itemId'
+                targetItem = item
+                break
+            }
+        }
+
+        guard let foundItem = targetItem else {
+            Log.debug(label:Self.EXTENSION_NAME, "trackPropositionInteraction - Could not find PropositionItem with id: \(itemId) in the reconstructed proposition.")
+            return
+        }
+        
+        // 4. Call Track
+        foundItem.track(interaction, withEdgeEventType: eventType, forTokens: tokensArray)
+        Log.debug(label:Self.EXTENSION_NAME, "trackPropositionInteraction - Successfully tracked interaction for item ID: \(itemId), EventType: \(eventType.toString())")
+    }
 }

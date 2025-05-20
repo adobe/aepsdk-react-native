@@ -16,6 +16,7 @@ import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUt
 import android.app.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
@@ -27,6 +28,7 @@ import com.adobe.marketing.mobile.MessagingEdgeEventType;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.messaging.MessagingUtils;
 import com.adobe.marketing.mobile.messaging.Proposition;
+import com.adobe.marketing.mobile.messaging.PropositionItem;
 import com.adobe.marketing.mobile.messaging.Surface;
 import com.adobe.marketing.mobile.services.ServiceProvider;
 import com.adobe.marketing.mobile.services.ui.InAppMessage;
@@ -38,12 +40,15 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import com.adobe.marketing.mobile.services.Log;
+import com.adobe.marketing.mobile.util.StringUtils;
 
 public final class RCTAEPMessagingModule
     extends ReactContextBaseJavaModule implements PresentationDelegate {
@@ -268,5 +273,52 @@ public final class RCTAEPMessagingModule
     reactContext
         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
         .emit(name, eventData);
+  }
+
+  @ReactMethod
+  public void trackPropositionInteraction(
+      ReadableMap propositionMap,
+      String itemId,
+      int eventTypeInt,
+      @Nullable String interaction,
+      @Nullable ReadableArray tokensArray
+  ) {
+    if (propositionMap == null || StringUtils.isNullOrEmpty(itemId)) {
+        Log.debug(TAG, "trackPropositionInteraction", "Proposition data or item ID is null/empty. Cannot track interaction.");
+        return;
+    }
+
+    Map<String, Object> propositionJavaMap = RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
+    Proposition nativeProposition = Proposition.fromEventData(propositionJavaMap);
+
+    if (nativeProposition == null) {
+        Log.debug(TAG, "trackPropositionInteraction", "Failed to reconstruct native Proposition from event data. Cannot track interaction for item ID: %s", itemId);
+        return;
+    }
+
+    PropositionItem targetItem = null;
+    for (PropositionItem item : nativeProposition.getItems()) {
+        if (item.getItemId().equals(itemId)) {
+            targetItem = item;
+            break;
+        }
+    }
+
+    if (targetItem == null) {
+        Log.debug(TAG, "trackPropositionInteraction", "Could not find PropositionItem with id: %s in the reconstructed proposition. Cannot track interaction.", itemId);
+        return;
+    }
+
+    MessagingEdgeEventType eventType = RCTAEPMessagingUtil.getEventType(eventTypeInt);
+    if (eventType == null) {
+        Log.debug(TAG, "trackPropositionInteraction", "Invalid event type integer received: %d. Cannot track interaction for item ID: %s", eventTypeInt, itemId);
+        return;
+    }
+
+    List<String> nativeTokens = tokensArray != null ? RCTAEPMessagingUtil.convertReadableArrayToStringList(tokensArray) : null;
+
+    // Call the native track method on the PropositionItem
+    targetItem.track(interaction, eventType, nativeTokens);
+    Log.debug(TAG, "trackPropositionInteraction", "Successfully tracked interaction for item ID: %s, EventType: %s", itemId, eventType.name());
   }
 }
