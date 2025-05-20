@@ -34,13 +34,19 @@ To install **AEPSampleAppNewArchEnabled App**, follow these steps:
 > Note: Commands are assuming you're in the root directory of the repository.
 
 ```
-yarn install && yarn sampleappnewarchenabled:ios:pod:install
+yarn install 
 ```
 
 ### Build packages
 
 ```
 yarn run build
+```
+
+### Generate Native Projects 
+
+```
+yarn sampleappnewarchenabled:expo:prebuild
 ```
 
 ## Get Started
