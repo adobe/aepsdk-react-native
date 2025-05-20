@@ -103,6 +103,9 @@ yarn install
 
 ##### ios development
 
+> [!NOTE]   
+> Skip this step if you are developing with Expo.
+
 For iOS development, after installing the plugins from npm, download the pod dependencies by running the following command:
 
 ```bash
