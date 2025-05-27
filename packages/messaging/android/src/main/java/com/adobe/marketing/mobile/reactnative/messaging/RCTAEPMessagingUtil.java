@@ -19,13 +19,14 @@
  import com.facebook.react.bridge.Arguments;
  import com.facebook.react.bridge.ReadableArray;
  import com.facebook.react.bridge.ReadableMap;
+ import com.facebook.react.bridge.ReadableMapKeySetIterator;
+ import com.facebook.react.bridge.ReadableType;
  import com.facebook.react.bridge.WritableArray;
  import com.facebook.react.bridge.WritableMap;
  import com.facebook.react.bridge.WritableNativeArray;
  import com.facebook.react.bridge.WritableNativeMap;
  import java.util.ArrayList;
  import java.util.Collection;
- import java.util.Collections;
  import java.util.HashMap;
  import java.util.Iterator;
  import java.util.List;
@@ -217,99 +218,39 @@
      }
      return writableMap;
    }
- 
-   // Helper method to convert ReadableMap to Map<String, Object>
-   static Map<String, Object> convertReadableMapToMap(ReadableMap readableMap) {
-     if (readableMap == null) {
-       return Collections.emptyMap();
-     }
-     Map<String, Object> map = new HashMap<>();
-     com.facebook.react.bridge.ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
-     while (iterator.hasNextKey()) {
-       String key = iterator.nextKey();
-       com.facebook.react.bridge.ReadableType type = readableMap.getType(key);
-       switch (type) {
-         case Null:
-           map.put(key, null);
-           break;
-         case Boolean:
-           map.put(key, readableMap.getBoolean(key));
-           break;
-         case Number:
-           // Can be int or double
-           double numberValue = readableMap.getDouble(key);
-           if (numberValue == (int) numberValue) {
-             map.put(key, (int) numberValue);
-           } else {
-             map.put(key, numberValue);
-           }
-           break;
-         case String:
-           map.put(key, readableMap.getString(key));
-           break;
-         case Map:
-           map.put(key, convertReadableMapToMap(readableMap.getMap(key)));
-           break;
-         case Array:
-           map.put(key, convertReadableArrayToList(readableMap.getArray(key)));
-           break;
-       }
-     }
-     return map;
-   }
- 
-   // Helper method to convert ReadableArray to List<Object>
-   static List<Object> convertReadableArrayToList(ReadableArray readableArray) {
-     if (readableArray == null) {
-       return Collections.emptyList();
-     }
-     List<Object> list = new ArrayList<>(readableArray.size());
-     for (int i = 0; i < readableArray.size(); i++) {
-       com.facebook.react.bridge.ReadableType type = readableArray.getType(i);
-       switch (type) {
-         case Null:
-           list.add(null);
-           break;
-         case Boolean:
-           list.add(readableArray.getBoolean(i));
-           break;
-         case Number:
-           double numberValue = readableArray.getDouble(i);
-           if (numberValue == (int) numberValue) {
-             list.add((int) numberValue);
-           } else {
-             list.add(numberValue);
-           }
-           break;
-         case String:
-           list.add(readableArray.getString(i));
-           break;
-         case Map:
-           list.add(convertReadableMapToMap(readableArray.getMap(i)));
-           break;
-         case Array:
-           list.add(convertReadableArrayToList(readableArray.getArray(i)));
-           break;
-       }
-     }
-     return list;
-   }
- 
-   // Helper method to convert ReadableArray to List<String>, assuming all elements are strings
-   static List<String> convertReadableArrayToStringList(ReadableArray readableArray) {
-     if (readableArray == null) {
-       return Collections.emptyList();
-     }
-     List<String> list = new ArrayList<>(readableArray.size());
-     for (int i = 0; i < readableArray.size(); i++) {
-       com.facebook.react.bridge.ReadableType type = readableArray.getType(i);
-       if (type == com.facebook.react.bridge.ReadableType.String) {
-         list.add(readableArray.getString(i));
-       } else {
-         // Handle error or skip non-string elements if necessary
-         // For now, skipping non-string elements
-       }
-     }
-     return list;
-   }
+
+   /**
+     * Converts {@link ReadableMap} Map to {@link Map}
+     *
+     * @param readableMap instance of {@code ReadableMap}
+     * @return instance of {@code Map}
+     */
+    static Map<String, Object> convertReadableMapToMap(final ReadableMap readableMap) {
+        ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
+        Map<String, Object> map = new HashMap<>();
+        while (iterator.hasNextKey()) {
+            String key = iterator.nextKey();
+            ReadableType type = readableMap.getType(key);
+            switch (type) {
+                case Boolean:
+                    map.put(key, readableMap.getBoolean(key));
+                    break;
+                case Number:
+                    map.put(key, readableMap.getDouble(key));
+                    break;
+                case String:
+                    map.put(key, readableMap.getString(key));
+                    break;
+                case Map:
+                    map.put(key, convertReadableMapToMap(readableMap.getMap(key)));
+                    break;
+                case Array:
+                    map.put(key, convertReadableArrayToList(readableMap.getArray(key)));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return map;
+    }
  }
