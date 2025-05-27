@@ -13,6 +13,37 @@ governing permissions and limitations under the License.
 import { NativeModules } from 'react-native';
 import { Messaging, Message, MessagingEdgeEventType } from '../src';
 
+// Mocking the NativeModules.AEPMessaging
+jest.mock('react-native', () => ({
+  ...jest.requireActual('react-native'),
+  NativeModules: {
+    ...jest.requireActual('react-native').NativeModules,
+    AEPMessaging: {
+      extensionVersion: jest.fn(() => Promise.resolve('test-version')),
+      refreshInAppMessages: jest.fn(),
+      setMessagingDelegate: jest.fn(),
+      setAutoTrack: jest.fn(),
+      show: jest.fn(),
+      dismiss: jest.fn(),
+      track: jest.fn(),
+      clear: jest.fn(),
+      updatePropositionsForSurfaces: jest.fn(),
+      getPropositionsForSurfaces: jest.fn(() => Promise.resolve({})),
+      // Ensure trackPropositionInteraction is part of the mock
+      trackPropositionInteraction: jest.fn(), 
+      // Add any other methods from AEPMessaging that are used in tests or the module itself
+      getCachedMessages: jest.fn(() => Promise.resolve([])),
+      getLatestMessage: jest.fn(() => Promise.resolve(null)),
+      setMessageSettings: jest.fn()
+    }
+  },
+  NativeEventEmitter: jest.fn(() => ({
+    addListener: jest.fn(),
+    removeListeners: jest.fn(),
+    removeAllListeners: jest.fn() // Added removeAllListeners based on usage in Messaging.ts
+  }))
+}));
+
 describe('Messaging', () => {
   it('extensionVersion is called', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
