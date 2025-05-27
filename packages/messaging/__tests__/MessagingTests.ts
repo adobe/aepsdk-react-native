@@ -104,4 +104,50 @@ describe('Messaging', () => {
     ]);
     expect(spy).toHaveBeenCalledWith(['testSurface1', 'testSurface2']);
   });
+
+  it('trackContentCardDisplay is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'trackPropositionInteraction');
+    const mockProposition = { id: 'propId' } as any;
+    const mockContentCard = { itemId: 'itemId' } as any;
+
+    await Messaging.trackContentCardDisplay(mockProposition, mockContentCard);
+    expect(spy).toHaveBeenCalledWith(
+      mockProposition,
+      mockContentCard,
+      MessagingEdgeEventType.DISPLAY,
+      null,
+      null
+    );
+  });
+
+  it('trackContentCardInteract is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'trackPropositionInteraction');
+    const mockProposition = { id: 'propId' } as any;
+    const mockContentCard = { itemId: 'itemId' } as any;
+    const interaction = 'mockInteraction';
+
+    await Messaging.trackContentCardInteract(mockProposition, mockContentCard, interaction);
+    expect(spy).toHaveBeenCalledWith(
+      mockProposition,
+      mockContentCard,
+      MessagingEdgeEventType.INTERACT,
+      interaction,
+      null
+    );
+  });
+
+  it('trackContentCardDismiss is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'trackPropositionInteraction');
+    const mockProposition = { id: 'propId' } as any;
+    const mockContentCard = { itemId: 'itemId' } as any;
+
+    await Messaging.trackContentCardDismiss(mockProposition, mockContentCard);
+    expect(spy).toHaveBeenCalledWith(
+      mockProposition,
+      mockContentCard,
+      MessagingEdgeEventType.DISMISS,
+      null,
+      null
+    );
+  });
 });
