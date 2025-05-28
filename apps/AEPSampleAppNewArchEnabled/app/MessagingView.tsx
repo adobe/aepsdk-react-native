@@ -64,7 +64,7 @@ const getLatestMessage = async () => {
   console.log('Latest Message:', message);
 };
 
-const trackPropositionInteraction = async () => {
+const trackContentCardInteraction = async () => {
   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
   for (const surface of SURFACES) { 
     const propositions = messages[surface] || [];
@@ -110,7 +110,7 @@ function MessagingView() {
         <Button title="getCachedMessages()" onPress={getCachedMessages} />
         <Button title="getLatestMessage()" onPress={getLatestMessage} />
         <Button title="trackAction()" onPress={trackAction} />
-        <Button title="trackPropositionInteraction()" onPress={trackPropositionInteraction} />
+        <Button title="trackPropositionInteraction()" onPress={trackContentCardInteraction} />
         <Button title="trackContentCardDisplay()" onPress={trackContentCardDisplay} />
       </ScrollView>
     </View>
