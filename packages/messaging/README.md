@@ -434,3 +434,23 @@ function otherWorkflowFinished() {
   currentMessage.clearMessage();
 }
 ```
+
+## Tracking interactions with content cards
+
+### trackContentCardDisplay
+
+Tracks a Display interaction with the given ContentCard
+
+**Syntax**
+```javascript
+Messaging.trackContentCardDisplay(proposition, contentCard);
+```
+
+### trackContentCardDisplay
+
+Tracks a Click interaction with the given ContentCard
+
+**Syntax**
+```javascript
+Messaging.trackContentCardInteraction(proposition, contentCard);
+```
