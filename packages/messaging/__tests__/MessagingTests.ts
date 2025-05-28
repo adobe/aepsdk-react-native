@@ -104,4 +104,26 @@ describe('Messaging', () => {
     ]);
     expect(spy).toHaveBeenCalledWith(['testSurface1', 'testSurface2']);
   });
+
+  it('should call trackContentCardDisplay', async () => {
+    const spy = jest.spyOn(
+      NativeModules.AEPMessaging,
+      'trackContentCardDisplay'
+    );
+    const mockProposition = { propositionId: 'mockPropositionId' } as any;
+    const mockContentCard = { contentCardId: 'mockContentCardId' } as any;
+    await Messaging.trackContentCardDisplay(mockProposition, mockContentCard);
+    expect(spy).toHaveBeenCalledWith(mockProposition, mockContentCard);
+  });
+
+  it('should call trackContentCardInteraction', async () => {
+    const spy = jest.spyOn(
+      NativeModules.AEPMessaging,
+      'trackContentCardInteraction'
+    );
+    const mockProposition = { propositionId: 'mockPropositionId' } as any;
+    const mockContentCard = { contentCardId: 'mockContentCardId' } as any;
+    await Messaging.trackContentCardInteraction(mockProposition, mockContentCard);
+    expect(spy).toHaveBeenCalledWith(mockProposition, mockContentCard);
+  });
 });
