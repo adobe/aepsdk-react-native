@@ -446,7 +446,7 @@ Tracks a Display interaction with the given ContentCard
 Messaging.trackContentCardDisplay(proposition, contentCard);
 ```
 
-### trackContentCardDisplay
+### trackContentCardInteraction
 
 Tracks a Click interaction with the given ContentCard
 
