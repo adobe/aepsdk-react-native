@@ -206,80 +206,46 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         _ propositionMap: [String: Any], 
         contentCardMap: [String: Any]
     ) { 
-
-        guard let propositionId = propositionMap["id"] as? String,
-              let scope = propositionMap["scope"] as? String,
-              let scopeDetails = propositionMap["scopeDetails"] as? [String: Any],
-              let itemsArrayData = propositionMap["items"] as? [[String: Any]] else {
+        guard let contentCardId = contentCardMap["id"] as? String else {
+            print("Error: Content card ID is missing or invalid")
             return
         }
-
-        var parsedPropositionItems: [Messaging.PropositionItem] = []
-        let decoder = JSONDecoder() 
-
-        for itemDict in itemsArrayData {
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: itemDict, options: [])
-                let propositionItem = try decoder.decode(Messaging.PropositionItem.self, from: jsonData)
-                parsedPropositionItems.append(propositionItem)
-            } catch {
-                Log.error(label: "RCTAEPMessaging", message: "Failed to decode PropositionItem: \(error.localizedDescription) for item: \(itemDict)")
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: propositionMap)
+            let proposition = try JSONDecoder().decode(Proposition.self, from: jsonData)
+            
+            if let matchingItem = proposition.propositionItems.first(where: { $0.itemId == contentCardId }) {
+                matchingItem.track(withEdgeEventType: MessagingEdgeEventType.display)
+            } else {
+                print("Error: No matching proposition item found for content card ID: \(contentCardId)")
             }
-        }
-
-        let proposition = Messaging.Proposition(uniqueId: propositionId, scope: scope, scopeDetails: scopeDetails, items: parsedPropositionItems)
-
-        guard let displayedItemId = contentCardMap["id"] as? String else { 
-            Log.warning(label: "RCTAEPMessaging", message: "contentCardMap is missing 'id' or it's not a String, cannot identify the displayed item.")
-            return
-        }
-
-        for item in proposition.propositionItems {
-            if item.itemId == displayedItemId {
-                item.track(withEdgeEventType: MessagingEdgeEventType.display)
-                break 
-            }
+        } catch {
+            print("Error decoding proposition: \(error.localizedDescription)")
         }
     }
 
-@objc
+    @objc
     func trackContentCardInteraction(
         _ propositionMap: [String: Any], 
         contentCardMap: [String: Any]
     ) { 
-
-        guard let propositionId = propositionMap["id"] as? String,
-              let scope = propositionMap["scope"] as? String,
-              let scopeDetails = propositionMap["scopeDetails"] as? [String: Any],
-              let itemsArrayData = propositionMap["items"] as? [[String: Any]] else {
+        guard let contentCardId = contentCardMap["id"] as? String else {
+            print("Error: Content card ID is missing or invalid")
             return
         }
-
-        var parsedPropositionItems: [Messaging.PropositionItem] = []
-        let decoder = JSONDecoder() 
-
-        for itemDict in itemsArrayData {
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: itemDict, options: [])
-                let propositionItem = try decoder.decode(Messaging.PropositionItem.self, from: jsonData)
-                parsedPropositionItems.append(propositionItem)
-            } catch {
-                Log.error(label: "RCTAEPMessaging", message: "Failed to decode PropositionItem: \(error.localizedDescription) for item: \(itemDict)")
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: propositionMap)
+            let proposition = try JSONDecoder().decode(Proposition.self, from: jsonData)
+            
+            if let matchingItem = proposition.propositionItems.first(where: { $0.itemId == contentCardId }) {
+                matchingItem.track("click", withEdgeEventType: MessagingEdgeEventType.interact)
+            } else {
+                print("Error: No matching proposition item found for content card ID: \(contentCardId)")
             }
-        }
-
-        let proposition = Messaging.Proposition(uniqueId: propositionId, scope: scope, scopeDetails: scopeDetails, items: parsedPropositionItems)
-
-        guard let clickedItemId = contentCardMap["id"] as? String else { 
-            Log.warning(label: "RCTAEPMessaging", message: "contentCardMap is missing 'id' or it's not a String, cannot identify the displayed item.")
-            return
-        }
-
-        for item in proposition.propositionItems {
-            if item.itemId == clickedItemId {
-                item.track("click", withEdgeEventType: MessagingEdgeEventType.interact)
-                break 
-            }
+        } catch {
+            print("Error decoding proposition: \(error.localizedDescription)")
         }
     }
 

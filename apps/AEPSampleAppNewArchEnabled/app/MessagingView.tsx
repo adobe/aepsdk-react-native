@@ -13,11 +13,12 @@ governing permissions and limitations under the License.
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {MobileCore} from '@adobe/react-native-aepcore';
-import {Messaging} from '@adobe/react-native-aepmessaging'
+import {Messaging, PersonalizationSchema} from '@adobe/react-native-aepmessaging'
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
-const SURFACES = ['android-cb-preview'];
+const SURFACES = ['android-cbe-preview', 'cbe/json', 'android-cc'];
+const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
 
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
@@ -64,25 +65,37 @@ const getLatestMessage = async () => {
   console.log('Latest Message:', message);
 };
 
+// this method can be used to track click interactions with content cards
 const trackContentCardInteraction = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  for (const surface of SURFACES) { 
+  const messages = await Messaging.getPropositionsForSurfaces(SURFACES_WITH_CONTENT_CARDS);
+  
+  for (const surface of SURFACES_WITH_CONTENT_CARDS) { 
     const propositions = messages[surface] || [];
+
     for (const proposition of propositions) {
-      for (const item of proposition.items) {
-        Messaging.trackContentCardInteraction(proposition, item);
+      for (const propositionItem of proposition.items) {
+        if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
+          Messaging.trackContentCardInteraction(proposition, propositionItem);
+          console.log('trackContentCardInteraction', proposition, propositionItem);
+        }
       }
     }
   }
 }
 
+// this method can be used to track display interactions with content cards
 const trackContentCardDisplay = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  for (const surface of SURFACES) { 
+  const messages = await Messaging.getPropositionsForSurfaces(SURFACES_WITH_CONTENT_CARDS);
+
+  for (const surface of SURFACES_WITH_CONTENT_CARDS) { 
     const propositions = messages[surface] || [];
+
     for (const proposition of propositions) {
-      for (const item of proposition.items) {
-        Messaging.trackContentCardDisplay(proposition, item);
+      for (const propositionItem of proposition.items) {
+        if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
+          Messaging.trackContentCardDisplay(proposition, propositionItem);
+          console.log('trackContentCardDisplay', proposition, propositionItem);
+        }
       }
     }
   }

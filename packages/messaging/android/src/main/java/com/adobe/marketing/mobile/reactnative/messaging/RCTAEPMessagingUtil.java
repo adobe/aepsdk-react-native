@@ -253,4 +253,31 @@
         }
         return map;
     }
+
+    static List<Object> convertReadableArrayToList(final ReadableArray readableArray) {
+        final List<Object> list = new ArrayList<>(readableArray.size());
+        for (int i = 0; i < readableArray.size(); i++) {
+            ReadableType indexType = readableArray.getType(i);
+            switch(indexType) {
+                case Boolean:
+                    list.add(i, readableArray.getBoolean(i));
+                    break;
+                case Number:
+                    list.add(i, readableArray.getDouble(i));
+                    break;
+                case String:
+                    list.add(i, readableArray.getString(i));
+                    break;
+                case Map:
+                    list.add(i, convertReadableMapToMap(readableArray.getMap(i)));
+                    break;
+                case Array:
+                    list.add(i, convertReadableArrayToList(readableArray.getArray(i)));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return list;
+    }
  }
