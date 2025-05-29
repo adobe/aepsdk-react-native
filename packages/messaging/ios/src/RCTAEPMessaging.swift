@@ -215,7 +215,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
             let jsonData = try JSONSerialization.data(withJSONObject: propositionMap)
             let proposition = try JSONDecoder().decode(Proposition.self, from: jsonData)
             
-            if let matchingItem = proposition.propositionItems.first(where: { $0.itemId == contentCardId }) {
+            if let matchingItem = proposition.items.first(where: { $0.itemId == contentCardId }) {
                 matchingItem.track(withEdgeEventType: MessagingEdgeEventType.display)
             } else {
                 print("Error: No matching proposition item found for content card ID: \(contentCardId)")
@@ -239,7 +239,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
             let jsonData = try JSONSerialization.data(withJSONObject: propositionMap)
             let proposition = try JSONDecoder().decode(Proposition.self, from: jsonData)
             
-            if let matchingItem = proposition.propositionItems.first(where: { $0.itemId == contentCardId }) {
+            if let matchingItem = proposition.items.first(where: { $0.itemId == contentCardId }) {
                 matchingItem.track("click", withEdgeEventType: MessagingEdgeEventType.interact)
             } else {
                 print("Error: No matching proposition item found for content card ID: \(contentCardId)")
