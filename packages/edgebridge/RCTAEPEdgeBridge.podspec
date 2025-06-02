@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/adobe/aepsdk-react-native"
 
   s.license      = "Apache 2.0 License"
-  s.platform      = :ios, '12.0'
+  s.platforms    = { :ios => "12.0", :tvos => "12.0" }
 
   s.source       = { :git => "https://github.com/adobe/aepsdk-react-native.git", :tag => "#{s.version}" }
 

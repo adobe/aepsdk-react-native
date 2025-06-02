@@ -19,7 +19,10 @@ This repository is a monorepo and contains a collection of React Native modules 
 | [@adobe/react-native-aepoptimize](./packages/optimize) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepoptimize.svg)](https://www.npmjs.com/package/@adobe/react-native-aepoptimize) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepoptimize) | [Optimize](https://developer.adobe.com/client-sdks/documentation/adobe-journey-optimizer-decisioning) | Supported |
 | [@adobe/react-native-aepplaces](./packages/places) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepplaces.svg)](https://www.npmjs.com/package/@adobe/react-native-aepplaces) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepplaces) | [Places](https://developer.adobe.com/client-sdks/documentation/places) | Supported |
 | [@adobe/react-native-aeptarget](./packages/target) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aeptarget.svg)](https://www.npmjs.com/package/@adobe/react-native-aeptarget) ![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aeptarget) | [Target](https://developer.adobe.com/client-sdks/documentation/adobe-target) | Supported |
-| [@adobe/react-native-aepcampaignclassic](./packages/campaignclassic) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) |[CampaignClassic](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic) | Not Supported |
+| [@adobe/react-native-aepcampaignclassic](./packages/campaignclassic) | [![npm version](https://badge.fury.io/js/%40adobe%2Freact-native-aepcampaignclassic.svg)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) [![npm downloads](https://img.shields.io/npm/dm/@adobe/react-native-aepcampaignclassic)](https://www.npmjs.com/package/@adobe/react-native-aepcampaignclassic) |[CampaignClassic](https://developer.adobe.com/client-sdks/documentation/adobe-campaign-classic) | Supported |
+
+> [!NOTE]  
+> The `@adobe/react-native-aepoptimize` package introduced a **breaking change** affecting the `score` data type, causing a build failure due to a lossy conversion from `double` to `int`. To resolve this, **upgrade to version 6.1.0 or later**. Refer to the [Adobe SDK Release Notes](https://developer.adobe.com/client-sdks/home/release-notes/) for details.
 
 > [!NOTE]   
 > Since version 5.0.0 of the Adobe React Native SDK, all React Native libraries that share the same major version are compatible with each other.
@@ -100,6 +103,9 @@ yarn install
 
 ##### ios development
 
+> [!NOTE]   
+> Skip this step if you are developing with Expo.
+
 For iOS development, after installing the plugins from npm, download the pod dependencies by running the following command:
 
 ```bash
@@ -151,6 +157,14 @@ Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues
 Underlying Objective-C module 'AEPRulesEngine' not found
 ```
 Refer to the solution [here](https://github.com/adobe/aepsdk-react-native/issues/263#issuecomment-1498393770).
+
+3. **Fixing Android Build Error in `@adobe/react-native-aepoptimize`**  
+
+```java
+    TestReactNativeApp/node_modules/@adobe/react-native-aepoptimize/android/src/main/java/com/adobe/marketing/mobile/reactnative/optimize/RCTAEPOptimizeUtil.java:75: error: incompatible types: possible lossy conversion from double to int
+            offerWritableMap.putInt("score", offer.getScore());
+```
+This is caused by a breaking change in the `@adobe/react-native-aepoptimize` wrapper. Update to **version 6.1.0 or later** to resolve the type mismatch. For more details, see the [Adobe SDK Release Notes](#).
 
 ## Sample Apps
 Refer to the [sample apps](https://github.com/adobe/aepsdk-react-native/tree/main/apps) for example implementations.
