@@ -156,7 +156,9 @@ jest.doMock('react-native', () => {
           updatePropositionsForSurfaces: jest.fn(),
           getPropositionsForSurfaces: jest.fn(
             () => new Promise((resolve) => resolve([]))
-          )
+          ),
+          trackContentCardDisplay: jest.fn(),
+          trackContentCardInteraction: jest.fn()
         },
         AEPOptimize: {
           extensionVersion: jest.fn(

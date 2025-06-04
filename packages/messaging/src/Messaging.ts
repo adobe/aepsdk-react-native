@@ -19,6 +19,7 @@ import {
 import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
 import { MessagingProposition } from './models/MessagingProposition';
+import { ContentCard } from './models/ContentCard';
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -34,6 +35,8 @@ export interface NativeMessagingModule {
     shouldSaveMessage: boolean
   ) => void;
   updatePropositionsForSurfaces: (surfaces: string[]) => void;
+  trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
+  trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -88,6 +91,14 @@ class Messaging {
     surfaces: string[]
   ): Promise<Record<string, MessagingProposition[]>> {
     return await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
+  }
+
+  static trackContentCardDisplay(proposition: MessagingProposition, contentCard: ContentCard): void {
+    RCTAEPMessaging.trackContentCardDisplay(proposition, contentCard);
+  }
+
+  static trackContentCardInteraction(proposition: MessagingProposition, contentCard: ContentCard): void {
+    RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);
   }
 
   /**
