@@ -40,31 +40,32 @@ const updateContentCards = async (): Promise<void> => {
 
 ### Step 2: Retrieve Content Cards
 
-After updating propositions, retrieve the content cards for a specific surface using the `getPropositionsForSurface` API. This returns an array of `Proposition` objects that contain content cards for which the user is qualified.
+After updating propositions, retrieve the content cards for a specific surface using the `getPropositionsForSurfaces` API. This returns a record of surface names with their corresponding propositions that contain content cards for which the user is qualified.
 
 **Important**: Only content cards for which the user has qualified are returned. User qualification is determined by the delivery rules configured in Adobe Journey Optimizer.
 
 ```typescript
 import { Messaging, MessagingProposition, ContentCard, PersonalizationSchema } from '@adobe/react-native-aepmessaging';
 
-// Retrieve propositions for a specific surface
-const getContentCards = async (surfacePath: string): Promise<ContentCard[]> => {
+// Retrieve propositions for specific surfaces
+const getContentCards = async (surfacePaths: string[]): Promise<ContentCard[]> => {
   try {
-    const propositions: MessagingProposition[] = await Messaging.getPropositionsForSurface(surfacePath);
+    const propositionsMap: Record<string, MessagingProposition[]> = await Messaging.getPropositionsForSurfaces(surfacePaths);
     
-    if (propositions && propositions.length > 0) {
-      console.log(`Found ${propositions.length} propositions for surface: ${surfacePath}`);
-      
-      // Extract content cards from propositions
-      const contentCards: ContentCard[] = propositions.flatMap(proposition => 
-        proposition.items.filter(item => item.schema === PersonalizationSchema.CONTENT_CARD) as ContentCard[]
-      );
-      
-      return contentCards;
-    } else {
-      console.log(`No propositions available for surface: ${surfacePath}`);
-      return [];
-    }
+    const allContentCards: ContentCard[] = [];
+    
+    // Extract content cards from all surfaces
+    Object.values(propositionsMap).forEach(propositions => {
+      propositions.forEach(proposition => {
+        const contentCards = proposition.items.filter(
+          item => item.schema === PersonalizationSchema.CONTENT_CARD
+        ) as ContentCard[];
+        allContentCards.push(...contentCards);
+      });
+    });
+    
+    console.log(`Found ${allContentCards.length} content cards across all surfaces`);
+    return allContentCards;
   } catch (error) {
     console.error('Error retrieving propositions:', error);
     return [];
@@ -105,7 +106,9 @@ const ContentCardsScreen: React.FC<ContentCardsScreenProps> = ({ surfacePath = '
       await Messaging.updatePropositionsForSurfaces([surfacePath]);
       
       // Then retrieve the propositions and extract content cards
-      const propositions: MessagingProposition[] = await Messaging.getPropositionsForSurface(surfacePath);
+      const propositionsMap: Record<string, MessagingProposition[]> = await Messaging.getPropositionsForSurfaces([surfacePath]);
+      const propositions = propositionsMap[surfacePath] || [];
+      
       const cards: ContentCard[] = propositions.flatMap(proposition => 
         proposition.items.filter(item => item.schema === PersonalizationSchema.CONTENT_CARD) as ContentCard[]
       );
@@ -216,12 +219,11 @@ export default ContentCardsScreen;
 
 ## Tracking Content Card Events
 
-Content cards support event tracking to measure user engagement and campaign effectiveness. The AEPMessaging extension provides methods to track three key events: display, dismiss, and interact. These events help you understand how users engage with your content cards and optimize your campaigns accordingly.
+Content cards support event tracking to measure user engagement and campaign effectiveness. The AEPMessaging extension provides methods to track two key events: display and interact. These events help you understand how users engage with your content cards and optimize your campaigns accordingly.
 
 ### Event Types
 
 - **Display**: Triggered when a content card is shown to the user
-- **Dismiss**: Triggered when a user dismisses or closes a content card
 - **Interact**: Triggered when a user taps or interacts with a content card
 
 ### Implementing Event Tracking
@@ -254,7 +256,8 @@ const ContentCardsWithTracking: React.FC<ContentCardsWithTrackingProps> = ({
       setLoading(true);
       
       await Messaging.updatePropositionsForSurfaces([surfacePath]);
-      const fetchedPropositions: MessagingProposition[] = await Messaging.getPropositionsForSurface(surfacePath);
+      const propositionsMap: Record<string, MessagingProposition[]> = await Messaging.getPropositionsForSurfaces([surfacePath]);
+      const fetchedPropositions = propositionsMap[surfacePath] || [];
       
       const cards: ContentCard[] = fetchedPropositions.flatMap(proposition => 
         proposition.items.filter(item => item.schema === PersonalizationSchema.CONTENT_CARD) as ContentCard[]
@@ -272,13 +275,13 @@ const ContentCardsWithTracking: React.FC<ContentCardsWithTrackingProps> = ({
   };
 
   // Track display event when card becomes visible
-  const trackDisplayEvent = (proposition: MessagingProposition): void => {
+  const trackDisplayEvent = (proposition: MessagingProposition, contentCard: ContentCard): void => {
     const propositionId = proposition.id;
     
     // Prevent duplicate display events for the same card
     if (!displayedCards.current.has(propositionId)) {
       try {
-        Messaging.trackPropositionDisplay(proposition);
+        Messaging.trackContentCardDisplay(proposition, contentCard);
         displayedCards.current.add(propositionId);
         console.log(`Display event tracked for proposition: ${propositionId}`);
       } catch (error) {
@@ -288,34 +291,18 @@ const ContentCardsWithTracking: React.FC<ContentCardsWithTrackingProps> = ({
   };
 
   // Track interact event when user taps on card
-  const trackInteractEvent = (proposition: MessagingProposition, actionId?: string): void => {
+  const trackInteractEvent = (proposition: MessagingProposition, contentCard: ContentCard): void => {
     try {
-      if (actionId) {
-        // Track interaction with specific action
-        Messaging.trackPropositionInteract(proposition, actionId);
-      } else {
-        // Track general card interaction
-        Messaging.trackPropositionInteract(proposition);
-      }
+      Messaging.trackContentCardInteraction(proposition, contentCard);
       console.log(`Interact event tracked for proposition: ${proposition.id}`);
     } catch (error) {
       console.error('Failed to track interact event:', error);
     }
   };
 
-  // Track dismiss event when user dismisses card
-  const trackDismissEvent = (proposition: MessagingProposition): void => {
-    try {
-      Messaging.trackPropositionDismiss(proposition);
-      console.log(`Dismiss event tracked for proposition: ${proposition.id}`);
-    } catch (error) {
-      console.error('Failed to track dismiss event:', error);
-    }
-  };
-
   const handleCardPress = (card: ContentCard, proposition: MessagingProposition): void => {
     // Track interaction
-    trackInteractEvent(proposition);
+    trackInteractEvent(proposition, card);
     
     // Handle card action (e.g., navigate to URL)
     if (card.data.content.actionUrl) {
@@ -324,10 +311,7 @@ const ContentCardsWithTracking: React.FC<ContentCardsWithTrackingProps> = ({
     }
   };
 
-  const handleCardDismiss = (cardIndex: number, proposition: MessagingProposition): void => {
-    // Track dismiss event
-    trackDismissEvent(proposition);
-    
+  const handleCardDismiss = (cardIndex: number): void => {
     // Remove card from display
     setContentCards(prevCards => prevCards.filter((_, index) => index !== cardIndex));
   };
@@ -341,7 +325,7 @@ const ContentCardsWithTracking: React.FC<ContentCardsWithTrackingProps> = ({
     // Track display event when card is rendered
     useEffect(() => {
       if (proposition) {
-        trackDisplayEvent(proposition);
+        trackDisplayEvent(proposition, card);
       }
     }, [proposition]);
 
@@ -349,7 +333,7 @@ const ContentCardsWithTracking: React.FC<ContentCardsWithTrackingProps> = ({
       <View key={index} style={styles.cardContainer}>
         <TouchableOpacity 
           style={styles.dismissButton}
-          onPress={() => proposition && handleCardDismiss(index, proposition)}
+          onPress={() => handleCardDismiss(index)}
         >
           <Text style={styles.dismissText}>×</Text>
         </TouchableOpacity>
@@ -474,8 +458,7 @@ export default ContentCardsWithTracking;
 
 1. **Display Events**: Track display events only once per card per session to avoid duplicate analytics
 2. **Interact Events**: Track interactions immediately when they occur to ensure accurate measurement
-3. **Dismiss Events**: Always track dismiss events to understand user preferences and card effectiveness
-4. **Error Handling**: Implement proper error handling for tracking calls to prevent app crashes
+3. **Error Handling**: Implement proper error handling for tracking calls to prevent app crashes
 
 ### Custom Event Tracking Hook
 
@@ -483,23 +466,22 @@ For reusable event tracking logic, consider creating a custom hook:
 
 ```typescript
 import { useCallback, useRef } from 'react';
-import { Messaging, MessagingProposition } from '@adobe/react-native-aepmessaging';
+import { Messaging, MessagingProposition, ContentCard } from '@adobe/react-native-aepmessaging';
 
 interface ContentCardTracking {
-  trackDisplay: (proposition: MessagingProposition) => void;
-  trackInteract: (proposition: MessagingProposition, actionId?: string) => void;
-  trackDismiss: (proposition: MessagingProposition) => void;
+  trackDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
+  trackInteract: (proposition: MessagingProposition, contentCard: ContentCard) => void;
 }
 
 const useContentCardTracking = (): ContentCardTracking => {
   const displayedCards = useRef<Set<string>>(new Set());
 
-  const trackDisplay = useCallback((proposition: MessagingProposition): void => {
+  const trackDisplay = useCallback((proposition: MessagingProposition, contentCard: ContentCard): void => {
     const propositionId = proposition.id;
     
     if (!displayedCards.current.has(propositionId)) {
       try {
-        Messaging.trackPropositionDisplay(proposition);
+        Messaging.trackContentCardDisplay(proposition, contentCard);
         displayedCards.current.add(propositionId);
         console.log(`Display tracked: ${propositionId}`);
       } catch (error) {
@@ -508,41 +490,27 @@ const useContentCardTracking = (): ContentCardTracking => {
     }
   }, []);
 
-  const trackInteract = useCallback((proposition: MessagingProposition, actionId?: string): void => {
+  const trackInteract = useCallback((proposition: MessagingProposition, contentCard: ContentCard): void => {
     try {
-      if (actionId) {
-        Messaging.trackPropositionInteract(proposition, actionId);
-      } else {
-        Messaging.trackPropositionInteract(proposition);
-      }
+      Messaging.trackContentCardInteraction(proposition, contentCard);
       console.log(`Interact tracked: ${proposition.id}`);
     } catch (error) {
       console.error('Interact tracking failed:', error);
     }
   }, []);
 
-  const trackDismiss = useCallback((proposition: MessagingProposition): void => {
-    try {
-      Messaging.trackPropositionDismiss(proposition);
-      console.log(`Dismiss tracked: ${proposition.id}`);
-    } catch (error) {
-      console.error('Dismiss tracking failed:', error);
-    }
-  }, []);
-
   return {
     trackDisplay,
     trackInteract,
-    trackDismiss,
   };
 };
 
 export default useContentCardTracking;
 ```
 
-### FlatList Implementation with Viewport Tracking
+### Advanced Usage Example
 
-For better performance and more accurate display tracking, use a FlatList with viewport detection to track display events only when cards actually appear on screen:
+Here's a more comprehensive example showing how to use the tracking methods in a production-ready implementation:
 
 ```typescript
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -555,67 +523,59 @@ interface ContentCardWithProposition extends ContentCard {
 }
 
 interface ContentCardsFlatListProps {
-  surfacePath?: string;
-}
-
-interface ViewabilityConfig {
-  itemVisiblePercentThreshold: number;
-  minimumViewTime: number;
-}
-
-interface ViewableItemsChangedInfo {
-  viewableItems: ViewToken[];
-  changed: ViewToken[];
+  surfacePaths?: string[];
 }
 
 const ContentCardsFlatList: React.FC<ContentCardsFlatListProps> = ({ 
-  surfacePath = 'homepage' 
+  surfacePaths = ['homepage'] 
 }) => {
   const [contentCards, setContentCards] = useState<ContentCardWithProposition[]>([]);
-  const [propositions, setPropositions] = useState<MessagingProposition[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const displayedCards = useRef<Set<string>>(new Set());
-  const flatListRef = useRef<FlatList<ContentCardWithProposition>>(null);
 
   useEffect(() => {
     fetchContentCards();
-  }, [surfacePath]);
+  }, [surfacePaths]);
 
   const fetchContentCards = async (): Promise<void> => {
     try {
       setLoading(true);
       
-      await Messaging.updatePropositionsForSurfaces([surfacePath]);
-      const fetchedPropositions: MessagingProposition[] = await Messaging.getPropositionsForSurface(surfacePath);
+      await Messaging.updatePropositionsForSurfaces(surfacePaths);
+      const propositionsMap: Record<string, MessagingProposition[]> = await Messaging.getPropositionsForSurfaces(surfacePaths);
       
-      const cards: ContentCardWithProposition[] = fetchedPropositions.flatMap((proposition, propIndex) => 
-        proposition.items
-          .filter(item => item.schema === PersonalizationSchema.CONTENT_CARD)
-          .map((item, itemIndex) => ({
-            ...(item as ContentCard),
-            proposition,
-            uniqueId: `${proposition.id}-${itemIndex}`, // Unique ID for FlatList
-          }))
-      );
+      const cards: ContentCardWithProposition[] = [];
       
-      setContentCards(cards || []);
-      setPropositions(fetchedPropositions || []);
+      Object.entries(propositionsMap).forEach(([surface, propositions]) => {
+        propositions.forEach((proposition, propIndex) => {
+          proposition.items
+            .filter(item => item.schema === PersonalizationSchema.CONTENT_CARD)
+            .forEach((item, itemIndex) => {
+              cards.push({
+                ...(item as ContentCard),
+                proposition,
+                uniqueId: `${surface}-${proposition.id}-${itemIndex}`,
+              });
+            });
+        });
+      });
+      
+      setContentCards(cards);
     } catch (error) {
       console.error('Failed to fetch content cards:', error);
       setContentCards([]);
-      setPropositions([]);
     } finally {
       setLoading(false);
     }
   };
 
   // Track display event when card appears in viewport
-  const trackDisplayEvent = useCallback((proposition: MessagingProposition): void => {
+  const trackDisplayEvent = useCallback((proposition: MessagingProposition, contentCard: ContentCard): void => {
     const propositionId = proposition.id;
     
     if (!displayedCards.current.has(propositionId)) {
       try {
-        Messaging.trackPropositionDisplay(proposition);
+        Messaging.trackContentCardDisplay(proposition, contentCard);
         displayedCards.current.add(propositionId);
         console.log(`Display event tracked for proposition: ${propositionId}`);
       } catch (error) {
@@ -625,46 +585,26 @@ const ContentCardsFlatList: React.FC<ContentCardsFlatListProps> = ({
   }, []);
 
   // Track interact event
-  const trackInteractEvent = useCallback((proposition: MessagingProposition, actionId?: string): void => {
+  const trackInteractEvent = useCallback((proposition: MessagingProposition, contentCard: ContentCard): void => {
     try {
-      if (actionId) {
-        Messaging.trackPropositionInteract(proposition, actionId);
-      } else {
-        Messaging.trackPropositionInteract(proposition);
-      }
+      Messaging.trackContentCardInteraction(proposition, contentCard);
       console.log(`Interact event tracked for proposition: ${proposition.id}`);
     } catch (error) {
       console.error('Failed to track interact event:', error);
     }
   }, []);
 
-  // Track dismiss event
-  const trackDismissEvent = useCallback((proposition: MessagingProposition): void => {
-    try {
-      Messaging.trackPropositionDismiss(proposition);
-      console.log(`Dismiss event tracked for proposition: ${proposition.id}`);
-    } catch (error) {
-      console.error('Failed to track dismiss event:', error);
-    }
-  }, []);
-
   // Handle viewable items changed - track display events for visible cards
-  const onViewableItemsChanged = useCallback(({ viewableItems }: ViewableItemsChangedInfo): void => {
+  const onViewableItemsChanged = useCallback(({ viewableItems }: { viewableItems: ViewToken[] }): void => {
     viewableItems.forEach(({ item }) => {
       if (item.proposition) {
-        trackDisplayEvent(item.proposition);
+        trackDisplayEvent(item.proposition, item);
       }
     });
   }, [trackDisplayEvent]);
 
-  // Viewport configuration for determining when items are "viewable"
-  const viewabilityConfig: ViewabilityConfig = {
-    itemVisiblePercentThreshold: 50, // Card must be 50% visible to trigger display event
-    minimumViewTime: 500, // Card must be visible for 500ms
-  };
-
   const handleCardPress = useCallback((card: ContentCardWithProposition): void => {
-    trackInteractEvent(card.proposition);
+    trackInteractEvent(card.proposition, card);
     
     if (card.data.content.actionUrl) {
       console.log(`Navigating to: ${card.data.content.actionUrl}`);
@@ -672,61 +612,38 @@ const ContentCardsFlatList: React.FC<ContentCardsFlatListProps> = ({
     }
   }, [trackInteractEvent]);
 
-  const handleCardDismiss = useCallback((cardId: string): void => {
-    const cardToRemove = contentCards.find(card => card.uniqueId === cardId);
-    if (cardToRemove) {
-      trackDismissEvent(cardToRemove.proposition);
-      setContentCards(prevCards => prevCards.filter(card => card.uniqueId !== cardId));
-    }
-  }, [contentCards, trackDismissEvent]);
-
   const renderContentCard = ({ item: card }: { item: ContentCardWithProposition }): JSX.Element => {
     const { data } = card;
 
     return (
-      <View style={styles.cardContainer}>
-        <TouchableOpacity 
-          style={styles.dismissButton}
-          onPress={() => handleCardDismiss(card.uniqueId)}
-        >
-          <Text style={styles.dismissText}>×</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.cardContent}
-          onPress={() => handleCardPress(card)}
-          activeOpacity={0.8}
-        >
-          {data.content.image?.url && (
-            <Image 
-              source={{ uri: data.content.image.url }} 
-              style={styles.cardImage}
-              resizeMode="cover"
-            />
+      <TouchableOpacity 
+        style={styles.cardContainer}
+        onPress={() => handleCardPress(card)}
+        activeOpacity={0.8}
+      >
+        {data.content.image?.url && (
+          <Image 
+            source={{ uri: data.content.image.url }} 
+            style={styles.cardImage}
+            resizeMode="cover"
+          />
+        )}
+        <View style={styles.cardTextContent}>
+          {data.content.title?.content && (
+            <Text style={styles.cardTitle}>{data.content.title.content}</Text>
           )}
-          <View style={styles.cardTextContent}>
-            {data.content.title?.content && (
-              <Text style={styles.cardTitle}>{data.content.title.content}</Text>
-            )}
-            {data.content.body?.content && (
-              <Text style={styles.cardBody}>{data.content.body.content}</Text>
-            )}
-            {data.content.actionUrl && (
-              <View style={styles.actionButton}>
-                <Text style={styles.actionText}>Learn More</Text>
-              </View>
-            )}
-          </View>
-        </TouchableOpacity>
-      </View>
+          {data.content.body?.content && (
+            <Text style={styles.cardBody}>{data.content.body.content}</Text>
+          )}
+          {data.content.actionUrl && (
+            <View style={styles.actionButton}>
+              <Text style={styles.actionText}>Learn More</Text>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
     );
   };
-
-  const renderEmptyState = (): JSX.Element => (
-    <View style={styles.emptyState}>
-      <Text style={styles.emptyText}>No content cards available</Text>
-    </View>
-  );
 
   const keyExtractor = (item: ContentCardWithProposition): string => item.uniqueId;
 
@@ -740,18 +657,16 @@ const ContentCardsFlatList: React.FC<ContentCardsFlatListProps> = ({
 
   return (
     <FlatList<ContentCardWithProposition>
-      ref={flatListRef}
       data={contentCards}
       renderItem={renderContentCard}
       keyExtractor={keyExtractor}
       onViewableItemsChanged={onViewableItemsChanged}
-      viewabilityConfig={viewabilityConfig}
-      ListEmptyComponent={renderEmptyState}
+      viewabilityConfig={{
+        itemVisiblePercentThreshold: 50,
+        minimumViewTime: 500,
+      }}
       contentContainerStyle={styles.flatListContainer}
       showsVerticalScrollIndicator={false}
-      removeClippedSubviews={true} // Optimize performance for large lists
-      maxToRenderPerBatch={5} // Render 5 items per batch
-      windowSize={10} // Keep 10 items in memory
     />
   );
 };
@@ -770,29 +685,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
-    position: 'relative',
     overflow: 'hidden',
-  },
-  dismissButton: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1,
-  },
-  dismissText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    lineHeight: 18,
-  },
-  cardContent: {
-    flex: 1,
   },
   cardImage: {
     width: '100%',
@@ -830,248 +723,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#999',
-  },
 });
 
 export default ContentCardsFlatList;
 ```
 
-### Key Features of the FlatList Implementation
-
-1. **Viewport-Based Display Tracking**: Uses `onViewableItemsChanged` to track display events only when cards are actually visible to the user
-2. **Viewability Configuration**: Cards must be 50% visible for 500ms before triggering a display event
-3. **Performance Optimization**: Includes `removeClippedSubviews`, `maxToRenderPerBatch`, and `windowSize` for better performance with large lists
-4. **Unique Key Generation**: Each card gets a unique ID for proper FlatList rendering
-5. **Empty State Handling**: Shows appropriate message when no content cards are available
-
-### Viewability Configuration Options
-
-You can customize the viewability behavior based on your tracking requirements:
-
-```typescript
-// More strict viewability - card must be fully visible
-const strictViewabilityConfig: ViewabilityConfig = {
-  itemVisiblePercentThreshold: 100,
-  minimumViewTime: 1000,
-};
-
-// More lenient viewability - card just needs to appear
-const lenientViewabilityConfig: ViewabilityConfig = {
-  itemVisiblePercentThreshold: 25,
-  minimumViewTime: 250,
-};
-
-// Custom viewability for different card types
-interface CustomViewabilityConfig {
-  viewAreaCoveragePercentThreshold: number;
-  waitForInteraction: boolean;
-}
-
-const customViewabilityConfig: CustomViewabilityConfig = {
-  viewAreaCoveragePercentThreshold: 75, // 75% of viewport must be covered
-  waitForInteraction: false, // Don't wait for user interaction
-};
-```
-
-### Advanced Usage with Multiple Surfaces
-
-For applications with multiple content card locations, you can create a more sophisticated implementation:
-
-```typescript
-import React, { useState, useEffect } from 'react';
-import { View, SectionList, Text, Image, TouchableOpacity, StyleSheet, SectionListData } from 'react-native';
-import { Messaging, MessagingProposition, ContentCard, PersonalizationSchema } from '@adobe/react-native-aepmessaging';
-
-interface Surface {
-  id: string;
-  title: string;
-}
-
-interface CardSection {
-  title: string;
-  data: ContentCard[];
-  surfaceId: string;
-}
-
-const MultiSurfaceContentCards: React.FC = () => {
-  const [cardSections, setCardSections] = useState<CardSection[]>([]);
-
-  const surfaces: Surface[] = [
-    { id: 'homepage', title: 'Featured Content' },
-    { id: 'product-recommendations', title: 'Recommended for You' },
-    { id: 'promotions', title: 'Special Offers' }
-  ];
-
-  useEffect(() => {
-    fetchAllContentCards();
-  }, []);
-
-  const fetchAllContentCards = async (): Promise<void> => {
-    try {
-      // Update propositions for all surfaces
-      const surfacePaths: string[] = surfaces.map(surface => surface.id);
-      await Messaging.updatePropositionsForSurfaces(surfacePaths);
-
-      // Fetch content cards for each surface
-      const sections: CardSection[] = await Promise.all(
-        surfaces.map(async (surface): Promise<CardSection> => {
-          const propositions: MessagingProposition[] = await Messaging.getPropositionsForSurface(surface.id);
-          const cards: ContentCard[] = propositions.flatMap(proposition => 
-            proposition.items.filter(item => item.schema === PersonalizationSchema.CONTENT_CARD) as ContentCard[]
-          );
-          
-          return {
-            title: surface.title,
-            data: cards || [],
-            surfaceId: surface.id
-          };
-        })
-      );
-
-      // Filter out sections with no cards
-      const sectionsWithCards: CardSection[] = sections.filter(section => section.data.length > 0);
-      setCardSections(sectionsWithCards);
-    } catch (error) {
-      console.error('Failed to fetch content cards:', error);
-    }
-  };
-
-  const renderSectionHeader = ({ section }: { section: SectionListData<ContentCard, CardSection> }): JSX.Element => (
-    <Text style={styles.sectionHeader}>{section.title}</Text>
-  );
-
-  const renderContentCard = ({ item }: { item: ContentCard }): JSX.Element => {
-    const { data } = item;
-    
-    return (
-      <TouchableOpacity style={styles.cardWrapper}>
-        {data.content.image?.url && (
-          <Image source={{ uri: data.content.image.url }} style={styles.cardImage} />
-        )}
-        <View style={styles.cardContent}>
-          {data.content.title?.content && (
-            <Text style={styles.cardTitle}>{data.content.title.content}</Text>
-          )}
-          {data.content.body?.content && (
-            <Text style={styles.cardBody}>{data.content.body.content}</Text>
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const keyExtractor = (item: ContentCard, index: number): string => `card-${item.id}-${index}`;
-
-  return (
-    <SectionList<ContentCard, CardSection>
-      sections={cardSections}
-      renderItem={renderContentCard}
-      renderSectionHeader={renderSectionHeader}
-      keyExtractor={keyExtractor}
-      style={styles.container}
-    />
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  sectionHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 16,
-    color: '#333',
-  },
-  cardWrapper: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  cardImage: {
-    width: '100%',
-    height: 100,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
-  cardContent: {
-    padding: 12,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  cardBody: {
-    fontSize: 14,
-    color: '#666',
-  },
-});
-```
-
-### Performance Considerations
+## Performance Considerations
 
 1. **Caching**: Content cards are cached in-memory by the Messaging extension and persist through the application's lifecycle
 2. **Batching**: Always batch surface requests when fetching content cards for multiple locations
-3. **Lazy Loading**: Consider implementing lazy loading for content cards in long lists
-4. **Refresh Strategy**: Implement a refresh strategy based on your app's usage patterns
+3. **Viewport Tracking**: Use FlatList with `onViewableItemsChanged` for accurate display tracking
+4. **Error Handling**: Implement proper error handling for all tracking calls
 
-```typescript
-import { useState, useCallback, useEffect } from 'react';
-import { Messaging, MessagingProposition, ContentCard, PersonalizationSchema } from '@adobe/react-native-aepmessaging';
+## Wrap Up
 
-interface UseContentCardRefreshResult {
-  cards: ContentCard[];
-  refreshCards: (force?: boolean) => Promise<void>;
-}
+This implementation provides a comprehensive foundation for fetching, rendering, and tracking content cards in your React Native application using the `trackContentCardDisplay` and `trackContentCardInteraction` methods. These methods provide specific tracking for content card interactions, allowing for better analytics and campaign optimization.
 
-// Example refresh strategy
-const useContentCardRefresh = (
-  surfacePath: string, 
-  refreshInterval: number = 300000 // 5 minutes
-): UseContentCardRefreshResult => {
-  const [cards, setCards] = useState<ContentCard[]>([]);
-  const [lastRefresh, setLastRefresh] = useState<number>(0);
+The key benefits of these tracking methods:
+- **Simplified API**: Direct methods for content card tracking without needing to handle proposition-level details
+- **Better Analytics**: More specific event data for content card interactions
+- **Easier Implementation**: Cleaner code with dedicated methods for content card events
 
-  const refreshCards = useCallback(async (force: boolean = false): Promise<void> => {
-    const now = Date.now();
-    if (force || (now - lastRefresh) > refreshInterval) {
-      try {
-        await Messaging.updatePropositionsForSurfaces([surfacePath]);
-        const propositions: MessagingProposition[] = await Messaging.getPropositionsForSurface(surfacePath);
-        const newCards: ContentCard[] = propositions.flatMap(proposition => 
-          proposition.items.filter(item => item.schema === PersonalizationSchema.CONTENT_CARD) as ContentCard[]
-        );
-        setCards(newCards || []);
-        setLastRefresh(now);
-      } catch (error) {
-        console.error('Failed to refresh content cards:', error);
-      }
-    }
-  }, [surfacePath, refreshInterval, lastRefresh]);
-
-  useEffect(() => {
-    refreshCards();
-  }, [refreshCards]);
-
-  return { cards, refreshCards };
-};
-```
-
-# Wrap Up
-This implementation provides a comprehensive foundation for fetching and rendering content cards in your React Native application. Using the examples shown here, you can render content cards inside your application using whatever styles you would like. Happy coding!
+Happy coding! 
