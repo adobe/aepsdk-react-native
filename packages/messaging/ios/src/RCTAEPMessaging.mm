@@ -47,4 +47,12 @@ RCT_EXTERN_METHOD(updatePropositionsForSurfaces
                   : (RCTPromiseResolveBlock)resolve withRejecter
                   : (RCTPromiseRejectBlock)reject);
 
+RCT_EXTERN_METHOD(trackContentCardDisplay
+                  : (NSDictionary *)propositionMap contentCardMap
+                  : (NSDictionary *)contentCardMap);
+
+RCT_EXTERN_METHOD(trackContentCardInteraction
+                  : (NSDictionary *)propositionMap contentCardMap
+                  : (NSDictionary *)contentCardMap);
+
 @end

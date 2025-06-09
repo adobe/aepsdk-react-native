@@ -109,6 +109,8 @@ build/
 ## User settings
 xcuserdata/
 packages/.DS_Store
+packages/*/.DS_Store
+packages/*/*/.DS_Store
 
 dist/
 test/.DS_Store

@@ -27,6 +27,7 @@ import com.adobe.marketing.mobile.MessagingEdgeEventType;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.messaging.MessagingUtils;
 import com.adobe.marketing.mobile.messaging.Proposition;
+import com.adobe.marketing.mobile.messaging.PropositionItem;
 import com.adobe.marketing.mobile.messaging.Surface;
 import com.adobe.marketing.mobile.services.ServiceProvider;
 import com.adobe.marketing.mobile.services.ui.InAppMessage;
@@ -38,6 +39,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.HashMap;
@@ -268,5 +270,29 @@ public final class RCTAEPMessagingModule
     reactContext
         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
         .emit(name, eventData);
+  }
+
+  @ReactMethod
+  public void trackContentCardDisplay(ReadableMap propositionMap, ReadableMap contentCardMap) {
+    final Map<String, Object> eventData = RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
+    final Proposition proposition = Proposition.fromEventData(eventData);
+    for (PropositionItem item : proposition.getItems()) {
+      if (item.getItemId().equals(contentCardMap.getString("id"))) {
+        item.track(MessagingEdgeEventType.DISPLAY);
+        break;
+      }
+    }
+  }
+
+  @ReactMethod
+  public void trackContentCardInteraction(ReadableMap propositionMap, ReadableMap contentCardMap) {
+    final Map<String, Object> eventData = RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
+    final Proposition proposition = Proposition.fromEventData(eventData);
+    for (PropositionItem item : proposition.getItems()) {
+      if (item.getItemId().equals(contentCardMap.getString("id"))) {
+        item.track("click", MessagingEdgeEventType.INTERACT, null);
+        break;
+      }
+    }
   }
 }

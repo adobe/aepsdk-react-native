@@ -201,6 +201,54 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         reject(Constants.CACHE_MISS, nil, nil)
     }
 
+    @objc
+    func trackContentCardDisplay(
+        _ propositionMap: [String: Any], 
+        contentCardMap: [String: Any]
+    ) { 
+        guard let contentCardId = contentCardMap["id"] as? String else {
+            print("Error: Content card ID is missing or invalid")
+            return
+        }
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: propositionMap)
+            let proposition = try JSONDecoder().decode(Proposition.self, from: jsonData)
+            
+            if let matchingItem = proposition.items.first(where: { $0.itemId == contentCardId }) {
+                matchingItem.track(withEdgeEventType: MessagingEdgeEventType.display)
+            } else {
+                print("Error: No matching proposition item found for content card ID: \(contentCardId)")
+            }
+        } catch {
+            print("Error decoding proposition: \(error.localizedDescription)")
+        }
+    }
+
+    @objc
+    func trackContentCardInteraction(
+        _ propositionMap: [String: Any], 
+        contentCardMap: [String: Any]
+    ) { 
+        guard let contentCardId = contentCardMap["id"] as? String else {
+            print("Error: Content card ID is missing or invalid")
+            return
+        }
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: propositionMap)
+            let proposition = try JSONDecoder().decode(Proposition.self, from: jsonData)
+            
+            if let matchingItem = proposition.items.first(where: { $0.itemId == contentCardId }) {
+                matchingItem.track("click", withEdgeEventType: MessagingEdgeEventType.interact)
+            } else {
+                print("Error: No matching proposition item found for content card ID: \(contentCardId)")
+            }
+        } catch {
+            print("Error decoding proposition: \(error.localizedDescription)")
+        }
+    }
+
     // Messaging Delegate Methods
     public func onDismiss(message: Showable) {
         if let fullscreenMessage = message as? FullscreenMessage,
