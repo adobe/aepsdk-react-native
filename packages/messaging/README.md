@@ -435,6 +435,7 @@ function otherWorkflowFinished() {
 }
 ```
 
+
 ## Tracking interactions with content cards
 
 ### trackContentCardDisplay
@@ -458,3 +459,4 @@ Messaging.trackContentCardInteraction(proposition, contentCard);
 
 ## Tutorials
 [Content Cards](./tutorials/ContentCards.md)
+
