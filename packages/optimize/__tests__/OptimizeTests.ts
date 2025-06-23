@@ -174,4 +174,11 @@ describe('Optimize', () => {
       'eyJhY3Rpdml0eUlkIjoieGNvcmU6b2ZmZXItYWN0aXZpdHk6MTExMTExMTExMTExMTExMSIsInBsYWNlbWVudElkIjoieGNvcmU6b2ZmZXItcGxhY2VtZW50OjExMTExMTExMTExMTExMTEiLCJpdGVtQ291bnQiOjEwfQ=='
     );
   });
+
+  it('Test Optimize.multipleOffersDisplayed', async () => {
+    const spy = jest.spyOn(NativeModules.AEPOptimize, 'multipleOffersDisplayed');
+    const offers = [new Offer(offerJson)];
+    await Optimize.multipleOffersDisplayed(offers);
+    expect(spy).toHaveBeenCalledWith(offers);
+  });
 });

@@ -15,6 +15,7 @@ import {
   Optimize,
   DecisionScope,
   Proposition,
+  Offer,
 } from '@adobe/react-native-aepoptimize';
 import {WebView} from 'react-native-webview';
 import styles from '../styles/styles';
@@ -117,6 +118,28 @@ export default () => {
         }
       },
     });
+
+  const multipleOffersDisplayed = async () => {
+    const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+    const offersArray: Array<Offer> = [];
+    
+    propositionsMap.forEach((proposition: Proposition) => {
+      if (proposition && proposition.items) {
+        proposition.items.forEach((offer) => {
+          offersArray.push(offer);
+        });
+      }
+    });
+    
+    console.log('Extracted offers:', offersArray);
+    
+    if (offersArray.length > 0) {
+      Optimize.multipleOffersDisplayed(offersArray);
+      console.log(`Called multipleOffersDisplayed with ${offersArray.length} offers`);
+    } else {
+      console.log('No offers found to display');
+    }
+  };
 
   const renderTargetOffer = () => {
     if (targetProposition?.items) {
@@ -336,6 +359,12 @@ export default () => {
         <Button
           title="Clear Cached Proposition"
           onPress={clearCachedProposition}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
+          title="Multiple Offers Displayed"
+          onPress={multipleOffersDisplayed}
         />
       </View>
       <View style={{margin: 5}}>
