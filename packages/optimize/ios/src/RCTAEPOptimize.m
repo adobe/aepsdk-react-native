@@ -144,6 +144,32 @@ RCT_EXPORT_METHOD(offerDisplayed
   }
 }
 
+RCT_EXPORT_METHOD(multipleOffersDisplayed
+                  : (NSArray<NSDictionary<NSString *, id> *> *)offersArray) {
+  [AEPLog debugWithLabel:TAG message:@"Multiple Offers Displayed"];
+  
+  if (!offersArray || [offersArray count] == 0) {
+    return;
+  }
+  
+  // Convert NSArray of offer dictionaries to NSArray<AEPOffer *>
+  NSMutableArray<AEPOffer *> *nativeOffers = [[NSMutableArray alloc] init];
+  
+  for (NSDictionary<NSString *, id> *offerDict in offersArray) {
+    if (offerDict) {
+      AEPOffer *nativeOffer = [AEPOffer initFromData:offerDict];
+      if (nativeOffer) {
+        [nativeOffers addObject:nativeOffer];
+      }
+    }
+  }
+  
+  // Call the native AEPMobileOptimize displayed method for multiple offers
+  if ([nativeOffers count] > 0) {
+    [AEPMobileOptimize displayed:nativeOffers];
+  }
+}
+
 RCT_EXPORT_METHOD(generateReferenceXdm
                   : (NSDictionary<NSString *, id> *)dictionary resolver
                   : (RCTPromiseResolveBlock)resolve rejector

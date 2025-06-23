@@ -30,6 +30,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,31 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
                 offer.displayed();
                 break;
             }
+        }
+    }
+
+    @ReactMethod
+    public void multipleOffersDisplayed(final ReadableArray offers) {
+        if (offers == null || offers.size() == 0) {
+            return;
+        }
+        
+        // Convert ReadableArray to List<Offer>
+        List<Offer> nativeOffers = new ArrayList<>();
+        for (int i = 0; i < offers.size(); i++) {
+            ReadableMap offerMap = offers.getMap(i);
+            if (offerMap != null) {
+                Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(offerMap);
+                Offer nativeOffer = Offer.fromEventData(offerEventData);
+                if (nativeOffer != null) {
+                    nativeOffers.add(nativeOffer);
+                }
+            }
+        }
+        
+        // Call the native List<Offer>.displayed() API
+        if (!nativeOffers.isEmpty()) {
+            nativeOffers.displayed();
         }
     }
 
