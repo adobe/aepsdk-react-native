@@ -18,6 +18,7 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OfferType;
+import com.adobe.marketing.mobile.optimize.OfferUtils.displayed;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.facebook.react.bridge.Promise;
@@ -74,7 +75,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
             ReadableMap offerMap = offers.getMap(i);
             if (offerMap != null) {
                 Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(offerMap);
-                Offer nativeOffer = Offer.fromEventData(offerEventData);
+                Offer nativeOffer = createOffer(offerEventData);
                 if (nativeOffer != null) {
                     nativeOffers.add(nativeOffer);
                 }
