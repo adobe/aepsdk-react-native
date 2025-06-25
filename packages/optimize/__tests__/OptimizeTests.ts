@@ -51,16 +51,93 @@ describe('Optimize', () => {
   });
 
   it('AEPOptimize updateProposition is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPOptimize, 'updatePropositions');
-    let decisionScopes = [new DecisionScope('abcdef')];
+    let spy = jest.spyOn(NativeModules.AEPOptimize, "updatePropositions");
+    let decisionScopes = [new DecisionScope("abcdef")];
     let xdm = new Map();
     let data = new Map();
     await Optimize.updatePropositions(decisionScopes, xdm, data);
     expect(spy).toHaveBeenCalledWith(
       decisionScopes.map((decisionScope) => decisionScope.getName()),
-      xdm,
-      data
+      undefined, // empty Map becomes undefined
+      undefined // empty Map becomes undefined
     );
+  });
+
+  it('AEPOptimize updateProposition is called with callback', async () => {
+    let spy = jest.spyOn(NativeModules.AEPOptimize, "updatePropositions");
+    let decisionScopes = [new DecisionScope("abcdef")];
+    let xdm = new Map();
+    let data = new Map();
+    const callback = (_response: { error?: any; propositions?: { [key: string]: Proposition } | undefined }) => {};
+    await Optimize.updatePropositions(decisionScopes, xdm, data, callback);
+    expect(spy).toHaveBeenCalledWith(
+      decisionScopes.map((decisionScope) => decisionScope.getName()),
+      undefined, // empty Map becomes undefined
+      undefined, // empty Map becomes undefined
+      expect.any(Function)
+    );
+  });
+
+  it('AEPOptimize updateProposition callback handles successful response', async () => {
+    const mockResponse = {
+      propositions: {
+        'scope1': propositionJson
+      }
+    };
+    
+    // Mock the native method to call the callback with mock data
+    const mockMethod = jest.fn().mockImplementation((...args: any[]) => {
+      const callback = args[3];
+      if (typeof callback === 'function') {
+        callback(mockResponse);
+      }
+    });
+    NativeModules.AEPOptimize.updatePropositions = mockMethod;
+    
+    let decisionScopes = [new DecisionScope("abcdef")];
+    let callbackResponse: any = null;
+    const callback = (response: { error?: any; propositions?: { [key: string]: Proposition } | undefined }) => {
+      callbackResponse = response;
+    };
+    
+    await Optimize.updatePropositions(decisionScopes, undefined, undefined, callback);
+    
+    expect(callbackResponse).not.toBeNull();
+    expect(callbackResponse.propositions).toBeDefined();
+    expect(callbackResponse.propositions['scope1']).toBeInstanceOf(Proposition);
+    expect(callbackResponse.error).toBeUndefined();
+  });
+
+  it('AEPOptimize updateProposition callback handles error response', async () => {
+    const mockErrorResponse = {
+      error: {
+        message: 'Test error',
+        code: 500
+      }
+    };
+    
+    // Mock the native method to call the callback with error data
+    const mockMethod = jest.fn().mockImplementation((...args: any[]) => {
+      const callback = args[3];
+      if (typeof callback === 'function') {
+        callback(mockErrorResponse);
+      }
+    });
+    NativeModules.AEPOptimize.updatePropositions = mockMethod;
+    
+    let decisionScopes = [new DecisionScope("abcdef")];
+    let callbackResponse: any = null;
+    const callback = (response: { error?: any; propositions?: { [key: string]: Proposition } | undefined }) => {
+      callbackResponse = response;
+    };
+    
+    await Optimize.updatePropositions(decisionScopes, undefined, undefined, callback);
+    
+    expect(callbackResponse).not.toBeNull();
+    expect(callbackResponse.error).toBeDefined();
+    expect(callbackResponse.error.message).toBe('Test error');
+    expect(callbackResponse.error.code).toBe(500);
+    expect(callbackResponse.propositions).toBeUndefined();
   });
 
   it('Test Offer object state', async () => {

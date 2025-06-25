@@ -50,18 +50,81 @@ RCT_EXPORT_METHOD(clearCachedPropositions) {
   [AEPMobileOptimize clearCachedPropositions];
 }
 
-RCT_EXPORT_METHOD(updatePropositions
-                  : (NSArray<NSString *> *)decisionsScopes xdm
-                  : (NSDictionary<NSString *, id> *)xdm data
-                  : (NSDictionary<NSString *, id> *)data) {
-
-  [AEPLog traceWithLabel:TAG message:@"updatePropositions is called."];
-  NSArray<AEPDecisionScope *> *decisionScopesArray =
-      [self createDecisionScopesArray:decisionsScopes];
-  [AEPMobileOptimize updatePropositions:decisionScopesArray
-                                withXdm:xdm
-                                andData:data];
+// Helper method to handle proposition dictionary creation
+- (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)createPropositionDictionary:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict {
+    NSMutableDictionary<NSString *, NSDictionary<NSString *, id> *> *propositionDictionary = [[NSMutableDictionary alloc] initWithCapacity:decisionScopePropositionDict.count];
+    
+    for (AEPDecisionScope *key in decisionScopePropositionDict) {
+        AEPOptimizeProposition *proposition = decisionScopePropositionDict[key];
+        if (proposition) {
+            [propositionDictionary setValue:[self convertPropositionToDict:proposition] forKey:key.name];
+        }
+    }
+    return propositionDictionary;
 }
+
+// Helper method to create standardized response for callbacks
+- (NSDictionary *)createCallbackResponse:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict 
+                                   error:(NSError *)error {
+    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
+    
+    if (error) {
+        [response setValue:@{ @"message": error.description, @"code": @(error.code) } forKey:@"error"];
+    }
+    
+    if (decisionScopePropositionDict && [decisionScopePropositionDict count] > 0) {
+        NSDictionary<NSString *, NSDictionary<NSString *, id> *> *propositionDictionary = [self createPropositionDictionary:decisionScopePropositionDict];
+        [response setValue:propositionDictionary forKey:@"propositions"];
+    }
+    
+    return response;
+}
+
+// Method for when we need a callback
+RCT_EXPORT_METHOD(updatePropositionsWithCallback:(NSArray<NSString *> *)decisionScopesArray
+                  withXdm:(NSDictionary *)xdm
+                  andData:(NSDictionary *)data
+                  callback:(RCTResponseSenderBlock)callback) {
+    [AEPLog traceWithLabel:TAG message:@"updatePropositionsWithCallback is called."];
+    NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
+    
+    [AEPMobileOptimize updatePropositions:scopes
+                                   withXdm:xdm
+                                   andData:data
+                                completion:^(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *decisionScopePropositionDict, NSError *error) {
+        NSDictionary *response = [self createCallbackResponse:decisionScopePropositionDict error:error];
+        callback(@[response]);
+    }];
+}
+
+// Method for when we don't need a callback
+RCT_EXPORT_METHOD(updatePropositionsWithoutCallback:(NSArray<NSString *> *)decisionScopesArray
+                  withXdm:(NSDictionary *)xdm
+                  andData:(NSDictionary *)data) {
+    [AEPLog traceWithLabel:TAG message:@"updatePropositionsWithoutCallback is called."];
+    NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
+    
+    [AEPMobileOptimize updatePropositions:scopes
+                                   withXdm:xdm
+                                   andData:data
+                                completion:nil];
+}
+
+// Unified method that handles both callback and non-callback cases (like Android implementation)
+RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
+                  withXdm:(NSDictionary *)xdm
+                  andData:(NSDictionary *)data
+                  callback:(RCTResponseSenderBlock)callback) {
+    [AEPLog traceWithLabel:TAG message:@"updatePropositions is called."];
+    NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
+    
+    if (callback != nil && [callback isEqual:[NSNull null]] == NO) {
+        [self updatePropositionsWithCallback:decisionScopesArray withXdm:xdm andData:data callback:callback];
+    } else {
+        [self updatePropositionsWithoutCallback:decisionScopesArray withXdm:xdm andData:data];
+    }
+}
+
 
 RCT_EXPORT_METHOD(getPropositions
                   : (NSArray<NSString *> *)decisionScopes resolver
