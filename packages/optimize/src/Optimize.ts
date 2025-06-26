@@ -30,7 +30,7 @@ interface IOptimize {
   onPropositionUpdate: (adobeCallback: AdobePropositionCallback) => void;
   clearCachedPropositions: () => void;
   getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
-  updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>, callback?: UpdatePropositionsCallback) => void
+  updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>, callback?: (propositions: Map<string, Proposition>) => void) => void
 }
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
@@ -105,33 +105,9 @@ const Optimize: IOptimize = {
 * @param {Map<string, any>} data - containing additional free-form data to be sent in the personalization query request
 * @param {UpdatePropositionsCallback} callback - optional callback that will be called with the response containing updated propositions and/or error information
 */
-  updatePropositions(decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>, callback?: UpdatePropositionsCallback) {    
-    const decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
-    
-    const xdmObject = xdm && xdm.size > 0 ? Object.fromEntries(xdm) : undefined;
-    const dataObject = data && data.size > 0 ? Object.fromEntries(data) : undefined;
-    
-    if (callback) {
-      RCTAEPOptimize.updatePropositions(decisionScopeNames, xdmObject, dataObject, (response: any) => {
-        const processedResponse: UpdatePropositionsResponse = {};
-        
-        if (response && response.error) {
-          processedResponse.error = response.error;
-        }
-        
-        if (response && response.propositions) {
-          const propositionMap: { [key: string]: Proposition } = {};
-          for (const [key, value] of Object.entries(response.propositions)) {
-            propositionMap[key] = new Proposition(value as any);
-          }
-          processedResponse.propositions = propositionMap;
-        }
-        
-        callback(processedResponse);
-      });
-    } else {
-      RCTAEPOptimize.updatePropositions(decisionScopeNames, xdmObject, dataObject, null);
-    }
+  updatePropositions(decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>, callback?: (propositions: Map<string, Proposition>) => void) {    
+    var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
+    RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data, callback || function() {});
   }  
 };
 
