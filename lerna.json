@@ -1,9 +1,8 @@
 {
   "packages": [
     "packages/*",
-    "apps/*"
+    "apps/AEPSampleAppNewArchEnabled"
   ],
   "npmClient": "yarn",
-  "useWorkspaces": true,
   "version": "independent"
 }
