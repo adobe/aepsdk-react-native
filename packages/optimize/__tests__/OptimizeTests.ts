@@ -176,7 +176,7 @@ describe('Optimize', () => {
   });
 
   it('Test Optimize.displayed', async () => {
-    const spy = jest.spyOn(NativeModules.AEPOptimize, 'displayed');
+    const spy = jest.spyOn(NativeModules.AEPOptimize, 'multipleOffersDisplayed');
     const proposition = new Proposition(propositionJson as any);
     const offer = proposition.items[0];
     const offerPairs = [{
