@@ -18,7 +18,7 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OfferType;
-import com.adobe.marketing.mobile.optimize.OfferUtils.displayed;
+import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.facebook.react.bridge.Promise;
@@ -64,27 +64,39 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void multipleOffersDisplayed(final ReadableArray offers) {
-        if (offers == null || offers.size() == 0) {
+    public void multipleOffersDisplayed(final ReadableArray propositionOfferPairs) {
+        if (propositionOfferPairs == null || propositionOfferPairs.size() == 0) {
             return;
         }
-        
-        // Convert ReadableArray to List<Offer>
+
         List<Offer> nativeOffers = new ArrayList<>();
-        for (int i = 0; i < offers.size(); i++) {
-            ReadableMap offerMap = offers.getMap(i);
-            if (offerMap != null) {
-                Map<String, Object> offerEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(offerMap);
-                Offer nativeOffer = createOffer(offerEventData);
-                if (nativeOffer != null) {
-                    nativeOffers.add(nativeOffer);
+        
+        for (int i = 0; i < propositionOfferPairs.size(); i++) {
+            ReadableMap propositionOfferPairMap = propositionOfferPairs.getMap(i);
+            if (propositionOfferPairMap == null) {
+                continue;
+            }
+
+            ReadableMap propositionMap = propositionOfferPairMap.getMap("proposition");
+            String offerId = propositionOfferPairMap.getString("offerId");
+            if (propositionMap == null || offerId == null) {
+                continue;
+            }
+
+            Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
+            OptimizeProposition proposition = OptimizeProposition.fromEventData(propositionEventData);
+            if (proposition != null) {
+                for (Offer offer : proposition.getOffers()) {
+                    if (offer.getId().equalsIgnoreCase(offerId)) {
+                        nativeOffers.add(offer);
+                        break;
+                    }
                 }
             }
         }
         
-        // Call the native List<Offer>.displayed() API
         if (!nativeOffers.isEmpty()) {
-            nativeOffers.displayed();
+            OfferUtils.displayed(nativeOffers);
         }
     }
 

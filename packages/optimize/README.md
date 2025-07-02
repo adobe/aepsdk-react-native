@@ -163,6 +163,38 @@ const decisionScopes = [
 Optimize.updatePropositions(decisionScopes, null, null);
 ```
 
+### Batching multiple display propositions track events:
+
+This API provides enhanced support for batching multiple display propositions track events.
+
+#### displayed
+
+**Syntax**
+
+```typescript
+displayed(offerPairs: Array<{ proposition: Proposition; offerId: string }>): Promise<void>
+```
+
+**Example**
+
+```typescript
+const propositions: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+const offerPairs: Array<{ proposition: Proposition; offerId: string }> = [];
+
+propositions.forEach((proposition: Proposition) => {
+  if (proposition && proposition.items) {
+    proposition.items.forEach((offer) => {
+      offerPairs.push({
+        proposition,
+        offerId: offer.id,
+      });
+    });
+  }
+});
+
+await Optimize.displayed(offerPairs);
+```
+
 ---
 
 ## Public classes

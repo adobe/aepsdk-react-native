@@ -175,10 +175,15 @@ describe('Optimize', () => {
     );
   });
 
-  it('Test Optimize.multipleOffersDisplayed', async () => {
-    const spy = jest.spyOn(NativeModules.AEPOptimize, 'multipleOffersDisplayed');
-    const offers = [new Offer(offerJson)];
-    await Optimize.multipleOffersDisplayed(offers);
-    expect(spy).toHaveBeenCalledWith(offers);
+  it('Test Optimize.displayed', async () => {
+    const spy = jest.spyOn(NativeModules.AEPOptimize, 'displayed');
+    const proposition = new Proposition(propositionJson as any);
+    const offer = proposition.items[0];
+    const offerPairs = [{
+      proposition,
+      offerId: offer.id
+    }];
+    await Optimize.displayed(offerPairs);
+    expect(spy).toHaveBeenCalledWith(offerPairs);
   });
 });

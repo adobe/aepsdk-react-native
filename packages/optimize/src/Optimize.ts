@@ -14,7 +14,7 @@ import { EventSubscription, NativeModules } from 'react-native';
 import { NativeEventEmitter } from 'react-native';
 import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
-import Offer from './models/Offer';
+import { PropositionOfferPair } from './models/PropositionOfferPair';
 import { AdobePropositionCallback }  from './models/AdobePropositionCallback';
 
 interface IOptimize {
@@ -23,7 +23,7 @@ interface IOptimize {
   clearCachedPropositions: () => void;
   getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
   updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) => void
-  multipleOffersDisplayed: (offers: Array<Offer>) => void
+  displayed: (offers: Array<PropositionOfferPair>) => void
 }
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
@@ -105,10 +105,10 @@ const Optimize: IOptimize = {
   /**
   * Dispatches an event for the Edge network extension to send an Experience Event to the Edge
   * network with the display interaction data for the given list of [Offer]s.
-  * @param {Array<Offer>} offers - an array of Offer objects that were displayed
+  * @param {Array<PropositionOfferPair>} offers - an array of PropositionOfferPair objects that were displayed
   */
-  multipleOffersDisplayed(offers: Array<Offer>) {
-    RCTAEPOptimize.multipleOffersDisplayed(offers);
+  displayed(propositionOfferPairs: Array<{proposition: Proposition, offerId: string}>) {
+    RCTAEPOptimize.multipleOffersDisplayed(propositionOfferPairs);
   }
 };
 

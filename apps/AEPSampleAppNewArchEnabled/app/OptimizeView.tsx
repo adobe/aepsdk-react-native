@@ -29,6 +29,7 @@ import {
 } from 'react-native';
 import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
 import {  useRouter } from 'expo-router';
+import { PropositionOfferPair } from '@adobe/react-native-aepoptimize/dist/models/PropositionOfferPair';
 
 const ViewTypes = {
   header: 0,
@@ -87,7 +88,7 @@ export default () => {
 
   const updatePropositions = () => {
     Optimize.updatePropositions(decisionScopes);
-    console.log('Updated Propositions');
+    console.log('Updated Proposition for decisionScopes:', decisionScopes);
   };
 
   const getPropositions = async () => {
@@ -95,6 +96,7 @@ export default () => {
       await Optimize.getPropositions(decisionScopes);
     console.log(propositions);
     if (propositions) {
+      console.log(propositions);
       setTextProposition(propositions.get(decisionScopeText.getName()));
       setImageProposition(propositions.get(decisionScopeImage.getName()));
       setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
@@ -123,21 +125,24 @@ export default () => {
 
   const multipleOffersDisplayed = async () => {
     const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
-    const offersArray: Array<Offer> = [];
+    const offerPairs: Array<PropositionOfferPair> = [];
     
     propositionsMap.forEach((proposition: Proposition) => {
       if (proposition && proposition.items) {
         proposition.items.forEach((offer) => {
-          offersArray.push(offer);
+          offerPairs.push({
+            proposition: proposition,
+            offerId: offer.id
+          });
         });
       }
     });
     
-    console.log('Extracted offers:', offersArray);
+    console.log('Extracted offer pairs:', offerPairs);
     
-    if (offersArray.length > 0) {
-      Optimize.multipleOffersDisplayed(offersArray);
-      console.log(`Called multipleOffersDisplayed with ${offersArray.length} offers`);
+    if (offerPairs.length > 0) {
+      Optimize.displayed(offerPairs);
+      console.log(`Called multipleOffersDisplayed with ${offerPairs.length} offers`);
     } else {
       console.log('No offers found to display');
     }

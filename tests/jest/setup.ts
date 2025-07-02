@@ -185,7 +185,7 @@ jest.doMock('react-native', () => {
           generateReferenceXdm: jest.fn(
             () => new Promise((resolve) => resolve(new Map()))
           ),
-          multipleOffersDisplayed: jest.fn()
+          displayed: jest.fn()
         },
         AEPTarget: {
           extensionVersion: jest.fn(

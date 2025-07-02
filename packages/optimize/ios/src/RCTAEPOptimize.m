@@ -145,27 +145,35 @@ RCT_EXPORT_METHOD(offerDisplayed
 }
 
 RCT_EXPORT_METHOD(multipleOffersDisplayed
-                  : (NSArray<NSDictionary<NSString *, id> *> *)offersArray) {
-  [AEPLog debugWithLabel:TAG message:@"Multiple Offers Displayed"];
-  
-  if (!offersArray || [offersArray count] == 0) {
+                  : (NSArray<NSDictionary *> *)propositionOfferPairs) {
+  [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed is called."];
+  if (!propositionOfferPairs || propositionOfferPairs.count == 0) {
     return;
   }
-  
-  // Convert NSArray of offer dictionaries to NSArray<AEPOffer *>
-  NSMutableArray<AEPOffer *> *nativeOffers = [[NSMutableArray alloc] init];
-  
-  for (NSDictionary<NSString *, id> *offerDict in offersArray) {
-    if (offerDict) {
-      AEPOffer *nativeOffer = [AEPOffer initFromData:offerDict];
-      if (nativeOffer) {
-        [nativeOffers addObject:nativeOffer];
+
+  NSMutableArray<AEPOffer *> *nativeOffers = [NSMutableArray array];
+
+  for (NSDictionary *pair in propositionOfferPairs) {
+    NSDictionary *propositionDict = pair[@"proposition"];
+    NSString *offerId = pair[@"offerId"];
+    if (!propositionDict || !offerId) {
+      continue;
+    }
+
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:propositionDict];
+    if (!proposition) {
+      continue;
+    }
+
+    for (AEPOffer *offer in proposition.offers) {
+      if ([[offer id] isEqualToString:offerId]) {
+        [nativeOffers addObject:offer];
+        break;
       }
     }
   }
-  
-  // Call the native AEPMobileOptimize displayed method for multiple offers
-  if ([nativeOffers count] > 0) {
+
+  if (nativeOffers.count > 0) {
     [AEPMobileOptimize displayed:nativeOffers];
   }
 }
