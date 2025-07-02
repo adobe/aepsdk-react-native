@@ -58,8 +58,9 @@ describe('Optimize', () => {
     await Optimize.updatePropositions(decisionScopes, xdm, data);
     expect(spy).toHaveBeenCalledWith(
       decisionScopes.map((decisionScope) => decisionScope.getName()),
-      undefined, // empty Map becomes undefined
-      undefined // empty Map becomes undefined
+      xdm,
+      data,
+      expect.any(Function) // Now always passes a function, even when no callback provided
     );
   });
 
@@ -72,8 +73,8 @@ describe('Optimize', () => {
     await Optimize.updatePropositions(decisionScopes, xdm, data, callback);
     expect(spy).toHaveBeenCalledWith(
       decisionScopes.map((decisionScope) => decisionScope.getName()),
-      undefined, // empty Map becomes undefined
-      undefined, // empty Map becomes undefined
+      xdm,
+      data,
       expect.any(Function)
     );
   });
