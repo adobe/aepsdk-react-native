@@ -80,36 +80,6 @@ RCT_EXPORT_METHOD(clearCachedPropositions) {
     return response;
 }
 
-// Method for when we need a callback
-RCT_EXPORT_METHOD(updatePropositionsWithCallback:(NSArray<NSString *> *)decisionScopesArray
-                  withXdm:(NSDictionary *)xdm
-                  andData:(NSDictionary *)data
-                  callback:(RCTResponseSenderBlock)callback) {
-    [AEPLog traceWithLabel:TAG message:@"updatePropositionsWithCallback is called."];
-    NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
-    
-    [AEPMobileOptimize updatePropositions:scopes
-                                   withXdm:xdm
-                                   andData:data
-                                completion:^(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *decisionScopePropositionDict, NSError *error) {
-        NSDictionary *response = [self createCallbackResponse:decisionScopePropositionDict error:error];
-        callback(@[response]);
-    }];
-}
-
-// Method for when we don't need a callback
-RCT_EXPORT_METHOD(updatePropositionsWithoutCallback:(NSArray<NSString *> *)decisionScopesArray
-                  withXdm:(NSDictionary *)xdm
-                  andData:(NSDictionary *)data) {
-    [AEPLog traceWithLabel:TAG message:@"updatePropositionsWithoutCallback is called."];
-    NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
-    
-    [AEPMobileOptimize updatePropositions:scopes
-                                   withXdm:xdm
-                                   andData:data
-                                completion:nil];
-}
-
 // Unified method that handles both callback and non-callback cases (like Android implementation)
 RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
                   withXdm:(NSDictionary *)xdm
@@ -119,9 +89,20 @@ RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
     NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
     
     if (callback != nil && [callback isEqual:[NSNull null]] == NO) {
-        [self updatePropositionsWithCallback:decisionScopesArray withXdm:xdm andData:data callback:callback];
+        [AEPLog traceWithLabel:TAG message:@"Callback provided, calling with completion handler."];
+        [AEPMobileOptimize updatePropositions:scopes
+                                       withXdm:xdm
+                                       andData:data
+                                    completion:^(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *decisionScopePropositionDict, NSError *error) {
+            NSDictionary *response = [self createCallbackResponse:decisionScopePropositionDict error:error];
+            callback(@[response]);
+        }];
     } else {
-        [self updatePropositionsWithoutCallback:decisionScopesArray withXdm:xdm andData:data];
+        [AEPLog traceWithLabel:TAG message:@"No callback provided, calling without completion handler."];
+        [AEPMobileOptimize updatePropositions:scopes
+                                       withXdm:xdm
+                                       andData:data
+                                    completion:nil];
     }
 }
 

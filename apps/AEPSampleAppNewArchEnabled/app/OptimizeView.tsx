@@ -70,6 +70,10 @@ export default () => {
   const decisionScopeTargetMbox = new DecisionScope('akhil-test-mbox');
 
   const decisionScopes = [
+    decisionScopeText,
+    decisionScopeImage,
+    decisionScopeHtml,
+    decisionScopeJson,
     decisionScopeTargetMbox,
   ];
 
