@@ -28,7 +28,9 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import android.util.Log;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,12 +74,40 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data) {
+    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data, final Callback callback) {
+        Log.d(TAG, "updatePropositions called");
         final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
         Map<String, Object> mapXdm = xdm != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(xdm) : Collections.<String, Object>emptyMap();
         Map<String, Object> mapData = data != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(data) : Collections.<String, Object>emptyMap();
-        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData);
+        
+        if (callback != null) {
+            Log.d(TAG, "Callback is not null, calling Optimize.updatePropositions with callback.");
+            Optimize.updatePropositions(decisionScopeList, mapXdm, mapData, new AdobeCallbackWithError<Map<DecisionScope, OptimizeProposition>>() {
+                @Override
+                public void fail(final AdobeError adobeError) {
+                    Log.e(TAG, "updatePropositions callback failed: " + adobeError.getErrorName());
+                    if (callback != null) {
+                        final WritableMap response = createCallbackResponse(null, adobeError);
+                        Log.d(TAG, "Invoking JS callback with error: " + response.toString());
+                        callback.invoke(response);
+                    }
+                }
+
+                @Override
+                public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+                    Log.d(TAG, "updatePropositions callback success.");
+                    if (callback != null) {
+                        final WritableMap response = createCallbackResponse(decisionScopePropositionMap, null);
+                        Log.d(TAG, "Invoking JS callback with success: " + response.toString());
+                        callback.invoke(response);
+                    }
+                }
+            });
+        } else {
+            Log.d(TAG, "Callback is null, calling Optimize.updatePropositions without callback.");
+            Optimize.updatePropositions(decisionScopeList, mapXdm, mapData);
+        }
     }
 
     @ReactMethod
@@ -185,6 +215,28 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     // Required for React Native built in EventEmitter Calls.
     @ReactMethod
     public void removeListeners(Integer count) {}
+
+    // Helper method to create callback response
+    private WritableMap createCallbackResponse(final Map<DecisionScope, OptimizeProposition> propositionsMap, final AdobeError error) {
+        final WritableMap response = new WritableNativeMap();
+        
+        if (error != null) {
+            final WritableMap errorMap = new WritableNativeMap();
+            errorMap.putString("message", error.getErrorName());
+            errorMap.putInt("code", error.getErrorCode());
+            response.putMap("error", errorMap);
+        }
+        
+        if (propositionsMap != null && !propositionsMap.isEmpty()) {
+            final WritableMap propositionsWritableMap = new WritableNativeMap();
+            for (final Map.Entry<DecisionScope, OptimizeProposition> entry : propositionsMap.entrySet()) {
+                propositionsWritableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
+            }
+            response.putMap("propositions", propositionsWritableMap);
+        }
+        
+        return response;
+    }
 
     private static Offer createOffer(Map<String, Object> offerEventData) {
         String id = (String) offerEventData.get("id");
