@@ -174,4 +174,50 @@ describe('Optimize', () => {
       'eyJhY3Rpdml0eUlkIjoieGNvcmU6b2ZmZXItYWN0aXZpdHk6MTExMTExMTExMTExMTExMSIsInBsYWNlbWVudElkIjoieGNvcmU6b2ZmZXItcGxhY2VtZW50OjExMTExMTExMTExMTExMTEiLCJpdGVtQ291bnQiOjEwfQ=='
     );
   });
+
+  it('Test Optimize.displayed', async () => {
+    const spy = jest.spyOn(NativeModules.AEPOptimize, 'multipleOffersDisplayed');
+    const proposition = new Proposition(propositionJson as any);
+    const offer = proposition.items[0];
+    const offerPairs = [{
+      proposition,
+      offerId: offer.id
+    }];
+
+    // Clean the proposition as your implementation does
+    const entries = Object.entries(proposition).filter(
+      ([_, value]) => typeof value !== 'function'
+    );
+    const cleanedProposition = Object.fromEntries(entries);
+    const cleanedPairs = [{
+      proposition: cleanedProposition,
+      offerId: offer.id
+    }];
+
+    await Optimize.displayed(offerPairs);
+    expect(spy).toHaveBeenCalledWith(cleanedPairs);
+  });
+
+  it('Test Optimize.generateDisplayInteractionXdm', async () => {
+    const spy = jest.spyOn(NativeModules.AEPOptimize, 'generateDisplayInteractionXdmForMultipleOffers');
+    const proposition = new Proposition(propositionJson as any);
+    const offer = proposition.items[0];
+    const offerPairs = [{
+      proposition,
+      offerId: offer.id
+    }];
+  
+    // Clean the proposition as your implementation does
+    const entries = Object.entries(proposition).filter(
+      ([_, value]) => typeof value !== 'function'
+    );
+    const cleanedProposition = Object.fromEntries(entries);
+    const cleanedPairs = [{
+      proposition: cleanedProposition,
+      offerId: offer.id
+    }];
+  
+    await Optimize.generateDisplayInteractionXdm(offerPairs);
+    expect(spy).toHaveBeenCalledWith(cleanedPairs);
+  });
 });
