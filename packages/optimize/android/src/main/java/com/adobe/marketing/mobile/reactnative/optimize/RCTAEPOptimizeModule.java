@@ -184,6 +184,42 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void generateDisplayInteractionXdmForMultipleOffers(final ReadableArray propositionOfferPairs, final Promise promise) {
+        final List<Offer> nativeOffers = new ArrayList<>();
+        
+        for (int i = 0; i < propositionOfferPairs.size(); i++) {
+            ReadableMap propositionOfferPairMap = propositionOfferPairs.getMap(i);
+            if (propositionOfferPairMap == null) {
+                continue;   
+            }
+
+            ReadableMap propositionMap = propositionOfferPairMap.getMap("proposition");
+            String offerId = propositionOfferPairMap.getString("offerId");
+            if (propositionMap == null || offerId == null) {
+                continue;       
+            }
+
+            Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
+            OptimizeProposition proposition = OptimizeProposition.fromEventData(propositionEventData);
+
+            for (Offer offer : proposition.getOffers()) {
+                if (offer.getId().equalsIgnoreCase(offerId)) {
+                    nativeOffers.add(offer);
+                    break;
+                }
+            }
+        }
+
+        if (nativeOffers.size() > 0) {
+            final Map<String, Object> interactionXdm = OfferUtils.generateDisplayInteractionXdm(nativeOffers);
+            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
+            promise.resolve(writableMap);
+        } else {
+            promise.reject("generateDisplayInteractionXdmForMultipleOffers", "Error in generating Display interaction XDM for multiple offers.");
+        }
+    }
+
+    @ReactMethod
     public void generateTapInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
         final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
         final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);

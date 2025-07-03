@@ -10,9 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import Proposition from './Proposition';
+import Proposition from '../models/Proposition';
 
-export type PropositionOfferPair = {
-  proposition: Proposition;
-  offerId: string;
-};
+export function cleanProposition(proposition: Proposition): object {
+    const entries = Object.entries(proposition).filter(([_, value]) => typeof value !== "function");
+    return Object.fromEntries(entries);
+}

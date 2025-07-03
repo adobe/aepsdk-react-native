@@ -178,6 +178,46 @@ RCT_EXPORT_METHOD(multipleOffersDisplayed
   }
 }
 
+RCT_EXPORT_METHOD(generateDisplayInteractionXdmForMultipleOffers
+                  : (NSArray<NSDictionary *> *)propositionOfferPairs resolver
+                  : (RCTPromiseResolveBlock)resolve rejector
+                  : (RCTPromiseRejectBlock)reject) {
+  [AEPLog debugWithLabel:TAG message:@"generateDisplayInteractionXdmForMultipleOffers"];
+  if (!propositionOfferPairs || propositionOfferPairs.count == 0) {
+    reject(@"generateDisplayInteractionXdmForMultipleOffers", @"No proposition-offer pairs provided.", nil);
+    return;
+  }
+
+  NSMutableArray<AEPOffer *> *nativeOffers = [NSMutableArray array];
+
+  for (NSDictionary *pair in propositionOfferPairs) {
+    NSDictionary *propositionDict = pair[@"proposition"];
+    NSString *offerId = pair[@"offerId"];
+    if (!propositionDict || !offerId) {
+      continue;
+    }
+
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:propositionDict];
+    if (!proposition) {
+      continue;
+    }
+
+    for (AEPOffer *offer in proposition.offers) {
+      if ([[offer id] isEqualToString:offerId]) {
+        [nativeOffers addObject:offer];
+        break;
+      }
+    }
+  }
+
+  if (nativeOffers.count > 0) {
+    NSDictionary<NSString *, id> *displayInteractionXdm = [AEPMobileOptimize generateDisplayInteractionXdm:nativeOffers];
+    resolve(displayInteractionXdm);
+  } else {
+    reject(@"generateDisplayInteractionXdmForMultipleOffers", @"Error in generating Display interaction XDM for multiple offers.", nil);
+  }
+}
+
 RCT_EXPORT_METHOD(generateReferenceXdm
                   : (NSDictionary<NSString *, id> *)dictionary resolver
                   : (RCTPromiseResolveBlock)resolve rejector

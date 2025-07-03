@@ -165,14 +165,14 @@ Optimize.updatePropositions(decisionScopes, null, null);
 
 ### Batching multiple display propositions track events:
 
-This API provides enhanced support for batching multiple display propositions track events.
+The Optimize SDK now provides enhanced support for batching multiple display propositions track events. The following APIs are available:
 
 #### displayed
 
 **Syntax**
 
 ```typescript
-displayed(offerPairs: Array<{ proposition: Proposition; offerId: string }>): Promise<void>
+displayed(offerPairs: Array<{ proposition: Proposition; offerId: string }>)
 ```
 
 **Example**
@@ -192,7 +192,37 @@ propositions.forEach((proposition: Proposition) => {
   }
 });
 
-await Optimize.displayed(offerPairs);
+Optimize.displayed(offerPairs);
+```
+
+#### generateDisplayInteractionXdm
+
+**Syntax**
+
+```typescript
+generateDisplayInteractionXdm(offerPairs: Array<{ proposition: Proposition; offerId: string }>): Promise<Map<string, any>>
+```
+
+**Example**
+
+```typescript
+const propositions: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+const offerPairs: Array<{ proposition: Proposition; offerId: string }> = [];
+
+propositions.forEach((proposition: Proposition) => {
+  if (proposition && proposition.items) {
+    proposition.items.forEach((offer) => {
+      offerPairs.push({
+        proposition,
+        offerId: offer.id,
+      });
+    });
+  }
+});
+
+const xdmData = await Optimize.generateDisplayInteractionXdm(offerPairs);
+// use xdmData as needed
+
 ```
 
 ---

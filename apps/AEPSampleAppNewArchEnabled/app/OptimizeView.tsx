@@ -15,7 +15,6 @@ import {
   Optimize,
   DecisionScope,
   Proposition,
-  Offer,
 } from '@adobe/react-native-aepoptimize';
 import {WebView} from 'react-native-webview';
 import styles from '../styles/styles';
@@ -29,7 +28,6 @@ import {
 } from 'react-native';
 import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
 import {  useRouter } from 'expo-router';
-import { PropositionOfferPair } from '@adobe/react-native-aepoptimize/dist/models/PropositionOfferPair';
 
 const ViewTypes = {
   header: 0,
@@ -125,7 +123,7 @@ export default () => {
 
   const multipleOffersDisplayed = async () => {
     const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
-    const offerPairs: Array<PropositionOfferPair> = [];
+    const offerPairs: Array<{proposition: Proposition, offerId: string}> = [];
     
     propositionsMap.forEach((proposition: Proposition) => {
       if (proposition && proposition.items) {
@@ -145,6 +143,29 @@ export default () => {
       console.log(`Called multipleOffersDisplayed with ${offerPairs.length} offers`);
     } else {
       console.log('No offers found to display');
+    }
+  };
+
+  const generateDisplayInteractionXdmForMultipleOffers = async () => {
+    const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+    const offerPairs: Array<{proposition: Proposition, offerId: string}> = [];
+
+    propositionsMap.forEach((proposition: Proposition) => {
+      if (proposition && proposition.items) {
+        proposition.items.forEach((offer) => {
+          offerPairs.push({
+            proposition: proposition,
+            offerId: offer.id
+          });
+        });
+      }
+    });
+
+    const xdm = await Optimize.generateDisplayInteractionXdm(offerPairs);
+    if (xdm) {
+      console.log('Generated Display Interaction XDM for Multiple Offers:', xdm);
+    } else {
+      console.log('Error in generating Display interaction XDM for multiple offers.');
     }
   };
 
@@ -372,6 +393,12 @@ export default () => {
         <Button
           title="Multiple Offers Displayed"
           onPress={multipleOffersDisplayed}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
+          title="Generate Display Interaction XDM for Multiple Offers"
+          onPress={generateDisplayInteractionXdmForMultipleOffers}
         />
       </View>
       <View style={{margin: 5}}>
