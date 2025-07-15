@@ -151,6 +151,7 @@ RCT_EXPORT_METHOD(multipleOffersDisplayed
     return;
   }
 
+  NSMutableArray<AEPOptimizeProposition *> *propositions = [NSMutableArray array];
   NSMutableArray<AEPOffer *> *nativeOffers = [NSMutableArray array];
 
   for (NSDictionary *pair in propositionOfferPairs) {
@@ -164,6 +165,8 @@ RCT_EXPORT_METHOD(multipleOffersDisplayed
     if (!proposition) {
       continue;
     }
+
+    [propositions addObject:proposition];
 
     for (AEPOffer *offer in proposition.offers) {
       if ([[offer id] isEqualToString:offerId]) {
@@ -189,6 +192,7 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdmForMultipleOffers
   }
 
   NSMutableArray<AEPOffer *> *nativeOffers = [NSMutableArray array];
+  NSMutableArray<AEPOptimizeProposition *> *propositions = [NSMutableArray array];
 
   for (NSDictionary *pair in propositionOfferPairs) {
     NSDictionary *propositionDict = pair[@"proposition"];
@@ -201,6 +205,8 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdmForMultipleOffers
     if (!proposition) {
       continue;
     }
+
+    [propositions addObject:proposition];
 
     for (AEPOffer *offer in proposition.offers) {
       if ([[offer id] isEqualToString:offerId]) {
