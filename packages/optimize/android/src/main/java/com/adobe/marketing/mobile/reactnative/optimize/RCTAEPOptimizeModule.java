@@ -77,8 +77,8 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
                 continue;
             }
 
-            ReadableMap propositionMap = propositionOfferPairMap.getMap("proposition");
-            String offerId = propositionOfferPairMap.getString("offerId");
+            ReadableMap propositionMap = propositionOfferPairMap.getMap(RCTAEPOptimizeConstants.PROPOSITION_KEY);
+            String offerId = propositionOfferPairMap.getString(RCTAEPOptimizeConstants.OFFER_ID_KEY);
             if (propositionMap == null || offerId == null) {
                 continue;
             }
@@ -193,8 +193,8 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
                 continue;   
             }
 
-            ReadableMap propositionMap = propositionOfferPairMap.getMap("proposition");
-            String offerId = propositionOfferPairMap.getString("offerId");
+            ReadableMap propositionMap = propositionOfferPairMap.getMap(RCTAEPOptimizeConstants.PROPOSITION_KEY);
+            String offerId = propositionOfferPairMap.getString(RCTAEPOptimizeConstants.OFFER_ID_KEY);
             if (propositionMap == null || offerId == null) {
                 continue;       
             }
