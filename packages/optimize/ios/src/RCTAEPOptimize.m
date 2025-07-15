@@ -151,6 +151,8 @@ RCT_EXPORT_METHOD(multipleOffersDisplayed
     return;
   }
 
+  // Offer objects contain a weak reference to the proposition that they belong to.
+  // We need to keep the propositions alive until the offers are displayed.
   NSMutableArray<AEPOptimizeProposition *> *propositions = [NSMutableArray array];
   NSMutableArray<AEPOffer *> *nativeOffers = [NSMutableArray array];
 
@@ -191,6 +193,8 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdmForMultipleOffers
     return;
   }
 
+  // Offer objects contain a weak reference to the proposition that they belong to.
+  // We need to keep the propositions alive until the xdm data is generated.
   NSMutableArray<AEPOffer *> *nativeOffers = [NSMutableArray array];
   NSMutableArray<AEPOptimizeProposition *> *propositions = [NSMutableArray array];
 

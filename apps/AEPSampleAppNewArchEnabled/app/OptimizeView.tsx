@@ -67,7 +67,6 @@ export default () => {
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9',
   );
   const decisionScopeTargetMbox = new DecisionScope('demoLoc3');
-  const multipleOffersDecisionScope = new DecisionScope('akhil-test-mbox');
 
   const decisionScopes = [
     decisionScopeText,
@@ -75,7 +74,6 @@ export default () => {
     decisionScopeHtml,
     decisionScopeJson,
     decisionScopeTargetMbox,
-    multipleOffersDecisionScope
   ];
 
   const optimizeExtensionVersion = async () => {
@@ -92,9 +90,8 @@ export default () => {
   const getPropositions = async () => {
     const propositions: Map<string, Proposition> =
       await Optimize.getPropositions(decisionScopes);
-    console.log(propositions);
     if (propositions) {
-      console.log(propositions);
+      console.log("get propositions", JSON.stringify(Object.fromEntries(propositions), null, 2));
       setTextProposition(propositions.get(decisionScopeText.getName()));
       setImageProposition(propositions.get(decisionScopeImage.getName()));
       setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
@@ -163,7 +160,7 @@ export default () => {
 
     const xdm = await Optimize.generateDisplayInteractionXdm(offerPairs);
     if (xdm) {
-      console.log('Generated Display Interaction XDM for Multiple Offers:', xdm);
+      console.log('Generated Display Interaction XDM for Multiple Offers:', JSON.stringify(xdm, null, 2));
     } else {
       console.log('Error in generating Display interaction XDM for multiple offers.');
     }
