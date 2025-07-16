@@ -97,7 +97,8 @@ RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
             if (errorCallback != nil) {
                 errorCallback(@[response]);
             }
-        } else {
+        } 
+        if (decisionScopePropositionDict) {
             NSDictionary *response = [self createCallbackResponse:decisionScopePropositionDict error:nil];
             if (successCallback != nil) {
                 successCallback(@[response]);

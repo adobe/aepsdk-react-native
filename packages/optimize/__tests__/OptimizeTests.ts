@@ -104,23 +104,23 @@ describe('Optimize', () => {
 
   it('AEPOptimize updateProposition callback handles error response', async () => {
     // For error, the callback may not be called, or may be called with an empty map or undefined. We'll simulate an empty map.
-    const mockErrorResponse = new Map<string, Proposition>();
+    const mockErrorResponse = new Error('Test error');
     // Mock the native method to call the callback with error data
     const mockMethod = jest.fn().mockImplementation((...args: any[]) => {
-      const callback = args[3];
-      if (typeof callback === 'function') {
-        callback(mockErrorResponse);
+      const onError = args[4];
+      if (typeof onError === 'function') {
+        onError(mockErrorResponse);
       }
     });
     NativeModules.AEPOptimize.updatePropositions = mockMethod;
     let decisionScopes = [new DecisionScope("abcdef")];
-    let callbackResponse: Map<string, Proposition> | null = null;
-    const callback = (propositions: Map<string, Proposition>) => {
-      callbackResponse = propositions;
+    let callbackResponse: any = null;
+    const onError = (error: any) => {
+      callbackResponse = error;
     };
-    await Optimize.updatePropositions(decisionScopes, undefined, undefined, callback as any, undefined);
+    await Optimize.updatePropositions(decisionScopes, undefined, undefined, undefined, onError as any);
     expect(callbackResponse).not.toBeNull();
-    expect(callbackResponse!.size).toBe(0);
+    expect(callbackResponse!.message).toBe('Test error');
   });
 
   it('AEPOptimize updateProposition calls both success and error callbacks', async () => {
