@@ -35,6 +35,7 @@ import android.util.Log;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import androidx.annotation.Nullable;
 
 public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
@@ -74,40 +75,34 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data, final Callback callback) {
+    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data, @Nullable final Callback successCallback, @Nullable final Callback errorCallback) {
         Log.d(TAG, "updatePropositions called");
         final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
         Map<String, Object> mapXdm = xdm != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(xdm) : Collections.<String, Object>emptyMap();
         Map<String, Object> mapData = data != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(data) : Collections.<String, Object>emptyMap();
         
-        if (callback != null) {
-            Log.d(TAG, "Callback is not null, calling Optimize.updatePropositions with callback.");
-            Optimize.updatePropositions(decisionScopeList, mapXdm, mapData, new AdobeCallbackWithError<Map<DecisionScope, OptimizeProposition>>() {
-                @Override
-                public void fail(final AdobeError adobeError) {
-                    Log.e(TAG, "updatePropositions callback failed: " + adobeError.getErrorName());
-                    if (callback != null) {
-                        final WritableMap response = createCallbackResponse(null, adobeError);
-                        Log.d(TAG, "Invoking JS callback with error: " + response.toString());
-                        callback.invoke(response);
-                    }
+        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData, new AdobeCallbackWithError<Map<DecisionScope, OptimizeProposition>>() {
+            @Override
+            public void fail(final AdobeError adobeError) {
+                Log.e(TAG, "updatePropositions callback failed: " + adobeError.getErrorName());
+                if (errorCallback != null) {
+                    final WritableMap response = createCallbackResponse(null, adobeError);
+                    Log.d(TAG, "Invoking JS errorCallback with error: " + response.toString());
+                    errorCallback.invoke(response);
                 }
+            }
 
-                @Override
-                public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-                    Log.d(TAG, "updatePropositions callback success.");
-                    if (callback != null) {
-                        final WritableMap response = createCallbackResponse(decisionScopePropositionMap, null);
-                        Log.d(TAG, "Invoking JS callback with success: " + response.toString());
-                        callback.invoke(response);
-                    }
+            @Override
+            public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+                Log.d(TAG, "updatePropositions callback success.");
+                if (successCallback != null) {
+                    final WritableMap response = createCallbackResponse(decisionScopePropositionMap, null);
+                    Log.d(TAG, "Invoking JS successCallback with success: " + response.toString());
+                    successCallback.invoke(response);
                 }
-            });
-        } else {
-            Log.d(TAG, "Callback is null, calling Optimize.updatePropositions without callback.");
-            Optimize.updatePropositions(decisionScopeList, mapXdm, mapData);
-        }
+            }
+        });
     }
 
     @ReactMethod

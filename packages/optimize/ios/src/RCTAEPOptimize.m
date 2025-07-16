@@ -84,26 +84,26 @@ RCT_EXPORT_METHOD(clearCachedPropositions) {
 RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
                   withXdm:(NSDictionary *)xdm
                   andData:(NSDictionary *)data
-                  callback:(RCTResponseSenderBlock)callback) {
+                  successCallback:(RCTResponseSenderBlock)successCallback
+                  errorCallback:(RCTResponseSenderBlock)errorCallback) {
     [AEPLog traceWithLabel:TAG message:@"updatePropositions is called."];
     NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
-    
-    if (callback != nil && [callback isEqual:[NSNull null]] == NO) {
-        [AEPLog traceWithLabel:TAG message:@"Callback provided, calling with completion handler."];
-        [AEPMobileOptimize updatePropositions:scopes
-                                       withXdm:xdm
-                                       andData:data
-                                    completion:^(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *decisionScopePropositionDict, NSError *error) {
-            NSDictionary *response = [self createCallbackResponse:decisionScopePropositionDict error:error];
-            callback(@[response]);
-        }];
-    } else {
-        [AEPLog traceWithLabel:TAG message:@"No callback provided, calling without completion handler."];
-        [AEPMobileOptimize updatePropositions:scopes
-                                       withXdm:xdm
-                                       andData:data
-                                    completion:nil];
-    }
+    [AEPMobileOptimize updatePropositions:scopes
+                                   withXdm:xdm
+                                   andData:data
+                                completion:^(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *decisionScopePropositionDict, NSError *error) {
+        if (error) {
+            NSDictionary *response = [self createCallbackResponse:nil error:error];
+            if (errorCallback != nil) {
+                errorCallback(@[response]);
+            }
+        } else {
+            NSDictionary *response = [self createCallbackResponse:decisionScopePropositionDict error:nil];
+            if (successCallback != nil) {
+                successCallback(@[response]);
+            }
+        }
+    }];
 }
 
 
