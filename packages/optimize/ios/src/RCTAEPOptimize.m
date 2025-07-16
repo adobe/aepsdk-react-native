@@ -144,6 +144,90 @@ RCT_EXPORT_METHOD(offerDisplayed
   }
 }
 
+RCT_EXPORT_METHOD(multipleOffersDisplayed
+                  : (NSArray<NSDictionary *> *)propositionOfferPairs) {
+  [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed is called."];
+  if (!propositionOfferPairs || propositionOfferPairs.count == 0) {
+    return;
+  }
+
+  // Offer objects contain a weak reference to the proposition that they belong to.
+  // We need to keep the propositions alive until the offers are displayed.
+  NSMutableArray<AEPOptimizeProposition *> *propositions = [NSMutableArray array];
+  NSMutableArray<AEPOffer *> *nativeOffers = [NSMutableArray array];
+
+  for (NSDictionary *pair in propositionOfferPairs) {
+    NSDictionary *propositionDict = pair[@"proposition"];
+    NSString *offerId = pair[@"offerId"];
+    if (!propositionDict || !offerId) {
+      continue;
+    }
+
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:propositionDict];
+    if (!proposition) {
+      continue;
+    }
+
+    [propositions addObject:proposition];
+
+    for (AEPOffer *offer in proposition.offers) {
+      if ([[offer id] isEqualToString:offerId]) {
+        [nativeOffers addObject:offer];
+        break;
+      }
+    }
+  }
+
+  if (nativeOffers.count > 0) {
+    [AEPMobileOptimize displayed:nativeOffers];
+  }
+}
+
+RCT_EXPORT_METHOD(generateDisplayInteractionXdmForMultipleOffers
+                  : (NSArray<NSDictionary *> *)propositionOfferPairs resolver
+                  : (RCTPromiseResolveBlock)resolve rejector
+                  : (RCTPromiseRejectBlock)reject) {
+  [AEPLog debugWithLabel:TAG message:@"generateDisplayInteractionXdmForMultipleOffers"];
+  if (!propositionOfferPairs || propositionOfferPairs.count == 0) {
+    reject(@"generateDisplayInteractionXdmForMultipleOffers", @"No proposition-offer pairs provided.", nil);
+    return;
+  }
+
+  // Offer objects contain a weak reference to the proposition that they belong to.
+  // We need to keep the propositions alive until the xdm data is generated.
+  NSMutableArray<AEPOffer *> *nativeOffers = [NSMutableArray array];
+  NSMutableArray<AEPOptimizeProposition *> *propositions = [NSMutableArray array];
+
+  for (NSDictionary *pair in propositionOfferPairs) {
+    NSDictionary *propositionDict = pair[@"proposition"];
+    NSString *offerId = pair[@"offerId"];
+    if (!propositionDict || !offerId) {
+      continue;
+    }
+
+    AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:propositionDict];
+    if (!proposition) {
+      continue;
+    }
+
+    [propositions addObject:proposition];
+
+    for (AEPOffer *offer in proposition.offers) {
+      if ([[offer id] isEqualToString:offerId]) {
+        [nativeOffers addObject:offer];
+        break;
+      }
+    }
+  }
+
+  if (nativeOffers.count > 0) {
+    NSDictionary<NSString *, id> *displayInteractionXdm = [AEPMobileOptimize generateDisplayInteractionXdm:nativeOffers];
+    resolve(displayInteractionXdm);
+  } else {
+    reject(@"generateDisplayInteractionXdmForMultipleOffers", @"Error in generating Display interaction XDM for multiple offers.", nil);
+  }
+}
+
 RCT_EXPORT_METHOD(generateReferenceXdm
                   : (NSDictionary<NSString *, id> *)dictionary resolver
                   : (RCTPromiseResolveBlock)resolve rejector
