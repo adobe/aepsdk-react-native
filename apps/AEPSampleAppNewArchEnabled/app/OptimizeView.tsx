@@ -53,7 +53,6 @@ export default () => {
   const [htmlProposition, setHtmlProposition] = useState<Proposition>();
   const [jsonProposition, setJsonProposition] = useState<Proposition>();
   const [targetProposition, setTargetProposition] = useState<Proposition | undefined>();
-  const [callbackLog, setCallbackLog] = useState<string>('');
 
   const decisionScopeText = new DecisionScope(
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9',
@@ -70,11 +69,7 @@ export default () => {
   const decisionScopeTargetMbox = new DecisionScope('akhil-test-mbox');
 
   const decisionScopes = [
-    decisionScopeText,
-    decisionScopeImage,
-    decisionScopeHtml,
-    decisionScopeJson,
-    decisionScopeTargetMbox,
+    decisionScopeTargetMbox
   ];
 
   const optimizeExtensionVersion = async () => {
@@ -90,15 +85,15 @@ export default () => {
 
   const testUpdatePropositionsCallback = () => {
     console.log('Testing updatePropositions with callback...');
-    setCallbackLog('Waiting for callback...');
-    
     Optimize.updatePropositions(
       decisionScopes,
       undefined,
       undefined,
       (response) => {
         console.log('Callback received:', response);
-        setCallbackLog(JSON.stringify(response, null, 2));
+      },
+      (error) => {
+        console.log('Error:', error);
       }
     );
   };
@@ -118,7 +113,6 @@ export default () => {
 
   const clearCachedProposition = () => {
     Optimize.clearCachedPropositions();
-    setCallbackLog('');
     console.log('Proposition cache cleared');
   };
 
@@ -366,10 +360,6 @@ export default () => {
       </View>
       <Text style={{...styles.welcome, fontSize: 20}}>
         SDK Version:: {version}
-      </Text>
-      <Text style={styles.welcome}>Callback Log:</Text>
-      <Text style={{...styles.text, fontFamily: 'monospace', backgroundColor: '#f0f0f0', padding: 10}}>
-        {callbackLog || 'No callback data yet'}
       </Text>
       <Text style={styles.welcome}>Personalized Offers</Text>
       <RecyclerListView
