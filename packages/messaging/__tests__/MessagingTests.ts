@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 import { Messaging, Message, MessagingEdgeEventType } from '../src';
 
 describe('Messaging', () => {
@@ -125,5 +125,35 @@ describe('Messaging', () => {
     const mockContentCard = { contentCardId: 'mockContentCardId' } as any;
     await Messaging.trackContentCardInteraction(mockProposition, mockContentCard);
     expect(spy).toHaveBeenCalledWith(mockProposition, mockContentCard);
+  });
+
+  it('should call handleJavascriptMessage', () => {
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'handleJavascriptMessage');
+    const messageId = 'test-message-id';
+    const handlerName = 'myInappCallback';
+    const callback = jest.fn();
+
+    Messaging.handleJavascriptMessage(messageId, handlerName, callback);
+
+    expect(spy).toHaveBeenCalledWith(messageId, handlerName);
+  });
+
+  it('handleJavascriptMessage callback is invoked when the native event is emitted', () => {
+    const messageId = 'test-message-id';
+    const handlerName = 'myInappCallback';
+    const callback = jest.fn();
+
+    Messaging.handleJavascriptMessage(messageId, handlerName, callback);
+
+    // Simulate the native event emission
+    const eventEmitter = new NativeEventEmitter(NativeModules.AEPMessaging);
+    const content = 'hello from webview';
+    eventEmitter.emit('onJavascriptMessage', {
+      messageId,
+      handlerName,
+      content,
+    });
+
+    expect(callback).toHaveBeenCalledWith(content);
   });
 });

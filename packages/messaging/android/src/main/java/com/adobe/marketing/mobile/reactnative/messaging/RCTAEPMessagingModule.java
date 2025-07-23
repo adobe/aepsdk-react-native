@@ -31,6 +31,7 @@ import com.adobe.marketing.mobile.messaging.PropositionItem;
 import com.adobe.marketing.mobile.messaging.Surface;
 import com.adobe.marketing.mobile.services.ServiceProvider;
 import com.adobe.marketing.mobile.services.ui.InAppMessage;
+import com.adobe.marketing.mobile.services.ui.message.InAppMessageEventHandler;
 import com.adobe.marketing.mobile.services.ui.Presentable;
 import com.adobe.marketing.mobile.services.ui.PresentationDelegate;
 import com.facebook.react.bridge.Arguments;
@@ -57,6 +58,7 @@ public final class RCTAEPMessagingModule
   private boolean shouldShowMessage = false;
   private CountDownLatch latch = new CountDownLatch(1);
   private Message latestMessage = null;
+  private final Map<String, Presentable<?>> presentableCache = new HashMap<>();
 
   public RCTAEPMessagingModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -175,11 +177,29 @@ public final class RCTAEPMessagingModule
     }
   }
 
+  @ReactMethod
+  public void handleJavascriptMessage(final String messageId, final String handlerName) {
+    Presentable<?> presentable = presentableCache.get(messageId);
+    if (presentable == null || !(presentable.getPresentation() instanceof InAppMessage)) return;
+
+    Presentable<InAppMessage> inAppMessagePresentable = (Presentable<InAppMessage>) presentable;
+    InAppMessageEventHandler eventHandler = inAppMessagePresentable.getPresentation().getEventHandler();
+
+    eventHandler.handleJavascriptMessage(handlerName, content -> {
+      Map<String, String> params = new HashMap<>();
+      params.put("messageId", messageId);
+      params.put("handlerName", handlerName);
+      params.put("content", content);
+      emitEvent("onJavascriptMessage", params);
+    });
+  }
+ 
   // Messaging Delegate functions
   @Override
   public void onShow(final Presentable<?> presentable) {
     if (!(presentable.getPresentation() instanceof InAppMessage)) return;
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
+    presentableCache.put(message.getId(), presentable);
     if (message != null) {
       Map<String, String> data =
           convertMessageToMap(message);
