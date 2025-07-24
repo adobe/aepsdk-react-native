@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeModules } from 'react-native';
 import { Messaging, Message, MessagingEdgeEventType } from '../src';
 
 describe('Messaging', () => {
