@@ -63,24 +63,7 @@ RCT_EXPORT_METHOD(clearCachedPropositions) {
     return propositionDictionary;
 }
 
-// Helper method to create standardized response for callbacks
-- (NSDictionary *)createCallbackResponse:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict 
-                                   error:(NSError *)error {
-    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
-    
-    if (error) {
-        [response setValue:@{ @"message": error.description, @"code": @(error.code) } forKey:@"error"];
-    }
-    
-    if (decisionScopePropositionDict && [decisionScopePropositionDict count] > 0) {
-        NSDictionary<NSString *, NSDictionary<NSString *, id> *> *propositionDictionary = [self createPropositionDictionary:decisionScopePropositionDict];
-        [response setValue:propositionDictionary forKey:@"propositions"];
-    }
-    
-    return response;
-}
-
-// Unified method that handles both callback and non-callback cases (like Android implementation)
+// Unified method that handles both callback and non-callback cases
 RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
                   withXdm:(NSDictionary *)xdm
                   andData:(NSDictionary *)data
@@ -93,11 +76,11 @@ RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
                                    andData:data
                                 completion:^(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *decisionScopePropositionDict, NSError *error) {
         if (error) {
-            NSDictionary *response = [self createCallbackResponse:nil error:error];
+            NSDictionary *errorDict = [self convertNSErrorToOptimizeErrorDict:error];
             if (errorCallback != nil) {
-                errorCallback(@[response]);
+                errorCallback(@[errorDict]);
             }
-        } 
+        }
         if (decisionScopePropositionDict) {
             NSDictionary *response = [self createCallbackResponse:decisionScopePropositionDict error:nil];
             if (successCallback != nil) {
@@ -337,6 +320,36 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
   default:
     return @"";
   }
+}
+
+// Helper to convert NSError to a structured error dictionary for JS
+- (NSDictionary *)convertNSErrorToOptimizeErrorDict:(NSError *)error {
+    if (!error) return @{};
+    NSMutableDictionary *errorDict = [NSMutableDictionary dictionary];
+    errorDict[@"type"] = error.domain ?: @"";
+    errorDict[@"status"] = @(error.code);
+    errorDict[@"title"] = error.localizedDescription ?: @"";
+    errorDict[@"detail"] = error.localizedFailureReason ?: @"";
+    // errorDict[@"report"] = ...; // Add if you have extra info
+    errorDict[@"aepError"] = @"unexpected"; // Optionally map code/domain to aepError string
+    return errorDict;
+}
+
+// Helper method to create standardized response for callbacks
+- (NSDictionary *)createCallbackResponse:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict 
+                                   error:(NSError *)error {
+    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
+    
+    if (error) {
+        [response setValue:@{ @"message": error.description, @"code": @(error.code) } forKey:@"error"];
+    }
+    
+    if (decisionScopePropositionDict && [decisionScopePropositionDict count] > 0) {
+        NSDictionary<NSString *, NSDictionary<NSString *, id> *> *propositionDictionary = [self createPropositionDictionary:decisionScopePropositionDict];
+        [response setValue:propositionDictionary forKey:@"propositions"];
+    }
+    
+    return response;
 }
 
 - (void)handleError:(NSError *)error rejecter:(RCTPromiseRejectBlock)reject {

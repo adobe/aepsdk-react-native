@@ -12,6 +12,8 @@ package com.adobe.marketing.mobile.reactnative.optimize;
 
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
+import com.adobe.marketing.mobile.optimize.AdobeCallbackWithOptimizeError;
+import com.adobe.marketing.mobile.optimize.AEPOptimizeError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
@@ -82,13 +84,13 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         Map<String, Object> mapXdm = xdm != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(xdm) : Collections.<String, Object>emptyMap();
         Map<String, Object> mapData = data != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(data) : Collections.<String, Object>emptyMap();
         
-        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData, new AdobeCallbackWithError<Map<DecisionScope, OptimizeProposition>>() {
+        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData, new AdobeCallbackWithOptimizeError<Map<DecisionScope, OptimizeProposition>>() {
             @Override
-            public void fail(final AdobeError adobeError) {
-                Log.e(TAG, "updatePropositions callback failed: " + adobeError.getErrorName());
+            public void fail(final AEPOptimizeError adobeError) {
+                Log.e(TAG, "updatePropositions callback failed: " );
                 if (errorCallback != null) {
-                    final WritableMap response = createCallbackResponse(null, adobeError);
-                    Log.d(TAG, "Invoking JS errorCallback with error: " + response.toString());
+                    final WritableMap response = RCTAEPOptimizeUtil.convertAEPOptimizeErrorToWritableMap(adobeError);
+                    Log.d(TAG, "Invoking JS errorCallback with error: ");
                     errorCallback.invoke(response);
                 }
             }
