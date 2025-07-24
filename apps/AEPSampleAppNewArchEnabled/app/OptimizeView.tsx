@@ -84,7 +84,7 @@ export default () => {
 
   const updatePropositions = () => {
     Optimize.updatePropositions(decisionScopes);
-    console.log('Updated Propositions');
+    console.log('Updated Proposition for decisionScopes:', decisionScopes);
   };
 
   const testUpdatePropositionsCallback = () => {
@@ -105,8 +105,8 @@ export default () => {
   const getPropositions = async () => {
     const propositions: Map<string, Proposition> =
       await Optimize.getPropositions(decisionScopes);
-    console.log(propositions);
     if (propositions) {
+      console.log("get propositions", JSON.stringify(Object.fromEntries(propositions), null, 2));
       setTextProposition(propositions.get(decisionScopeText.getName()));
       setImageProposition(propositions.get(decisionScopeImage.getName()));
       setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
@@ -132,6 +132,54 @@ export default () => {
         }
       },
     });
+
+  const multipleOffersDisplayed = async () => {
+    const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+    const offerPairs: Array<{proposition: Proposition, offerId: string}> = [];
+    
+    propositionsMap.forEach((proposition: Proposition) => {
+      if (proposition && proposition.items) {
+        proposition.items.forEach((offer) => {
+          offerPairs.push({
+            proposition: proposition,
+            offerId: offer.id
+          });
+        });
+      }
+    });
+    
+    console.log('Extracted offer pairs:', offerPairs);
+    
+    if (offerPairs.length > 0) {
+      Optimize.displayed(offerPairs);
+      console.log(`Called multipleOffersDisplayed with ${offerPairs.length} offers`);
+    } else {
+      console.log('No offers found to display');
+    }
+  };
+
+  const generateDisplayInteractionXdmForMultipleOffers = async () => {
+    const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+    const offerPairs: Array<{proposition: Proposition, offerId: string}> = [];
+
+    propositionsMap.forEach((proposition: Proposition) => {
+      if (proposition && proposition.items) {
+        proposition.items.forEach((offer) => {
+          offerPairs.push({
+            proposition: proposition,
+            offerId: offer.id
+          });
+        });
+      }
+    });
+
+    const xdm = await Optimize.generateDisplayInteractionXdm(offerPairs);
+    if (xdm) {
+      console.log('Generated Display Interaction XDM for Multiple Offers:', JSON.stringify(xdm, null, 2));
+    } else {
+      console.log('Error in generating Display interaction XDM for multiple offers.');
+    }
+  };
 
   const renderTargetOffer = () => {
     if (targetProposition?.items) {
@@ -354,6 +402,18 @@ export default () => {
         <Button
           title="Clear Cached Proposition"
           onPress={clearCachedProposition}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
+          title="Multiple Offers Displayed"
+          onPress={multipleOffersDisplayed}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
+          title="Generate Display Interaction XDM for Multiple Offers"
+          onPress={generateDisplayInteractionXdmForMultipleOffers}
         />
       </View>
       <View style={{margin: 5}}>
