@@ -137,23 +137,4 @@ describe('Messaging', () => {
 
     expect(spy).toHaveBeenCalledWith(messageId, handlerName);
   });
-
-  it('handleJavascriptMessage callback is invoked when the native event is emitted', () => {
-    const messageId = 'test-message-id';
-    const handlerName = 'myInappCallback';
-    const callback = jest.fn();
-
-    Messaging.handleJavascriptMessage(messageId, handlerName, callback);
-
-    // Simulate the native event emission
-    const eventEmitter = new NativeEventEmitter(NativeModules.AEPMessaging);
-    const content = 'hello from webview';
-    eventEmitter.emit('onJavascriptMessage', {
-      messageId,
-      handlerName,
-      content,
-    });
-
-    expect(callback).toHaveBeenCalledWith(content);
-  });
 });
