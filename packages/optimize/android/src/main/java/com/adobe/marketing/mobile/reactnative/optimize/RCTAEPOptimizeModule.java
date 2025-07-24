@@ -99,7 +99,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
                 Log.d(TAG, "updatePropositions callback success.");
                 if (successCallback != null) {
-                    final WritableMap response = createCallbackResponse(decisionScopePropositionMap, null);
+                    final WritableMap response = createCallbackResponse(decisionScopePropositionMap);
                     Log.d(TAG, "Invoking JS successCallback with success: " + response.toString());
                     successCallback.invoke(response);
                 }
@@ -214,15 +214,8 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     public void removeListeners(Integer count) {}
 
     // Helper method to create callback response
-    private WritableMap createCallbackResponse(final Map<DecisionScope, OptimizeProposition> propositionsMap, final AdobeError error) {
+    private WritableMap createCallbackResponse(final Map<DecisionScope, OptimizeProposition> propositionsMap) {
         final WritableMap response = new WritableNativeMap();
-        
-        if (error != null) {
-            final WritableMap errorMap = new WritableNativeMap();
-            errorMap.putString("message", error.getErrorName());
-            errorMap.putInt("code", error.getErrorCode());
-            response.putMap("error", errorMap);
-        }
         
         if (propositionsMap != null && !propositionsMap.isEmpty()) {
             final WritableMap propositionsWritableMap = new WritableNativeMap();
