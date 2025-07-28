@@ -80,11 +80,11 @@ RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
             if (errorCallback != nil) {
                 errorCallback(@[errorDict]);
             }
-        }
+        } 
         if (decisionScopePropositionDict) {
-            NSDictionary *response = [self createCallbackResponse:decisionScopePropositionDict error:nil];
+            NSDictionary *propositions = [self createCallbackResponse:decisionScopePropositionDict];
             if (successCallback != nil) {
-                successCallback(@[response]);
+                successCallback(@[propositions]);
             }
         }
     }];
@@ -421,19 +421,14 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
 
 // Helper method to create standardized response for callbacks
 - (NSDictionary *)createCallbackResponse:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict 
-                                   error:(NSError *)error {
-    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
-    
-    if (error) {
-        [response setValue:@{ @"message": error.description, @"code": @(error.code) } forKey:@"error"];
-    }
+                                  {
     
     if (decisionScopePropositionDict && [decisionScopePropositionDict count] > 0) {
-        NSDictionary<NSString *, NSDictionary<NSString *, id> *> *propositionDictionary = [self createPropositionDictionary:decisionScopePropositionDict];
-        [response setValue:propositionDictionary forKey:@"propositions"];
+        // Return the propositions map directly
+        return [self createPropositionDictionary:decisionScopePropositionDict];
     }
     
-    return response;
+    return @{};
 }
 
 - (void)handleError:(NSError *)error rejecter:(RCTPromiseRejectBlock)reject {

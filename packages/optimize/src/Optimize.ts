@@ -27,8 +27,8 @@ interface IOptimize {
     decisionScopes: Array<DecisionScope>,
     xdm?: Map<string, any>,
     data?: Map<string, any>,
-    onSuccess?: Map<string, Proposition> | undefined,
-    onError?: any | undefined
+    onSuccess?: (response: Map<string, Proposition>) => void,
+    onError?: (error: any) => void
   ) => void;
   displayed: (propositionOfferPairs: Array<PropositionOfferPair>) => void
   generateDisplayInteractionXdm: (propositionOfferPairs: Array<PropositionOfferPair>) => Promise<Map<string, any>>
@@ -110,8 +110,8 @@ const Optimize: IOptimize = {
     decisionScopes: Array<DecisionScope>,
     xdm?: Map<string, any>,
     data?: Map<string, any>,
-    onSuccess?: Map<string, Proposition> | undefined,
-    onError?: any | undefined
+    onSuccess?: (response: Map<string, Proposition>) => void,
+    onError?: (error: any) => void
   ) {
     var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
     RCTAEPOptimize.updatePropositions(
