@@ -193,17 +193,15 @@ class RCTAEPOptimizeUtil {
      * @return WritableMap
      */
     static WritableMap createCallbackResponse(final Map<DecisionScope, OptimizeProposition> propositionsMap) {
-        final WritableMap response = new WritableNativeMap();
+        final WritableMap propositionsWritableMap = new WritableNativeMap();
         
         if (propositionsMap != null && !propositionsMap.isEmpty()) {
-            final WritableMap propositionsWritableMap = new WritableNativeMap();
             for (final Map.Entry<DecisionScope, OptimizeProposition> entry : propositionsMap.entrySet()) {
                 propositionsWritableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
             }
-            response.putMap("propositions", propositionsWritableMap);
         }
         
-        return response;
+        return propositionsWritableMap;
     }
 
     /**
