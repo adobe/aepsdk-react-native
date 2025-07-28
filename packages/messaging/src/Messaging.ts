@@ -184,6 +184,16 @@ class Messaging {
     RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
 
+  /**
+   * Registers a javascript interface for the provided handler name 
+   * to the WebView associated with the InAppMessage presentation 
+   * to handle Javascript messages. 
+   * When the registered handlers are executed via the HTML 
+   * the result will be passed back to the associated callback.
+   * @param messageId The id of the message to handle
+   * @param handlerName The name of the handler to handle
+   * @param callback The callback to handle the message
+   */
   static handleJavascriptMessage(messageId: string, handlerName: string, callback: (content: string) => void) {
     if (!jsMessageHandlers[messageId]) {
       jsMessageHandlers[messageId] = {};
