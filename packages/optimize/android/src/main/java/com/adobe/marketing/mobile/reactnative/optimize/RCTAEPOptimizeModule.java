@@ -138,7 +138,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
                 Log.d(TAG, "updatePropositions callback success.");
                 if (successCallback != null) {
-                    final WritableMap response = createCallbackResponse(decisionScopePropositionMap);
+                    final WritableMap response = RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap);
                     Log.d(TAG, "Invoking JS successCallback with success: " + response.toString());
                     successCallback.invoke(response);
                 }
@@ -287,21 +287,6 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     // Required for React Native built in EventEmitter Calls.
     @ReactMethod
     public void removeListeners(Integer count) {}
-
-    // Helper method to create callback response
-    private WritableMap createCallbackResponse(final Map<DecisionScope, OptimizeProposition> propositionsMap) {
-        final WritableMap response = new WritableNativeMap();
-        
-        if (propositionsMap != null && !propositionsMap.isEmpty()) {
-            final WritableMap propositionsWritableMap = new WritableNativeMap();
-            for (final Map.Entry<DecisionScope, OptimizeProposition> entry : propositionsMap.entrySet()) {
-                propositionsWritableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
-            }
-            response.putMap("propositions", propositionsWritableMap);
-        }
-        
-        return response;
-    }
 
     private static Offer createOffer(Map<String, Object> offerEventData) {
         String id = (String) offerEventData.get("id");

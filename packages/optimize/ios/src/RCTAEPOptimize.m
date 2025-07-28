@@ -420,8 +420,7 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
 }
 
 // Helper method to create standardized response for callbacks
-- (NSDictionary *)createCallbackResponse:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict 
-                                  {
+- (NSDictionary *)createCallbackResponse:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict {
     
     if (decisionScopePropositionDict && [decisionScopePropositionDict count] > 0) {
         // Return the propositions map directly

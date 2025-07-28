@@ -186,6 +186,26 @@ class RCTAEPOptimizeUtil {
         }
         return list;
     }
+
+    /**
+     * Helper method to create callback response
+     * @param propositionsMap
+     * @return WritableMap
+     */
+    static WritableMap createCallbackResponse(final Map<DecisionScope, OptimizeProposition> propositionsMap) {
+        final WritableMap response = new WritableNativeMap();
+        
+        if (propositionsMap != null && !propositionsMap.isEmpty()) {
+            final WritableMap propositionsWritableMap = new WritableNativeMap();
+            for (final Map.Entry<DecisionScope, OptimizeProposition> entry : propositionsMap.entrySet()) {
+                propositionsWritableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
+            }
+            response.putMap("propositions", propositionsWritableMap);
+        }
+        
+        return response;
+    }
+
     /**
      * Converts an AEPOptimizeError to a WritableMap for React Native error callback
      */
