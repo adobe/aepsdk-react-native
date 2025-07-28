@@ -211,6 +211,7 @@ public final class RCTAEPMessagingModule
   public void onDismiss(final Presentable<?> presentable) {
     if (!(presentable.getPresentation() instanceof InAppMessage)) return;
     Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
+    presentableCache.remove(message.getId());
     if (message != null) {
       Map<String, String> data =
           convertMessageToMap(message);

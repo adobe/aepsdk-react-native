@@ -274,6 +274,8 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         if let fullscreenMessage = message as? FullscreenMessage,
             let parentMessage = fullscreenMessage.parent
         {
+            jsHandlerMessageCache.removeValue(forKey: parentMessage.id)
+
             emitNativeEvent(
                 name: Constants.ON_DISMISS_EVENT,
                 body: RCTAEPMessagingDataBridge.transformToMessage(
