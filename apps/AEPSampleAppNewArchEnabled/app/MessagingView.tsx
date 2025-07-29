@@ -56,7 +56,7 @@ const getPropositionsForSurfaces = async () => {
 };
 
 const trackAction = async () => {
-  MobileCore.trackAction('iamjs', {full: true});
+  MobileCore.trackAction('tuesday', {full: true});
 };
 
 const updatePropositionsForSurfaces = async () => {

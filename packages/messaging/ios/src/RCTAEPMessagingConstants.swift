@@ -23,5 +23,4 @@ class Constants {
     static let MESSAGE_ID_KEY = "messageId"
     static let HANDLER_NAME_KEY = "handlerName"
     static let CONTENT_KEY = "content"
-    static let ON_JAVASCRIPT_MESSAGE_EVENT = "onJavascriptMessage"
 }
