@@ -33,7 +33,16 @@ const refreshInAppMessages = () => {
 const setMessagingDelegate = () => {
   Messaging.setMessagingDelegate({
     onDismiss: msg => console.log('dismissed!', msg),
-    onShow: msg => console.log('show', msg),
+    onShow: msg => {
+      console.log('show', msg);
+      Messaging.handleJavascriptMessage(
+        msg.id,
+        'myInappCallback',
+        (content) => {
+          console.log('Received webview content:', content);
+        }
+      );
+    },
     shouldShowMessage: () => true,
     shouldSaveMessage: () => true,
     urlLoaded: (url, message) => console.log(url, message),
