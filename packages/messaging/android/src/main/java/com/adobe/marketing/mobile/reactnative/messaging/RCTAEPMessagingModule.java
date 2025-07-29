@@ -187,10 +187,10 @@ public final class RCTAEPMessagingModule
 
     eventHandler.handleJavascriptMessage(handlerName, content -> {
       Map<String, String> params = new HashMap<>();
-      params.put("messageId", messageId);
-      params.put("handlerName", handlerName);
-      params.put("content", content);
-      emitEvent("onJavascriptMessage", params);
+      params.put(RCTAEPMessagingConstants.MESSAGE_ID_KEY, messageId);
+      params.put(RCTAEPMessagingConstants.HANDLER_NAME_KEY, handlerName);
+      params.put(RCTAEPMessagingConstants.CONTENT_KEY, content);
+      emitEvent(RCTAEPMessagingConstants.ON_JAVASCRIPT_MESSAGE_EVENT, params);
     });
   }
  

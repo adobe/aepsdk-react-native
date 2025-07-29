@@ -255,15 +255,18 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         _ messageId: String,
         handlerName: String
     ) {
-        guard let message = jsHandlerMessageCache[messageId] else { return }
+        guard let message = jsHandlerMessageCache[messageId] else { 
+            print("[RCTAEPMessaging] handleJavascriptMessage: No message found in cache for messageId: \(messageId)")
+            return 
+        }
 
         message.handleJavascriptMessage(handlerName) { [weak self] content in
             self?.emitNativeEvent(
-                name: "onJavascriptMessage",
+                name: Constants.ON_JAVASCRIPT_MESSAGE_EVENT,
                 body: [
-                    "messageId": messageId,
-                    "handlerName": handlerName,
-                    "content": content ?? ""
+                    Constants.MESSAGE_ID_KEY: messageId,
+                    Constants.HANDLER_NAME_KEY: handlerName,
+                    Constants.CONTENT_KEY: content ?? ""
                 ]
             )
         }
