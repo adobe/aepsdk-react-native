@@ -25,7 +25,6 @@ export enum TemplateType {
     IMAGE_ONLY = "ImageOnly"
 }
 
-
 export interface ContentTemplate {
     readonly id: string; // content card id
     readonly type: TemplateType;
@@ -62,7 +61,7 @@ export class ContentProvider {
         console.log(this.surface);
 
         const messages = await Messaging.getPropositionsForSurfaces([this.surface]);
-        console.log(messages);
+        console.log(JSON.stringify(messages));
         const propositions = messages[this.surface];
         if (!propositions) {
             return [];

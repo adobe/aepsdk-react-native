@@ -18,7 +18,7 @@ import { ContentViewEvent } from "./common/ContentViewEvent";
 export interface ImageOnlyContentProps {
   data: ImageOnlyContentData;
   styleOverrides?: ImageOnlyContentStyle;
-  listener?: (interactId: string, eventName: ContentViewEvent) => void;
+  listener?: (eventName: ContentViewEvent, interactId?: string) => void;
 }
 
 /**

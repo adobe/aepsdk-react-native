@@ -103,7 +103,7 @@ const renderViewComponent = (
   component: Component,
   theme: Theme,
   colorScheme: "light" | "dark",
-  onEvent?: (interactId: string, eventName: ContentViewEvent) => void
+  onEvent?: (eventName: ContentViewEvent, interactId?: string) => void
 ): React.ReactElement => {
   const style = { ...component.style };
   const viewStyle = {
@@ -240,20 +240,19 @@ const renderImageComponent = (
 const renderButtonComponent = (
   component: Component,
   theme: Theme,
-  onEvent?: (interactId: string, eventName: ContentViewEvent) => void
+  onEvent?: (eventName: ContentViewEvent, interactId?: string) => void
 ): React.ReactElement => {
   const style = { ...component.style };
   const { interactId } = component;
 
   const handleButtonPress = async () => {
     if (interactId && onEvent) {
-      onEvent(interactId, "clickButton");
+      onEvent("clickButton", interactId);
     }
     if (component.actionUrl) {
       try {
         await Linking.openURL(component.actionUrl);
       } catch (error) {
-        // TODO: add a utility function to handle SDK logs.
         console.warn(`Failed to open URL: ${component.actionUrl}`, error);
       }
     }
@@ -277,13 +276,13 @@ const renderDismissButtonComponent = (
   component: Component,
   theme: Theme,
   colorScheme: "light" | "dark",
-  onEvent?: (interactId: string, eventName: ContentViewEvent) => void
+  onEvent?: (eventName: ContentViewEvent, interactId?: string) => void
 ): React.ReactElement | null => {
   const { interactId } = component;
 
   const handlePress = (eventName: ContentViewEvent) => {
     if (interactId && onEvent) {
-      onEvent(interactId, eventName);
+      onEvent(eventName, interactId);
     }
   };
 
@@ -306,7 +305,7 @@ const renderComponent = (
   component: Component,
   theme: Theme,
   colorScheme: "light" | "dark",
-  onEvent?: (interactId: string, eventName: ContentViewEvent) => void
+  onEvent?: (eventName: ContentViewEvent, interactId?: string) => void
 ): React.ReactElement | null => {
   switch (component.type) {
     case "view":
@@ -361,7 +360,19 @@ export const ContentView = ({
 
   // Memoize the rendered component for performance
   const renderedComponent = useMemo(() => {
-    return renderComponent(component, theme, colorScheme, onEvent);
+    return (
+      <View
+        onTouchStart={() => {
+          if (component.actionUrl && component.actionUrl !== "") {
+            Linking.openURL(component.actionUrl).catch((error) => {
+              console.warn(`Failed to open URL: ${component.actionUrl}`, error);
+            });
+          }
+        }}
+      >
+        {renderComponent(component, theme, colorScheme, onEvent)}
+      </View>
+    );
   }, [component, theme, colorScheme, onEvent]);
 
   return renderedComponent;

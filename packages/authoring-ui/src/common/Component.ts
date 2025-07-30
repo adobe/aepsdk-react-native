@@ -40,10 +40,11 @@ export interface Component {
     children?: Component[];
     // Text/Button properties
     content?: string;
+    // Action URL for button and the root view
+    actionUrl?: string;
     // Image properties
     url?: string;
     darkUrl?: string;
-    actionUrl?: string;
     alt?: string;
     resizeMode?: 'cover' | 'contain' | 'stretch' | 'center' | 'repeat';
     // Dismiss button properties

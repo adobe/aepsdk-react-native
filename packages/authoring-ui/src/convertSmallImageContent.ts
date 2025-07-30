@@ -84,7 +84,7 @@ const styles: StyleObject = {
     },
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
         paddingTop: 8,
         minHeight: 36,
     },
@@ -188,6 +188,7 @@ export function convertSmallImageContentToComponent(
     return {
         type: 'view',
         style: mergedStyles.card,
+        actionUrl: data.actionUrl || "",
         children,
     };
 } 

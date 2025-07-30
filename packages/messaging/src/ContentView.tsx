@@ -31,10 +31,7 @@ export interface ContentViewProps {
     largeImageStyle?: LargeImageContentStyle;
     imageOnlyStyle?: ImageOnlyContentStyle;
   };
-  listener?: (
-    componentIdentifier: string | null,
-    event: ContentViewEvent
-  ) => void;
+  listener?: (event: ContentViewEvent, componentIdentifier?: string) => void;
 }
 
 export const ContentView: React.FC<ContentViewProps> = ({
@@ -47,10 +44,9 @@ export const ContentView: React.FC<ContentViewProps> = ({
   const contentCardMapping =
     ContentCardMappingManager.getInstance().getContentCardMapping(data.id);
 
-  // listener?: (interactId: string, eventName: ContentViewEvent) => void;
   // Create a default listener that always listens to all events and forwards to client listener if not null
   const defaultListener = useCallback(
-    (componentIdentifier: string | null, event: ContentViewEvent) => {
+    (event: ContentViewEvent, componentIdentifier?: string) => {
       // Handle dismiss event by hiding the content view
       if (event === "onDismiss") {
         setIsVisible(false);
@@ -72,7 +68,7 @@ export const ContentView: React.FC<ContentViewProps> = ({
       }
 
       if (listener) {
-        listener(componentIdentifier, event);
+        listener(event, componentIdentifier);
       }
     },
     [listener]
@@ -80,7 +76,7 @@ export const ContentView: React.FC<ContentViewProps> = ({
 
   // Call listener on mount to signal view display
   useEffect(() => {
-    defaultListener(null, "onDisplay");
+    defaultListener("onDisplay");
   }, [defaultListener]);
 
   // If not visible, return null to hide the entire view

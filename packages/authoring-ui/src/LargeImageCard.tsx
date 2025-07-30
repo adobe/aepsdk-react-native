@@ -21,7 +21,7 @@ import { ContentViewEvent } from "./common/ContentViewEvent";
 export interface LargeImageContentProps {
   data: LargeImageContentData;
   styleOverrides?: LargeImageContentStyle;
-  listener?: (interactId: string, eventName: ContentViewEvent) => void;
+  listener?: (eventName: ContentViewEvent, interactId?: string) => void;
 }
 
 /**

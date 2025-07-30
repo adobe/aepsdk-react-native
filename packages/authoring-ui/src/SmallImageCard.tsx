@@ -22,7 +22,7 @@ export interface SmallImageContentProps {
   data: SmallImageContentData;
   height?: number;
   styleOverrides?: SmallImageContentStyle;
-  listener?: (interactId: string, eventName: ContentViewEvent) => void;
+  listener?: (eventName: ContentViewEvent, interactId?: string) => void;
 }
 
 /**
