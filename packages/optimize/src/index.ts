@@ -15,11 +15,13 @@ import { AdobePropositionCallback } from "./models/AdobePropositionCallback";
 import AEPOptimizeError from "./models/AEPOptimizeError";
 import DecisionScope from "./models/DecisionScope";
 import Offer from "./models/Offer";
+import Proposition from "./models/Proposition";
 
 export {
   Optimize,
   AdobePropositionCallback,
   AEPOptimizeError,
   DecisionScope,
-  Offer
+  Offer,
+  Proposition
 }
