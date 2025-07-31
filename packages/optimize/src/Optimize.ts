@@ -16,6 +16,7 @@ import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
 import { PropositionOfferPair } from './models/PropositionOfferPair';
 import { AdobePropositionCallback }  from './models/AdobePropositionCallback';
+import AEPOptimizeError from './models/AEPOptimizeError';
 import { cleanProposition } from './utils/cleanProposition';
 
 interface IOptimize {
@@ -28,7 +29,7 @@ interface IOptimize {
     xdm?: Map<string, any>,
     data?: Map<string, any>,
     onSuccess?: (response: Map<string, Proposition>) => void,
-    onError?: (error: any) => void
+    onError?: (error: AEPOptimizeError) => void
   ) => void;
   displayed: (propositionOfferPairs: Array<PropositionOfferPair>) => void
   generateDisplayInteractionXdm: (propositionOfferPairs: Array<PropositionOfferPair>) => Promise<Map<string, any>>
@@ -111,7 +112,7 @@ const Optimize: IOptimize = {
     xdm?: Map<string, any>,
     data?: Map<string, any>,
     onSuccess?: (response: Map<string, Proposition>) => void,
-    onError?: (error: any) => void
+    onError?: (error: AEPOptimizeError) => void
   ) {
     var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
     RCTAEPOptimize.updatePropositions(

@@ -410,12 +410,30 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
 - (NSDictionary *)convertNSErrorToOptimizeErrorDict:(NSError *)error {
     if (!error) return @{};
     NSMutableDictionary *errorDict = [NSMutableDictionary dictionary];
-    errorDict[@"type"] = error.domain ?: @"";
-    errorDict[@"status"] = @(error.code);
-    errorDict[@"title"] = error.localizedDescription ?: @"";
-    errorDict[@"detail"] = error.localizedFailureReason ?: @"";
-    // errorDict[@"report"] = ...; // Add if you have extra info
-    errorDict[@"aepError"] = @"unexpected"; // Optionally map code/domain to aepError string
+
+    // Log for debugging
+    NSLog(@"[AEPOptimize] NSError.domain: %@", error.domain);
+    NSLog(@"[AEPOptimize] NSError.code: %ld", (long)error.code);
+    NSLog(@"[AEPOptimize] NSError.userInfo: %@", error.userInfo);
+    NSLog(@"[AEPOptimize] NSError.localizedDescription: %@", error.localizedDescription);
+
+    // Extract AEPOptimizeError properties from userInfo (matches Android structure)
+    NSDictionary *userInfo = error.userInfo;
+
+    errorDict[@"type"] = userInfo[@"type"] ?: @"";
+    errorDict[@"status"] = userInfo[@"status"] ?: @(error.code);
+    errorDict[@"title"] = userInfo[@"title"] ?: @"";
+    errorDict[@"detail"] = userInfo[@"detail"] ?: @"";
+    errorDict[@"report"] = userInfo[@"report"] ?: @{};
+    
+    // Handle aepError - check for both nil and NSNull
+    id aepErrorValue = userInfo[@"aepError"];
+    if (aepErrorValue && aepErrorValue != [NSNull null]) {
+        errorDict[@"aepError"] = aepErrorValue;
+    } else {
+        errorDict[@"aepError"] = @"general.unexpected";
+    }
+
     return errorDict;
 }
 
