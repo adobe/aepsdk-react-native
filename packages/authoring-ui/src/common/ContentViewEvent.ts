@@ -20,4 +20,4 @@
  * @property {string} clickButton - The event type for the clickButton event when a button is clicked.
  * @property {string} press - The event type for the press event when the content is pressed.
  */
-export type ContentViewEvent = "onDismiss" | "onDisplay" | "clickButton" | "press";
+export type ContentViewEvent = "onDismiss" | "onDisplay" | "clickButton" | "press" | "viewPress";

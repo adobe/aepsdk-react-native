@@ -73,6 +73,8 @@ export function convertImageOnlyContentToComponent(
         {
             type: 'view',
             style: mergedStyles.container,
+            actionView: true,
+            ...(data.actionUrl && { actionUrl: data.actionUrl }),
             children: [
                 // Image container - always present for image only template
                 {
@@ -103,7 +105,5 @@ export function convertImageOnlyContentToComponent(
         type: 'view',
         style: mergedStyles.card,
         children,
-        // Add actionUrl to the card if present
-        ...(data.actionUrl && { actionUrl: data.actionUrl }),
     };
 }

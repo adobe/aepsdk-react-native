@@ -126,6 +126,8 @@ export function convertSmallImageContentToComponent(
         {
             type: 'view',
             style: mergedStyles.container,
+            actionView: true,
+            ...(data.actionUrl && { actionUrl: data.actionUrl }),
             children: [
                 ...(data.image?.url ? [{
                     type: 'view' as ComponentType,
@@ -188,7 +190,6 @@ export function convertSmallImageContentToComponent(
     return {
         type: 'view',
         style: mergedStyles.card,
-        actionUrl: data.actionUrl || "",
         children,
     };
 } 

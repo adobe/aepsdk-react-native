@@ -110,6 +110,8 @@ export function convertLargeImageContentToComponent(
         {
             type: 'view',
             style: mergedStyles.container,
+            actionView: true,
+            ...(data.actionUrl && { actionUrl: data.actionUrl }),
             children: [
                 // Image at the top (if present)
                 ...(data.image?.url ? [{

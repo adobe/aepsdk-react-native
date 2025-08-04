@@ -112,7 +112,21 @@ const renderViewComponent = (
   };
 
   return (
-    <View style={viewStyle}>
+    <View
+      style={viewStyle}
+      onTouchEnd={() => {
+        if (
+          component.actionView &&
+          component.actionUrl &&
+          component.actionUrl !== ""
+        ) {
+          console.log("viewPress", component.actionUrl);
+          Linking.openURL(component.actionUrl).catch((error) => {
+            console.warn(`Failed to open URL: ${component.actionUrl}`, error);
+          });
+        }
+      }}
+    >
       {component.children?.map((childComponent, index) => (
         <React.Fragment key={index}>
           {renderComponent(childComponent, theme, colorScheme, onEvent)}
@@ -361,17 +375,7 @@ export const ContentView = ({
   // Memoize the rendered component for performance
   const renderedComponent = useMemo(() => {
     return (
-      <View
-        onTouchStart={() => {
-          if (component.actionUrl && component.actionUrl !== "") {
-            Linking.openURL(component.actionUrl).catch((error) => {
-              console.warn(`Failed to open URL: ${component.actionUrl}`, error);
-            });
-          }
-        }}
-      >
-        {renderComponent(component, theme, colorScheme, onEvent)}
-      </View>
+      <View>{renderComponent(component, theme, colorScheme, onEvent)}</View>
     );
   }, [component, theme, colorScheme, onEvent]);
 

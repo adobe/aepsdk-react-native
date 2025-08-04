@@ -34,6 +34,8 @@ export interface Component {
     style?: ComponentStyle;
     id?: string;
     name?: string;
+    // The view responds to the actionUrl
+    actionView?: boolean;
     // Add interactId for event monitoring
     interactId?: string;
     // Child components

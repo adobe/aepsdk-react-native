@@ -37,12 +37,12 @@ import { MobileCore } from "@adobe/react-native-aepcore";
 
 const ContentCardView = () => {
   const [content, setContent] = useState<ContentTemplate[] | null>(null);
-  const [selectedView, setSelectedView] = useState<string>("SmallImage");
+  const [selectedView, setSelectedView] = useState<string>("Remote");
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string>("System");
   const colorScheme = useColorScheme();
 
-  const viewOptions = ["SmallImage", "LargeImage", "ImageOnly"];
+  const viewOptions = ["SmallImage", "LargeImage", "ImageOnly", "Remote"];
   const themeOptions: Array<{
     label: string;
     value: ColorSchemeName;
@@ -218,26 +218,6 @@ const ContentCardView = () => {
       <ScrollView contentContainerStyle={{ marginRight: 20 }}>
         {selectedView === "SmallImage" && (
           <View>
-            {renderStyledText("[Remote] cards")}
-            {content &&
-              content.map((item) => (
-                <ContentView
-                  key={item.id}
-                  data={item}
-                  cardHeight={210}
-                  styleOverrides={{
-                    smallImageStyle: {
-                      title: {
-                        numberOfLines: 2,
-                      },
-                      body: {
-                        numberOfLines: 4,
-                      },
-                    },
-                  }}
-                />
-              ))}
-
             {renderStyledText("[Basic] all fields")}
             <ContentView
               key="1"
@@ -512,6 +492,29 @@ const ContentCardView = () => {
           <View>
             {renderStyledText("basic")}
             <ContentView key="1" data={IMAGE_ONLY_CONTENT_ALL_FIELDS} />
+          </View>
+        )}
+        {selectedView === "Remote" && (
+          <View>
+            {renderStyledText("[Remote] cards")}
+            {content &&
+              content.map((item) => (
+                <ContentView
+                  key={item.id}
+                  data={item}
+                  cardHeight={210}
+                  styleOverrides={{
+                    smallImageStyle: {
+                      title: {
+                        numberOfLines: 2,
+                      },
+                      body: {
+                        numberOfLines: 4,
+                      },
+                    },
+                  }}
+                />
+              ))}
           </View>
         )}
       </ScrollView>
@@ -985,8 +988,8 @@ const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
   imageOnlyData: {
     actionUrl: "https://google.com",
     image: {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
-      darkUrl: "https://imagetoDownload.com/darkimage",
+      url: "https://i.ibb.co/0X8R3TG/Messages-24.png",
+      darkUrl: "https://i.ibb.co/0X8R3TG/Messages-24.png",
       alt: "flight offer",
     },
     dismissBtn: {
