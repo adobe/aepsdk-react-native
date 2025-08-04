@@ -70,6 +70,7 @@ android {
 repositories {
   mavenCentral()
   google()
+  maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
