@@ -182,13 +182,6 @@ jest.doMock('react-native', () => {
           ),
           generateReferenceXdm: jest.fn(
             () => new Promise((resolve) => resolve(new Map()))
-          ),
-          multipleOffersDisplayed: jest.fn(),
-          generateDisplayInteractionXdmForMultipleOffers: jest.fn(
-            () => 
-              new Promise((resolve) => 
-                resolve(new Map())
-              )
           )
         },
         AEPTarget: {
