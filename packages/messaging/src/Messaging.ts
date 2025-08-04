@@ -37,7 +37,6 @@ export interface NativeMessagingModule {
   updatePropositionsForSurfaces: (surfaces: string[]) => void;
   trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
   trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
-  handleJavascriptMessage: (messageId: string, handlerName: string) => void;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -45,18 +44,6 @@ const RCTAEPMessaging: NativeModule & NativeMessagingModule =
 
 declare var messagingDelegate: MessagingDelegate;
 var messagingDelegate: MessagingDelegate;
-
-// Registery to store callbacks for each message in handleJavascriptMessage
-// Record - {messageId : {handlerName : callback}}
-const jsMessageHandlers: Record<string, Record<string, (content: string) => void>> = {};
-const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
-
-handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
-  const {messageId, handlerName, content} = event;
-  if (jsMessageHandlers[messageId] && jsMessageHandlers[messageId][handlerName]) {
-    jsMessageHandlers[messageId][handlerName](content);
-  }
-});
 
 class Messaging {
   /**
@@ -182,24 +169,6 @@ class Messaging {
    */
   static updatePropositionsForSurfaces(surfaces: string[]) {
     RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
-  }
-
-  /**
-   * Registers a javascript interface for the provided handler name 
-   * to the WebView associated with the InAppMessage presentation 
-   * to handle Javascript messages. 
-   * When the registered handlers are executed via the HTML 
-   * the result will be passed back to the associated callback.
-   * @param messageId The id of the message to handle
-   * @param handlerName The name of the handler to handle
-   * @param callback The callback to handle the message
-   */
-  static handleJavascriptMessage(messageId: string, handlerName: string, callback: (content: string) => void) {
-    if (!jsMessageHandlers[messageId]) {
-      jsMessageHandlers[messageId] = {};
-    }
-    jsMessageHandlers[messageId][handlerName] = callback;
-    RCTAEPMessaging.handleJavascriptMessage(messageId, handlerName);
   }
 }
 
