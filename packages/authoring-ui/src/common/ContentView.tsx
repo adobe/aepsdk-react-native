@@ -108,7 +108,7 @@ const renderViewComponent = (
   const style = { ...component.style };
   const viewStyle = {
     ...(style as ViewStyle),
-    backgroundColor: theme.colors.background,
+    backgroundColor: (style as ViewStyle)?.backgroundColor || theme.colors.background,
   };
 
   return (
@@ -121,6 +121,11 @@ const renderViewComponent = (
           component.actionUrl !== ""
         ) {
           console.log("viewPress", component.actionUrl);
+
+          if (onEvent) {
+            onEvent("viewPress");
+          }
+          
           Linking.openURL(component.actionUrl).catch((error) => {
             console.warn(`Failed to open URL: ${component.actionUrl}`, error);
           });
@@ -238,7 +243,7 @@ const renderImageComponent = (
 
   const imageStyle = {
     ...(style as ImageStyle),
-    backgroundColor: theme.colors.image_placeholder,
+    backgroundColor: (style as ImageStyle)?.backgroundColor || theme.colors.image_placeholder,
   };
 
   return (
