@@ -17,6 +17,7 @@ import { ContentViewEvent } from "./common/ContentViewEvent";
 
 export interface ImageOnlyContentProps {
   data: ImageOnlyContentData;
+  height?: number;
   styleOverrides?: ImageOnlyContentStyle;
   listener?: (eventName: ContentViewEvent, interactId?: string) => void;
 }
@@ -30,7 +31,7 @@ export interface ImageOnlyContentProps {
 export const ImageOnlyContent: React.FC<ImageOnlyContentProps> = (
   props: ImageOnlyContentProps
 ) => {
-  const { data, styleOverrides, listener } = props;
-  const component = convertImageOnlyContentToComponent(data, styleOverrides);
+  const { data, height, styleOverrides, listener } = props;
+  const component = convertImageOnlyContentToComponent(data, height, styleOverrides);
   return <ContentView component={component} onEvent={listener} />;
 };

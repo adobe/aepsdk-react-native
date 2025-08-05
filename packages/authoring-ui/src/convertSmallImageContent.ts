@@ -35,7 +35,7 @@ const styles: StyleObject = {
         margin: 15,
         position: 'relative',
         minHeight: 120,
-        width: '100%',
+        flex: 1,
     },
     container: {
         flexDirection: 'row',

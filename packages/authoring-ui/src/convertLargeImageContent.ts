@@ -34,7 +34,7 @@ const styles: StyleObject = {
         margin: 15,
         position: 'relative',
         minHeight: 200,
-        width: '100%',
+        flex: 1,
     },
     container: {
         flexDirection: 'column',
