@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["es2017", "es2018", "es2019"],
+    "jsx": "react-native",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": false,
+    "strict": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "react": ["../../node_modules/@types/react"],
+      "react-native": ["../../node_modules/@types/react-native"]
+    },
+    "typeRoots": ["../../node_modules/@types"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "__tests__",
+    "dist",
+    "node_modules",
+    "../../node_modules/@types/react-native/node_modules"
+  ]
+}
