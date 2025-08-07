@@ -10,6 +10,7 @@
  */
 package com.adobe.marketing.mobile.reactnative.optimize;
 
+import android.util.Log;
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
@@ -18,6 +19,7 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OfferType;
+import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.facebook.react.bridge.Promise;
@@ -30,14 +32,20 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     private static final String TAG = "RCTAEPOptimizeModule";
     private final ReactApplicationContext reactContext;
+    // Cache of <Offer ID, Proposition>
+    private final Map<String, OptimizeProposition> propositionCache = new ConcurrentHashMap<>();
+    // Cache of <Offer ID, Offer>
+    private final Map<String, Offer> offerCache = new ConcurrentHashMap<>();
 
     public RCTAEPOptimizeModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -92,6 +100,8 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+                clearPropositionOffersCache();
+                cachePropositionOffers(decisionScopePropositionMap);
                 final WritableMap writableMap = new WritableNativeMap();
                 for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
                     writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
@@ -99,6 +109,58 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
                 promise.resolve(writableMap);
             }
         });
+    }
+
+    public void cachePropositionOffers(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
+            OptimizeProposition proposition = entry.getValue();
+            if (proposition == null) {
+                continue;
+            }
+
+            for (Offer offer : proposition.getOffers()) {
+                if (offer == null) {
+                    continue;
+                }
+
+                offerCache.put(offer.getId(), offer);
+                propositionCache.put(offer.getId(), proposition);
+            }
+        }
+    }
+
+    public void clearPropositionOffersCache() {
+        offerCache.clear();
+        propositionCache.clear();
+    }
+
+    @ReactMethod
+    public void multipleOffersDisplayed(final ReadableArray offerIds) {
+        if (offerIds == null || offerIds.size() == 0) {
+            return;
+        }
+
+        List<Offer> nativeOffers = new ArrayList<>();
+
+        for (int i = 0; i < offerIds.size(); i++) {
+            String offerId = offerIds.getString(i);
+            if (offerId == null) {
+                continue;
+            }
+
+            Offer offer = offerCache.get(offerId);
+            if (offer == null) {
+                Log.d(TAG, "multipleOffersDisplayed: offer not found in cache for offerId: " + offerId);
+                continue;
+            }
+
+            nativeOffers.add(offer);
+        }
+
+        if (!nativeOffers.isEmpty()) {
+            Log.d(TAG, "multipleOffersDisplayed: calling display for: " + nativeOffers.size() + " offers");
+            OfferUtils.displayed(nativeOffers);
+        }
     }
 
     @ReactMethod

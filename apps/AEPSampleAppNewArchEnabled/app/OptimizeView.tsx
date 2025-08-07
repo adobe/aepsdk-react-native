@@ -67,13 +67,19 @@ export default () => {
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9',
   );
   const decisionScopeTargetMbox = new DecisionScope('demoLoc3');
+  const decistionScopeTest = new DecisionScope('ishita-test');
+  const decisisionScopeODE = new DecisionScope('eyJ4ZG06YWN0aXZpdHlJZCI6ImRwczpvZmZlci1hY3Rpdml0eToxOWEyYzMyYzQ4MzliNmRjIiwieGRtOnBsYWNlbWVudElkIjoieGNvcmU6b2ZmZXItcGxhY2VtZW50OjE4ZTBlZTA0OTRkZDE3YzQifQ==');
+  const decistionScopeTest2 = new DecisionScope('akhil-test-mbox');
 
   const decisionScopes = [
-    decisionScopeText,
-    decisionScopeImage,
-    decisionScopeHtml,
-    decisionScopeJson,
-    decisionScopeTargetMbox,
+    // decisionScopeText,
+    // decisionScopeImage,
+    // decisionScopeHtml,
+    // decisionScopeJson,
+    // decisionScopeTargetMbox,
+    decistionScopeTest,
+    decisisionScopeODE,
+    decistionScopeTest2
   ];
 
   const optimizeExtensionVersion = async () => {
@@ -90,13 +96,14 @@ export default () => {
   const getPropositions = async () => {
     const propositions: Map<string, Proposition> =
       await Optimize.getPropositions(decisionScopes);
-    console.log(propositions);
+    console.log(propositions.size, ' propositions size');
     if (propositions) {
       setTextProposition(propositions.get(decisionScopeText.getName()));
       setImageProposition(propositions.get(decisionScopeImage.getName()));
       setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
       setJsonProposition(propositions.get(decisionScopeJson.getName()));
       setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+      console.log('propositions', propositions);
     }
   };
 
@@ -117,6 +124,20 @@ export default () => {
         }
       },
     });
+
+  const multipleOffersDisplayed = async () => {
+    const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+    const offerIds: Array<string> = [];
+    propositionsMap.forEach((proposition: Proposition) => {
+      if (proposition && proposition.items && proposition.items.length > 0) {
+        proposition.items.forEach((offer) => {
+          offerIds.push(offer.id);
+        });
+      }
+    });
+    console.log('offerIds', offerIds);
+    Optimize.displayed(offerIds);
+  };
 
   const renderTargetOffer = () => {
     if (targetProposition?.items) {
@@ -342,6 +363,12 @@ export default () => {
         <Button
           title="Subscribe to Proposition Update"
           onPress={onPropositionUpdate}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
+          title="Multiple Offers Displayed"
+          onPress={multipleOffersDisplayed}
         />
       </View>
       <Text style={{...styles.welcome, fontSize: 20}}>

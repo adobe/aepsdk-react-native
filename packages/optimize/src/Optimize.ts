@@ -22,6 +22,7 @@ interface IOptimize {
   clearCachedPropositions: () => void;
   getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
   updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) => void
+  displayed: (offerIds: Array<string>) => void
 }
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
@@ -98,7 +99,11 @@ const Optimize: IOptimize = {
   updatePropositions(decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) {    
     var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
     RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data);
-  }  
+  },  
+
+  displayed(offerIds: Array<string>) {
+    RCTAEPOptimize.multipleOffersDisplayed(offerIds);
+  }
 };
 
 export default Optimize;
