@@ -32,7 +32,7 @@ class Proposition {
         this.scope = eventData['scope'];
         this.scopeDetails = eventData['scopeDetails'];
         if(eventData['items']) {
-            this.items = eventData['items'].map((offer) => new Offer(offer));                
+            this.items = eventData['items'].map((offer) => new Offer({ ...offer, propositionId: this.id }));                
         }else {
             this.items = new Array();
         }           

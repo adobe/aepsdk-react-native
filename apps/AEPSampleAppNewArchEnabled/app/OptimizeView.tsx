@@ -15,6 +15,7 @@ import {
   Optimize,
   DecisionScope,
   Proposition,
+  Offer,
 } from '@adobe/react-native-aepoptimize';
 import {WebView} from 'react-native-webview';
 import styles from '../styles/styles';
@@ -127,16 +128,16 @@ export default () => {
 
   const multipleOffersDisplayed = async () => {
     const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
-    const offerIds: Array<string> = [];
+    const offers: Array<Offer> = [];
     propositionsMap.forEach((proposition: Proposition) => {
       if (proposition && proposition.items && proposition.items.length > 0) {
         proposition.items.forEach((offer) => {
-          offerIds.push(offer.id);
+          offers.push(offer);
         });
       }
     });
-    console.log('offerIds', offerIds);
-    Optimize.displayed(offerIds);
+    console.log('offers', offers);
+    Optimize.displayed(offers);
   };
 
   const renderTargetOffer = () => {

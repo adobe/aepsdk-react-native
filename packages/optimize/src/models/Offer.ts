@@ -29,6 +29,7 @@ interface OfferEventData {
     data: OfferData;
     score: number;
     meta?: Map<string, any>;
+    propositionId?: string;
 }
 
 class Offer {
@@ -38,6 +39,7 @@ class Offer {
     data: OfferData;  
     score: number;
     meta?: Map<string, any>;
+    propositionId?: string;
 
     get content(): string {
         return this.data.content;
@@ -62,6 +64,7 @@ class Offer {
         this.data = eventData.data;
         this.score = eventData.score;
         this.meta = eventData.meta;
+        this.propositionId = eventData.propositionId || '';
     }
 
     /**

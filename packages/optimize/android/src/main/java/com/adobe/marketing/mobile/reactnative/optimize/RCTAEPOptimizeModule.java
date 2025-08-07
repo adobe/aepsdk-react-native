@@ -42,10 +42,8 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     private static final String TAG = "RCTAEPOptimizeModule";
     private final ReactApplicationContext reactContext;
-    // Cache of <Offer ID, Proposition>
+    // Cache of <Proposition ID, Proposition>
     private final Map<String, OptimizeProposition> propositionCache = new ConcurrentHashMap<>();
-    // Cache of <Offer ID, Offer>
-    private final Map<String, Offer> offerCache = new ConcurrentHashMap<>();
 
     public RCTAEPOptimizeModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -118,47 +116,55 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
                 continue;
             }
 
-            for (Offer offer : proposition.getOffers()) {
-                if (offer == null) {
-                    continue;
-                }
-
-                offerCache.put(offer.getId(), offer);
-                propositionCache.put(offer.getId(), proposition);
-            }
+            String propositionId = proposition.getId();
+            propositionCache.put(propositionId, proposition);
         }
     }
 
     public void clearPropositionOffersCache() {
-        offerCache.clear();
         propositionCache.clear();
     }
 
     @ReactMethod
-    public void multipleOffersDisplayed(final ReadableArray offerIds) {
-        if (offerIds == null || offerIds.size() == 0) {
+    public void multipleOffersDisplayed(final ReadableArray offersArray) {
+        if (offersArray == null || offersArray.size() == 0) {
+            Log.d(TAG, "multipleOffersDisplayed: offersArray is null or empty");
             return;
         }
 
         List<Offer> nativeOffers = new ArrayList<>();
 
-        for (int i = 0; i < offerIds.size(); i++) {
-            String offerId = offerIds.getString(i);
-            if (offerId == null) {
-                continue;
-            }
-
-            Offer offer = offerCache.get(offerId);
+        for (int i = 0; i < offersArray.size(); i++) {
+            ReadableMap offer = offersArray.getMap(i);
             if (offer == null) {
-                Log.d(TAG, "multipleOffersDisplayed: offer not found in cache for offerId: " + offerId);
+                Log.d(TAG, "multipleOffersDisplayed: offer is null for index: " + i);
                 continue;
             }
 
-            nativeOffers.add(offer);
+            String propositionId = offer.getString("propositionId");
+            String offerId = offer.getString("id");
+
+            if (propositionId == null || offerId == null) {
+                Log.d(TAG, "multipleOffersDisplayed: propositionId or offerId is null for offer: " + offer.toString());
+                continue;
+            }
+
+            OptimizeProposition proposition = propositionCache.get(propositionId);
+            if (proposition == null) {
+                Log.d(TAG, "multipleOffersDisplayed: proposition not found in cache for propositionId: " + propositionId);
+                continue;
+            }
+
+            for (Offer propositionOffer : proposition.getOffers()) {
+                if (propositionOffer.getId().equalsIgnoreCase(offerId)) {
+                    nativeOffers.add(propositionOffer);
+                    break;
+                }
+            }
         }
 
         if (!nativeOffers.isEmpty()) {
-            Log.d(TAG, "multipleOffersDisplayed: calling display for: " + nativeOffers.size() + " offers");
+            Log.d(TAG, "multipleOffersDisplayed: calling display for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
             OfferUtils.displayed(nativeOffers);
         }
     }
