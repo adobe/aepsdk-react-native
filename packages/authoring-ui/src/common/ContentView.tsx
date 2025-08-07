@@ -121,7 +121,6 @@ const renderViewComponent = (
           component.actionUrl !== ""
         ) {
           console.log("viewPress", component.actionUrl);
-
           Linking.openURL(component.actionUrl).catch((error) => {
             console.warn(`Failed to open URL: ${component.actionUrl}`, error);
           });
