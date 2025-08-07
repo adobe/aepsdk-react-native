@@ -11,11 +11,43 @@
 */
 
 import { PersonalizationSchema } from './PersonalizationSchema';
+import { PropositionItem, PropositionItemData } from './PropositionItem';
 
-export interface JSONPropositionItem {
+export interface JSONPropositionItemData extends PropositionItemData {
   id: string;
   data: {
     content: string;
   };
   schema: PersonalizationSchema.JSON_CONTENT;
+}
+
+export class JSONPropositionItem extends PropositionItem {
+  declare data: JSONPropositionItemData['data']; // Override data type for better typing
+
+  constructor(jsonPropositionItemData: JSONPropositionItemData) {
+    super(jsonPropositionItemData);
+    this.data = jsonPropositionItemData.data;
+  }
+
+  /**
+   * Gets the JSON content string of this proposition item.
+   * 
+   * @returns {string} The JSON content
+   */
+  getContent(): string {
+    return this.data.content;
+  }
+
+  /**
+   * Attempts to parse the content as JSON.
+   * 
+   * @returns {object | null} Parsed JSON object or null if parsing fails
+   */
+  getParsedContent(): object | null {
+    try {
+      return JSON.parse(this.data.content);
+    } catch (error) {
+      return null;
+    }
+  }
 }

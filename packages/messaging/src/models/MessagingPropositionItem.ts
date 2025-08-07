@@ -14,9 +14,13 @@ import { ContentCard } from './ContentCard';
 import { HTMLProposition } from './HTMLProposition';
 import { JSONPropositionItem } from './JSONPropositionItem';
 import { InAppMessage } from './InAppMessage';
+import { PropositionItem } from './PropositionItem';
 
+// Union type for all possible proposition item types
+// All items now extend PropositionItem and have unified tracking capabilities
 export type MessagingPropositionItem =
   | ContentCard
   | HTMLProposition
   | InAppMessage
-  | JSONPropositionItem;
+  | JSONPropositionItem
+  | PropositionItem; // Base PropositionItem for any other schema types
