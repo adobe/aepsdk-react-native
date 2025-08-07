@@ -24,49 +24,58 @@ interface StyleObject extends ImageOnlyContentStyle {
 
 const styles: StyleObject = {
     card: {
-        backgroundColor: '#ffffff',
         borderRadius: 12,
         overflow: 'hidden',
         margin: 15,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
-        position: 'relative', // Added for dismiss button positioning
-        width: '100%', // Ensure card takes full width
+        position: 'relative',
+        minHeight: 120, // Added for dismiss button positioning
+        flex: 1, // Ensure card takes full width
     },
     container: {
         flexDirection: 'column',
+        minHeight: 120,
     },
     imageContainer: {
         backgroundColor: '#f0f0f0',
         borderRadius: 12,
         width: "100%", // Full width for the image
-        height: 200,
+        minHeight: 120,
+        maxHeight: 300, // Fallback when no cardHeight provided
     },
     image: {
         width: '100%',
         height: '100%',
-        // aspectRatio: undefined, // Let image maintain original aspect ratio
-        resizeMode: 'cover', // Maintain aspect ratio, show full image
+        resizeMode: 'cover'
     },
 };
 
 function mergeStyles(defaultStyles: StyleObject, overrides?: ImageOnlyContentStyle): StyleObject {
     if (!overrides) return defaultStyles;
 
-    return {
+    const merged = {
         card: { ...defaultStyles.card, ...overrides.card },
         container: { ...defaultStyles.container, ...overrides.container },
         imageContainer: { ...defaultStyles.imageContainer, ...overrides.imageContainer },
         image: { ...defaultStyles.image, ...overrides.image },
     };
+    
+    return merged;
 }
 
 export function convertImageOnlyContentToComponent(
     data: ImageOnlyContentData,
-    styleOverrides?: ImageOnlyContentStyle
+    height?: number,
+    styleOverrides?: ImageOnlyContentStyle,
 ): Component {
+    // let's add height to the styleOverrides before merging the customer provided styles.
+    if (height) {
+        styleOverrides = { 
+            ...styleOverrides, 
+            card: { ...styleOverrides?.card, maxHeight: height },
+            imageContainer: { ...styleOverrides?.imageContainer, maxHeight: height }
+        };
+    }
+
     const mergedStyles = mergeStyles(styles, styleOverrides);
 
     const children: Component[] = [
