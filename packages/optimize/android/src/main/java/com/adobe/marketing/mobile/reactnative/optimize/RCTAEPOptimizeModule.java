@@ -98,7 +98,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-                clearPropositionOffersCache();
+                clearPropositionsCache();
                 cachePropositionOffers(decisionScopePropositionMap);
                 final WritableMap writableMap = new WritableNativeMap();
                 for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
@@ -121,7 +121,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         }
     }
 
-    public void clearPropositionOffersCache() {
+    public void clearPropositionsCache() {
         propositionCache.clear();
     }
 

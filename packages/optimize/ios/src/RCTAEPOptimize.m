@@ -20,11 +20,13 @@ static NSString *const TAG = @"RCTAEPOptimize";
 
 @implementation RCTAEPOptimize {
   bool hasListeners;
+  NSMutableDictionary<NSString *, AEPOptimizeProposition *> *propositionCache;
 }
 
 - (instancetype)init {
   self = [super init];
   hasListeners = false;
+  propositionCache = [[NSMutableDictionary alloc] init];
   return self;
 }
 
@@ -80,6 +82,9 @@ RCT_EXPORT_METHOD(getPropositions
                reject([NSString stringWithFormat:@"%ld", (long)error.code],
                       error.description, nil);
              } else {
+              [self clearPropositionsCache];
+              [self cachePropositions:decisionScopePropositionDict];
+
                NSDictionary<NSString *, NSDictionary<NSString *, id> *>
                    *propositionDictionary = [[NSMutableDictionary alloc] init];
 
@@ -211,6 +216,72 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
                                       offerId],
            nil);
   }
+}
+
+RCT_EXPORT_METHOD(multipleOffersDisplayed
+                  : (NSArray<NSDictionary<NSString *, id> *> *)offersArray) {
+    
+    [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed is called."];
+    
+    if (!offersArray || [offersArray count] == 0) {
+        [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed: offersArray is null or empty"];
+        return;
+    }
+    
+    NSMutableArray<AEPOffer *> *nativeOffers = [[NSMutableArray alloc] init];
+    
+    for (NSDictionary<NSString *, id> *offerDict in offersArray) {
+        if (!offerDict) {
+            [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed: offer is null"];
+            continue;
+        }
+        
+        NSString *propositionId = [offerDict objectForKey:@"propositionId"];
+        NSString *offerId = [offerDict objectForKey:@"id"];
+        
+        if (!propositionId || !offerId) {
+            [AEPLog debugWithLabel:TAG 
+                           message:[NSString stringWithFormat:@"multipleOffersDisplayed: propositionId or offerId is null for offer: %@", offerDict]];
+            continue;
+        }
+        
+        AEPOptimizeProposition *proposition = [propositionCache objectForKey:propositionId];
+        if (!proposition) {
+            [AEPLog debugWithLabel:TAG 
+                           message:[NSString stringWithFormat:@"multipleOffersDisplayed: proposition not found in cache for propositionId: %@", propositionId]];
+            continue;
+        }
+        
+        NSArray<AEPOffer *> *offers = [proposition offers];
+        for (AEPOffer *propositionOffer in offers) {
+            if ([[propositionOffer id] isEqualToString:offerId]) {
+                [nativeOffers addObject:propositionOffer];
+                break;
+            }
+        }
+    }
+    
+    if ([nativeOffers count] > 0) {
+        [AEPLog debugWithLabel:TAG 
+                       message:[NSString stringWithFormat:@"multipleOffersDisplayed: calling display for: %lu offers", (unsigned long)[nativeOffers count]]];
+        
+        [AEPMobileOptimize displayed:nativeOffers];
+    }
+}
+
+#pragma mark - Cache Management
+
+- (void)cachePropositions:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict {
+    for (AEPDecisionScope *key in decisionScopePropositionDict) {
+        AEPOptimizeProposition *proposition = decisionScopePropositionDict[key];
+        if (proposition && proposition.id) {
+            [propositionCache setObject:proposition forKey:proposition.id];
+        }
+    }
+}
+
+- (void)clearPropositionsCache {
+    [propositionCache removeAllObjects];
 }
 
 #pragma mark - Helper methods
