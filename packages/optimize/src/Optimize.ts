@@ -14,6 +14,7 @@ import { EventSubscription, NativeModules } from 'react-native';
 import { NativeEventEmitter } from 'react-native';
 import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
+import Offer from './models/Offer';
 import { AdobePropositionCallback }  from './models/AdobePropositionCallback';
 
 interface IOptimize {
@@ -22,6 +23,8 @@ interface IOptimize {
   clearCachedPropositions: () => void;
   getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
   updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) => void
+  displayed: (offers: Array<Offer>) => void
+  generateDisplayInteractionXdm: (offers: Array<Offer>) => Promise<Map<string, any>>
 }
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
@@ -98,7 +101,15 @@ const Optimize: IOptimize = {
   updatePropositions(decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) {    
     var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
     RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data);
-  }  
+  },  
+
+  displayed(offers: Array<Offer>) {
+    RCTAEPOptimize.multipleOffersDisplayed(offers);
+  },
+
+  generateDisplayInteractionXdm(offers: Array<Offer>) {
+    return RCTAEPOptimize.multipleOffersGenerateDisplayInteractionXdm(offers);
+  }
 };
 
 export default Optimize;
