@@ -20,7 +20,6 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OfferType;
-import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.facebook.react.bridge.Promise;
@@ -35,7 +34,6 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -65,43 +63,6 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
                 offer.displayed();
                 break;
             }
-        }
-    }
-
-    @ReactMethod
-    public void multipleOffersDisplayed(final ReadableArray propositionOfferPairs) {
-        if (propositionOfferPairs == null || propositionOfferPairs.size() == 0) {
-            return;
-        }
-
-        List<Offer> nativeOffers = new ArrayList<>();
-        
-        for (int i = 0; i < propositionOfferPairs.size(); i++) {
-            ReadableMap propositionOfferPairMap = propositionOfferPairs.getMap(i);
-            if (propositionOfferPairMap == null) {
-                continue;
-            }
-
-            ReadableMap propositionMap = propositionOfferPairMap.getMap(RCTAEPOptimizeConstants.PROPOSITION_KEY);
-            String offerId = propositionOfferPairMap.getString(RCTAEPOptimizeConstants.OFFER_ID_KEY);
-            if (propositionMap == null || offerId == null) {
-                continue;
-            }
-
-            Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-            OptimizeProposition proposition = OptimizeProposition.fromEventData(propositionEventData);
-            if (proposition != null) {
-                for (Offer offer : proposition.getOffers()) {
-                    if (offer.getId().equalsIgnoreCase(offerId)) {
-                        nativeOffers.add(offer);
-                        break;
-                    }
-                }
-            }
-        }
-        
-        if (!nativeOffers.isEmpty()) {
-            OfferUtils.displayed(nativeOffers);
         }
     }
 
@@ -207,42 +168,6 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
             promise.resolve(writableMap);
         } else {
             promise.reject("generateDisplayInteractionXdm", "Error in generating Display interaction XDM for offer with id: " + offerId);
-        }
-    }
-
-    @ReactMethod
-    public void generateDisplayInteractionXdmForMultipleOffers(final ReadableArray propositionOfferPairs, final Promise promise) {
-        final List<Offer> nativeOffers = new ArrayList<>();
-        
-        for (int i = 0; i < propositionOfferPairs.size(); i++) {
-            ReadableMap propositionOfferPairMap = propositionOfferPairs.getMap(i);
-            if (propositionOfferPairMap == null) {
-                continue;   
-            }
-
-            ReadableMap propositionMap = propositionOfferPairMap.getMap(RCTAEPOptimizeConstants.PROPOSITION_KEY);
-            String offerId = propositionOfferPairMap.getString(RCTAEPOptimizeConstants.OFFER_ID_KEY);
-            if (propositionMap == null || offerId == null) {
-                continue;       
-            }
-
-            Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-            OptimizeProposition proposition = OptimizeProposition.fromEventData(propositionEventData);
-
-            for (Offer offer : proposition.getOffers()) {
-                if (offer.getId().equalsIgnoreCase(offerId)) {
-                    nativeOffers.add(offer);
-                    break;
-                }
-            }
-        }
-
-        if (nativeOffers.size() > 0) {
-            final Map<String, Object> interactionXdm = OfferUtils.generateDisplayInteractionXdm(nativeOffers);
-            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
-            promise.resolve(writableMap);
-        } else {
-            promise.reject("generateDisplayInteractionXdmForMultipleOffers", "Error in generating Display interaction XDM for multiple offers.");
         }
     }
 
