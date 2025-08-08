@@ -127,45 +127,25 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void multipleOffersDisplayed(final ReadableArray offersArray) {
-        if (offersArray == null || offersArray.size() == 0) {
-            Log.d(TAG, "multipleOffersDisplayed: offersArray is null or empty");
-            return;
-        }
-
-        List<Offer> nativeOffers = new ArrayList<>();
-
-        for (int i = 0; i < offersArray.size(); i++) {
-            ReadableMap offer = offersArray.getMap(i);
-            if (offer == null) {
-                Log.d(TAG, "multipleOffersDisplayed: offer is null for index: " + i);
-                continue;
-            }
-
-            String propositionId = offer.getString("propositionId");
-            String offerId = offer.getString("id");
-
-            if (propositionId == null || offerId == null) {
-                Log.d(TAG, "multipleOffersDisplayed: propositionId or offerId is null for offer: " + offer.toString());
-                continue;
-            }
-
-            OptimizeProposition proposition = propositionCache.get(propositionId);
-            if (proposition == null) {
-                Log.d(TAG, "multipleOffersDisplayed: proposition not found in cache for propositionId: " + propositionId);
-                continue;
-            }
-
-            for (Offer propositionOffer : proposition.getOffers()) {
-                if (propositionOffer.getId().equalsIgnoreCase(offerId)) {
-                    nativeOffers.add(propositionOffer);
-                    break;
-                }
-            }
-        }
+        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray);
 
         if (!nativeOffers.isEmpty()) {
             Log.d(TAG, "multipleOffersDisplayed: calling display for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
             OfferUtils.displayed(nativeOffers);
+        }
+    }
+
+    @ReactMethod
+    public void multipleOffersGenerateDisplayInteractionXdm(final ReadableArray offersArray, final Promise promise) {
+        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray);
+
+        if (!nativeOffers.isEmpty()) {
+            Log.d(TAG, "multipleOffersGenerateDisplayInteractionXdm: calling generateDisplayInteractionXdm for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
+            final Map<String, Object> interactionXdm = OfferUtils.generateDisplayInteractionXdm(nativeOffers);
+            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
+            promise.resolve(writableMap);
+        } else {
+            promise.reject("multipleOffersGenerateDisplayInteractionXdm", "Error in generating Display interaction XDM for multiple offers: " + offersArray.toString());
         }
     }
 

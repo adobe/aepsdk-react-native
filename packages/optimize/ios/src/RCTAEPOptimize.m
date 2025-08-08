@@ -220,53 +220,76 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
 
 RCT_EXPORT_METHOD(multipleOffersDisplayed
                   : (NSArray<NSDictionary<NSString *, id> *> *)offersArray) {
-    
+                    
     [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed is called."];
-    
-    if (!offersArray || [offersArray count] == 0) {
-        [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed: offersArray is null or empty"];
-        return;
+
+    NSMutableArray<AEPOffer *> *nativeOffers = [self getNativeOffersFromOffersArray:offersArray];
+
+    if ([nativeOffers count] > 0) {
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"multipleOffersDisplayed: calling display for: %lu offers", (unsigned long)[nativeOffers count]]];
+      [AEPMobileOptimize displayed:nativeOffers];
     }
+}
+
+RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
+                  : (NSArray<NSDictionary<NSString *, id> *> *)offersArray resolver
+                  : (RCTPromiseResolveBlock)resolve rejector
+                  : (RCTPromiseRejectBlock)reject) {
     
-    NSMutableArray<AEPOffer *> *nativeOffers = [[NSMutableArray alloc] init];
+    [AEPLog debugWithLabel:TAG message:@"multipleOffersGenerateDisplayInteractionXdm is called."];
     
-    for (NSDictionary<NSString *, id> *offerDict in offersArray) {
-        if (!offerDict) {
-            [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed: offer is null"];
-            continue;
-        }
-        
-        NSString *propositionId = [offerDict objectForKey:@"propositionId"];
-        NSString *offerId = [offerDict objectForKey:@"id"];
-        
-        if (!propositionId || !offerId) {
-            [AEPLog debugWithLabel:TAG 
-                           message:[NSString stringWithFormat:@"multipleOffersDisplayed: propositionId or offerId is null for offer: %@", offerDict]];
-            continue;
-        }
-        
-        AEPOptimizeProposition *proposition = [propositionCache objectForKey:propositionId];
-        if (!proposition) {
-            [AEPLog debugWithLabel:TAG 
-                           message:[NSString stringWithFormat:@"multipleOffersDisplayed: proposition not found in cache for propositionId: %@", propositionId]];
-            continue;
-        }
-        
-        NSArray<AEPOffer *> *offers = [proposition offers];
-        for (AEPOffer *propositionOffer in offers) {
-            if ([[propositionOffer id] isEqualToString:offerId]) {
-                [nativeOffers addObject:propositionOffer];
-                break;
-            }
-        }
-    }
+    NSMutableArray<AEPOffer *> *nativeOffers = [self getNativeOffersFromOffersArray:offersArray];
     
     if ([nativeOffers count] > 0) {
-        [AEPLog debugWithLabel:TAG 
-                       message:[NSString stringWithFormat:@"multipleOffersDisplayed: calling display for: %lu offers", (unsigned long)[nativeOffers count]]];
-        
-        [AEPMobileOptimize displayed:nativeOffers];
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"multipleOffersGenerateDisplayInteractionXdm: calling display for: %lu offers", (unsigned long)[nativeOffers count]]];
+      NSDictionary<NSString *, id> *displayInteractionXdm = [AEPMobileOptimize generateDisplayInteractionXdm:nativeOffers];
+
+      resolve(displayInteractionXdm);
+    } else {
+      reject(@"generateDisplayInteractionXdmForMultipleOffers", @"Error in generating Display interaction XDM for multiple offers.", nil);
     }
+}
+
+#pragma mark - Helper methods
+
+- (NSMutableArray<AEPOffer *> *)getNativeOffersFromOffersArray:(NSArray<NSDictionary<NSString *, id> *> *)offersArray {
+  NSMutableArray<AEPOffer *> *nativeOffers = [[NSMutableArray alloc] init];
+
+  if (!offersArray || [offersArray count] == 0) {
+    [AEPLog debugWithLabel:TAG message:@"getNativeOffersFromOffersArray: offersArray is null or empty"];
+    return nativeOffers;
+  }
+
+  for (NSDictionary<NSString *, id> *offerDict in offersArray) {
+    if (!offerDict) {
+      [AEPLog debugWithLabel:TAG message:@"getNativeOffersFromOffersArray: offer is null"];
+      continue;
+    }
+    
+    NSString *propositionId = [offerDict objectForKey:@"propositionId"];
+    NSString *offerId = [offerDict objectForKey:@"id"];
+        
+    if (!propositionId || !offerId) {
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"getNativeOffersFromOffersArray: propositionId or offerId is null for offer: %@", offerDict]];
+      continue;
+    }
+    
+    AEPOptimizeProposition *proposition = [propositionCache objectForKey:propositionId];
+    if (!proposition) {
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"getNativeOffersFromOffersArray: proposition not found in cache for propositionId: %@", propositionId]];
+      continue;
+    }
+
+    NSArray<AEPOffer *> *offers = [proposition offers];
+    for (AEPOffer *propositionOffer in offers) {
+      if ([[propositionOffer id] isEqualToString:offerId]) {
+        [nativeOffers addObject:propositionOffer];
+        break;
+      }
+    }
+  }
+
+  return nativeOffers;
 }
 
 #pragma mark - Cache Management

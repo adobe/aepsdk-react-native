@@ -24,6 +24,7 @@ interface IOptimize {
   getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
   updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) => void
   displayed: (offers: Array<Offer>) => void
+  generateDisplayInteractionXdm: (offers: Array<Offer>) => Promise<Map<string, any>>
 }
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
@@ -104,6 +105,10 @@ const Optimize: IOptimize = {
 
   displayed(offers: Array<Offer>) {
     RCTAEPOptimize.multipleOffersDisplayed(offers);
+  },
+
+  generateDisplayInteractionXdm(offers: Array<Offer>) {
+    return RCTAEPOptimize.multipleOffersGenerateDisplayInteractionXdm(offers);
   }
 };
 

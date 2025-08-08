@@ -140,6 +140,25 @@ export default () => {
     Optimize.displayed(offers);
   };
 
+  const multipleOffersGenerateDisplayInteractionXdm = async () => {
+    const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+    const offers: Array<Offer> = [];
+    propositionsMap.forEach((proposition: Proposition) => {
+      if (proposition && proposition.items && proposition.items.length > 0) {
+        proposition.items.forEach((offer) => {
+          offers.push(offer);
+        });
+      }
+    });
+    console.log('offers', offers);
+    const displayInteractionXdm = await Optimize.generateDisplayInteractionXdm(offers);
+    if (displayInteractionXdm) {
+      console.log('displayInteractionXdm', JSON.stringify(displayInteractionXdm, null, 2));
+    } else {
+      console.log('displayInteractionXdm is null');
+    }
+  };
+
   const renderTargetOffer = () => {
     if (targetProposition?.items) {
       if (targetProposition.items[0].format === TARGET_OFFER_TYPE_JSON) {
@@ -370,6 +389,12 @@ export default () => {
         <Button
           title="Multiple Offers Displayed"
           onPress={multipleOffersDisplayed}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
+          title="Multiple Offers Generate Display Interaction XDM"
+          onPress={multipleOffersGenerateDisplayInteractionXdm}
         />
       </View>
       <Text style={{...styles.welcome, fontSize: 20}}>

@@ -185,4 +185,44 @@ class RCTAEPOptimizeUtil {
         }
         return list;
     }
+
+    static ArrayList<Offer> getNativeOffers(final ReadableArray offersArray) {
+        List<Offer> nativeOffers = new ArrayList<>();
+
+        if (offersArray == null || offersArray.size() == 0) {
+            Log.d(TAG, "getNativeOffers: offersArray is null or empty");
+            return nativeOffers;
+        }
+
+        for (int i = 0; i < offersArray.size(); i++) {
+            ReadableMap offer = offersArray.getMap(i);
+            if (offer == null) {
+                Log.d(TAG, "getNativeOffers: offer is null for index: " + i);
+                continue;
+            }
+
+            String propositionId = offer.getString("propositionId");
+            String offerId = offer.getString("id");
+
+            if (propositionId == null || offerId == null) {
+                Log.d(TAG, "getNativeOffers: propositionId or offerId is null for offer: " + offer.toString());
+                continue;
+            }
+
+            OptimizeProposition proposition = propositionCache.get(propositionId);
+            if (proposition == null) {
+                Log.d(TAG, "getNativeOffers: proposition not found in cache for propositionId: " + propositionId);
+                continue;
+            }
+
+            for (Offer propositionOffer : proposition.getOffers()) {
+                if (propositionOffer.getId().equalsIgnoreCase(offerId)) {
+                    nativeOffers.add(propositionOffer);
+                    break;
+                }
+            }
+        }
+
+        return nativeOffers;
+    }
 }
