@@ -9,7 +9,7 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useRef } from "react";
 import { ContentTemplate, TemplateType } from "./ContentProvider";
 import {
   SmallImageContent,
@@ -44,6 +44,9 @@ export const ContentView: React.FC<ContentViewProps> = ({
   const contentCardMapping =
     ContentCardMappingManager.getInstance().getContentCardMapping(data.id);
 
+  // Track if onDisplay was already called to prevent duplicates
+  const displayedRef = useRef(false);
+
   // Create a default listener that always listens to all events and forwards to client listener if not null
   const defaultListener = useCallback(
     (event: ContentViewEvent, componentIdentifier?: string) => {
@@ -74,9 +77,12 @@ export const ContentView: React.FC<ContentViewProps> = ({
     [listener]
   );
 
-  // Call listener on mount to signal view display
+  // Call listener on mount to signal view display (only once to prevent duplicates)
   useEffect(() => {
-    defaultListener("onDisplay");
+    if (!displayedRef.current) {
+      defaultListener("onDisplay");
+      displayedRef.current = true;
+    }
   }, [defaultListener]);
 
   // If not visible, return null to hide the entire view
@@ -109,6 +115,7 @@ export const ContentView: React.FC<ContentViewProps> = ({
       return (
         <ImageOnlyContent
           data={data.imageOnlyData}
+          height={cardHeight} 
           styleOverrides={styleOverrides?.imageOnlyStyle}
           listener={defaultListener}
         />
