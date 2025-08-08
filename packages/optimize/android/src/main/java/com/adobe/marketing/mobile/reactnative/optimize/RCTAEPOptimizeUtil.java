@@ -186,7 +186,7 @@ class RCTAEPOptimizeUtil {
         return list;
     }
 
-    static ArrayList<Offer> getNativeOffers(final ReadableArray offersArray) {
+    static List<Offer> getNativeOffers(final ReadableArray offersArray, Map<String, OptimizeProposition> propositionCache) {
         List<Offer> nativeOffers = new ArrayList<>();
 
         if (offersArray == null || offersArray.size() == 0) {

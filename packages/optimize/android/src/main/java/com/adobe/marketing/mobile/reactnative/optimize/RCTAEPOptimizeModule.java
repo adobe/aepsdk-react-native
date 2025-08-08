@@ -127,7 +127,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void multipleOffersDisplayed(final ReadableArray offersArray) {
-        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray);
+        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray, propositionCache);
 
         if (!nativeOffers.isEmpty()) {
             Log.d(TAG, "multipleOffersDisplayed: calling display for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
@@ -137,7 +137,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void multipleOffersGenerateDisplayInteractionXdm(final ReadableArray offersArray, final Promise promise) {
-        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray);
+        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray, propositionCache);
 
         if (!nativeOffers.isEmpty()) {
             Log.d(TAG, "multipleOffersGenerateDisplayInteractionXdm: calling generateDisplayInteractionXdm for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
