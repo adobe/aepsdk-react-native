@@ -45,6 +45,35 @@ const RCTAEPMessaging: NativeModule & NativeMessagingModule =
 declare var messagingDelegate: MessagingDelegate;
 var messagingDelegate: MessagingDelegate;
 
+// Registery to store callbacks for each message in handleJavascriptMessage
+// Record - {messageId : {handlerName : callback}}
+const jsMessageHandlers: Record<string, Record<string, (content: string) => void>> = {};
+const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
+
+handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
+  const {messageId, handlerName, content} = event;
+  if (jsMessageHandlers[messageId] && jsMessageHandlers[messageId][handlerName]) {
+    jsMessageHandlers[messageId][handlerName](content);
+  }
+});
+
+handleJSMessageEventEmitter.addListener('cacheJavascriptCallback', (event) => {
+  const {messageId, handlerName, callback} = event;
+  if (!jsMessageHandlers[messageId]) {
+    jsMessageHandlers[messageId] = {};
+  }
+  jsMessageHandlers[messageId][handlerName] = callback;
+});
+
+class MessagingCacheUtil {
+  static cacheJavascriptCallback(messageId: string, handlerName: string, callback: (content: string) => void) {
+    if (!jsMessageHandlers[messageId]) {
+      jsMessageHandlers[messageId] = {};
+    }
+    jsMessageHandlers[messageId][handlerName] = callback;
+  }
+}
+
 class Messaging {
   /**
    * Returns the version of the AEPMessaging extension
@@ -173,3 +202,4 @@ class Messaging {
 }
 
 export default Messaging;
+export { MessagingCacheUtil };
