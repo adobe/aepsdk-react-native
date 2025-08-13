@@ -37,6 +37,8 @@ export interface NativeMessagingModule {
   updatePropositionsForSurfaces: (surfaces: string[]) => void;
   trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
   trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
+  trackPropositionItem: (itemId: string, interaction: string | null, eventType: number, tokens: string[] | null) => void;
+  generatePropositionInteractionXdm: (itemId: string, interaction: string | null, eventType: number, tokens: string[] | null) => Promise<object>;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -99,6 +101,33 @@ class Messaging {
 
   static trackContentCardInteraction(proposition: MessagingProposition, contentCard: ContentCard): void {
     RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);
+  }
+
+  /**
+   * Tracks interactions with a PropositionItem using the provided interaction and event type.
+   * This method is used internally by the PropositionItem.track() method.
+   * 
+   * @param {string} itemId - The unique identifier of the PropositionItem
+   * @param {string | null} interaction - A custom string value to be recorded in the interaction
+   * @param {number} eventType - The MessagingEdgeEventType numeric value
+   * @param {string[] | null} tokens - Array containing the sub-item tokens for recording interaction
+   */
+  static trackPropositionItem(itemId: string, interaction: string | null, eventType: number, tokens: string[] | null): void {
+    RCTAEPMessaging.trackPropositionItem(itemId, interaction, eventType, tokens);
+  }
+
+  /**
+   * Generates XDM data for PropositionItem interactions.
+   * This method is used internally by the PropositionItem.generateInteractionXdm() method.
+   * 
+   * @param {string} itemId - The unique identifier of the PropositionItem
+   * @param {string | null} interaction - A custom string value to be recorded in the interaction
+   * @param {number} eventType - The MessagingEdgeEventType numeric value
+   * @param {string[] | null} tokens - Array containing the sub-item tokens for recording interaction
+   * @returns {Promise<object>} Promise containing XDM data for the proposition interaction
+   */
+  static async generatePropositionInteractionXdm(itemId: string, interaction: string | null, eventType: number, tokens: string[] | null): Promise<object> {
+    return await RCTAEPMessaging.generatePropositionInteractionXdm(itemId, interaction, eventType, tokens);
   }
 
   /**

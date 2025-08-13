@@ -27,6 +27,11 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     private var shouldShowMessage = true
     public static var emitter: RCTEventEmitter!
 
+    // Cache to store PropositionItem objects by their ID for unified tracking
+    private var propositionItemCache = [String: PropositionItem]()
+    // Cache to store the parent Proposition for each PropositionItem
+    private var propositionCache = [String: Proposition]()
+
     override init() {
         super.init()
         RCTAEPMessaging.emitter = self
@@ -81,6 +86,13 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
                 resolve([String: Any]());
                 return;
             }
+            
+            // Cache PropositionItems for unified tracking when propositions are retrieved
+            if let propositionsDict = propositions {
+                let allPropositions = Array(propositionsDict.values).flatMap { $0 }
+                self.cachePropositionsItems(allPropositions)
+            }
+            
             resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositions!))
         }
     }
@@ -247,6 +259,187 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         } catch {
             print("Error decoding proposition: \(error.localizedDescription)")
         }
+    }
+
+    /// MARK: - Unified PropositionItem Tracking Methods
+    
+    /**
+     * Tracks interactions with a PropositionItem using the provided interaction and event type.
+     * This method is used by the React Native PropositionItem.track() method.
+     * 
+     * - Parameters:
+     *   - itemId: The unique identifier of the PropositionItem
+     *   - interaction: A custom string value to be recorded in the interaction (optional)
+     *   - eventType: The MessagingEdgeEventType numeric value
+     *   - tokens: Array containing the sub-item tokens for recording interaction (optional)
+     */
+    @objc
+    func trackPropositionItem(
+        _ itemId: String,
+        interaction: String?,
+        eventType: Int,
+        tokens: [String]?,
+        withResolver resolve: @escaping RCTPromiseResolveBlock,
+        withRejecter reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard let edgeEventType = MessagingEdgeEventType(rawValue: eventType) else {
+            reject("InvalidEventType", "Invalid eventType: \(eventType)", nil)
+            return
+        }
+        
+        guard let propositionItem = findPropositionItemById(itemId) else {
+            print("Warning: PropositionItem not found for ID: \(itemId)")
+            resolve(nil)
+            return
+        }
+        
+        // Call the appropriate track method based on provided parameters
+        if let interaction = interaction, let tokens = tokens {
+            // Track with interaction and tokens
+            propositionItem.track(interaction, withEdgeEventType: edgeEventType, forTokens: tokens)
+        } else if let interaction = interaction {
+            // Track with interaction only
+            propositionItem.track(interaction, withEdgeEventType: edgeEventType)
+        } else {
+            // Track with event type only
+            propositionItem.track(withEdgeEventType: edgeEventType)
+        }
+        
+        print("Successfully tracked PropositionItem: \(itemId) with eventType: \(edgeEventType)")
+        resolve(nil)
+    }
+    
+    /**
+     * Generates XDM data for PropositionItem interactions.
+     * This method is used by the React Native PropositionItem.generateInteractionXdm() method.
+     * 
+     * - Parameters:
+     *   - itemId: The unique identifier of the PropositionItem
+     *   - interaction: A custom string value to be recorded in the interaction (optional)
+     *   - eventType: The MessagingEdgeEventType numeric value
+     *   - tokens: Array containing the sub-item tokens for recording interaction (optional)
+     *   - resolve: Promise resolver with XDM data for the proposition interaction
+     *   - reject: Promise rejecter for errors
+     */
+    @objc
+    func generatePropositionInteractionXdm(
+        _ itemId: String,
+        interaction: String?,
+        eventType: Int,
+        tokens: [String]?,
+        withResolver resolve: @escaping RCTPromiseResolveBlock,
+        withRejecter reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard let edgeEventType = MessagingEdgeEventType(rawValue: eventType) else {
+            reject("InvalidEventType", "Invalid eventType: \(eventType)", nil)
+            return
+        }
+        
+        guard let propositionItem = findPropositionItemById(itemId) else {
+            reject("PropositionItemNotFound", "No PropositionItem found with ID: \(itemId)", nil)
+            return
+        }
+        
+        // Generate XDM data using the appropriate method
+        var xdmData: [String: Any]?
+        
+        if let interaction = interaction, let tokens = tokens {
+            xdmData = propositionItem.generateInteractionXdm(interaction, withEdgeEventType: edgeEventType, forTokens: tokens)
+        } else if let interaction = interaction {
+            xdmData = propositionItem.generateInteractionXdm(interaction, withEdgeEventType: edgeEventType)
+        } else {
+            xdmData = propositionItem.generateInteractionXdm(withEdgeEventType: edgeEventType)
+        }
+        
+        if let xdmData = xdmData {
+            resolve(xdmData)
+            print("Successfully generated XDM data for PropositionItem: \(itemId)")
+        } else {
+            reject("XDMGenerationFailed", "Failed to generate XDM data for PropositionItem: \(itemId)", nil)
+        }
+    }
+    
+    /// MARK: - PropositionItem Cache Management
+    
+    /**
+     * Caches a PropositionItem and its parent Proposition for later tracking.
+     * This method should be called when PropositionItems are created from propositions.
+     */
+    private func cachePropositionItem(_ propositionItem: PropositionItem, parentProposition: Proposition) {
+        let itemId = propositionItem.itemId
+        
+        // Cache the PropositionItem
+        propositionItemCache[itemId] = propositionItem
+        
+        // Cache the parent Proposition
+        propositionCache[itemId] = parentProposition
+        
+        print("Cached PropositionItem with ID: \(itemId)")
+    }
+    
+    /**
+     * Caches multiple PropositionItems from a list of propositions.
+     * This is a convenience method for caching all items from multiple propositions.
+     */
+    private func cachePropositionsItems(_ propositions: [Proposition]) {
+        for proposition in propositions {
+            for item in proposition.items {
+                cachePropositionItem(item, parentProposition: proposition)
+            }
+        }
+    }
+    
+    /**
+     * Finds a cached PropositionItem by its ID.
+     */
+    private func findPropositionItemById(_ itemId: String) -> PropositionItem? {
+        return propositionItemCache[itemId]
+    }
+    
+    /**
+     * Finds a cached parent Proposition by PropositionItem ID.
+     */
+    private func findPropositionByItemId(_ itemId: String) -> Proposition? {
+        return propositionCache[itemId]
+    }
+    
+    /**
+     * Clears the PropositionItem cache.
+     * This should be called when propositions are refreshed or when memory cleanup is needed.
+     */
+    @objc
+    func clearPropositionItemCache(
+        withResolver resolve: @escaping RCTPromiseResolveBlock,
+        withRejecter reject: @escaping RCTPromiseRejectBlock
+    ) {
+        propositionItemCache.removeAll()
+        propositionCache.removeAll()
+        print("PropositionItem cache cleared")
+        resolve(nil)
+    }
+    
+    /**
+     * Gets the current size of the PropositionItem cache.
+     * Useful for debugging and monitoring.
+     */
+    @objc
+    func getPropositionItemCacheSize(
+        withResolver resolve: @escaping RCTPromiseResolveBlock,
+        withRejecter reject: @escaping RCTPromiseRejectBlock
+    ) {
+        resolve(propositionItemCache.count)
+    }
+    
+    /**
+     * Checks if a PropositionItem exists in the cache.
+     */
+    @objc
+    func hasPropositionItem(
+        _ itemId: String,
+        withResolver resolve: @escaping RCTPromiseResolveBlock,
+        withRejecter reject: @escaping RCTPromiseRejectBlock
+    ) {
+        resolve(propositionItemCache.keys.contains(itemId))
     }
 
     // Messaging Delegate Methods
