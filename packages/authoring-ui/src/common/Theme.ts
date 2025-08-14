@@ -32,8 +32,6 @@ export interface Colors {
     background?: string;
     text_primary?: string;
     text_secondary?: string;
-    title_background?: string;
-    body_background?: string;
     image_placeholder?: string;
     button_text_color?: string;
 }

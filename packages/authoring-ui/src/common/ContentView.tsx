@@ -106,9 +106,11 @@ const renderViewComponent = (
   onEvent?: (eventName: ContentViewEvent, interactId?: string) => void
 ): React.ReactElement => {
   const style = { ...component.style };
-  const viewStyle = {
+  const viewStyle: ViewStyle = {
     ...(style as ViewStyle),
-    backgroundColor: theme.colors.background,
+    ...(theme.colors.background != null
+      ? { backgroundColor: theme.colors.background }
+      : {}),
   };
 
   return (
@@ -144,9 +146,11 @@ const renderTextComponent = (
   theme: Theme
 ): React.ReactElement => {
   const style = { ...component.style };
-  const textStyle = {
+  const textStyle: ComponentTextStyle = {
     ...(style as ComponentTextStyle),
-    color: theme.colors.text_primary,
+    ...(theme.colors.text_primary != null
+      ? { color: theme.colors.text_primary }
+      : {}),
   };
 
   return (
@@ -172,9 +176,11 @@ const renderTitleComponent = (
   theme: Theme
 ): React.ReactElement => {
   const style = { ...component.style };
-  const titleStyle = {
+  const titleStyle: ComponentTextStyle = {
     ...(style as ComponentTextStyle),
-    color: theme.colors.text_primary,
+    ...(theme.colors.text_primary != null
+      ? { color: theme.colors.text_primary }
+      : {}),
   };
 
   return (
@@ -200,9 +206,11 @@ const renderBodyComponent = (
   theme: Theme
 ): React.ReactElement => {
   const style = { ...component.style };
-  const bodyStyle = {
+  const bodyStyle: ComponentTextStyle = {
     ...(style as ComponentTextStyle),
-    color: theme.colors.text_secondary,
+    ...(theme.colors.text_secondary != null
+      ? { color: theme.colors.text_secondary }
+      : {}),
   };
 
   return (
@@ -236,9 +244,11 @@ const renderImageComponent = (
       ? component.darkUrl
       : component.url;
 
-  const imageStyle = {
+  const imageStyle: ImageStyle = {
     ...(style as ImageStyle),
-    backgroundColor: theme.colors.image_placeholder,
+    ...(theme.colors.image_placeholder != null
+      ? { backgroundColor: theme.colors.image_placeholder }
+      : {}),
   };
 
   return (
@@ -276,7 +286,7 @@ const renderButtonComponent = (
     <View style={style as ButtonStyle}>
       <Button
         title={component.content || ""}
-        color={theme.colors.button_text_color}
+        color={theme.colors.button_text_color ?? undefined}
         onPress={handleButtonPress}
       />
     </View>
