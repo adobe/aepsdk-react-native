@@ -75,12 +75,32 @@ export class ContentProvider {
 
                     // Add to the mapping manager for tracking purposes
                     this.mappingManager.addMapping(contentCard.id, contentCard, proposition);
-
-                    list.push({
-                        id: contentCard.id,
-                        type: TemplateType.SMALL_IMAGE,
-                        smallImageData: contentCard.data.content
-                    })
+                    const templateType = contentCard.data?.meta?.adobe?.template as string;
+                    switch (templateType) {
+                        case "SmallImage":
+                            list.push({
+                                id: contentCard.id,
+                                type: TemplateType.SMALL_IMAGE,
+                                smallImageData: contentCard.data.content
+                            })
+                            break;
+                        case "LargeImage":
+                            list.push({
+                                id: contentCard.id,
+                                type: TemplateType.LARGE_IMAGE,
+                                largeImageData: contentCard.data.content
+                            })
+                            break;
+                        case "ImageOnly":
+                            list.push({
+                                id: contentCard.id,
+                                type: TemplateType.IMAGE_ONLY,
+                                imageOnlyData: contentCard.data.content
+                            })
+                            break;
+                        default:
+                            console.error(`Unknown template type: ${templateType}`);
+                    }
                 }
             }
         }

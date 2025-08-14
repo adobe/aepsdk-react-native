@@ -66,13 +66,13 @@ const ContentCardView = () => {
   };
 
   useEffect(() => {
-    Messaging.updatePropositionsForSurfaces(["rn/ios/small_image"]);
+    Messaging.updatePropositionsForSurfaces(["rn/ios/remote_image"]);
     // Note:
     // - Call above to update the propositions and cache the content locally
     // - Customers may call this function when launching the app
     // MobileCore.trackAction("xyz");
     // const provider = new ContentProvider("card/ms");
-    const provider = new ContentProvider("rn/ios/small_image");
+    const provider = new ContentProvider("rn/ios/remote_image");
     provider
       .getContent()
       .then((content) => {
@@ -246,7 +246,7 @@ const ContentCardView = () => {
                 },
               }}
             >
-                            <ContentView
+              <ContentView
                 key="1"
                 cardHeight={160}
                 data={SMALL_IMAGE_CONTENT_ALL_FIELDS}
@@ -474,7 +474,7 @@ const ContentCardView = () => {
                 },
               }}
             >
-                            <ContentView
+              <ContentView
                 key="7"
                 cardHeight={160}
                 data={LARGE_IMAGE_CONTENT_DARK_URL}
@@ -491,39 +491,52 @@ const ContentCardView = () => {
         {selectedView === "ImageOnly" && (
           <View>
             {renderStyledText("1. All fields")}
-            <ContentView 
-              key="1" 
+            <ContentView
+              key="1"
               data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               listener={(event, identifier) => {
-                console.log("Event triggered: - for imageOnly image 1", event, identifier);
-              }}
-            />
-            
-            {renderStyledText("2. Images with Action url, dismiss style simple - card height 800")}
-            <ContentView 
-              key="2" 
-              data={IMAGE_ONLY_CONTENT_WITH_ACTION_URL}
-              cardHeight={500}
-              listener={(event, identifier) => {
-                console.log("Event triggered: - for imageOnly image 2", event, identifier);
+                console.log(
+                  "Event triggered: - for imageOnly image 1",
+                  event,
+                  identifier
+                );
               }}
             />
 
-            {renderStyledText("3.Adobe default image, dismiss style circle - card height 400")}
-            <ContentView 
-              key="3" 
+            {renderStyledText(
+              "2. Images with Action url, dismiss style simple - card height 800"
+            )}
+            <ContentView
+              key="2"
+              data={IMAGE_ONLY_CONTENT_WITH_ACTION_URL}
+              cardHeight={500}
+              listener={(event, identifier) => {
+                console.log(
+                  "Event triggered: - for imageOnly image 2",
+                  event,
+                  identifier
+                );
+              }}
+            />
+
+            {renderStyledText(
+              "3.Adobe default image, dismiss style circle - card height 400"
+            )}
+            <ContentView
+              key="3"
               data={IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE}
               cardHeight={400}
               listener={(event, identifier) => {
-                console.log("Event triggered: - for imageOnly image 3", event, identifier);
+                console.log(
+                  "Event triggered: - for imageOnly image 3",
+                  event,
+                  identifier
+                );
               }}
             />
 
             {renderStyledText("4. No dismiss button - no card height")}
-            <ContentView
-              key="4"
-              data={IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON}
-            />
+            <ContentView key="4" data={IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON} />
 
             {renderStyledText("5. [image] Invalid")}
             <ContentView
@@ -531,7 +544,6 @@ const ContentCardView = () => {
               data={IMAGE_ONLY_CONTENT_INVALID_IMAGE}
               cardHeight={200}
             />
-
 
             {renderStyledText("6.[action] No actionUrl")}
             <ContentView
@@ -548,30 +560,36 @@ const ContentCardView = () => {
               styleOverrides={{
                 imageOnlyStyle: {
                   image: {
-                    aspectRatio:  1/ 1,
+                    aspectRatio: 1 / 1,
                   },
                 },
               }}
               listener={(event, identifier) => {
-                console.log("Event triggered: - for imageOnly image 7", event, identifier);
+                console.log(
+                  "Event triggered: - for imageOnly image 7",
+                  event,
+                  identifier
+                );
               }}
             />
 
             {renderStyledText("8.[style] Custom height (150)")}
             <ContentView
-                key="8"
-                data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
-                cardHeight={400}
-                styleOverrides={{
-                  imageOnlyStyle: {
-                    image: {
-                      height: 150,
-                    },
+              key="8"
+              data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
+              cardHeight={400}
+              styleOverrides={{
+                imageOnlyStyle: {
+                  image: {
+                    height: 150,
                   },
-                }}
-              />
+                },
+              }}
+            />
 
-            {renderStyledText("9. [style] Custom width (80%), set image container backgroud color")}
+            {renderStyledText(
+              "9. [style] Custom width (80%), set image container backgroud color"
+            )}
             <ContentView
               key="9"
               data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
@@ -599,9 +617,9 @@ const ContentCardView = () => {
                     borderRadius: 80,
                     margin: 30,
                   },
-                   image: {
-                    width: '50%',
-                    resizeMode: 'stretch'
+                  image: {
+                    width: "50%",
+                    resizeMode: "stretch",
                   },
                 },
               }}
@@ -620,7 +638,7 @@ const ContentCardView = () => {
                     borderColor: "#FF69B4",
                     maxHeight: 100,
                   },
-                   image: {
+                  image: {
                     resizeMode: "center",
                     backgroundColor: "#79f4bbff",
                   },
@@ -657,7 +675,9 @@ const ContentCardView = () => {
               cardHeight={200}
             />
 
-            {renderStyledText("1.[image] No Light Mode (only dark mode) - no actionUrl")}
+            {renderStyledText(
+              "1.[image] No Light Mode (only dark mode) - no actionUrl"
+            )}
             <ContentView
               key="15"
               data={IMAGE_ONLY_CONTENT_NO_LIGHT_MODE}
@@ -1161,7 +1181,8 @@ const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
     actionUrl: "https://www.adobe.com/",
     image: {
       url: "https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg",
-      darkUrl: "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
+      darkUrl:
+        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
       alt: "flight offer",
     },
     dismissBtn: {
@@ -1177,7 +1198,8 @@ const IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
     actionUrl: "https://google.com",
     image: {
       url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
-      darkUrl: "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
+      darkUrl:
+        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
       alt: "flight offer",
     },
   },
@@ -1190,7 +1212,8 @@ const IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE: ContentTemplate = {
     actionUrl: "https://google.com",
     image: {
       url: "https://i.ibb.co/0X8R3TG/Messages-24.png",
-      darkUrl: "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
+      darkUrl:
+        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
       alt: "flight offer",
     },
     dismissBtn: {
@@ -1215,14 +1238,14 @@ const IMAGE_ONLY_CONTENT_INVALID_IMAGE: ContentTemplate = {
   },
 };
 
-
 const IMAGE_ONLY_CONTENT_NO_ACTION: ContentTemplate = {
   id: "image-only-no-action",
   type: TemplateType.IMAGE_ONLY,
   imageOnlyData: {
     image: {
       url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
-      darkUrl: "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
+      darkUrl:
+        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
       alt: "non-clickable image",
     },
     dismissBtn: {
@@ -1252,7 +1275,8 @@ const IMAGE_ONLY_CONTENT_NO_LIGHT_MODE: ContentTemplate = {
   imageOnlyData: {
     image: {
       url: "",
-      darkUrl: "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
+      darkUrl:
+        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
       alt: "basketball icon",
     },
     dismissBtn: {
@@ -1268,7 +1292,8 @@ const IMAGE_ONLY_CONTENT_WITH_ACTION_URL: ContentTemplate = {
     actionUrl: "https://google.com",
     image: {
       url: "https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg",
-      darkUrl: "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
+      darkUrl:
+        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
       alt: "with action URL - Google Images",
     },
     dismissBtn: {
