@@ -15,6 +15,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@adobe/react-native-aepui": "^1.0.0",
     "@adobe/react-native-aepassurance": "^7.0.0",
     "@adobe/react-native-aepcampaignclassic": "^7.0.0",
     "@adobe/react-native-aepcore": "^7.0.0",

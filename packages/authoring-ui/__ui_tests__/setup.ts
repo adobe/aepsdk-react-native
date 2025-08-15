@@ -1,0 +1,33 @@
+/*
+    Copyright 2025 Adobe. All rights reserved.
+    This file is licensed to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+    or agreed to in writing, software distributed under the License is
+    distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS OF
+    ANY KIND, either express or implied. See the License for the specific
+    language governing permissions and limitations under the License.
+*/
+// Global test setup
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+// Suppress console warnings during tests
+const originalWarn = console.warn;
+beforeAll(() => {
+    console.warn = (...args: any[]) => {
+        if (
+            typeof args[0] === 'string' &&
+            args[0].includes('Warning: ReactDOM.render is no longer supported')
+        ) {
+            return;
+        }
+        originalWarn.call(console, ...args);
+    };
+});
+
+afterAll(() => {
+    console.warn = originalWarn;
+}); 
