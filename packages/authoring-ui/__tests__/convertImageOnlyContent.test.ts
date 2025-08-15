@@ -77,7 +77,8 @@ describe('convertImageOnlyContentToComponent', () => {
 
             const result = convertImageOnlyContentToComponent(data);
 
-            expect(result.actionUrl).toBe('https://example.com/action');
+            const mainContent = result.children![0];
+            expect(mainContent.actionUrl).toBe('https://example.com/action');
         });
 
         it('does not include actionUrl when not provided', () => {
@@ -90,7 +91,8 @@ describe('convertImageOnlyContentToComponent', () => {
 
             const result = convertImageOnlyContentToComponent(data);
 
-            expect(result.actionUrl).toBeUndefined();
+            const mainContent = result.children![0];
+            expect(mainContent.actionUrl).toBeUndefined();
         });
     });
 
@@ -177,7 +179,7 @@ describe('convertImageOnlyContentToComponent', () => {
                 },
             };
 
-            const result = convertImageOnlyContentToComponent(data, styleOverrides);
+            const result = convertImageOnlyContentToComponent(data, undefined, styleOverrides);
 
             expect(result.style).toMatchObject({
                 backgroundColor: '#ff0000',
@@ -200,7 +202,7 @@ describe('convertImageOnlyContentToComponent', () => {
                 },
             };
 
-            const result = convertImageOnlyContentToComponent(data, styleOverrides);
+            const result = convertImageOnlyContentToComponent(data, undefined, styleOverrides);
 
             const imageContainer = result.children![0].children![0];
             expect(imageContainer.style).toMatchObject({
@@ -239,10 +241,12 @@ describe('convertImageOnlyContentToComponent', () => {
             // Root component
             expect(result.type).toBe('view');
             expect(result.children).toHaveLength(2); // Main content + dismiss button
-            expect(result.actionUrl).toBe('https://example.com/action');
+            
+            // Main content should have actionUrl
+            const mainContent = result.children![0];
+            expect(mainContent.actionUrl).toBe('https://example.com/action');
 
             // Main content container
-            const mainContent = result.children![0];
             expect(mainContent.type).toBe('view');
             expect(mainContent.children).toHaveLength(1); // Only image container
 
@@ -274,10 +278,11 @@ describe('convertImageOnlyContentToComponent', () => {
             // Root component
             expect(result.type).toBe('view');
             expect(result.children).toHaveLength(1); // Only main content
-            expect(result.actionUrl).toBeUndefined();
+            
+            const mainContent = result.children![0];
+            expect(mainContent.actionUrl).toBeUndefined();
 
             // Main content container
-            const mainContent = result.children![0];
             expect(mainContent.type).toBe('view');
             expect(mainContent.children).toHaveLength(1); // Only image container
 
@@ -326,11 +331,249 @@ describe('convertImageOnlyContentToComponent', () => {
             const result = convertImageOnlyContentToComponent(data);
 
             expect(result.children).toHaveLength(2); // Main content + dismiss button
-            expect(result.actionUrl).toBe('https://example.com/action');
+            
+            const mainContent = result.children![0];
+            expect(mainContent.actionUrl).toBe('https://example.com/action');
 
             const dismissButton = result.children![1];
             expect(dismissButton.type).toBe('dismissButton');
             expect(dismissButton.dismissType).toBe('circle');
+        });
+    });
+
+    describe('Height parameter handling', () => {
+        it('applies height to card and imageContainer maxHeight', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                    alt: 'Test Image',
+                },
+            };
+
+            const height = 250;
+            const result = convertImageOnlyContentToComponent(data, height);
+
+            expect(result.style).toMatchObject({
+                maxHeight: 250,
+            });
+
+            const imageContainer = result.children![0].children![0];
+            expect(imageContainer.style).toMatchObject({
+                maxHeight: 250,
+            });
+        });
+
+        it('combines height with style overrides correctly', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                    alt: 'Test Image',
+                },
+            };
+
+            const height = 200;
+            const styleOverrides: ImageOnlyContentStyle = {
+                card: {
+                    backgroundColor: '#ff0000',
+                    borderRadius: 20,
+                },
+                imageContainer: {
+                    borderRadius: 15,
+                },
+            };
+
+            const result = convertImageOnlyContentToComponent(data, height, styleOverrides);
+
+            // Height should be applied to maxHeight
+            expect(result.style).toMatchObject({
+                backgroundColor: '#ff0000',
+                borderRadius: 20,
+                maxHeight: 200,
+            });
+
+            const imageContainer = result.children![0].children![0];
+            expect(imageContainer.style).toMatchObject({
+                borderRadius: 15,
+                maxHeight: 200,
+            });
+        });
+
+        it('works without height parameter', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                    alt: 'Test Image',
+                },
+            };
+
+            const result = convertImageOnlyContentToComponent(data);
+
+            expect(result.style).not.toHaveProperty('maxHeight');
+            
+            const imageContainer = result.children![0].children![0];
+            expect(imageContainer.style).toMatchObject({
+                maxHeight: 300, // Default maxHeight from styles
+            });
+        });
+
+        it('overrides existing maxHeight in style overrides when height is provided', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                    alt: 'Test Image',
+                },
+            };
+
+            const height = 180;
+            const styleOverrides: ImageOnlyContentStyle = {
+                card: {
+                    maxHeight: 300, // This should be overridden by height parameter
+                },
+                imageContainer: {
+                    maxHeight: 400, // This should be overridden by height parameter
+                },
+            };
+
+            const result = convertImageOnlyContentToComponent(data, height, styleOverrides);
+
+            expect(result.style).toMatchObject({
+                maxHeight: 180, // Height parameter takes precedence
+            });
+
+            const imageContainer = result.children![0].children![0];
+            expect(imageContainer.style).toMatchObject({
+                maxHeight: 180, // Height parameter takes precedence
+            });
+        });
+    });
+
+    describe('ActionView property validation', () => {
+        it('sets actionView to true on main content container', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                    alt: 'Test Image',
+                },
+            };
+
+            const result = convertImageOnlyContentToComponent(data);
+
+            const mainContent = result.children![0];
+            expect(mainContent.actionView).toBe(true);
+        });
+
+        it('sets actionView to true even when actionUrl is not provided', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                    alt: 'Test Image',
+                },
+            };
+
+            const result = convertImageOnlyContentToComponent(data);
+
+            const mainContent = result.children![0];
+            expect(mainContent.actionView).toBe(true);
+            expect(mainContent.actionUrl).toBeUndefined();
+        });
+
+        it('sets actionView to true and includes actionUrl when provided', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                    alt: 'Test Image',
+                },
+                actionUrl: 'https://example.com/action',
+            };
+
+            const result = convertImageOnlyContentToComponent(data);
+
+            const mainContent = result.children![0];
+            expect(mainContent.actionView).toBe(true);
+            expect(mainContent.actionUrl).toBe('https://example.com/action');
+        });
+    });
+
+    describe('Parameter combinations', () => {
+        it('handles all parameters together', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                    darkUrl: 'https://example.com/dark.jpg',
+                    alt: 'Test Image',
+                },
+                actionUrl: 'https://example.com/action',
+                dismissBtn: { style: 'circle' },
+            };
+
+            const height = 220;
+            const styleOverrides: ImageOnlyContentStyle = {
+                card: {
+                    backgroundColor: '#00ff00',
+                    borderRadius: 25,
+                },
+                image: {
+                    borderRadius: 10,
+                },
+            };
+
+            const result = convertImageOnlyContentToComponent(data, height, styleOverrides);
+
+            // Root component
+            expect(result.type).toBe('view');
+            expect(result.style).toMatchObject({
+                backgroundColor: '#00ff00',
+                borderRadius: 25,
+                maxHeight: 220,
+            });
+            expect(result.children).toHaveLength(2);
+
+            // Main content
+            const mainContent = result.children![0];
+            expect(mainContent.actionView).toBe(true);
+            expect(mainContent.actionUrl).toBe('https://example.com/action');
+
+            // Image container
+            const imageContainer = mainContent.children![0];
+            expect(imageContainer.style).toMatchObject({
+                maxHeight: 220,
+            });
+
+            // Image
+            const imageComponent = imageContainer.children![0];
+            expect(imageComponent.type).toBe('image');
+            expect(imageComponent.url).toBe('https://example.com/image.jpg');
+            expect(imageComponent.darkUrl).toBe('https://example.com/dark.jpg');
+            expect(imageComponent.alt).toBe('Test Image');
+            expect(imageComponent.style).toMatchObject({
+                borderRadius: 10,
+            });
+
+            // Dismiss button
+            const dismissButton = result.children![1];
+            expect(dismissButton.type).toBe('dismissButton');
+            expect(dismissButton.dismissType).toBe('circle');
+            expect(dismissButton.interactId).toBe('dismiss_button');
+        });
+
+        it('handles height parameter only', () => {
+            const data: ImageOnlyContentData = {
+                image: {
+                    url: 'https://example.com/image.jpg',
+                },
+            };
+
+            const height = 160;
+            const result = convertImageOnlyContentToComponent(data, height);
+
+            expect(result.style).toMatchObject({
+                maxHeight: 160,
+            });
+
+            const imageContainer = result.children![0].children![0];
+            expect(imageContainer.style).toMatchObject({
+                maxHeight: 160,
+            });
         });
     });
 }); 
