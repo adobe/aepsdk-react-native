@@ -11,11 +11,12 @@
 */
 
 import { PersonalizationSchema } from './PersonalizationSchema';
+import { Trackable } from './Trackable';
 
 type ContentCardTemplate = 'SmallImage';
 type DismissButtonStyle = 'circle' | 'none' | 'simple';
 
-export interface ContentCard {
+export interface ContentCard extends Trackable {
   id: string;
   data: {
     contentType: 'application/json';
