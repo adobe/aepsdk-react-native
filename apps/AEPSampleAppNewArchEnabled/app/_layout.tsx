@@ -42,7 +42,7 @@ export default function RootLayout() {
     // For class components, call initializeWithAppId inside componentDidMount.
     MobileCore.setLogLevel(LogLevel.DEBUG);
     MobileCore.initializeWithAppId(
-      "3149c49c3910/473386a6e5b0/launch-6099493a8c97-development"
+      "staging/1b50a869c4a2/bcd1a623883f/launch-e44d085fc760-development"
     )
       .then(() => {
         console.log("AEP SDK Initialized");
