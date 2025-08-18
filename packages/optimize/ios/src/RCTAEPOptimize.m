@@ -394,6 +394,13 @@ RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
     [offersArray addObject:[self convertOfferToDict:offer]];
   }
   [propositionDict setValue:offersArray forKey:@"items"];
+
+  if ([proposition activity]) {
+    [propositionDict setValue:[proposition activity] forKey:@"activity"];
+  }
+  if ([proposition placement]) {
+    [propositionDict setValue:[proposition placement] forKey:@"placement"];
+  }
   return propositionDict;
 }
 

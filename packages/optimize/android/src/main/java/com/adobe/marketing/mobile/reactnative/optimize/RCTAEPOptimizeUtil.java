@@ -48,6 +48,12 @@ class RCTAEPOptimizeUtil {
             offersWritableArray.pushMap(convertOfferToWritableMap(offer));
         }
         propositionWritableMap.putArray("items", offersWritableArray);
+        if (proposition.getActivity() != null) {
+            propositionWritableMap.putMap("activity", convertMapToWritableMap(proposition.getActivity()));
+        }
+        if (proposition.getPlacement() != null) {
+            propositionWritableMap.putMap("placement", convertMapToWritableMap(proposition.getPlacement()));
+        }
         return propositionWritableMap;
     }
     static WritableMap convertOfferToWritableMap(final Offer offer) {
