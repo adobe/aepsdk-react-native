@@ -25,6 +25,7 @@ import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.adobe.marketing.mobile.util.DataReader;
+import com.adobe.marketing.mobile.util.DataReaderException;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -148,21 +149,27 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
             }
 
             String activityId = null;
-
-            Map<String, Object> activity = proposition.getActivity();
-            if (activity != null && activity.containsKey("id")) {
-                activityId = DataReader.getString(activity, "id");
-            } else {
-                Map<String, Object> scopeDetails = proposition.getScopeDetails();
-                if (scopeDetails != null && scopeDetails.containsKey("activity")) {
-                    Map<String, Object> scopeDetailsActivity = DataReader.getMap(scopeDetails, "activity");
-                    if (scopeDetailsActivity != null && scopeDetailsActivity.containsKey("id")) {
-                        activityId = DataReader.getString(scopeDetailsActivity, "id");
+            try {
+                Map<String, Object> activity = proposition.getActivity();
+                if (activity != null && activity.containsKey("id")) {
+                    activityId = DataReader.getString(activity, "id");
+                } else {
+                    Map<String, Object> scopeDetails = proposition.getScopeDetails();
+                    if (scopeDetails != null && scopeDetails.containsKey("activity")) {
+                        Map<String, Object> scopeDetailsActivity = DataReader.getTypedMap(Object.class, scopeDetails, "activity");
+                        if (scopeDetailsActivity != null && scopeDetailsActivity.containsKey("id")) {
+                            activityId = DataReader.getString(scopeDetailsActivity, "id");
+                        }
                     }
                 }
+            } catch (DataReaderException e) {
+                Log.w(TAG, "Failed to extract activity ID from proposition: " + e.getMessage());
+                continue;
             }
 
-            propositionCache.put(activityId, proposition);
+            if (activityId != null) {
+                propositionCache.put(activityId, proposition);
+            }
         }
     }
 
