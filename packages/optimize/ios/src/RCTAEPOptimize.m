@@ -52,18 +52,46 @@ RCT_EXPORT_METHOD(clearCachedPropositions) {
   [AEPMobileOptimize clearCachedPropositions];
 }
 
-RCT_EXPORT_METHOD(updatePropositions
-                  : (NSArray<NSString *> *)decisionsScopes xdm
-                  : (NSDictionary<NSString *, id> *)xdm data
-                  : (NSDictionary<NSString *, id> *)data) {
-
-  [AEPLog traceWithLabel:TAG message:@"updatePropositions is called."];
-  NSArray<AEPDecisionScope *> *decisionScopesArray =
-      [self createDecisionScopesArray:decisionsScopes];
-  [AEPMobileOptimize updatePropositions:decisionScopesArray
-                                withXdm:xdm
-                                andData:data];
+// Helper method to handle proposition dictionary creation
+- (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)createPropositionDictionary:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict {
+    NSMutableDictionary<NSString *, NSDictionary<NSString *, id> *> *propositionDictionary = [[NSMutableDictionary alloc] initWithCapacity:decisionScopePropositionDict.count];
+    
+    for (AEPDecisionScope *key in decisionScopePropositionDict) {
+        AEPOptimizeProposition *proposition = decisionScopePropositionDict[key];
+        if (proposition) {
+            [propositionDictionary setValue:[self convertPropositionToDict:proposition] forKey:key.name];
+        }
+    }
+    return propositionDictionary;
 }
+
+// Unified method that handles both callback and non-callback cases
+RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
+                  withXdm:(NSDictionary *)xdm
+                  andData:(NSDictionary *)data
+                  successCallback:(RCTResponseSenderBlock)successCallback
+                  errorCallback:(RCTResponseSenderBlock)errorCallback) {
+    [AEPLog traceWithLabel:TAG message:@"updatePropositions is called."];
+    NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
+    [AEPMobileOptimize updatePropositions:scopes
+                                   withXdm:xdm
+                                   andData:data
+                                completion:^(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *decisionScopePropositionDict, NSError *error) {
+        if (error) {
+            NSDictionary *errorDict = [self convertNSErrorToOptimizeErrorDict:error];
+            if (errorCallback != nil) {
+                errorCallback(@[errorDict]);
+            }
+        } 
+        if (decisionScopePropositionDict) {
+            NSDictionary *propositions = [self createCallbackResponse:decisionScopePropositionDict];
+            if (successCallback != nil) {
+                successCallback(@[propositions]);
+            }
+        }
+    }];
+}
+
 
 RCT_EXPORT_METHOD(getPropositions
                   : (NSArray<NSString *> *)decisionScopes resolver
@@ -405,6 +433,48 @@ RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
   default:
     return @"";
   }
+}
+
+// Helper to convert NSError to a structured error dictionary for JS
+- (NSDictionary *)convertNSErrorToOptimizeErrorDict:(NSError *)error {
+    if (!error) return @{};
+    NSMutableDictionary *errorDict = [NSMutableDictionary dictionary];
+
+    // Log for debugging
+    NSLog(@"[AEPOptimize] NSError.domain: %@", error.domain);
+    NSLog(@"[AEPOptimize] NSError.code: %ld", (long)error.code);
+    NSLog(@"[AEPOptimize] NSError.userInfo: %@", error.userInfo);
+    NSLog(@"[AEPOptimize] NSError.localizedDescription: %@", error.localizedDescription);
+
+    // Extract AEPOptimizeError properties from userInfo (matches Android structure)
+    NSDictionary *userInfo = error.userInfo;
+
+    errorDict[@"type"] = userInfo[@"type"] ?: @"";
+    errorDict[@"status"] = userInfo[@"status"] ?: @(error.code);
+    errorDict[@"title"] = userInfo[@"title"] ?: @"";
+    errorDict[@"detail"] = userInfo[@"detail"] ?: @"";
+    errorDict[@"report"] = userInfo[@"report"] ?: @{};
+    
+    // Handle aepError - check for both nil and NSNull
+    id aepErrorValue = userInfo[@"aepError"];
+    if (aepErrorValue && aepErrorValue != [NSNull null]) {
+        errorDict[@"aepError"] = aepErrorValue;
+    } else {
+        errorDict[@"aepError"] = @"general.unexpected";
+    }
+
+    return errorDict;
+}
+
+// Helper method to create standardized response for callbacks
+- (NSDictionary *)createCallbackResponse:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict {
+    
+    if (decisionScopePropositionDict && [decisionScopePropositionDict count] > 0) {
+        // Return the propositions map directly
+        return [self createPropositionDictionary:decisionScopePropositionDict];
+    }
+    
+    return @{};
 }
 
 - (void)handleError:(NSError *)error rejecter:(RCTPromiseRejectBlock)reject {

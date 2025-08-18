@@ -13,6 +13,8 @@ package com.adobe.marketing.mobile.reactnative.optimize;
 import android.util.Log;
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
+import com.adobe.marketing.mobile.optimize.AdobeCallbackWithOptimizeError;
+import com.adobe.marketing.mobile.optimize.AEPOptimizeError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
@@ -31,13 +33,16 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import androidx.annotation.Nullable;
 
 public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
@@ -82,12 +87,34 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data) {
+    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data, @Nullable final Callback successCallback, @Nullable final Callback errorCallback) {
+        Log.d(TAG, "updatePropositions called");
         final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
         Map<String, Object> mapXdm = xdm != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(xdm) : Collections.<String, Object>emptyMap();
         Map<String, Object> mapData = data != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(data) : Collections.<String, Object>emptyMap();
-        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData);
+        
+        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData, new AdobeCallbackWithOptimizeError<Map<DecisionScope, OptimizeProposition>>() {
+            @Override
+            public void fail(final AEPOptimizeError adobeError) {
+                Log.e(TAG, "updatePropositions callback failed: " );
+                if (errorCallback != null) {
+                    final WritableMap response = RCTAEPOptimizeUtil.convertAEPOptimizeErrorToWritableMap(adobeError);
+                    Log.d(TAG, "Invoking JS errorCallback with error: ");
+                    errorCallback.invoke(response);
+                }
+            }
+
+            @Override
+            public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+                Log.d(TAG, "updatePropositions callback success.");
+                if (successCallback != null) {
+                    final WritableMap response = RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap);
+                    Log.d(TAG, "Invoking JS successCallback with success: " + response.toString());
+                    successCallback.invoke(response);
+                }
+            }
+        });
     }
 
     @ReactMethod
