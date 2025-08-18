@@ -337,11 +337,14 @@ RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
         
         NSString *activityId = nil;
 
-        NSDictionary *activity = [proposition activity];
-        if (activity && [activity objectForKey:@"id"]) {
-            activityId = [activity objectForKey:@"id"];
+        NSDictionary *propositionDict = [self convertPropositionToDict:proposition];
+        NSDictionary *activity = [propositionDict valueForKey:@"activity"];
+        if ([propositionDict objectForKey:@"activity"]) {
+          if (activity && [activity objectForKey:@"id"]) {
+              activityId = [activity objectForKey:@"id"];
+          }
         } else {
-          NSDictionary *scopeDetails = [proposition scopeDetails];
+          NSDictionary *scopeDetails = [propositionDict valueForKey:@"scopeDetails"];
           if (scopeDetails && [scopeDetails objectForKey:@"activity"]) {
             NSDictionary *scopeDetailsActivity = [scopeDetails objectForKey:@"activity"];
             if (scopeDetailsActivity && [scopeDetailsActivity objectForKey:@"id"]) {
