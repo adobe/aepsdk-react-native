@@ -14,25 +14,53 @@ import Offer from './Offer';
 
 const RCTAEPOptimize = require('react-native').NativeModules.AEPOptimize;
 
+interface Activity {
+    id: string;
+    etag: string;
+}
+
+interface Placement {
+    id: string;
+    etag: string;
+}
+
 interface PropositionEventData {
     id: string;
     items: Array<Offer>;
     scope: string;
-    scopeDetails: Map<string, any>;
+    scopeDetails?: Map<string, any>;
+    activity?: Activity;
+    placement?: Placement;
 }
 
 class Proposition {
     id: string;
     items: Array<Offer>;
     scope: string;
-    scopeDetails: Map<string, any>;
+    scopeDetails?: Map<string, any>;
+    activity?: Activity;
+    placement?: Placement;
 
     constructor(eventData: PropositionEventData) {
         this.id = eventData['id'];
         this.scope = eventData['scope'];
-        this.scopeDetails = eventData['scopeDetails'];
+        if (eventData['scopeDetails']) {
+            this.scopeDetails = eventData['scopeDetails'];
+        }
+        if (eventData['activity']) {
+            this.activity = eventData['activity'];
+        }
+        if (eventData['placement']) {
+            this.placement = eventData['placement'];
+        }
         if(eventData['items']) {
-            this.items = eventData['items'].map((offer) => new Offer({ ...offer, propositionId: this.id }));                
+            let uniquePropositionId: string | undefined = undefined;
+            if (this.activity && this.activity['id']) {
+                uniquePropositionId = this.activity['id'];
+            } else if (this.scopeDetails && this.scopeDetails['activity'] && this.scopeDetails['activity']['id']) {
+                uniquePropositionId = this.scopeDetails['activity']['id'];
+            }
+            this.items = eventData['items'].map((offer) => new Offer({ ...offer, uniquePropositionId}));                
         }else {
             this.items = new Array();
         }           

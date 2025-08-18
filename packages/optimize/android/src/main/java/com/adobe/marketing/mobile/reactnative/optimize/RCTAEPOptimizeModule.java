@@ -22,6 +22,7 @@ import com.adobe.marketing.mobile.optimize.OfferType;
 import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
+import com.adobe.marketing.mobile.util.DataReader;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -74,7 +75,10 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void clearCachedPropositions() {
+        // clear the native cache
         Optimize.clearCachedPropositions();
+        // clear the react native cache
+        clearPropositionsCache();
     }
 
     @ReactMethod
@@ -98,7 +102,6 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-                clearPropositionsCache();
                 cachePropositionOffers(decisionScopePropositionMap);
                 final WritableMap writableMap = new WritableNativeMap();
                 for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
@@ -109,19 +112,33 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         });
     }
 
-    public void cachePropositionOffers(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+    private void cachePropositionOffers(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
         for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
             OptimizeProposition proposition = entry.getValue();
             if (proposition == null) {
                 continue;
             }
 
-            String propositionId = proposition.getId();
-            propositionCache.put(propositionId, proposition);
+            String activityId = null;
+
+            Map<String, Object> activity = proposition.getActivity();
+            if (activity != null && activity.containsKey("id")) {
+                activityId = DataReader.getString(activity, "id");
+            } else {
+                Map<String, Object> scopeDetails = proposition.getScopeDetails();
+                if (scopeDetails != null && scopeDetails.containsKey("activity")) {
+                    Map<String, Object> scopeDetailsActivity = DataReader.getMap(scopeDetails, "activity");
+                    if (scopeDetailsActivity != null && scopeDetailsActivity.containsKey("id")) {
+                        activityId = DataReader.getString(scopeDetailsActivity, "id");
+                    }
+                }
+            }
+
+            propositionCache.put(activityId, proposition);
         }
     }
 
-    public void clearPropositionsCache() {
+    private void clearPropositionsCache() {
         propositionCache.clear();
     }
 

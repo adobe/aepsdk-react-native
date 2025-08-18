@@ -104,7 +104,8 @@ export default () => {
       setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
       setJsonProposition(propositions.get(decisionScopeJson.getName()));
       setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
-      console.log('propositions', propositions);
+      const propositionObject = Object.fromEntries(propositions);
+      console.log('propositions', JSON.stringify(propositionObject, null, 2));
     }
   };
 

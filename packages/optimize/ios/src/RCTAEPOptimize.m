@@ -82,7 +82,6 @@ RCT_EXPORT_METHOD(getPropositions
                reject([NSString stringWithFormat:@"%ld", (long)error.code],
                       error.description, nil);
              } else {
-              [self clearPropositionsCache];
               [self cachePropositions:decisionScopePropositionDict];
 
                NSDictionary<NSString *, NSDictionary<NSString *, id> *>
@@ -266,17 +265,17 @@ RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
       continue;
     }
     
-    NSString *propositionId = [offerDict objectForKey:@"propositionId"];
+    NSString *uniquePropositionId = [offerDict objectForKey:@"uniquePropositionId"];
     NSString *offerId = [offerDict objectForKey:@"id"];
         
-    if (!propositionId || !offerId) {
-      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"getNativeOffersFromOffersArray: propositionId or offerId is null for offer: %@", offerDict]];
+    if (!uniquePropositionId || !offerId) {
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"getNativeOffersFromOffersArray: uniquePropositionId or offerId is null for offer: %@", offerDict]];
       continue;
     }
     
-    AEPOptimizeProposition *proposition = [propositionCache objectForKey:propositionId];
+    AEPOptimizeProposition *proposition = [propositionCache objectForKey:uniquePropositionId];
     if (!proposition) {
-      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"getNativeOffersFromOffersArray: proposition not found in cache for propositionId: %@", propositionId]];
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"getNativeOffersFromOffersArray: proposition not found in cache for uniquePropositionId: %@", uniquePropositionId]];
       continue;
     }
 
@@ -297,8 +296,28 @@ RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
 - (void)cachePropositions:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict {
     for (AEPDecisionScope *key in decisionScopePropositionDict) {
         AEPOptimizeProposition *proposition = decisionScopePropositionDict[key];
-        if (proposition && proposition.id) {
-            [propositionCache setObject:proposition forKey:proposition.id];
+        if (!proposition) {
+            [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"cachePropositions: proposition is null for decisionScope: %@", key]];
+            continue;
+        }
+        
+        NSString *activityId = nil;
+
+        NSDictionary *activity = [proposition activity];
+        if (activity && [activity objectForKey:@"id"]) {
+            activityId = [activity objectForKey:@"id"];
+        } else {
+          NSDictionary *scopeDetails = [proposition scopeDetails];
+          if (scopeDetails && [scopeDetails objectForKey:@"activity"]) {
+            NSDictionary *scopeDetailsActivity = [scopeDetails objectForKey:@"activity"];
+            if (scopeDetailsActivity && [scopeDetailsActivity objectForKey:@"id"]) {
+              activityId = [scopeDetailsActivity objectForKey:@"id"];
+            }
+          }
+        }
+
+        if (activityId) {
+          [propositionCache setObject:proposition forKey:activityId];
         }
     }
 }

@@ -201,17 +201,17 @@ class RCTAEPOptimizeUtil {
                 continue;
             }
 
-            String propositionId = offer.getString("propositionId");
+            String uniquePropositionId = offer.getString(RCTAEPOptimizeConstants.UNIQUE_PROPOSITION_ID_KEY);
             String offerId = offer.getString("id");
 
-            if (propositionId == null || offerId == null) {
-                Log.d(TAG, "getNativeOffers: propositionId or offerId is null for offer: " + offer.toString());
+            if (uniquePropositionId == null || offerId == null) {
+                Log.d(TAG, "getNativeOffers: uniquePropositionId or offerId is null for offer: " + offer.toString());
                 continue;
             }
 
-            OptimizeProposition proposition = propositionCache.get(propositionId);
+            OptimizeProposition proposition = propositionCache.get(uniquePropositionId);
             if (proposition == null) {
-                Log.d(TAG, "getNativeOffers: proposition not found in cache for propositionId: " + propositionId);
+                Log.d(TAG, "getNativeOffers: proposition not found in cache for uniquePropositionId: " + uniquePropositionId);
                 continue;
             }
 
