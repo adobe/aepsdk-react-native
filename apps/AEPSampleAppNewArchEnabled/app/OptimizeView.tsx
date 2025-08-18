@@ -73,7 +73,7 @@ export default () => {
     decisionScopeImage,
     decisionScopeHtml,
     decisionScopeJson,
-    decisionScopeTargetMbox,
+    decisionScopeTargetMbox
   ];
 
   const optimizeExtensionVersion = async () => {
@@ -85,6 +85,21 @@ export default () => {
   const updatePropositions = () => {
     Optimize.updatePropositions(decisionScopes);
     console.log('Updated Propositions');
+  };
+
+  const testUpdatePropositionsCallback = () => {
+    console.log('Testing updatePropositions with callback...');
+    Optimize.updatePropositions(
+      decisionScopes,
+      undefined,
+      undefined,
+      (response) => {
+        console.log('Callback received:', response);
+      },
+      (error) => {
+        console.log('Error:', error);
+      }
+    );
   };
 
   const getPropositions = async () => {
@@ -328,6 +343,9 @@ export default () => {
       </View>
       <View style={{margin: 5}}>
         <Button title="Update Propositions" onPress={updatePropositions} />
+      </View>
+      <View style={{margin: 5}}>
+        <Button title="Test Update Propositions Callback" onPress={testUpdatePropositionsCallback} />
       </View>
       <View style={{margin: 5}}>
         <Button title="Get Propositions" onPress={getPropositions} />

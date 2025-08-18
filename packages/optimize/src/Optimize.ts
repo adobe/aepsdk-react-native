@@ -15,13 +15,21 @@ import { NativeEventEmitter } from 'react-native';
 import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
 import { AdobePropositionCallback }  from './models/AdobePropositionCallback';
+import AEPOptimizeError from './models/AEPOptimizeError';
+
 
 interface IOptimize {
   extensionVersion: () => Promise<string>;
   onPropositionUpdate: (adobeCallback: AdobePropositionCallback) => void;
   clearCachedPropositions: () => void;
-  getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
-  updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) => void
+  getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>;
+  updatePropositions: (
+    decisionScopes: Array<DecisionScope>,
+    xdm?: Map<string, any>,
+    data?: Map<string, any>,
+    onSuccess?: (response: Map<string, Proposition>) => void,
+    onError?: (error: AEPOptimizeError) => void
+  ) => void;
 }
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
@@ -94,11 +102,25 @@ const Optimize: IOptimize = {
 * @param {Array<DecisionScope>} decisionScopes - containing scopes for which offers need to be updated
 * @param {Map<string, any>} xdm - containing additional XDM-formatted data to be sent in the personalization query request. 
 * @param {Map<string, any>} data - containing additional free-form data to be sent in the personalization query request
+* @param {UpdatePropositionsCallback} callback - optional callback that will be called with the response containing updated propositions and/or error information
 */
-  updatePropositions(decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) {    
+  updatePropositions(
+    decisionScopes: Array<DecisionScope>,
+    xdm?: Map<string, any>,
+    data?: Map<string, any>,
+    onSuccess?: (response: Map<string, Proposition>) => void,
+    onError?: (error: AEPOptimizeError) => void
+  ) {
     var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
-    RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data);
-  }  
+    
+    RCTAEPOptimize.updatePropositions(
+      decisionScopeNames,
+      xdm,
+      data,
+      typeof onSuccess === 'function' ? onSuccess : () => {},
+      typeof onError === 'function' ? onError : () => {}
+    );
+  },  
 };
 
 export default Optimize;
