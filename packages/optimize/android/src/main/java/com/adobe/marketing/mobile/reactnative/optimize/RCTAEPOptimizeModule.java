@@ -80,10 +80,10 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void clearCachedPropositions() {
-        // clear the native cache
-        Optimize.clearCachedPropositions();
         // clear the react native cache
         clearPropositionsCache();
+        // clear the native cache
+        Optimize.clearCachedPropositions();
     }
 
     @ReactMethod
@@ -107,6 +107,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+                cachePropositionOffers(decisionScopePropositionMap);
                 Log.d(TAG, "updatePropositions callback success.");
                 if (successCallback != null) {
                     final WritableMap response = RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap);
@@ -198,6 +199,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+                cachePropositionOffers(decisionScopePropositionMap);
                 sendUpdatedPropositionsEvent(decisionScopePropositionMap);
             }
         });

@@ -69,7 +69,7 @@ export default () => {
   );
   const decisionScopeTargetMbox = new DecisionScope('demoLoc3');
   const decistionScopeTest = new DecisionScope('ishita-test');
-  const decisisionScopeODE = new DecisionScope('eyJ4ZG06YWN0aXZpdHlJZCI6ImRwczpvZmZlci1hY3Rpdml0eToxOWEyYzMyYzQ4MzliNmRjIiwieGRtOnBsYWNlbWVudElkIjoieGNvcmU6b2ZmZXItcGxhY2VtZW50OjE4ZTBlZTA0OTRkZDE3YzQifQ==');
+  const decisisionScopeODE = new DecisionScope('eyJ4ZG06YWN0aXZpdHlJZCI6ImRwczpvZmZlci1hY3Rpdml0eToxYjI5ZGMyNjAzNDA4YzZkIiwieGRtOnBsYWNlbWVudElkIjoiZHBzOm9mZmVyLXBsYWNlbWVudDoxYjI5ZDhhMzNlZWVlZWRiIn0=');
   const decistionScopeTest2 = new DecisionScope('akhil-test-mbox');
 
   const decisionScopes = [

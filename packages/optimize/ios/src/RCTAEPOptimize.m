@@ -49,6 +49,9 @@ RCT_EXPORT_METHOD(extensionVersion
 
 RCT_EXPORT_METHOD(clearCachedPropositions) {
   [AEPLog traceWithLabel:TAG message:@"clearCachedPropositions is called."];
+  // clear the react native cache
+  [self clearPropositionsCache];
+  // clear the native cache
   [AEPMobileOptimize clearCachedPropositions];
 }
 
@@ -84,6 +87,7 @@ RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
             }
         } 
         if (decisionScopePropositionDict) {
+            [self cachePropositions:decisionScopePropositionDict];
             NSDictionary *propositions = [self createCallbackResponse:decisionScopePropositionDict];
             if (successCallback != nil) {
                 successCallback(@[propositions]);
@@ -132,6 +136,8 @@ RCT_EXPORT_METHOD(onPropositionsUpdate) {
   [AEPMobileOptimize onPropositionsUpdate:^(
                          NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *>
                              *decisionScopePropositionDict) {
+
+    [self cachePropositions:decisionScopePropositionDict];
     NSDictionary<NSString *, NSDictionary<NSString *, id> *>
         *propositionDictionary = [[NSMutableDictionary alloc] init];
 
