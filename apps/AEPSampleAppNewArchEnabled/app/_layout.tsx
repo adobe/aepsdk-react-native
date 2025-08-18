@@ -10,9 +10,6 @@ import { useEffect } from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-const ENV_ID_Optimize = "3149c49c3910/0f12baf27522/launch-c219c0fa9543";
-const ENV_ID_Optimize_Dev = "3149c49c3910/0f12baf27522/launch-0d096c129660-development";
-const ENV_ID_Messaging = "3149c49c3910/4f6b2fbf2986/launch-7d78a5fd1de3-development";
 
 export default function RootLayout() {
   const scheme = useColorScheme();
@@ -41,7 +38,7 @@ export default function RootLayout() {
     // For functional components, use useEffect with an empty dependency array.
     // For class components, call initializeWithAppId inside componentDidMount.
     MobileCore.setLogLevel(LogLevel.DEBUG);
-    MobileCore.initializeWithAppId(ENV_ID_Optimize_Dev)
+    MobileCore.initializeWithAppId("YOUR-APP-ID")
       .then(() => {
         console.log("AEP SDK Initialized");
       })
