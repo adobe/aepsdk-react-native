@@ -12,9 +12,12 @@
 
  package com.adobe.marketing.mobile.reactnative.messaging;
 
+ import android.util.Log;
+
  import com.adobe.marketing.mobile.Message;
  import com.adobe.marketing.mobile.MessagingEdgeEventType;
  import com.adobe.marketing.mobile.messaging.Proposition;
+ import com.adobe.marketing.mobile.messaging.PropositionItem;
  import com.adobe.marketing.mobile.messaging.Surface;
  import com.facebook.react.bridge.Arguments;
  import com.facebook.react.bridge.ReadableArray;
@@ -31,6 +34,9 @@
  import java.util.Iterator;
  import java.util.List;
  import java.util.Map;
+ import java.util.concurrent.atomic.AtomicLong;
+ import java.util.UUID;
+ import java.nio.charset.StandardCharsets;
  
  /**
   * Utility class for converting data models to {@link
@@ -40,8 +46,28 @@
  class RCTAEPMessagingUtil {
  
    private static final String TAG = "RCTAEPMessaging";
- 
-   private RCTAEPMessagingUtil() {}
+     private static final AtomicLong GLOBAL_UUID_COUNTER = new AtomicLong(0L);
+     @SuppressWarnings("unchecked")
+     private static String extractActivityIdFromPropositionEventData(final Proposition p) {
+         try {
+             final Map<String, Object> ed = p.toEventData();
+             if (ed == null) return null;
+             final Object sd = ed.get("scopeDetails");
+             if (!(sd instanceof Map)) return null;
+             final Object act = ((Map<String, Object>) sd).get("activity");
+             if (!(act instanceof Map)) return null;
+             final Object id = ((Map<String, Object>) act).get("id");
+             return (id instanceof String) ? (String) id : null;
+         } catch (Exception ignored) {
+             return null;
+         }
+     }
+
+     private static String generateItemUuid(final String activityId, final long counter) {
+         final String key = (activityId != null ? activityId : "") + "#" + counter;
+         return UUID.nameUUIDFromBytes(key.getBytes(StandardCharsets.UTF_8)).toString();
+     }
+     private RCTAEPMessagingUtil() {}
  
    // From React Native
    static MessagingEdgeEventType getEventType(final int eventType) {
@@ -187,7 +213,99 @@
  
      return result;
    }
- 
+
+     /** Ensures a nested map exists at the given key; creates an empty one if missing. */
+     private static void ensurePath(final WritableMap parent, final String key) {
+         if (parent == null) return;
+         if (!parent.hasKey(key) || parent.getType(key) != ReadableType.Map) {
+             parent.putMap(key, Arguments.createMap());
+         }
+     }
+
+     public static WritableMap convertPropositionItem(final PropositionItem item) {
+         WritableMap map = Arguments.createMap();
+         try {
+             // Core fields (public getters only)
+             map.putString("id", item.getItemId());
+             if (item.getSchema() != null) {
+                 map.putString("schema", item.getSchema().toString());
+             }
+
+             // Data payload
+             if (item.getItemData() != null && !item.getItemData().isEmpty()) {
+                 map.putMap("data", toWritableMap(item.getItemData()));
+             }
+
+             // Optional convenience fields (schema-derived)
+             Map<String, Object> jsonMap = item.getJsonContentMap();
+             if (jsonMap != null) {
+                 map.putMap("jsonContentMap", toWritableMap(jsonMap));
+             }
+
+             List<Map<String, Object>> jsonArr = item.getJsonContentArrayList();
+             if (jsonArr != null) {
+                 map.putArray("jsonContentArray", toWritableArray(jsonArr));
+             }
+
+             String html = item.getHtmlContent();
+             if (html != null) {
+                 map.putString("htmlContent", html);
+             }
+         } catch (Exception e) {
+             Log.w("RCTAEPMessagingUtil", "Error converting PropositionItem: " + e.getMessage());
+         }
+         return map;
+     }
+
+     public static WritableMap convertSingleProposition(final Proposition p, final String bundleId) {
+         WritableMap map = Arguments.createMap();
+
+         // 1) Start from Proposition's own event data (Proposition.toEventData is public)
+         try {
+             Map<String, Object> eventData = p.toEventData();
+             if (eventData != null) {
+                 map = toWritableMap(eventData);
+             }
+         } catch (Exception ignored) {}
+
+         // 2) Ensure scopeDetails.activity is present & writable
+         WritableMap scopeDetails = Arguments.createMap();
+         if (map.hasKey("scopeDetails") && map.getType("scopeDetails") == ReadableType.Map) {
+             scopeDetails.merge(map.getMap("scopeDetails"));
+         }
+         WritableMap activity = Arguments.createMap();
+         if (scopeDetails.hasKey("activity") && scopeDetails.getType("activity") == ReadableType.Map) {
+             activity.merge(scopeDetails.getMap("activity"));
+         }
+         scopeDetails.putMap("activity", activity);
+         map.putMap("scopeDetails", scopeDetails);
+
+         // 3) Extract activityId for UUID generation (safe only if present)
+         String activityId = null;
+         if (activity.hasKey("id") && activity.getType("id") == ReadableType.String) {
+             activityId = activity.getString("id");
+         }
+
+         // 4) Build items array from actual PropositionItems and inject uuid
+         WritableArray itemsArr = Arguments.createArray();
+         try {
+             List<PropositionItem> items = p.getItems();
+             if (items != null) {
+                 for (final PropositionItem item : items) {
+                     WritableMap itemMap = convertPropositionItem(item);
+                     String uuid = generateItemUuid(activityId, GLOBAL_UUID_COUNTER.incrementAndGet());
+                     itemMap.putString("uuid", uuid); // <-- inject UUID here
+                     itemsArr.pushMap(itemMap);
+                 }
+             }
+         } catch (Exception e) {
+             Log.w("RCTAEPMessagingUtil", "Error building items with UUID: " + e.getMessage());
+         }
+         map.putArray("items", itemsArr);
+
+         return map;
+     }
+
    static WritableMap convertSurfacePropositions(
        final Map<Surface, List<Proposition>> propositionMap,
        String packageName) {
@@ -201,7 +319,9 @@
  
        for (Iterator<Proposition> iterator = entry.getValue().iterator();
             iterator.hasNext();) {
-         propositions.pushMap(toWritableMap(iterator.next().toEventData()));
+         //propositions.pushMap(toWritableMap(iterator.next().toEventData()));
+           Proposition nextProp = iterator.next();
+           propositions.pushMap(convertSingleProposition(nextProp, packageName));
        }
  
        data.putArray(key, propositions);

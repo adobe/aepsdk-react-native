@@ -42,6 +42,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableType;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.ArrayList;
@@ -50,10 +52,44 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ConcurrentHashMap;
+import org.json.JSONObject;
+
+
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+
+
 
 public final class RCTAEPMessagingModule
     extends ReactContextBaseJavaModule implements PresentationDelegate {
+  private final AtomicLong globalUuidCounter = new AtomicLong(0L);
+  private final Map<String, PropositionItem> propositionItemByUuid = new ConcurrentHashMap<>();
 
+  public void registerPropositionItemUuid(@NonNull final String uuid, @NonNull final PropositionItem item) {
+    if (uuid != null && item != null) {
+      propositionItemByUuid.put(uuid, item);
+    }
+  }
+  private String generateItemUuid(String activityId, long counter) {
+    String key = (activityId != null ? activityId : "") + "#" + counter;
+    return UUID.nameUUIDFromBytes(key.getBytes(StandardCharsets.UTF_8)).toString();
+  }
+  @SuppressWarnings("unchecked")
+  private String extractActivityId(Proposition proposition) {
+    try {
+      Map<String, Object> eventData = proposition.toEventData();
+      if (eventData == null) return null;
+      Object sd = eventData.get("scopeDetails");
+      if (!(sd instanceof Map)) return null;
+      Object act = ((Map<?, ?>) sd).get("activity");
+      if (!(act instanceof Map)) return null;
+      Object id = ((Map<?, ?>) act).get("id");
+      return (id instanceof String) ? (String) id : null;
+    } catch (Exception e) {
+      return null;
+    }
+  }
   private static final String TAG = "RCTAEPMessagingModule";
   private final Map<String, Message> messageCache = new HashMap<>();
   private final ReactApplicationContext reactContext;
@@ -105,35 +141,132 @@ public final class RCTAEPMessagingModule
   }
 
   @ReactMethod
-  public void getPropositionsForSurfaces(ReadableArray surfaces,
-                                         final Promise promise) {
-    String bundleId = this.reactContext.getPackageName();
-    Messaging.getPropositionsForSurfaces(
-        RCTAEPMessagingUtil.convertSurfaces(surfaces),
-        new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
-          @Override
-          public void fail(final AdobeError adobeError) {
-            promise.reject(adobeError.getErrorName(),
-                           "Unable to get Propositions");
-          }
+  public void getPropositionsForSurfaces(ReadableArray surfaces, final Promise promise) {
+    final String bundleId = this.reactContext.getPackageName();
 
-          @Override
-          public void call(
-              Map<Surface, List<Proposition>> propositionsMap) {
-            
-            // Cache PropositionItems for unified tracking when propositions are retrieved
-            for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
-              List<Proposition> propositions = entry.getValue();
-              if (propositions != null) {
-                cachePropositionsItems(propositions);
+    Messaging.getPropositionsForSurfaces(
+            RCTAEPMessagingUtil.convertSurfaces(surfaces),
+            new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
+              @Override
+              public void fail(final AdobeError adobeError) {
+                Log.d(TAG, "getPropositionsForSurfaces: fail: " + adobeError.getErrorName());
+                promise.reject(adobeError.getErrorName(), "Unable to get Propositions");
               }
-            }
-            
-            promise.resolve(RCTAEPMessagingUtil.convertSurfacePropositions(
-                propositionsMap, bundleId));
-          }
-        });
+
+              @Override
+              public void call(Map<Surface, List<Proposition>> propositionsMap) {
+                try {
+                  // Optional: clear UUID cache per fetch to avoid stale entries
+                  propositionItemByUuid.clear();
+
+                  WritableMap out = Arguments.createMap();
+
+                  for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
+                    final String surfaceKey = (entry.getKey() != null)
+                            ? entry.getKey().getUri().replace("mobileapp://" + bundleId + "/", "")
+                            : "unknown";
+                    final List<Proposition> propositions = entry.getValue();
+                    final WritableArray jsProps = Arguments.createArray();
+
+                    Log.d(TAG, "Surface [" + surfaceKey + "] propCount=" + (propositions != null ? propositions.size() : 0));
+
+                    if (propositions != null) {
+                      for (Proposition p : propositions) {
+                        try {
+                          // Start from SDK map for proposition to keep full parity
+                          WritableMap pMap = RCTAEPMessagingUtil.toWritableMap(p.toEventData());
+
+                          // Derive activityId for UUID generation
+                          final String activityId = extractActivityId(p);
+                          Log.d(TAG, "activityId=" + activityId);
+
+                          // If SDK already included items, we'll replace them with UUID-injected ones
+                          final WritableArray newItems = Arguments.createArray();
+
+                          final List<PropositionItem> items = p.getItems();
+                          if (items != null && !items.isEmpty()) {
+                            Log.d(TAG, "items.size=" + items.size());
+
+                            // If you want to "overlay" UUIDs on top of SDK's item maps, fetch them:
+                            ReadableArray sdkItems = null;
+                            if (pMap.hasKey("items") && pMap.getType("items") == ReadableType.Array) {
+                              sdkItems = pMap.getArray("items");
+                            }
+
+                            for (int i = 0; i < items.size(); i++) {
+                              final PropositionItem item = items.get(i);
+
+                              // Base item map: prefer SDK's item map at same index; fallback to manual conversion
+                              WritableMap itemMap = Arguments.createMap();
+                              try {
+                                if (sdkItems != null && i < sdkItems.size() && sdkItems.getType(i) == ReadableType.Map) {
+                                  itemMap.merge(sdkItems.getMap(i)); // like JS spread
+                                } else {
+                                  itemMap = RCTAEPMessagingUtil.convertPropositionItem(item);
+                                }
+                              } catch (Throwable t) {
+                                Log.d(TAG, "Fallback to manual item conversion (index " + i + "): " + t.getMessage());
+                                itemMap = RCTAEPMessagingUtil.convertPropositionItem(item);
+                              }
+
+                              // Inject UUID and cache native item for future tracking
+                              final String uuid = generateItemUuid(activityId, globalUuidCounter.incrementAndGet());
+                              itemMap.putString("uuid", uuid);
+                              propositionItemByUuid.put(uuid, item);
+
+                              // Helpful log
+                              try { Log.d(TAG, "itemId=" + item.getItemId() + " uuid=" + uuid); } catch (Throwable ignore) {}
+
+                              newItems.pushMap(itemMap);
+                            }
+                          } else {
+                            Log.d(TAG, "Proposition has no items.");
+                          }
+
+                          // Overwrite items with UUID-injected array
+                          pMap.putArray("items", newItems);
+
+                          jsProps.pushMap(pMap);
+                        } catch (Throwable propEx) {
+                          Log.d(TAG, "Error building proposition payload, falling back to SDK map: " + propEx.getMessage());
+                          // Fallback: push SDK's raw proposition if something went wrong
+                          jsProps.pushMap(RCTAEPMessagingUtil.toWritableMap(p.toEventData()));
+                        }
+                      }
+                    }
+
+                    // (Optional) per-surface payload log (size only to keep logs light)
+                    Log.d(TAG, "Surface [" + surfaceKey + "] payload size=" + jsProps.size());
+
+                    out.putArray(surfaceKey, jsProps);
+                  }
+
+                  // Log the full 'out' map lightly (size of top-level keys)
+                  try {
+                    Map<String, Object> outSnapshot = RCTAEPMessagingUtil.convertReadableMapToMap(out);
+                    Log.d(TAG, "OUT keys=" + outSnapshot.keySet());
+                  } catch (Throwable e) {
+                    Log.d(TAG, "OUT log failed: " + e.getMessage());
+                  }
+
+                  promise.resolve(out);
+                } catch (Throwable topEx) {
+                  Log.d(TAG, "Top-level error building propositions: " + topEx.getMessage());
+                  // As a last resort, mirror the previous behavior:
+                  try {
+                    String pkg = bundleId;
+                    WritableMap fallback = RCTAEPMessagingUtil.convertSurfacePropositions(propositionsMap, pkg);
+                    promise.resolve(fallback);
+                  } catch (Throwable finalEx) {
+                    promise.reject("BuildError", "Failed to build propositions", finalEx);
+                  }
+                }
+              }
+            });
   }
+
+
+
 
   @ReactMethod
   public void refreshInAppMessages() {
@@ -249,9 +382,11 @@ public final class RCTAEPMessagingModule
     }
 
     if (shouldSaveMessage) {
+      Log.d("MessageCache", "Saving message with ID: " + message.getId()
+              + ", Content: " + message);
+
       messageCache.put(message.getId(), message);
     }
-
     return shouldShowMessage;
   }
 
@@ -324,62 +459,64 @@ public final class RCTAEPMessagingModule
    * @param tokens Array containing the sub-item tokens for recording interaction (nullable)
    */
   @ReactMethod
-  public void trackPropositionItem(String itemId, @Nullable String interaction, int eventType, @Nullable ReadableArray tokens) {
-    Log.d(TAG, "trackPropositionItem called with itemId: " + itemId + ", interaction: " + interaction + ", eventType: " + eventType);
+  public void trackPropositionItem(String uuid, @Nullable String interaction, int eventType, @Nullable ReadableArray tokens) {
+    Log.d(TAG, "trackPropositionItem called with uuid: " + uuid + ", interaction: " + interaction + ", eventType: " + eventType);
 
     try {
       // Convert eventType int to MessagingEdgeEventType enum
-      MessagingEdgeEventType edgeEventType = RCTAEPMessagingUtil.getEventType(eventType);
+      final MessagingEdgeEventType edgeEventType = RCTAEPMessagingUtil.getEventType(eventType);
       if (edgeEventType == null) {
-        Log.d(TAG, "Invalid eventType provided: " + eventType + " for itemId: " + itemId);
+        Log.d(TAG, "Invalid eventType provided: " + eventType + " for uuid: " + uuid);
+        return;
+      }
+      Log.d(TAG, "Converted eventType " + eventType + " to " + edgeEventType.name());
+
+      // Resolve PropositionItem strictly by UUID
+      if (uuid == null) {
+        Log.d(TAG, "UUID is null; cannot track.");
         return;
       }
 
-      Log.d(TAG, "Converted eventType " + eventType + " to MessagingEdgeEventType: " + edgeEventType.name());
-
-      // Find the PropositionItem by ID
-      PropositionItem propositionItem = findPropositionItemById(itemId);
-
+      final PropositionItem propositionItem = propositionItemByUuid.get(uuid);
       if (propositionItem == null) {
-        Log.d(TAG, "PropositionItem not found in cache for itemId: " + itemId);
+        Log.d(TAG, "PropositionItem not found in uuid cache for uuid: " + uuid);
         return;
       }
+      Log.d(TAG, "Found PropositionItem in uuid cache for uuid: " + uuid);
 
-      Log.d(TAG, "Found PropositionItem in cache for itemId: " + itemId);
-
-      // Convert ReadableArray to List<String> if provided
+      // Convert ReadableArray tokens -> List<String>
       List<String> tokenList = null;
       if (tokens != null) {
         tokenList = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {
           tokenList.add(tokens.getString(i));
         }
-        Log.d(TAG, "Converted tokens array to list with " + tokenList.size() + " items for itemId: " + itemId);
+        Log.d(TAG, "Converted tokens array to list with " + tokenList.size() + " items for uuid: " + uuid);
       } else {
-        Log.d(TAG, "No tokens provided for itemId: " + itemId);
+        Log.d(TAG, "No tokens provided for uuid: " + uuid);
       }
 
-      // Call the appropriate track method based on provided parameters
+      // Track
       if (interaction != null && tokenList != null) {
-        // Track with interaction and tokens
-        Log.d(TAG, "Tracking PropositionItem with interaction '" + interaction + "' and " + tokenList.size() + " tokens for itemId: " + itemId);
+        Log.d(TAG, "Tracking PropositionItem with interaction '" + interaction + "' and " + tokenList.size() + " tokens for uuid: " + uuid);
         propositionItem.track(interaction, edgeEventType, tokenList);
       } else if (interaction != null) {
-        // Track with interaction only
-        Log.d(TAG, "Tracking PropositionItem with interaction '" + interaction + "' for itemId: " + itemId);
+        Log.d(TAG, "Tracking PropositionItem with interaction '" + interaction + "' for uuid: " + uuid);
         propositionItem.track(interaction, edgeEventType, null);
       } else {
-        // Track with event type only
-        Log.d(TAG, "Tracking PropositionItem with eventType only for itemId: " + itemId);
+        Log.d(TAG, "Tracking PropositionItem with eventType only for uuid: " + uuid);
         propositionItem.track(edgeEventType);
       }
 
-      Log.d(TAG, "Successfully tracked PropositionItem for itemId: " + itemId);
+      Log.d(TAG, "Successfully tracked PropositionItem for uuid: " + uuid);
 
     } catch (Exception e) {
-      Log.d(TAG, "Error tracking PropositionItem: " + itemId + ", error: " + e.getMessage(), e);
+      Log.d(TAG, "Error tracking PropositionItem for uuid: " + uuid + ", error: " + e.getMessage(), e);
     }
   }
+
+
+
   /**
    * Generates XDM data for PropositionItem interactions.
    * This method is used by the React Native PropositionItem.generateInteractionXdm() method.

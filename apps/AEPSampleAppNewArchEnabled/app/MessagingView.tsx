@@ -17,12 +17,13 @@ import {
   Messaging, 
   PersonalizationSchema, 
   MessagingEdgeEventType,
-  PropositionItem  // Add this import
+  PropositionItem,  // Add this import
+  Message
 } from '@adobe/react-native-aepmessaging'
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
-const SURFACES = ['android-cbe-preview', 'cbe/json', 'android-cc'];
+const SURFACES = ['android-cbe-preview', 'android-cc', 'android-cc-naman'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
 
 const messagingExtensionVersion = async () => {
@@ -62,6 +63,8 @@ const updatePropositionsForSurfaces = async () => {
 
 const getCachedMessages = async () => {
   const messages = await Messaging.getCachedMessages();
+  const newMessage = new Message(messages[0]);
+  newMessage.track("button_clicked", MessagingEdgeEventType.INTERACT);
   console.log('Cached messages:', messages);
 };
 
@@ -167,8 +170,8 @@ const unifiedTrackingExample = async () => {
     for (const proposition of propositions) {
       for (const propositionItemData of proposition.items) {
         // Create PropositionItem instance from the plain data object
-        const propositionItem = new PropositionItem(propositionItemData);
-        console.log('propositionItem here is created:', propositionItem);
+      const propositionItem = new PropositionItem(propositionItemData);
+        console.log('propositionItem here is created:', propositionItem, propositionItem.uuid);
         
         // Use the unified tracking approach via PropositionItem
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
@@ -225,6 +228,91 @@ const unifiedTrackingExample = async () => {
 //   }
 // }
 
+// Function to track in-app message interactions
+const trackInAppMessage = async () => {
+  try {
+    // Get cached messages first
+    const messages = await Messaging.getCachedMessages();
+    console.log('Cached messages:', messages);
+    
+    if (messages && messages.length > 0) {
+      const message = messages[0]; // Get first message
+      
+      // Call track on the message instance
+      // This calls the Java track(messageId, interaction, eventType) method
+      message.track("button_clicked", MessagingEdgeEventType.INTERACT);
+      
+      console.log(`Tracked interaction on message: ${message.id}`);
+    } else {
+      console.log('No cached messages available to track');
+    }
+  } catch (error) {
+    console.error('Error tracking in-app message:', error);
+  }
+};
+
+// Function to track proposition items using cached approach
+const trackPropositionItems = async () => {
+  try {
+    // Get propositions - this automatically caches them
+    const propositions = await Messaging.getPropositionsForSurfaces(['android-cc', 'homepage', 'android-cbe-preview']);
+    console.log('Retrieved propositions:', propositions);
+    
+    // Iterate through surfaces
+    for (const [surface, propositionList] of Object.entries(propositions)) {
+      console.log(`Processing surface: ${surface}`);
+      
+      // Iterate through propositions for this surface
+      for (const proposition of propositionList) {
+        console.log(`Processing proposition: ${proposition.id}`);
+        
+        // Iterate through items in the proposition
+        for (const itemData of proposition.items) {
+          // Create PropositionItem instance (this gets cached automatically)
+          const propositionItem = new PropositionItem(itemData);
+          
+          // Track display event
+          propositionItem.track(MessagingEdgeEventType.DISPLAY);
+          console.log(`Tracked display for item: ${propositionItem.id}`);
+          
+          // Track interaction event
+          propositionItem.track("user_clicked", MessagingEdgeEventType.INTERACT, null);
+          console.log(`Tracked interaction for item: ${propositionItem.id}`);
+          
+          // Track with tokens (for embedded decisions)
+          if (itemData.data?.tokens) {
+            const tokens = itemData.data.tokens; // Extract from your data
+            propositionItem.track("token_interaction", MessagingEdgeEventType.INTERACT, tokens);
+            console.log(`Tracked with tokens for item: ${propositionItem.id}`);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error tracking proposition items:', error);
+  }
+};
+
+// Direct static method call (bypasses caching)
+const trackDirectly = () => {
+  // This calls trackPropositionItem directly without creating instances
+  Messaging.trackPropositionItem(
+    "item_123",           // itemId
+    "direct_call",        // interaction
+    MessagingEdgeEventType.INTERACT, // eventType
+    ["token1", "token2"]  // tokens
+  );
+  
+  console.log('Tracked directly via static method');
+};
+
+const trackEdgeCaseMessageWithPropositionItem = async () => {
+  const messages = await Messaging.getCachedMessages();
+  const newMessage = new PropositionItem({id: "12", autoTrack: true});
+  newMessage.track("button_clicked", MessagingEdgeEventType.INTERACT);
+  console.log('Cached messages:', messages);
+}
+
 function MessagingView() {
   const router = useRouter();
 
@@ -252,6 +340,18 @@ function MessagingView() {
         <Button title="trackPropositionItem()" onPress={trackPropositionItemExample} />
         {/* <Button title="generatePropositionInteractionXdm()" onPress={generatePropositionInteractionXdmExample} /> */}
         <Button title="Unified Tracking Example" onPress={unifiedTrackingExample} />
+        <Button 
+          title="Track In-App Message" 
+          onPress={trackInAppMessage} 
+        />
+        <Button 
+          title="Track Proposition Items (Cached)" 
+          onPress={trackPropositionItems} 
+        />
+        <Button 
+          title="Track Directly (Static)" 
+          onPress={trackDirectly} 
+        />
         {/* <Button title="Unified XDM Generation Example" onPress={unifiedXdmGenerationExample} /> */}
       </ScrollView>
     </View>

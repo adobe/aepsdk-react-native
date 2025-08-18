@@ -21,6 +21,7 @@ const RCTAEPMessaging = NativeModules.AEPMessaging;
  */
 export interface PropositionItemData {
   id: string;
+  uuid: string;
   schema: PersonalizationSchema;
   data: {
     [key: string]: any;
@@ -36,6 +37,7 @@ export interface PropositionItemData {
  */
 export class PropositionItem {
   id: string;
+  uuid: string;
   schema: PersonalizationSchema;
   data: { [key: string]: any };
 
@@ -43,6 +45,7 @@ export class PropositionItem {
     this.id = propositionItemData.id;
     this.schema = propositionItemData.schema;
     this.data = propositionItemData.data;
+    this.uuid = propositionItemData.uuid;
   }
 
   /**
@@ -125,7 +128,7 @@ export class PropositionItem {
    * Internal method that performs the actual tracking
    */
   private trackWithDetails(interaction: string | null, eventType: MessagingEdgeEventType, tokens: string[] | null): void {
-    RCTAEPMessaging.trackPropositionItem(this.id, interaction, eventType, tokens);
+    RCTAEPMessaging.trackPropositionItem(this.uuid, interaction, eventType, tokens);
   }
 
   /**
