@@ -23,7 +23,7 @@ interface IOptimize {
   extensionVersion: () => Promise<string>;
   onPropositionUpdate: (adobeCallback: AdobePropositionCallback) => void;
   clearCachedPropositions: () => void;
-  getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
+  getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>;
   updatePropositions: (
     decisionScopes: Array<DecisionScope>,
     xdm?: Map<string, any>,
@@ -31,8 +31,8 @@ interface IOptimize {
     onSuccess?: (response: Map<string, Proposition>) => void,
     onError?: (error: AEPOptimizeError) => void
   ) => void;
-  displayed: (offers: Array<Offer>) => void
-  generateDisplayInteractionXdm: (offers: Array<Offer>) => Promise<Map<string, any>>
+  displayed: (offers: Array<Offer>) => void;
+  generateDisplayInteractionXdm: (offers: Array<Offer>) => Promise<Map<string, any>>;
 }
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
@@ -127,7 +127,7 @@ const Optimize: IOptimize = {
 /**
    * Dispatches an event for the Edge network extension to send an Experience Event to the Edge network with the display interaction data for the
    * given list of Proposition offers.
-   * @param offers - an array of Proposition offers
+   * @param {Array<Offer>} offers - an array of Proposition offers
    */
   displayed(offers: Array<Offer>) {
     RCTAEPOptimize.multipleOffersDisplayed(offers);
@@ -136,7 +136,7 @@ const Optimize: IOptimize = {
 /**
  * Generates a map containing XDM formatted data for `Experience Event - OptimizeProposition Interactions` 
  * field group from the provided list of PropositionOfferPair objects.
- * @param {offers} offers - the list of Proposition offers
+ * @param {Array<Offer>} offers - the list of Proposition offers
  * @return {Promise<Map<string, any>>} - a promise that resolves to xdm map
  */
   generateDisplayInteractionXdm(offers: Array<Offer>) {

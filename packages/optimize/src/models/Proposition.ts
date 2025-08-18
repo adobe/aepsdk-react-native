@@ -15,13 +15,13 @@ import Offer from './Offer';
 const RCTAEPOptimize = require('react-native').NativeModules.AEPOptimize;
 
 interface Activity {
-    id: string;
-    etag: string;
+    id?: string;
+    etag?: string;
 }
 
 interface Placement {
-    id: string;
-    etag: string;
+    id?: string;
+    etag?: string;
 }
 
 interface PropositionEventData {
@@ -48,10 +48,16 @@ class Proposition {
             this.scopeDetails = eventData['scopeDetails'];
         }
         if (eventData['activity']) {
-            this.activity = eventData['activity'];
+            this.activity = {
+                id: eventData['activity']?.['id'],
+                etag: eventData['activity']?.['etag']
+            };
         }
         if (eventData['placement']) {
-            this.placement = eventData['placement'];
+            this.placement = {
+                id: eventData['placement']?.['id'],
+                etag: eventData['placement']?.['etag']
+            };
         }
         if(eventData['items']) {
             let uniquePropositionId: string | undefined = undefined;
