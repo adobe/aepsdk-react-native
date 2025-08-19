@@ -11,7 +11,6 @@
 */
 
 import { PersonalizationSchema } from './PersonalizationSchema';
-import MessagingEdgeEventType from './MessagingEdgeEventType';
 import { PropositionItem, PropositionItemData } from './PropositionItem';
 
 type ContentCardTemplate = 'SmallImage';
@@ -54,32 +53,6 @@ export class ContentCard extends PropositionItem {
   constructor(contentCardData: ContentCardData) {
     super(contentCardData);
     this.data = contentCardData.data;
-  }
-
-  /**
-   * Convenience method to track when this ContentCard is displayed.
-   * Equivalent to calling track(MessagingEdgeEventType.DISPLAY).
-   */
-  trackDisplay(): void {
-    this.track(MessagingEdgeEventType.DISPLAY);
-  }
-
-  /**
-   * Convenience method to track when this ContentCard is dismissed.
-   * 
-   * @param {string | null} interaction - Optional interaction identifier (e.g., "user_dismissed", "auto_dismissed")
-   */
-  trackDismiss(interaction: string | null = null): void {
-    this.track(interaction, MessagingEdgeEventType.DISMISS, null);
-  }
-
-  /**
-   * Convenience method to track user interactions with this ContentCard.
-   * 
-   * @param {string} interaction - The interaction identifier (e.g., "clicked", "button_pressed", "action_taken")
-   */
-  trackInteraction(interaction: string): void {
-    this.track(interaction, MessagingEdgeEventType.INTERACT, null);
   }
 
   /**

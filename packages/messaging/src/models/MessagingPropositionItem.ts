@@ -12,7 +12,7 @@
 
 import { ContentCard } from './ContentCard';
 import { HTMLProposition } from './HTMLProposition';
-import { JSONPropositionItem } from './JSONPropositionItem';
+import { JSONPropositionItem } from './JSONProposition';
 import { InAppMessage } from './InAppMessage';
 import { PropositionItem } from './PropositionItem';
 
@@ -23,4 +23,4 @@ export type MessagingPropositionItem =
   | HTMLProposition
   | InAppMessage
   | JSONPropositionItem
-  | PropositionItem; // Base PropositionItem for any other schema types
+  | PropositionItem;

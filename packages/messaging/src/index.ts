@@ -17,6 +17,8 @@ import { ContentCard, ContentCardData } from './models/ContentCard';
 
 import { InAppMessage } from './models/InAppMessage';
 // import { JSONPropositionItem, JSONPropositionItemData } from './models/JSONPropositionItem';
+import { HTMLProposition, HTMLPropositionData } from './models/HTMLProposition';
+import { JSONPropositionItem, JSONPropositionData } from './models/JSONProposition';
 
 import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
@@ -44,4 +46,8 @@ export {
   PersonalizationSchema,
   PropositionItem,
   PropositionItemData,
+  HTMLProposition,
+  HTMLPropositionData,
+  JSONPropositionItem,
+  JSONPropositionData,
 };

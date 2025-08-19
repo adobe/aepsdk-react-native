@@ -17,14 +17,31 @@ import {
   Messaging, 
   PersonalizationSchema, 
   MessagingEdgeEventType,
-  PropositionItem,  // Add this import
-  Message
+  PropositionItem,
+  Message,
+  ContentCard,
+  HTMLProposition,
+  JSONPropositionItem,
 } from '@adobe/react-native-aepmessaging'
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
 const SURFACES = ['android-cbe-preview', 'android-cc', 'android-cc-naman'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
+
+// Helper: instantiate the appropriate class based on schema
+const toItemInstance = (itemData: any) => {
+  switch (itemData?.schema) {
+    case PersonalizationSchema.CONTENT_CARD:
+      return new ContentCard(itemData as any);
+    case PersonalizationSchema.HTML_CONTENT:
+      return new HTMLProposition(itemData as any);
+    case PersonalizationSchema.JSON_CONTENT:
+      return new JSONPropositionItem(itemData as any);
+    default:
+      return new PropositionItem(itemData as any);
+  }
+};
 
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
@@ -169,22 +186,22 @@ const unifiedTrackingExample = async () => {
 
     for (const proposition of propositions) {
       for (const propositionItemData of proposition.items) {
-        // Create PropositionItem instance from the plain data object
-      const propositionItem = new PropositionItem(propositionItemData);
-        console.log('propositionItem here is created:', propositionItem, propositionItem.uuid);
+        // Create strongly-typed instance based on schema
+        const item = toItemInstance(propositionItemData);
+        console.log('propositionItem here is created:', item, (item as any).uuid);
         
-        // Use the unified tracking approach via PropositionItem
-        if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          // Track display for content cards
-          propositionItem.track(MessagingEdgeEventType.DISPLAY);
+        // Use the unified tracking approach via base class
+        if (item.schema === PersonalizationSchema.CONTENT_CARD) {
+           item.track(MessagingEdgeEventType.DISPLAY);
           console.log('Tracked content card display using unified API');
-          
-          // Track interaction with custom interaction string
-          propositionItem.track('card_clicked', MessagingEdgeEventType.INTERACT, null);
+          item.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+         // item.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+           item.track(MessagingEdgeEventType.DISPLAY);
+
           console.log('Tracked content card interaction using unified API');
-        } else if (propositionItem.schema === PersonalizationSchema.JSON_CONTENT) {
-          // Track display for JSON content
-          propositionItem.track(MessagingEdgeEventType.DISPLAY);
+        } else if (item.schema === PersonalizationSchema.JSON_CONTENT) {
+          // item.track(MessagingEdgeEventType.DISPLAY);
+          item.track('token clicked', MessagingEdgeEventType.INTERACT, null);
           console.log('Tracked JSON content display using unified API');
         }
       }
@@ -263,28 +280,21 @@ const trackPropositionItems = async () => {
       console.log(`Processing surface: ${surface}`);
       
       // Iterate through propositions for this surface
-      for (const proposition of propositionList) {
+      for (const proposition of propositionList as any[]) {
         console.log(`Processing proposition: ${proposition.id}`);
         
         // Iterate through items in the proposition
         for (const itemData of proposition.items) {
-          // Create PropositionItem instance (this gets cached automatically)
-          const propositionItem = new PropositionItem(itemData);
+          // Create instance based on schema (this gets cached automatically)
+          const item = toItemInstance(itemData);
           
           // Track display event
-          propositionItem.track(MessagingEdgeEventType.DISPLAY);
-          console.log(`Tracked display for item: ${propositionItem.id}`);
+          item.track(MessagingEdgeEventType.DISPLAY);
+          console.log(`Tracked display for item: ${item.id}`);
           
           // Track interaction event
-          propositionItem.track("user_clicked", MessagingEdgeEventType.INTERACT, null);
-          console.log(`Tracked interaction for item: ${propositionItem.id}`);
-          
-          // Track with tokens (for embedded decisions)
-          if (itemData.data?.tokens) {
-            const tokens = itemData.data.tokens; // Extract from your data
-            propositionItem.track("token_interaction", MessagingEdgeEventType.INTERACT, tokens);
-            console.log(`Tracked with tokens for item: ${propositionItem.id}`);
-          }
+          item.track('user_clicked', MessagingEdgeEventType.INTERACT, null);
+          console.log(`Tracked interaction for item: ${item.id}`);
         }
       }
     }
@@ -308,8 +318,7 @@ const trackDirectly = () => {
 
 const trackEdgeCaseMessageWithPropositionItem = async () => {
   const messages = await Messaging.getCachedMessages();
-  const newMessage = new PropositionItem({id: "12", autoTrack: true});
-  newMessage.track("button_clicked", MessagingEdgeEventType.INTERACT);
+  // Removed invalid manual PropositionItem construction
   console.log('Cached messages:', messages);
 }
 
