@@ -127,7 +127,7 @@ const Optimize: IOptimize = {
 /**
    * Dispatches an event for the Edge network extension to send an Experience Event to the Edge network with the display interaction data for the
    * given list of Proposition offers.
-   * @param {Array<Offer>} offers - an array of Proposition offers
+   * @param {Array<Offer>} offers - an array of Proposition Offers
    */
   displayed(offers: Array<Offer>) {
     RCTAEPOptimize.multipleOffersDisplayed(offers);
@@ -135,8 +135,8 @@ const Optimize: IOptimize = {
 
 /**
  * Generates a map containing XDM formatted data for `Experience Event - OptimizeProposition Interactions` 
- * field group from the provided list of PropositionOfferPair objects.
- * @param {Array<Offer>} offers - the list of Proposition offers
+ * field group from the provided list of Proposition Offers.
+ * @param {Array<Offer>} offers - an array of Proposition Offers
  * @return {Promise<Map<string, any>>} - a promise that resolves to xdm map
  */
   generateDisplayInteractionXdm(offers: Array<Offer>) {
