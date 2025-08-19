@@ -163,6 +163,62 @@ const decisionScopes = [
 Optimize.updatePropositions(decisionScopes, null, null);
 ```
 
+### Batching display interaction events for multiple Offers:
+
+The Optimize SDK now provides enhanced support for batching display interaction events for multiple Offers. The following APIs are available:
+
+#### displayed
+
+**Syntax**
+
+```typescript
+displayed(offers: Array<Offer>)
+```
+
+**Example**
+
+```typescript
+
+const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+const offers: Array<Offer> = [];
+
+propositionsMap.forEach((proposition: Proposition) => {
+  if (proposition && proposition.items && proposition.items.length > 0) {
+    proposition.items.forEach((offer) => {
+      offers.push(offer);
+    });
+  }
+});
+
+Optimize.displayed(offers);
+```
+
+#### generateDisplayInteractionXdm
+
+**Syntax**
+
+```typescript
+generateDisplayInteractionXdm(offers: Array<Offer>): Promise<Map<string, any>>;
+```
+
+**Example**
+
+```typescript
+
+const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+const offers: Array<Offer> = [];
+
+propositionsMap.forEach((proposition: Proposition) => {
+  if (proposition && proposition.items && proposition.items.length > 0) {
+    proposition.items.forEach((offer) => {
+      offers.push(offer);
+    });
+  }
+});
+
+const displayInteractionXdm = await Optimize.generateDisplayInteractionXdm(offers);
+```
+
 ---
 
 ## Public classes

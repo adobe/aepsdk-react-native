@@ -20,11 +20,13 @@ static NSString *const TAG = @"RCTAEPOptimize";
 
 @implementation RCTAEPOptimize {
   bool hasListeners;
+  NSMutableDictionary<NSString *, AEPOptimizeProposition *> *propositionCache;
 }
 
 - (instancetype)init {
   self = [super init];
   hasListeners = false;
+  propositionCache = [[NSMutableDictionary alloc] init];
   return self;
 }
 
@@ -47,6 +49,9 @@ RCT_EXPORT_METHOD(extensionVersion
 
 RCT_EXPORT_METHOD(clearCachedPropositions) {
   [AEPLog traceWithLabel:TAG message:@"clearCachedPropositions is called."];
+  // clear the react native cache
+  [self clearPropositionsCache];
+  // clear the native cache
   [AEPMobileOptimize clearCachedPropositions];
 }
 
@@ -82,6 +87,7 @@ RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
             }
         } 
         if (decisionScopePropositionDict) {
+            [self cachePropositions:decisionScopePropositionDict];
             NSDictionary *propositions = [self createCallbackResponse:decisionScopePropositionDict];
             if (successCallback != nil) {
                 successCallback(@[propositions]);
@@ -108,6 +114,8 @@ RCT_EXPORT_METHOD(getPropositions
                reject([NSString stringWithFormat:@"%ld", (long)error.code],
                       error.description, nil);
              } else {
+              [self cachePropositions:decisionScopePropositionDict];
+
                NSDictionary<NSString *, NSDictionary<NSString *, id> *>
                    *propositionDictionary = [[NSMutableDictionary alloc] init];
 
@@ -128,6 +136,8 @@ RCT_EXPORT_METHOD(onPropositionsUpdate) {
   [AEPMobileOptimize onPropositionsUpdate:^(
                          NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *>
                              *decisionScopePropositionDict) {
+
+    [self cachePropositions:decisionScopePropositionDict];
     NSDictionary<NSString *, NSDictionary<NSString *, id> *>
         *propositionDictionary = [[NSMutableDictionary alloc] init];
 
@@ -241,6 +251,118 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
   }
 }
 
+RCT_EXPORT_METHOD(multipleOffersDisplayed
+                  : (NSArray<NSDictionary<NSString *, id> *> *)offersArray) {
+                    
+    [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed is called."];
+
+    NSMutableArray<AEPOffer *> *nativeOffers = [self getNativeOffersFromOffersArray:offersArray];
+
+    if ([nativeOffers count] > 0) {
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"multipleOffersDisplayed: calling display for: %lu offers", (unsigned long)[nativeOffers count]]];
+      [AEPMobileOptimize displayed:nativeOffers];
+    }
+}
+
+RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
+                  : (NSArray<NSDictionary<NSString *, id> *> *)offersArray resolver
+                  : (RCTPromiseResolveBlock)resolve rejector
+                  : (RCTPromiseRejectBlock)reject) {
+    
+    [AEPLog debugWithLabel:TAG message:@"multipleOffersGenerateDisplayInteractionXdm is called."];
+    
+    NSMutableArray<AEPOffer *> *nativeOffers = [self getNativeOffersFromOffersArray:offersArray];
+    
+    if ([nativeOffers count] > 0) {
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"multipleOffersGenerateDisplayInteractionXdm: calling display for: %lu offers", (unsigned long)[nativeOffers count]]];
+      NSDictionary<NSString *, id> *displayInteractionXdm = [AEPMobileOptimize generateDisplayInteractionXdm:nativeOffers];
+
+      resolve(displayInteractionXdm);
+    } else {
+      reject(@"generateDisplayInteractionXdmForMultipleOffers", @"Error in generating Display interaction XDM for multiple offers.", nil);
+    }
+}
+
+#pragma mark - Helper methods
+
+- (NSMutableArray<AEPOffer *> *)getNativeOffersFromOffersArray:(NSArray<NSDictionary<NSString *, id> *> *)offersArray {
+  NSMutableArray<AEPOffer *> *nativeOffers = [[NSMutableArray alloc] init];
+
+  if (!offersArray || [offersArray count] == 0) {
+    [AEPLog debugWithLabel:TAG message:@"getNativeOffersFromOffersArray: offersArray is null or empty"];
+    return nativeOffers;
+  }
+
+  for (NSDictionary<NSString *, id> *offerDict in offersArray) {
+    if (!offerDict) {
+      [AEPLog debugWithLabel:TAG message:@"getNativeOffersFromOffersArray: offer is null"];
+      continue;
+    }
+    
+    NSString *uniquePropositionId = [offerDict objectForKey:@"uniquePropositionId"];
+    NSString *offerId = [offerDict objectForKey:@"id"];
+        
+    if (!uniquePropositionId || !offerId) {
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"getNativeOffersFromOffersArray: uniquePropositionId or offerId is null for offer: %@", offerDict]];
+      continue;
+    }
+    
+    AEPOptimizeProposition *proposition = [propositionCache objectForKey:uniquePropositionId];
+    if (!proposition) {
+      [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"getNativeOffersFromOffersArray: proposition not found in cache for uniquePropositionId: %@", uniquePropositionId]];
+      continue;
+    }
+
+    NSArray<AEPOffer *> *offers = [proposition offers];
+    for (AEPOffer *propositionOffer in offers) {
+      if ([[propositionOffer id] isEqualToString:offerId]) {
+        [nativeOffers addObject:propositionOffer];
+        break;
+      }
+    }
+  }
+
+  return nativeOffers;
+}
+
+#pragma mark - Cache Management
+
+- (void)cachePropositions:(NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *> *)decisionScopePropositionDict {
+    for (AEPDecisionScope *key in decisionScopePropositionDict) {
+        AEPOptimizeProposition *proposition = decisionScopePropositionDict[key];
+        if (!proposition) {
+            [AEPLog debugWithLabel:TAG message:[NSString stringWithFormat:@"cachePropositions: proposition is null for decisionScope: %@", key]];
+            continue;
+        }
+        
+        NSString *activityId = nil;
+
+        NSDictionary *propositionDict = [self convertPropositionToDict:proposition];
+        NSDictionary *activity = [propositionDict valueForKey:@"activity"];
+        if ([propositionDict objectForKey:@"activity"]) {
+          if (activity && [activity objectForKey:@"id"]) {
+              activityId = [activity objectForKey:@"id"];
+          }
+        } else {
+          NSDictionary *scopeDetails = [propositionDict valueForKey:@"scopeDetails"];
+          if (scopeDetails && [scopeDetails objectForKey:@"activity"]) {
+            NSDictionary *scopeDetailsActivity = [scopeDetails objectForKey:@"activity"];
+            if (scopeDetailsActivity && [scopeDetailsActivity objectForKey:@"id"]) {
+              activityId = [scopeDetailsActivity objectForKey:@"id"];
+            }
+          }
+        }
+
+        if (activityId) {
+          [propositionCache setObject:proposition forKey:activityId];
+        }
+    }
+}
+
+- (void)clearPropositionsCache {
+    [propositionCache removeAllObjects];
+}
+
 #pragma mark - Helper methods
 
 - (NSArray<AEPDecisionScope *> *)createDecisionScopesArray:
@@ -272,6 +394,13 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
     [offersArray addObject:[self convertOfferToDict:offer]];
   }
   [propositionDict setValue:offersArray forKey:@"items"];
+
+  if ([proposition activity]) {
+    [propositionDict setValue:[proposition activity] forKey:@"activity"];
+  }
+  if ([proposition placement]) {
+    [propositionDict setValue:[proposition placement] forKey:@"placement"];
+  }
   return propositionDict;
 }
 
