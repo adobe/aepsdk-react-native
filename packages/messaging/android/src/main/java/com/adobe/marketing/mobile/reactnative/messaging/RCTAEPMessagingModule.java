@@ -55,7 +55,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class RCTAEPMessagingModule
     extends ReactContextBaseJavaModule implements PresentationDelegate {
-  private final Map<String, PropositionItem> propositionItemByUuid = new ConcurrentHashMap<>();
+  private final Map<String, Proposition> propositionItemByUuid = new ConcurrentHashMap<>();
 
   @SuppressWarnings("unchecked")
   private String extractActivityId(Proposition proposition) {
@@ -189,7 +189,7 @@ public final class RCTAEPMessagingModule
                               // Inject UUID and cache native item for future tracking
                               final String uuid = activityId;
                               itemMap.putString("uuid", uuid);
-                              propositionItemByUuid.put(uuid, item);
+                              propositionItemByUuid.put(uuid, p);
 
                               // Helpful log
                               try { Log.d(TAG, "itemId=" + item.getItemId() + " uuid=" + uuid); } catch (Throwable ignore) {}
@@ -452,12 +452,20 @@ public final class RCTAEPMessagingModule
         Log.d(TAG, "UUID is null; cannot track.");
         return;
       }
+      final Proposition proposition = propositionItemByUuid.get(uuid);
 
-      final PropositionItem propositionItem = propositionItemByUuid.get(uuid);
-      if (propositionItem == null) {
+      if (proposition == null) {
         Log.d(TAG, "PropositionItem not found in uuid cache for uuid: " + uuid);
         return;
+
       }
+      final List<PropositionItem> items = proposition.getItems();
+      if (items == null || items.isEmpty()) {
+        Log.d(TAG, "Proposition has no items for uuid: " + uuid);
+        return;
+      }
+      final PropositionItem propositionItem = items.get(0);
+
       Log.d(TAG, "Found PropositionItem in uuid cache for uuid: " + uuid);
 
       // Convert ReadableArray tokens -> List<String>
