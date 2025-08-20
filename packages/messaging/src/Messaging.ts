@@ -20,6 +20,7 @@ import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
 import { MessagingProposition } from './models/MessagingProposition';
 import { ContentCard } from './models/ContentCard';
+import { eventEmitter } from './MessagingUtil';
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -57,22 +58,13 @@ handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
   }
 });
 
-handleJSMessageEventEmitter.addListener('cacheJavascriptCallback', (event) => {
+eventEmitter.on('cacheJavascriptCallback', (event) => {
   const {messageId, handlerName, callback} = event;
   if (!jsMessageHandlers[messageId]) {
     jsMessageHandlers[messageId] = {};
   }
   jsMessageHandlers[messageId][handlerName] = callback;
 });
-
-class MessagingCacheUtil {
-  static cacheJavascriptCallback(messageId: string, handlerName: string, callback: (content: string) => void) {
-    if (!jsMessageHandlers[messageId]) {
-      jsMessageHandlers[messageId] = {};
-    }
-    jsMessageHandlers[messageId][handlerName] = callback;
-  }
-}
 
 class Messaging {
   /**
@@ -139,15 +131,15 @@ class Messaging {
 
     const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
 
-    eventEmitter.addListener('onShow', (message) =>
+    eventEmitter.addListener('onShow', (message: Message) =>
       messagingDelegate?.onShow?.(message)
     );
 
-    eventEmitter.addListener('onDismiss', (message) => {
+    eventEmitter.addListener('onDismiss', (message: Message) => {
       messagingDelegate?.onDismiss?.(message);
     });
 
-    eventEmitter.addListener('shouldShowMessage', (message) => {
+    eventEmitter.addListener('shouldShowMessage', (message: Message) => {
       const shouldShowMessage =
         messagingDelegate?.shouldShowMessage?.(message) ?? true;
       const shouldSaveMessage =
@@ -156,13 +148,13 @@ class Messaging {
     });
 
     if (Platform.OS === 'ios') {
-      eventEmitter.addListener('urlLoaded', (event) =>
+      eventEmitter.addListener('urlLoaded', (event: {url: string, message: Message}) =>
         messagingDelegate?.urlLoaded?.(event.url, event.message)
       );
     }
 
     if (Platform.OS === 'android') {
-      eventEmitter.addListener('onContentLoaded', (event) =>
+      eventEmitter.addListener('onContentLoaded', (event: {message: Message}) =>
         messagingDelegate?.onContentLoaded?.(event.message)
       );
     }
@@ -202,4 +194,3 @@ class Messaging {
 }
 
 export default Messaging;
-export { MessagingCacheUtil };

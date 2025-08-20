@@ -1,9 +1,5 @@
-import { MessagingCacheUtil } from './Messaging';
+import { EventEmitter } from 'events';
 
-class MessagingUtil {
-  static cacheJavascriptCallback(messageId: string, handlerName: string, callback: (content: string) => void) {
-    MessagingCacheUtil.cacheJavascriptCallback(messageId, handlerName, callback);
-  }
-}
+const eventEmitter = new EventEmitter();
 
-export default MessagingUtil;
+export { eventEmitter };

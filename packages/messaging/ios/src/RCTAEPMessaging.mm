@@ -55,4 +55,8 @@ RCT_EXTERN_METHOD(trackContentCardInteraction
                   : (NSDictionary *)propositionMap contentCardMap
                   : (NSDictionary *)contentCardMap);
 
+RCT_EXTERN_METHOD(handleJavascriptMessage
+                  : (NSString *)messageId handlerName
+                  : (NSString *)handlerName)
+
 @end

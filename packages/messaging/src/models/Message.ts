@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-// import MessagingUtil from '../MessagingUtil';
+import { eventEmitter } from '../MessagingUtil';
 
 const RCTAEPMessaging = NativeModules.AEPMessaging;
 
@@ -72,7 +72,7 @@ class Message {
 
   handleJavascriptMessage(handlerName: string, callback: (content: string) => void) {
     // MessagingUtil.cacheJavascriptCallback(this.id, handlerName, callback);
-    EventEmitter.emit('cacheJavascriptCallback', {
+    eventEmitter.emit('cacheJavascriptCallback', {
       messageId: this.id,
       handlerName: handlerName,
       callback: callback
