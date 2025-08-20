@@ -31,6 +31,36 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     private var propositionItemCache = [String: PropositionItem]()
     // Cache to store the parent Proposition for each PropositionItem
     private var propositionCache = [String: Proposition]()
+    // UUID-based cache for PropositionItem to mirror Android implementation
+    // Weak parent map: uuid -> parent (weak)
+    private let parentByUuid = NSMapTable<NSString, AnyObject>(
+      keyOptions: .strongMemory,
+      valueOptions: .weakMemory
+    )
+    // Holds the SDK item (strong) + its parent Proposition (weak)
+    private final class ItemHandle {
+        let item: PropositionItem
+        weak var parent: Proposition?
+        init(item: PropositionItem, parent: Proposition?) {
+            self.item = item
+            self.parent = parent
+        }
+    }
+    
+    // Adjust the types to your SDK (AEP Messaging) if names vary
+    private struct CachedItem {
+      let parent: Proposition       // strong
+      let item: PropositionItem     // strong
+    }
+
+    /// Build your uuid. If you already have a single unique uuid, just return it.
+    /// Otherwise, compose it as "propositionId#itemId" (matches your logs).
+    private func makeUuid(for parent: Proposition, item: PropositionItem) -> String {
+      // If you already have a provided uuid -> return that.
+      // return item.uuid
+        return "\(parent)"
+    }
+    // Map uuid (activityId) to parent Proposition
 
     override init() {
         super.init()
@@ -77,23 +107,90 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         withRejecter reject: @escaping RCTPromiseRejectBlock
     ) {
         let surfacePaths = surfaces.map { $0.isEmpty ? Surface() : Surface(path: $0) }
-        Messaging.getPropositionsForSurfaces(surfacePaths) { propositions, error in
-            guard error == nil else {
+        Messaging.getPropositionsForSurfaces(surfacePaths) {[weak self] propositions, error in
+            NSLog("[MessagingBridge] getPropositionsForSurfaces called with surfaces: \(surfacePaths)")
+
+            guard let self, error == nil else {
+                NSLog("[MessagingBridge] Error retrieving propositions: \(String(describing: error))")
                 reject("Unable to Retrieve Propositions", nil, nil)
                 return
             }
-            if (propositions != nil && propositions!.isEmpty) {
-                resolve([String: Any]());
-                return;
+
+            if let p = propositions, p.isEmpty {
+                NSLog("[MessagingBridge] No propositions returned from SDK")
+                resolve([String: Any]())
+                return
+            }
+
+            // Clear per fetch (Android parity)
+            self.propositionByUuid.removeAll()
+            NSLog("[MessagingBridge] Cleared propositionByUuid cache")
+
+            guard let propositionsDict = propositions else {
+                NSLog("[MessagingBridge] propositionsDict is nil")
+                resolve([String: Any]())
+                return
             }
             
-            // Cache PropositionItems for unified tracking when propositions are retrieved
-            if let propositionsDict = propositions {
-                let allPropositions = Array(propositionsDict.values).flatMap { $0 }
-                self.cachePropositionsItems(allPropositions)
+
+            var out: [String: [Any]] = [:]
+            let bundlePrefix = "mobileapp://" + (Bundle.main.bundleIdentifier ?? "") + "/"
+            NSLog("[MessagingBridge] bundlePrefix: \(bundlePrefix)")
+
+            for (surface, propList) in propositionsDict {
+                let surfaceKey = surface.uri.hasPrefix(bundlePrefix)
+                    ? String(surface.uri.dropFirst(bundlePrefix.count))
+                    : surface.uri
+                NSLog("[MessagingBridge] Processing surface: \(surface.uri), mapped key: \(surfaceKey), proposition count: \(propList.count)")
+
+                var jsProps: [Any] = []
+
+                for (index, proposition) in propList.enumerated() {
+                    var pMap: [String: Any] = proposition.asDictionary() ?? [:]
+                    NSLog("[MessagingBridge] Proposition[\(index)] raw dictionary: \(pMap)")
+
+                    // Android parity: use activityId as uuid for all items in this proposition
+                    let activityId = self.extractActivityId(from: pMap)
+                    NSLog("[MessagingBridge] Extracted activityId: \(String(describing: activityId))")
+
+                    var newItems: [[String: Any]] = []
+                    let items = proposition.items
+                    let sdkItems = (pMap["items"] as? [[String: Any]])
+                    NSLog("[MessagingBridge] Proposition[\(index)] items count: \(items.count), sdkItems count: \(String(describing: sdkItems?.count))")
+
+                    if !items.isEmpty {
+                        for (itemIndex, item) in items.enumerated() {
+                            var itemMap: [String: Any]
+                            if let sdkItems = sdkItems, itemIndex < sdkItems.count {
+                                itemMap = sdkItems[itemIndex]  // keep SDK’s fields
+                            } else {
+                                itemMap = ["id": item.itemId]  // minimal fallback
+                            }
+
+                            if let uuid = activityId {
+                                // Inject Android-style uuid (note: same for every item under this proposition)
+                                itemMap["uuid"] = uuid
+
+                                // Map uuid to parent proposition for simpler tracking: uuid -> proposition
+                                self.propositionByUuid[uuid] = proposition
+
+                                NSLog("[MessagingBridge] Injected uuid=\(uuid) for item[\(itemIndex)] id=\(item.itemId)")
+                            }
+
+                            newItems.append(itemMap)
+                        }
+                    }
+
+                    pMap["items"] = newItems
+                    jsProps.append(pMap)
+                }
+
+                out[surfaceKey] = jsProps
+                NSLog("[MessagingBridge] Finished surfaceKey=\(surfaceKey) with \(jsProps.count) propositions")
             }
-            
-            resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositions!))
+
+            NSLog("[MessagingBridge] Final output built for \(out.keys.count) surfaces")
+            resolve(out)
         }
     }
 
@@ -268,46 +365,75 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
      * This method is used by the React Native PropositionItem.track() method.
      * 
      * - Parameters:
-     *   - itemId: The unique identifier of the PropositionItem
+     *   - uuid: The UUID mapped to the PropositionItem (derived from activityId)
      *   - interaction: A custom string value to be recorded in the interaction (optional)
      *   - eventType: The MessagingEdgeEventType numeric value
      *   - tokens: Array containing the sub-item tokens for recording interaction (optional)
      */
+
     @objc
     func trackPropositionItem(
-        _ itemId: String,
+        _ uuid: String,
         interaction: String?,
         eventType: Int,
         tokens: [String]?,
         withResolver resolve: @escaping RCTPromiseResolveBlock,
         withRejecter reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard let edgeEventType = MessagingEdgeEventType(rawValue: eventType) else {
-            reject("InvalidEventType", "Invalid eventType: \(eventType)", nil)
-            return
-        }
-        
-        guard let propositionItem = findPropositionItemById(itemId) else {
-            print("Warning: PropositionItem not found for ID: \(itemId)")
+        NSLog("[MessagingBridge] trackPropositionItem called with eventType=\(eventType), uuid=\(uuid), interaction=\(String(describing: interaction)), tokens=\(String(describing: tokens))")
+
+        guard !uuid.isEmpty else {
+            NSLog("[MessagingBridge] Empty uuid provided; no-op.")
             resolve(nil)
             return
         }
-        
-        // Call the appropriate track method based on provided parameters
-        if let interaction = interaction, let tokens = tokens {
-            // Track with interaction and tokens
-            propositionItem.track(interaction, withEdgeEventType: edgeEventType, forTokens: tokens)
-        } else if let interaction = interaction {
-            // Track with interaction only
-            propositionItem.track(interaction, withEdgeEventType: edgeEventType)
-        } else {
-            // Track with event type only
-            propositionItem.track(withEdgeEventType: edgeEventType)
+
+        guard let proposition = propositionByUuid[uuid] else {
+            NSLog("[MessagingBridge] No cached proposition for uuid=\(uuid); no-op.")
+            resolve(nil)
+            return
         }
-        
-        print("Successfully tracked PropositionItem: \(itemId) with eventType: \(edgeEventType)")
+
+        NSLog("[MessagingBridge] Found proposition for uuid=\(uuid). scope=\(proposition.scope), items=\(proposition.items.count)")
+
+        // Event type mapping (Android parity)
+        let edgeEventType = mapEdgeEventType(eventType) ?? .display
+
+        // Track on the first item under this proposition
+        guard let item = proposition.items.first else {
+            NSLog("[MessagingBridge] Proposition for uuid=\(uuid) has no items; no-op.")
+            resolve(nil)
+            return
+        }
+
+        // Normalize inputs
+        let trimmedInteraction = interaction?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let nonEmptyTokens = tokens?.compactMap { token in
+            let t = token.trimmingCharacters(in: .whitespacesAndNewlines)
+            return t.isEmpty ? nil : t
+        }
+
+        if let i = trimmedInteraction, !i.isEmpty {
+            if let t = nonEmptyTokens, !t.isEmpty {
+                NSLog("[MessagingBridge] Tracking with interaction and tokens. uuid=\(uuid), interaction=\(i), tokens=\(t), eventType=\(edgeEventType)")
+                item.track(i, withEdgeEventType: edgeEventType, forTokens: t)
+            } else {
+                NSLog("[MessagingBridge] Tracking with interaction only. uuid=\(uuid), interaction=\(i), eventType=\(edgeEventType.rawValue)")
+                item.track(i, withEdgeEventType: edgeEventType)
+            }
+        } else if let t = nonEmptyTokens, !t.isEmpty {
+            NSLog("[MessagingBridge] Tracking with tokens only (no interaction). uuid=\(uuid), tokens=\(t), eventType=\(edgeEventType.rawValue)")
+            item.track(withEdgeEventType: edgeEventType)
+        } else {
+            NSLog("[MessagingBridge] Tracking with event only. uuid=\(uuid), eventType=\(edgeEventType.rawValue)")
+            item.track(withEdgeEventType: edgeEventType)
+        }
+
+        NSLog("[MessagingBridge] Tracking complete for uuid=\(uuid)")
         resolve(nil)
     }
+
+
     
     /**
      * Generates XDM data for PropositionItem interactions.
@@ -402,7 +528,8 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     private func findPropositionByItemId(_ itemId: String) -> Proposition? {
         return propositionCache[itemId]
     }
-    
+    // Map uuid (scopeDetails.activity.id) -> parent Proposition
+    private var propositionByUuid = [String: Proposition]()
     /**
      * Clears the PropositionItem cache.
      * This should be called when propositions are refreshed or when memory cleanup is needed.
@@ -507,5 +634,32 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
 
     private func emitNativeEvent(name: String, body: Any) {
         RCTAEPMessaging.emitter.sendEvent(withName: name, body: body)
+    }
+}
+
+// MARK: - Private helpers
+private extension RCTAEPMessaging {
+    /// Extracts activityId from a proposition dictionary at scopeDetails.activity.id
+    func extractActivityId(from propositionDict: [String: Any]) -> String? {
+        guard let scopeDetails = propositionDict["scopeDetails"] as? [String: Any],
+              let activity = scopeDetails["activity"] as? [String: Any],
+              let id = activity["id"] as? String else {
+            return nil
+        }
+        return id
+    }
+
+    /// Maps JS MessagingEdgeEventType integer values to AEPMessaging.MessagingEdgeEventType cases
+    /// JS enum values: DISMISS=0, INTERACT=1, TRIGGER=2, DISPLAY=3, PUSH_APPLICATION_OPENED=4, PUSH_CUSTOM_ACTION=5
+    func mapEdgeEventType(_ value: Int) -> MessagingEdgeEventType? {
+        switch value {
+        case 0: return .dismiss
+        case 1: return .interact
+        case 2: return .trigger
+        case 3: return .display
+        case 4: return .pushApplicationOpened
+        case 5: return .pushCustomAction
+        default: return nil
+        }
     }
 }
