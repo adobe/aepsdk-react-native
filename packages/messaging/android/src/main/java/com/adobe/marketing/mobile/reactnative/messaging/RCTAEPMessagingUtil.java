@@ -214,13 +214,6 @@
      return result;
    }
 
-     /** Ensures a nested map exists at the given key; creates an empty one if missing. */
-     private static void ensurePath(final WritableMap parent, final String key) {
-         if (parent == null) return;
-         if (!parent.hasKey(key) || parent.getType(key) != ReadableType.Map) {
-             parent.putMap(key, Arguments.createMap());
-         }
-     }
 
      public static WritableMap convertPropositionItem(final PropositionItem item) {
          WritableMap map = Arguments.createMap();

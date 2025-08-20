@@ -22,11 +22,9 @@ import androidx.annotation.Nullable;
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Message;
 import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MessagingEdgeEventType;
-import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.messaging.MessagingUtils;
 import com.adobe.marketing.mobile.messaging.Proposition;
 import com.adobe.marketing.mobile.messaging.PropositionItem;
@@ -52,29 +50,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ConcurrentHashMap;
-import org.json.JSONObject;
-
-
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
 
 
 
 public final class RCTAEPMessagingModule
     extends ReactContextBaseJavaModule implements PresentationDelegate {
-  private final AtomicLong globalUuidCounter = new AtomicLong(0L);
   private final Map<String, PropositionItem> propositionItemByUuid = new ConcurrentHashMap<>();
 
-  public void registerPropositionItemUuid(@NonNull final String uuid, @NonNull final PropositionItem item) {
-    if (uuid != null && item != null) {
-      propositionItemByUuid.put(uuid, item);
-    }
-  }
-  private String generateItemUuid(String activityId, long counter) {
-    String key = (activityId != null ? activityId : "") + "#" + counter;
-    return UUID.nameUUIDFromBytes(key.getBytes(StandardCharsets.UTF_8)).toString();
-  }
   @SuppressWarnings("unchecked")
   private String extractActivityId(Proposition proposition) {
     try {
@@ -97,11 +79,6 @@ public final class RCTAEPMessagingModule
   private boolean shouldShowMessage = false;
   private CountDownLatch latch = new CountDownLatch(1);
   private Message latestMessage = null;
-
-  // Cache to store PropositionItem objects by their ID for unified tracking
-  private final Map<String, PropositionItem> propositionItemCache = new ConcurrentHashMap<>();
-  // Cache to store the parent Proposition for each PropositionItem
-  private final Map<String, Proposition> propositionCache = new ConcurrentHashMap<>();
 
   public RCTAEPMessagingModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -210,7 +187,7 @@ public final class RCTAEPMessagingModule
                               }
 
                               // Inject UUID and cache native item for future tracking
-                              final String uuid = generateItemUuid(activityId, globalUuidCounter.incrementAndGet());
+                              final String uuid = activityId;
                               itemMap.putString("uuid", uuid);
                               propositionItemByUuid.put(uuid, item);
 
@@ -453,7 +430,6 @@ public final class RCTAEPMessagingModule
    * Tracks interactions with a PropositionItem using the provided interaction and event type.
    * This method is used by the React Native PropositionItem.track() method.
    * 
-   * @param itemId The unique identifier of the PropositionItem
    * @param interaction A custom string value to be recorded in the interaction (nullable)
    * @param eventType The MessagingEdgeEventType numeric value
    * @param tokens Array containing the sub-item tokens for recording interaction (nullable)
@@ -515,168 +491,4 @@ public final class RCTAEPMessagingModule
     }
   }
 
-
-
-  /**
-   * Generates XDM data for PropositionItem interactions.
-   * This method is used by the React Native PropositionItem.generateInteractionXdm() method.
-   * 
-   * @param itemId The unique identifier of the PropositionItem
-   * @param interaction A custom string value to be recorded in the interaction (nullable)
-   * @param eventType The MessagingEdgeEventType numeric value
-   * @param tokens Array containing the sub-item tokens for recording interaction (nullable)
-   * @param promise Promise to resolve with XDM data for the proposition interaction
-   */
-  @ReactMethod
-  public void generatePropositionInteractionXdm(String itemId, @Nullable String interaction, int eventType, @Nullable ReadableArray tokens, Promise promise) {
-    try {
-      // Convert eventType int to MessagingEdgeEventType enum
-      MessagingEdgeEventType edgeEventType = RCTAEPMessagingUtil.getEventType(eventType);
-      if (edgeEventType == null) {
-        promise.reject("InvalidEventType", "Invalid eventType: " + eventType);
-        return;
-      }
-      
-      // Find the PropositionItem by ID
-      PropositionItem propositionItem = findPropositionItemById(itemId);
-      
-      if (propositionItem == null) {
-        promise.reject("PropositionItemNotFound", "No PropositionItem found with ID: " + itemId);
-        return;
-      }
-
-      // Convert ReadableArray to List<String> if provided
-      List<String> tokenList = null;
-      if (tokens != null) {
-        tokenList = new ArrayList<>();
-        for (int i = 0; i < tokens.size(); i++) {
-          tokenList.add(tokens.getString(i));
-        }
-      }
-
-      // Generate XDM data using the appropriate method
-      Map<String, Object> xdmData;
-      if (interaction != null && tokenList != null) {
-        xdmData = propositionItem.generateInteractionXdm(interaction, edgeEventType, tokenList);
-      } else if (interaction != null) {
-        xdmData = propositionItem.generateInteractionXdm(interaction, edgeEventType, null);
-      } else {
-        xdmData = propositionItem.generateInteractionXdm(edgeEventType);
-      }
-
-      if (xdmData != null) {
-        // Convert Map to WritableMap for React Native
-        WritableMap result = RCTAEPMessagingUtil.toWritableMap(xdmData);
-        promise.resolve(result);
-      } else {
-        promise.reject("XDMGenerationFailed", "Failed to generate XDM data for PropositionItem: " + itemId);
-      }
-
-    } catch (Exception e) {
-//      Log.error(TAG, "Error generating XDM data for PropositionItem: " + itemId + ", error: " + e.getMessage());
-      promise.reject("XDMGenerationError", "Error generating XDM data: " + e.getMessage(), e);
-    }
-  }
-
-  /**
-   * Caches a PropositionItem and its parent Proposition for later tracking.
-   * This method should be called when PropositionItems are created from propositions.
-   * 
-   * @param propositionItem The PropositionItem to cache
-   * @param parentProposition The parent Proposition containing this item
-   */
-  public void cachePropositionItem(PropositionItem propositionItem, Proposition parentProposition) {
-    if (propositionItem != null && propositionItem.getItemId() != null) {
-      String itemId = propositionItem.getItemId();
-      
-      // Cache the PropositionItem
-      propositionItemCache.put(itemId, propositionItem);
-      
-      // Cache the parent Proposition
-      if (parentProposition != null) {
-        propositionCache.put(itemId, parentProposition);
-        
-        // Set the proposition reference in the PropositionItem if possible
-        try {
-          // Use reflection to set the proposition reference
-          java.lang.reflect.Field propositionRefField = propositionItem.getClass().getDeclaredField("propositionReference");
-          propositionRefField.setAccessible(true);
-          propositionRefField.set(propositionItem, new java.lang.ref.SoftReference<>(parentProposition));
-        } catch (Exception e) {
-
-        }
-      }
-      
-    }
-  }
-
-  /**
-   * Caches multiple PropositionItems from a list of propositions.
-   * This is a convenience method for caching all items from multiple propositions.
-   * 
-   * @param propositions List of propositions containing items to cache
-   */
-  public void cachePropositionsItems(List<Proposition> propositions) {
-    if (propositions != null) {
-      for (Proposition proposition : propositions) {
-        if (proposition.getItems() != null) {
-          for (PropositionItem item : proposition.getItems()) {
-            cachePropositionItem(item, proposition);
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Finds a cached PropositionItem by its ID.
-   * 
-   * @param itemId The ID of the PropositionItem to find
-   * @return The PropositionItem if found, null otherwise
-   */
-  private PropositionItem findPropositionItemById(String itemId) {
-    return propositionItemCache.get(itemId);
-  }
-
-  /**
-   * Finds a cached parent Proposition by PropositionItem ID.
-   * 
-   * @param itemId The ID of the PropositionItem whose parent to find
-   * @return The parent Proposition if found, null otherwise
-   */
-  private Proposition findPropositionByItemId(String itemId) {
-    return propositionCache.get(itemId);
-  }
-
-  /**
-   * Clears the PropositionItem cache.
-   * This should be called when propositions are refreshed or when memory cleanup is needed.
-   */
-  @ReactMethod
-  public void clearPropositionItemCache() {
-    propositionItemCache.clear();
-    propositionCache.clear();
-  }
-
-  /**
-   * Gets the current size of the PropositionItem cache.
-   * Useful for debugging and monitoring.
-   * 
-   * @param promise Promise that resolves with the cache size
-   */
-  @ReactMethod
-  public void getPropositionItemCacheSize(Promise promise) {
-    promise.resolve(propositionItemCache.size());
-  }
-
-  /**
-   * Checks if a PropositionItem exists in the cache.
-   * 
-   * @param itemId The ID of the PropositionItem to check
-   * @param promise Promise that resolves with boolean indicating if item exists
-   */
-  @ReactMethod
-  public void hasPropositionItem(String itemId, Promise promise) {
-    promise.resolve(propositionItemCache.containsKey(itemId));
-  }
 }
