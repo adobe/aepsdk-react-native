@@ -15,6 +15,7 @@ import {
   Optimize,
   DecisionScope,
   Proposition,
+  Offer,
 } from '@adobe/react-native-aepoptimize';
 import {WebView} from 'react-native-webview';
 import styles from '../styles/styles';
@@ -87,16 +88,33 @@ export default () => {
     console.log('Updated Propositions');
   };
 
+  const testUpdatePropositionsCallback = () => {
+    console.log('Testing updatePropositions with callback...');
+    Optimize.updatePropositions(
+      decisionScopes,
+      undefined,
+      undefined,
+      (response) => {
+        console.log('Callback received:', response);
+      },
+      (error) => {
+        console.log('Error:', error);
+      }
+    );
+  };
+
   const getPropositions = async () => {
     const propositions: Map<string, Proposition> =
       await Optimize.getPropositions(decisionScopes);
-    console.log(propositions);
+    console.log(propositions.size, ' propositions size');
     if (propositions) {
       setTextProposition(propositions.get(decisionScopeText.getName()));
       setImageProposition(propositions.get(decisionScopeImage.getName()));
       setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
       setJsonProposition(propositions.get(decisionScopeJson.getName()));
       setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+      const propositionObject = Object.fromEntries(propositions);
+      console.log('propositions', JSON.stringify(propositionObject, null, 2));
     }
   };
 
@@ -117,6 +135,39 @@ export default () => {
         }
       },
     });
+
+  const multipleOffersDisplayed = async () => {
+    const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+    const offers: Array<Offer> = [];
+    propositionsMap.forEach((proposition: Proposition) => {
+      if (proposition && proposition.items && proposition.items.length > 0) {
+        proposition.items.forEach((offer) => {
+          offers.push(offer);
+        });
+      }
+    });
+    console.log('offers', offers);
+    Optimize.displayed(offers);
+  };
+
+  const multipleOffersGenerateDisplayInteractionXdm = async () => {
+    const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+    const offers: Array<Offer> = [];
+    propositionsMap.forEach((proposition: Proposition) => {
+      if (proposition && proposition.items && proposition.items.length > 0) {
+        proposition.items.forEach((offer) => {
+          offers.push(offer);
+        });
+      }
+    });
+    console.log('offers', offers);
+    const displayInteractionXdm = await Optimize.generateDisplayInteractionXdm(offers);
+    if (displayInteractionXdm) {
+      console.log('displayInteractionXdm', JSON.stringify(displayInteractionXdm, null, 2));
+    } else {
+      console.log('displayInteractionXdm is null');
+    }
+  };
 
   const renderTargetOffer = () => {
     if (targetProposition?.items) {
@@ -330,6 +381,9 @@ export default () => {
         <Button title="Update Propositions" onPress={updatePropositions} />
       </View>
       <View style={{margin: 5}}>
+        <Button title="Test Update Propositions Callback" onPress={testUpdatePropositionsCallback} />
+      </View>
+      <View style={{margin: 5}}>
         <Button title="Get Propositions" onPress={getPropositions} />
       </View>
       <View style={{margin: 5}}>
@@ -342,6 +396,18 @@ export default () => {
         <Button
           title="Subscribe to Proposition Update"
           onPress={onPropositionUpdate}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
+          title="Multiple Offers Displayed"
+          onPress={multipleOffersDisplayed}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
+          title="Multiple Offers Generate Display Interaction XDM"
+          onPress={multipleOffersGenerateDisplayInteractionXdm}
         />
       </View>
       <Text style={{...styles.welcome, fontSize: 20}}>
