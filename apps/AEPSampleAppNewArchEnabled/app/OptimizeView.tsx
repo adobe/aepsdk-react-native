@@ -74,7 +74,7 @@ export default () => {
     decisionScopeImage,
     decisionScopeHtml,
     decisionScopeJson,
-    decisionScopeTargetMbox,
+    decisionScopeTargetMbox
   ];
 
   const optimizeExtensionVersion = async () => {

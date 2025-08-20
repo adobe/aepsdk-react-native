@@ -108,6 +108,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+
                 cachePropositionOffers(decisionScopePropositionMap);
                 Log.d(TAG, "updatePropositions callback success.");
                 if (successCallback != null) {
