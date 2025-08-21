@@ -52,7 +52,7 @@ export default function RootLayout() {
       });
   }, []);
 
-  return (
+return (
     <ThemeProvider value={scheme === "dark" ? DarkTheme : DefaultTheme}>
       <Drawer>
         <Drawer.Screen name="index" options={{ title: "Home" }} />

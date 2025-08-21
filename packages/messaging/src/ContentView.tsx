@@ -19,9 +19,9 @@ import {
   ImageOnlyContent,
   ImageOnlyContentStyle,
 } from "@adobe/react-native-aepui";
-import { ContentCardMappingManager } from "./ContentCardMappingManager";
-import Messaging from "./Messaging";
+import { fetchedContentCards } from "./ContentProvider";
 import { ContentViewEvent } from "@adobe/react-native-aepui";
+import MessagingEdgeEventType from "./models/MessagingEdgeEventType";
 
 export interface ContentViewProps {
   data: ContentTemplate;
@@ -41,8 +41,9 @@ export const ContentView: React.FC<ContentViewProps> = ({
   listener,
 }) => {
   const [isVisible, setIsVisible] = useState(true);
-  const contentCardMapping =
-    ContentCardMappingManager.getInstance().getContentCardMapping(data.id);
+  const contentCard = fetchedContentCards.get(data.id);
+  // const contentCardMapping =
+  //   ContentCardMappingManager.getInstance().getContentCardMapping(data.id);
 
   // Track if onDisplay was already called to prevent duplicates
   const displayedRef = useRef(false);
@@ -53,21 +54,18 @@ export const ContentView: React.FC<ContentViewProps> = ({
       // Handle dismiss event by hiding the content view
       if (event === "onDismiss") {
         setIsVisible(false);
+        if (contentCard) {
+          contentCard.track(MessagingEdgeEventType.DISMISS);
+        }
       }
 
-      if (event === "clickButton" && contentCardMapping) {
-        console.log("trackContentCardInteraction", contentCardMapping);
-        Messaging.trackContentCardInteraction(
-          contentCardMapping.proposition,
-          contentCardMapping.contentCard
-        );
+      if (event === "clickButton" && contentCard) {
+        console.log("trackContentCardInteraction", contentCard);
+        contentCard.track(MessagingEdgeEventType.INTERACT);
       }
-      if (event === "onDisplay" && contentCardMapping) {
-        console.log("trackContentCardDisplay", contentCardMapping);
-        Messaging.trackContentCardDisplay(
-          contentCardMapping.proposition,
-          contentCardMapping.contentCard
-        );
+      if (event === "onDisplay" && contentCard) {
+        console.log("trackContentCardDisplay", contentCard);
+        contentCard.track(MessagingEdgeEventType.DISPLAY);
       }
 
       if (listener) {
@@ -115,7 +113,7 @@ export const ContentView: React.FC<ContentViewProps> = ({
       return (
         <ImageOnlyContent
           data={data.imageOnlyData}
-          height={cardHeight} 
+          height={cardHeight}
           styleOverrides={styleOverrides?.imageOnlyStyle}
           listener={defaultListener}
         />

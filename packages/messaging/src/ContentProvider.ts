@@ -13,7 +13,6 @@ import { SmallImageContentData, LargeImageContentData, ImageOnlyContentData } fr
 import Messaging from "./Messaging";
 import { PersonalizationSchema } from "./models/PersonalizationSchema";
 import { ContentCard } from "./models/ContentCard";
-import { ContentCardMappingManager } from "./ContentCardMappingManager";
 
 /** Represents template types for AepUI templates. */
 export enum TemplateType {
@@ -35,12 +34,13 @@ export interface ContentTemplate {
     // TODO: add metadata here ....
 }
 
+export const fetchedContentCards: Map<string, ContentCard> = new Map();
+
 export class ContentProvider {
 
-    private mappingManager: ContentCardMappingManager;
+    // cached fetetched content card objects 
 
     constructor(private readonly surface: string) {
-        this.mappingManager = ContentCardMappingManager.getInstance();
     }
 
     //TODO: it looks like this is not useful, it might be beeeter to remove it and move getContent() to the Messaging class
@@ -71,10 +71,10 @@ export class ContentProvider {
         for (const proposition of propositions) {
             for (const item of proposition.items) {
                 if (item.schema === PersonalizationSchema.CONTENT_CARD) {
-                    const contentCard = item as ContentCard;
+                    const contentCard = new ContentCard (item as any);
 
                     // Add to the mapping manager for tracking purposes
-                    this.mappingManager.addMapping(contentCard.id, contentCard, proposition);
+                    fetchedContentCards.set(contentCard.id, contentCard);
                     const templateType = contentCard.data?.meta?.adobe?.template as string;
                     switch (templateType) {
                         case "SmallImage":

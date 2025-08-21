@@ -19,6 +19,7 @@ import {
   Modal,
   Appearance,
   ColorSchemeName,
+  Button,
 } from "react-native";
 import {
   ContentProvider,
@@ -66,21 +67,17 @@ const ContentCardView = () => {
   };
 
   useEffect(() => {
-    Messaging.updatePropositionsForSurfaces(["rn/ios/remote_image"]);
+    Messaging.updatePropositionsForSurfaces(["android-cc"]);
     // Note:
     // - Call above to update the propositions and cache the content locally
     // - Customers may call this function when launching the app
-    // MobileCore.trackAction("xyz");
-    // const provider = new ContentProvider("card/ms");
-
-    
-    MobileCore.trackAction("small_image");
+   
     //  MobileCore.trackAction("large_image");
     //  MobileCore.trackAction("image_only");
     
 
 
-    const provider = new ContentProvider("rn/ios/remote_image");
+    const provider = new ContentProvider("android-cc");
     provider
       .getContent()
       .then((content) => {
@@ -101,6 +98,14 @@ const ContentCardView = () => {
           alignItems: "center",
         }}
       >
+        <Button title="track proposition" onPress={() => {
+            //MobileCore.trackAction("xyz");
+            // const provider = new ContentProvider("card/ms");
+        
+            
+            MobileCore.trackAction("small_image");
+          console.log('track proposition');
+        }} />
         <View
           style={{
             width: "65%",
