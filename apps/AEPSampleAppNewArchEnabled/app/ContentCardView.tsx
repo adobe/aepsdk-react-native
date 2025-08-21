@@ -72,11 +72,19 @@ const ContentCardView = () => {
     // - Customers may call this function when launching the app
     // MobileCore.trackAction("xyz");
     // const provider = new ContentProvider("card/ms");
+
+    
+    MobileCore.trackAction("small_image");
+    //  MobileCore.trackAction("large_image");
+    //  MobileCore.trackAction("image_only");
+    
+
+
     const provider = new ContentProvider("rn/ios/remote_image");
     provider
       .getContent()
       .then((content) => {
-        console.log(content);
+        console.log("i am in content card view", content);
         setContent(content);
       })
       .catch((err) => console.error(err.message))
