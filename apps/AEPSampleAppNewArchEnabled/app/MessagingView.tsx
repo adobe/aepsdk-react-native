@@ -29,6 +29,9 @@ import { useRouter } from 'expo-router';
 const SURFACES = ['android-cbe-preview', 'android-cc', 'android-cc-naman'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
 
+const SURFACES_CONTENT_CARDS_UI = ["android-cbe-preview", "cbe/json", "android-cc"];
+const SURFACES_WITH_CONTENT_CARDS_2 = ["android-cc"];
+
 // Helper: instantiate the appropriate class based on schema
 const toItemInstance = (itemData: any) => {
   switch (itemData?.schema) {
@@ -50,18 +53,27 @@ const messagingExtensionVersion = async () => {
 
 const refreshInAppMessages = () => {
   Messaging.refreshInAppMessages();
-  console.log('messages refreshed');
+  console.log("messages refreshed");
 };
 
 const setMessagingDelegate = () => {
   Messaging.setMessagingDelegate({
-    onDismiss: msg => console.log('dismissed!', msg),
-    onShow: msg => console.log('show', msg),
+    onDismiss: (msg) => console.log("dismissed!", msg),
+    onShow: (msg) => {
+      console.log("show", msg);
+      Messaging.handleJavascriptMessage(
+        msg.id,
+        "myInappCallback",
+        (content) => {
+          console.log("Received webview content:", content);
+        }
+      );
+    },
     shouldShowMessage: () => true,
     shouldSaveMessage: () => true,
     urlLoaded: (url, message) => console.log(url, message),
   });
-  console.log('messaging delegate set');
+  console.log("messaging delegate set");
 };
 
 const getPropositionsForSurfaces = async () => {
@@ -70,63 +82,67 @@ const getPropositionsForSurfaces = async () => {
 };
 
 const trackAction = async () => {
-  MobileCore.trackAction('tuesday', {full: true});
+  MobileCore.trackAction("tuesday", { full: true });
 };
 
 const updatePropositionsForSurfaces = async () => {
   Messaging.updatePropositionsForSurfaces(SURFACES);
-  console.log('Updated Propositions');
+  console.log("Updated Propositions");
 };
 
 const getCachedMessages = async () => {
   const messages = await Messaging.getCachedMessages();
-  const newMessage = new Message(messages[0]);
-  newMessage.track("button_clicked", MessagingEdgeEventType.INTERACT);
-  console.log('Cached messages:', messages);
+  console.log("Cached messages:", messages);
 };
 
 const getLatestMessage = async () => {
   const message = await Messaging.getLatestMessage();
-  console.log('Latest Message:', message);
+  console.log("Latest Message:", message);
 };
 
 // this method can be used to track click interactions with content cards
 const trackContentCardInteraction = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces(SURFACES_WITH_CONTENT_CARDS);
-  
-  for (const surface of SURFACES_WITH_CONTENT_CARDS) { 
+  const messages = await Messaging.getPropositionsForSurfaces(
+    SURFACES_WITH_CONTENT_CARDS
+  );
+
+  for (const surface of SURFACES_WITH_CONTENT_CARDS) {
     const propositions = messages[surface] || [];
 
     for (const proposition of propositions) {
       for (const propositionItem of proposition.items) {
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          // Cast to ContentCard for the legacy tracking method
-          Messaging.trackContentCardInteraction(proposition, propositionItem as any);
-          console.log('trackContentCardInteraction', proposition, propositionItem);
+          Messaging.trackContentCardInteraction(proposition, propositionItem);
+          console.log(
+            "trackContentCardInteraction",
+            proposition,
+            propositionItem
+          );
         }
       }
     }
   }
-}
+};
 
 // this method can be used to track display interactions with content cards
 const trackContentCardDisplay = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces(SURFACES_WITH_CONTENT_CARDS);
+  const messages = await Messaging.getPropositionsForSurfaces(
+    SURFACES_WITH_CONTENT_CARDS
+  );
 
-  for (const surface of SURFACES_WITH_CONTENT_CARDS) { 
+  for (const surface of SURFACES_WITH_CONTENT_CARDS) {
     const propositions = messages[surface] || [];
 
     for (const proposition of propositions) {
       for (const propositionItem of proposition.items) {
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          // Cast to ContentCard for the legacy tracking method
-          Messaging.trackContentCardDisplay(proposition, propositionItem as any);
-          console.log('trackContentCardDisplay', proposition, propositionItem);
+          Messaging.trackContentCardDisplay(proposition, propositionItem);
+          console.log("trackContentCardDisplay", proposition, propositionItem);
         }
       }
     }
   }
-}
+};
 
 // New method demonstrating trackPropositionItem API
 const trackPropositionItemExample = async () => {
@@ -327,10 +343,13 @@ function MessagingView() {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{marginTop: 75}}>
+      <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={router.back} title="Go to main page" />
         <Text style={styles.welcome}>Messaging</Text>
-        <Button title="extensionVersion()" onPress={messagingExtensionVersion} />
+        <Button
+          title="extensionVersion()"
+          onPress={messagingExtensionVersion}
+        />
         <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
         <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
         <Button

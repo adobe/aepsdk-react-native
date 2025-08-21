@@ -29,6 +29,11 @@ import { PersonalizationSchema } from './models/PersonalizationSchema';
 import { PropositionItem, PropositionItemData } from './models/PropositionItem';
 import { Activity, Characteristics } from './models/ScopeDetails';
 
+export { SmallImageContentData } from "@adobe/react-native-aepui";
+export * from './ContentProvider';
+export * from './ContentView';
+export { ThemeProvider, Themes } from '@adobe/react-native-aepui';
+
 export {
   Activity,
   Characteristics,

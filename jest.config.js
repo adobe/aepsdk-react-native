@@ -6,7 +6,7 @@ module.exports = {
     '\\.(ts|tsx)$': 'ts-jest'
   },
   setupFiles: ['./tests/jest/setup.ts'],
-  testMatch: ['**/packages/**/__tests__/*.ts'],
+  testMatch: ['**/packages/**/__tests__/*.ts', '**/packages/**/__tests__/*.tsx'],
   modulePaths: ['node_modules', './apps/AEPSampleAppNewArchEnabled/node_modules'],
   testPathIgnorePatterns: ['./packages/template'],
   moduleDirectories: ['node_modules', './apps/AEPSampleAppNewArchEnabled/node_modules'],

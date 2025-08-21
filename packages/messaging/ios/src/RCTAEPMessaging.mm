@@ -62,5 +62,8 @@ RCT_EXTERN_METHOD(trackPropositionItem
                   : (NSArray<NSString *> * _Nullable)tokens withResolver
                   : (RCTPromiseResolveBlock)resolve withRejecter
                   : (RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(handleJavascriptMessage
+                  : (NSString *)messageId handlerName
+                  : (NSString *)handlerName)
 
 @end

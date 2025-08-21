@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.AEPSampleAppNewArchEnabled"
+      "bundleIdentifier": "com.adobe.MessagingDemoAppSwiftUI"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.AEPSampleAppNewArchEnabled"
+      "package": "com.adobe.marketing.mobile.messagingsample"
     },
     "web": {
       "bundler": "metro",
@@ -34,7 +34,7 @@
         "expo-build-properties",
         {
           "ios": {
-            "newArchEnabled": true, 
+            "newArchEnabled": true,
             "useFrameworks": "static"
           },
           "android": {
