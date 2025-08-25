@@ -40,8 +40,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableType;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.ArrayList;
@@ -133,7 +131,6 @@ public final class RCTAEPMessagingModule
               @Override
               public void call(
                       Map<Surface, List<Proposition>> propositionsMap) {
-                propositionItemByUuid.clear();
                 // Build UUID->Proposition map keyed by scopeDetails.activity.activityID when available
                 try {
                   for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
@@ -186,6 +183,8 @@ public final class RCTAEPMessagingModule
   public void updatePropositionsForSurfaces(ReadableArray surfaces) {
     Messaging.updatePropositionsForSurfaces(
         RCTAEPMessagingUtil.convertSurfaces(surfaces));
+        propositionItemByUuid.clear();
+
   }
 
   // Message Methods
