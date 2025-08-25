@@ -30,19 +30,6 @@ import { useRouter } from 'expo-router';
 const SURFACES = ['android-cbe-preview', 'android-cc', 'android-cc-naman'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
 
-// Helper: instantiate the appropriate class based on schema
-const toItemInstance = (itemData: any) => {
-  switch (itemData?.schema) {
-    case PersonalizationSchema.CONTENT_CARD:
-      return new ContentCard(itemData as any);
-    case PersonalizationSchema.HTML_CONTENT:
-      return new HTMLProposition(itemData as any);
-    case PersonalizationSchema.JSON_CONTENT:
-      return new JSONPropositionItem(itemData as any);
-    default:
-      return new PropositionItem(itemData as any);
-  }
-};
 
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
@@ -66,23 +53,7 @@ const setMessagingDelegate = () => {
 };
 const getPropositionsForSurfaces = async () => {
   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
- // console.log("messages", messages);
-
-  for (const surface of SURFACES) { 
-    const propositions = messages[surface] || [];
-
-    for (const proposition of propositions) {
-      const newMessage = new MessagingProposition(proposition); 
-      console.log("newMessage here", newMessage);
-        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY); 
-        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY);
-        console.log('Tracked content card display using unified API');
-        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-        console.log('Tracked content card interaction using unified API');
-    }
-  }
-  //console.log(JSON.stringify(mapped));
+  console.log(JSON.stringify(messages));
 };
 const trackAction = async () => {
   MobileCore.trackAction('tuesday', {full: true});
@@ -143,28 +114,6 @@ const trackContentCardDisplay = async () => {
   }
 }
 
-// New method demonstrating trackPropositionItem API
-const trackPropositionItemExample = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  
-  for (const surface of SURFACES) { 
-    const propositions = messages[surface] || [];
-
-    for (const proposition of propositions) {
-      for (const propositionItem of proposition.items) {
-        // Track proposition item interaction using the new API
-        Messaging.trackPropositionItem(
-          propositionItem.id, 
-          'button_clicked', 
-          MessagingEdgeEventType.INTERACT, 
-          null
-        );
-        console.log('trackPropositionItem called for:', propositionItem.id);
-      }
-    }
-  }
-}
-
 
 // Method demonstrating unified tracking using PropositionItem methods
 const unifiedTrackingExample = async () => {
@@ -175,88 +124,18 @@ const unifiedTrackingExample = async () => {
     const propositions = messages[surface] || [];
 
     for (const proposition of propositions) {
-      for (const propositionItemData of proposition.items) {
-        // Create strongly-typed instance based on schema
-        const item = toItemInstance(propositionItemData);
-        console.log('propositionItem here is created:', item, (item as any).uuid);
-        
-        // Use the unified tracking approach via base class
-        if (item.schema === PersonalizationSchema.CONTENT_CARD) {
-           item.track(MessagingEdgeEventType.DISPLAY);
-          console.log('Tracked content card display using unified API');
-          item.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-         // item.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-           item.track(MessagingEdgeEventType.DISPLAY);
-
-          console.log('Tracked content card interaction using unified API');
-        } else if (item.schema === PersonalizationSchema.JSON_CONTENT) {
-          // item.track(MessagingEdgeEventType.DISPLAY);
-          item.track('token clicked', MessagingEdgeEventType.INTERACT, null);
-          console.log('Tracked JSON content display using unified API');
-        }
-      }
+      const newMessage = new MessagingProposition(proposition); 
+      console.log("newMessage here", newMessage);
+        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY); 
+        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY);
+        console.log('Tracked content card display using unified API');
+        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+        console.log('Tracked content card interaction using unified API');
     }
   }
 }
 
-
-// Function to track in-app message interactions
-const trackInAppMessage = async () => {
-  try {
-    // Get cached messages first
-    const messages = await Messaging.getCachedMessages();
-    console.log('Cached messages:', messages);
-    
-    if (messages && messages.length > 0) {
-      const message = messages[0]; // Get first message
-      
-      // Call track on the message instance
-      // This calls the Java track(messageId, interaction, eventType) method
-      message.track("button_clicked", MessagingEdgeEventType.INTERACT);
-      
-      console.log(`Tracked interaction on message: ${message.id}`);
-    } else {
-      console.log('No cached messages available to track');
-    }
-  } catch (error) {
-    console.error('Error tracking in-app message:', error);
-  }
-};
-
-// Function to track proposition items using cached approach
-const trackPropositionItems = async () => {
-  try {
-    // Get propositions - this automatically caches them
-    const propositions = await Messaging.getPropositionsForSurfaces(['android-cc', 'homepage', 'android-cbe-preview']);
-    console.log('Retrieved propositions:', propositions);
-    
-    // Iterate through surfaces
-    for (const [surface, propositionList] of Object.entries(propositions)) {
-      console.log(`Processing surface: ${surface}`);
-      
-      // Iterate through propositions for this surface
-      for (const proposition of propositionList as any[]) {
-        console.log(`Processing proposition: ${proposition.id}`);
-        
-        // Iterate through items in the proposition
-        for (const itemData of proposition.items) {
-          // Create instance based on schema (this gets cached automatically)
-          const item = toItemInstance(itemData);
-          
-          // Track display event
-          item.track(MessagingEdgeEventType.DISPLAY);
-          console.log(`Tracked display for item: ${item.id}`);
-          
-          // Track interaction event
-          item.track('user_clicked', MessagingEdgeEventType.INTERACT, null);
-          console.log(`Tracked interaction for item: ${item.id}`);
-        }
-      }
-    }
-  } catch (error) {
-    console.error('Error tracking proposition items:', error);
-  }
-};
 
 
 function MessagingView() {
@@ -283,18 +162,7 @@ function MessagingView() {
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackPropositionInteraction()" onPress={trackContentCardInteraction} />
         <Button title="trackContentCardDisplay()" onPress={trackContentCardDisplay} />
-        <Button title="trackPropositionItem()" onPress={trackPropositionItemExample} />
-        {/* <Button title="generatePropositionInteractionXdm()" onPress={generatePropositionInteractionXdmExample} /> */}
         <Button title="Unified Tracking Example" onPress={unifiedTrackingExample} />
-        <Button 
-          title="Track In-App Message" 
-          onPress={trackInAppMessage} 
-        />
-        <Button 
-          title="Track Proposition Items (Cached)" 
-          onPress={trackPropositionItems} 
-        />
-        {/* <Button title="Unified XDM Generation Example" onPress={unifiedXdmGenerationExample} /> */}
       </ScrollView>
     </View>
   );
