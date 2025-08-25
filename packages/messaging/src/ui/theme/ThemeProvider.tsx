@@ -10,9 +10,10 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import React, { createContext, useContext, ReactNode, useMemo } from "react";
-import { useColorScheme } from "react-native";
-import { Theme, Themes } from "./Theme";
+
+import React, { createContext, useContext, ReactNode, useMemo } from 'react';
+import { useColorScheme } from 'react-native';
+import { Theme, Themes } from './Theme';
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -26,26 +27,26 @@ export interface ThemeContextType {
 const defaultTheme: Themes = {
   light: {
     colors: {
-      primary: "#007AFF",
-      secondary: "#5856D6",
-      background: "#FFFFFF",
-      text_primary: "#000000",
-      text_secondary: "#8E8E93",
-      image_placeholder: "#C7C7CC",
-      button_text_color: "dodgerblue",
-    },
+      primary: '#007AFF',
+      secondary: '#5856D6',
+      background: '#FFFFFF',
+      textPrimary: '#000000',
+      textSecondary: '#8E8E93',
+      imagePlaceholder: '#C7C7CC',
+      buttonTextColor: 'dodgerblue'
+    }
   },
   dark: {
     colors: {
-      primary: "#0A84FF",
-      secondary: "#5E5CE6",
-      background: "#262626",
-      text_primary: "#FFFFFF",
-      text_secondary: "#8E8E93",
-      image_placeholder: "#48484A",
-      button_text_color: "dodgerblue",
-    },
-  },
+      primary: '#0A84FF',
+      secondary: '#5E5CE6',
+      background: '#262626',
+      textPrimary: '#FFFFFF',
+      textSecondary: '#8E8E93',
+      imagePlaceholder: '#48484A',
+      buttonTextColor: 'dodgerblue'
+    }
+  }
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -59,7 +60,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
  */
 export const ThemeProvider = ({
   children,
-  customThemes,
+  customThemes
 }: ThemeProviderProps) => {
   const systemColorScheme = useColorScheme();
 
@@ -69,28 +70,29 @@ export const ThemeProvider = ({
       light: {
         colors: {
           ...defaultTheme.light.colors,
-          ...(customThemes?.light?.colors || {}),
-        },
+          ...(customThemes?.light?.colors || {})
+        }
       },
       dark: {
         colors: {
           ...defaultTheme.dark.colors,
-          ...(customThemes?.dark?.colors || {}),
-        },
-      },
+          ...(customThemes?.dark?.colors || {})
+        }
+      }
     }),
     [customThemes]
   );
 
   // Memoize the active theme
-  const activeTheme = useMemo(() => {
-    return mergedThemes[systemColorScheme] || mergedThemes.light;
-  }, [mergedThemes, systemColorScheme]);
+  const activeTheme = useMemo(
+    () => mergedThemes[systemColorScheme ?? 'light'],
+    [mergedThemes, systemColorScheme]
+  );
 
   // Memoize the context value to prevent unnecessary re-renders
   const contextValue: ThemeContextType = useMemo(
     () => ({
-      theme: activeTheme,
+      theme: activeTheme
     }),
     [activeTheme]
   );
@@ -109,10 +111,10 @@ export const ThemeProvider = ({
  */
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
+  const systemColorScheme = useColorScheme();
   if (context === undefined) {
-    const systemColorScheme = useColorScheme();
     return {
-      theme: defaultTheme[systemColorScheme] || defaultTheme.light,
+      theme: defaultTheme[systemColorScheme ?? 'light']
     };
   }
   return context;

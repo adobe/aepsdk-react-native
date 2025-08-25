@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 */
 
 import Messaging from './Messaging';
-import { ContentCard, ContentCardData } from './models/ContentCard';
 
 import { InAppMessage } from './models/InAppMessage';
 import { HTMLProposition, HTMLPropositionData } from './models/HTMLProposition';
@@ -25,17 +24,15 @@ import { MessagingPropositionItem } from './models/MessagingPropositionItem';
 import { PersonalizationSchema } from './models/PersonalizationSchema';
 import { PropositionItem, PropositionItemData } from './models/PropositionItem';
 import { Activity, Characteristics } from './models/ScopeDetails';
+import { ContentTemplate, TemplateType } from './ui/types/Templates';
 
-export { SmallImageContentData } from "@adobe/react-native-aepui";
-export * from './ContentProvider';
-export * from './ContentView';
-export { ThemeProvider, Themes } from '@adobe/react-native-aepui';
+export * from './models/ContentCard';
+export * from './ui/components';
+export * from './ui/components/ContentView';
 
 export {
   Activity,
   Characteristics,
-  ContentCard,
-  ContentCardData,
   InAppMessage,
   Messaging,
   Message,
@@ -50,4 +47,6 @@ export {
   HTMLPropositionData,
   JSONPropositionItem,
   JSONPropositionData,
+  ContentTemplate,
+  TemplateType
 };

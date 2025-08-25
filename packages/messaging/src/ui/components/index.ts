@@ -9,13 +9,11 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-export * from './SmallImageTypes';
-export * from './SmallImageCard';
-export * from './LargeImageTypes';
-export * from './LargeImageCard';
-export * from './ImageOnlyTypes';
-export * from './ImageOnlyCard';
-export * from './common/ContentViewEvent';
-export * from './common/Component';
-export { ThemeProvider } from './common/ThemeProvider';
-export type { Themes } from './common/Theme';
+
+export * from './Button/Button';
+export * from './ImageOnlyCard/ImageOnlyCard';
+export * from './SmallImageCard/SmallImageCard';
+export * from './LargeImageCard/LargeImageCard';
+export * from '../types/ContentViewEvent';
+export { ThemeProvider } from '../theme/ThemeProvider';
+export type { Themes } from '../theme/Theme';
