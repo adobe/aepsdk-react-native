@@ -21,8 +21,9 @@ import {
   Message,
   ContentCard,
   HTMLProposition,
-  JSONPropositionItem,
+  JSONPropositionItem
 } from '@adobe/react-native-aepmessaging'
+import { MessagingProposition } from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
@@ -75,12 +76,26 @@ const setMessagingDelegate = () => {
   });
   console.log("messaging delegate set");
 };
-
 const getPropositionsForSurfaces = async () => {
   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  console.log(JSON.stringify(messages));
-};
+ // console.log("messages", messages);
 
+  for (const surface of SURFACES) { 
+    const propositions = messages[surface] || [];
+
+    for (const proposition of propositions) {
+      const newMessage = new MessagingProposition(proposition); 
+      console.log("newMessage here", newMessage);
+        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY); 
+        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY);
+        console.log('Tracked content card display using unified API');
+        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+        console.log('Tracked content card interaction using unified API');
+    }
+  }
+  //console.log(JSON.stringify(mapped));
+};
 const trackAction = async () => {
   MobileCore.trackAction("tuesday", { full: true });
 };

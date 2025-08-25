@@ -13,6 +13,7 @@ import { SmallImageContentData, LargeImageContentData, ImageOnlyContentData } fr
 import Messaging from "./Messaging";
 import { PersonalizationSchema } from "./models/PersonalizationSchema";
 import { ContentCard } from "./models/ContentCard";
+import { MessagingProposition } from "./models/MessagingProposition";
 
 /** Represents template types for AepUI templates. */
 export enum TemplateType {
@@ -67,11 +68,12 @@ export class ContentProvider {
             return [];
         }
         const list: ContentTemplate[] = [];
-
+        
         for (const proposition of propositions) {
-            for (const item of proposition.items) {
+            const newProposition = new MessagingProposition(proposition);
+            for (const item of newProposition.items) {
                 if (item.schema === PersonalizationSchema.CONTENT_CARD) {
-                    const contentCard = new ContentCard (item as any);
+                    const contentCard =  (item as any);
 
                     // Add to the mapping manager for tracking purposes
                     fetchedContentCards.set(contentCard.id, contentCard);

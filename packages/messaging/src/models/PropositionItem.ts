@@ -23,6 +23,7 @@ export interface PropositionItemData {
   id: string;
   uuid: string;
   schema: PersonalizationSchema;
+  activityID: string;
   data: {
     [key: string]: any;
   };
@@ -38,6 +39,7 @@ export interface PropositionItemData {
 export class PropositionItem {
   id: string;
   uuid: string;
+  activityID: string;
   schema: PersonalizationSchema;
   data: { [key: string]: any };
 
@@ -46,6 +48,7 @@ export class PropositionItem {
     this.schema = propositionItemData.schema;
     this.data = propositionItemData.data;
     this.uuid = propositionItemData.uuid;
+    this.activityID = propositionItemData.activityID;
   }
 
   /**
@@ -125,7 +128,9 @@ export class PropositionItem {
    * Internal method that performs the actual tracking
    */
   private trackWithDetails(interaction: string | null, eventType: MessagingEdgeEventType, tokens: string[] | null): void {
-    const nativeIdentifier = this.uuid ?? this.id;
+    console.log("activityID here", this.activityID);
+    const nativeIdentifier = this.activityID ?? null;
+    console.log("nativeIdentifier here", nativeIdentifier);
     RCTAEPMessaging.trackPropositionItem(nativeIdentifier, interaction, eventType, tokens);
   }
 
