@@ -14,6 +14,7 @@ import {
   Image,
   ImageStyle,
   Pressable,
+  // Pressable,
   StyleSheet,
   useColorScheme,
   View,
@@ -21,6 +22,7 @@ import {
 } from 'react-native';
 import DismissButton from '../DismissButton/DismissButton';
 import { ImageOnlyContentData } from '../../../models/ContentCard';
+import useAspectRatio from '../../hooks/useAspectRatio';
 
 export interface ImageOnlyContentProps {
   data: ImageOnlyContentData;
@@ -50,21 +52,28 @@ const ImageOnlyCard: React.FC<ImageOnlyContentProps> = ({
   styleOverrides
 }) => {
   const colorScheme = useColorScheme();
-  console.log('imageonlycard', data);
-
-  const imageSource = useMemo(() => {
+  const imageUri = useMemo(() => {
     if (colorScheme === 'dark' && data?.image?.darkUrl) {
-      return { uri: data.image.darkUrl };
+      return data.image.darkUrl;
     }
-    return { uri: data.image?.url };
+    return data.image?.url;
   }, [colorScheme, data.image?.darkUrl, data.image?.url]);
+  const imageAspectRatio = useAspectRatio(imageUri);
 
   return (
-    <Pressable onPress={onPress} style={styleOverrides?.container}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.card, styleOverrides?.container]}
+    >
       <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
         <Image
-          source={imageSource}
-          style={[styles.image, styleOverrides?.image]}
+          resizeMode="contain"
+          source={{ uri: imageUri }}
+          style={[
+            styles.image,
+            { aspectRatio: imageAspectRatio },
+            styleOverrides?.image
+          ]}
         />
         {data.dismissBtn?.style && data.dismissBtn.style !== 'none' && (
           <DismissButton onPress={onDismiss} type={data.dismissBtn.style} />
@@ -78,19 +87,17 @@ export default ImageOnlyCard;
 
 const styles = StyleSheet.create({
   card: {
-    overflow: 'hidden',
     margin: 15,
-    position: 'relative',
     flex: 1
   },
   imageContainer: {
     backgroundColor: '#f0f0f0',
+    flex: 1,
     width: '100%',
-    aspectRatio: 1,
+    height: '100%'
   },
   image: {
     width: '100%',
-    height: '100%',
-    resizeMode: 'cover'
+    flex: 1
   }
 });

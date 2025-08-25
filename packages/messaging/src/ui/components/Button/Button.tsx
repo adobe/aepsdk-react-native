@@ -18,7 +18,7 @@ const Button: React.FC<ButtonProps> = ({
   interactId,
   ...props
 }) => {
-  const { theme } = useTheme();
+  const theme = useTheme();
   const handlePress = useCallback(() => {
     if (interactId) {
       onPress?.(interactId);

@@ -26,6 +26,8 @@ import Button from '../Button/Button';
 import { SmallImageContentData } from '../../../models/ContentCard';
 import { useMemo } from 'react';
 import DismissButton from '../DismissButton/DismissButton';
+import { useTheme } from '../../theme/ThemeProvider';
+import useAspectRatio from '../../hooks/useAspectRatio';
 
 export interface SmallImageContentStyle {
   card?: Partial<ViewStyle>;
@@ -60,13 +62,16 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
   console.log('render');
   console.log('data', content);
   const colorScheme = useColorScheme();
+  const theme = useTheme();
 
-  const imageSource = useMemo(() => {
+  const imageUri = useMemo(() => {
     if (colorScheme === 'dark' && content?.image?.darkUrl) {
-      return { uri: content.image.darkUrl };
+      return content.image.darkUrl;
     }
-    return { uri: content.image?.url };
+    return content.image?.url;
   }, [colorScheme, content?.image?.darkUrl, content?.image?.url]);
+
+  const imageAspectRatio = useAspectRatio(imageUri);
 
   return (
     <Pressable
@@ -74,16 +79,27 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
       style={[styles.card, styleOverrides?.card]}
       {...props}
     >
-      <Image
-        source={imageSource}
-        style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain', maxWidth: '25%' }}
-      />
+      {imageUri && (
+        <Image
+          source={{ uri: imageUri }}
+          style={[
+            styles.image,
+            { aspectRatio: imageAspectRatio },
+            styleOverrides?.image
+          ]}
+        />
+      )}
+
       <View style={{ flex: 1 }}>
         {content?.title?.content && (
-          <Text style={styles.title}>{content.title.content}</Text>
+          <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
+            {content.title.content}
+          </Text>
         )}
         {content?.body?.content && (
-          <Text style={styles.body}>{content.body.content}</Text>
+          <Text style={[styles.body, { color: theme.colors.textPrimary }]}>
+            {content.body.content}
+          </Text>
         )}
         <View style={styles.buttonContainer}>
           {content?.buttons?.length &&
@@ -122,15 +138,14 @@ const styles = StyleSheet.create({
     minHeight: 120
   },
   imageContainer: {
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
-    width: '35%',
+    borderRadius: 12,
+    width: 'auto',
     height: '100%'
   },
   image: {
-    width: '100%',
+    width: 'auto',
     height: '100%',
-    resizeMode: 'cover'
+    resizeMode: 'contain'
   },
   contentContainer: {
     flex: 1,

@@ -20,10 +20,6 @@ interface ThemeProviderProps {
   customThemes: Themes;
 }
 
-export interface ThemeContextType {
-  theme: Theme;
-}
-
 const defaultTheme: Themes = {
   light: {
     colors: {
@@ -49,7 +45,7 @@ const defaultTheme: Themes = {
   }
 };
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<Theme | undefined>(undefined);
 
 /**
  * ThemeProvider component that provides the theme to the children components.
@@ -90,12 +86,7 @@ export const ThemeProvider = ({
   );
 
   // Memoize the context value to prevent unnecessary re-renders
-  const contextValue: ThemeContextType = useMemo(
-    () => ({
-      theme: activeTheme
-    }),
-    [activeTheme]
-  );
+  const contextValue: Theme = useMemo(() => activeTheme, [activeTheme]);
 
   return (
     <ThemeContext.Provider value={contextValue}>
@@ -106,16 +97,13 @@ export const ThemeProvider = ({
 
 /**
  * useTheme hook that returns the theme context.
- *
  * @returns The theme context.
  */
-export const useTheme = (): ThemeContextType => {
+export const useTheme = (): Theme => {
   const context = useContext(ThemeContext);
   const systemColorScheme = useColorScheme();
   if (context === undefined) {
-    return {
-      theme: defaultTheme[systemColorScheme ?? 'light']
-    };
+    return defaultTheme[systemColorScheme ?? 'light'];
   }
   return context;
 };
