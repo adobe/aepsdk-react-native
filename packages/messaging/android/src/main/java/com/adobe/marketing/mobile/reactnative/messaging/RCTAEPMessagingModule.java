@@ -120,129 +120,193 @@ public final class RCTAEPMessagingModule
   }
 
   @ReactMethod
-  public void getPropositionsForSurfaces(ReadableArray surfaces, final Promise promise) {
-    final String bundleId = this.reactContext.getPackageName();
-
+  public void getPropositionsForSurfaces(ReadableArray surfaces,
+                                         final Promise promise) {
+    String bundleId = this.reactContext.getPackageName();
     Messaging.getPropositionsForSurfaces(
             RCTAEPMessagingUtil.convertSurfaces(surfaces),
             new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
               @Override
               public void fail(final AdobeError adobeError) {
-                Log.d(TAG, "getPropositionsForSurfaces: fail: " + adobeError.getErrorName());
-                promise.reject(adobeError.getErrorName(), "Unable to get Propositions");
+                promise.reject(adobeError.getErrorName(),
+                        "Unable to get Propositions");
               }
 
               @Override
-              public void call(Map<Surface, List<Proposition>> propositionsMap) {
+              public void call(
+                      Map<Surface, List<Proposition>> propositionsMap) {
+                propositionItemByUuid.clear();
+                // Build UUID->Proposition map keyed by scopeDetails.activity.activityID when available
                 try {
-                  // Optional: clear UUID cache per fetch to avoid stale entries
-                  propositionItemByUuid.clear();
-
-                  WritableMap out = Arguments.createMap();
-
                   for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
-                    final String surfaceKey = (entry.getKey() != null)
-                            ? entry.getKey().getUri().replace("mobileapp://" + bundleId + "/", "")
-                            : "unknown";
-                    final List<Proposition> propositions = entry.getValue();
-                    final WritableArray jsProps = Arguments.createArray();
-
-                    Log.d(TAG, "Surface [" + surfaceKey + "] propCount=" + (propositions != null ? propositions.size() : 0));
-
-                    if (propositions != null) {
-                      for (Proposition p : propositions) {
-                        try {
-                          // Start from SDK map for proposition to keep full parity
-                          WritableMap pMap = RCTAEPMessagingUtil.toWritableMap(p.toEventData());
-
-                          // Derive activityId for UUID generation
-                          final String activityId = extractActivityId(p);
-                          Log.d(TAG, "activityId=" + activityId);
-
-                          // If SDK already included items, we'll replace them with UUID-injected ones
-                          final WritableArray newItems = Arguments.createArray();
-
-                          final List<PropositionItem> items = p.getItems();
-                          if (items != null && !items.isEmpty()) {
-                            Log.d(TAG, "items.size=" + items.size());
-
-                            // If you want to "overlay" UUIDs on top of SDK's item maps, fetch them:
-                            ReadableArray sdkItems = null;
-                            if (pMap.hasKey("items") && pMap.getType("items") == ReadableType.Array) {
-                              sdkItems = pMap.getArray("items");
+                    List<Proposition> propositions = entry.getValue();
+                    if (propositions == null) continue;
+                    for (Proposition p : propositions) {
+                      try {
+                        Map<String, Object> eventData = p.toEventData();
+                        if (eventData == null) continue;
+                        Object sd = eventData.get("scopeDetails");
+                        String key = null;
+                        if (sd instanceof Map) {
+                          Object act = ((Map<?, ?>) sd).get("activity");
+                          if (act instanceof Map) {
+                            Object activityID = ((Map<?, ?>) act).get("activityID");
+                            if (activityID instanceof String) {
+                              key = (String) activityID;
+                            } else {
+                              Object id = ((Map<?, ?>) act).get("id");
+                              if (id instanceof String) key = (String) id;
                             }
-
-                            for (int i = 0; i < items.size(); i++) {
-                              final PropositionItem item = items.get(i);
-
-                              // Base item map: prefer SDK's item map at same index; fallback to manual conversion
-                              WritableMap itemMap = Arguments.createMap();
-                              try {
-                                if (sdkItems != null && i < sdkItems.size() && sdkItems.getType(i) == ReadableType.Map) {
-                                  itemMap.merge(sdkItems.getMap(i)); // like JS spread
-                                } else {
-                                  itemMap = RCTAEPMessagingUtil.convertPropositionItem(item);
-                                }
-                              } catch (Throwable t) {
-                                Log.d(TAG, "Fallback to manual item conversion (index " + i + "): " + t.getMessage());
-                                itemMap = RCTAEPMessagingUtil.convertPropositionItem(item);
-                              }
-
-                              // Inject UUID and cache native item for future tracking
-                              final String uuid = activityId;
-                              itemMap.putString("uuid", uuid);
-                              propositionItemByUuid.put(uuid, p);
-
-                              // Helpful log
-                              try { Log.d(TAG, "itemId=" + item.getItemId() + " uuid=" + uuid); } catch (Throwable ignore) {}
-
-                              newItems.pushMap(itemMap);
-                            }
-                          } else {
-                            Log.d(TAG, "Proposition has no items.");
                           }
-
-                          // Overwrite items with UUID-injected array
-                          pMap.putArray("items", newItems);
-
-                          jsProps.pushMap(pMap);
-                        } catch (Throwable propEx) {
-                          Log.d(TAG, "Error building proposition payload, falling back to SDK map: " + propEx.getMessage());
-                          // Fallback: push SDK's raw proposition if something went wrong
-                          jsProps.pushMap(RCTAEPMessagingUtil.toWritableMap(p.toEventData()));
                         }
-                      }
+                        if (key == null) key = extractActivityId(p);
+                        if (key != null) {
+                          propositionItemByUuid.put(key, p);
+                        }
+                      } catch (Throwable ignore) {}
                     }
-
-                    // (Optional) per-surface payload log (size only to keep logs light)
-                    Log.d(TAG, "Surface [" + surfaceKey + "] payload size=" + jsProps.size());
-
-                    out.putArray(surfaceKey, jsProps);
                   }
+                } catch (Throwable ignore) {}
 
-                  // Log the full 'out' map lightly (size of top-level keys)
-                  try {
-                    Map<String, Object> outSnapshot = RCTAEPMessagingUtil.convertReadableMapToMap(out);
-                    Log.d(TAG, "OUT keys=" + outSnapshot.keySet());
-                  } catch (Throwable e) {
-                    Log.d(TAG, "OUT log failed: " + e.getMessage());
-                  }
-
-                  promise.resolve(out);
-                } catch (Throwable topEx) {
-                  Log.d(TAG, "Top-level error building propositions: " + topEx.getMessage());
-                  // As a last resort, mirror the previous behavior:
-                  try {
-                    String pkg = bundleId;
-                    WritableMap fallback = RCTAEPMessagingUtil.convertSurfacePropositions(propositionsMap, pkg);
-                    promise.resolve(fallback);
-                  } catch (Throwable finalEx) {
-                    promise.reject("BuildError", "Failed to build propositions", finalEx);
-                  }
-                }
+                promise.resolve(RCTAEPMessagingUtil.convertSurfacePropositions(
+                        propositionsMap, bundleId));
               }
             });
   }
+
+//  public void getPropositionsForSurfaces(ReadableArray surfaces, final Promise promise) {
+//    final String bundleId = this.reactContext.getPackageName();
+//
+//    Messaging.getPropositionsForSurfaces(
+//            RCTAEPMessagingUtil.convertSurfaces(surfaces),
+//            new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
+//              @Override
+//              public void fail(final AdobeError adobeError) {
+//                Log.d(TAG, "getPropositionsForSurfaces: fail: " + adobeError.getErrorName());
+//                promise.reject(adobeError.getErrorName(), "Unable to get Propositions");
+//              }
+//
+//              @Override
+//              public void call(Map<Surface, List<Proposition>> propositionsMap) {
+//                try {
+//                  // Optional: clear UUID cache per fetch to avoid stale entries
+//                  propositionItemByUuid.clear();
+//
+//                  WritableMap out = Arguments.createMap();
+//
+//                  for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
+//                    final String surfaceKey = (entry.getKey() != null)
+//                            ? entry.getKey().getUri().replace("mobileapp://" + bundleId + "/", "")
+//                            : "unknown";
+//                    final List<Proposition> propositions = entry.getValue();
+//                    final WritableArray jsProps = Arguments.createArray();
+//
+//                    Log.d(TAG, "Surface [" + surfaceKey + "] propCount=" + (propositions != null ? propositions.size() : 0));
+//
+//                    if (propositions != null) {
+//                      for (Proposition p : propositions) {
+//                        try {
+//                          // Start from SDK map for proposition to keep full parity
+//                          WritableMap pMap = RCTAEPMessagingUtil.toWritableMap(p.toEventData());
+//
+//                          // Derive activityId for UUID generation
+//                          final String activityId = extractActivityId(p);
+//                          Log.d(TAG, "activityId=" + activityId);
+//
+//                          // If SDK already included items, we'll replace them with UUID-injected ones
+//                          final WritableArray newItems = Arguments.createArray();
+//
+//                          final List<PropositionItem> items = p.getItems();
+//                          if (items != null && !items.isEmpty()) {
+//                            Log.d(TAG, "items.size=" + items.size());
+//
+//                            // If you want to "overlay" UUIDs on top of SDK's item maps, fetch them:
+//                            ReadableArray sdkItems = null;
+//                            if (pMap.hasKey("items") && pMap.getType("items") == ReadableType.Array) {
+//                              sdkItems = pMap.getArray("items");
+//                            }
+//
+//                            for (int i = 0; i < items.size(); i++) {
+//                              final PropositionItem item = items.get(i);
+//
+//                              // Base item map: prefer SDK's item map at same index; fallback to manual conversion
+//                              WritableMap itemMap = Arguments.createMap();
+//                              try {
+//                                if (sdkItems != null && i < sdkItems.size() && sdkItems.getType(i) == ReadableType.Map) {
+//                                  itemMap.merge(sdkItems.getMap(i)); // like JS spread
+//                                } else {
+//                                  itemMap = RCTAEPMessagingUtil.convertPropositionItem(item);
+//                                }
+//                              } catch (Throwable t) {
+//                                Log.d(TAG, "Fallback to manual item conversion (index " + i + "): " + t.getMessage());
+//                                itemMap = RCTAEPMessagingUtil.convertPropositionItem(item);
+//                              }
+//
+//                              // Inject UUID and cache native item for future tracking
+//                              final String uuid = activityId;
+//                              itemMap.putString("uuid", uuid);
+//                              // Use scopeDetails.activity.activityID as the map key when available
+//                              try {
+//                                Map<String, Object> eventData = p.toEventData();
+//                                Map<String, Object> scopeDetails = (Map<String, Object>) eventData.get("scopeDetails");
+//                                Map<String, Object> activity = scopeDetails != null ? (Map<String, Object>) scopeDetails.get("activity") : null;
+//                                String activityID = activity != null ? (String) activity.get("activityID") : null;
+//                                String key = activityID != null ? activityID : uuid;
+//                                propositionItemByUuid.put(key, p);
+//                              } catch (Throwable ignore) {
+//                                propositionItemByUuid.put(uuid, p);
+//                              }
+//
+//                              // Helpful log
+//                              try { Log.d(TAG, "itemId=" + item.getItemId() + " uuid=" + uuid); } catch (Throwable ignore) {}
+//
+//                              newItems.pushMap(itemMap);
+//                            }
+//                          } else {
+//                            Log.d(TAG, "Proposition has no items.");
+//                          }
+//
+//                          // Overwrite items with UUID-injected array
+//                          pMap.putArray("items", newItems);
+//
+//                          jsProps.pushMap(pMap);
+//                        } catch (Throwable propEx) {
+//                          Log.d(TAG, "Error building proposition payload, falling back to SDK map: " + propEx.getMessage());
+//                          // Fallback: push SDK's raw proposition if something went wrong
+//                          jsProps.pushMap(RCTAEPMessagingUtil.toWritableMap(p.toEventData()));
+//                        }
+//                      }
+//                    }
+//
+//                    // (Optional) per-surface payload log (size only to keep logs light)
+//                    Log.d(TAG, "Surface [" + surfaceKey + "] payload size=" + jsProps.size());
+//
+//                    out.putArray(surfaceKey, jsProps);
+//                  }
+//
+//                  // Log the full 'out' map lightly (size of top-level keys)
+//                  try {
+//                    Map<String, Object> outSnapshot = RCTAEPMessagingUtil.convertReadableMapToMap(out);
+//                    Log.d(TAG, "OUT keys=" + outSnapshot.keySet());
+//                  } catch (Throwable e) {
+//                    Log.d(TAG, "OUT log failed: " + e.getMessage());
+//                  }
+//
+//                  promise.resolve(out);
+//                } catch (Throwable topEx) {
+//                  Log.d(TAG, "Top-level error building propositions: " + topEx.getMessage());
+//                  // As a last resort, mirror the previous behavior:
+//                  try {
+//                    String pkg = bundleId;
+//                    WritableMap fallback = RCTAEPMessagingUtil.convertSurfacePropositions(propositionsMap, pkg);
+//                    promise.resolve(fallback);
+//                  } catch (Throwable finalEx) {
+//                    promise.reject("BuildError", "Failed to build propositions", finalEx);
+//                  }
+//                }
+//              }
+//            });
+//  }
 
 
 
