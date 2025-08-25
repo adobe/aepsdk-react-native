@@ -299,29 +299,51 @@
          return map;
      }
 
-   static WritableMap convertSurfacePropositions(
-       final Map<Surface, List<Proposition>> propositionMap,
-       String packageName) {
-     WritableMap data = new WritableNativeMap();
- 
-     for (Map.Entry<Surface, List<Proposition>> entry :
-          propositionMap.entrySet()) {
-       String key = entry.getKey().getUri().replace(
-           "mobileapp://" + packageName + "/", "");
-       WritableArray propositions = new WritableNativeArray();
- 
-       for (Iterator<Proposition> iterator = entry.getValue().iterator();
-            iterator.hasNext();) {
-         //propositions.pushMap(toWritableMap(iterator.next().toEventData()));
-           Proposition nextProp = iterator.next();
-           propositions.pushMap(convertSingleProposition(nextProp, packageName));
-       }
- 
-       data.putArray(key, propositions);
+     static WritableMap convertSurfacePropositions(
+             final Map<Surface, List<Proposition>> propositionMap,
+             String packageName) {
+         WritableMap data = new WritableNativeMap();
+
+         for (Map.Entry<Surface, List<Proposition>> entry :
+                 propositionMap.entrySet()) {
+             String key = entry.getKey().getUri().replace(
+                     "mobileapp://" + packageName + "/", "");
+             WritableArray propositions = new WritableNativeArray();
+
+             for (Iterator<Proposition> iterator = entry.getValue().iterator();
+                  iterator.hasNext();) {
+                 propositions.pushMap(toWritableMap(iterator.next().toEventData()));
+             }
+
+             data.putArray(key, propositions);
+         }
+
+         return data;
      }
- 
-     return data;
-   }
+
+//   static WritableMap convertSurfacePropositions(
+//       final Map<Surface, List<Proposition>> propositionMap,
+//       String packageName) {
+//     WritableMap data = new WritableNativeMap();
+//
+//     for (Map.Entry<Surface, List<Proposition>> entry :
+//          propositionMap.entrySet()) {
+//       String key = entry.getKey().getUri().replace(
+//           "mobileapp://" + packageName + "/", "");
+//       WritableArray propositions = new WritableNativeArray();
+//
+//       for (Iterator<Proposition> iterator = entry.getValue().iterator();
+//            iterator.hasNext();) {
+//         //propositions.pushMap(toWritableMap(iterator.next().toEventData()));
+//           Proposition nextProp = iterator.next();
+//           propositions.pushMap(convertSingleProposition(nextProp, packageName));
+//       }
+//
+//       data.putArray(key, propositions);
+//     }
+//
+//     return data;
+//   }
  
    static ReadableMap convertToReadableMap(Map<String, String> map) {
      WritableMap writableMap = Arguments.createMap();
