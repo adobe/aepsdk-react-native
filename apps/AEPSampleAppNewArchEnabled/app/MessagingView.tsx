@@ -165,31 +165,6 @@ const trackPropositionItemExample = async () => {
   }
 }
 
-// New method demonstrating generatePropositionInteractionXdm API
-// const generatePropositionInteractionXdmExample = async () => {
-//   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  
-//   for (const surface of SURFACES) { 
-//     const propositions = messages[surface] || [];
-
-//     for (const proposition of propositions) {
-//       for (const propositionItem of proposition.items) {
-//         // Generate XDM data for proposition item interaction
-//         try {
-//           const xdmData = await Messaging.generatePropositionInteractionXdm(
-//             propositionItem.id, 
-//             'link_clicked', 
-//             MessagingEdgeEventType.INTERACT, 
-//             ['token1', 'token2']
-//           );
-//           console.log('Generated XDM data:', JSON.stringify(xdmData));
-//         } catch (error) {
-//           console.error('Error generating XDM data:', error);
-//         }
-//       }
-//     }
-//   }
-// }
 
 // Method demonstrating unified tracking using PropositionItem methods
 const unifiedTrackingExample = async () => {
@@ -224,41 +199,6 @@ const unifiedTrackingExample = async () => {
   }
 }
 
-// // Method demonstrating unified XDM generation using PropositionItem methods
-// const unifiedXdmGenerationExample = async () => {
-//   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  
-//   for (const surface of SURFACES) { 
-//     const propositions = messages[surface] || [];
-
-//     for (const proposition of propositions) {
-//       for (const propositionItem of proposition.items) {
-//         try {
-//           // Generate XDM using the unified approach - check if the method exists
-//           if ('generateInteractionXdm' in propositionItem) {
-//             const xdmData = await propositionItem.generateInteractionXdm(
-//               'unified_interaction', 
-//               MessagingEdgeEventType.INTERACT, 
-//               ['unified_token']
-//             );
-//             console.log('Generated XDM using unified API:', JSON.stringify(xdmData));
-//           } else {
-//             // Fall back to the static method for items that don't have the instance method
-//             const xdmData = await Messaging.generatePropositionInteractionXdm(
-//               propositionItem.id,
-//               'unified_interaction', 
-//               MessagingEdgeEventType.INTERACT, 
-//               ['unified_token']
-//             );
-//             console.log('Generated XDM using static API fallback:', JSON.stringify(xdmData));
-//           }
-//         } catch (error) {
-//           console.error('Error generating XDM with unified API:', error);
-//         }
-//       }
-//     }
-//   }
-// }
 
 // Function to track in-app message interactions
 const trackInAppMessage = async () => {
@@ -318,24 +258,6 @@ const trackPropositionItems = async () => {
   }
 };
 
-// Direct static method call (bypasses caching)
-const trackDirectly = () => {
-  // This calls trackPropositionItem directly without creating instances
-  Messaging.trackPropositionItem(
-    "item_123",           // itemId
-    "direct_call",        // interaction
-    MessagingEdgeEventType.INTERACT, // eventType
-    ["token1", "token2"]  // tokens
-  );
-  
-  console.log('Tracked directly via static method');
-};
-
-const trackEdgeCaseMessageWithPropositionItem = async () => {
-  const messages = await Messaging.getCachedMessages();
-  // Removed invalid manual PropositionItem construction
-  console.log('Cached messages:', messages);
-}
 
 function MessagingView() {
   const router = useRouter();
@@ -371,10 +293,6 @@ function MessagingView() {
         <Button 
           title="Track Proposition Items (Cached)" 
           onPress={trackPropositionItems} 
-        />
-        <Button 
-          title="Track Directly (Static)" 
-          onPress={trackDirectly} 
         />
         {/* <Button title="Unified XDM Generation Example" onPress={unifiedXdmGenerationExample} /> */}
       </ScrollView>
