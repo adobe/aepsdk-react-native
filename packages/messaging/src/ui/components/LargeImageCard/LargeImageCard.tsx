@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import {
   Image,
   ImageStyle,
@@ -6,12 +7,15 @@ import {
   StyleSheet,
   Text,
   TextStyle,
+  useColorScheme,
   View,
   ViewStyle
 } from 'react-native';
 import { LargeImageContentData } from '../../../models/ContentCard';
 import Button from '../Button/Button';
 import DismissButton from '../DismissButton/DismissButton';
+import useAspectRatio from '../../hooks/useAspectRatio';
+import { useTheme } from '../../theme/ThemeProvider';
 
 export interface LargeImageContentStyle {
   card?: Partial<ViewStyle>;
@@ -39,16 +43,16 @@ const LargeImageCard: React.FC<LargeImageCardProps> = ({
   onPress,
   ...props
 }) => {
-  // const colorScheme = useColorScheme();
-
-  // const imageSource = useMemo(() => {
-  //   if (colorScheme === 'dark' && content?.image?.darkUrl) {
-  //     return { uri: content.image.darkUrl };
-  //   }
-  //   return { uri: content.image?.url };
-  // }, [colorScheme, content?.image?.darkUrl, content?.image?.url]);
-
-  console.log('LargeImageCard', content);
+  const colorScheme = useColorScheme();
+  const theme = useTheme();
+  const imageUri = useMemo(
+    () =>
+      colorScheme === 'dark' && content?.image?.darkUrl
+        ? content.image.darkUrl
+        : content.image?.url,
+    [colorScheme, content?.image?.darkUrl, content?.image?.url]
+  );
+  const imageAspectRatio = useAspectRatio(imageUri);
 
   return (
     <Pressable
@@ -56,16 +60,40 @@ const LargeImageCard: React.FC<LargeImageCardProps> = ({
       style={[styles.card, styleOverrides?.card]}
       {...props}
     >
-      <Image
-        source={{ uri: 'https://i.ibb.co/0X8R3TG/Messages-24.png' }}
-        style={{
-          width: '100%',
-          resizeMode: 'cover',
-          aspectRatio: 1
-        }}
-      />
-      {content?.title?.content && <Text style={[styles.title, styleOverrides?.title]}>{content.title.content}</Text>}
-      {content?.body?.content && <Text style={[styles.body, styleOverrides?.body]}>{content.body.content}</Text>}
+      {imageUri && (
+        <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
+          <Image
+            source={{ uri: imageUri }}
+            style={[
+              styles.image,
+              { aspectRatio: imageAspectRatio },
+              styleOverrides?.image
+            ]}
+          />
+        </View>
+      )}
+      {content?.title?.content && (
+        <Text
+          style={[
+            styles.title,
+            { color: theme.colors.textPrimary },
+            styleOverrides?.title
+          ]}
+        >
+          {content.title.content}
+        </Text>
+      )}
+      {content?.body?.content && (
+        <Text
+          style={[
+            styles.body,
+            { color: theme.colors.textPrimary },
+            styleOverrides?.body
+          ]}
+        >
+          {content.body.content}
+        </Text>
+      )}
       <View style={[styles.buttonContainer, styleOverrides?.buttonContainer]}>
         {content?.buttons?.length &&
           content?.buttons?.length > 0 &&
@@ -92,23 +120,18 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 15,
     flex: 1,
-    gap: 8,
-    maxWidth: '100%',
+    gap: 8
   },
   container: {
-    flexDirection: 'row',
-    minHeight: 120
+    flexDirection: 'row'
   },
   imageContainer: {
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
-    width: '35%',
-    height: '100%'
+    borderRadius: 12,
+    alignItems: 'center'
   },
   image: {
     width: '100%',
-    height: '100%',
-    resizeMode: 'cover'
+    resizeMode: 'contain'
   },
   contentContainer: {
     flex: 1,

@@ -99,13 +99,11 @@ export const ContentView: React.FC<ContentViewProps> = ({
 
   if (!template.data) return null;
 
-  console.log('template', template);
-
   switch (template.type) {
     case TemplateType.SMALL_IMAGE:
       return (
         <SmallImageCard
-          content={(template.data as any).content as SmallImageContentData}
+          content={template.data.content as SmallImageContentData}
           onPress={onPress}
           onDismiss={onDismiss}
           styleOverrides={styleOverrides?.smallImageStyle}
@@ -123,7 +121,6 @@ export const ContentView: React.FC<ContentViewProps> = ({
     case TemplateType.IMAGE_ONLY:
       return (
         <ImageOnlyCard
-          // @ts-ignore
           data={template.data.content}
           onDismiss={onDismiss}
           onPress={onPress}
@@ -131,7 +128,7 @@ export const ContentView: React.FC<ContentViewProps> = ({
         />
       );
     default:
-      console.error('Unknown template type:', (template as any).type);
+      console.error('Unknown template type:', template.type);
       return null;
   }
 };
