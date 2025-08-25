@@ -27,40 +27,6 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     private var shouldShowMessage = true
     public static var emitter: RCTEventEmitter!
 
-    // Cache to store PropositionItem objects by their ID for unified tracking
-    private var propositionItemCache = [String: PropositionItem]()
-    // Cache to store the parent Proposition for each PropositionItem
-    private var propositionCache = [String: Proposition]()
-    // UUID-based cache for PropositionItem to mirror Android implementation
-    // Weak parent map: uuid -> parent (weak)
-    private let parentByUuid = NSMapTable<NSString, AnyObject>(
-      keyOptions: .strongMemory,
-      valueOptions: .weakMemory
-    )
-    // Holds the SDK item (strong) + its parent Proposition (weak)
-    private final class ItemHandle {
-        let item: PropositionItem
-        weak var parent: Proposition?
-        init(item: PropositionItem, parent: Proposition?) {
-            self.item = item
-            self.parent = parent
-        }
-    }
-    
-    // Adjust the types to your SDK (AEP Messaging) if names vary
-    private struct CachedItem {
-      let parent: Proposition       // strong
-      let item: PropositionItem     // strong
-    }
-
-    /// Build your uuid. If you already have a single unique uuid, just return it.
-    /// Otherwise, compose it as "propositionId#itemId" (matches your logs).
-    private func makeUuid(for parent: Proposition, item: PropositionItem) -> String {
-      // If you already have a provided uuid -> return that.
-      // return item.uuid
-        return "\(parent)"
-    }
-    // Map uuid (activityId) to parent Proposition
 
     override init() {
         super.init()
@@ -118,9 +84,6 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
                 return
             }
 
-            // Clear cache per fetch (Android parity)
-            self.propositionByUuid.removeAll()
-
             // Populate uuid->Proposition map using scopeDetails.activity.activityID when available, else activity.id
             for (_, list) in propositions {
                 for proposition in list {
@@ -176,6 +139,8 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     ) {
         let mapped = surfaces.map { Surface(path: $0) }
         Messaging.updatePropositionsForSurfaces(mapped)
+        propositionByUuid.removeAll()
+
         resolve(nil)
     }
 
@@ -388,91 +353,10 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     }
 
 
-    
-    /// MARK: - PropositionItem Cache Management
-    
-    /**
-     * Caches a PropositionItem and its parent Proposition for later tracking.
-     * This method should be called when PropositionItems are created from propositions.
-     */
-    private func cachePropositionItem(_ propositionItem: PropositionItem, parentProposition: Proposition) {
-        let itemId = propositionItem.itemId
-        
-        // Cache the PropositionItem
-        propositionItemCache[itemId] = propositionItem
-        
-        // Cache the parent Proposition
-        propositionCache[itemId] = parentProposition
-        
-        print("Cached PropositionItem with ID: \(itemId)")
-    }
-    
-    /**
-     * Caches multiple PropositionItems from a list of propositions.
-     * This is a convenience method for caching all items from multiple propositions.
-     */
-    private func cachePropositionsItems(_ propositions: [Proposition]) {
-        for proposition in propositions {
-            for item in proposition.items {
-                cachePropositionItem(item, parentProposition: proposition)
-            }
-        }
-    }
-    
-    /**
-     * Finds a cached PropositionItem by its ID.
-     */
-    private func findPropositionItemById(_ itemId: String) -> PropositionItem? {
-        return propositionItemCache[itemId]
-    }
-    
-    /**
-     * Finds a cached parent Proposition by PropositionItem ID.
-     */
-    private func findPropositionByItemId(_ itemId: String) -> Proposition? {
-        return propositionCache[itemId]
-    }
+
     // Map uuid (scopeDetails.activity.id) -> parent Proposition
     private var propositionByUuid = [String: Proposition]()
-    /**
-     * Clears the PropositionItem cache.
-     * This should be called when propositions are refreshed or when memory cleanup is needed.
-     */
-    @objc
-    func clearPropositionItemCache(
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
-    ) {
-        propositionItemCache.removeAll()
-        propositionCache.removeAll()
-        print("PropositionItem cache cleared")
-        resolve(nil)
-    }
-    
-    /**
-     * Gets the current size of the PropositionItem cache.
-     * Useful for debugging and monitoring.
-     */
-    @objc
-    func getPropositionItemCacheSize(
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
-    ) {
-        resolve(propositionItemCache.count)
-    }
-    
-    /**
-     * Checks if a PropositionItem exists in the cache.
-     */
-    @objc
-    func hasPropositionItem(
-        _ itemId: String,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
-    ) {
-        resolve(propositionItemCache.keys.contains(itemId))
-    }
-
+   
     // Messaging Delegate Methods
     public func onDismiss(message: Showable) {
         if let fullscreenMessage = message as? FullscreenMessage,
