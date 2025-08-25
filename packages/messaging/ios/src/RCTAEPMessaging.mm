@@ -55,4 +55,12 @@ RCT_EXTERN_METHOD(trackContentCardInteraction
                   : (NSDictionary *)propositionMap contentCardMap
                   : (NSDictionary *)contentCardMap);
 
+RCT_EXTERN_METHOD(trackPropositionItem
+                  : (NSString *)uuid interaction
+                  : (NSString * _Nullable)interaction eventType
+                  : (NSInteger)eventType tokens
+                  : (NSArray<NSString *> * _Nullable)tokens withResolver
+                  : (RCTPromiseResolveBlock)resolve withRejecter
+                  : (RCTPromiseRejectBlock)reject);
+
 @end

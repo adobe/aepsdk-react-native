@@ -13,12 +13,23 @@ governing permissions and limitations under the License.
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {MobileCore} from '@adobe/react-native-aepcore';
-import {Messaging, PersonalizationSchema} from '@adobe/react-native-aepmessaging'
+import {
+  Messaging, 
+  PersonalizationSchema, 
+  MessagingEdgeEventType,
+  PropositionItem,
+  Message,
+  ContentCard,
+  HTMLProposition,
+  JSONPropositionItem
+} from '@adobe/react-native-aepmessaging'
+import { MessagingProposition } from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
-const SURFACES = ['android-cbe-preview', 'cbe/json', 'android-cc'];
+const SURFACES = ['android-cbe-preview', 'android-cc', 'android-cc-naman'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
+
 
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
@@ -40,12 +51,10 @@ const setMessagingDelegate = () => {
   });
   console.log('messaging delegate set');
 };
-
 const getPropositionsForSurfaces = async () => {
   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
   console.log(JSON.stringify(messages));
 };
-
 const trackAction = async () => {
   MobileCore.trackAction('tuesday', {full: true});
 };
@@ -57,6 +66,8 @@ const updatePropositionsForSurfaces = async () => {
 
 const getCachedMessages = async () => {
   const messages = await Messaging.getCachedMessages();
+  const newMessage = new Message(messages[0]);
+  newMessage.track("button_clicked", MessagingEdgeEventType.INTERACT);
   console.log('Cached messages:', messages);
 };
 
@@ -75,7 +86,8 @@ const trackContentCardInteraction = async () => {
     for (const proposition of propositions) {
       for (const propositionItem of proposition.items) {
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          Messaging.trackContentCardInteraction(proposition, propositionItem);
+          // Cast to ContentCard for the legacy tracking method
+          Messaging.trackContentCardInteraction(proposition, propositionItem as any);
           console.log('trackContentCardInteraction', proposition, propositionItem);
         }
       }
@@ -93,13 +105,38 @@ const trackContentCardDisplay = async () => {
     for (const proposition of propositions) {
       for (const propositionItem of proposition.items) {
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          Messaging.trackContentCardDisplay(proposition, propositionItem);
+          // Cast to ContentCard for the legacy tracking method
+          Messaging.trackContentCardDisplay(proposition, propositionItem as any);
           console.log('trackContentCardDisplay', proposition, propositionItem);
         }
       }
     }
   }
 }
+
+
+// Method demonstrating unified tracking using PropositionItem methods
+const unifiedTrackingExample = async () => {
+  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
+  console.log('messages here are ', messages);
+  
+  for (const surface of SURFACES) { 
+    const propositions = messages[surface] || [];
+
+    for (const proposition of propositions) {
+      const newMessage = new MessagingProposition(proposition); 
+      console.log("newMessage here", newMessage);
+        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY); 
+        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY);
+        console.log('Tracked content card display using unified API');
+        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+        console.log('Tracked content card interaction using unified API');
+    }
+  }
+}
+
+
 
 function MessagingView() {
   const router = useRouter();
@@ -125,6 +162,7 @@ function MessagingView() {
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackPropositionInteraction()" onPress={trackContentCardInteraction} />
         <Button title="trackContentCardDisplay()" onPress={trackContentCardDisplay} />
+        <Button title="Unified Tracking Example" onPress={unifiedTrackingExample} />
       </ScrollView>
     </View>
   );
