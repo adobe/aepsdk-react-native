@@ -10,351 +10,221 @@
     language governing permissions and limitations under the License.
  */
 
- package com.adobe.marketing.mobile.reactnative.messaging;
+package com.adobe.marketing.mobile.reactnative.messaging;
 
- import android.util.Log;
+import com.adobe.marketing.mobile.Message;
+import com.adobe.marketing.mobile.MessagingEdgeEventType;
+import com.adobe.marketing.mobile.messaging.Proposition;
+import com.adobe.marketing.mobile.messaging.Surface;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.ReadableType;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 
- import com.adobe.marketing.mobile.Message;
- import com.adobe.marketing.mobile.MessagingEdgeEventType;
- import com.adobe.marketing.mobile.messaging.Proposition;
- import com.adobe.marketing.mobile.messaging.PropositionItem;
- import com.adobe.marketing.mobile.messaging.Surface;
- import com.facebook.react.bridge.Arguments;
- import com.facebook.react.bridge.ReadableArray;
- import com.facebook.react.bridge.ReadableMap;
- import com.facebook.react.bridge.ReadableMapKeySetIterator;
- import com.facebook.react.bridge.ReadableType;
- import com.facebook.react.bridge.WritableArray;
- import com.facebook.react.bridge.WritableMap;
- import com.facebook.react.bridge.WritableNativeArray;
- import com.facebook.react.bridge.WritableNativeMap;
- import java.util.ArrayList;
- import java.util.Collection;
- import java.util.HashMap;
- import java.util.Iterator;
- import java.util.List;
- import java.util.Map;
- import java.util.concurrent.atomic.AtomicLong;
- import java.util.UUID;
- import java.nio.charset.StandardCharsets;
- 
- /**
-  * Utility class for converting data models to {@link
-  * com.facebook.react.bridge.WritableMap}
-  */
- 
- class RCTAEPMessagingUtil {
- 
-   private static final String TAG = "RCTAEPMessaging";
-     private static final AtomicLong GLOBAL_UUID_COUNTER = new AtomicLong(0L);
-     @SuppressWarnings("unchecked")
-     private static String extractActivityIdFromPropositionEventData(final Proposition p) {
-         try {
-             final Map<String, Object> ed = p.toEventData();
-             if (ed == null) return null;
-             final Object sd = ed.get("scopeDetails");
-             if (!(sd instanceof Map)) return null;
-             final Object act = ((Map<String, Object>) sd).get("activity");
-             if (!(act instanceof Map)) return null;
-             final Object id = ((Map<String, Object>) act).get("id");
-             return (id instanceof String) ? (String) id : null;
-         } catch (Exception ignored) {
-             return null;
-         }
-     }
-
-     private static String generateItemUuid(final String activityId, final long counter) {
-         final String key = (activityId != null ? activityId : "") + "#" + counter;
-         return UUID.nameUUIDFromBytes(key.getBytes(StandardCharsets.UTF_8)).toString();
-     }
-     private RCTAEPMessagingUtil() {}
- 
-   // From React Native
-   static MessagingEdgeEventType getEventType(final int eventType) {
-     switch (eventType) {
-     case 0:
-       return MessagingEdgeEventType.DISMISS;
-     case 1:
-       return MessagingEdgeEventType.INTERACT;
-     case 2:
-       return MessagingEdgeEventType.TRIGGER;
-     case 3:
-       return MessagingEdgeEventType.DISPLAY;
-     case 4:
-       return MessagingEdgeEventType.PUSH_APPLICATION_OPENED;
-     case 5:
-       return MessagingEdgeEventType.PUSH_CUSTOM_ACTION;
-     default:
-       return null;
-     }
-   }
- 
-   static List<Surface> convertSurfaces(final ReadableArray rawSurfaces) {
-     List<Surface> surfaces = new ArrayList<>();
- 
-     for (int i = 0; i < rawSurfaces.size(); i++) {
-       surfaces.add(new Surface(rawSurfaces.getString(i)));
-     }
- 
-     return surfaces;
-   }
- 
-   // To React Native
-   static WritableMap toWritableMap(Map<String, Object> map) {
-     if (map == null) {
-       return null;
-     }
- 
-     WritableMap writableMap = Arguments.createMap();
-     Iterator iterator = map.entrySet().iterator();
- 
-     while (iterator.hasNext()) {
-       Map.Entry pair = (Map.Entry)iterator.next();
-       Object value = pair.getValue();
- 
-       if (value == null) {
-         writableMap.putNull((String)pair.getKey());
-       } else if (value instanceof Boolean) {
-         writableMap.putBoolean((String)pair.getKey(), (Boolean)value);
-       } else if (value instanceof Double) {
-         writableMap.putDouble((String)pair.getKey(), (Double)value);
-       } else if (value instanceof Integer) {
-         writableMap.putInt((String)pair.getKey(), (Integer)value);
-       } else if (value instanceof String) {
-         writableMap.putString((String)pair.getKey(), (String)value);
-       } else if (value instanceof Map) {
-         writableMap.putMap((String)pair.getKey(),
-                            toWritableMap((Map<String, Object>)value));
-       } else if (value instanceof List) {
-         writableMap.putArray((String)pair.getKey(),
-                              toWritableArray((List)value));
-       } else if (value.getClass() != null && value.getClass().isArray()) {
-         writableMap.putArray((String)pair.getKey(),
-                              toWritableArray((Object[])value));
-       }
-     }
- 
-     return writableMap;
-   }
- 
-   static WritableArray toWritableArray(Object[] array) {
-     if (array == null) {
-       return null;
-     }
-     WritableArray writableArr = Arguments.createArray();
- 
-     for (int i = 0; i < array.length; i++) {
-       Object value = array[i];
- 
-       if (value == null) {
-         writableArr.pushNull();
-       } else if (value instanceof Boolean) {
-         writableArr.pushBoolean((Boolean)value);
-       } else if (value instanceof Double) {
-         writableArr.pushDouble((Double)value);
-       } else if (value instanceof Integer) {
-         writableArr.pushInt((Integer)value);
-       } else if (value instanceof String) {
-         writableArr.pushString((String)value);
-       } else if (value instanceof Map) {
-         writableArr.pushMap(toWritableMap((Map<String, Object>)value));
-       } else if (value instanceof List) {
-         writableArr.pushArray(toWritableArray((List)value));
-       } else if (value.getClass().isArray()) {
-         writableArr.pushArray(toWritableArray((Object[])value));
-       }
-     }
- 
-     return writableArr;
-   }
- 
-   static WritableArray toWritableArray(List array) {
-     if (array == null) {
-       return null;
-     }
-     WritableArray writableArr = Arguments.createArray();
- 
-     for (Object value : array) {
-       if (value == null) {
-         writableArr.pushNull();
-       } else if (value instanceof Boolean) {
-         writableArr.pushBoolean((Boolean)value);
-       } else if (value instanceof Double) {
-         writableArr.pushDouble((Double)value);
-       } else if (value instanceof Integer) {
-         writableArr.pushInt((Integer)value);
-       } else if (value instanceof String) {
-         writableArr.pushString((String)value);
-       } else if (value instanceof Map) {
-         writableArr.pushMap(toWritableMap((Map<String, Object>)value));
-       } else if (value instanceof List) {
-         writableArr.pushArray(toWritableArray((List)value));
-       } else if (value.getClass().isArray()) {
-         writableArr.pushArray(toWritableArray((Object[])value));
-       }
-     }
- 
-     return writableArr;
-   }
- 
-   static Map<String, String> convertMessageToMap(final Message message) {
-     Map<String, String> data = new HashMap<>();
-     data.put("id", message.getId());
-     data.put("autoTrack", String.valueOf(message.getAutoTrack()));
-     return data;
-   }
- 
-   static ReadableArray convertMessagesToJS(final Collection<Message> messages) {
-     WritableArray result = new WritableNativeArray();
- 
-       for (Message message : messages) {
-           result.pushMap(convertToReadableMap(convertMessageToMap(message)));
-       }
- 
-     return result;
-   }
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
-     public static WritableMap convertPropositionItem(final PropositionItem item) {
-         WritableMap map = Arguments.createMap();
-         try {
-             // Core fields (public getters only)
-             map.putString("id", item.getItemId());
-             if (item.getSchema() != null) {
-                 map.putString("schema", item.getSchema().toString());
-             }
+/**
+ * Utility class for converting data models to {@link
+ * com.facebook.react.bridge.WritableMap}
+ */
 
-             // Data payload
-             if (item.getItemData() != null && !item.getItemData().isEmpty()) {
-                 map.putMap("data", toWritableMap(item.getItemData()));
-             }
+class RCTAEPMessagingUtil {
 
-             // Optional convenience fields (schema-derived)
-             Map<String, Object> jsonMap = item.getJsonContentMap();
-             if (jsonMap != null) {
-                 map.putMap("jsonContentMap", toWritableMap(jsonMap));
-             }
+    private static final String TAG = "RCTAEPMessaging";
 
-             List<Map<String, Object>> jsonArr = item.getJsonContentArrayList();
-             if (jsonArr != null) {
-                 map.putArray("jsonContentArray", toWritableArray(jsonArr));
-             }
+    @SuppressWarnings("unchecked")
 
-             String html = item.getHtmlContent();
-             if (html != null) {
-                 map.putString("htmlContent", html);
-             }
-         } catch (Exception e) {
-             Log.w("RCTAEPMessagingUtil", "Error converting PropositionItem: " + e.getMessage());
-         }
-         return map;
-     }
+    private RCTAEPMessagingUtil() {
+    }
 
-     public static WritableMap convertSingleProposition(final Proposition p, final String bundleId) {
-         WritableMap map = Arguments.createMap();
+    // From React Native
+    static MessagingEdgeEventType getEventType(final int eventType) {
+        switch (eventType) {
+            case 0:
+                return MessagingEdgeEventType.DISMISS;
+            case 1:
+                return MessagingEdgeEventType.INTERACT;
+            case 2:
+                return MessagingEdgeEventType.TRIGGER;
+            case 3:
+                return MessagingEdgeEventType.DISPLAY;
+            case 4:
+                return MessagingEdgeEventType.PUSH_APPLICATION_OPENED;
+            case 5:
+                return MessagingEdgeEventType.PUSH_CUSTOM_ACTION;
+            default:
+                return null;
+        }
+    }
 
-         // 1) Start from Proposition's own event data (Proposition.toEventData is public)
-         try {
-             Map<String, Object> eventData = p.toEventData();
-             if (eventData != null) {
-                 map = toWritableMap(eventData);
-             }
-         } catch (Exception ignored) {}
+    static List<Surface> convertSurfaces(final ReadableArray rawSurfaces) {
+        List<Surface> surfaces = new ArrayList<>();
 
-         // 2) Ensure scopeDetails.activity is present & writable
-         WritableMap scopeDetails = Arguments.createMap();
-         if (map.hasKey("scopeDetails") && map.getType("scopeDetails") == ReadableType.Map) {
-             scopeDetails.merge(map.getMap("scopeDetails"));
-         }
-         WritableMap activity = Arguments.createMap();
-         if (scopeDetails.hasKey("activity") && scopeDetails.getType("activity") == ReadableType.Map) {
-             activity.merge(scopeDetails.getMap("activity"));
-         }
-         scopeDetails.putMap("activity", activity);
-         map.putMap("scopeDetails", scopeDetails);
+        for (int i = 0; i < rawSurfaces.size(); i++) {
+            surfaces.add(new Surface(rawSurfaces.getString(i)));
+        }
 
-         // 3) Extract activityId for UUID generation (safe only if present)
-         String activityId = null;
-         if (activity.hasKey("id") && activity.getType("id") == ReadableType.String) {
-             activityId = activity.getString("id");
-         }
+        return surfaces;
+    }
 
-         // 4) Build items array from actual PropositionItems and inject uuid
-         WritableArray itemsArr = Arguments.createArray();
-         try {
-             List<PropositionItem> items = p.getItems();
-             if (items != null) {
-                 for (final PropositionItem item : items) {
-                     WritableMap itemMap = convertPropositionItem(item);
-                     String uuid = generateItemUuid(activityId, GLOBAL_UUID_COUNTER.incrementAndGet());
-                     itemMap.putString("uuid", uuid); // <-- inject UUID here
-                     itemsArr.pushMap(itemMap);
-                 }
-             }
-         } catch (Exception e) {
-             Log.w("RCTAEPMessagingUtil", "Error building items with UUID: " + e.getMessage());
-         }
-         map.putArray("items", itemsArr);
+    // To React Native
+    static WritableMap toWritableMap(Map<String, Object> map) {
+        if (map == null) {
+            return null;
+        }
 
-         return map;
-     }
+        WritableMap writableMap = Arguments.createMap();
+        Iterator iterator = map.entrySet().iterator();
 
-     static WritableMap convertSurfacePropositions(
-             final Map<Surface, List<Proposition>> propositionMap,
-             String packageName) {
-         WritableMap data = new WritableNativeMap();
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) iterator.next();
+            Object value = pair.getValue();
 
-         for (Map.Entry<Surface, List<Proposition>> entry :
-                 propositionMap.entrySet()) {
-             String key = entry.getKey().getUri().replace(
-                     "mobileapp://" + packageName + "/", "");
-             WritableArray propositions = new WritableNativeArray();
+            if (value == null) {
+                writableMap.putNull((String) pair.getKey());
+            } else if (value instanceof Boolean) {
+                writableMap.putBoolean((String) pair.getKey(), (Boolean) value);
+            } else if (value instanceof Double) {
+                writableMap.putDouble((String) pair.getKey(), (Double) value);
+            } else if (value instanceof Integer) {
+                writableMap.putInt((String) pair.getKey(), (Integer) value);
+            } else if (value instanceof String) {
+                writableMap.putString((String) pair.getKey(), (String) value);
+            } else if (value instanceof Map) {
+                writableMap.putMap((String) pair.getKey(),
+                        toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableMap.putArray((String) pair.getKey(),
+                        toWritableArray((List) value));
+            } else if (value.getClass() != null && value.getClass().isArray()) {
+                writableMap.putArray((String) pair.getKey(),
+                        toWritableArray((Object[]) value));
+            }
+        }
 
-             for (Iterator<Proposition> iterator = entry.getValue().iterator();
-                  iterator.hasNext();) {
-                 propositions.pushMap(toWritableMap(iterator.next().toEventData()));
-             }
+        return writableMap;
+    }
 
-             data.putArray(key, propositions);
-         }
+    static WritableArray toWritableArray(Object[] array) {
+        if (array == null) {
+            return null;
+        }
+        WritableArray writableArr = Arguments.createArray();
 
-         return data;
-     }
+        for (int i = 0; i < array.length; i++) {
+            Object value = array[i];
 
-//   static WritableMap convertSurfacePropositions(
-//       final Map<Surface, List<Proposition>> propositionMap,
-//       String packageName) {
-//     WritableMap data = new WritableNativeMap();
-//
-//     for (Map.Entry<Surface, List<Proposition>> entry :
-//          propositionMap.entrySet()) {
-//       String key = entry.getKey().getUri().replace(
-//           "mobileapp://" + packageName + "/", "");
-//       WritableArray propositions = new WritableNativeArray();
-//
-//       for (Iterator<Proposition> iterator = entry.getValue().iterator();
-//            iterator.hasNext();) {
-//         //propositions.pushMap(toWritableMap(iterator.next().toEventData()));
-//           Proposition nextProp = iterator.next();
-//           propositions.pushMap(convertSingleProposition(nextProp, packageName));
-//       }
-//
-//       data.putArray(key, propositions);
-//     }
-//
-//     return data;
-//   }
- 
-   static ReadableMap convertToReadableMap(Map<String, String> map) {
-     WritableMap writableMap = Arguments.createMap();
- 
-     for (Map.Entry<String, String> entry : map.entrySet()) {
-       writableMap.putString(entry.getKey(), entry.getValue());
-     }
-     return writableMap;
-   }
+            if (value == null) {
+                writableArr.pushNull();
+            } else if (value instanceof Boolean) {
+                writableArr.pushBoolean((Boolean) value);
+            } else if (value instanceof Double) {
+                writableArr.pushDouble((Double) value);
+            } else if (value instanceof Integer) {
+                writableArr.pushInt((Integer) value);
+            } else if (value instanceof String) {
+                writableArr.pushString((String) value);
+            } else if (value instanceof Map) {
+                writableArr.pushMap(toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(toWritableArray((List) value));
+            } else if (value.getClass().isArray()) {
+                writableArr.pushArray(toWritableArray((Object[]) value));
+            }
+        }
 
-   /**
+        return writableArr;
+    }
+
+    static WritableArray toWritableArray(List array) {
+        if (array == null) {
+            return null;
+        }
+        WritableArray writableArr = Arguments.createArray();
+
+        for (Object value : array) {
+            if (value == null) {
+                writableArr.pushNull();
+            } else if (value instanceof Boolean) {
+                writableArr.pushBoolean((Boolean) value);
+            } else if (value instanceof Double) {
+                writableArr.pushDouble((Double) value);
+            } else if (value instanceof Integer) {
+                writableArr.pushInt((Integer) value);
+            } else if (value instanceof String) {
+                writableArr.pushString((String) value);
+            } else if (value instanceof Map) {
+                writableArr.pushMap(toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                writableArr.pushArray(toWritableArray((List) value));
+            } else if (value.getClass().isArray()) {
+                writableArr.pushArray(toWritableArray((Object[]) value));
+            }
+        }
+
+        return writableArr;
+    }
+
+    static Map<String, String> convertMessageToMap(final Message message) {
+        Map<String, String> data = new HashMap<>();
+        data.put("id", message.getId());
+        data.put("autoTrack", String.valueOf(message.getAutoTrack()));
+        return data;
+    }
+
+    static ReadableArray convertMessagesToJS(final Collection<Message> messages) {
+        WritableArray result = new WritableNativeArray();
+
+        for (Message message : messages) {
+            result.pushMap(convertToReadableMap(convertMessageToMap(message)));
+        }
+
+        return result;
+    }
+
+    static WritableMap convertSurfacePropositions(
+            final Map<Surface, List<Proposition>> propositionMap,
+            String packageName) {
+        WritableMap data = new WritableNativeMap();
+
+        for (Map.Entry<Surface, List<Proposition>> entry :
+                propositionMap.entrySet()) {
+            String key = entry.getKey().getUri().replace(
+                    "mobileapp://" + packageName + "/", "");
+            WritableArray propositions = new WritableNativeArray();
+
+            for (Iterator<Proposition> iterator = entry.getValue().iterator();
+                 iterator.hasNext(); ) {
+                propositions.pushMap(toWritableMap(iterator.next().toEventData()));
+            }
+
+            data.putArray(key, propositions);
+        }
+
+        return data;
+    }
+
+    static ReadableMap convertToReadableMap(Map<String, String> map) {
+        WritableMap writableMap = Arguments.createMap();
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            writableMap.putString(entry.getKey(), entry.getValue());
+        }
+        return writableMap;
+    }
+
+    /**
      * Converts {@link ReadableMap} Map to {@link Map}
      *
      * @param readableMap instance of {@code ReadableMap}
@@ -393,7 +263,7 @@
         final List<Object> list = new ArrayList<>(readableArray.size());
         for (int i = 0; i < readableArray.size(); i++) {
             ReadableType indexType = readableArray.getType(i);
-            switch(indexType) {
+            switch (indexType) {
                 case Boolean:
                     list.add(i, readableArray.getBoolean(i));
                     break;
@@ -415,4 +285,4 @@
         }
         return list;
     }
- }
+}
