@@ -99,7 +99,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     ) {
         resolve(self.latestMessage != nil ? RCTAEPMessagingDataBridge.transformToMessage(message: self.latestMessage!) : nil)
     }
-
+    
     @objc
     func getPropositionsForSurfaces(
         _ surfaces: [String],
@@ -107,90 +107,44 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         withRejecter reject: @escaping RCTPromiseRejectBlock
     ) {
         let surfacePaths = surfaces.map { $0.isEmpty ? Surface() : Surface(path: $0) }
-        Messaging.getPropositionsForSurfaces(surfacePaths) {[weak self] propositions, error in
-            NSLog("[MessagingBridge] getPropositionsForSurfaces called with surfaces: \(surfacePaths)")
-
-            guard let self, error == nil else {
-                NSLog("[MessagingBridge] Error retrieving propositions: \(String(describing: error))")
+        Messaging.getPropositionsForSurfaces(surfacePaths) { [weak self] propositions, error in
+            guard let self = self else { return }
+            guard error == nil else {
                 reject("Unable to Retrieve Propositions", nil, nil)
                 return
             }
-
-            if let p = propositions, p.isEmpty {
-                NSLog("[MessagingBridge] No propositions returned from SDK")
+            guard let propositions = propositions, !propositions.isEmpty else {
                 resolve([String: Any]())
                 return
             }
 
-            // Clear per fetch (Android parity)
+            // Clear cache per fetch (Android parity)
             self.propositionByUuid.removeAll()
-            NSLog("[MessagingBridge] Cleared propositionByUuid cache")
 
-            guard let propositionsDict = propositions else {
-                NSLog("[MessagingBridge] propositionsDict is nil")
-                resolve([String: Any]())
-                return
-            }
-            
-
-            var out: [String: [Any]] = [:]
-            let bundlePrefix = "mobileapp://" + (Bundle.main.bundleIdentifier ?? "") + "/"
-            NSLog("[MessagingBridge] bundlePrefix: \(bundlePrefix)")
-
-            for (surface, propList) in propositionsDict {
-                let surfaceKey = surface.uri.hasPrefix(bundlePrefix)
-                    ? String(surface.uri.dropFirst(bundlePrefix.count))
-                    : surface.uri
-                NSLog("[MessagingBridge] Processing surface: \(surface.uri), mapped key: \(surfaceKey), proposition count: \(propList.count)")
-
-                var jsProps: [Any] = []
-
-                for (index, proposition) in propList.enumerated() {
-                    var pMap: [String: Any] = proposition.asDictionary() ?? [:]
-                    NSLog("[MessagingBridge] Proposition[\(index)] raw dictionary: \(pMap)")
-
-                    // Android parity: use activityId as uuid for all items in this proposition
-                    let activityId = self.extractActivityId(from: pMap)
-                    NSLog("[MessagingBridge] Extracted activityId: \(String(describing: activityId))")
-
-                    var newItems: [[String: Any]] = []
-                    let items = proposition.items
-                    let sdkItems = (pMap["items"] as? [[String: Any]])
-                    NSLog("[MessagingBridge] Proposition[\(index)] items count: \(items.count), sdkItems count: \(String(describing: sdkItems?.count))")
-
-                    if !items.isEmpty {
-                        for (itemIndex, item) in items.enumerated() {
-                            var itemMap: [String: Any]
-                            if let sdkItems = sdkItems, itemIndex < sdkItems.count {
-                                itemMap = sdkItems[itemIndex]  // keep SDK’s fields
-                            } else {
-                                itemMap = ["id": item.itemId]  // minimal fallback
+            // Populate uuid->Proposition map using scopeDetails.activity.activityID when available, else activity.id
+            for (_, list) in propositions {
+                for proposition in list {
+                    if var pMap = proposition.asDictionary() {
+                        var key: String? = nil
+                        if let sd = pMap["scopeDetails"] as? [String: Any],
+                           let act = sd["activity"] as? [String: Any] {
+                            if let activityID = act["activityID"] as? String, !activityID.isEmpty {
+                                key = activityID
+                            } else if let id = act["id"] as? String, !id.isEmpty {
+                                key = id
                             }
-
-                            if let uuid = activityId {
-                                // Inject Android-style uuid (note: same for every item under this proposition)
-                                itemMap["uuid"] = uuid
-
-                                // Map uuid to parent proposition for simpler tracking: uuid -> proposition
-                                self.propositionByUuid[uuid] = proposition
-
-                                NSLog("[MessagingBridge] Injected uuid=\(uuid) for item[\(itemIndex)] id=\(item.itemId)")
-                            }
-
-                            newItems.append(itemMap)
+                        }
+                        if key == nil {
+                            key = self.extractActivityId(from: pMap)
+                        }
+                        if let key = key {
+                            self.propositionByUuid[key] = proposition
                         }
                     }
-
-                    pMap["items"] = newItems
-                    jsProps.append(pMap)
                 }
-
-                out[surfaceKey] = jsProps
-                NSLog("[MessagingBridge] Finished surfaceKey=\(surfaceKey) with \(jsProps.count) propositions")
             }
 
-            NSLog("[MessagingBridge] Final output built for \(out.keys.count) surfaces")
-            resolve(out)
+            resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositions))
         }
     }
 
@@ -434,56 +388,6 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     }
 
 
-    
-    /**
-     * Generates XDM data for PropositionItem interactions.
-     * This method is used by the React Native PropositionItem.generateInteractionXdm() method.
-     * 
-     * - Parameters:
-     *   - itemId: The unique identifier of the PropositionItem
-     *   - interaction: A custom string value to be recorded in the interaction (optional)
-     *   - eventType: The MessagingEdgeEventType numeric value
-     *   - tokens: Array containing the sub-item tokens for recording interaction (optional)
-     *   - resolve: Promise resolver with XDM data for the proposition interaction
-     *   - reject: Promise rejecter for errors
-     */
-    @objc
-    func generatePropositionInteractionXdm(
-        _ itemId: String,
-        interaction: String?,
-        eventType: Int,
-        tokens: [String]?,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
-    ) {
-        guard let edgeEventType = MessagingEdgeEventType(rawValue: eventType) else {
-            reject("InvalidEventType", "Invalid eventType: \(eventType)", nil)
-            return
-        }
-        
-        guard let propositionItem = findPropositionItemById(itemId) else {
-            reject("PropositionItemNotFound", "No PropositionItem found with ID: \(itemId)", nil)
-            return
-        }
-        
-        // Generate XDM data using the appropriate method
-        var xdmData: [String: Any]?
-        
-        if let interaction = interaction, let tokens = tokens {
-            xdmData = propositionItem.generateInteractionXdm(interaction, withEdgeEventType: edgeEventType, forTokens: tokens)
-        } else if let interaction = interaction {
-            xdmData = propositionItem.generateInteractionXdm(interaction, withEdgeEventType: edgeEventType)
-        } else {
-            xdmData = propositionItem.generateInteractionXdm(withEdgeEventType: edgeEventType)
-        }
-        
-        if let xdmData = xdmData {
-            resolve(xdmData)
-            print("Successfully generated XDM data for PropositionItem: \(itemId)")
-        } else {
-            reject("XDMGenerationFailed", "Failed to generate XDM data for PropositionItem: \(itemId)", nil)
-        }
-    }
     
     /// MARK: - PropositionItem Cache Management
     
