@@ -6,6 +6,10 @@
   "license": "Apache-2.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    "models": "./dist/models",
+    "ui": "./dist/ui"
+  },
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "tsc": "tsc"
@@ -31,7 +35,6 @@
     "@adobe/react-native-aepcore": "^7.0.0",
     "@adobe/react-native-aepedge": "^7.0.0",
     "@adobe/react-native-aepedgeidentity": "^7.0.0",
-    "@adobe/react-native-aepui": "^1.0.0",
     "react": ">=16.8.0",
     "react-native": ">=0.60.0"
   },

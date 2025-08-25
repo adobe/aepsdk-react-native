@@ -12,36 +12,62 @@
 
 import { PersonalizationSchema } from './PersonalizationSchema';
 
-type ContentCardTemplate = 'SmallImage';
-type DismissButtonStyle = 'circle' | 'none' | 'simple';
+export type ContentCardTemplate = 'SmallImage' | 'LargeImage' | 'ImageOnly';
+export type DismissButtonStyle = 'circle' | 'none' | 'simple';
 
-export interface ContentCard {
-  id: string;
-  data: {
-    contentType: 'application/json';
-    expiryDate: number;
-    publishedDate: number;
-    content: {
-      actionUrl: string;
-
-      body: { content: string };
-      title: { content: string };
-      buttons: Array<{
-        actionUrl: string;
-        id: string;
-        text: { content: string };
-        interactId: string;
-      }>;
-      image: { alt: string; url: string };
-      dismissBtn: { style: DismissButtonStyle };
-    };
-    meta: {
-      [key: string]: any;
-      adobe: { template: ContentCardTemplate };
-      dismissState: boolean;
-      readState: boolean;
-      surface: string;
-    };
+export interface ContentCardButton {
+  readonly interactId: string;
+  readonly actionUrl?: string;
+  readonly id?: string;
+  readonly text: {
+    readonly content: string;
   };
-  schema: PersonalizationSchema.CONTENT_CARD;
 }
+
+export interface ContentCardContent {
+  readonly image?: {
+    readonly alt?: string;
+    readonly url: string;
+    readonly darkUrl?: string;
+  };
+  readonly buttons?: readonly ContentCardButton[];
+  readonly dismissBtn?: {
+    readonly style: DismissButtonStyle;
+  };
+  readonly actionUrl?: string;
+  readonly body?: {
+    readonly content: string;
+  };
+  readonly title: {
+    readonly content: string;
+  };
+}
+
+export type ImageOnlyContentData = Pick<
+  ContentCardContent,
+  'image' | 'dismissBtn' | 'actionUrl'
+>;
+
+export type LargeImageContentData = ContentCardContent;
+
+export type SmallImageContentData = ContentCardContent;
+
+export interface ContentCardMeta {
+  [key: string]: any;
+  adobe: { template: ContentCardTemplate };
+  surface?: string;
+}
+
+export interface ContentCardData {
+  expiryDate: number;
+  meta: ContentCardMeta;
+  content: SmallImageContentData | LargeImageContentData | ImageOnlyContentData;
+  contentType: 'application/json';
+  publishedDate: number;
+}
+
+export type ContentCard = {
+  id: string;
+  schema: PersonalizationSchema.CONTENT_CARD;
+  data: ContentCardData;
+};

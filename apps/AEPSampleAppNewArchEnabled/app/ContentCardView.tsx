@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   ScrollView,
@@ -18,38 +18,37 @@ import {
   Text,
   Modal,
   Appearance,
-  ColorSchemeName,
-} from "react-native";
+  ColorSchemeName
+} from 'react-native';
+import { useEffect } from 'react';
 import {
-  ContentProvider,
-  ContentTemplate,
-  ContentView,
-} from "@adobe/react-native-aepmessaging";
-import { useEffect } from "react";
-import {
-  TemplateType,
   ThemeProvider,
-  Themes,
-} from "@adobe/react-native-aepmessaging";
-import { useColorScheme } from "../hooks/useColorScheme";
-import { Messaging } from "@adobe/react-native-aepmessaging";
-import { MobileCore } from "@adobe/react-native-aepcore";
+  Themes
+} from '@adobe/react-native-aepmessaging/src/ui/components';
+import { useColorScheme } from '../hooks/useColorScheme';
+import {
+  Messaging,
+  ContentView,
+  ContentTemplate,
+  TemplateType
+} from '@adobe/react-native-aepmessaging';
+import { MobileCore } from '@adobe/react-native-aepcore';
 
 const ContentCardView = () => {
   const [content, setContent] = useState<ContentTemplate[] | null>(null);
-  const [selectedView, setSelectedView] = useState<string>("Remote");
+  const [selectedView, setSelectedView] = useState<string>('Remote');
   const [showPicker, setShowPicker] = useState<boolean>(false);
-  const [selectedTheme, setSelectedTheme] = useState<string>("System");
+  const [selectedTheme, setSelectedTheme] = useState<string>('System');
   const colorScheme = useColorScheme();
 
-  const viewOptions = ["SmallImage", "LargeImage", "ImageOnly", "Remote"];
+  const viewOptions = ['SmallImage', 'LargeImage', 'ImageOnly', 'Remote'];
   const themeOptions: Array<{
     label: string;
     value: ColorSchemeName;
   }> = [
-    { label: "Light", value: "light" },
-    { label: "Dark", value: "dark" },
-    { label: "System", value: null },
+    { label: 'Light', value: 'light' },
+    { label: 'Dark', value: 'dark' },
+    { label: 'System', value: null }
   ];
 
   const handleThemeChange = (theme: string, value: ColorSchemeName) => {
@@ -59,49 +58,47 @@ const ContentCardView = () => {
 
   const renderStyledText = (text: string) => {
     return (
-      <Text style={{ color: "darkgray", textAlign: "center", fontSize: 18 }}>
+      <Text style={{ color: 'darkgray', textAlign: 'center', fontSize: 18 }}>
         {text}
       </Text>
     );
   };
 
   useEffect(() => {
-    Messaging.updatePropositionsForSurfaces(["rn/ios/remote_image"]);
+    Messaging.updatePropositionsForSurfaces(['rn/android/remote_image']);
     // Note:
     // - Call above to update the propositions and cache the content locally
     // - Customers may call this function when launching the app
-    // MobileCore.trackAction("xyz");
-    // const provider = new ContentProvider("card/ms");
-    const provider = new ContentProvider("rn/ios/remote_image");
-    provider
-      .getContent()
-      .then((content) => {
-        console.log(content);
+    MobileCore.trackAction('small_image');
+    try {
+      Messaging.getContentCardUI('rn/android/remote_image').then((content) => {
+        console.log('content', content);
         setContent(content);
-      })
-      .catch((err) => console.error(err.message))
-      .finally(() => console.log("Content loaded"));
+      });
+    } catch (error) {
+      console.error('Error fetching content cards:', error);
+    }
   }, []);
 
   return (
-    <View>
+    <ScrollView>
       {/* Theme Switcher */}
       <View
         style={{
           marginTop: 60,
           marginBottom: 15,
-          alignItems: "center",
+          alignItems: 'center'
         }}
       >
         <View
           style={{
-            width: "65%",
-            backgroundColor: colorScheme === "dark" ? "#3A3A3A" : "#E8E8E8",
+            width: '65%',
+            backgroundColor: colorScheme === 'dark' ? '#3A3A3A' : '#E8E8E8',
             borderRadius: 12,
             padding: 4,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between'
           }}
         >
           {themeOptions.map((option) => (
@@ -115,26 +112,26 @@ const ContentCardView = () => {
                 marginHorizontal: 1,
                 backgroundColor:
                   selectedTheme === option.label
-                    ? colorScheme === "dark"
-                      ? "#4A4A4A"
-                      : "#FFFFFF"
-                    : "transparent",
-                alignItems: "center",
-                justifyContent: "center",
+                    ? colorScheme === 'dark'
+                      ? '#4A4A4A'
+                      : '#FFFFFF'
+                    : 'transparent',
+                alignItems: 'center',
+                justifyContent: 'center',
                 shadowColor:
-                  selectedTheme === option.label ? "#000" : "transparent",
+                  selectedTheme === option.label ? '#000' : 'transparent',
                 shadowOffset: { width: 0, height: 1 },
                 shadowOpacity: selectedTheme === option.label ? 0.1 : 0,
                 shadowRadius: 2,
-                elevation: selectedTheme === option.label ? 2 : 0,
+                elevation: selectedTheme === option.label ? 2 : 0
               }}
               onPress={() => handleThemeChange(option.label, option.value)}
             >
               <Text
                 style={{
                   fontSize: 14,
-                  fontWeight: selectedTheme === option.label ? "600" : "400",
-                  color: colorScheme === "dark" ? "#FFFFFF" : "#000000",
+                  fontWeight: selectedTheme === option.label ? '600' : '400',
+                  color: colorScheme === 'dark' ? '#FFFFFF' : '#000000'
                 }}
               >
                 {option.label}
@@ -150,11 +147,11 @@ const ContentCardView = () => {
           style={{
             height: 50,
             borderWidth: 1,
-            borderColor: "#ccc",
+            borderColor: '#ccc',
             borderRadius: 5,
-            justifyContent: "center",
+            justifyContent: 'center',
             paddingHorizontal: 10,
-            backgroundColor: "#fff",
+            backgroundColor: '#fff'
           }}
           onPress={() => setShowPicker(true)}
         >
@@ -165,17 +162,17 @@ const ContentCardView = () => {
           <View
             style={{
               flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "rgba(0,0,0,0.5)",
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0,0,0,0.5)'
             }}
           >
             <View
               style={{
-                backgroundColor: "white",
+                backgroundColor: 'white',
                 padding: 20,
                 borderRadius: 10,
-                width: "80%",
+                width: '80%'
               }}
             >
               {viewOptions.map((option) => (
@@ -184,7 +181,7 @@ const ContentCardView = () => {
                   style={{
                     paddingVertical: 10,
                     borderBottomWidth: 1,
-                    borderBottomColor: "#eee",
+                    borderBottomColor: '#eee'
                   }}
                   onPress={() => {
                     setSelectedView(option);
@@ -194,7 +191,7 @@ const ContentCardView = () => {
                   <Text
                     style={{
                       fontSize: 16,
-                      color: selectedView === option ? "#007AFF" : "#000",
+                      color: selectedView === option ? '#007AFF' : '#000'
                     }}
                   >
                     {option}
@@ -204,11 +201,11 @@ const ContentCardView = () => {
               <TouchableOpacity
                 style={{
                   paddingVertical: 10,
-                  marginTop: 10,
+                  marginTop: 10
                 }}
                 onPress={() => setShowPicker(false)}
               >
-                <Text style={{ fontSize: 16, color: "#FF3B30" }}>Cancel</Text>
+                <Text style={{ fontSize: 16, color: '#FF3B30' }}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -216,180 +213,179 @@ const ContentCardView = () => {
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        {selectedView === "SmallImage" && (
+        {selectedView === 'SmallImage' && (
           <View>
-            {renderStyledText("[Basic] all fields")}
+            {renderStyledText('[Basic] all fields')}
             <ContentView
               key="1"
-              data={SMALL_IMAGE_CONTENT_ALL_FIELDS}
-              cardHeight={160}
+              template={SMALL_IMAGE_CONTENT_ALL_FIELDS}
               listener={(event, identifier) => {
-                console.log("Event triggered:", event, identifier);
+                console.log('Event triggered:', event, identifier);
               }}
             />
-            {renderStyledText("[dark/light]Custom theme")}
+            {renderStyledText('[dark/light]Custom theme')}
             <ThemeProvider
               customThemes={{
                 light: {
                   colors: {
-                    text_primary: "red",
-                    background: "oldlace",
-                    button_text_color: "orange",
-                  },
+                    textPrimary: 'red',
+                    background: 'oldlace',
+                    buttonTextColor: 'orange'
+                  }
                 },
                 dark: {
                   colors: {
-                    text_primary: "green",
-                    background: "lightblue",
-                    button_text_color: "mediumorchid",
-                  },
-                },
+                    textPrimary: 'green',
+                    background: 'lightblue',
+                    buttonTextColor: 'mediumorchid'
+                  }
+                }
               }}
             >
               <ContentView
                 key="1"
                 cardHeight={160}
-                data={SMALL_IMAGE_CONTENT_ALL_FIELDS}
+                template={SMALL_IMAGE_CONTENT_ALL_FIELDS}
                 listener={(event, identifier) => {
-                  console.log("Event triggered:", event, identifier);
+                  console.log('Event triggered:', event, identifier);
                 }}
               />
             </ThemeProvider>
 
-            {renderStyledText("[dismiss button] NO ")}
+            {renderStyledText('[dismiss button] NO ')}
             <ContentView
               key="11"
               cardHeight={160}
-              data={SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON}
+              template={SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON}
             />
-            {renderStyledText("[dismiss button] Simple")}
+            {renderStyledText('[dismiss button] Simple')}
             <ContentView
               key="12"
               cardHeight={160}
-              data={SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE}
+              template={SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE}
             />
-            {renderStyledText("[image] Invalid")}
+            {renderStyledText('[image] Invalid')}
             <ContentView
               key="2"
               cardHeight={150}
-              data={SMALL_IMAGE_CONTENT_INVALID_IMAGE}
+              template={SMALL_IMAGE_CONTENT_INVALID_IMAGE}
             />
-            {renderStyledText("[dark/light] darkUrl")}
+            {renderStyledText('[dark/light] darkUrl')}
             <ContentView
               key="3"
               cardHeight={160}
-              data={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
+              template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
             />
-            {renderStyledText("[style]title (2 lines), body (4 lines)")}
+            {renderStyledText('[style]title (2 lines), body (4 lines)')}
             <ContentView
               key="4"
-              data={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
+              template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
               styleOverrides={{
                 smallImageStyle: {
                   title: {
-                    numberOfLines: 2,
+                    numberOfLines: 2
                   },
                   body: {
-                    numberOfLines: 4,
-                  },
-                },
+                    numberOfLines: 4
+                  }
+                }
               }}
               listener={(event, identifier) => {
-                console.log("Event triggered:", event, identifier);
+                console.log('Event triggered:', event, identifier);
               }}
             />
-            {renderStyledText("[button] 3")}
+            {renderStyledText('[button] 3')}
             <ContentView
               key="5"
               cardHeight={160}
-              data={SMALL_IMAGE_CONTENT_3_BUTTONS}
+              template={SMALL_IMAGE_CONTENT_3_BUTTONS}
             />
             {renderStyledText(
-              "[style] height (150) title (1 line), body (1 line)"
+              '[style] height (150) title (1 line), body (1 line)'
             )}
             <View style={{ height: 150 }}>
               <ContentView
                 key="6"
                 cardHeight={200}
-                data={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
+                template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
                 styleOverrides={{
                   smallImageStyle: {
                     title: {
-                      numberOfLines: 1,
+                      numberOfLines: 1
                     },
                     body: {
-                      numberOfLines: 1,
-                    },
-                  },
+                      numberOfLines: 1
+                    }
+                  }
                 }}
               />
             </View>
-            {renderStyledText("image width (50%)")}
+            {renderStyledText('image width (50%)')}
             <View>
               <ContentView
                 key="6"
                 cardHeight={220}
-                data={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
+                template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
                 styleOverrides={{
                   smallImageStyle: {
                     title: {
-                      numberOfLines: 2,
+                      numberOfLines: 2
                     },
                     body: {
-                      numberOfLines: 4,
+                      numberOfLines: 4
                     },
                     imageContainer: {
-                      width: "50%",
-                    },
-                  },
+                      width: '50%'
+                    }
+                  }
                 }}
               />
             </View>
 
             {renderStyledText(
-              "No button, image width (40%), title (2 lines), body (6 lines), height (180)"
+              'No button, image width (40%), title (2 lines), body (6 lines), height (180)'
             )}
             <View>
               <ContentView
                 key="7"
                 cardHeight={160}
-                data={SMALL_IMAGE_CONTENT_NO_BUTTON}
+                template={SMALL_IMAGE_CONTENT_NO_BUTTON}
                 styleOverrides={{
                   smallImageStyle: {
                     title: {
-                      numberOfLines: 2,
+                      numberOfLines: 2
                     },
                     body: {
-                      numberOfLines: 6,
+                      numberOfLines: 6
                     },
                     imageContainer: {
-                      width: "40%",
-                    },
-                  },
+                      width: '40%'
+                    }
+                  }
                 }}
               />
             </View>
-            {renderStyledText("No button, image (right aligned)")}
+            {renderStyledText('No button, image (right aligned)')}
             <View>
               <ContentView
                 key="8"
                 cardHeight={160}
-                data={SMALL_IMAGE_CONTENT_NO_BUTTON}
+                template={SMALL_IMAGE_CONTENT_NO_BUTTON}
                 styleOverrides={{
                   smallImageStyle: {
                     title: {
-                      numberOfLines: 2,
+                      numberOfLines: 2
                     },
                     body: {
-                      numberOfLines: 6,
+                      numberOfLines: 6
                     },
                     container: {
-                      flexDirection: "row-reverse",
+                      flexDirection: 'row-reverse'
                     },
                     imageContainer: {
-                      width: "40%",
-                    },
-                  },
+                      width: '40%'
+                    }
+                  }
                 }}
               />
             </View>
@@ -398,88 +394,70 @@ const ContentCardView = () => {
           </View>
         )}
 
-        {selectedView === "LargeImage" && (
+        {selectedView === 'LargeImage' && (
           <View>
-            {renderStyledText("[basic] all fields")}
-            <ContentView
-              key="1"
-              cardHeight={200}
-              data={LARGE_IMAGE_CONTENT_ALL_FIELDS}
-            />
-            {renderStyledText("[button] 3")}
-            <ContentView
-              key="2"
-              cardHeight={200}
-              data={LARGE_IMAGE_CONTENT_3_BUTTONS}
-            />
+            {renderStyledText('[basic] all fields')}
+            <ContentView key="1" template={LARGE_IMAGE_CONTENT_ALL_FIELDS} />
+            {renderStyledText('[button] 3')}
+            <ContentView key="2" template={LARGE_IMAGE_CONTENT_3_BUTTONS} />
 
-            {renderStyledText("[dismiss button] NO ")}
+            {renderStyledText('[dismiss button] NO ')}
             <ContentView
               key="3"
-              cardHeight={200}
-              data={LARGE_IMAGE_CONTENT_NO_DISMISS_BUTTON}
+              template={LARGE_IMAGE_CONTENT_NO_DISMISS_BUTTON}
             />
 
-            {renderStyledText("[image] Invalid")}
-            <ContentView
-              key="4"
-              cardHeight={150}
-              data={LARGE_IMAGE_CONTENT_INVALID_IMAGE}
-            />
-            {renderStyledText("[dark/light] darkUrl")}
-            <ContentView
-              key="5"
-              cardHeight={160}
-              data={LARGE_IMAGE_CONTENT_DARK_URL}
-            />
+            {renderStyledText('[image] Invalid')}
+            <ContentView key="4" template={LARGE_IMAGE_CONTENT_INVALID_IMAGE} />
+            {renderStyledText('[dark/light] darkUrl')}
+            <ContentView key="5" template={LARGE_IMAGE_CONTENT_DARK_URL} />
             {renderStyledText(
-              "[style]title (2 lines), body (2 lines), image (1:1)"
+              '[style]title (2 lines), body (2 lines), image (1:1)'
             )}
             <ContentView
               key="6"
-              data={LARGE_IMAGE_CONTENT_LONG_TITLE}
+              template={LARGE_IMAGE_CONTENT_LONG_TITLE}
               styleOverrides={{
                 largeImageStyle: {
                   title: {
-                    numberOfLines: 2,
+                    numberOfLines: 2
                   },
                   body: {
-                    numberOfLines: 2,
+                    numberOfLines: 2
                   },
                   image: {
-                    aspectRatio: 1 / 1,
-                  },
-                },
+                    aspectRatio: 1 / 1
+                  }
+                }
               }}
               listener={(event, identifier) => {
-                console.log("Event triggered:", event, identifier);
+                console.log('Event triggered:', event, identifier);
               }}
             />
-            {renderStyledText("[dark/light]Custom theme")}
+            {renderStyledText('[dark/light]Custom theme')}
             <ThemeProvider
               customThemes={{
                 light: {
                   colors: {
-                    text_primary: "red",
-                    background: "oldlace",
-                    button_text_color: "orange",
-                  },
+                    textPrimary: 'red',
+                    background: 'oldlace',
+                    buttonTextColor: 'orange'
+                  }
                 },
                 dark: {
                   colors: {
-                    text_primary: "green",
-                    background: "lightblue",
-                    button_text_color: "mediumorchid",
-                  },
-                },
+                    textPrimary: 'green',
+                    background: 'lightblue',
+                    buttonTextColor: 'mediumorchid'
+                  }
+                }
               }}
             >
               <ContentView
                 key="7"
-                cardHeight={160}
-                data={LARGE_IMAGE_CONTENT_DARK_URL}
+                template={LARGE_IMAGE_CONTENT_DARK_URL}
                 listener={(event, identifier) => {
-                  console.log("Event triggered:", event, identifier);
+                  console.log('Event triggered:', event, identifier);
                 }}
               />
             </ThemeProvider>
@@ -488,15 +466,15 @@ const ContentCardView = () => {
           </View>
         )}
 
-        {selectedView === "ImageOnly" && (
+        {selectedView === 'ImageOnly' && (
           <View>
-            {renderStyledText("1. All fields")}
+            {renderStyledText('1. All fields')}
             <ContentView
               key="1"
-              data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
+              template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               listener={(event, identifier) => {
                 console.log(
-                  "Event triggered: - for imageOnly image 1",
+                  'Event triggered: - for imageOnly image 1',
                   event,
                   identifier
                 );
@@ -504,15 +482,14 @@ const ContentCardView = () => {
             />
 
             {renderStyledText(
-              "2. Images with Action url, dismiss style simple - card height 800"
+              '2. Images with Action url, dismiss style simple - card height 800'
             )}
             <ContentView
               key="2"
-              data={IMAGE_ONLY_CONTENT_WITH_ACTION_URL}
-              cardHeight={500}
+              template={IMAGE_ONLY_CONTENT_WITH_ACTION_URL}
               listener={(event, identifier) => {
                 console.log(
-                  "Event triggered: - for imageOnly image 2",
+                  'Event triggered: - for imageOnly image 2',
                   event,
                   identifier
                 );
@@ -520,784 +497,762 @@ const ContentCardView = () => {
             />
 
             {renderStyledText(
-              "3.Adobe default image, dismiss style circle - card height 400"
+              '3.Adobe default image, dismiss style circle - card height 400'
             )}
             <ContentView
               key="3"
-              data={IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE}
-              cardHeight={400}
+              template={IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE}
               listener={(event, identifier) => {
                 console.log(
-                  "Event triggered: - for imageOnly image 3",
+                  'Event triggered: - for imageOnly image 3',
                   event,
                   identifier
                 );
               }}
             />
 
-            {renderStyledText("4. No dismiss button - no card height")}
-            <ContentView key="4" data={IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON} />
-
-            {renderStyledText("5. [image] Invalid")}
+            {renderStyledText('4. No dismiss button - no card height')}
             <ContentView
-              key="5"
-              data={IMAGE_ONLY_CONTENT_INVALID_IMAGE}
-              cardHeight={200}
+              key="4"
+              template={IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON}
             />
 
-            {renderStyledText("6.[action] No actionUrl")}
-            <ContentView
-              key="6"
-              data={IMAGE_ONLY_CONTENT_NO_ACTION}
-              cardHeight={200}
-            />
+            {renderStyledText('5. [image] Invalid')}
+            <ContentView key="5" template={IMAGE_ONLY_CONTENT_INVALID_IMAGE} />
 
-            {renderStyledText("7.[style] Custom aspect ratio (1:1)")}
+            {renderStyledText('6.[action] No actionUrl')}
+            <ContentView key="6" template={IMAGE_ONLY_CONTENT_NO_ACTION} />
+
+            {renderStyledText('7.[style] Custom aspect ratio (1:1)')}
             <ContentView
               key="7"
-              data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
-              cardHeight={200}
+              template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
                   image: {
-                    aspectRatio: 1 / 1,
-                  },
-                },
+                    aspectRatio: 1 / 1
+                  }
+                }
               }}
               listener={(event, identifier) => {
                 console.log(
-                  "Event triggered: - for imageOnly image 7",
+                  'Event triggered: - for imageOnly image 7',
                   event,
                   identifier
                 );
               }}
             />
 
-            {renderStyledText("8.[style] Custom height (150)")}
+            {renderStyledText('8.[style] Custom height (150)')}
             <ContentView
               key="8"
-              data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
-              cardHeight={400}
+              template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
                   image: {
-                    height: 150,
-                  },
-                },
+                    height: 150
+                  }
+                }
               }}
             />
 
             {renderStyledText(
-              "9. [style] Custom width (80%), set image container backgroud color"
+              '9. [style] Custom width (80%), set image container backgroud color'
             )}
             <ContentView
               key="9"
-              data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
-              cardHeight={200}
+              template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
                   image: {
-                    width: "80%",
+                    width: '80%'
                   },
                   imageContainer: {
-                    backgroundColor: "#79f4bbff",
-                  },
-                },
+                    backgroundColor: '#79f4bbff'
+                  }
+                }
               }}
             />
 
-            {renderStyledText("10. [style] Card customization")}
+            {renderStyledText('10. [style] Card customization')}
             <ContentView
               key="10"
-              data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
-              cardHeight={400}
+              template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
                   card: {
                     borderRadius: 80,
-                    margin: 30,
+                    margin: 30
                   },
                   image: {
-                    width: "50%",
-                    resizeMode: "stretch",
-                  },
-                },
+                    width: '50%',
+                    resizeMode: 'stretch'
+                  }
+                }
               }}
             />
 
-            {renderStyledText("11.[style] Image container customization")}
+            {renderStyledText('11.[style] Image container customization')}
             <ContentView
               key="11"
-              data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
-              cardHeight={200}
+              template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
                   imageContainer: {
                     borderRadius: 15,
                     borderWidth: 5,
-                    borderColor: "#FF69B4",
-                    maxHeight: 100,
+                    borderColor: '#FF69B4',
+                    maxHeight: 100
                   },
                   image: {
-                    resizeMode: "center",
-                    backgroundColor: "#79f4bbff",
-                  },
-                },
+                    resizeMode: 'center',
+                    backgroundColor: '#79f4bbff'
+                  }
+                }
               }}
             />
 
-            {renderStyledText("12.[style] Combined styles")}
+            {renderStyledText('12.[style] Combined styles')}
             <ContentView
               key="12"
-              data={IMAGE_ONLY_CONTENT_ALL_FIELDS}
-              cardHeight={200}
+              template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
                   card: {
                     margin: 5,
-                    borderRadius: 0,
+                    borderRadius: 0
                   },
                   imageContainer: {
-                    backgroundColor: "#E6E6FA",
-                    minHeight: 180,
+                    backgroundColor: '#E6E6FA',
+                    minHeight: 180
                   },
                   image: {
-                    resizeMode: "cover",
-                  },
-                },
+                    resizeMode: 'cover'
+                  }
+                }
               }}
             />
 
-            {renderStyledText("13.[image] No darkUrl (only light mode)")}
-            <ContentView
-              key="13"
-              data={IMAGE_ONLY_CONTENT_NO_DARK_URL}
-              cardHeight={200}
-            />
+            {renderStyledText('13.[image] No darkUrl (only light mode)')}
+            <ContentView key="13" template={IMAGE_ONLY_CONTENT_NO_DARK_URL} />
 
             {renderStyledText(
-              "1.[image] No Light Mode (only dark mode) - no actionUrl"
+              '1.[image] No Light Mode (only dark mode) - no actionUrl'
             )}
-            <ContentView
-              key="15"
-              data={IMAGE_ONLY_CONTENT_NO_LIGHT_MODE}
-              cardHeight={300}
-            />
+            <ContentView key="15" template={IMAGE_ONLY_CONTENT_NO_LIGHT_MODE} />
             <View style={{ height: 200 }} />
           </View>
         )}
-        {selectedView === "Remote" && (
+        {selectedView === 'Remote' && (
           <View>
-            {renderStyledText("[Remote] cards")}
-            {content &&
-              content.map((item) => (
-                <ContentView
-                  key={item.id}
-                  data={item}
-                  cardHeight={210}
-                  styleOverrides={{
-                    smallImageStyle: {
-                      title: {
-                        numberOfLines: 2,
-                      },
-                      body: {
-                        numberOfLines: 4,
-                      },
+            {renderStyledText('[Remote] cards')}
+            {content?.map((item) => (
+              <ContentView
+                key={item.id}
+                template={item}
+                styleOverrides={{
+                  smallImageStyle: {
+                    title: {
+                      numberOfLines: 2
                     },
-                  }}
-                />
-              ))}
+                    body: {
+                      numberOfLines: 4
+                    }
+                  }
+                }}
+              />
+            ))}
           </View>
         )}
       </ScrollView>
-    </View>
+    </ScrollView>
   );
 };
 
 export default ContentCardView;
 
 const SMALL_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
-  id: "small-image-all-fields",
+  id: 'small-image-all-fields',
   type: TemplateType.SMALL_IMAGE,
-  smallImageData: {
+  data: {
     image: {
-      alt: "",
-      url: "https://cdn-icons-png.flaticon.com/256/3303/3303838.png",
-      darkUrl: "https://cdn-icons-png.flaticon.com/256/3303/3303838.png",
+      alt: '',
+      url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
+      darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
     },
     buttons: [
       {
-        interactId: "downloadClicked",
-        actionUrl: "https://nba.com",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
+        interactId: 'downloadClicked',
+        actionUrl: 'https://nba.com',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
         text: {
-          content: "Download App",
-        },
+          content: 'Download App'
+        }
       },
       {
-        interactId: "OK",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
+        interactId: 'OK',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
         text: {
-          content: "OK",
-        },
-      },
+          content: 'OK'
+        }
+      }
     ],
     dismissBtn: {
-      style: "circle",
+      style: 'circle'
     },
-    actionUrl: "",
+    actionUrl: '',
     body: {
       content:
-        "Get live scores, real-time updates, and exclusive content right at your fingertips.",
+        'Get live scores, real-time updates, and exclusive content right at your fingertips.'
     },
     title: {
-      content: "Stay connected to all the action",
-    },
-  },
+      content: 'Stay connected to all the action'
+    }
+  }
 };
 const SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
-  id: "small-image-all-fields",
+  id: 'small-image-all-fields',
   type: TemplateType.SMALL_IMAGE,
-  smallImageData: {
+  data: {
     image: {
-      alt: "",
-      url: "https://cdn-icons-png.flaticon.com/256/3303/3303838.png",
-      darkUrl: "https://cdn-icons-png.flaticon.com/256/3303/3303838.png",
+      alt: '',
+      url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
+      darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
     },
     buttons: [
       {
-        interactId: "downloadClicked",
-        actionUrl: "https://nba.com",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
+        interactId: 'downloadClicked',
+        actionUrl: 'https://nba.com',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
         text: {
-          content: "Download App",
-        },
-      },
+          content: 'Download App'
+        }
+      }
     ],
-    actionUrl: "",
+    actionUrl: '',
     body: {
       content:
-        "Get live scores, real-time updates, and exclusive content right at your fingertips.",
+        'Get live scores, real-time updates, and exclusive content right at your fingertips.'
     },
     title: {
-      content: "Stay connected to all the action",
-    },
-  },
+      content: 'Stay connected to all the action'
+    }
+  }
 };
 
 const SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE: ContentTemplate = {
-  id: "small-image-dismiss-button-simple",
+  id: 'small-image-dismiss-button-simple',
   type: TemplateType.SMALL_IMAGE,
-  smallImageData: {
+  data: {
     image: {
-      alt: "",
-      url: "https://cdn-icons-png.flaticon.com/256/3303/3303838.png",
-      darkUrl: "https://cdn-icons-png.flaticon.com/256/3303/3303838.png",
+      alt: '',
+      url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
+      darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
     },
     buttons: [
       {
-        interactId: "downloadClicked",
-        actionUrl: "https://nba.com",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
+        interactId: 'downloadClicked',
+        actionUrl: 'https://nba.com',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
         text: {
-          content: "Download App",
-        },
+          content: 'Download App'
+        }
       },
       {
-        interactId: "OK",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
+        interactId: 'OK',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
         text: {
-          content: "OK",
-        },
-      },
+          content: 'OK'
+        }
+      }
     ],
     dismissBtn: {
-      style: "simple",
+      style: 'simple'
     },
-    actionUrl: "",
+    actionUrl: '',
     body: {
       content:
-        "Get live scores, real-time updates, and exclusive content right at your fingertips.",
+        'Get live scores, real-time updates, and exclusive content right at your fingertips.'
     },
     title: {
-      content: "Stay connected to all the action",
-    },
-  },
+      content: 'Stay connected to all the action'
+    }
+  }
 };
 
 const SMALL_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
-  id: "small-image-invalid-image",
+  id: 'small-image-invalid-image',
   type: TemplateType.SMALL_IMAGE,
-  smallImageData: {
+  data: {
     body: {
       content:
-        "Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        'Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     title: {
-      content: "Get Ready for the Basketball Season Kickoff!",
+      content: 'Get Ready for the Basketball Season Kickoff!'
     },
     buttons: [
       {
-        interactId: "buy",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
-        actionUrl: "https://nba.com",
+        interactId: 'buy',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
+        actionUrl: 'https://nba.com',
         text: {
-          content: "Get Season Pass",
-        },
-      },
+          content: 'Get Season Pass'
+        }
+      }
     ],
-    actionUrl: "",
+    actionUrl: '',
     dismissBtn: {
-      style: "circle",
+      style: 'circle'
     },
     image: {
       darkUrl:
-        "https://static-00.iconduck.com/assets.00/basketball-icon-256x256-vydm63md.png",
-      alt: "",
-      url: "https://static-00.iconduck.com/assets.00/basketball-icon-256x256-vydm63md.png",
-    },
-  },
+        'https://static-00.iconduck.com/assets.00/basketball-icon-256x256-vydm63md.png',
+      alt: '',
+      url: 'https://static-00.iconduck.com/assets.00/basketball-icon-256x256-vydm63md.png'
+    }
+  }
 };
 
 const SMALL_IMAGE_CONTENT_IMAGE_DARK_URL: ContentTemplate = {
-  id: "small-image-invalid-image",
+  id: 'small-image-invalid-image',
   type: TemplateType.SMALL_IMAGE,
-  smallImageData: {
+  data: {
     body: {
       content:
-        "🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     title: {
-      content: "Get Ready for the Basketball Season Kickoff!",
+      content: 'Get Ready for the Basketball Season Kickoff!'
     },
     buttons: [
       {
-        interactId: "buy",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
-        actionUrl: "https://nba.com",
+        interactId: 'buy',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
+        actionUrl: 'https://nba.com',
         text: {
-          content: "Get Season Pass",
-        },
-      },
+          content: 'Get Season Pass'
+        }
+      }
     ],
-    actionUrl: "",
+    actionUrl: '',
     dismissBtn: {
-      style: "circle",
+      style: 'circle'
     },
     image: {
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
-      alt: "",
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
-    },
-  },
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+      alt: '',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+    }
+  }
 };
 const SMALL_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
-  id: "small-image-invalid-image",
+  id: 'small-image-invalid-image',
   type: TemplateType.SMALL_IMAGE,
-  smallImageData: {
+  data: {
     body: {
       content:
-        "Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        'Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     title: {
-      content: "Get Ready for the Basketball Season Kickoff!",
+      content: 'Get Ready for the Basketball Season Kickoff!'
     },
     buttons: [
       {
-        interactId: "buy",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
-        actionUrl: "https://nba.com",
+        interactId: 'buy',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
+        actionUrl: 'https://nba.com',
         text: {
-          content: "Buyyyyy",
-        },
+          content: 'Buyyyyy'
+        }
       },
       {
-        interactId: "ok",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
-        actionUrl: "https://nba.com",
+        interactId: 'ok',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
+        actionUrl: 'https://nba.com',
         text: {
-          content: "OK",
-        },
+          content: 'OK'
+        }
       },
       {
-        interactId: "more",
-        id: "5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6",
-        actionUrl: "https://nba.com",
+        interactId: 'more',
+        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
+        actionUrl: 'https://nba.com',
         text: {
-          content: "More",
-        },
-      },
+          content: 'More'
+        }
+      }
     ],
-    actionUrl: "",
+    actionUrl: '',
     dismissBtn: {
-      style: "circle",
+      style: 'circle'
     },
     image: {
-      alt: "",
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
-    },
-  },
+      alt: '',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+    }
+  }
 };
 const SMALL_IMAGE_CONTENT_NO_BUTTON: ContentTemplate = {
-  id: "small-image-invalid-image",
+  id: 'small-image-invalid-image',
   type: TemplateType.SMALL_IMAGE,
-  smallImageData: {
+  data: {
     body: {
       content:
-        "🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     title: {
-      content: "Get Ready for the Basketball Season Kickoff!",
+      content: 'Get Ready for the Basketball Season Kickoff!'
     },
     buttons: [],
-    actionUrl: "",
+    actionUrl: '',
     dismissBtn: {
-      style: "circle",
+      style: 'circle'
     },
     image: {
-      alt: "",
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
-    },
-  },
+      alt: '',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+    }
+  }
 };
 
 const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
-  id: "large-image-all-fields",
+  id: 'large-image-all-fields',
   type: TemplateType.LARGE_IMAGE,
-  largeImageData: {
-    actionUrl: "https://cardaction.com",
+  data: {
+    actionUrl: 'https://cardaction.com',
     body: {
       content:
-        "🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     buttons: [
       {
-        id: "a41d1bff-2797-4958-a6d7-2b367e055795",
-        actionUrl: "https://buttonone.com/action",
-        interactId: "buttonOneClicked",
+        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
+        actionUrl: 'https://buttonone.com/action',
+        interactId: 'buttonOneClicked',
         text: {
-          content: "ButtonTextOne",
-        },
-      },
+          content: 'ButtonTextOne'
+        }
+      }
     ],
     image: {
-      alt: "",
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
-      darkUrl: "",
+      alt: '',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+      darkUrl: ''
     },
     dismissBtn: {
-      style: "simple",
+      style: 'simple'
     },
     title: {
-      content: "This is large image title",
-    },
-  },
+      content: 'This is large image title'
+    }
+  }
 };
 
 const LARGE_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
-  id: "large-image-all-fields",
+  id: 'large-image-all-fields',
   type: TemplateType.LARGE_IMAGE,
-  largeImageData: {
-    actionUrl: "https://cardaction.com",
+  data: {
+    actionUrl: 'https://cardaction.com',
     body: {
       content:
-        "🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     buttons: [
       {
-        id: "a41d1bff-2797-4958-a6d7-2b367e055795",
-        actionUrl: "https://buttonone.com/action",
-        interactId: "buttonOneClicked",
+        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
+        actionUrl: 'https://buttonone.com/action',
+        interactId: 'buttonOneClicked',
         text: {
-          content: "ButtonTextOne",
-        },
-      },
+          content: 'ButtonTextOne'
+        }
+      }
     ],
     image: {
-      alt: "",
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
+      alt: '',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
     },
     dismissBtn: {
-      style: "none",
+      style: 'none'
     },
     title: {
-      content: "This is large image title",
-    },
-  },
+      content: 'This is large image title'
+    }
+  }
 };
 
 const LARGE_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
-  id: "large-image-all-fields",
+  id: 'large-image-all-fields',
   type: TemplateType.LARGE_IMAGE,
-  largeImageData: {
-    actionUrl: "https://cardaction.com",
+  data: {
+    actionUrl: 'https://cardaction.com',
     body: {
       content:
-        "🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     buttons: [
       {
-        id: "a41d1bff-2797-4958-a6d7-2b367e055795",
-        actionUrl: "https://buttonone.com/action",
-        interactId: "buttonOneClicked",
+        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
+        actionUrl: 'https://buttonone.com/action',
+        interactId: 'buttonOneClicked',
         text: {
-          content: "ButtonTextOne",
-        },
-      },
+          content: 'ButtonTextOne'
+        }
+      }
     ],
     image: {
-      alt: "",
-      url: "https://xxx",
-      darkUrl: "https://imageurl.com/dark",
+      alt: '',
+      url: 'https://xxx',
+      darkUrl: 'https://imageurl.com/dark'
     },
     dismissBtn: {
-      style: "none",
+      style: 'none'
     },
     title: {
-      content: "This is large image title",
-    },
-  },
+      content: 'This is large image title'
+    }
+  }
 };
 
 const LARGE_IMAGE_CONTENT_DARK_URL: ContentTemplate = {
-  id: "large-image-all-fields",
+  id: 'large-image-all-fields',
   type: TemplateType.LARGE_IMAGE,
-  largeImageData: {
-    actionUrl: "https://cardaction.com",
+  data: {
+    actionUrl: 'https://cardaction.com',
     body: {
       content:
-        "🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     buttons: [
       {
-        id: "a41d1bff-2797-4958-a6d7-2b367e055795",
-        actionUrl: "https://buttonone.com/action",
-        interactId: "buttonOneClicked",
+        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
+        actionUrl: 'https://buttonone.com/action',
+        interactId: 'buttonOneClicked',
         text: {
-          content: "ButtonTextOne",
-        },
-      },
+          content: 'ButtonTextOne'
+        }
+      }
     ],
     image: {
-      alt: "",
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
+      alt: '',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
     },
     dismissBtn: {
-      style: "none",
+      style: 'none'
     },
     title: {
-      content: "This is large image title",
-    },
-  },
+      content: 'This is large image title'
+    }
+  }
 };
 
 const LARGE_IMAGE_CONTENT_LONG_TITLE: ContentTemplate = {
-  id: "large-image-all-fields",
+  id: 'large-image-all-fields',
   type: TemplateType.LARGE_IMAGE,
-  largeImageData: {
-    actionUrl: "https://cardaction.com",
+  data: {
+    actionUrl: 'https://cardaction.com',
     body: {
       content:
-        "🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     buttons: [
       {
-        id: "a41d1bff-2797-4958-a6d7-2b367e055795",
-        actionUrl: "https://buttonone.com/action",
-        interactId: "buttonOneClicked",
+        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
+        actionUrl: 'https://buttonone.com/action',
+        interactId: 'buttonOneClicked',
         text: {
-          content: "ButtonTextOne",
-        },
-      },
+          content: 'ButtonTextOne'
+        }
+      }
     ],
     image: {
-      alt: "",
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
+      alt: '',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
     },
     dismissBtn: {
-      style: "none",
+      style: 'none'
     },
     title: {
       content:
-        "This is large image title, it's very long very long very long very long",
-    },
-  },
+        "This is large image title, it's very long very long very long very long"
+    }
+  }
 };
 const LARGE_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
-  id: "large-image-all-fields",
+  id: 'large-image-all-fields',
   type: TemplateType.LARGE_IMAGE,
-  largeImageData: {
-    actionUrl: "https://cardaction.com",
+  data: {
+    actionUrl: 'https://cardaction.com',
     body: {
       content:
-        "🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game",
+        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
     },
     buttons: [
       {
-        id: "a41d1bff-2797-4958-a6d7-2b367e055795",
-        actionUrl: "https://buttonone.com/action",
-        interactId: "buttonOneClicked_1",
+        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
+        actionUrl: 'https://buttonone.com/action',
+        interactId: 'buttonOneClicked_1',
         text: {
-          content: "ButtonOne",
-        },
+          content: 'ButtonOne'
+        }
       },
       {
-        id: "a41d1bff-2797-4958-a6d7-2b367e055795",
-        interactId: "buttonOneClicked_2",
+        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
+        interactId: 'buttonOneClicked_2',
         text: {
-          content: "ButtonTwo",
-        },
+          content: 'ButtonTwo'
+        }
       },
       {
-        id: "a41d1bff-2797-4958-a6d7-2b367e055795",
-        interactId: "buttonOneClicked_3",
+        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
+        interactId: 'buttonOneClicked_3',
         text: {
-          content: "ButtonThreeeeeeeee",
-        },
-      },
+          content: 'ButtonThreeeeeeeee'
+        }
+      }
     ],
     image: {
-      alt: "",
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
+      alt: '',
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
     },
     dismissBtn: {
-      style: "simple",
+      style: 'simple'
     },
     title: {
-      content: "This is large image title",
-    },
-  },
+      content: 'This is large image title'
+    }
+  }
 };
 
 const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
-  id: "image-only-all-fields",
+  id: 'image-only-all-fields',
   type: TemplateType.IMAGE_ONLY,
-  imageOnlyData: {
-    actionUrl: "https://www.adobe.com/",
+  data: {
+    actionUrl: 'https://www.adobe.com/',
     image: {
-      url: "https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg",
+      url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
-      alt: "flight offer",
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+      alt: 'flight offer'
     },
     dismissBtn: {
-      style: "simple",
-    },
-  },
+      style: 'simple'
+    }
+  }
 };
 
 const IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
-  id: "image-only-no-dismiss",
+  id: 'image-only-no-dismiss',
   type: TemplateType.IMAGE_ONLY,
-  imageOnlyData: {
-    actionUrl: "https://google.com",
+  data: {
+    actionUrl: 'https://google.com',
     image: {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
-      alt: "flight offer",
-    },
-  },
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+      alt: 'flight offer'
+    }
+  }
 };
 
 const IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE: ContentTemplate = {
-  id: "image-only-dismiss-circle",
+  id: 'image-only-dismiss-circle',
   type: TemplateType.IMAGE_ONLY,
-  imageOnlyData: {
-    actionUrl: "https://google.com",
+  data: {
+    actionUrl: 'https://google.com',
     image: {
-      url: "https://i.ibb.co/0X8R3TG/Messages-24.png",
+      url: 'https://i.ibb.co/0X8R3TG/Messages-24.png',
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
-      alt: "flight offer",
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+      alt: 'flight offer'
     },
     dismissBtn: {
-      style: "circle",
-    },
-  },
+      style: 'circle'
+    }
+  }
 };
 
 const IMAGE_ONLY_CONTENT_INVALID_IMAGE: ContentTemplate = {
-  id: "image-only-invalid-image",
+  id: 'image-only-invalid-image',
   type: TemplateType.IMAGE_ONLY,
-  imageOnlyData: {
-    actionUrl: "https://google.com",
+  data: {
+    actionUrl: 'https://google.com',
     image: {
-      url: "https://invalid-url-that-will-fail",
-      darkUrl: "https://another-invalid-url",
-      alt: "broken image",
+      url: 'https://invalid-url-that-will-fail',
+      darkUrl: 'https://another-invalid-url',
+      alt: 'broken image'
     },
     dismissBtn: {
-      style: "simple",
-    },
-  },
+      style: 'simple'
+    }
+  }
 };
 
 const IMAGE_ONLY_CONTENT_NO_ACTION: ContentTemplate = {
-  id: "image-only-no-action",
+  id: 'image-only-no-action',
   type: TemplateType.IMAGE_ONLY,
-  imageOnlyData: {
+  data: {
     image: {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s",
+      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg",
-      alt: "non-clickable image",
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+      alt: 'non-clickable image'
     },
     dismissBtn: {
-      style: "simple",
-    },
-  },
+      style: 'simple'
+    }
+  }
 };
 
 const IMAGE_ONLY_CONTENT_NO_DARK_URL: ContentTemplate = {
-  id: "image-only-no-dark-url",
+  id: 'image-only-no-dark-url',
   type: TemplateType.IMAGE_ONLY,
-  imageOnlyData: {
-    actionUrl: "https://google.com",
+  data: {
+    actionUrl: 'https://google.com',
     image: {
-      url: "https://cdn-icons-png.flaticon.com/256/3303/3303838.png",
-      alt: "light mode only image",
+      url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
+      alt: 'light mode only image'
     },
     dismissBtn: {
-      style: "simple",
-    },
-  },
+      style: 'simple'
+    }
+  }
 };
 
 const IMAGE_ONLY_CONTENT_NO_LIGHT_MODE: ContentTemplate = {
-  id: "image-only-different-image",
+  id: 'image-only-different-image',
   type: TemplateType.IMAGE_ONLY,
-  imageOnlyData: {
+  data: {
     image: {
-      url: "",
+      url: '',
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
-      alt: "basketball icon",
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+      alt: 'basketball icon'
     },
     dismissBtn: {
-      style: "circle",
-    },
-  },
+      style: 'circle'
+    }
+  }
 };
 
 const IMAGE_ONLY_CONTENT_WITH_ACTION_URL: ContentTemplate = {
-  id: "image-only-with-action-url",
+  id: 'image-only-with-action-url',
   type: TemplateType.IMAGE_ONLY,
-  imageOnlyData: {
-    actionUrl: "https://google.com",
+  data: {
+    actionUrl: 'https://google.com',
     image: {
-      url: "https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg",
+      url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
       darkUrl:
-        "https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*",
-      alt: "with action URL - Google Images",
+        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+      alt: 'with action URL - Google Images'
     },
     dismissBtn: {
-      style: "simple",
-    },
-  },
+      style: 'simple'
+    }
+  }
 };

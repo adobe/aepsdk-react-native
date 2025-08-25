@@ -2878,11 +2878,6 @@
   resolved "https://registry.yarnpkg.com/@react-native/normalize-colors/-/normalize-colors-0.74.89.tgz#b8ac17d1bbccd3ef9a1f921665d04d42cff85976"
   integrity sha512-qoMMXddVKVhZ8PA1AbUCk83trpd6N+1nF2A6k1i6LsQObyS92fELuk8kU/lQs6M7BsMHwqyLCpQJ1uFgNvIQXg==
 
-"@react-native/typescript-config@^0.80.1":
-  version "0.80.2"
-  resolved "https://registry.yarnpkg.com/@react-native/typescript-config/-/typescript-config-0.80.2.tgz#2124710ef3ff989401e3c5bfe217cf5f06d6d93b"
-  integrity sha512-bq2WgQD0xN+VKBWCDSa7iKbJRUCVNjxjbB7Yzai8EKPSkoYjp08LeoEzPRr1wXJGeFI3OOwsSm/MZbUr72KmNA==
-
 "@react-native/virtualized-lists@0.76.9":
   version "0.76.9"
   resolved "https://registry.yarnpkg.com/@react-native/virtualized-lists/-/virtualized-lists-0.76.9.tgz#23b94fe2525d6b3b974604a14ee7810384420dcd"
@@ -3045,15 +3040,6 @@
   integrity sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==
   dependencies:
     "@sinonjs/commons" "^3.0.0"
-
-"@testing-library/react-native@^12.4.3":
-  version "12.9.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/react-native/-/react-native-12.9.0.tgz#9c727d9ffec91024be3288ed9376df3673154784"
-  integrity sha512-wIn/lB1FjV2N4Q7i9PWVRck3Ehwq5pkhAef5X5/bmQ78J/NoOsGbVY2/DG5Y9Lxw+RfE+GvSEh/fe5Tz6sKSvw==
-  dependencies:
-    jest-matcher-utils "^29.7.0"
-    pretty-format "^29.7.0"
-    redent "^3.0.0"
 
 "@tootallnate/once@2":
   version "2.0.0"
@@ -3230,9 +3216,9 @@
     "@types/react" "^18"
 
 "@types/react@^17":
-  version "17.0.87"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.87.tgz#998a5e146fbea449986d95a794c0aff47f12b6e6"
-  integrity sha512-wpg9AbtJ6agjA+BKYmhG6dRWEU/2DHYwMzCaBzsz137ft6IyuqZ5fI4ic1DWL4DrI03Zy78IyVE6ucrXl0mu4g==
+  version "17.0.88"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.88.tgz#d926ade927fcad5a79338fb283dc93fc84bcf1d9"
+  integrity sha512-HEOvpzcFWkEcHq4EsTChnpimRc3Lz1/qzYRDFtobFp4obVa6QVjCDMjWmkgxgaTYttNvyjnldY8MUflGp5YiUw==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "^0.16"
@@ -9017,7 +9003,7 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react-test-renderer@18.3.1, react-test-renderer@^18.2.0:
+react-test-renderer@18.3.1:
   version "18.3.1"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-18.3.1.tgz#e693608a1f96283400d4a3afead6893f958b80b4"
   integrity sha512-KkAgygexHUkQqtvvx/otwxtuFu5cVjfzTCtjXLH9boS19/Nbtg84zS7wIQn39G8IlrhThBpQsMKkq5ZHZIYFXA==

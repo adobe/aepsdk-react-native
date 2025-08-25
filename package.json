@@ -4,7 +4,7 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*", 
+      "packages/*",
       "apps/AEPSampleAppNewArchEnabled"
     ],
     "nohoist": [
@@ -23,7 +23,6 @@
     "sampleapp:start": "cd apps/AEPSampleApp && npx react-native start --reset-cache",
     "sampleapp:ios:run": "cd apps/AEPSampleApp && npx react-native run-ios",
     "sampleapp:android:run": "cd apps/AEPSampleApp && npx react-native run-android",
-    
     "sampleappnewarchenabled:expo:prebuild": "cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild",
     "sampleappnewarchenabled:ios:pod:update": "cd apps/AEPSampleAppNewArchEnabled/ios && pod update",
     "sampleappnewarchenabled:ios:pod:install": "cd apps/AEPSampleAppNewArchEnabled/ios && pod install",
@@ -53,5 +52,5 @@
     "@types/node": "^22.9.0",
     "typescript": "^4.5.5"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

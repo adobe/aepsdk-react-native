@@ -9,15 +9,15 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
+
 /**
  * The event types for the ContentView component.
- * 
+ *
  * @enum {string}
  * @readonly
  * @description The event types for the ContentView component.
- * @property {string} onDismiss - The event type for the onDismiss event when the dismiss button is pressed.    
+ * @property {string} onDismiss - The event type for the onDismiss event when the dismiss button is pressed.
  * @property {string} onDisplay - The event type for the onDisplay event when the content card is displayed.
- * @property {string} clickButton - The event type for the clickButton event when a button is clicked.
- * @property {string} press - The event type for the press event when the content is pressed.
+ * @property {string} onInteract - The event type for the interact event when the content is pressed.
  */
-export type ContentViewEvent = "onDismiss" | "onDisplay" | "clickButton" | "press" | "viewPress";
+export type ContentViewEvent = 'onDismiss' | 'onDisplay' | 'onInteract';

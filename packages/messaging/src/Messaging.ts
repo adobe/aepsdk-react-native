@@ -20,11 +20,13 @@ import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
 import { MessagingProposition } from './models/MessagingProposition';
 import { ContentCard } from './models/ContentCard';
-
+import { PersonalizationSchema } from './models/PersonalizationSchema';
+import { ContentTemplate, TemplateType } from './ui/types/Templates';
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
   getCachedMessages: () => Message[];
   getLatestMessage: () => Message;
+  getContentCardUI: (surface: string) => Promise<ContentTemplate[]>;
   getPropositionsForSurfaces: (
     surfaces: string[]
   ) => Record<string, MessagingProposition[]>;
@@ -35,8 +37,14 @@ export interface NativeMessagingModule {
     shouldSaveMessage: boolean
   ) => void;
   updatePropositionsForSurfaces: (surfaces: string[]) => void;
-  trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
-  trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
+  trackContentCardDisplay: (
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ) => void;
+  trackContentCardInteraction: (
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ) => void;
   handleJavascriptMessage: (messageId: string, handlerName: string) => void;
 }
 
@@ -48,12 +56,18 @@ var messagingDelegate: MessagingDelegate;
 
 // Registery to store callbacks for each message in handleJavascriptMessage
 // Record - {messageId : {handlerName : callback}}
-const jsMessageHandlers: Record<string, Record<string, (content: string) => void>> = {};
+const jsMessageHandlers: Record<
+  string,
+  Record<string, (content: string) => void>
+> = {};
 const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
 
 handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
-  const {messageId, handlerName, content} = event;
-  if (jsMessageHandlers[messageId] && jsMessageHandlers[messageId][handlerName]) {
+  const { messageId, handlerName, content } = event;
+  if (
+    jsMessageHandlers[messageId] &&
+    jsMessageHandlers[messageId][handlerName]
+  ) {
     jsMessageHandlers[messageId][handlerName](content);
   }
 });
@@ -106,11 +120,17 @@ class Messaging {
     return await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
   }
 
-  static trackContentCardDisplay(proposition: MessagingProposition, contentCard: ContentCard): void {
+  static trackContentCardDisplay(
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ): void {
     RCTAEPMessaging.trackContentCardDisplay(proposition, contentCard);
   }
 
-  static trackContentCardInteraction(proposition: MessagingProposition, contentCard: ContentCard): void {
+  static trackContentCardInteraction(
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ): void {
     RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);
   }
 
@@ -185,21 +205,50 @@ class Messaging {
   }
 
   /**
-   * Registers a javascript interface for the provided handler name 
-   * to the WebView associated with the InAppMessage presentation 
-   * to handle Javascript messages. 
-   * When the registered handlers are executed via the HTML 
+   * Registers a javascript interface for the provided handler name
+   * to the WebView associated with the InAppMessage presentation
+   * to handle Javascript messages.
+   * When the registered handlers are executed via the HTML
    * the result will be passed back to the associated callback.
    * @param messageId The id of the message to handle
    * @param handlerName The name of the handler to handle
    * @param callback The callback to handle the message
    */
-  static handleJavascriptMessage(messageId: string, handlerName: string, callback: (content: string) => void) {
+  static handleJavascriptMessage(
+    messageId: string,
+    handlerName: string,
+    callback: (content: string) => void
+  ) {
     if (!jsMessageHandlers[messageId]) {
       jsMessageHandlers[messageId] = {};
     }
     jsMessageHandlers[messageId][handlerName] = callback;
     RCTAEPMessaging.handleJavascriptMessage(messageId, handlerName);
+  }
+
+  static async getContentCardUI(surface: string): Promise<ContentTemplate[]> {
+    const messages = await Messaging.getPropositionsForSurfaces([surface]);
+    const propositions = messages[surface];
+    if (!propositions?.length) {
+      return [];
+    }
+    const contentCards = propositions.flatMap((proposition) =>
+      proposition.items.filter(
+        (item) => item.schema === PersonalizationSchema.CONTENT_CARD
+      )
+    );
+
+    if (!contentCards?.length) {
+      return [];
+    }
+
+    return contentCards.map((card: ContentCard) => {
+      const type = card.data?.meta?.adobe?.template ?? TemplateType.SMALL_IMAGE;
+      return {
+        ...card,
+        type
+      };
+    }) as ContentTemplate[];
   }
 }
 

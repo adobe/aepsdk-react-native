@@ -1,9 +1,22 @@
 {
   "extends": "../../tsconfig.json",
+  "jsx": "react-native",
   "compilerOptions": {
     "noEmit": false,
+    "strict": false,
     "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "paths": {
+      "react": ["../../node_modules/@types/react"],
+      "react-native": ["../../node_modules/@types/react-native"]
+    },
+    "typeRoots": ["../../node_modules/@types"]
   },
-  "exclude": ["__tests__", "dist"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": [
+    "__tests__",
+    "dist",
+    "node_modules",
+    "../../node_modules/@types/react-native/node_modules"
+  ]
 }
