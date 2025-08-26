@@ -27,7 +27,7 @@ import { MessagingProposition } from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
-const SURFACES = ['android-cbe-preview', 'android-cc', 'android-cc-naman'];
+const SURFACES = ['android-cbe-preview', 'cbe/json', 'android-cc'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
 
 
@@ -66,8 +66,6 @@ const updatePropositionsForSurfaces = async () => {
 
 const getCachedMessages = async () => {
   const messages = await Messaging.getCachedMessages();
-  const newMessage = new Message(messages[0]);
-  newMessage.track("button_clicked", MessagingEdgeEventType.INTERACT);
   console.log('Cached messages:', messages);
 };
 
@@ -124,7 +122,7 @@ const unifiedTrackingExample = async () => {
     const propositions = messages[surface] || [];
 
     for (const proposition of propositions) {
-      const newMessage = new MessagingProposition(proposition); 
+      const newMessage = new MessagingProposition(proposition);       
       console.log("newMessage here", newMessage);
         newMessage.items[0].track(MessagingEdgeEventType.DISPLAY); 
         newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);

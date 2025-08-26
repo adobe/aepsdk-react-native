@@ -27,7 +27,6 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     private var shouldShowMessage = true
     public static var emitter: RCTEventEmitter!
 
-
     override init() {
         super.init()
         RCTAEPMessaging.emitter = self
@@ -65,7 +64,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     ) {
         resolve(self.latestMessage != nil ? RCTAEPMessagingDataBridge.transformToMessage(message: self.latestMessage!) : nil)
     }
-    
+      
     @objc
     func getPropositionsForSurfaces(
         _ surfaces: [String],
@@ -84,23 +83,11 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
                 return
             }
 
-            // Populate uuid->Proposition map using scopeDetails.activity.activityID when available, else activity.id
+            // Populate uuid->Proposition map using scopeDetails.activity.id
             for (_, list) in propositions {
                 for proposition in list {
-                    if var pMap = proposition.asDictionary() {
-                        var key: String? = nil
-                        if let sd = pMap["scopeDetails"] as? [String: Any],
-                           let act = sd["activity"] as? [String: Any] {
-                            if let activityID = act["activityID"] as? String, !activityID.isEmpty {
-                                key = activityID
-                            } else if let id = act["id"] as? String, !id.isEmpty {
-                                key = id
-                            }
-                        }
-                        if key == nil {
-                            key = self.extractActivityId(from: pMap)
-                        }
-                        if let key = key {
+                    if let pMap = proposition.asDictionary() {
+                        if let key = RCTAEPMessagingDataBridge.extractActivityId(from: pMap) {
                             self.propositionByUuid[key] = proposition
                         }
                     }
@@ -427,16 +414,6 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
 
 // MARK: - Private helpers
 private extension RCTAEPMessaging {
-    /// Extracts activityId from a proposition dictionary at scopeDetails.activity.id
-    func extractActivityId(from propositionDict: [String: Any]) -> String? {
-        guard let scopeDetails = propositionDict["scopeDetails"] as? [String: Any],
-              let activity = scopeDetails["activity"] as? [String: Any],
-              let id = activity["id"] as? String else {
-            return nil
-        }
-        return id
-    }
-
     /// Maps JS MessagingEdgeEventType integer values to AEPMessaging.MessagingEdgeEventType cases
     /// JS enum values: DISMISS=0, INTERACT=1, TRIGGER=2, DISPLAY=3, PUSH_APPLICATION_OPENED=4, PUSH_CUSTOM_ACTION=5
     func mapEdgeEventType(_ value: Int) -> MessagingEdgeEventType? {

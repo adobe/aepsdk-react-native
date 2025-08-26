@@ -27,4 +27,14 @@ public class RCTAEPMessagingDataBridge: NSObject {
                 .map({ $0.asDictionary() })
         }
     }
+
+    /// Extracts the activity identifier from a proposition dictionary at scopeDetails.activity.id
+    static func extractActivityId(from propositionDict: [String: Any]) -> String? {
+        guard let scopeDetails = propositionDict["scopeDetails"] as? [String: Any],
+              let activity = scopeDetails["activity"] as? [String: Any],
+              let id = activity["id"] as? String, !id.isEmpty else {
+            return nil
+        }
+        return id
+    }
 }
