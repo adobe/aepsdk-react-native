@@ -12,8 +12,6 @@ governing permissions and limitations under the License.
 
 import Messaging from './Messaging';
 import { ContentCard, ContentCardData } from './models/ContentCard';
-// import { HTMLProposition, HTMLPropositionData } from './models/HTMLProposition';
-// import { HTMLProposition } from './models/HTMLProposition';
 
 import { InAppMessage } from './models/InAppMessage';
 import { HTMLProposition, HTMLPropositionData } from './models/HTMLProposition';

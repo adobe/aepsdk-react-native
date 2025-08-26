@@ -122,14 +122,16 @@ const unifiedTrackingExample = async () => {
     const propositions = messages[surface] || [];
 
     for (const proposition of propositions) {
-      const newMessage = new MessagingProposition(proposition);       
-      console.log("newMessage here", newMessage);
-        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY); 
-        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-        newMessage.items[0].track(MessagingEdgeEventType.DISPLAY);
+      const propositionWrapper = new MessagingProposition(proposition);       
+      if (propositionWrapper.items.length > 0) {
+        const propositionItem = propositionWrapper.items[0];
+        propositionItem.track(MessagingEdgeEventType.DISPLAY); 
+        propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+        propositionItem.track(MessagingEdgeEventType.DISPLAY);
         console.log('Tracked content card display using unified API');
-        newMessage.items[0].track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+        propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
         console.log('Tracked content card interaction using unified API');
+      }
     }
   }
 }
