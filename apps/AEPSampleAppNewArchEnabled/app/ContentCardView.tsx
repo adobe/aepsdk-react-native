@@ -21,16 +21,13 @@ import {
   ColorSchemeName
 } from 'react-native';
 import { useEffect } from 'react';
-import {
-  ThemeProvider,
-  Themes
-} from '@adobe/react-native-aepmessaging/src/ui/components';
 import { useColorScheme } from '../hooks/useColorScheme';
 import {
   Messaging,
   ContentView,
   ContentTemplate,
-  TemplateType
+  TemplateType,
+  ThemeProvider
 } from '@adobe/react-native-aepmessaging';
 import { MobileCore } from '@adobe/react-native-aepcore';
 
@@ -69,12 +66,14 @@ const ContentCardView = () => {
     // Note:
     // - Call above to update the propositions and cache the content locally
     // - Customers may call this function when launching the app
-    MobileCore.trackAction('small_image');
+    console.log('trackAction');
+    MobileCore.trackAction('xyz');
     try {
       Messaging.getContentCardUI('rn/android/remote_image').then((content) => {
         console.log('content', content);
         setContent(content);
       });
+      console.log('ahhhh')
     } catch (error) {
       console.error('Error fetching content cards:', error);
     }
@@ -650,14 +649,17 @@ const ContentCardView = () => {
               <ContentView
                 key={item.id}
                 template={item}
+                listener={(event, card) => {
+                  console.log('Event triggered:', event, card);
+                }}
                 styleOverrides={{
                   smallImageStyle: {
-                    title: {
-                      numberOfLines: 2
-                    },
-                    body: {
-                      numberOfLines: 4
-                    }
+                    // title: {
+                    //   numberOfLines: 2
+                    // },
+                    // body: {
+                    //   numberOfLines: 4
+                    // }
                   }
                 }}
               />

@@ -9,14 +9,13 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   Image,
   ImageStyle,
   Pressable,
-  // Pressable,
+  PressableProps,
   StyleSheet,
-  useColorScheme,
   View,
   ViewStyle
 } from 'react-native';
@@ -25,8 +24,9 @@ import { ImageOnlyContentData } from '../../../models/ContentCard';
 import useAspectRatio from '../../hooks/useAspectRatio';
 
 export interface ImageOnlyContentProps {
-  data: ImageOnlyContentData;
+  content: ImageOnlyContentData;
   height?: number;
+  imageUri?: string;
   styleOverrides?: ImageOnlyContentStyle;
   onDismiss?: () => void;
   onPress?: () => void;
@@ -34,9 +34,9 @@ export interface ImageOnlyContentProps {
 
 export interface ImageOnlyContentStyle {
   card?: Partial<ViewStyle>;
-  container?: Partial<ViewStyle>;
   imageContainer?: Partial<ViewStyle>;
   image?: Partial<ImageStyle>;
+  dismissButton?: PressableProps['style'];
 }
 
 /**
@@ -46,25 +46,16 @@ export interface ImageOnlyContentStyle {
  * @returns The rendered image only card component.
  */
 const ImageOnlyCard: React.FC<ImageOnlyContentProps> = ({
-  data,
+  content,
+  imageUri,
   onDismiss,
   onPress,
   styleOverrides
 }) => {
-  const colorScheme = useColorScheme();
-  const imageUri = useMemo(() => {
-    if (colorScheme === 'dark' && data?.image?.darkUrl) {
-      return data.image.darkUrl;
-    }
-    return data.image?.url;
-  }, [colorScheme, data.image?.darkUrl, data.image?.url]);
   const imageAspectRatio = useAspectRatio(imageUri);
 
   return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.card, styleOverrides?.container]}
-    >
+    <Pressable onPress={onPress} style={[styles.card, styleOverrides?.card]}>
       <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
         <Image
           resizeMode="contain"
@@ -75,8 +66,12 @@ const ImageOnlyCard: React.FC<ImageOnlyContentProps> = ({
             styleOverrides?.image
           ]}
         />
-        {data.dismissBtn?.style && data.dismissBtn.style !== 'none' && (
-          <DismissButton onPress={onDismiss} type={data.dismissBtn.style} />
+        {content.dismissBtn?.style && content.dismissBtn.style !== 'none' && (
+          <DismissButton
+            onPress={onDismiss}
+            type={content.dismissBtn.style}
+            style={styleOverrides?.dismissButton}
+          />
         )}
       </View>
     </Pressable>

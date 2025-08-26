@@ -1,4 +1,15 @@
-import React, { useMemo } from 'react';
+/*
+    Copyright 2025 Adobe. All rights reserved.
+    This file is licensed to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+    or agreed to in writing, software distributed under the License is
+    distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS OF
+    ANY KIND, either express or implied. See the License for the specific
+    language governing permissions and limitations under the License.
+*/
+import React from 'react';
 import {
   Image,
   ImageStyle,
@@ -7,7 +18,6 @@ import {
   StyleSheet,
   Text,
   TextStyle,
-  useColorScheme,
   View,
   ViewStyle
 } from 'react-native';
@@ -31,6 +41,7 @@ export interface LargeImageContentStyle {
 
 export interface LargeImageCardProps extends PressableProps {
   content: LargeImageContentData;
+  imageUri?: string;
   styleOverrides?: LargeImageContentStyle;
   onDismiss?: () => void;
   onPress?: () => void;
@@ -38,20 +49,13 @@ export interface LargeImageCardProps extends PressableProps {
 
 const LargeImageCard: React.FC<LargeImageCardProps> = ({
   content,
+  imageUri,
   styleOverrides,
   onDismiss,
   onPress,
   ...props
 }) => {
-  const colorScheme = useColorScheme();
   const theme = useTheme();
-  const imageUri = useMemo(
-    () =>
-      colorScheme === 'dark' && content?.image?.darkUrl
-        ? content.image.darkUrl
-        : content.image?.url,
-    [colorScheme, content?.image?.darkUrl, content?.image?.url]
-  );
   const imageAspectRatio = useAspectRatio(imageUri);
 
   return (

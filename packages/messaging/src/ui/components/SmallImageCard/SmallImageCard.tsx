@@ -18,32 +18,37 @@ import {
   StyleSheet,
   Text,
   TextStyle,
-  useColorScheme,
   View,
   ViewStyle
 } from 'react-native';
 import Button from '../Button/Button';
 import { SmallImageContentData } from '../../../models/ContentCard';
-import { useMemo } from 'react';
 import DismissButton from '../DismissButton/DismissButton';
 import { useTheme } from '../../theme/ThemeProvider';
 import useAspectRatio from '../../hooks/useAspectRatio';
 
 export interface SmallImageContentStyle {
-  card?: Partial<ViewStyle>;
-  container?: Partial<ViewStyle>;
-  imageContainer?: Partial<ViewStyle>;
-  image?: Partial<ImageStyle>;
-  contentContainer?: Partial<ViewStyle>;
-  textContent?: Partial<ViewStyle>;
-  title?: Partial<TextStyle>;
-  body?: Partial<TextStyle>;
-  buttonContainer?: Partial<ViewStyle>;
-  button?: Partial<PressableProps['style']>;
+  /** Applies to the root of the content card */
+  card?: ViewStyle;
+  /** Applies to the container inside the content card, applied inside the card Pressable */
+  container?: ViewStyle;
+
+  imageContainer?: ViewStyle;
+  image?: ImageStyle;
+  contentContainer?: ViewStyle;
+  /** Applies to title and body properties, will be overridden by title and body styles */
+  text?: TextStyle;
+  title?: TextStyle;
+  body?: TextStyle;
+  buttonContainer?: ViewStyle;
+  button?: PressableProps['style'];
+  buttonText?: TextStyle;
+  dismissButton?: PressableProps['style'];
 }
 
 export interface SmallImageCardProps extends PressableProps {
   content: SmallImageContentData;
+  imageUri?: string;
   height?: number;
   styleOverrides?: SmallImageContentStyle;
   onDismiss?: () => void;
@@ -53,70 +58,91 @@ export interface SmallImageCardProps extends PressableProps {
 const SmallImageCard: React.FC<SmallImageCardProps> = ({
   content,
   height,
+  imageUri,
   styleOverrides,
   style,
   onDismiss,
   onPress,
   ...props
 }) => {
-  console.log('render');
-  console.log('data', content);
-  const colorScheme = useColorScheme();
   const theme = useTheme();
-
-  const imageUri = useMemo(() => {
-    if (colorScheme === 'dark' && content?.image?.darkUrl) {
-      return content.image.darkUrl;
-    }
-    return content.image?.url;
-  }, [colorScheme, content?.image?.darkUrl, content?.image?.url]);
-
   const imageAspectRatio = useAspectRatio(imageUri);
 
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.card, styleOverrides?.card]}
+      style={(state) => [
+        styles.card,
+        styleOverrides?.card,
+        typeof style === 'function' ? style(state) : style
+      ]}
       {...props}
     >
-      {imageUri && (
-        <Image
-          source={{ uri: imageUri }}
-          style={[
-            styles.image,
-            { aspectRatio: imageAspectRatio },
-            styleOverrides?.image
-          ]}
-        />
-      )}
+      <View style={[styles.container, styleOverrides?.container]}>
+        {imageUri && (
+          <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
+            <Image
+              source={{ uri: imageUri }}
+              style={[
+                styles.image,
+                { aspectRatio: imageAspectRatio },
+                styleOverrides?.image
+              ]}
+            />
+          </View>
+        )}
 
-      <View style={{ flex: 1 }}>
-        {content?.title?.content && (
-          <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
-            {content.title.content}
-          </Text>
-        )}
-        {content?.body?.content && (
-          <Text style={[styles.body, { color: theme.colors.textPrimary }]}>
-            {content.body.content}
-          </Text>
-        )}
-        <View style={styles.buttonContainer}>
-          {content?.buttons?.length &&
-            content?.buttons?.length > 0 &&
-            content.buttons.map((button) => (
-              <Button
-                key={button.id}
-                actionUrl={button.actionUrl}
-                title={button.text.content}
-                onPress={onPress}
-              />
-            ))}
+        <View
+          style={[styles.contentContainer, styleOverrides?.contentContainer]}
+        >
+          {content?.title?.content && (
+            <Text
+              style={[
+                styles.title,
+                { color: theme.colors.textPrimary },
+                styleOverrides?.text,
+                styleOverrides?.title
+              ]}
+            >
+              {content.title.content}
+            </Text>
+          )}
+          {content?.body?.content && (
+            <Text
+              style={[
+                styles.body,
+                { color: theme.colors.textPrimary },
+                styleOverrides?.text,
+                styleOverrides?.body
+              ]}
+            >
+              {content.body.content}
+            </Text>
+          )}
+          <View
+            style={[styles.buttonContainer, styleOverrides?.buttonContainer]}
+          >
+            {content?.buttons?.length &&
+              content?.buttons?.length > 0 &&
+              content.buttons.map((button) => (
+                <Button
+                  key={button.id}
+                  actionUrl={button.actionUrl}
+                  title={button.text.content}
+                  onPress={onPress}
+                  style={styleOverrides?.button}
+                  textStyle={[styleOverrides?.text, styleOverrides?.buttonText]}
+                />
+              ))}
+          </View>
+          {content?.dismissBtn && content.dismissBtn?.style !== 'none' && (
+            <DismissButton
+              onPress={onDismiss}
+              type={content.dismissBtn.style}
+            />
+          )}
         </View>
       </View>
-      {content?.dismissBtn && content.dismissBtn?.style !== 'none' && (
-        <DismissButton onPress={onDismiss} type={content.dismissBtn.style} />
-      )}
     </Pressable>
   );
 };
@@ -143,7 +169,6 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   image: {
-    width: 'auto',
     height: '100%',
     resizeMode: 'contain'
   },
