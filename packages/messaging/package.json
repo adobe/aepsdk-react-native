@@ -7,8 +7,9 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    "models": "./dist/models",
-    "ui": "./dist/ui"
+    ".": "./dist/index.js",
+    "./models": "./dist/models/index.js",
+    "./ui": "./dist/ui/index.js"
   },
   "scripts": {
     "cleanup": "rm -rf node_modules",

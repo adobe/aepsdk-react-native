@@ -25,7 +25,7 @@ import { ContentTemplate, TemplateType } from './ui/types/Templates';
 
 export * from './models/ContentCard';
 export * from './ui/components';
-export * from './ui/components/ContentView';
+export * from './ui/components/ContentView/ContentView';
 
 export {
   Activity,
