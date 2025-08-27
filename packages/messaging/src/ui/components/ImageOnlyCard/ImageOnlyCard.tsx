@@ -53,6 +53,8 @@ const ImageOnlyCard: React.FC<ImageOnlyContentProps> = ({
   styleOverrides
 }) => {
   const imageAspectRatio = useAspectRatio(imageUri);
+  console.log(content.dismissBtn);
+  console.log(imageUri, imageAspectRatio)
 
   return (
     <Pressable onPress={onPress} style={[styles.card, styleOverrides?.card]}>
@@ -83,13 +85,10 @@ export default ImageOnlyCard;
 const styles = StyleSheet.create({
   card: {
     margin: 15,
-    flex: 1
+    flex: 1,
   },
   imageContainer: {
     backgroundColor: '#f0f0f0',
-    flex: 1,
-    width: '100%',
-    height: '100%'
   },
   image: {
     width: '100%',

@@ -18,7 +18,8 @@ import {
   Text,
   Modal,
   Appearance,
-  ColorSchemeName
+  ColorSchemeName,
+  Platform
 } from 'react-native';
 import { useEffect } from 'react';
 import { useColorScheme } from '../hooks/useColorScheme';
@@ -62,18 +63,18 @@ const ContentCardView = () => {
   };
 
   useEffect(() => {
-    Messaging.updatePropositionsForSurfaces(['rn/android/remote_image']);
+    Messaging.updatePropositionsForSurfaces([`rn/${Platform.OS}/remote_image`]);
     // Note:
     // - Call above to update the propositions and cache the content locally
     // - Customers may call this function when launching the app
-    console.log('trackAction');
     MobileCore.trackAction('xyz');
     try {
-      Messaging.getContentCardUI('rn/android/remote_image').then((content) => {
-        console.log('content', content);
-        setContent(content);
-      });
-      console.log('ahhhh')
+      Messaging.getContentCardUI(`rn/${Platform.OS}/remote_image`).then(
+        (content) => {
+          console.log('content', content);
+          setContent(content);
+        }
+      );
     } catch (error) {
       console.error('Error fetching content cards:', error);
     }
@@ -1246,15 +1247,17 @@ const IMAGE_ONLY_CONTENT_WITH_ACTION_URL: ContentTemplate = {
   id: 'image-only-with-action-url',
   type: TemplateType.IMAGE_ONLY,
   data: {
-    actionUrl: 'https://google.com',
-    image: {
-      url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
-      alt: 'with action URL - Google Images'
-    },
-    dismissBtn: {
-      style: 'simple'
+    content: {
+      actionUrl: 'https://google.com',
+      image: {
+        url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        alt: 'with action URL - Google Images'
+      },
+      dismissBtn: {
+        style: 'simple'
+      }
     }
   }
-};
+} as ContentTemplate;

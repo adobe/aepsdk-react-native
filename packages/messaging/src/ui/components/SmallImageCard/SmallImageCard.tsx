@@ -12,18 +12,23 @@
 
 import {
   Image,
+  ImageProps,
   ImageStyle,
   Pressable,
   PressableProps,
   StyleSheet,
   Text,
+  TextProps,
   TextStyle,
   View,
+  ViewProps,
   ViewStyle
 } from 'react-native';
-import Button from '../Button/Button';
+import Button, { ButtonProps } from '../Button/Button';
 import { SmallImageContentData } from '../../../models/ContentCard';
-import DismissButton from '../DismissButton/DismissButton';
+import DismissButton, {
+  DismissButtonProps
+} from '../DismissButton/DismissButton';
 import { useTheme } from '../../theme/ThemeProvider';
 import useAspectRatio from '../../hooks/useAspectRatio';
 
@@ -53,9 +58,27 @@ export interface SmallImageCardProps extends PressableProps {
   styleOverrides?: SmallImageContentStyle;
   onDismiss?: () => void;
   onPress?: () => void;
+  ContainerProps?: ViewProps;
+  ImageContainerProps?: ViewProps;
+  ImageProps?: ImageProps;
+  TextProps?: TextProps;
+  BodyProps?: TextProps;
+  TitleProps?: TextProps;
+  ButtonContainerProps?: ViewProps;
+  ButtonProps?: ButtonProps;
+  DismissButtonProps?: DismissButtonProps;
 }
 
 const SmallImageCard: React.FC<SmallImageCardProps> = ({
+  BodyProps,
+  ButtonContainerProps,
+  ButtonProps,
+  ContainerProps,
+  DismissButtonProps,
+  ImageContainerProps,
+  ImageProps,
+  TextProps,
+  TitleProps,
   content,
   height,
   imageUri,
@@ -78,9 +101,15 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
       ]}
       {...props}
     >
-      <View style={[styles.container, styleOverrides?.container]}>
+      <View
+        style={[styles.container, styleOverrides?.container]}
+        {...ContainerProps}
+      >
         {imageUri && (
-          <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
+          <View
+            style={[styles.imageContainer, styleOverrides?.imageContainer]}
+            {...ImageContainerProps}
+          >
             <Image
               source={{ uri: imageUri }}
               style={[
@@ -88,6 +117,7 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                 { aspectRatio: imageAspectRatio },
                 styleOverrides?.image
               ]}
+              {...ImageProps}
             />
           </View>
         )}
@@ -103,24 +133,31 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                 styleOverrides?.text,
                 styleOverrides?.title
               ]}
+              {...TextProps}
+              {...TitleProps}
             >
               {content.title.content}
             </Text>
           )}
           {content?.body?.content && (
             <Text
+              {...BodyProps}
               style={[
                 styles.body,
                 { color: theme.colors.textPrimary },
                 styleOverrides?.text,
                 styleOverrides?.body
               ]}
+              {...TextProps}
+              {...BodyProps}
             >
               {content.body.content}
             </Text>
           )}
           <View
+            {...ButtonContainerProps}
             style={[styles.buttonContainer, styleOverrides?.buttonContainer]}
+            {...ButtonContainerProps}
           >
             {content?.buttons?.length &&
               content?.buttons?.length > 0 &&
@@ -132,6 +169,7 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                   onPress={onPress}
                   style={styleOverrides?.button}
                   textStyle={[styleOverrides?.text, styleOverrides?.buttonText]}
+                  {...ButtonProps}
                 />
               ))}
           </View>
@@ -139,6 +177,7 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
             <DismissButton
               onPress={onDismiss}
               type={content.dismissBtn.style}
+              {...DismissButtonProps}
             />
           )}
         </View>
@@ -153,27 +192,26 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
     margin: 15,
-    flex: 1,
-    flexDirection: 'row',
-    gap: 8,
-    maxWidth: '100%',
-    alignItems: 'center'
+    maxWidth: '100%'
   },
   container: {
     flexDirection: 'row',
-    minHeight: 120
+    alignItems: 'center',
+    gap: 8,
+    flex: 1
   },
   imageContainer: {
     borderRadius: 12,
-    width: 'auto',
-    height: '100%'
+    height: '100%',
+    flex: 1 / 3,
+    justifyContent: 'center'
   },
   image: {
-    height: '100%',
+    width: '100%',
     resizeMode: 'contain'
   },
   contentContainer: {
-    flex: 1,
+    flex: 2 / 3,
     paddingVertical: 16,
     paddingHorizontal: 16,
     justifyContent: 'flex-start'
