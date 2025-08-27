@@ -11,11 +11,12 @@
 */
 
 import { PersonalizationSchema } from './PersonalizationSchema';
+import { PropositionItem, PropositionItemData } from './PropositionItem';
 
 type ContentCardTemplate = 'SmallImage';
 type DismissButtonStyle = 'circle' | 'none' | 'simple';
 
-export interface ContentCard {
+export interface ContentCardData extends PropositionItemData {
   id: string;
   data: {
     contentType: 'application/json';
@@ -44,4 +45,14 @@ export interface ContentCard {
     };
   };
   schema: PersonalizationSchema.CONTENT_CARD;
+}
+
+export class ContentCard extends PropositionItem {
+  declare data: ContentCardData['data']; // Override data type for better typing
+
+  constructor(contentCardData: ContentCardData) {
+    super(contentCardData);
+    this.data = contentCardData.data;
+  }
+
 }
