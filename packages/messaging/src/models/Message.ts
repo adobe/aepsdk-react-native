@@ -10,10 +10,22 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
-import { eventEmitter } from '../MessagingUtil';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 
 const RCTAEPMessaging = NativeModules.AEPMessaging;
+
+// Registery to store inAppMessage callbacks for each message in Message.handleJavascriptMessage
+// Record - {messageId : {handlerName : callback}}
+const jsMessageHandlers: Record<string, Record<string, (content: string) => void>> = {};
+const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
+
+// invokes the callback registered in Message.handleJavascriptMessage with the content received from the inAppMessage webview
+handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
+  const {messageId, handlerName, content} = event;
+  if (jsMessageHandlers[messageId] && jsMessageHandlers[messageId][handlerName]) {
+    jsMessageHandlers[messageId][handlerName](content);
+  }
+});
 
 class Message {
   id: string;
@@ -70,13 +82,18 @@ class Message {
     RCTAEPMessaging.clear(this.id);
   }
 
-  handleJavascriptMessage(handlerName: string, callback: (content: string) => void) {
-    // MessagingUtil.cacheJavascriptCallback(this.id, handlerName, callback);
-    eventEmitter.emit('cacheJavascriptCallback', {
-      messageId: this.id,
-      handlerName: handlerName,
-      callback: callback
-    });
+  /**
+   * Adds a handler for named JavaScript messages sent from the message's WebView.
+   * The parameter passed to handler will contain the body of the message passed from the WebView's JavaScript.
+   * @param {string} handlerName: The name of the message that should be handled by the handler
+   * @param {function} handler: The method or closure to be called with the body of the message created in the Message's JavaScript
+   */
+  handleJavascriptMessage(handlerName: string, handler: (content: string) => void) {
+    // cache the callback
+    if (!jsMessageHandlers[this.id]) {
+      jsMessageHandlers[this.id] = {};
+    }
+    jsMessageHandlers[this.id][handlerName] = handler;
     RCTAEPMessaging.handleJavascriptMessage(this.id, handlerName);
   }
 }

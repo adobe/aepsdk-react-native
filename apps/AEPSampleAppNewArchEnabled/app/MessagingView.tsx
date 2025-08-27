@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {MobileCore} from '@adobe/react-native-aepcore';
-import {Message, Messaging, PersonalizationSchema} from '@adobe/react-native-aepmessaging'
+import {Messaging, PersonalizationSchema} from '@adobe/react-native-aepmessaging'
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
@@ -32,8 +32,8 @@ const refreshInAppMessages = () => {
 
 const setMessagingDelegate = () => {
   Messaging.setMessagingDelegate({
-    onDismiss: (msg: Message) => console.log('dismissed!', msg),
-    onShow: (msg: Message) => {
+    onDismiss: msg => console.log('dismissed!', msg),
+    onShow: msg => {
       console.log('show', msg);
       msg.handleJavascriptMessage('myInappCallback', (content: string) => {
         console.log('Received webview content in onShow:', content);
@@ -41,7 +41,7 @@ const setMessagingDelegate = () => {
     },
     shouldShowMessage: () => true,
     shouldSaveMessage: () => true,
-    urlLoaded: (url: string, message: Message) => console.log(url, message),
+    urlLoaded: (url, message) => console.log(url, message),
   });
   console.log('messaging delegate set');
 };

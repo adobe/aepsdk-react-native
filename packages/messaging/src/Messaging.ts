@@ -20,7 +20,6 @@ import Message from './models/Message';
 import { MessagingDelegate } from './models/MessagingDelegate';
 import { MessagingProposition } from './models/MessagingProposition';
 import { ContentCard } from './models/ContentCard';
-import { eventEmitter } from './MessagingUtil';
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -45,26 +44,6 @@ const RCTAEPMessaging: NativeModule & NativeMessagingModule =
 
 declare var messagingDelegate: MessagingDelegate;
 var messagingDelegate: MessagingDelegate;
-
-// Registery to store callbacks for each message in handleJavascriptMessage
-// Record - {messageId : {handlerName : callback}}
-const jsMessageHandlers: Record<string, Record<string, (content: string) => void>> = {};
-const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
-
-handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
-  const {messageId, handlerName, content} = event;
-  if (jsMessageHandlers[messageId] && jsMessageHandlers[messageId][handlerName]) {
-    jsMessageHandlers[messageId][handlerName](content);
-  }
-});
-
-eventEmitter.on('cacheJavascriptCallback', (event) => {
-  const {messageId, handlerName, callback} = event;
-  if (!jsMessageHandlers[messageId]) {
-    jsMessageHandlers[messageId] = {};
-  }
-  jsMessageHandlers[messageId][handlerName] = callback;
-});
 
 class Messaging {
   /**

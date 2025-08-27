@@ -17,4 +17,3 @@ class RCTAEPMessagingConstants {
     static final String CONTENT_KEY = "content";
     static final String ON_JAVASCRIPT_MESSAGE_EVENT = "onJavascriptMessage";
  }
- 

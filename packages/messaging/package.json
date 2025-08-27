@@ -38,8 +38,5 @@
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
-  },
-  "dependencies": {
-    "events": "^3.3.0"
   }
 }
