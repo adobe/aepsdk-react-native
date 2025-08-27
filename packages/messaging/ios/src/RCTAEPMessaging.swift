@@ -312,28 +312,9 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
             return
         }
 
-        // Normalize inputs
-        let trimmedInteraction = interaction?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let nonEmptyTokens = tokens?.compactMap { token in
-            let t = token.trimmingCharacters(in: .whitespacesAndNewlines)
-            return t.isEmpty ? nil : t
-        }
-
-        if let i = trimmedInteraction, !i.isEmpty {
-            if let t = nonEmptyTokens, !t.isEmpty {
-                NSLog("[MessagingBridge] Tracking with interaction and tokens. uuid=\(uuid), interaction=\(i), tokens=\(t), eventType=\(edgeEventType)")
-                item.track(i, withEdgeEventType: edgeEventType, forTokens: t)
-            } else {
-                NSLog("[MessagingBridge] Tracking with interaction only. uuid=\(uuid), interaction=\(i), eventType=\(edgeEventType.rawValue)")
-                item.track(i, withEdgeEventType: edgeEventType)
-            }
-        } else if let t = nonEmptyTokens, !t.isEmpty {
-            NSLog("[MessagingBridge] Tracking with tokens only (no interaction). uuid=\(uuid), tokens=\(t), eventType=\(edgeEventType.rawValue)")
-            item.track(withEdgeEventType: edgeEventType)
-        } else {
-            NSLog("[MessagingBridge] Tracking with event only. uuid=\(uuid), eventType=\(edgeEventType.rawValue)")
-            item.track(withEdgeEventType: edgeEventType)
-        }
+        // Direct call without normalization (expecting valid inputs)
+        NSLog("[MessagingBridge] Tracking (direct) uuid=\(uuid), interaction=\(String(describing: interaction)), tokens=\(String(describing: tokens)), eventType=\(edgeEventType.rawValue)")
+        item.track(interaction, withEdgeEventType: edgeEventType, forTokens: tokens)
 
         NSLog("[MessagingBridge] Tracking complete for uuid=\(uuid)")
         resolve(nil)
