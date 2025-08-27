@@ -55,16 +55,17 @@ public final class RCTAEPMessagingModule
     extends ReactContextBaseJavaModule implements PresentationDelegate {
   private final Map<String, Proposition> propositionItemByUuid = new ConcurrentHashMap<>();
 
-  @SuppressWarnings("unchecked")
   private String extractActivityId(Proposition proposition) {
     try {
       Map<String, Object> eventData = proposition.toEventData();
       if (eventData == null) return null;
-      Object sd = eventData.get("scopeDetails");
-      if (!(sd instanceof Map)) return null;
-      Object act = ((Map<?, ?>) sd).get("activity");
-      if (!(act instanceof Map)) return null;
-      Object id = ((Map<?, ?>) act).get("id");
+      Object scopeDetailsObj = eventData.get("scopeDetails");
+      if (!(scopeDetailsObj instanceof Map)) return null;
+      Map<String, Object> scopeDetails = (Map<String, Object>) scopeDetailsObj;
+      Object activityObj = scopeDetails.get("activity");
+      if (!(activityObj instanceof Map)) return null;
+      Map<String, Object> activity = (Map<String, Object>) activityObj;
+      Object id = activity.get("id");
       return (id instanceof String) ? (String) id : null;
     } catch (Exception e) {
       return null;
@@ -131,30 +132,14 @@ public final class RCTAEPMessagingModule
               @Override
               public void call(
                       Map<Surface, List<Proposition>> propositionsMap) {
-                // Build UUID->Proposition map keyed by scopeDetails.activity.activityID when available
+                // Build UUID->Proposition map keyed by scopeDetails.activity.id
                 try {
                   for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
                     List<Proposition> propositions = entry.getValue();
                     if (propositions == null) continue;
                     for (Proposition p : propositions) {
                       try {
-                        Map<String, Object> eventData = p.toEventData();
-                        if (eventData == null) continue;
-                        Object sd = eventData.get("scopeDetails");
-                        String key = null;
-                        if (sd instanceof Map) {
-                          Object act = ((Map<?, ?>) sd).get("activity");
-                          if (act instanceof Map) {
-                            Object activityID = ((Map<?, ?>) act).get("activityID");
-                            if (activityID instanceof String) {
-                              key = (String) activityID;
-                            } else {
-                              Object id = ((Map<?, ?>) act).get("id");
-                              if (id instanceof String) key = (String) id;
-                            }
-                          }
-                        }
-                        if (key == null) key = extractActivityId(p);
+                        String key = extractActivityId(p);
                         if (key != null) {
                           propositionItemByUuid.put(key, p);
                         }
@@ -362,63 +347,34 @@ public final class RCTAEPMessagingModule
    */
   @ReactMethod
   public void trackPropositionItem(String uuid, @Nullable String interaction, int eventType, @Nullable ReadableArray tokens) {
-    Log.d(TAG, "trackPropositionItem called with uuid: " + uuid + ", interaction: " + interaction + ", eventType: " + eventType);
-
     try {
       // Convert eventType int to MessagingEdgeEventType enum
       final MessagingEdgeEventType edgeEventType = RCTAEPMessagingUtil.getEventType(eventType);
       if (edgeEventType == null) {
-        Log.d(TAG, "Invalid eventType provided: " + eventType + " for uuid: " + uuid);
         return;
       }
-      Log.d(TAG, "Converted eventType " + eventType + " to " + edgeEventType.name());
-
-      // Resolve PropositionItem strictly by UUID
+      // Resolve PropositionItem by UUID
       if (uuid == null) {
-        Log.d(TAG, "UUID is null; cannot track.");
         return;
       }
       final Proposition proposition = propositionItemByUuid.get(uuid);
-
       if (proposition == null) {
-        Log.d(TAG, "PropositionItem not found in uuid cache for uuid: " + uuid);
         return;
-
       }
       final List<PropositionItem> items = proposition.getItems();
       if (items == null || items.isEmpty()) {
-        Log.d(TAG, "Proposition has no items for uuid: " + uuid);
         return;
       }
       final PropositionItem propositionItem = items.get(0);
 
-      Log.d(TAG, "Found PropositionItem in uuid cache for uuid: " + uuid);
-
-      // Convert ReadableArray tokens -> List<String>
-      List<String> tokenList = null;
+      // Convert ReadableArray tokens -> List<String> (empty list if none)
+      List<String> tokenList = new ArrayList<>();
       if (tokens != null) {
-        tokenList = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {
           tokenList.add(tokens.getString(i));
         }
-        Log.d(TAG, "Converted tokens array to list with " + tokenList.size() + " items for uuid: " + uuid);
-      } else {
-        Log.d(TAG, "No tokens provided for uuid: " + uuid);
       }
-
-      // Track
-      if (interaction != null && tokenList != null) {
-        Log.d(TAG, "Tracking PropositionItem with interaction '" + interaction + "' and " + tokenList.size() + " tokens for uuid: " + uuid);
-        propositionItem.track(interaction, edgeEventType, tokenList);
-      } else if (interaction != null) {
-        Log.d(TAG, "Tracking PropositionItem with interaction '" + interaction + "' for uuid: " + uuid);
-        propositionItem.track(interaction, edgeEventType, null);
-      } else {
-        Log.d(TAG, "Tracking PropositionItem with eventType only for uuid: " + uuid);
-        propositionItem.track(edgeEventType);
-      }
-
-      Log.d(TAG, "Successfully tracked PropositionItem for uuid: " + uuid);
+      propositionItem.track(interaction, edgeEventType, tokenList);
 
     } catch (Exception e) {
       Log.d(TAG, "Error tracking PropositionItem for uuid: " + uuid + ", error: " + e.getMessage(), e);
