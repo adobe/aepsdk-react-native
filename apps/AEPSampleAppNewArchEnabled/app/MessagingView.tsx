@@ -47,9 +47,8 @@ const setMessagingDelegate = () => {
 };
 
 const getPropositionsForSurfaces = async () => {
-  console.log('getPropositionsForSurfaces');
   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  console.log(JSON.stringify(messages));
+  console.log('getPropositionsForSurfaces', JSON.stringify(messages));
 };
 
 const trackAction = async () => {
