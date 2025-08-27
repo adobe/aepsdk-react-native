@@ -30,9 +30,18 @@ public class RCTAEPMessagingDataBridge: NSObject {
 
     /// Extracts the activity identifier from a proposition dictionary at scopeDetails.activity.id
     static func extractActivityId(from propositionDict: [String: Any]) -> String? {
-        guard let scopeDetails = propositionDict["scopeDetails"] as? [String: Any],
-              let activity = scopeDetails["activity"] as? [String: Any],
-              let id = activity["id"] as? String, !id.isEmpty else {
+        guard let scopeDetails = propositionDict["scopeDetails"] as? [String: Any] else {
+            NSLog("[MessagingBridge] Missing scopeDetails on proposition; cannot extract activity.id")
+            return nil
+        }
+
+        guard let activity = scopeDetails["activity"] as? [String: Any] else {
+            NSLog("[MessagingBridge] Missing activity under scopeDetails; cannot extract activity.id")
+            return nil
+        }
+
+        guard let id = activity["id"] as? String, !id.isEmpty else {
+            NSLog("[MessagingBridge] Missing or empty activity.id; skipping uuid cache mapping")
             return nil
         }
         return id

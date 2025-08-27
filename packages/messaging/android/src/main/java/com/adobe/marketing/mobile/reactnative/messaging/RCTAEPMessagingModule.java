@@ -63,11 +63,20 @@ public final class RCTAEPMessagingModule
       if (!(scopeDetailsObj instanceof Map)) return null;
       Map<String, Object> scopeDetails = (Map<String, Object>) scopeDetailsObj;
       Object activityObj = scopeDetails.get("activity");
-      if (!(activityObj instanceof Map)) return null;
+      if (!(activityObj instanceof Map)) {
+        Log.d(TAG, "[MessagingBridge] Missing activity under scopeDetails; cannot extract activity.id");
+        return null;
+      }
       Map<String, Object> activity = (Map<String, Object>) activityObj;
       Object id = activity.get("id");
-      return (id instanceof String) ? (String) id : null;
+      if (id instanceof String) {
+        return (String) id;
+      } else {
+        Log.d(TAG, "[MessagingBridge] Missing activity.id or not a String; skipping uuid cache mapping");
+        return null;
+      }
     } catch (Exception e) {
+      Log.d(TAG, "[MessagingBridge] Exception extracting activity.id: " + e.getMessage(), e);
       return null;
     }
   }
@@ -270,9 +279,6 @@ public final class RCTAEPMessagingModule
     }
 
     if (shouldSaveMessage) {
-      Log.d("MessageCache", "Saving message with ID: " + message.getId()
-              + ", Content: " + message);
-
       messageCache.put(message.getId(), message);
     }
     return shouldShowMessage;
@@ -355,10 +361,12 @@ public final class RCTAEPMessagingModule
       }
       // Resolve PropositionItem by UUID
       if (uuid == null) {
+        Log.d(TAG, "[MessagingBridge] Null uuid provided; no-op.");
         return;
       }
       final Proposition proposition = propositionItemByUuid.get(uuid);
       if (proposition == null) {
+        Log.d(TAG, "[MessagingBridge] No cached proposition for uuid=" + uuid + "; no-op.");
         return;
       }
       final List<PropositionItem> items = proposition.getItems();
@@ -374,6 +382,7 @@ public final class RCTAEPMessagingModule
           tokenList.add(tokens.getString(i));
         }
       }
+      Log.d(TAG, "[MessagingBridge] Tracking (direct) uuid=" + uuid + ", interaction=" + interaction + ", tokens=" + tokenList + ", eventType=" + edgeEventType.name());
       propositionItem.track(interaction, edgeEventType, tokenList);
 
     } catch (Exception e) {

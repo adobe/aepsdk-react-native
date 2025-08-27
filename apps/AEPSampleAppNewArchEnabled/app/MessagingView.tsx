@@ -115,9 +115,7 @@ const trackContentCardDisplay = async () => {
 
 // Method demonstrating unified tracking using PropositionItem methods
 const unifiedTrackingExample = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  console.log('messages here are ', messages);
-  
+  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);  
   for (const surface of SURFACES) { 
     const propositions = messages[surface] || [];
 
@@ -127,10 +125,6 @@ const unifiedTrackingExample = async () => {
         const propositionItem = propositionWrapper.items[0];
         propositionItem.track(MessagingEdgeEventType.DISPLAY); 
         propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-        propositionItem.track(MessagingEdgeEventType.DISPLAY);
-        console.log('Tracked content card display using unified API');
-        propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-        console.log('Tracked content card interaction using unified API');
       }
     }
   }
