@@ -6,10 +6,12 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import { Drawer } from "expo-router/drawer";
+import { Platform } from "react-native";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { MobileCore, LogLevel } from "@adobe/react-native-aepcore";
 import { useEffect } from "react";
+import { Messaging } from '@adobe/react-native-aepmessaging';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,32 +48,16 @@ export default function RootLayout() {
     )
       .then(() => {
         console.log("AEP SDK Initialized");
-        
-        // // Set up messaging delegate after SDK initialization
-        // const unsubscribe = Messaging.setMessagingDelegate({
-        //   onDismiss: (message) => {
-        //     console.log('Message dismissed:', message);
-        //   },
-        //   onShow: (message) => {
-        //     console.log('Message shown:', message);
-        //   },
-        //   shouldShowMessage: (message) => {
-        //     console.log('Should show message:', message);
-        //     return true; // Always show messages in sample app
-        //   },
-        //   shouldSaveMessage: (message) => {
-        //     console.log('Should save message:', message);
-        //     return true; // Always save messages in sample app
-        //   },
-        //   urlLoaded: (url, message) => {
-        //     console.log('URL loaded:', url, 'for message:', message);
-        //   },
-        // });
-        
-        // console.log("Messaging delegate set up successfully");
-        
-        // Store unsubscribe function if needed for cleanup
-        // You could return it from useEffect if you need to clean up on unmount
+         
+        // Messaging - Update propositions AFTER SDK is fully initialized
+        // Use platform-specific surface names
+        const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
+        console.log("update propositions before for surface:", surface);
+        return Messaging.updatePropositionsForSurfaces([surface]);
+      })
+      .then(() => {
+        console.log("update propositions after - SUCCESS");
+        console.log("Propositions updated successfully in layout");
       })
       .catch((error) => {
         console.error("AEP SDK Initialization error:", error);
