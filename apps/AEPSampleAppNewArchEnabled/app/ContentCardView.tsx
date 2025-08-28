@@ -19,7 +19,8 @@ import {
   Modal,
   Appearance,
   ColorSchemeName,
-  Platform
+  Platform,
+  TextInput
 } from 'react-native';
 import { useEffect } from 'react';
 import { useColorScheme } from '../hooks/useColorScheme';
@@ -37,6 +38,8 @@ const ContentCardView = () => {
   const [selectedView, setSelectedView] = useState<string>('Remote');
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string>('System');
+  const [trackInput, setTrackInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const colorScheme = useColorScheme();
 
   const viewOptions = ['SmallImage', 'LargeImage', 'ImageOnly', 'Remote'];
@@ -62,22 +65,76 @@ const ContentCardView = () => {
     );
   };
 
-  useEffect(() => {
-    Messaging.updatePropositionsForSurfaces([`rn/${Platform.OS}/remote_image`]);
-    // Note:
-    // - Call above to update the propositions and cache the content locally
-    // - Customers may call this function when launching the app
-    MobileCore.trackAction('xyz');
-    try {
-      Messaging.getContentCardUI(`rn/${Platform.OS}/remote_image`).then(
-        (content) => {
-          console.log('content', content);
-          setContent(content);
-        }
-      );
-    } catch (error) {
-      console.error('Error fetching content cards:', error);
+  // Track action and refresh content cards
+  const handleTrackAction = async () => {
+    if (!trackInput.trim()) {
+      console.log(' No action text entered');
+      return;
     }
+    
+    setIsLoading(true);
+    console.log('Tracking action:', trackInput);
+    
+    try {
+      // Define the surface based on platform
+      const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
+      
+      // Track the action
+      MobileCore.trackAction(trackInput);
+      
+      // Wait a moment for the action to be processed
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Update propositions first
+      console.log('Updating propositions for surface:', surface);
+      await Messaging.updatePropositionsForSurfaces([surface]);
+      
+      // Refresh content cards
+      console.log('Refreshing content cards...');
+      const newContent = await Messaging.getContentCardUI(surface);
+      console.log('📱 New content:', newContent);
+      setContent(newContent);
+      
+    } catch (error) {
+      console.error('Error tracking action or refreshing content:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Define the surface based on platform
+    const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
+    console.log('Using surface:', surface);
+    
+    // Track initial action
+    MobileCore.trackAction('small_image');
+   
+    // Wait for propositions to be updated from layout.tsx
+    const timer = setTimeout(async () => {
+      console.log("Getting content cards (propositions should already be updated from _layout.tsx)...");
+      try {
+        // Just get the content - propositions should already be updated in _layout.tsx
+        const content = await Messaging.getContentCardUI(surface);
+        console.log('Content retrieved');
+        setContent(content);
+        
+      } catch (error) {
+        console.error('Error fetching content cards:', error);
+        // Fallback: try updating propositions if they weren't ready
+        try {
+          console.log('Fallback: Updating propositions...');
+          await Messaging.updatePropositionsForSurfaces([surface]);
+          const content = await Messaging.getContentCardUI(surface);
+          console.log('Fallback content retrieved');
+          setContent(content);
+        } catch (fallbackError) {
+          console.error('Fallback also failed:', fallbackError);
+        }
+      }
+    }, 3000); // Wait 3 seconds for SDK initialization
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -664,37 +721,139 @@ const ContentCardView = () => {
             <View style={{ height: 200 }} />
           </View>
         )}
-       {selectedView === 'Remote' && (
-          <View>
-                     {renderStyledText(
-              '1.[image] No Light Mode (only dark mode) - no actionUrl'
-            )}
-            <ContentView key="15" template={IMAGE_ONLY_CONTENT_NO_LIGHT_MODE} />
-            <View style={{ height: 200 }} />
-          </View>
-        )}
         {selectedView === 'Remote' && (
           <View>
             {renderStyledText('[Remote] cards')}
-            {content?.map((item) => (
-              <ContentView
-                key={item.id}
-                template={item}
-                listener={(event, card) => {
-                  console.log('Event triggered:', event, card);
-                }}
-                styleOverrides={{
-                  smallImageStyle: {
-                    // title: {
-                    //   numberOfLines: 2
-                    // },
-                    // body: {
-                    //   numberOfLines: 4
-                    // }
-                  }
-                }}
-              />
-            ))}
+            
+            {/* Track Action Section */}
+            <View style={{ 
+              marginHorizontal: 20, 
+              marginBottom: 20,
+              padding: 15,
+              backgroundColor: colorScheme === 'dark' ? '#2A2A2A' : '#F5F5F5',
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: colorScheme === 'dark' ? '#444' : '#E0E0E0'
+            }}>
+              <Text style={{ 
+                color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
+                fontSize: 16,
+                fontWeight: '600',
+                marginBottom: 10,
+                textAlign: 'center'
+              }}>
+                Track Action & Refresh Content
+              </Text>
+              
+              <View style={{ 
+                flexDirection: 'row', 
+                alignItems: 'center',
+                marginBottom: 10
+              }}>
+                <TextInput
+                  style={{
+                    flex: 1,
+                    height: 40,
+                    borderWidth: 1,
+                    borderColor: colorScheme === 'dark' ? '#555' : '#CCC',
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    marginRight: 10,
+                    backgroundColor: colorScheme === 'dark' ? '#3A3A3A' : '#FFFFFF',
+                    color: colorScheme === 'dark' ? '#FFFFFF' : '#000000'
+                  }}
+                  placeholder="track action"
+                  placeholderTextColor={colorScheme === 'dark' ? '#888' : '#999'}
+                  value={trackInput}
+                  onChangeText={setTrackInput}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  spellCheck={false}
+                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#007AFF',
+                    paddingHorizontal: 16,
+                    paddingVertical: 10,
+                    borderRadius: 8,
+                    opacity: isLoading ? 0.6 : 1
+                  }}
+                  onPress={handleTrackAction}
+                  disabled={isLoading}
+                >
+                  <Text style={{ color: 'white', fontWeight: '600' }}>
+                    {isLoading ? 'Loading...' : 'Track & Refresh Content'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              
+              <Text style={{ 
+                color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                fontSize: 12,
+                textAlign: 'center',
+                fontStyle: 'italic'
+              }}>
+                Enter an action name to track it, or leave empty to just refresh content
+              </Text>
+            </View>
+            
+            {/* Content Cards Display */}
+            {content && content.length > 0 ? (
+              content.map((item) => (
+                <ContentView
+                  key={item.id}
+                  template={item}
+                  listener={(event, card) => {
+                    console.log('Event triggered:', event, card);
+                  }}
+                  styleOverrides={{
+                    smallImageStyle: {
+                      // title: {
+                      //   numberOfLines: 2
+                      // },
+                      // body: {
+                      //   numberOfLines: 4
+                      // }
+                    }
+                  }}
+                />
+              ))
+            ) : (
+              <View style={{ 
+                padding: 20, 
+                margin: 20, 
+                backgroundColor: colorScheme === 'dark' ? '#3A3A3A' : '#F5F5F5',
+                borderRadius: 10,
+                alignItems: 'center'
+              }}>
+                <Text style={{ 
+                  color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
+                  fontSize: 16,
+                  textAlign: 'center',
+                  marginBottom: 10,
+                  fontWeight: '600'
+                }}>
+                  No Content Cards Available
+                </Text>
+                <Text style={{ 
+                  color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                  fontSize: 14,
+                  textAlign: 'center',
+                  lineHeight: 20
+                }}>
+                  Content cards will appear here when they are configured in Adobe Journey Optimizer for surface: "rn/ios/remote_image"
+                </Text>
+                <Text style={{ 
+                  color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                  fontSize: 12,
+                  textAlign: 'center',
+                  marginTop: 10,
+                  fontStyle: 'italic'
+                }}>
+                  Try tracking an action above to refresh content cards.
+                </Text>
+              </View>
+            )}
           </View>
         )}
       </ScrollView>

@@ -6,10 +6,12 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import { Drawer } from "expo-router/drawer";
+import { Platform } from "react-native";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { MobileCore, LogLevel } from "@adobe/react-native-aepcore";
 import { useEffect } from "react";
+import { Messaging } from '@adobe/react-native-aepmessaging';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,6 +48,16 @@ export default function RootLayout() {
     )
       .then(() => {
         console.log("AEP SDK Initialized");
+         
+        // Messaging - Update propositions AFTER SDK is fully initialized
+        // Use platform-specific surface names
+        const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
+        console.log("update propositions before for surface:", surface);
+        return Messaging.updatePropositionsForSurfaces([surface]);
+      })
+      .then(() => {
+        console.log("update propositions after - SUCCESS");
+        console.log("Propositions updated successfully in layout");
       })
       .catch((error) => {
         console.error("AEP SDK Initialization error:", error);

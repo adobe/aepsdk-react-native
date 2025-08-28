@@ -236,13 +236,13 @@ class Messaging {
       proposition.items.filter(
         (item) => item.schema === PersonalizationSchema.CONTENT_CARD
       )
-    );
+    ) as ContentCard[];
 
     if (!contentCards?.length) {
       return [];
     }
 
-    return contentCards.map((card: ContentCard) => {
+    return contentCards.map((card) => {
       const type = card.data?.meta?.adobe?.template ?? TemplateType.SMALL_IMAGE;
       return {
         ...card,
