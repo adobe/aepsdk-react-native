@@ -19,7 +19,8 @@ import {
   Modal,
   Appearance,
   ColorSchemeName,
-  Platform
+  Platform,
+  TextInput
 } from 'react-native';
 import { useEffect } from 'react';
 import { useColorScheme } from '../hooks/useColorScheme';
@@ -37,6 +38,8 @@ const ContentCardView = () => {
   const [selectedView, setSelectedView] = useState<string>('Remote');
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string>('System');
+  const [trackInput, setTrackInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const colorScheme = useColorScheme();
 
   const viewOptions = ['SmallImage', 'LargeImage', 'ImageOnly', 'Remote'];
@@ -62,22 +65,76 @@ const ContentCardView = () => {
     );
   };
 
-  useEffect(() => {
-    Messaging.updatePropositionsForSurfaces([`rn/${Platform.OS}/remote_image`]);
-    // Note:
-    // - Call above to update the propositions and cache the content locally
-    // - Customers may call this function when launching the app
-    MobileCore.trackAction('xyz');
-    try {
-      Messaging.getContentCardUI(`rn/${Platform.OS}/remote_image`).then(
-        (content) => {
-          console.log('content', content);
-          setContent(content);
-        }
-      );
-    } catch (error) {
-      console.error('Error fetching content cards:', error);
+  // Track action and refresh content cards
+  const handleTrackAction = async () => {
+    if (!trackInput.trim()) {
+      console.log(' No action text entered');
+      return;
     }
+    
+    setIsLoading(true);
+    console.log('Tracking action:', trackInput);
+    
+    try {
+      // Define the surface based on platform
+      const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
+      
+      // Track the action
+      MobileCore.trackAction(trackInput);
+      
+      // Wait a moment for the action to be processed
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Update propositions first
+      console.log('Updating propositions for surface:', surface);
+      await Messaging.updatePropositionsForSurfaces([surface]);
+      
+      // Refresh content cards
+      console.log('Refreshing content cards...');
+      const newContent = await Messaging.getContentCardUI(surface);
+      console.log('📱 New content:', newContent);
+      setContent(newContent);
+      
+    } catch (error) {
+      console.error('Error tracking action or refreshing content:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Define the surface based on platform
+    const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
+    console.log('Using surface:', surface);
+    
+    // Track initial action
+    MobileCore.trackAction('small_image');
+   
+    // Wait for propositions to be updated from layout.tsx
+    const timer = setTimeout(async () => {
+      console.log("Getting content cards (propositions should already be updated from _layout.tsx)...");
+      try {
+        // Just get the content - propositions should already be updated in _layout.tsx
+        const content = await Messaging.getContentCardUI(surface);
+        console.log('Content retrieved');
+        setContent(content);
+        
+      } catch (error) {
+        console.error('Error fetching content cards:', error);
+        // Fallback: try updating propositions if they weren't ready
+        try {
+          console.log('Fallback: Updating propositions...');
+          await Messaging.updatePropositionsForSurfaces([surface]);
+          const content = await Messaging.getContentCardUI(surface);
+          console.log('Fallback content retrieved');
+          setContent(content);
+        } catch (fallbackError) {
+          console.error('Fallback also failed:', fallbackError);
+        }
+      }
+    }, 3000); // Wait 3 seconds for SDK initialization
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -219,8 +276,24 @@ const ContentCardView = () => {
             <ContentView
               key="1"
               template={SMALL_IMAGE_CONTENT_ALL_FIELDS}
-              listener={(event, identifier) => {
-                console.log('Event triggered:', event, identifier);
+              styleOverrides={{
+                smallImageStyle: {
+                  card: {
+                    backgroundColor: '#800080',
+                    borderRadius: 20,
+                    margin: 15,
+                    padding: 10
+                  },
+                  title: {
+                    color: '#FF0000'
+                  },
+                  body: {
+                    color: '#00FF00'
+                  }
+                }
+              }}
+              listener={(event, card) => {
+                console.log('Event triggered:', event, card);
               }}
             />
             {renderStyledText('[dark/light]Custom theme')}
@@ -244,10 +317,9 @@ const ContentCardView = () => {
             >
               <ContentView
                 key="1"
-                cardHeight={160}
                 template={SMALL_IMAGE_CONTENT_ALL_FIELDS}
-                listener={(event, identifier) => {
-                  console.log('Event triggered:', event, identifier);
+                listener={(event, card) => {
+                  console.log('Event triggered:', event, card);
                 }}
               />
             </ThemeProvider>
@@ -255,25 +327,37 @@ const ContentCardView = () => {
             {renderStyledText('[dismiss button] NO ')}
             <ContentView
               key="11"
-              cardHeight={160}
               template={SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON}
             />
             {renderStyledText('[dismiss button] Simple')}
             <ContentView
               key="12"
-              cardHeight={160}
               template={SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE}
             />
             {renderStyledText('[image] Invalid')}
             <ContentView
               key="2"
-              cardHeight={150}
               template={SMALL_IMAGE_CONTENT_INVALID_IMAGE}
+              styleOverrides={{
+                smallImageStyle: {
+                  card: {
+                    backgroundColor: '#800080',
+                    borderRadius: 20,
+                    margin: 15,
+                    padding: 10
+                  },
+                  title: {
+                    color: '#FF0000'
+                  },
+                  body: {
+                    color: '#00FF00'
+                  }
+                }
+              }}
             />
             {renderStyledText('[dark/light] darkUrl')}
             <ContentView
               key="3"
-              cardHeight={160}
               template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
             />
             {renderStyledText('[style]title (2 lines), body (4 lines)')}
@@ -282,22 +366,27 @@ const ContentCardView = () => {
               template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
               styleOverrides={{
                 smallImageStyle: {
+                  card: {
+                    backgroundColor: '#800080',
+                    borderRadius: 20,
+                    margin: 15,
+                    padding: 10
+                  },
                   title: {
-                    numberOfLines: 2
+                    color: '#FF0000'
                   },
                   body: {
-                    numberOfLines: 4
+                    color: '#00FF00'
                   }
                 }
               }}
-              listener={(event, identifier) => {
-                console.log('Event triggered:', event, identifier);
+              listener={(event, card) => {
+                console.log('Event triggered:', event, card);
               }}
             />
             {renderStyledText('[button] 3')}
             <ContentView
               key="5"
-              cardHeight={160}
               template={SMALL_IMAGE_CONTENT_3_BUTTONS}
             />
             {renderStyledText(
@@ -306,15 +395,14 @@ const ContentCardView = () => {
             <View style={{ height: 150 }}>
               <ContentView
                 key="6"
-                cardHeight={200}
                 template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
                 styleOverrides={{
                   smallImageStyle: {
                     title: {
-                      numberOfLines: 1
+                      fontSize: 16
                     },
                     body: {
-                      numberOfLines: 1
+                      fontSize: 14
                     }
                   }
                 }}
@@ -324,15 +412,16 @@ const ContentCardView = () => {
             <View>
               <ContentView
                 key="6"
-                cardHeight={220}
                 template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
                 styleOverrides={{
                   smallImageStyle: {
                     title: {
-                      numberOfLines: 2
+                      fontSize: 16,
+                      fontWeight: '600'
                     },
                     body: {
-                      numberOfLines: 4
+                      fontSize: 14,
+                      lineHeight: 18
                     },
                     imageContainer: {
                       width: '50%'
@@ -348,15 +437,16 @@ const ContentCardView = () => {
             <View>
               <ContentView
                 key="7"
-                cardHeight={160}
                 template={SMALL_IMAGE_CONTENT_NO_BUTTON}
                 styleOverrides={{
                   smallImageStyle: {
                     title: {
-                      numberOfLines: 2
+                      fontSize: 16,
+                      fontWeight: '600'
                     },
                     body: {
-                      numberOfLines: 6
+                      fontSize: 14,
+                      lineHeight: 18
                     },
                     imageContainer: {
                       width: '40%'
@@ -369,15 +459,16 @@ const ContentCardView = () => {
             <View>
               <ContentView
                 key="8"
-                cardHeight={160}
                 template={SMALL_IMAGE_CONTENT_NO_BUTTON}
                 styleOverrides={{
                   smallImageStyle: {
                     title: {
-                      numberOfLines: 2
+                      fontSize: 16,
+                      fontWeight: '600'
                     },
                     body: {
-                      numberOfLines: 6
+                      fontSize: 14,
+                      lineHeight: 18
                     },
                     container: {
                       flexDirection: 'row-reverse'
@@ -420,18 +511,20 @@ const ContentCardView = () => {
               styleOverrides={{
                 largeImageStyle: {
                   title: {
-                    numberOfLines: 2
+                    fontSize: 18,
+                    fontWeight: '600'
                   },
                   body: {
-                    numberOfLines: 2
+                    fontSize: 14,
+                    lineHeight: 18
                   },
                   image: {
                     aspectRatio: 1 / 1
                   }
                 }
               }}
-              listener={(event, identifier) => {
-                console.log('Event triggered:', event, identifier);
+              listener={(event, card) => {
+                console.log('Event triggered:', event, card);
               }}
             />
             {renderStyledText('[dark/light]Custom theme')}
@@ -456,8 +549,8 @@ const ContentCardView = () => {
               <ContentView
                 key="7"
                 template={LARGE_IMAGE_CONTENT_DARK_URL}
-                listener={(event, identifier) => {
-                  console.log('Event triggered:', event, identifier);
+                listener={(event, card) => {
+                  console.log('Event triggered:', event, card);
                 }}
               />
             </ThemeProvider>
@@ -472,60 +565,45 @@ const ContentCardView = () => {
             <ContentView
               key="1"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
-              listener={(event, identifier) => {
+              listener={(event, card) => {
                 console.log(
                   'Event triggered: - for imageOnly image 1',
                   event,
-                  identifier
+                  card
                 );
               }}
             />
 
             {renderStyledText(
-              '2. Images with Action url, dismiss style simple - card height 800'
+              '2.Adobe default image, dismiss style circle'
             )}
             <ContentView
               key="2"
-              template={IMAGE_ONLY_CONTENT_WITH_ACTION_URL}
-              listener={(event, identifier) => {
+              template={IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE}
+              listener={(event, card) => {
                 console.log(
                   'Event triggered: - for imageOnly image 2',
                   event,
-                  identifier
+                  card
                 );
               }}
             />
 
-            {renderStyledText(
-              '3.Adobe default image, dismiss style circle - card height 400'
-            )}
+            {renderStyledText('3. No dismiss button - no card height')}
             <ContentView
               key="3"
-              template={IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE}
-              listener={(event, identifier) => {
-                console.log(
-                  'Event triggered: - for imageOnly image 3',
-                  event,
-                  identifier
-                );
-              }}
-            />
-
-            {renderStyledText('4. No dismiss button - no card height')}
-            <ContentView
-              key="4"
               template={IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON}
             />
 
-            {renderStyledText('5. [image] Invalid')}
-            <ContentView key="5" template={IMAGE_ONLY_CONTENT_INVALID_IMAGE} />
+            {renderStyledText('4. [image] Invalid')}
+            <ContentView key="4" template={IMAGE_ONLY_CONTENT_INVALID_IMAGE} />
 
-            {renderStyledText('6.[action] No actionUrl')}
-            <ContentView key="6" template={IMAGE_ONLY_CONTENT_NO_ACTION} />
+            {renderStyledText('5.[action] No actionUrl')}
+            <ContentView key="5" template={IMAGE_ONLY_CONTENT_NO_ACTION} />
 
-            {renderStyledText('7.[style] Custom aspect ratio (1:1)')}
+            {renderStyledText('6.[style] Custom aspect ratio (1:1)')}
             <ContentView
-              key="7"
+              key="6"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
@@ -534,18 +612,18 @@ const ContentCardView = () => {
                   }
                 }
               }}
-              listener={(event, identifier) => {
+              listener={(event, card) => {
                 console.log(
                   'Event triggered: - for imageOnly image 7',
                   event,
-                  identifier
+                  card
                 );
               }}
             />
 
-            {renderStyledText('8.[style] Custom height (150)')}
+            {renderStyledText('7.[style] Custom height (150)')}
             <ContentView
-              key="8"
+              key="7"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
@@ -557,10 +635,10 @@ const ContentCardView = () => {
             />
 
             {renderStyledText(
-              '9. [style] Custom width (80%), set image container backgroud color'
+              '8. [style] Custom width (80%), set image container backgroud color'
             )}
             <ContentView
-              key="9"
+              key="8"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
@@ -574,9 +652,9 @@ const ContentCardView = () => {
               }}
             />
 
-            {renderStyledText('10. [style] Card customization')}
+            {renderStyledText('9. [style] Card customization')}
             <ContentView
-              key="10"
+              key="9"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
@@ -592,9 +670,9 @@ const ContentCardView = () => {
               }}
             />
 
-            {renderStyledText('11.[style] Image container customization')}
+            {renderStyledText('10.[style] Image container customization')}
             <ContentView
-              key="11"
+              key="10"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
@@ -612,9 +690,9 @@ const ContentCardView = () => {
               }}
             />
 
-            {renderStyledText('12.[style] Combined styles')}
+            {renderStyledText('11.[style] Combined styles')}
             <ContentView
-              key="12"
+              key="11"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
                 imageOnlyStyle: {
@@ -633,8 +711,8 @@ const ContentCardView = () => {
               }}
             />
 
-            {renderStyledText('13.[image] No darkUrl (only light mode)')}
-            <ContentView key="13" template={IMAGE_ONLY_CONTENT_NO_DARK_URL} />
+            {renderStyledText('12.[image] No darkUrl (only light mode)')}
+            <ContentView key="12" template={IMAGE_ONLY_CONTENT_NO_DARK_URL} />
 
             {renderStyledText(
               '1.[image] No Light Mode (only dark mode) - no actionUrl'
@@ -646,99 +724,230 @@ const ContentCardView = () => {
         {selectedView === 'Remote' && (
           <View>
             {renderStyledText('[Remote] cards')}
-            {content?.map((item) => (
-              <ContentView
-                key={item.id}
-                template={item}
-                listener={(event, card) => {
-                  console.log('Event triggered:', event, card);
-                }}
-                styleOverrides={{
-                  smallImageStyle: {
-                    // title: {
-                    //   numberOfLines: 2
-                    // },
-                    // body: {
-                    //   numberOfLines: 4
-                    // }
-                  }
-                }}
-              />
-            ))}
+            
+            {/* Track Action Section */}
+            <View style={{ 
+              marginHorizontal: 20, 
+              marginBottom: 20,
+              padding: 15,
+              backgroundColor: colorScheme === 'dark' ? '#2A2A2A' : '#F5F5F5',
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: colorScheme === 'dark' ? '#444' : '#E0E0E0'
+            }}>
+              <Text style={{ 
+                color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
+                fontSize: 16,
+                fontWeight: '600',
+                marginBottom: 10,
+                textAlign: 'center'
+              }}>
+                Track Action & Refresh Content
+              </Text>
+              
+              <View style={{ 
+                flexDirection: 'row', 
+                alignItems: 'center',
+                marginBottom: 10
+              }}>
+                <TextInput
+                  style={{
+                    flex: 1,
+                    height: 40,
+                    borderWidth: 1,
+                    borderColor: colorScheme === 'dark' ? '#555' : '#CCC',
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    marginRight: 10,
+                    backgroundColor: colorScheme === 'dark' ? '#3A3A3A' : '#FFFFFF',
+                    color: colorScheme === 'dark' ? '#FFFFFF' : '#000000'
+                  }}
+                  placeholder="track action"
+                  placeholderTextColor={colorScheme === 'dark' ? '#888' : '#999'}
+                  value={trackInput}
+                  onChangeText={setTrackInput}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  spellCheck={false}
+                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#007AFF',
+                    paddingHorizontal: 16,
+                    paddingVertical: 10,
+                    borderRadius: 8,
+                    opacity: isLoading ? 0.6 : 1
+                  }}
+                  onPress={handleTrackAction}
+                  disabled={isLoading}
+                >
+                  <Text style={{ color: 'white', fontWeight: '600' }}>
+                    {isLoading ? 'Loading...' : 'Track & Refresh Content'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              
+              <Text style={{ 
+                color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                fontSize: 12,
+                textAlign: 'center',
+                fontStyle: 'italic'
+              }}>
+                Enter an action name to track it, or leave empty to just refresh content
+              </Text>
+            </View>
+            
+            {/* Content Cards Display */}
+            {content && content.length > 0 ? (
+              content.map((item) => (
+                <ContentView
+                  key={item.id}
+                  template={item}
+                  listener={(event, card) => {
+                    console.log('Event triggered:', event, card);
+                  }}
+                  styleOverrides={{
+                    smallImageStyle: {
+                      // title: {
+                      //   numberOfLines: 2
+                      // },
+                      // body: {
+                      //   numberOfLines: 4
+                      // }
+                    }
+                  }}
+                />
+              ))
+            ) : (
+              <View style={{ 
+                padding: 20, 
+                margin: 20, 
+                backgroundColor: colorScheme === 'dark' ? '#3A3A3A' : '#F5F5F5',
+                borderRadius: 10,
+                alignItems: 'center'
+              }}>
+                <Text style={{ 
+                  color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
+                  fontSize: 16,
+                  textAlign: 'center',
+                  marginBottom: 10,
+                  fontWeight: '600'
+                }}>
+                  No Content Cards Available
+                </Text>
+                <Text style={{ 
+                  color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                  fontSize: 14,
+                  textAlign: 'center',
+                  lineHeight: 20
+                }}>
+                  Content cards will appear here when they are configured in Adobe Journey Optimizer for surface: "rn/ios/remote_image"
+                </Text>
+                <Text style={{ 
+                  color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                  fontSize: 12,
+                  textAlign: 'center',
+                  marginTop: 10,
+                  fontStyle: 'italic'
+                }}>
+                  Try tracking an action above to refresh content cards.
+                </Text>
+              </View>
+            )}
           </View>
         )}
       </ScrollView>
     </ScrollView>
   );
 };
-
 export default ContentCardView;
+
+// All ContentTemplates updated with proper data structure
 
 const SMALL_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
   id: 'small-image-all-fields',
   type: TemplateType.SMALL_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    image: {
-      alt: '',
-      url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
-      darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'SmallImage' as any },
+      surface: 'rn/ios/sample'
     },
-    buttons: [
-      {
-        interactId: 'downloadClicked',
-        actionUrl: 'https://nba.com',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        text: {
-          content: 'Download App'
-        }
+    content: {
+      image: {
+        alt: '',
+        url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
+        darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
       },
-      {
-        interactId: 'OK',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        text: {
-          content: 'OK'
+      buttons: [
+        {
+          interactId: 'downloadClicked',
+          actionUrl: 'https://nba.com',
+          id: '5b4d53f5-44bd-4e5c-a5cb-6e650b1993f6',
+          text: {
+            content: 'Download App'
+          }
+        },
+        {
+          interactId: 'OK',
+          id: '5b4d53f5-45bd-4e3c-a5cb-6e650b1993f7',
+          text: {
+            content: 'OK'
+          }
         }
+      ],
+      dismissBtn: {
+        style: 'circle'
+      },
+      actionUrl: '',
+      body: {
+        content: 'Get live scores, real-time updates, and exclusive content right at your fingertips.'
+      },
+      title: {
+        content: 'Stay connected to all the action'
       }
-    ],
-    dismissBtn: {
-      style: 'circle'
-    },
-    actionUrl: '',
-    body: {
-      content:
-        'Get live scores, real-time updates, and exclusive content right at your fingertips.'
-    },
-    title: {
-      content: 'Stay connected to all the action'
     }
   }
 };
+
 const SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
-  id: 'small-image-all-fields',
+  id: 'small-image-no-dismiss',
   type: TemplateType.SMALL_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    image: {
-      alt: '',
-      url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
-      darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'SmallImage' as any },
+      surface: 'rn/ios/sample'
     },
-    buttons: [
-      {
-        interactId: 'downloadClicked',
-        actionUrl: 'https://nba.com',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        text: {
-          content: 'Download App'
+    content: {
+      image: {
+        alt: '',
+        url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
+        darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
+      },
+      buttons: [
+        {
+          interactId: 'downloadClicked',
+          actionUrl: 'https://nba.com',
+          id: '5b4d53f5-45bd-4e5c-a5cb-6e65b1993f6',
+          text: {
+            content: 'Download App'
+          }
         }
+      ],
+      actionUrl: '',
+      body: {
+        content: 'Get live scores, real-time updates, and exclusive content right at your fingertips.'
+      },
+      title: {
+        content: 'Stay connected to all the action'
       }
-    ],
-    actionUrl: '',
-    body: {
-      content:
-        'Get live scores, real-time updates, and exclusive content right at your fingertips.'
-    },
-    title: {
-      content: 'Stay connected to all the action'
     }
   }
 };
@@ -746,39 +955,48 @@ const SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
 const SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE: ContentTemplate = {
   id: 'small-image-dismiss-button-simple',
   type: TemplateType.SMALL_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    image: {
-      alt: '',
-      url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
-      darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'SmallImage' as any },
+      surface: 'rn/ios/sample'
     },
-    buttons: [
-      {
-        interactId: 'downloadClicked',
-        actionUrl: 'https://nba.com',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        text: {
-          content: 'Download App'
-        }
+    content: {
+      image: {
+        alt: '',
+        url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
+        darkUrl: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png'
       },
-      {
-        interactId: 'OK',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        text: {
-          content: 'OK'
+      buttons: [
+        {
+          interactId: 'downloadClicked',
+          actionUrl: 'https://nba.com',
+          id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1893f6',
+          text: {
+            content: 'Download App'
+          }
+        },
+        {
+          interactId: 'OK',
+          id: '5b4d53f5-45bd-4e5c-a5cb-6e650a1993f6',
+          text: {
+            content: 'OK'
+          }
         }
+      ],
+      dismissBtn: {
+        style: 'simple'
+      },
+      actionUrl: '',
+      body: {
+        content: 'Get live scores, real-time updates, and exclusive content right at your fingertips.'
+      },
+      title: {
+        content: 'Stay connected to all the action'
       }
-    ],
-    dismissBtn: {
-      style: 'simple'
-    },
-    actionUrl: '',
-    body: {
-      content:
-        'Get live scores, real-time updates, and exclusive content right at your fingertips.'
-    },
-    title: {
-      content: 'Stay connected to all the action'
     }
   }
 };
@@ -786,459 +1004,464 @@ const SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE: ContentTemplate = {
 const SMALL_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
   id: 'small-image-invalid-image',
   type: TemplateType.SMALL_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    body: {
-      content:
-        'Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'SmallImage' as any },
+      surface: 'rn/ios/sample'
     },
-    title: {
-      content: 'Get Ready for the Basketball Season Kickoff!'
-    },
-    buttons: [
-      {
-        interactId: 'buy',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        actionUrl: 'https://nba.com',
-        text: {
-          content: 'Get Season Pass'
+    content: {
+     body: {
+        content: 'Get live scores, real-time updates, and exclusive content right at your fingertips.'
+      },
+      title: {
+        content: 'Stay connected to all the action'
+      },
+      buttons: [
+        {
+          interactId: 'buy',
+          id: '5b4d53f5-45bd-4e5c-a5cb-6e450b1993f6',
+          actionUrl: 'https://nba.com',
+          text: {
+            content: 'Get Season Pass'
+          }
         }
+      ],
+      actionUrl: '',
+      dismissBtn: {
+        style: 'circle'
+      },
+      image: {
+        darkUrl: 'https://invalid-dark-url-that-will-fail.png',
+        alt: '',
+        url: 'https://invalid-light-url-that-will-fail.png'
       }
-    ],
-    actionUrl: '',
-    dismissBtn: {
-      style: 'circle'
-    },
-    image: {
-      darkUrl:
-        'https://static-00.iconduck.com/assets.00/basketball-icon-256x256-vydm63md.png',
-      alt: '',
-      url: 'https://static-00.iconduck.com/assets.00/basketball-icon-256x256-vydm63md.png'
     }
   }
 };
 
 const SMALL_IMAGE_CONTENT_IMAGE_DARK_URL: ContentTemplate = {
-  id: 'small-image-invalid-image',
+  id: 'small-image-dark-url',
   type: TemplateType.SMALL_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    body: {
-      content:
-        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'SmallImage' as any },
+      surface: 'rn/ios/sample'
     },
-    title: {
-      content: 'Get Ready for the Basketball Season Kickoff!'
-    },
-    buttons: [
-      {
-        interactId: 'buy',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        actionUrl: 'https://nba.com',
-        text: {
-          content: 'Get Season Pass'
-        }
-      }
-    ],
-    actionUrl: '',
-    dismissBtn: {
-      style: 'circle'
-    },
-    image: {
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
-      alt: '',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
-    }
-  }
-};
-const SMALL_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
-  id: 'small-image-invalid-image',
-  type: TemplateType.SMALL_IMAGE,
-  data: {
-    body: {
-      content:
-        'Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
-    },
-    title: {
-      content: 'Get Ready for the Basketball Season Kickoff!'
-    },
-    buttons: [
-      {
-        interactId: 'buy',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        actionUrl: 'https://nba.com',
-        text: {
-          content: 'Buyyyyy'
-        }
+    content: {
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
       },
-      {
-        interactId: 'ok',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        actionUrl: 'https://nba.com',
-        text: {
-          content: 'OK'
-        }
+      title: {
+        content: 'Get Ready for the Basketball Season Kickoff!'
       },
-      {
-        interactId: 'more',
-        id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1993f6',
-        actionUrl: 'https://nba.com',
-        text: {
-          content: 'More'
+      buttons: [
+        {
+          interactId: 'buy',
+          id: '5b4d53f5-45bd-4e5c-a5cb-6e850b1993f6',
+          actionUrl: 'https://nba.com',
+          text: {
+            content: 'Get Season Pass'
+          }
         }
+      ],
+      actionUrl: '',
+      dismissBtn: {
+        style: 'circle'
+      },
+      image: {
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        alt: '',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
       }
-    ],
-    actionUrl: '',
-    dismissBtn: {
-      style: 'circle'
-    },
-    image: {
-      alt: '',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
-    }
-  }
-};
-const SMALL_IMAGE_CONTENT_NO_BUTTON: ContentTemplate = {
-  id: 'small-image-invalid-image',
-  type: TemplateType.SMALL_IMAGE,
-  data: {
-    body: {
-      content:
-        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
-    },
-    title: {
-      content: 'Get Ready for the Basketball Season Kickoff!'
-    },
-    buttons: [],
-    actionUrl: '',
-    dismissBtn: {
-      style: 'circle'
-    },
-    image: {
-      alt: '',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
     }
   }
 };
 
+const SMALL_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
+  id: 'small-image-3-buttons',
+  type: TemplateType.SMALL_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'SmallImage' as any },
+      surface: 'rn/ios/sample'
+    },
+    content: {
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+      },
+      title: {
+        content: 'Get Ready for the Basketball Season Kickoff!'
+      },
+      buttons: [
+        {
+          interactId: 'buy',
+          id: '5b4d53f5-45bd-4e5c-a5cb-6e610b1993f6',
+          actionUrl: 'https://nba.com',
+          text: {
+            content: 'Buyyyyy'
+          }
+        },
+        {
+          interactId: 'ok',
+          id: '5b4d53f5-41bd-4e5c-a5cb-6e650b1993f6',
+          actionUrl: 'https://nba.com',
+          text: {
+            content: 'OK'
+          }
+        },
+        {
+          interactId: 'more',
+          id: '5b4d53f5-45bd-4e5c-a5cb-6e650b1793f6',
+          actionUrl: 'https://nba.com',
+          text: {
+            content: 'More'
+          }
+        }
+      ],
+      actionUrl: '',
+      dismissBtn: {
+        style: 'circle'
+      },
+      image: {
+        alt: '',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+      }
+    }
+  }
+};
+
+const SMALL_IMAGE_CONTENT_NO_BUTTON: ContentTemplate = {
+  id: 'small-image-no-button',
+  type: TemplateType.SMALL_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'SmallImage' as any },
+      surface: 'rn/ios/sample'
+    },
+    content: {
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+      },
+      title: {
+        content: 'Get Ready for the Basketball Season Kickoff!'
+      },
+      buttons: [],
+      actionUrl: '',
+      dismissBtn: {
+        style: 'circle'
+      },
+      image: {
+        alt: '',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+      }
+    }
+  }
+};
+
+// Large Image Templates
 const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
   id: 'large-image-all-fields',
   type: TemplateType.LARGE_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    actionUrl: 'https://cardaction.com',
-    body: {
-      content:
-        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'LargeImage' as any },
+      surface: 'rn/ios/sample'
     },
-    buttons: [
-      {
-        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
-        actionUrl: 'https://buttonone.com/action',
-        interactId: 'buttonOneClicked',
-        text: {
-          content: 'ButtonTextOne'
+    content: {
+      actionUrl: 'https://cardaction.com',
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+      },
+      buttons: [
+        {
+          id: 'a41d1bff-2797-4958-a6d7-2b367e0554595',
+          actionUrl: 'https://buttonone.com/action',
+          interactId: 'buttonOneClicked',
+          text: {
+            content: 'ButtonTextOne'
+          }
         }
+      ],
+      image: {
+        alt: '',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+        darkUrl: ''
+      },
+      dismissBtn: {
+        style: 'simple'
+      },
+      title: {
+        content: 'This is large image title'
       }
-    ],
-    image: {
-      alt: '',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-      darkUrl: ''
+    }
+  }
+};
+
+const LARGE_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
+  id: 'large-image-3-buttons',
+  type: TemplateType.LARGE_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'LargeImage' as any },
+      surface: 'rn/ios/sample'
     },
-    dismissBtn: {
-      style: 'simple'
-    },
-    title: {
-      content: 'This is large image title'
+    content: {
+      actionUrl: 'https://cardaction.com',
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+      },
+      buttons: [
+        {
+          id: 'a41d1bff-2797-4958-a6d7-2b367e035795',
+          actionUrl: 'https://buttonone.com/action',
+          interactId: 'buttonOneClicked_1',
+          text: {
+            content: 'ButtonOne'
+          }
+        },
+        {
+          id: 'a41d1bff-2797-4958-a6d7-2b367e055796',
+          interactId: 'buttonOneClicked_2',
+          text: {
+            content: 'ButtonTwo'
+          }
+        },
+        {
+          id: 'a41d1bff-2797-4958-a6d7-2b367e055797',
+          interactId: 'buttonOneClicked_3',
+          text: {
+            content: 'ButtonThreeeeeeeee'
+          }
+        }
+      ],
+      image: {
+        alt: '',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+      },
+      dismissBtn: {
+        style: 'simple'
+      },
+      title: {
+        content: 'This is large image title'
+      }
     }
   }
 };
 
 const LARGE_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
-  id: 'large-image-all-fields',
+  id: 'large-image-no-dismiss',
   type: TemplateType.LARGE_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    actionUrl: 'https://cardaction.com',
-    body: {
-      content:
-        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'LargeImage' as any },
+      surface: 'rn/ios/sample'
     },
-    buttons: [
-      {
-        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
-        actionUrl: 'https://buttonone.com/action',
-        interactId: 'buttonOneClicked',
-        text: {
-          content: 'ButtonTextOne'
+    content: {
+      actionUrl: 'https://cardaction.com',
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+      },
+      buttons: [
+        {
+          id: 'a41d1bff-2797-4958-a6d7-2b367e055798',
+          actionUrl: 'https://buttonone.com/action',
+          interactId: 'buttonOneClicked',
+          text: {
+            content: 'ButtonTextOne'
+          }
         }
+      ],
+      image: {
+        alt: '',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+      },
+      dismissBtn: {
+        style: 'none'
+      },
+      title: {
+        content: 'This is large image title'
       }
-    ],
-    image: {
-      alt: '',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
-    },
-    dismissBtn: {
-      style: 'none'
-    },
-    title: {
-      content: 'This is large image title'
     }
   }
 };
 
 const LARGE_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
-  id: 'large-image-all-fields',
+  id: 'large-image-invalid',
   type: TemplateType.LARGE_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    actionUrl: 'https://cardaction.com',
-    body: {
-      content:
-        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'LargeImage' as any },
+      surface: 'rn/ios/sample'
     },
-    buttons: [
-      {
-        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
-        actionUrl: 'https://buttonone.com/action',
-        interactId: 'buttonOneClicked',
-        text: {
-          content: 'ButtonTextOne'
+    content: {
+      actionUrl: 'https://cardaction.com',
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+      },
+      buttons: [
+        {
+          id: 'a41d1bff-2797-4958-a6d7-2b365e055795',
+          actionUrl: 'https://buttonone.com/action',
+          interactId: 'buttonOneClicked',
+          text: {
+            content: 'ButtonTextOne'
+          }
         }
+      ],
+      image: {
+        alt: '',
+        url: 'https://xxx',
+        darkUrl: 'https://imageurl.com/dark'
+      },
+      dismissBtn: {
+        style: 'none'
+      },
+      title: {
+        content: 'This is large image title'
       }
-    ],
-    image: {
-      alt: '',
-      url: 'https://xxx',
-      darkUrl: 'https://imageurl.com/dark'
-    },
-    dismissBtn: {
-      style: 'none'
-    },
-    title: {
-      content: 'This is large image title'
     }
   }
 };
 
 const LARGE_IMAGE_CONTENT_DARK_URL: ContentTemplate = {
-  id: 'large-image-all-fields',
+  id: 'large-image-dark-url',
   type: TemplateType.LARGE_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    actionUrl: 'https://cardaction.com',
-    body: {
-      content:
-        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'LargeImage' as any },
+      surface: 'rn/ios/sample'
     },
-    buttons: [
-      {
-        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
-        actionUrl: 'https://buttonone.com/action',
-        interactId: 'buttonOneClicked',
-        text: {
-          content: 'ButtonTextOne'
+    content: {
+      actionUrl: 'https://cardaction.com',
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+      },
+      buttons: [
+        {
+          id: 'a41d1bff-2797-4958-a6d7-2b367e055745',
+          actionUrl: 'https://buttonone.com/action',
+          interactId: 'buttonOneClicked',
+          text: {
+            content: 'ButtonTextOne'
+          }
         }
+      ],
+      image: {
+        alt: '',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
+      },
+      dismissBtn: {
+        style: 'none'
+      },
+      title: {
+        content: 'This is large image title'
       }
-    ],
-    image: {
-      alt: '',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
-    },
-    dismissBtn: {
-      style: 'none'
-    },
-    title: {
-      content: 'This is large image title'
     }
   }
 };
 
 const LARGE_IMAGE_CONTENT_LONG_TITLE: ContentTemplate = {
-  id: 'large-image-all-fields',
+  id: 'large-image-long-title',
   type: TemplateType.LARGE_IMAGE,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    actionUrl: 'https://cardaction.com',
-    body: {
-      content:
-        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'LargeImage' as any },
+      surface: 'rn/ios/sample'
     },
-    buttons: [
-      {
-        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
-        actionUrl: 'https://buttonone.com/action',
-        interactId: 'buttonOneClicked',
-        text: {
-          content: 'ButtonTextOne'
-        }
-      }
-    ],
-    image: {
-      alt: '',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
-    },
-    dismissBtn: {
-      style: 'none'
-    },
-    title: {
-      content:
-        "This is large image title, it's very long very long very long very long"
-    }
-  }
-};
-const LARGE_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
-  id: 'large-image-all-fields',
-  type: TemplateType.LARGE_IMAGE,
-  data: {
-    actionUrl: 'https://cardaction.com',
-    body: {
-      content:
-        '🎟️ Tickets are on sale now! Don’t miss out on securing your seat to witness the high-flying action from the best players in the game'
-    },
-    buttons: [
-      {
-        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
-        actionUrl: 'https://buttonone.com/action',
-        interactId: 'buttonOneClicked_1',
-        text: {
-          content: 'ButtonOne'
-        }
+    content: {
+      actionUrl: 'https://cardaction.com',
+      body: {
+        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
       },
-      {
-        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
-        interactId: 'buttonOneClicked_2',
-        text: {
-          content: 'ButtonTwo'
+      buttons: [
+        {
+          id: 'a41d1bff-2797-4958-a6d7-2b367e055748',
+          actionUrl: 'https://buttonone.com/action',
+          interactId: 'buttonOneClicked',
+          text: {
+            content: 'ButtonTextOne'
+          }
         }
+      ],
+      image: {
+        alt: '',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
       },
-      {
-        id: 'a41d1bff-2797-4958-a6d7-2b367e055795',
-        interactId: 'buttonOneClicked_3',
-        text: {
-          content: 'ButtonThreeeeeeeee'
-        }
+      dismissBtn: {
+        style: 'none'
+      },
+      title: {
+        content: 'This is large image title, it\'s very long very long very long very long'
       }
-    ],
-    image: {
-      alt: '',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
-    },
-    dismissBtn: {
-      style: 'simple'
-    },
-    title: {
-      content: 'This is large image title'
     }
   }
 };
 
+// Image Only Templates
 const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
   id: 'image-only-all-fields',
   type: TemplateType.IMAGE_ONLY,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
-    actionUrl: 'https://www.adobe.com/',
-    image: {
-      url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
-      alt: 'flight offer'
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'ImageOnly' as any },
+      surface: 'rn/ios/sample'
     },
-    dismissBtn: {
-      style: 'simple'
-    }
-  }
-};
-
-const IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
-  id: 'image-only-no-dismiss',
-  type: TemplateType.IMAGE_ONLY,
-  data: {
-    actionUrl: 'https://google.com',
-    image: {
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
-      alt: 'flight offer'
-    }
-  }
-};
-
-const IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE: ContentTemplate = {
-  id: 'image-only-dismiss-circle',
-  type: TemplateType.IMAGE_ONLY,
-  data: {
-    actionUrl: 'https://google.com',
-    image: {
-      url: 'https://i.ibb.co/0X8R3TG/Messages-24.png',
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
-      alt: 'flight offer'
-    },
-    dismissBtn: {
-      style: 'circle'
-    }
-  }
-};
-
-const IMAGE_ONLY_CONTENT_INVALID_IMAGE: ContentTemplate = {
-  id: 'image-only-invalid-image',
-  type: TemplateType.IMAGE_ONLY,
-  data: {
-    actionUrl: 'https://google.com',
-    image: {
-      url: 'https://invalid-url-that-will-fail',
-      darkUrl: 'https://another-invalid-url',
-      alt: 'broken image'
-    },
-    dismissBtn: {
-      style: 'simple'
-    }
-  }
-};
-
-const IMAGE_ONLY_CONTENT_NO_ACTION: ContentTemplate = {
-  id: 'image-only-no-action',
-  type: TemplateType.IMAGE_ONLY,
-  data: {
-    image: {
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
-      alt: 'non-clickable image'
-    },
-    dismissBtn: {
-      style: 'simple'
-    }
-  }
-};
-
-const IMAGE_ONLY_CONTENT_NO_DARK_URL: ContentTemplate = {
-  id: 'image-only-no-dark-url',
-  type: TemplateType.IMAGE_ONLY,
-  data: {
-    actionUrl: 'https://google.com',
-    image: {
-      url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
-      alt: 'light mode only image'
-    },
-    dismissBtn: {
-      style: 'simple'
-    }
-  }
-};
-
-const IMAGE_ONLY_CONTENT_NO_LIGHT_MODE: ContentTemplate = {
-  id: 'image-only-different-image',
-  type: TemplateType.IMAGE_ONLY,
-  data: {
-    image: {
-      url: '',
-      darkUrl:
-        'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
-      alt: 'basketball icon'
-    },
-    dismissBtn: {
-      style: 'circle'
+    content: {
+      actionUrl: 'https://www.adobe.com/',
+      image: {
+        url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+        alt: 'flight offer'
+      },
+      dismissBtn: {
+        style: 'simple'
+      }
     }
   }
 };
@@ -1246,17 +1469,174 @@ const IMAGE_ONLY_CONTENT_NO_LIGHT_MODE: ContentTemplate = {
 const IMAGE_ONLY_CONTENT_WITH_ACTION_URL: ContentTemplate = {
   id: 'image-only-with-action-url',
   type: TemplateType.IMAGE_ONLY,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'ImageOnly' as any },
+      surface: 'rn/ios/sample'
+    },
     content: {
       actionUrl: 'https://google.com',
       image: {
         url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
-        darkUrl:
-          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
         alt: 'with action URL - Google Images'
       },
       dismissBtn: {
         style: 'simple'
+      }
+    }
+  }
+};
+
+const IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE: ContentTemplate = {
+  id: 'image-only-dismiss-circle',
+  type: TemplateType.IMAGE_ONLY,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'ImageOnly' as any },
+      surface: 'rn/ios/sample'
+    },
+    content: {
+      actionUrl: 'https://google.com',
+      image: {
+        url: 'https://i.ibb.co/0X8R3TG/Messages-24.png',
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        alt: 'flight offer'
+      },
+      dismissBtn: {
+        style: 'circle'
+      }
+    }
+  }
+};
+
+const IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
+  id: 'image-only-no-dismiss',
+  type: TemplateType.IMAGE_ONLY,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'ImageOnly' as any },
+      surface: 'rn/ios/sample'
+    },
+    content: {
+      actionUrl: 'https://google.com',
+      image: {
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+        alt: 'flight offer'
+      }
+    }
+  }
+};
+
+const IMAGE_ONLY_CONTENT_INVALID_IMAGE: ContentTemplate = {
+  id: 'image-only-invalid-image',
+  type: TemplateType.IMAGE_ONLY,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'ImageOnly' as any },
+      surface: 'rn/ios/sample'
+    },
+    content: {
+      actionUrl: 'https://google.com',
+      image: {
+        url: 'https://invalid-url-that-will-fail',
+        darkUrl: 'https://another-invalid-url',
+        alt: 'broken image'
+      },
+      dismissBtn: {
+        style: 'simple'
+      }
+    }
+  }
+};
+
+const IMAGE_ONLY_CONTENT_NO_ACTION: ContentTemplate = {
+  id: 'image-only-no-action',
+  type: TemplateType.IMAGE_ONLY,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'ImageOnly' as any },
+      surface: 'rn/ios/sample'
+    },
+    content: {
+      image: {
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+        alt: 'non-clickable image'
+      },
+      dismissBtn: {
+        style: 'simple'
+      }
+    }
+  }
+};
+
+const IMAGE_ONLY_CONTENT_NO_DARK_URL: ContentTemplate = {
+  id: 'image-only-no-dark-url',
+  type: TemplateType.IMAGE_ONLY,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'ImageOnly' as any },
+      surface: 'rn/ios/sample'
+    },
+    content: {
+      actionUrl: 'https://google.com',
+      image: {
+        url: 'https://cdn-icons-png.flaticon.com/256/3303/3303838.png',
+        alt: 'light mode only image'
+      },
+      dismissBtn: {
+        style: 'simple'
+      }
+    }
+  }
+};
+
+const IMAGE_ONLY_CONTENT_NO_LIGHT_MODE: ContentTemplate = {
+  id: 'image-only-different-image',
+  type: TemplateType.IMAGE_ONLY,
+  schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
+  data: {
+    expiryDate: Date.now() + 86400000, // 24 hours from now
+    publishedDate: Date.now(),
+    contentType: 'application/json',
+    meta: {
+      adobe: { template: 'ImageOnly' as any },
+      surface: 'rn/ios/sample'
+    },
+    content: {
+      image: {
+        url: '',
+        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        alt: 'basketball icon'
+      },
+      dismissBtn: {
+        style: 'circle'
       }
     }
   }
