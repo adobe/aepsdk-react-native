@@ -33,7 +33,12 @@ const refreshInAppMessages = () => {
 const setMessagingDelegate = () => {
   Messaging.setMessagingDelegate({
     onDismiss: msg => console.log('dismissed!', msg),
-    onShow: msg => console.log('show', msg),
+    onShow: msg => {
+      console.log('show', msg);
+      msg.handleJavascriptMessage('myInappCallback', (content: string) => {
+        console.log('Received webview content in onShow:', content);
+      });
+    },
     shouldShowMessage: () => true,
     shouldSaveMessage: () => true,
     urlLoaded: (url, message) => console.log(url, message),
@@ -43,11 +48,11 @@ const setMessagingDelegate = () => {
 
 const getPropositionsForSurfaces = async () => {
   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
-  console.log(JSON.stringify(messages));
+  console.log('getPropositionsForSurfaces', JSON.stringify(messages));
 };
 
 const trackAction = async () => {
-  MobileCore.trackAction('tuesday', {full: true});
+  MobileCore.trackAction('iamjs', {full: true});
 };
 
 const updatePropositionsForSurfaces = async () => {

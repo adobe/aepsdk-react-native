@@ -87,6 +87,17 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalledWith(id);
   });
 
+  it('handleJavascriptMessage is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'handleJavascriptMessage');
+    let id = 'id';
+    let autoTrack = true;
+    let message = new Message({id, autoTrack});
+    let handlerName = 'handlerName';
+    let handler = jest.fn();
+    await message.handleJavascriptMessage(handlerName, handler);
+    expect(spy).toHaveBeenCalledWith(id, handlerName);
+  });
+
   it('should call updatePropositionsForSurfaces', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'updatePropositionsForSurfaces');
     await Messaging.updatePropositionsForSurfaces([
