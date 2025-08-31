@@ -202,19 +202,19 @@ for (let item in proposition.items) {
 ```
 
 
-### Unified track
+### PropositionItem.track
 
-A unified tracking API is available for any proposition item (e.g., Content Cards, HTML, JSON, code-based items). Prefer calling `track` directly on the item.
+A unified tracking API is available for any proposition item (Content Cards, HTML, JSON, code-based items). You can use the same track() method regardless of content type, making your code more consistent and maintainable.
 
 #### Using PropositionItem.track (recommended)
 
 **Syntax**
 
 ```javascript
-// Overload 1: event only
+// Track display event
 propositionItem.track(MessagingEdgeEventType.DISPLAY);
 
-// Overload 2: interaction + event + optional tokens
+// Track interaction with custom data + event + optional tokens
 propositionItem.track(
   interaction /* string | null */, 
   MessagingEdgeEventType.INTERACT /* enum value */, 
@@ -239,13 +239,10 @@ for (const surface of SURFACES) {
     if (msgProp.items.length > 0) {
       const propositionItem = msgProp.items[0];
 
-      // Overload 1: event only
-      propositionItem.track(MessagingEdgeEventType.DISPLAY);
-
-      // Overload 2: interaction + event + optional tokens
-      propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-       // Overload 3: interaction + event + optional tokens
-      propositionItem.track('button_click', MessagingEdgeEventType.INTERACT, ['token-1', 'token-2']);
+      // Track interaction with custom data
+         propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+     // Track with tokens for sub-item tracking
+        propositionItem.track('button_click', MessagingEdgeEventType.INTERACT, ['token-1', 'token-2']);
     }
   }
 }
