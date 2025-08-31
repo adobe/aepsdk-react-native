@@ -53,12 +53,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class RCTAEPMessagingModule
     extends ReactContextBaseJavaModule implements PresentationDelegate {
+  // We cache uuid -> Proposition (not PropositionItem) for iOS parity: storing items on iOS lost
+  // weak parent references. Propositions currently contain a single item, so using the first item
+  // for tracking is valid.
   private final Map<String, Proposition> propositionItemByUuid = new ConcurrentHashMap<>();
 
+  /**
+   * Parses the given Proposition and extracts the activity ID.
+   *
+   * Expected location: scopeDetails.activity.id in the proposition's event data.
+   * Returns null when any of the nested structures are missing or the id is not a String.
+   */
   private String extractActivityId(Proposition proposition) {
     try {
       Map<String, Object> eventData = proposition.toEventData();
-      if (eventData == null) return null;
+      if (eventData == null) {
+        Log.d(TAG, "[MessagingBridge] Proposition toEventData() returned null; cannot extract activity.id");
+        return null;
+      }
       Object scopeDetailsObj = eventData.get("scopeDetails");
       if (!(scopeDetailsObj instanceof Map)) return null;
       Map<String, Object> scopeDetails = (Map<String, Object>) scopeDetailsObj;
@@ -146,11 +158,11 @@ public final class RCTAEPMessagingModule
                   for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
                     List<Proposition> propositions = entry.getValue();
                     if (propositions == null) continue;
-                    for (Proposition p : propositions) {
+                    for (Proposition proposition : propositions) {
                       try {
-                        String key = extractActivityId(p);
+                        String key = extractActivityId(proposition);
                         if (key != null) {
-                          propositionItemByUuid.put(key, p);
+                          propositionItemByUuid.put(key, proposition);
                         }
                       } catch (Throwable ignore) {}
                     }
@@ -361,12 +373,12 @@ public final class RCTAEPMessagingModule
       }
       // Resolve PropositionItem by UUID
       if (uuid == null) {
-        Log.d(TAG, "[MessagingBridge] Null uuid provided; no-op.");
+        Log.d(TAG, "[MessagingBridge] Null uuid provided");
         return;
       }
       final Proposition proposition = propositionItemByUuid.get(uuid);
       if (proposition == null) {
-        Log.d(TAG, "[MessagingBridge] No cached proposition for uuid=" + uuid + "; no-op.");
+        Log.d(TAG, "[MessagingBridge] No cached proposition for uuid=" + uuid);
         return;
       }
       final List<PropositionItem> items = proposition.getItems();
