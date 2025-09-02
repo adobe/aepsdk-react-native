@@ -180,7 +180,10 @@ public final class RCTAEPMessagingModule
   @ReactMethod
   public void handleJavascriptMessage(final String messageId, final String handlerName) {
     Presentable<?> presentable = presentableCache.get(messageId);
-    if (presentable == null || !(presentable.getPresentation() instanceof InAppMessage)) return;
+    if (presentable == null || !(presentable.getPresentation() instanceof InAppMessage)) {
+      Log.w(TAG, "handleJavascriptMessage: No presentable found for messageId: " + messageId);
+      return;
+    }
 
     Presentable<InAppMessage> inAppMessagePresentable = (Presentable<InAppMessage>) presentable;
     InAppMessageEventHandler eventHandler = inAppMessagePresentable.getPresentation().getEventHandler();

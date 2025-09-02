@@ -89,12 +89,32 @@ class Message {
    * @param {function} handler: The method or closure to be called with the body of the message created in the Message's JavaScript
    */
   handleJavascriptMessage(handlerName: string, handler: (content: string) => void) {
+    // Validate parameters
+    if (!handlerName) {
+      console.warn('[AEP Messaging] handleJavascriptMessage: handlerName is required');
+      return;
+    }
+
+    if (typeof handler !== 'function') {
+      console.warn('[AEP Messaging] handleJavascriptMessage: handler must be a function');
+      return;
+    }
+
     // cache the callback
     if (!jsMessageHandlers[this.id]) {
       jsMessageHandlers[this.id] = {};
     }
     jsMessageHandlers[this.id][handlerName] = handler;
     RCTAEPMessaging.handleJavascriptMessage(this.id, handlerName);
+  }
+
+  /**
+   * Clears all the javascript message handlers for the message.
+   * This function must be called if the callbacks registered in handleJavascriptMessage are no longer needed.
+   * Failure to call this function may lead to memory leaks.
+   */
+  clearJavascriptMessageHandlers() {
+    delete jsMessageHandlers[this.id];
   }
 }
 

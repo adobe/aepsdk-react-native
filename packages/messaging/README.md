@@ -354,6 +354,23 @@ handleJavascriptMessage(handlerName: string, handler: (content: string) => void)
 
 It can be used for the native handling of JavaScript events. Please refer to the [tutorial](./tutorials/In-App%20Messaging.md#native-handling-of-javascript-events) for more information.
 
+### clearJavascriptMessageHandlers
+
+Clears all the javascript message handlers for the message. This function must be called if the callbacks registered in `handleJavascriptMessage` are no longer needed. Failure to call this function may lead to memory leaks.
+
+**Syntax**
+
+```typescript
+clearJavascriptMessageHandlers();
+```
+
+**Example**
+
+```typescript
+var message: Message;
+message.clearJavascriptMessageHandlers();
+```
+
 ## Programmatically control the display of in-app messages
 
 App developers can now create a type `MessagingDelegate` in order to be alerted when specific events occur during the lifecycle of an in-app message.
