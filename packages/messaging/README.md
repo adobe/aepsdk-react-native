@@ -201,6 +201,53 @@ for (let item in proposition.items) {
 }
 ```
 
+
+### PropositionItem.track
+
+A unified tracking API is available for any proposition item (Content Cards, HTML, JSON, code-based items). You can use the same track() method regardless of content type, making your code more consistent and maintainable.
+
+#### Using PropositionItem.track (recommended)
+
+**Syntax**
+
+```javascript
+// Track display event
+propositionItem.track(MessagingEdgeEventType.DISPLAY);
+
+// Track interaction with custom data + event + optional tokens
+propositionItem.track(
+  interaction /* string | null */, 
+  MessagingEdgeEventType.INTERACT /* enum value */, 
+  [/* tokens */] /* string[] | null */
+);
+```
+
+When using `getPropositionsForSurfaces`, the returned objects can be wrapped with `MessagingProposition` to get typed items and convenient tracking via `PropositionItem.track(...)`.
+
+```javascript
+import { Messaging, MessagingProposition, MessagingEdgeEventType } from '@adobe/react-native-aepmessaging';
+
+const SURFACES = ['mobileapp://my-surface'];
+const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
+
+for (const surface of SURFACES) {
+  const propositions = messages[surface] || [];
+
+  for (const proposition of propositions) {
+    const msgProp = new MessagingProposition(proposition);
+
+    if (msgProp.items.length > 0) {
+      const propositionItem = msgProp.items[0];
+
+      // Track interaction with custom data
+         propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+     // Track with tokens for sub-item tracking
+        propositionItem.track('button_click', MessagingEdgeEventType.INTERACT, ['token-1', 'token-2']);
+    }
+  }
+}
+```
+
 ### getLatestMessage
 
 Retrieves the most recently displayed message object
@@ -471,6 +518,8 @@ function otherWorkflowFinished() {
 
 ### trackContentCardDisplay
 
+Deprecated: Use `PropositionItem.track(...)` instead. This API will be removed in a future release.
+
 Tracks a Display interaction with the given ContentCard
 
 **Syntax**
@@ -479,6 +528,8 @@ Messaging.trackContentCardDisplay(proposition, contentCard);
 ```
 
 ### trackContentCardInteraction
+
+Deprecated: Use `PropositionItem.track(...)` instead. This API will be removed in a future release.
 
 Tracks a Click interaction with the given ContentCard
 

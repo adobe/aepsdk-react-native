@@ -6,6 +6,7 @@ import { Drawer } from 'expo-router/drawer';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MobileCore , LogLevel} from '@adobe/react-native-aepcore';
+import { Messaging } from '@adobe/react-native-aepmessaging';
 import { useEffect } from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -42,6 +43,32 @@ export default function RootLayout() {
     MobileCore.initializeWithAppId(ENV_ID_Messaging)
       .then(() => {
         console.log("AEP SDK Initialized");
+        
+        // // Set up messaging delegate after SDK initialization
+        // const unsubscribe = Messaging.setMessagingDelegate({
+        //   onDismiss: (message) => {
+        //     console.log('Message dismissed:', message);
+        //   },
+        //   onShow: (message) => {
+        //     console.log('Message shown:', message);
+        //   },
+        //   shouldShowMessage: (message) => {
+        //     console.log('Should show message:', message);
+        //     return true; // Always show messages in sample app
+        //   },
+        //   shouldSaveMessage: (message) => {
+        //     console.log('Should save message:', message);
+        //     return true; // Always save messages in sample app
+        //   },
+        //   urlLoaded: (url, message) => {
+        //     console.log('URL loaded:', url, 'for message:', message);
+        //   },
+        // });
+        
+        // console.log("Messaging delegate set up successfully");
+        
+        // Store unsubscribe function if needed for cleanup
+        // You could return it from useEffect if you need to clean up on unmount
       })
       .catch((error) => {
         console.error("AEP SDK Initialization error:", error);

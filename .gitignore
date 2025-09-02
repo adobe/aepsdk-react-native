@@ -149,3 +149,6 @@ out/
 # Ignore VSCode settings
 .vscode/
 .vscode/settings.json
+
+# ignore ds store
+.DS_Store

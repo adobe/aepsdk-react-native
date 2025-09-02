@@ -10,16 +10,22 @@
  */
 package com.adobe.marketing.mobile.reactnative.optimize;
 
+import android.util.Log;
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
+import com.adobe.marketing.mobile.optimize.AdobeCallbackWithOptimizeError;
+import com.adobe.marketing.mobile.optimize.AEPOptimizeError;
 import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OfferType;
+import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
+import com.adobe.marketing.mobile.util.DataReader;
+import com.adobe.marketing.mobile.util.DataReaderException;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -28,16 +34,23 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import androidx.annotation.Nullable;
 
 public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     private static final String TAG = "RCTAEPOptimizeModule";
     private final ReactApplicationContext reactContext;
+    // Cache of <Proposition ID, Proposition>
+    private final Map<String, OptimizeProposition> propositionCache = new ConcurrentHashMap<>();
 
     public RCTAEPOptimizeModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -68,16 +81,43 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void clearCachedPropositions() {
+        // clear the react native cache
+        clearPropositionsCache();
+        // clear the native cache
         Optimize.clearCachedPropositions();
     }
 
     @ReactMethod
-    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data) {
+    public void updatePropositions(final ReadableArray decisionScopesArray, ReadableMap xdm, ReadableMap data, @Nullable final Callback successCallback, @Nullable final Callback errorCallback) {
+        Log.d(TAG, "updatePropositions called");
         final List<DecisionScope> decisionScopeList = RCTAEPOptimizeUtil.createDecisionScopes(decisionScopesArray);
 
         Map<String, Object> mapXdm = xdm != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(xdm) : Collections.<String, Object>emptyMap();
         Map<String, Object> mapData = data != null ? RCTAEPOptimizeUtil.convertReadableMapToMap(data) : Collections.<String, Object>emptyMap();
-        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData);
+        
+        Optimize.updatePropositions(decisionScopeList, mapXdm, mapData, new AdobeCallbackWithOptimizeError<Map<DecisionScope, OptimizeProposition>>() {
+            @Override
+            public void fail(final AEPOptimizeError adobeError) {
+                Log.e(TAG, "updatePropositions callback failed: " );
+                if (errorCallback != null) {
+                    final WritableMap response = RCTAEPOptimizeUtil.convertAEPOptimizeErrorToWritableMap(adobeError);
+                    Log.d(TAG, "Invoking JS errorCallback with error: ");
+                    errorCallback.invoke(response);
+                }
+            }
+
+            @Override
+            public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+
+                cachePropositionOffers(decisionScopePropositionMap);
+                Log.d(TAG, "updatePropositions callback success.");
+                if (successCallback != null) {
+                    final WritableMap response = RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap);
+                    Log.d(TAG, "Invoking JS successCallback with success: " + response.toString());
+                    successCallback.invoke(response);
+                }
+            }
+        });
     }
 
     @ReactMethod
@@ -92,6 +132,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+                cachePropositionOffers(decisionScopePropositionMap);
                 final WritableMap writableMap = new WritableNativeMap();
                 for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
                     writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
@@ -101,11 +142,72 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         });
     }
 
+    private void cachePropositionOffers(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
+            OptimizeProposition proposition = entry.getValue();
+            if (proposition == null) {
+                continue;
+            }
+
+            String activityId = null;
+            try {
+                Map<String, Object> activity = proposition.getActivity();
+                if (activity != null && activity.containsKey("id")) {
+                    activityId = DataReader.getString(activity, "id");
+                } else {
+                    Map<String, Object> scopeDetails = proposition.getScopeDetails();
+                    if (scopeDetails != null && scopeDetails.containsKey("activity")) {
+                        Map<String, Object> scopeDetailsActivity = DataReader.getTypedMap(Object.class, scopeDetails, "activity");
+                        if (scopeDetailsActivity != null && scopeDetailsActivity.containsKey("id")) {
+                            activityId = DataReader.getString(scopeDetailsActivity, "id");
+                        }
+                    }
+                }
+            } catch (DataReaderException e) {
+                Log.w(TAG, "Failed to extract activity ID from proposition: " + e.getMessage());
+                continue;
+            }
+
+            if (activityId != null) {
+                propositionCache.put(activityId, proposition);
+            }
+        }
+    }
+
+    private void clearPropositionsCache() {
+        propositionCache.clear();
+    }
+
+    @ReactMethod
+    public void multipleOffersDisplayed(final ReadableArray offersArray) {
+        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray, propositionCache);
+
+        if (!nativeOffers.isEmpty()) {
+            Log.d(TAG, "multipleOffersDisplayed: calling display for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
+            OfferUtils.displayed(nativeOffers);
+        }
+    }
+
+    @ReactMethod
+    public void multipleOffersGenerateDisplayInteractionXdm(final ReadableArray offersArray, final Promise promise) {
+        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray, propositionCache);
+
+        if (!nativeOffers.isEmpty()) {
+            Log.d(TAG, "multipleOffersGenerateDisplayInteractionXdm: calling generateDisplayInteractionXdm for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
+            final Map<String, Object> interactionXdm = OfferUtils.generateDisplayInteractionXdm(nativeOffers);
+            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
+            promise.resolve(writableMap);
+        } else {
+            promise.reject("multipleOffersGenerateDisplayInteractionXdm", "Error in generating Display interaction XDM for multiple offers: " + offersArray.toString());
+        }
+    }
+
     @ReactMethod
     public void onPropositionsUpdate() {
         Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
+                cachePropositionOffers(decisionScopePropositionMap);
                 sendUpdatedPropositionsEvent(decisionScopePropositionMap);
             }
         });

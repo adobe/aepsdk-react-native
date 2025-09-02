@@ -157,6 +157,7 @@ jest.doMock('react-native', () => {
           getPropositionsForSurfaces: jest.fn(
             () => new Promise((resolve) => resolve([]))
           ),
+          trackPropositionItem: jest.fn(),
           trackContentCardDisplay: jest.fn(),
           trackContentCardInteraction: jest.fn()
         },
@@ -183,6 +184,10 @@ jest.doMock('react-native', () => {
             () => new Promise((resolve) => resolve(new Map()))
           ),
           generateReferenceXdm: jest.fn(
+            () => new Promise((resolve) => resolve(new Map()))
+          ),
+          multipleOffersDisplayed: jest.fn(),
+          multipleOffersGenerateDisplayInteractionXdm: jest.fn(
             () => new Promise((resolve) => resolve(new Map()))
           )
         },

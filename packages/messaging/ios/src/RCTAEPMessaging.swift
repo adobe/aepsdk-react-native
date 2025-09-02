@@ -65,7 +65,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     ) {
         resolve(self.latestMessage != nil ? RCTAEPMessagingDataBridge.transformToMessage(message: self.latestMessage!) : nil)
     }
-
+      
     @objc
     func getPropositionsForSurfaces(
         _ surfaces: [String],
@@ -73,16 +73,29 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         withRejecter reject: @escaping RCTPromiseRejectBlock
     ) {
         let surfacePaths = surfaces.map { $0.isEmpty ? Surface() : Surface(path: $0) }
-        Messaging.getPropositionsForSurfaces(surfacePaths) { propositions, error in
+        Messaging.getPropositionsForSurfaces(surfacePaths) { [weak self] propositions, error in
+            guard let self = self else { return }
             guard error == nil else {
                 reject("Unable to Retrieve Propositions", nil, nil)
                 return
             }
-            if (propositions != nil && propositions!.isEmpty) {
-                resolve([String: Any]());
-                return;
+            guard let propositions = propositions, !propositions.isEmpty else {
+                resolve([String: Any]())
+                return
             }
-            resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositions!))
+
+            // Populate uuid->Proposition map using scopeDetails.activity.id
+            for (_, list) in propositions {
+                for proposition in list {
+                    if let pMap = proposition.asDictionary() {
+                        if let key = RCTAEPMessagingDataBridge.extractActivityId(from: pMap) {
+                            self.propositionByUuid[key] = proposition
+                        }
+                    }
+                }
+            }
+
+            resolve(RCTAEPMessagingDataBridge.transformPropositionDict(dict: propositions))
         }
     }
 
@@ -114,6 +127,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     ) {
         let mapped = surfaces.map { Surface(path: $0) }
         Messaging.updatePropositionsForSurfaces(mapped)
+        propositionByUuid.removeAll()
         resolve(nil)
     }
 
@@ -272,6 +286,67 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         }
     }
 
+    /// MARK: - Unified PropositionItem Tracking Methods
+    
+    /**
+     * Tracks interactions with a PropositionItem using the provided interaction and event type.
+     * This method is used by the React Native PropositionItem.track() method.
+     * 
+     * - Parameters:
+     *   - uuid: The UUID mapped to the PropositionItem (derived from activityId)
+     *   - interaction: A custom string value to be recorded in the interaction (optional)
+     *   - eventType: The MessagingEdgeEventType numeric value
+     *   - tokens: Array containing the sub-item tokens for recording interaction (optional)
+     */
+
+    @objc
+    func trackPropositionItem(
+        _ uuid: String,
+        interaction: String?,
+        eventType: Int,
+        tokens: [String]?,
+        withResolver resolve: @escaping RCTPromiseResolveBlock,
+        withRejecter reject: @escaping RCTPromiseRejectBlock
+    ) {
+        NSLog("[MessagingBridge] trackPropositionItem called with eventType=\(eventType), uuid=\(uuid), interaction=\(String(describing: interaction)), tokens=\(String(describing: tokens))")
+
+        guard !uuid.isEmpty else {
+            NSLog("[MessagingBridge] Empty uuid provided; no-op.")
+            resolve(nil)
+            return
+        }
+
+        guard let proposition = propositionByUuid[uuid] else {
+            NSLog("[MessagingBridge] No cached proposition for uuid=\(uuid); no-op.")
+            resolve(nil)
+            return
+        }
+
+        NSLog("[MessagingBridge] Found proposition for uuid=\(uuid). scope=\(proposition.scope), items=\(proposition.items.count)")
+
+        // Event type mapping (Android parity)
+        let edgeEventType = mapEdgeEventType(eventType) ?? .display
+
+        // Track on the first item under this proposition
+        guard let item = proposition.items.first else {
+            NSLog("[MessagingBridge] Proposition for uuid=\(uuid) has no items; no-op.")
+            resolve(nil)
+            return
+        }
+
+        // Direct call without normalization (expecting valid inputs)
+        NSLog("[MessagingBridge] Tracking (direct) uuid=\(uuid), interaction=\(String(describing: interaction)), tokens=\(String(describing: tokens)), eventType=\(edgeEventType.rawValue)")
+        item.track(interaction, withEdgeEventType: edgeEventType, forTokens: tokens)
+
+        NSLog("[MessagingBridge] Tracking complete for uuid=\(uuid)")
+        resolve(nil)
+    }
+
+
+
+    // Map uuid (scopeDetails.activity.id) -> parent Proposition
+    private var propositionByUuid = [String: Proposition]()
+   
     // Messaging Delegate Methods
     public func onDismiss(message: Showable) {
         if let fullscreenMessage = message as? FullscreenMessage,
@@ -300,14 +375,28 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     }
 
     public func shouldShowMessage(message: Showable) -> Bool {
-        if let fullscreenMessage = message as? FullscreenMessage,
-            let message = fullscreenMessage.parent
-        {
+        let fullscreenMessage = message as? FullscreenMessage
+        let parentMessage = fullscreenMessage?.parent
+        
+        // If parent message exists, emit it
+        if let parentMessage = parentMessage {
             emitNativeEvent(
                 name: Constants.SHOULD_SHOW_MESSAGE_EVENT,
-                body: RCTAEPMessagingDataBridge.transformToMessage(message: message)
+                body: RCTAEPMessagingDataBridge.transformToMessage(message: parentMessage)
             )
-            semaphore.wait()
+        } else if let fullscreenMessage = fullscreenMessage {
+            // Parent is nil but fullscreen message exists - emit empty body for now
+            emitNativeEvent(
+                name: Constants.SHOULD_SHOW_MESSAGE_EVENT,
+                body: [:]
+            )
+        } else {
+            // Both are nil, don't emit anything and return false
+            return false
+        }
+        
+        semaphore.wait()
+        if let message = parentMessage {
             if self.shouldSaveMessage {
                 self.messageCache[message.id] = message
             }
@@ -315,10 +404,8 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
             if self.shouldShowMessage {
                 latestMessage = message
             }
-
-            return self.shouldShowMessage
         }
-        return false
+        return self.shouldShowMessage
     }
 
     public func urlLoaded(_ url: URL, byMessage message: Showable) {
@@ -339,5 +426,22 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
 
     private func emitNativeEvent(name: String, body: Any) {
         RCTAEPMessaging.emitter.sendEvent(withName: name, body: body)
+    }
+}
+
+// MARK: - Private helpers
+private extension RCTAEPMessaging {
+    /// Maps JS MessagingEdgeEventType integer values to AEPMessaging.MessagingEdgeEventType cases
+    /// JS enum values: DISMISS=0, INTERACT=1, TRIGGER=2, DISPLAY=3, PUSH_APPLICATION_OPENED=4, PUSH_CUSTOM_ACTION=5
+    func mapEdgeEventType(_ value: Int) -> MessagingEdgeEventType? {
+        switch value {
+        case 0: return .dismiss
+        case 1: return .interact
+        case 2: return .trigger
+        case 3: return .display
+        case 4: return .pushApplicationOpened
+        case 5: return .pushCustomAction
+        default: return nil
+        }
     }
 }

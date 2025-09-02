@@ -37,6 +37,7 @@ export interface NativeMessagingModule {
   updatePropositionsForSurfaces: (surfaces: string[]) => void;
   trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
   trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
+  trackPropositionItem: (itemId: string, interaction: string | null, eventType: number, tokens: string[] | null) => void;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -92,13 +93,31 @@ class Messaging {
   ): Promise<Record<string, MessagingProposition[]>> {
     return await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
   }
-
+  /**
+   * @deprecated Use PropositionItem.track(...) instead. Will be removed in vX.Y.Z.
+   */
   static trackContentCardDisplay(proposition: MessagingProposition, contentCard: ContentCard): void {
     RCTAEPMessaging.trackContentCardDisplay(proposition, contentCard);
   }
 
+  /**
+   * @deprecated Use PropositionItem.track(...) instead. Will be removed in vX.Y.Z.
+   */
   static trackContentCardInteraction(proposition: MessagingProposition, contentCard: ContentCard): void {
     RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);
+  }
+
+  /**
+   * Tracks interactions with a PropositionItem using the provided interaction and event type.
+   * This method is used internally by the PropositionItem.track() method.
+   * 
+   * @param {string} itemId - The unique identifier of the PropositionItem
+   * @param {string | null} interaction - A custom string value to be recorded in the interaction
+   * @param {number} eventType - The MessagingEdgeEventType numeric value
+   * @param {string[] | null} tokens - Array containing the sub-item tokens for recording interaction
+   */
+  static trackPropositionItem(itemId: string, interaction: string | null, eventType: number, tokens: string[] | null): void {
+    RCTAEPMessaging.trackPropositionItem(itemId, interaction, eventType, tokens);
   }
 
   /**

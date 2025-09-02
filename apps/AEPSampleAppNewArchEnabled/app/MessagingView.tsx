@@ -13,12 +13,23 @@ governing permissions and limitations under the License.
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {MobileCore} from '@adobe/react-native-aepcore';
-import {Messaging, PersonalizationSchema} from '@adobe/react-native-aepmessaging'
+import {
+  Messaging, 
+  PersonalizationSchema, 
+  MessagingEdgeEventType,
+  PropositionItem,
+  Message,
+  ContentCard,
+  HTMLProposition,
+  JSONPropositionItem
+} from '@adobe/react-native-aepmessaging'
+import { MessagingProposition } from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
 const SURFACES = ['android-cbe-preview', 'cbe/json', 'android-cc'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
+
 
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
@@ -45,12 +56,10 @@ const setMessagingDelegate = () => {
   });
   console.log('messaging delegate set');
 };
-
 const getPropositionsForSurfaces = async () => {
   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
   console.log('getPropositionsForSurfaces', JSON.stringify(messages));
 };
-
 const trackAction = async () => {
   MobileCore.trackAction('iamjs', {full: true});
 };
@@ -80,7 +89,8 @@ const trackContentCardInteraction = async () => {
     for (const proposition of propositions) {
       for (const propositionItem of proposition.items) {
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          Messaging.trackContentCardInteraction(proposition, propositionItem);
+          // Cast to ContentCard for the legacy tracking method
+          Messaging.trackContentCardInteraction(proposition, propositionItem as any);
           console.log('trackContentCardInteraction', proposition, propositionItem);
         }
       }
@@ -98,13 +108,34 @@ const trackContentCardDisplay = async () => {
     for (const proposition of propositions) {
       for (const propositionItem of proposition.items) {
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          Messaging.trackContentCardDisplay(proposition, propositionItem);
+          // Cast to ContentCard for the legacy tracking method
+          Messaging.trackContentCardDisplay(proposition, propositionItem as any);
           console.log('trackContentCardDisplay', proposition, propositionItem);
         }
       }
     }
   }
 }
+
+
+// Method demonstrating unified tracking using PropositionItem methods
+const unifiedTrackingExample = async () => {
+  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);  
+  for (const surface of SURFACES) { 
+    const propositions = messages[surface] || [];
+
+    for (const proposition of propositions) {
+      const propositionWrapper = new MessagingProposition(proposition);       
+      if (propositionWrapper.items.length > 0) {
+        const propositionItem = propositionWrapper.items[0];
+        propositionItem.track(MessagingEdgeEventType.DISPLAY); 
+        propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+      }
+    }
+  }
+}
+
+
 
 function MessagingView() {
   const router = useRouter();
@@ -130,6 +161,7 @@ function MessagingView() {
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackPropositionInteraction()" onPress={trackContentCardInteraction} />
         <Button title="trackContentCardDisplay()" onPress={trackContentCardDisplay} />
+        <Button title="Unified Tracking Example" onPress={unifiedTrackingExample} />
       </ScrollView>
     </View>
   );
