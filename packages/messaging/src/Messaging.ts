@@ -194,6 +194,32 @@ class Messaging {
   static updatePropositionsForSurfaces(surfaces: string[]) {
     RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
+
+  static async getContentCardUI(surface: string): Promise<ContentTemplate[]> {
+    const messages = await Messaging.getPropositionsForSurfaces([surface]);
+    console.log(JSON.stringify(messages, null, 2));
+    const propositions = messages[surface];
+    if (!propositions?.length) {
+      return [];
+    }
+    const contentCards = propositions.flatMap((proposition) =>
+      proposition.items.filter(
+        (item) => item.schema === PersonalizationSchema.CONTENT_CARD
+      )
+    );
+
+    if (!contentCards?.length) {
+      return [];
+    }
+
+    return contentCards.map((card: ContentCard) => {
+      const type = card.data?.meta?.adobe?.template ?? TemplateType.SMALL_IMAGE;
+      return {
+        ...card,
+        type
+      };
+    }) as ContentTemplate[];
+  }
 }
 
 export default Messaging;

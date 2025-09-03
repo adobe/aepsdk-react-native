@@ -67,15 +67,15 @@ export interface ContentCardData extends PropositionItemData {
     expiryDate: number;
     publishedDate: number;
     meta: ContentCardMeta;
-    content: SmallImageContentData | LargeImageContentData | ImageOnlyContentData   
+    content: SmallImageContentData | LargeImageContentData | ImageOnlyContentData
   };
 }
 export class ContentCard extends PropositionItem {
-  declare data: ContentCardData; // Override data type for better typing
+  declare data: ContentCardData['data'];
 
   constructor(contentCardData: ContentCardData) {
     super(contentCardData);
-    this.data = contentCardData;
+    this.data = contentCardData.data;
   }
 
 }
