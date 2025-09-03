@@ -37,35 +37,55 @@ export interface SmallImageContentStyle {
   card?: ViewStyle;
   /** Applies to the container inside the content card, applied inside the card Pressable */
   container?: ViewStyle;
-
+  /** Applies to the container wrapping the image on the content card */
   imageContainer?: ViewStyle;
+  /** Applies to the image on the content card */
   image?: ImageStyle;
+  /** Applies to the text content and buttons wrapper on the content card */
   contentContainer?: ViewStyle;
   /** Applies to title and body properties, will be overridden by title and body styles */
   text?: TextStyle;
+  /** Applies to the title on the content card */
   title?: TextStyle;
+  /** Applies to the body on the content card */
   body?: TextStyle;
+  /** Applies to the container wrapping the buttons on the content card */
   buttonContainer?: ViewStyle;
+  /** Applies to the buttons on the content card */
   button?: PressableProps['style'];
+  /** Applies to the text on the buttons on the content card */
   buttonText?: TextStyle;
+  /** Applies to the dismiss button on the content card */
   dismissButton?: PressableProps['style'];
 }
 
 export interface SmallImageCardProps extends PressableProps {
+  /** The content of the content card */
   content: SmallImageContentData;
   imageUri?: string;
-  height?: number;
+  /** The style overrides for the content card */
   styleOverrides?: SmallImageContentStyle;
+  /** The function to call when the dismiss button is pressed */
   onDismiss?: () => void;
+  /** The function to call when the content card is pressed */
   onPress?: () => void;
+  /** The props to pass to the container of the content card */
   ContainerProps?: ViewProps;
+  /** The props to pass to the image container of the content card */
   ImageContainerProps?: ViewProps;
+  /** The props to pass to the image of the content card */
   ImageProps?: ImageProps;
+  /** The props to pass to the text of the content card */
   TextProps?: TextProps;
+  /** The props to pass to the body of the content card */
   BodyProps?: TextProps;
+  /** The props to pass to the title of the content card */
   TitleProps?: TextProps;
+  /** The props to pass to the button container of the content card */
   ButtonContainerProps?: ViewProps;
+  /** The props to pass to the buttons of the content card */
   ButtonProps?: ButtonProps;
+  /** The props to pass to the dismiss button of the content card */
   DismissButtonProps?: DismissButtonProps;
 }
 
@@ -80,7 +100,6 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
   TextProps,
   TitleProps,
   content,
-  height,
   imageUri,
   styleOverrides,
   style,
@@ -166,10 +185,10 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                   key={button.id}
                   actionUrl={button.actionUrl}
                   title={button.text.content}
-                  onPress={onPress}
                   style={styleOverrides?.button}
                   textStyle={[styleOverrides?.text, styleOverrides?.buttonText]}
                   {...ButtonProps}
+                  onPress={onPress}
                 />
               ))}
           </View>

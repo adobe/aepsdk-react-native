@@ -36,7 +36,7 @@ export interface NativeMessagingModule {
     shouldShowMessage: boolean,
     shouldSaveMessage: boolean
   ) => void;
-  updatePropositionsForSurfaces: (surfaces: string[]) => void;
+  updatePropositionsForSurfaces: (surfaces: string[]) => Promise<void>;
   trackContentCardDisplay: (
     proposition: MessagingProposition,
     contentCard: ContentCard
@@ -200,8 +200,8 @@ class Messaging {
    * Dispatches an event to fetch propositions for the provided surfaces from remote.
    * @param surfaces A list of surface names to update
    */
-  static updatePropositionsForSurfaces(surfaces: string[]) {
-    RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
+  static async updatePropositionsForSurfaces(surfaces: string[]): Promise<void> {
+    return await RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
 
   /**

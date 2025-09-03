@@ -113,8 +113,13 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         withRejecter reject: @escaping RCTPromiseRejectBlock
     ) {
         let mapped = surfaces.map { Surface(path: $0) }
-        Messaging.updatePropositionsForSurfaces(mapped)
-        resolve(nil)
+        Messaging.updatePropositionsForSurfaces(mapped) { success in
+            if success {
+                resolve(nil)
+            } else {
+                reject("Unable to update propositions for surfaces", nil, nil)
+            }
+        }
     }
 
     /// Message Class Methods
