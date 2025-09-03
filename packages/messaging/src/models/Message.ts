@@ -109,11 +109,12 @@ class Message {
   }
 
   /**
+   * @internal - For internal use only.
    * Clears all the javascript message handlers for the message.
    * This function must be called if the callbacks registered in handleJavascriptMessage are no longer needed.
    * Failure to call this function may lead to memory leaks.
    */
-  clearJavascriptMessageHandlers() {
+  _clearJavascriptMessageHandlers() {
     delete jsMessageHandlers[this.id];
   }
 }
