@@ -11,11 +11,20 @@
 */
 
 import { PersonalizationSchema } from './PersonalizationSchema';
+import { PropositionItem, PropositionItemData } from './PropositionItem';
 
-export interface HTMLProposition {
-  id: string;
-  data: {
-    content: string;
-  };
-  schema: PersonalizationSchema.HTML_CONTENT;
+export interface HTMLPropositionData extends PropositionItemData {
+	data: {
+		content: string;
+	};
+	schema: PersonalizationSchema.HTML_CONTENT;
+}
+
+export class HTMLProposition extends PropositionItem {
+	declare data: HTMLPropositionData['data'];
+
+	constructor(htmlData: HTMLPropositionData) {
+		super(htmlData);
+		this.data = htmlData.data;
+	}
 }
