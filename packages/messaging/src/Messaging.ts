@@ -46,7 +46,6 @@ export interface NativeMessagingModule {
     contentCard: ContentCard
   ) => void;
   trackPropositionItem: (itemId: string, interaction: string | null, eventType: number, tokens: string[] | null) => void;
-  handleJavascriptMessage: (messageId: string, handlerName: string) => void;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -54,24 +53,6 @@ const RCTAEPMessaging: NativeModule & NativeMessagingModule =
 
 declare var messagingDelegate: MessagingDelegate;
 var messagingDelegate: MessagingDelegate;
-
-// Registery to store callbacks for each message in handleJavascriptMessage
-// Record - {messageId : {handlerName : callback}}
-const jsMessageHandlers: Record<
-  string,
-  Record<string, (content: string) => void>
-> = {};
-const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
-
-handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
-  const { messageId, handlerName, content } = event;
-  if (
-    jsMessageHandlers[messageId] &&
-    jsMessageHandlers[messageId][handlerName]
-  ) {
-    jsMessageHandlers[messageId][handlerName](content);
-  }
-});
 
 class Messaging {
   /**
@@ -237,30 +218,9 @@ class Messaging {
     RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
 
-  /**
-   * Registers a javascript interface for the provided handler name
-   * to the WebView associated with the InAppMessage presentation
-   * to handle Javascript messages.
-   * When the registered handlers are executed via the HTML
-   * the result will be passed back to the associated callback.
-   * @param messageId The id of the message to handle
-   * @param handlerName The name of the handler to handle
-   * @param callback The callback to handle the message
-   */
-  static handleJavascriptMessage(
-    messageId: string,
-    handlerName: string,
-    callback: (content: string) => void
-  ) {
-    if (!jsMessageHandlers[messageId]) {
-      jsMessageHandlers[messageId] = {};
-    }
-    jsMessageHandlers[messageId][handlerName] = callback;
-    RCTAEPMessaging.handleJavascriptMessage(messageId, handlerName);
-  }
-
   static async getContentCardUI(surface: string): Promise<ContentTemplate[]> {
     const messages = await Messaging.getPropositionsForSurfaces([surface]);
+    console.log(JSON.stringify(messages, null, 2));
     const propositions = messages[surface];
     if (!propositions?.length) {
       return [];
@@ -269,13 +229,13 @@ class Messaging {
       proposition.items.filter(
         (item) => item.schema === PersonalizationSchema.CONTENT_CARD
       )
-    ) as ContentCard[];
+    );
 
     if (!contentCards?.length) {
       return [];
     }
 
-    return contentCards.map((card) => {
+    return contentCards.map((card: ContentCard) => {
       const type = card.data?.meta?.adobe?.template ?? TemplateType.SMALL_IMAGE;
       return {
         ...card,
