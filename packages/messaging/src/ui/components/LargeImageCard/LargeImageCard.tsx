@@ -11,32 +11,41 @@
 */
 import React from 'react';
 import {
+  ButtonProps,
   Image,
+  ImageProps,
   ImageStyle,
   Pressable,
   PressableProps,
   StyleSheet,
   Text,
+  TextProps,
   TextStyle,
   View,
+  ViewProps,
   ViewStyle
 } from 'react-native';
 import { LargeImageContentData } from '../../../models/ContentCard';
 import Button from '../Button/Button';
-import DismissButton from '../DismissButton/DismissButton';
+import DismissButton, {
+  DismissButtonProps
+} from '../DismissButton/DismissButton';
 import useAspectRatio from '../../hooks/useAspectRatio';
 import { useTheme } from '../../theme/ThemeProvider';
 
 export interface LargeImageContentStyle {
-  card?: Partial<ViewStyle>;
-  container?: Partial<ViewStyle>;
-  imageContainer?: Partial<ViewStyle>;
-  image?: Partial<ImageStyle>;
-  contentContainer?: Partial<ViewStyle>;
-  textContent?: Partial<ViewStyle>;
-  title?: Partial<TextStyle>;
-  body?: Partial<TextStyle>;
-  buttonContainer?: Partial<ViewStyle>;
+  card?: ViewStyle;
+  container?: ViewStyle;
+  imageContainer?: ViewStyle;
+  image?: ImageStyle;
+  contentContainer?: ViewStyle;
+  textContent?: ViewStyle;
+  title?: TextStyle;
+  body?: TextStyle;
+  buttonContainer?: ViewStyle;
+  button?: PressableProps['style'];
+  buttonText?: TextStyle;
+  dismissButton?: PressableProps['style'];
 }
 
 export interface LargeImageCardProps extends PressableProps {
@@ -45,9 +54,27 @@ export interface LargeImageCardProps extends PressableProps {
   styleOverrides?: LargeImageContentStyle;
   onDismiss?: () => void;
   onPress?: () => void;
+  ContainerProps?: ViewProps;
+  ImageContainerProps?: ViewProps;
+  ImageProps?: ImageProps;
+  TextProps?: TextProps;
+  TitleProps?: TextProps;
+  BodyProps?: TextProps;
+  ButtonContainerProps?: ViewProps;
+  ButtonProps?: ButtonProps;
+  DismissButtonProps?: DismissButtonProps;
 }
 
 const LargeImageCard: React.FC<LargeImageCardProps> = ({
+  BodyProps,
+  ButtonContainerProps,
+  ButtonProps,
+  ContainerProps,
+  DismissButtonProps,
+  ImageContainerProps,
+  ImageProps,
+  TextProps,
+  TitleProps,
   content,
   imageUri,
   styleOverrides,
@@ -65,7 +92,10 @@ const LargeImageCard: React.FC<LargeImageCardProps> = ({
       {...props}
     >
       {imageUri && (
-        <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
+        <View
+          style={[styles.imageContainer, styleOverrides?.imageContainer]}
+          {...ImageContainerProps}
+        >
           <Image
             source={{ uri: imageUri }}
             style={[
@@ -73,6 +103,7 @@ const LargeImageCard: React.FC<LargeImageCardProps> = ({
               { aspectRatio: imageAspectRatio },
               styleOverrides?.image
             ]}
+            {...ImageProps}
           />
         </View>
       )}
@@ -83,6 +114,8 @@ const LargeImageCard: React.FC<LargeImageCardProps> = ({
             { color: theme.colors.textPrimary },
             styleOverrides?.title
           ]}
+          {...TextProps}
+          {...TitleProps}
         >
           {content.title.content}
         </Text>
@@ -94,11 +127,16 @@ const LargeImageCard: React.FC<LargeImageCardProps> = ({
             { color: theme.colors.textPrimary },
             styleOverrides?.body
           ]}
+          {...TextProps}
+          {...BodyProps}
         >
           {content.body.content}
         </Text>
       )}
-      <View style={[styles.buttonContainer, styleOverrides?.buttonContainer]}>
+      <View
+        style={[styles.buttonContainer, styleOverrides?.buttonContainer]}
+        {...ButtonContainerProps}
+      >
         {content?.buttons?.length &&
           content?.buttons?.length > 0 &&
           content.buttons.map((button) => (
@@ -106,12 +144,19 @@ const LargeImageCard: React.FC<LargeImageCardProps> = ({
               key={button.id}
               actionUrl={button.actionUrl}
               title={button.text.content}
+              style={styleOverrides?.button}
+              textStyle={styleOverrides?.buttonText}
+              {...ButtonProps}
               onPress={onPress}
             />
           ))}
       </View>
       {content?.dismissBtn && content.dismissBtn?.style !== 'none' && (
-        <DismissButton onPress={onDismiss} type={content.dismissBtn.style} />
+        <DismissButton
+          onPress={onDismiss}
+          type={content.dismissBtn.style}
+          {...DismissButtonProps}
+        />
       )}
     </Pressable>
   );

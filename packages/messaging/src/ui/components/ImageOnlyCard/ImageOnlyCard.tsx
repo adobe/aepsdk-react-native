@@ -12,14 +12,18 @@
 import React from 'react';
 import {
   Image,
+  ImageProps,
   ImageStyle,
   Pressable,
   PressableProps,
   StyleSheet,
   View,
+  ViewProps,
   ViewStyle
 } from 'react-native';
-import DismissButton from '../DismissButton/DismissButton';
+import DismissButton, {
+  DismissButtonProps
+} from '../DismissButton/DismissButton';
 import { ImageOnlyContentData } from '../../../models/ContentCard';
 import useAspectRatio from '../../hooks/useAspectRatio';
 
@@ -30,6 +34,10 @@ export interface ImageOnlyContentProps {
   styleOverrides?: ImageOnlyContentStyle;
   onDismiss?: () => void;
   onPress?: () => void;
+  ContainerProps?: ViewProps;
+  ImageContainerProps?: ViewProps;
+  ImageProps?: ImageProps;
+  DismissButtonProps?: DismissButtonProps;
 }
 
 export interface ImageOnlyContentStyle {
@@ -50,15 +58,26 @@ const ImageOnlyCard: React.FC<ImageOnlyContentProps> = ({
   imageUri,
   onDismiss,
   onPress,
-  styleOverrides
+  styleOverrides,
+  ContainerProps,
+  ImageContainerProps,
+  ImageProps,
+  DismissButtonProps
 }) => {
   const imageAspectRatio = useAspectRatio(imageUri);
   console.log(content.dismissBtn);
-  console.log(imageUri, imageAspectRatio)
+  console.log(imageUri, imageAspectRatio);
 
   return (
-    <Pressable onPress={onPress} style={[styles.card, styleOverrides?.card]}>
-      <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.card, styleOverrides?.card]}
+      {...ContainerProps}
+    >
+      <View
+        style={[styles.imageContainer, styleOverrides?.imageContainer]}
+        {...ImageContainerProps}
+      >
         <Image
           resizeMode="contain"
           source={{ uri: imageUri }}
@@ -67,12 +86,14 @@ const ImageOnlyCard: React.FC<ImageOnlyContentProps> = ({
             { aspectRatio: imageAspectRatio },
             styleOverrides?.image
           ]}
+          {...ImageProps}
         />
         {content.dismissBtn?.style && content.dismissBtn.style !== 'none' && (
           <DismissButton
             onPress={onDismiss}
             type={content.dismissBtn.style}
             style={styleOverrides?.dismissButton}
+            {...DismissButtonProps}
           />
         )}
       </View>
@@ -85,10 +106,10 @@ export default ImageOnlyCard;
 const styles = StyleSheet.create({
   card: {
     margin: 15,
-    flex: 1,
+    flex: 1
   },
   imageContainer: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f0f0f0'
   },
   image: {
     width: '100%',
