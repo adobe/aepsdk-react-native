@@ -387,6 +387,20 @@ var message: Message;
 message.clear();
 ```
 
+### handleJavascriptMessage
+
+Registers a javascript interface for the provided handler name to the WebView associated with the InAppMessage presentation to handle Javascript messages. When the registered handlers are executed via the HTML the result will be passed back to the associated handler.
+
+**Syntax**
+
+```typescript
+handleJavascriptMessage(handlerName: string, handler: (content: string) => void);
+```
+
+**Example**
+
+It can be used for the native handling of JavaScript events. Please refer to the [tutorial](./tutorials/In-App%20Messaging.md#native-handling-of-javascript-events) for more information.
+
 ## Programmatically control the display of in-app messages
 
 App developers can now create a type `MessagingDelegate` in order to be alerted when specific events occur during the lifecycle of an in-app message.
@@ -509,5 +523,4 @@ Messaging.trackContentCardInteraction(proposition, contentCard);
 
 
 ## Tutorials
-[Content Cards](./tutorials/ContentCards.md)
-
+[Native handling of Javascript Events](./tutorials/In-App%20Messaging.md)

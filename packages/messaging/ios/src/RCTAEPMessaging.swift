@@ -21,6 +21,7 @@ import WebKit
 @objc(RCTAEPMessaging)
 public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     private var messageCache = [String: Message]()
+    private var jsHandlerMessageCache = [String: Message]()
     private var latestMessage: Message? = nil
     private let semaphore = DispatchSemaphore(value: 0)
     private var shouldSaveMessage = false
@@ -263,6 +264,28 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         }
     }
 
+    @objc
+    func handleJavascriptMessage(
+        _ messageId: String,
+        handlerName: String
+    ) {
+        guard let message = jsHandlerMessageCache[messageId] else { 
+            print("[RCTAEPMessaging] handleJavascriptMessage: No message found in cache for messageId: \(messageId)")
+            return 
+        }
+
+        message.handleJavascriptMessage(handlerName) { [weak self] content in
+            self?.emitNativeEvent(
+                name: Constants.ON_JAVASCRIPT_MESSAGE_EVENT,
+                body: [
+                    Constants.MESSAGE_ID_KEY: messageId,
+                    Constants.HANDLER_NAME_KEY: handlerName,
+                    Constants.CONTENT_KEY: content ?? ""
+                ]
+            )
+        }
+    }
+
     /// MARK: - Unified PropositionItem Tracking Methods
     
     /**
@@ -329,6 +352,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         if let fullscreenMessage = message as? FullscreenMessage,
             let parentMessage = fullscreenMessage.parent
         {
+            jsHandlerMessageCache.removeValue(forKey: parentMessage.id)
             emitNativeEvent(
                 name: Constants.ON_DISMISS_EVENT,
                 body: RCTAEPMessagingDataBridge.transformToMessage(
@@ -342,6 +366,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         if let fullscreenMessage = message as? FullscreenMessage,
             let message = fullscreenMessage.parent
         {
+            jsHandlerMessageCache[message.id] = message
             emitNativeEvent(
                 name: Constants.ON_SHOW_EVENT,
                 body: RCTAEPMessagingDataBridge.transformToMessage(message: message)

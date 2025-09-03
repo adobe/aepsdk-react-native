@@ -129,31 +129,33 @@ class Messaging {
 
     const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
 
-    eventEmitter.addListener('onShow', (message) =>
-      messagingDelegate?.onShow?.(message)
+    eventEmitter.addListener('onShow', (message: Message) =>
+      messagingDelegate?.onShow?.(new Message(message))
     );
 
-    eventEmitter.addListener('onDismiss', (message) => {
-      messagingDelegate?.onDismiss?.(message);
+    eventEmitter.addListener('onDismiss', (message: Message) => {
+      message._clearJavascriptMessageHandlers();
+      messagingDelegate?.onDismiss?.(new Message(message));
     });
 
-    eventEmitter.addListener('shouldShowMessage', (message) => {
+    eventEmitter.addListener('shouldShowMessage', (message: Message) => {
+      const messageInstance = new Message(message);
       const shouldShowMessage =
-        messagingDelegate?.shouldShowMessage?.(message) ?? true;
+        messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
       const shouldSaveMessage =
-        messagingDelegate?.shouldSaveMessage?.(message) ?? false;
+        messagingDelegate?.shouldSaveMessage?.(messageInstance) ?? false;
       RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
     });
 
     if (Platform.OS === 'ios') {
-      eventEmitter.addListener('urlLoaded', (event) =>
-        messagingDelegate?.urlLoaded?.(event.url, event.message)
+      eventEmitter.addListener('urlLoaded', (event: {url: string, message: Message}) =>
+        messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
       );
     }
 
     if (Platform.OS === 'android') {
-      eventEmitter.addListener('onContentLoaded', (event) =>
-        messagingDelegate?.onContentLoaded?.(event.message)
+      eventEmitter.addListener('onContentLoaded', (event: {message: Message}) =>
+        messagingDelegate?.onContentLoaded?.(new Message(event.message))
       );
     }
 
