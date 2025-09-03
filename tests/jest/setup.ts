@@ -157,6 +157,7 @@ jest.doMock('react-native', () => {
           getPropositionsForSurfaces: jest.fn(
             () => new Promise((resolve) => resolve([]))
           ),
+          trackPropositionItem: jest.fn(),
           trackContentCardDisplay: jest.fn(),
           trackContentCardInteraction: jest.fn()
         },
