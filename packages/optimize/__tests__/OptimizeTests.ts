@@ -51,16 +51,120 @@ describe('Optimize', () => {
   });
 
   it('AEPOptimize updateProposition is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPOptimize, 'updatePropositions');
-    let decisionScopes = [new DecisionScope('abcdef')];
+    let spy = jest.spyOn(NativeModules.AEPOptimize, "updatePropositions");
+    let decisionScopes = [new DecisionScope("abcdef")];
     let xdm = new Map();
     let data = new Map();
     await Optimize.updatePropositions(decisionScopes, xdm, data);
     expect(spy).toHaveBeenCalledWith(
       decisionScopes.map((decisionScope) => decisionScope.getName()),
       xdm,
-      data
+      data,
+      expect.any(Function),
+      expect.any(Function)
     );
+  });
+
+  it('AEPOptimize updateProposition is called with callback', async () => {
+    let spy = jest.spyOn(NativeModules.AEPOptimize, "updatePropositions");
+    let decisionScopes = [new DecisionScope("abcdef")];
+    let xdm = new Map();
+    let data = new Map();
+    const callback = (_propositions: Map<string, Proposition>) => {};
+    await Optimize.updatePropositions(decisionScopes, xdm, data, callback as any, undefined);
+    expect(spy).toHaveBeenCalledWith(
+      decisionScopes.map((decisionScope) => decisionScope.getName()),
+      xdm,
+      data,
+      expect.any(Function),
+      expect.any(Function)
+    );
+  });
+
+  it('AEPOptimize updateProposition callback handles successful response', async () => {
+    const mockResponse = new Map<string, Proposition>();
+    mockResponse.set('scope1', new Proposition(propositionJson as any));
+    // Mock the native method to call the callback with mock data
+    const mockMethod = jest.fn().mockImplementation((...args: any[]) => {
+      const callback = args[3];
+      if (typeof callback === 'function') {
+        callback(mockResponse);
+      }
+    });
+    NativeModules.AEPOptimize.updatePropositions = mockMethod;
+    let decisionScopes = [new DecisionScope("abcdef")];
+    let callbackResponse: Map<string, Proposition> | null = null;
+    const callback = (propositions: Map<string, Proposition>) => {
+      callbackResponse = propositions;
+    };
+    await Optimize.updatePropositions(decisionScopes, undefined, undefined, callback as any, undefined);
+    expect(callbackResponse).not.toBeNull();
+    expect(callbackResponse!.get('scope1')).toBeInstanceOf(Proposition);
+  });
+
+  it('AEPOptimize updateProposition callback handles error response', async () => {
+    // For error, the callback may not be called, or may be called with an empty map or undefined. We'll simulate an empty map.
+    const mockErrorResponse = new Error('Test error');
+    // Mock the native method to call the callback with error data
+    const mockMethod = jest.fn().mockImplementation((...args: any[]) => {
+      const onError = args[4];
+      if (typeof onError === 'function') {
+        onError(mockErrorResponse);
+      }
+    });
+    NativeModules.AEPOptimize.updatePropositions = mockMethod;
+    let decisionScopes = [new DecisionScope("abcdef")];
+    let callbackResponse: any = null;
+    const onError = (error: any) => {
+      callbackResponse = error;
+    };
+    await Optimize.updatePropositions(decisionScopes, undefined, undefined, undefined, onError as any);
+    expect(callbackResponse).not.toBeNull();
+    expect(callbackResponse!.message).toBe('Test error');
+  });
+
+  it('AEPOptimize updateProposition calls both success and error callbacks', async () => {
+    const mockSuccessResponse = new Map<string, Proposition>();
+    mockSuccessResponse.set('scope1', new Proposition(propositionJson as any));
+    const mockError = { message: 'Test error', code: 500 };
+
+    // Mock the native method to call both callbacks
+    const mockMethod = jest.fn().mockImplementation((...args: any[]) => {
+      const onSuccess = args[3];
+      const onError = args[4];
+      if (typeof onSuccess === 'function') {
+        onSuccess(mockSuccessResponse);
+      }
+      if (typeof onError === 'function') {
+        onError(mockError);
+      }
+    });
+    NativeModules.AEPOptimize.updatePropositions = mockMethod;
+
+    let successCalled = false;
+    let errorCalled = false;
+    let successResponse: Map<string, Proposition> | null = null;
+    let errorResponse: any = null;
+
+    const onSuccess = (propositions: Map<string, Proposition>) => {
+      successCalled = true;
+      successResponse = propositions;
+    };
+    const onError = (error: any) => {
+      errorCalled = true;
+      errorResponse = error;
+    };
+
+    let decisionScopes = [new DecisionScope("abcdef")];
+    await Optimize.updatePropositions(decisionScopes, undefined, undefined, onSuccess as any, onError as any);
+
+    expect(successCalled).toBe(true);
+    expect(errorCalled).toBe(true);
+    expect(successResponse).not.toBeNull();
+    expect(successResponse!.get('scope1')).toBeInstanceOf(Proposition);
+    expect(errorResponse).toBeDefined();
+    expect(errorResponse.message).toBe('Test error');
+    expect(errorResponse.code).toBe(500);
   });
 
   it('Test Offer object state', async () => {
@@ -177,47 +281,16 @@ describe('Optimize', () => {
 
   it('Test Optimize.displayed', async () => {
     const spy = jest.spyOn(NativeModules.AEPOptimize, 'multipleOffersDisplayed');
-    const proposition = new Proposition(propositionJson as any);
-    const offer = proposition.items[0];
-    const offerPairs = [{
-      proposition,
-      offerId: offer.id
-    }];
-
-    // Clean the proposition as your implementation does
-    const entries = Object.entries(proposition).filter(
-      ([_, value]) => typeof value !== 'function'
-    );
-    const cleanedProposition = Object.fromEntries(entries);
-    const cleanedPairs = [{
-      proposition: cleanedProposition,
-      offerId: offer.id
-    }];
-
-    await Optimize.displayed(offerPairs);
-    expect(spy).toHaveBeenCalledWith(cleanedPairs);
+    const offers = [new Offer(offerJson)];
+    await Optimize.displayed(offers);
+    expect(spy).toHaveBeenCalledWith(offers);
   });
 
   it('Test Optimize.generateDisplayInteractionXdm', async () => {
-    const spy = jest.spyOn(NativeModules.AEPOptimize, 'generateDisplayInteractionXdmForMultipleOffers');
-    const proposition = new Proposition(propositionJson as any);
-    const offer = proposition.items[0];
-    const offerPairs = [{
-      proposition,
-      offerId: offer.id
-    }];
-  
-    // Clean the proposition as your implementation does
-    const entries = Object.entries(proposition).filter(
-      ([_, value]) => typeof value !== 'function'
-    );
-    const cleanedProposition = Object.fromEntries(entries);
-    const cleanedPairs = [{
-      proposition: cleanedProposition,
-      offerId: offer.id
-    }];
-  
-    await Optimize.generateDisplayInteractionXdm(offerPairs);
-    expect(spy).toHaveBeenCalledWith(cleanedPairs);
+    const spy = jest.spyOn(NativeModules.AEPOptimize, 'multipleOffersGenerateDisplayInteractionXdm');
+    const offers = [new Offer(offerJson)];
+    await Optimize.generateDisplayInteractionXdm(offers);
+    expect(spy).toHaveBeenCalledWith(offers);
   });
+  
 });

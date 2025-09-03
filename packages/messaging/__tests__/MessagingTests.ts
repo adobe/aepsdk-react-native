@@ -128,15 +128,4 @@ describe('Messaging', () => {
     await Messaging.trackContentCardInteraction(mockProposition, mockContentCard);
     expect(spy).toHaveBeenCalledWith(mockProposition, mockContentCard);
   });
-
-  it('should call handleJavascriptMessage', () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'handleJavascriptMessage');
-    const messageId = 'test-message-id';
-    const handlerName = 'myInappCallback';
-    const callback = jest.fn();
-
-    Messaging.handleJavascriptMessage(messageId, handlerName, callback);
-
-    expect(spy).toHaveBeenCalledWith(messageId, handlerName);
-  });
 });

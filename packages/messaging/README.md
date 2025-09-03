@@ -157,20 +157,6 @@ const messagingDelegate = {
 };
 ```
 
-### handleJavascriptMessage
-
-Registers a javascript interface for the provided handler name to the WebView associated with the InAppMessage presentation to handle Javascript messages. When the registered handlers are executed via the HTML the result will be passed back to the associated callback.
-
-**Syntax**
-
-```javascript
-handleJavascriptMessage(messageId: string, handlerName: string, callback: (content: string) => void)
-```
-
-**Example**
-
-It can be used for the native handling of JavaScript events. Please refer to the [tutorial](./tutorials/In-App%20Messaging.md#native-handling-of-javascript-events) for more information.
-
 ### updatePropositionsForSurfaces
 
 Dispatches an event to fetch propositions for the provided surfaces from remote.
@@ -475,4 +461,4 @@ Messaging.trackContentCardInteraction(proposition, contentCard);
 ## Tutorials
 
 [Content Cards](./tutorials/ContentCards.md)
-[In App Messaging](./tutorials/In-App%20Messaging.md)
+

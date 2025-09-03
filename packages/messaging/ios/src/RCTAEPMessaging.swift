@@ -21,7 +21,6 @@ import WebKit
 @objc(RCTAEPMessaging)
 public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     private var messageCache = [String: Message]()
-    private var jsHandlerMessageCache = [String: Message]()
     private var latestMessage: Message? = nil
     private let semaphore = DispatchSemaphore(value: 0)
     private var shouldSaveMessage = false
@@ -250,35 +249,11 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         }
     }
 
-    @objc
-    func handleJavascriptMessage(
-        _ messageId: String,
-        handlerName: String
-    ) {
-        guard let message = jsHandlerMessageCache[messageId] else { 
-            print("[RCTAEPMessaging] handleJavascriptMessage: No message found in cache for messageId: \(messageId)")
-            return 
-        }
-
-        message.handleJavascriptMessage(handlerName) { [weak self] content in
-            self?.emitNativeEvent(
-                name: Constants.ON_JAVASCRIPT_MESSAGE_EVENT,
-                body: [
-                    Constants.MESSAGE_ID_KEY: messageId,
-                    Constants.HANDLER_NAME_KEY: handlerName,
-                    Constants.CONTENT_KEY: content ?? ""
-                ]
-            )
-        }
-    }
-
     // Messaging Delegate Methods
     public func onDismiss(message: Showable) {
         if let fullscreenMessage = message as? FullscreenMessage,
             let parentMessage = fullscreenMessage.parent
         {
-            jsHandlerMessageCache.removeValue(forKey: parentMessage.id)
-
             emitNativeEvent(
                 name: Constants.ON_DISMISS_EVENT,
                 body: RCTAEPMessagingDataBridge.transformToMessage(
@@ -292,8 +267,6 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         if let fullscreenMessage = message as? FullscreenMessage,
             let message = fullscreenMessage.parent
         {
-            jsHandlerMessageCache[message.id] = message
-            
             emitNativeEvent(
                 name: Constants.ON_SHOW_EVENT,
                 body: RCTAEPMessagingDataBridge.transformToMessage(message: message)
@@ -302,14 +275,28 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     }
 
     public func shouldShowMessage(message: Showable) -> Bool {
-        if let fullscreenMessage = message as? FullscreenMessage,
-            let message = fullscreenMessage.parent
-        {
+        let fullscreenMessage = message as? FullscreenMessage
+        let parentMessage = fullscreenMessage?.parent
+        
+        // If parent message exists, emit it
+        if let parentMessage = parentMessage {
             emitNativeEvent(
                 name: Constants.SHOULD_SHOW_MESSAGE_EVENT,
-                body: RCTAEPMessagingDataBridge.transformToMessage(message: message)
+                body: RCTAEPMessagingDataBridge.transformToMessage(message: parentMessage)
             )
-            semaphore.wait()
+        } else if let fullscreenMessage = fullscreenMessage {
+            // Parent is nil but fullscreen message exists - emit empty body for now
+            emitNativeEvent(
+                name: Constants.SHOULD_SHOW_MESSAGE_EVENT,
+                body: [:]
+            )
+        } else {
+            // Both are nil, don't emit anything and return false
+            return false
+        }
+        
+        semaphore.wait()
+        if let message = parentMessage {
             if self.shouldSaveMessage {
                 self.messageCache[message.id] = message
             }
@@ -317,10 +304,8 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
             if self.shouldShowMessage {
                 latestMessage = message
             }
-
-            return self.shouldShowMessage
         }
-        return false
+        return self.shouldShowMessage
     }
 
     public func urlLoaded(_ url: URL, byMessage message: Showable) {

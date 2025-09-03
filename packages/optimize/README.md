@@ -138,20 +138,33 @@ Optimize.onPropositionUpdate({
 
 ### updating the propositions:
 
-This API fetches the propositions for the provided DecisionScope list.
+This API fetches the propositions for the provided DecisionScope list. The API now supports optional callback parameters for successful response and error handling.
 
 **Syntax**
 
 ```typescript
-updatePropositions(decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>)
+updatePropositions(
+  decisionScopes: Array<DecisionScope>, 
+  xdm?: Map<string, any>, 
+  data?: Map<string, any>,
+  onSuccess?: (response: Map<string, Proposition>) => void,
+  onError?: (error: AEPOptimizeError) => void
+)
 ```
+
+**Parameters:**
+- `decisionScopes`: Array of decision scopes for which offers need to be updated
+- `xdm`: Optional XDM-formatted data to be sent in the personalization query request
+- `data`: Optional free-form data to be sent in the personalization query request  
+- `onSuccess`: Optional callback function called when propositions are successfully updated
+- `onError`: Optional callback function called when an error occurs during the update
 
 **Example**
 
 ```typescript
 const decisionScopeText = new DecisionScope("{DecisionScope name}");
 const decisionScopeImage = new DecisionScope("{DecisionScope name}");
-const decisionScopeHtml = new DecisionScope("{DecisionScope name{");
+const decisionScopeHtml = new DecisionScope("{DecisionScope name}");
 const decisionScopeJson = new DecisionScope("{DecisionScope name}");
 const decisionScopes = [
   decisionScopeText,
@@ -160,39 +173,53 @@ const decisionScopes = [
   decisionScopeJson,
 ];
 
-Optimize.updatePropositions(decisionScopes, null, null);
+// Update without callbacks
+Optimize.updatePropositions(decisionScopes);
+
+// Update with callbacks
+Optimize.updatePropositions(
+  decisionScopes,
+  undefined, // xdm parameter
+  undefined, // data parameter
+  (response: Map<string, Proposition>) => {
+    console.log('✅ Propositions updated successfully:', response);
+    // Handle the updated propositions
+  },
+  (error: AEPOptimizeError) => {
+    console.error('❌ Error updating propositions:', error);
+    // Handle the error
+  }
+);
 ```
 
-### Batching multiple display propositions track events:
+### Batching display interaction events for multiple Offers:
 
-The Optimize SDK now provides enhanced support for batching multiple display propositions track events. The following APIs are available:
+The Optimize SDK now provides enhanced support for batching display interaction events for multiple Offers. The following APIs are available:
 
 #### displayed
 
 **Syntax**
 
 ```typescript
-displayed(offerPairs: Array<{ proposition: Proposition; offerId: string }>)
+displayed(offers: Array<Offer>)
 ```
 
 **Example**
 
 ```typescript
-const propositions: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
-const offerPairs: Array<{ proposition: Proposition; offerId: string }> = [];
 
-propositions.forEach((proposition: Proposition) => {
-  if (proposition && proposition.items) {
+const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+const offers: Array<Offer> = [];
+
+propositionsMap.forEach((proposition: Proposition) => {
+  if (proposition && proposition.items && proposition.items.length > 0) {
     proposition.items.forEach((offer) => {
-      offerPairs.push({
-        proposition,
-        offerId: offer.id,
-      });
+      offers.push(offer);
     });
   }
 });
 
-Optimize.displayed(offerPairs);
+Optimize.displayed(offers);
 ```
 
 #### generateDisplayInteractionXdm
@@ -200,29 +227,25 @@ Optimize.displayed(offerPairs);
 **Syntax**
 
 ```typescript
-generateDisplayInteractionXdm(offerPairs: Array<{ proposition: Proposition; offerId: string }>): Promise<Map<string, any>>
+generateDisplayInteractionXdm(offers: Array<Offer>): Promise<Map<string, any>>;
 ```
 
 **Example**
 
 ```typescript
-const propositions: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
-const offerPairs: Array<{ proposition: Proposition; offerId: string }> = [];
 
-propositions.forEach((proposition: Proposition) => {
-  if (proposition && proposition.items) {
+const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
+const offers: Array<Offer> = [];
+
+propositionsMap.forEach((proposition: Proposition) => {
+  if (proposition && proposition.items && proposition.items.length > 0) {
     proposition.items.forEach((offer) => {
-      offerPairs.push({
-        proposition,
-        offerId: offer.id,
-      });
+      offers.push(offer);
     });
   }
 });
 
-const xdmData = await Optimize.generateDisplayInteractionXdm(offerPairs);
-// use xdmData as needed
-
+const displayInteractionXdm = await Optimize.generateDisplayInteractionXdm(offers);
 ```
 
 ---
