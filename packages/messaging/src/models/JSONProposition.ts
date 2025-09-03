@@ -1,5 +1,5 @@
 /*
-    Copyright 2023 Adobe. All rights reserved.
+    Copyright 2024 Adobe. All rights reserved.
     This file is licensed to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -10,17 +10,21 @@
     language governing permissions and limitations under the License.
 */
 
-import { ContentCard } from './ContentCard';
-import { HTMLProposition } from './HTMLProposition';
-import { JSONPropositionItem } from './JSONProposition';
-import { InAppMessage } from './InAppMessage';
-import { PropositionItem } from './PropositionItem';
+import { PersonalizationSchema } from './PersonalizationSchema';
+import { PropositionItem, PropositionItemData } from './PropositionItem';
 
-// Union type for all possible proposition item types
-// All items now extend PropositionItem and have unified tracking capabilities
-export type MessagingPropositionItem =
-  | ContentCard
-  | HTMLProposition
-  | InAppMessage
-  | JSONPropositionItem
-  | PropositionItem;
+export interface JSONPropositionData extends PropositionItemData {
+	data: {
+		content: any;
+	};
+	schema: PersonalizationSchema.JSON_CONTENT;
+}
+
+export class JSONPropositionItem extends PropositionItem {
+	declare data: JSONPropositionData['data'];
+
+	constructor(jsonData: JSONPropositionData) {
+		super(jsonData);
+		this.data = jsonData.data;
+	}
+}
