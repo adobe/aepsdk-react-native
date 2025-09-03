@@ -94,14 +94,14 @@ class Messaging {
     return await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
   }
   /**
-   * @deprecated Use PropositionItem.track(...) instead. Will be removed in vX.Y.Z.
+   * @deprecated Use PropositionItem.track(...) instead.
    */
   static trackContentCardDisplay(proposition: MessagingProposition, contentCard: ContentCard): void {
     RCTAEPMessaging.trackContentCardDisplay(proposition, contentCard);
   }
 
   /**
-   * @deprecated Use PropositionItem.track(...) instead. Will be removed in vX.Y.Z.
+   * @deprecated Use PropositionItem.track(...) instead.
    */
   static trackContentCardInteraction(proposition: MessagingProposition, contentCard: ContentCard): void {
     RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);

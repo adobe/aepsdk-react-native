@@ -501,7 +501,7 @@ function otherWorkflowFinished() {
 
 ### trackContentCardDisplay
 
-Deprecated: Use `PropositionItem.track(...)` instead. This API will be removed in a future release.
+Deprecated in 7.2.0: Use `Proposition.track(...)` instead. This API will be removed in a future release.
 
 Tracks a Display interaction with the given ContentCard
 
@@ -512,7 +512,7 @@ Messaging.trackContentCardDisplay(proposition, contentCard);
 
 ### trackContentCardInteraction
 
-Deprecated: Use `PropositionItem.track(...)` instead. This API will be removed in a future release.
+Deprecated in 7.2.0: Use `Proposition.track(...)` instead. This API will be removed in a future release.
 
 Tracks a Click interaction with the given ContentCard
 
