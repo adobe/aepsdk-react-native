@@ -128,7 +128,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         let mapped = surfaces.map { Surface(path: $0) }
         Messaging.updatePropositionsForSurfaces(mapped) { success in
             if success {
-                propositionByUuid.removeAll()
+                self.propositionByUuid.removeAll()
                 resolve(nil)
             } else {
                 reject("Unable to update propositions for surfaces", nil, nil)
