@@ -1,6 +1,6 @@
 export * from './ContentCard';
 export * from './InAppMessage';
-export * from './JSONPropositionItem';
+export * from './JSONProposition';
 export * from './Message';
 export * from './MessagingDelegate';
 export * from './MessagingEdgeEventType';
