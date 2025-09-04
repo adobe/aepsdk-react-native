@@ -36,7 +36,7 @@ export interface NativeMessagingModule {
     shouldShowMessage: boolean,
     shouldSaveMessage: boolean
   ) => void;
-  updatePropositionsForSurfaces: (surfaces: string[]) => void;
+  updatePropositionsForSurfaces: (surfaces: string[]) => Promise<void>;
   trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
   trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
   trackPropositionItem: (itemId: string, interaction: string | null, eventType: number, tokens: string[] | null) => void;
@@ -191,8 +191,8 @@ class Messaging {
    * Dispatches an event to fetch propositions for the provided surfaces from remote.
    * @param surfaces A list of surface names to update
    */
-  static updatePropositionsForSurfaces(surfaces: string[]) {
-    RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
+  static async updatePropositionsForSurfaces(surfaces: string[]): Promise<void> {
+    return await RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
 
   static async getContentCardUI(surface: string): Promise<ContentTemplate[]> {
