@@ -22,6 +22,7 @@ import { MessagingProposition } from './models/MessagingProposition';
 import { ContentCard } from './models/ContentCard';
 import { PersonalizationSchema } from './models/PersonalizationSchema';
 import { ContentTemplate, TemplateType } from './ui/types/Templates';
+import { PropositionItem } from './models/PropositionItem';
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
   getCachedMessages: () => Message[];
@@ -168,8 +169,12 @@ class Messaging {
       eventEmitter.removeAllListeners('onDismiss');
       eventEmitter.removeAllListeners('onShow');
       eventEmitter.removeAllListeners('shouldShowMessage');
-      eventEmitter.removeAllListeners('urlLoaded');
-      eventEmitter.removeAllListeners('onContentLoaded');
+      if (Platform.OS === 'ios') {
+        eventEmitter.removeAllListeners('urlLoaded');
+      }
+      if (Platform.OS === 'android') {
+        eventEmitter.removeAllListeners('onContentLoaded');
+      }
     };
   }
 
@@ -213,13 +218,13 @@ class Messaging {
     }
 
     return contentCards.map((card: ContentCard) => {
+      // @ts-ignore
+      const data = new PropositionItem(card);
+        
       const type = card.data?.meta?.adobe?.template ?? TemplateType.SMALL_IMAGE;
-      return {
-        ...card,
-        type
-      };
-    }) as ContentTemplate[];
-  }
+return new ContentTemplate({ ...data, type } as any);
+  });
+}
 }
 
 export default Messaging;
