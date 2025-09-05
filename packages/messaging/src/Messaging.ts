@@ -22,7 +22,7 @@ import { MessagingProposition } from './models/MessagingProposition';
 import { ContentCard } from './models/ContentCard';
 import { PersonalizationSchema } from './models/PersonalizationSchema';
 import { ContentTemplate, TemplateType } from './ui/types/Templates';
-import { PropositionItem } from './models/PropositionItem';
+
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
   getCachedMessages: () => Message[];
@@ -38,9 +38,20 @@ export interface NativeMessagingModule {
     shouldSaveMessage: boolean
   ) => void;
   updatePropositionsForSurfaces: (surfaces: string[]) => Promise<void>;
-  trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
-  trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
-  trackPropositionItem: (itemId: string, interaction: string | null, eventType: number, tokens: string[] | null) => void;
+  trackContentCardDisplay: (
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ) => void;
+  trackContentCardInteraction: (
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ) => void;
+  trackPropositionItem: (
+    itemId: string,
+    interaction: string | null,
+    eventType: number,
+    tokens: string[] | null
+  ) => void;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -99,28 +110,44 @@ class Messaging {
   /**
    * @deprecated Use PropositionItem.track(...) instead.
    */
-  static trackContentCardDisplay(proposition: MessagingProposition, contentCard: ContentCard): void {
+  static trackContentCardDisplay(
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ): void {
     RCTAEPMessaging.trackContentCardDisplay(proposition, contentCard);
   }
 
   /**
    * @deprecated Use PropositionItem.track(...) instead.
    */
-  static trackContentCardInteraction(proposition: MessagingProposition, contentCard: ContentCard): void {
+  static trackContentCardInteraction(
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ): void {
     RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);
   }
 
   /**
    * Tracks interactions with a PropositionItem using the provided interaction and event type.
    * This method is used internally by the PropositionItem.track() method.
-   * 
+   *
    * @param {string} itemId - The unique identifier of the PropositionItem
    * @param {string | null} interaction - A custom string value to be recorded in the interaction
    * @param {number} eventType - The MessagingEdgeEventType numeric value
    * @param {string[] | null} tokens - Array containing the sub-item tokens for recording interaction
    */
-  static trackPropositionItem(itemId: string, interaction: string | null, eventType: number, tokens: string[] | null): void {
-    RCTAEPMessaging.trackPropositionItem(itemId, interaction, eventType, tokens);
+  static trackPropositionItem(
+    itemId: string,
+    interaction: string | null,
+    eventType: number,
+    tokens: string[] | null
+  ): void {
+    RCTAEPMessaging.trackPropositionItem(
+      itemId,
+      interaction,
+      eventType,
+      tokens
+    );
   }
 
   /**
@@ -152,14 +179,18 @@ class Messaging {
     });
 
     if (Platform.OS === 'ios') {
-      eventEmitter.addListener('urlLoaded', (event: {url: string, message: Message}) =>
-        messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
+      eventEmitter.addListener(
+        'urlLoaded',
+        (event: { url: string; message: Message }) =>
+          messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
       );
     }
 
     if (Platform.OS === 'android') {
-      eventEmitter.addListener('onContentLoaded', (event: {message: Message}) =>
-        messagingDelegate?.onContentLoaded?.(new Message(event.message))
+      eventEmitter.addListener(
+        'onContentLoaded',
+        (event: { message: Message }) =>
+          messagingDelegate?.onContentLoaded?.(new Message(event.message))
       );
     }
 
@@ -196,35 +227,35 @@ class Messaging {
    * Dispatches an event to fetch propositions for the provided surfaces from remote.
    * @param surfaces A list of surface names to update
    */
-  static async updatePropositionsForSurfaces(surfaces: string[]): Promise<void> {
+  static async updatePropositionsForSurfaces(
+    surfaces: string[]
+  ): Promise<void> {
     return await RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
 
   static async getContentCardUI(surface: string): Promise<ContentTemplate[]> {
     const messages = await Messaging.getPropositionsForSurfaces([surface]);
-    console.log(JSON.stringify(messages, null, 2));
     const propositions = messages[surface];
     if (!propositions?.length) {
       return [];
     }
-    const contentCards = propositions.flatMap((proposition) =>
-      proposition.items.filter(
-        (item) => item.schema === PersonalizationSchema.CONTENT_CARD
-      )
-    );
+    const contentCards = propositions
+      .map((proposition) => new MessagingProposition(proposition))
+      .flatMap((proposition) =>
+        proposition.items.filter(
+          (item) => item.schema === PersonalizationSchema.CONTENT_CARD
+        )
+      );
 
     if (!contentCards?.length) {
       return [];
     }
 
-    return contentCards.map((card: ContentCard) => {
-      // @ts-ignore
-      const data = new PropositionItem(card);
-        
+    return contentCards.map((card: any) => {
       const type = card.data?.meta?.adobe?.template ?? TemplateType.SMALL_IMAGE;
-return new ContentTemplate({ ...data, type } as any);
-  });
-}
+      return new ContentTemplate(card, type);
+    });
+  }
 }
 
 export default Messaging;

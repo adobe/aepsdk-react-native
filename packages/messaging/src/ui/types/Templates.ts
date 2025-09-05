@@ -1,4 +1,4 @@
-import { ContentCard } from '../../models/ContentCard';
+import { ContentCard, ContentCardData } from '../../models/ContentCard';
 
 /** Represents template types for Content Card templates. */
 export enum TemplateType {
@@ -19,8 +19,8 @@ export type TemplateTypeLiteral = `${TemplateType}`
 export class ContentTemplate extends ContentCard {
   readonly type: string;
 
-  constructor(data: ContentCard & { type: `${TemplateType}` }) {
-    super(data as any);
-    this.type = data.type;
+  constructor(data: ContentCardData, type: TemplateType) {
+    super(data);
+    this.type = type;
   }
 };
