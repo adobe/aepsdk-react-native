@@ -14,6 +14,13 @@ export type BaseContentTemplate = {
   readonly id: string;
 };
 
-export type ContentTemplate = ContentCard & {
-  readonly type: TemplateType;
+export type TemplateTypeLiteral = `${TemplateType}`
+
+export class ContentTemplate extends ContentCard {
+  readonly type: string;
+
+  constructor(data: ContentCard & { type: `${TemplateType}` }) {
+    super(data as any);
+    this.type = data.type;
+  }
 };

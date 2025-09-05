@@ -22,6 +22,7 @@ import { MessagingProposition } from './models/MessagingProposition';
 import { ContentCard } from './models/ContentCard';
 import { PersonalizationSchema } from './models/PersonalizationSchema';
 import { ContentTemplate, TemplateType } from './ui/types/Templates';
+import { PropositionItem } from './models/PropositionItem';
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
   getCachedMessages: () => Message[];
@@ -37,15 +38,9 @@ export interface NativeMessagingModule {
     shouldSaveMessage: boolean
   ) => void;
   updatePropositionsForSurfaces: (surfaces: string[]) => Promise<void>;
-  trackContentCardDisplay: (
-    proposition: MessagingProposition,
-    contentCard: ContentCard
-  ) => void;
-  trackContentCardInteraction: (
-    proposition: MessagingProposition,
-    contentCard: ContentCard
-  ) => void;
-  handleJavascriptMessage: (messageId: string, handlerName: string) => void;
+  trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
+  trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
+  trackPropositionItem: (itemId: string, interaction: string | null, eventType: number, tokens: string[] | null) => void;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -53,24 +48,6 @@ const RCTAEPMessaging: NativeModule & NativeMessagingModule =
 
 declare var messagingDelegate: MessagingDelegate;
 var messagingDelegate: MessagingDelegate;
-
-// Registery to store callbacks for each message in handleJavascriptMessage
-// Record - {messageId : {handlerName : callback}}
-const jsMessageHandlers: Record<
-  string,
-  Record<string, (content: string) => void>
-> = {};
-const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
-
-handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
-  const { messageId, handlerName, content } = event;
-  if (
-    jsMessageHandlers[messageId] &&
-    jsMessageHandlers[messageId][handlerName]
-  ) {
-    jsMessageHandlers[messageId][handlerName](content);
-  }
-});
 
 class Messaging {
   /**
@@ -119,19 +96,31 @@ class Messaging {
   ): Promise<Record<string, MessagingProposition[]>> {
     return await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
   }
-
-  static trackContentCardDisplay(
-    proposition: MessagingProposition,
-    contentCard: ContentCard
-  ): void {
+  /**
+   * @deprecated Use PropositionItem.track(...) instead.
+   */
+  static trackContentCardDisplay(proposition: MessagingProposition, contentCard: ContentCard): void {
     RCTAEPMessaging.trackContentCardDisplay(proposition, contentCard);
   }
 
-  static trackContentCardInteraction(
-    proposition: MessagingProposition,
-    contentCard: ContentCard
-  ): void {
+  /**
+   * @deprecated Use PropositionItem.track(...) instead.
+   */
+  static trackContentCardInteraction(proposition: MessagingProposition, contentCard: ContentCard): void {
     RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);
+  }
+
+  /**
+   * Tracks interactions with a PropositionItem using the provided interaction and event type.
+   * This method is used internally by the PropositionItem.track() method.
+   * 
+   * @param {string} itemId - The unique identifier of the PropositionItem
+   * @param {string | null} interaction - A custom string value to be recorded in the interaction
+   * @param {number} eventType - The MessagingEdgeEventType numeric value
+   * @param {string[] | null} tokens - Array containing the sub-item tokens for recording interaction
+   */
+  static trackPropositionItem(itemId: string, interaction: string | null, eventType: number, tokens: string[] | null): void {
+    RCTAEPMessaging.trackPropositionItem(itemId, interaction, eventType, tokens);
   }
 
   /**
@@ -143,31 +132,34 @@ class Messaging {
 
     const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
 
-    eventEmitter.addListener('onShow', (message) =>
-      messagingDelegate?.onShow?.(message)
+    eventEmitter.addListener('onShow', (message: Message) =>
+      messagingDelegate?.onShow?.(new Message(message))
     );
 
-    eventEmitter.addListener('onDismiss', (message) => {
-      messagingDelegate?.onDismiss?.(message);
+    eventEmitter.addListener('onDismiss', (message: Message) => {
+      const messageInstance = new Message(message);
+      messageInstance._clearJavascriptMessageHandlers();
+      messagingDelegate?.onDismiss?.(messageInstance);
     });
 
-    eventEmitter.addListener('shouldShowMessage', (message) => {
+    eventEmitter.addListener('shouldShowMessage', (message: Message) => {
+      const messageInstance = new Message(message);
       const shouldShowMessage =
-        messagingDelegate?.shouldShowMessage?.(message) ?? true;
+        messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
       const shouldSaveMessage =
-        messagingDelegate?.shouldSaveMessage?.(message) ?? false;
+        messagingDelegate?.shouldSaveMessage?.(messageInstance) ?? false;
       RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
     });
 
     if (Platform.OS === 'ios') {
-      eventEmitter.addListener('urlLoaded', (event) =>
-        messagingDelegate?.urlLoaded?.(event.url, event.message)
+      eventEmitter.addListener('urlLoaded', (event: {url: string, message: Message}) =>
+        messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
       );
     }
 
     if (Platform.OS === 'android') {
-      eventEmitter.addListener('onContentLoaded', (event) =>
-        messagingDelegate?.onContentLoaded?.(event.message)
+      eventEmitter.addListener('onContentLoaded', (event: {message: Message}) =>
+        messagingDelegate?.onContentLoaded?.(new Message(event.message))
       );
     }
 
@@ -177,8 +169,12 @@ class Messaging {
       eventEmitter.removeAllListeners('onDismiss');
       eventEmitter.removeAllListeners('onShow');
       eventEmitter.removeAllListeners('shouldShowMessage');
-      eventEmitter.removeAllListeners('urlLoaded');
-      eventEmitter.removeAllListeners('onContentLoaded');
+      if (Platform.OS === 'ios') {
+        eventEmitter.removeAllListeners('urlLoaded');
+      }
+      if (Platform.OS === 'android') {
+        eventEmitter.removeAllListeners('onContentLoaded');
+      }
     };
   }
 
@@ -204,30 +200,9 @@ class Messaging {
     return await RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
 
-  /**
-   * Registers a javascript interface for the provided handler name
-   * to the WebView associated with the InAppMessage presentation
-   * to handle Javascript messages.
-   * When the registered handlers are executed via the HTML
-   * the result will be passed back to the associated callback.
-   * @param messageId The id of the message to handle
-   * @param handlerName The name of the handler to handle
-   * @param callback The callback to handle the message
-   */
-  static handleJavascriptMessage(
-    messageId: string,
-    handlerName: string,
-    callback: (content: string) => void
-  ) {
-    if (!jsMessageHandlers[messageId]) {
-      jsMessageHandlers[messageId] = {};
-    }
-    jsMessageHandlers[messageId][handlerName] = callback;
-    RCTAEPMessaging.handleJavascriptMessage(messageId, handlerName);
-  }
-
   static async getContentCardUI(surface: string): Promise<ContentTemplate[]> {
     const messages = await Messaging.getPropositionsForSurfaces([surface]);
+    console.log(JSON.stringify(messages, null, 2));
     const propositions = messages[surface];
     if (!propositions?.length) {
       return [];
@@ -236,20 +211,20 @@ class Messaging {
       proposition.items.filter(
         (item) => item.schema === PersonalizationSchema.CONTENT_CARD
       )
-    ) as ContentCard[];
+    );
 
     if (!contentCards?.length) {
       return [];
     }
 
-    return contentCards.map((card) => {
+    return contentCards.map((card: ContentCard) => {
+      // @ts-ignore
+      const data = new PropositionItem(card);
+        
       const type = card.data?.meta?.adobe?.template ?? TemplateType.SMALL_IMAGE;
-      return {
-        ...card,
-        type
-      };
-    }) as ContentTemplate[];
-  }
+return new ContentTemplate({ ...data, type } as any);
+  });
+}
 }
 
 export default Messaging;

@@ -16,6 +16,7 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
+import com.adobe.marketing.mobile.optimize.AEPOptimizeError;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
@@ -47,6 +48,12 @@ class RCTAEPOptimizeUtil {
             offersWritableArray.pushMap(convertOfferToWritableMap(offer));
         }
         propositionWritableMap.putArray("items", offersWritableArray);
+        if (proposition.getActivity() != null) {
+            propositionWritableMap.putMap("activity", convertMapToWritableMap(proposition.getActivity()));
+        }
+        if (proposition.getPlacement() != null) {
+            propositionWritableMap.putMap("placement", convertMapToWritableMap(proposition.getPlacement()));
+        }
         return propositionWritableMap;
     }
     static WritableMap convertOfferToWritableMap(final Offer offer) {
@@ -184,5 +191,85 @@ class RCTAEPOptimizeUtil {
             }
         }
         return list;
+    }
+
+    static List<Offer> getNativeOffers(final ReadableArray offersArray, Map<String, OptimizeProposition> propositionCache) {
+        List<Offer> nativeOffers = new ArrayList<>();
+
+        if (offersArray == null || offersArray.size() == 0) {
+            Log.d(TAG, "getNativeOffers: offersArray is null or empty");
+            return nativeOffers;
+        }
+
+        for (int i = 0; i < offersArray.size(); i++) {
+            ReadableMap offer = offersArray.getMap(i);
+            if (offer == null) {
+                Log.d(TAG, "getNativeOffers: offer is null for index: " + i);
+                continue;
+            }
+
+            String uniquePropositionId = offer.getString(RCTAEPOptimizeConstants.UNIQUE_PROPOSITION_ID_KEY);
+            String offerId = offer.getString("id");
+
+            if (uniquePropositionId == null || offerId == null) {
+                Log.d(TAG, "getNativeOffers: uniquePropositionId or offerId is null for offer: " + offer.toString());
+                continue;
+            }
+
+            OptimizeProposition proposition = propositionCache.get(uniquePropositionId);
+            if (proposition == null) {
+                Log.d(TAG, "getNativeOffers: proposition not found in cache for uniquePropositionId: " + uniquePropositionId);
+                continue;
+            }
+
+            for (Offer propositionOffer : proposition.getOffers()) {
+                if (propositionOffer.getId().equalsIgnoreCase(offerId)) {
+                    nativeOffers.add(propositionOffer);
+                    break;
+                }
+            }
+        }
+
+        return nativeOffers;
+    }
+
+    /**
+     * Helper method to create callback response
+     * @param propositionsMap
+     * @return WritableMap
+     */
+    static WritableMap createCallbackResponse(final Map<DecisionScope, OptimizeProposition> propositionsMap) {
+        final WritableMap propositionsWritableMap = new WritableNativeMap();
+        
+        if (propositionsMap != null && !propositionsMap.isEmpty()) {
+            for (final Map.Entry<DecisionScope, OptimizeProposition> entry : propositionsMap.entrySet()) {
+                propositionsWritableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
+            }
+        }
+        
+        return propositionsWritableMap;
+    }
+
+    /**
+     * Converts an AEPOptimizeError to a WritableMap for React Native error callback
+     */
+    static WritableMap convertAEPOptimizeErrorToWritableMap(final AEPOptimizeError error) {
+        final WritableMap errorMap = new WritableNativeMap();
+        if (error == null) {
+            return errorMap;
+        }
+        errorMap.putString("type", error.getType());
+        if (error.getStatus() != null) {
+            errorMap.putInt("status", error.getStatus());
+        }
+        errorMap.putString("title", error.getTitle());
+        errorMap.putString("detail", error.getDetail());
+        if (error.getReport() != null && error.getReport() instanceof Map) {
+            errorMap.putMap("report", convertMapToWritableMap((Map<String, Object>) error.getReport()));
+        }
+        if (error.getAdobeError() != null) {
+            errorMap.putString("aepError", error.getAdobeError().getErrorName());
+        }
+        return errorMap;
     }
 }

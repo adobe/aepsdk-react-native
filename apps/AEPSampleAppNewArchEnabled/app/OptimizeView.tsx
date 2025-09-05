@@ -15,6 +15,7 @@ import {
   Optimize,
   DecisionScope,
   Proposition,
+  Offer,
 } from '@adobe/react-native-aepoptimize';
 import {WebView} from 'react-native-webview';
 import styles from '../styles/styles';
@@ -73,7 +74,7 @@ export default () => {
     decisionScopeImage,
     decisionScopeHtml,
     decisionScopeJson,
-    decisionScopeTargetMbox,
+    decisionScopeTargetMbox
   ];
 
   const optimizeExtensionVersion = async () => {
@@ -84,19 +85,36 @@ export default () => {
 
   const updatePropositions = () => {
     Optimize.updatePropositions(decisionScopes);
-    console.log('Updated Proposition for decisionScopes:', decisionScopes);
+    console.log('Updated Propositions');
+  };
+
+  const testUpdatePropositionsCallback = () => {
+    console.log('Testing updatePropositions with callback...');
+    Optimize.updatePropositions(
+      decisionScopes,
+      undefined,
+      undefined,
+      (response) => {
+        console.log('Callback received:', response);
+      },
+      (error) => {
+        console.log('Error:', error);
+      }
+    );
   };
 
   const getPropositions = async () => {
     const propositions: Map<string, Proposition> =
       await Optimize.getPropositions(decisionScopes);
+    console.log(propositions.size, ' propositions size');
     if (propositions) {
-      console.log("get propositions", JSON.stringify(Object.fromEntries(propositions), null, 2));
       setTextProposition(propositions.get(decisionScopeText.getName()));
       setImageProposition(propositions.get(decisionScopeImage.getName()));
       setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
       setJsonProposition(propositions.get(decisionScopeJson.getName()));
       setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+      const propositionObject = Object.fromEntries(propositions);
+      console.log('propositions', JSON.stringify(propositionObject, null, 2));
     }
   };
 
@@ -120,49 +138,34 @@ export default () => {
 
   const multipleOffersDisplayed = async () => {
     const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
-    const offerPairs: Array<{proposition: Proposition, offerId: string}> = [];
-    
+    const offers: Array<Offer> = [];
     propositionsMap.forEach((proposition: Proposition) => {
-      if (proposition && proposition.items) {
+      if (proposition && proposition.items && proposition.items.length > 0) {
         proposition.items.forEach((offer) => {
-          offerPairs.push({
-            proposition: proposition,
-            offerId: offer.id
-          });
+          offers.push(offer);
         });
       }
     });
-    
-    console.log('Extracted offer pairs:', offerPairs);
-    
-    if (offerPairs.length > 0) {
-      Optimize.displayed(offerPairs);
-      console.log(`Called multipleOffersDisplayed with ${offerPairs.length} offers`);
-    } else {
-      console.log('No offers found to display');
-    }
+    console.log('offers', offers);
+    Optimize.displayed(offers);
   };
 
-  const generateDisplayInteractionXdmForMultipleOffers = async () => {
+  const multipleOffersGenerateDisplayInteractionXdm = async () => {
     const propositionsMap: Map<string, Proposition> = await Optimize.getPropositions(decisionScopes);
-    const offerPairs: Array<{proposition: Proposition, offerId: string}> = [];
-
+    const offers: Array<Offer> = [];
     propositionsMap.forEach((proposition: Proposition) => {
-      if (proposition && proposition.items) {
+      if (proposition && proposition.items && proposition.items.length > 0) {
         proposition.items.forEach((offer) => {
-          offerPairs.push({
-            proposition: proposition,
-            offerId: offer.id
-          });
+          offers.push(offer);
         });
       }
     });
-
-    const xdm = await Optimize.generateDisplayInteractionXdm(offerPairs);
-    if (xdm) {
-      console.log('Generated Display Interaction XDM for Multiple Offers:', JSON.stringify(xdm, null, 2));
+    console.log('offers', offers);
+    const displayInteractionXdm = await Optimize.generateDisplayInteractionXdm(offers);
+    if (displayInteractionXdm) {
+      console.log('displayInteractionXdm', JSON.stringify(displayInteractionXdm, null, 2));
     } else {
-      console.log('Error in generating Display interaction XDM for multiple offers.');
+      console.log('displayInteractionXdm is null');
     }
   };
 
@@ -378,6 +381,9 @@ export default () => {
         <Button title="Update Propositions" onPress={updatePropositions} />
       </View>
       <View style={{margin: 5}}>
+        <Button title="Test Update Propositions Callback" onPress={testUpdatePropositionsCallback} />
+      </View>
+      <View style={{margin: 5}}>
         <Button title="Get Propositions" onPress={getPropositions} />
       </View>
       <View style={{margin: 5}}>
@@ -388,20 +394,20 @@ export default () => {
       </View>
       <View style={{margin: 5}}>
         <Button
+          title="Subscribe to Proposition Update"
+          onPress={onPropositionUpdate}
+        />
+      </View>
+      <View style={{margin: 5}}>
+        <Button
           title="Multiple Offers Displayed"
           onPress={multipleOffersDisplayed}
         />
       </View>
       <View style={{margin: 5}}>
         <Button
-          title="Generate Display Interaction XDM for Multiple Offers"
-          onPress={generateDisplayInteractionXdmForMultipleOffers}
-        />
-      </View>
-      <View style={{margin: 5}}>
-        <Button
-          title="Subscribe to Proposition Update"
-          onPress={onPropositionUpdate}
+          title="Multiple Offers Generate Display Interaction XDM"
+          onPress={multipleOffersGenerateDisplayInteractionXdm}
         />
       </View>
       <Text style={{...styles.welcome, fontSize: 20}}>

@@ -12,7 +12,7 @@ Please read the [documentation](../README.md/#programmatically-control-the-displ
 
 ## Register a JavaScript handler for your In-App Message
 
-In the `onShow` function of `MessagingDelegate`, call `handleJavascriptMessage(messageId: string, handlerName: string, callback: (content: string) => void)` to register your handler.
+In the `onShow` function of `MessagingDelegate`, call `handleJavascriptMessage(handlerName: string, handler: (content: string) => void)` to register your handler.
 
 The name of the message you intend to pass from the JavaScript side should be specified in the first parameter.
 
@@ -22,8 +22,7 @@ The name of the message you intend to pass from the JavaScript side should be sp
 Messaging.setMessagingDelegate({
     onShow: msg => {
       console.log('show', msg);
-      Messaging.handleJavascriptMessage(
-        msg.id,
+      msg.handleJavascriptMessage(
         'myInappCallback',
         (content) => {
           console.log('Received webview content:', content);

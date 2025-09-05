@@ -149,14 +149,17 @@ jest.doMock('react-native', () => {
           show: jest.fn(),
           dismiss: jest.fn(),
           track: jest.fn(),
+          handleJavascriptMessage: jest.fn(
+            () => new Promise((resolve) => resolve(new Object()))
+          ),
           clear: jest.fn(),
           updatePropositionsForSurfaces: jest.fn(),
           getPropositionsForSurfaces: jest.fn(
             () => new Promise((resolve) => resolve([]))
           ),
+          trackPropositionItem: jest.fn(),
           trackContentCardDisplay: jest.fn(),
-          trackContentCardInteraction: jest.fn(),
-          handleJavascriptMessage: jest.fn(),
+          trackContentCardInteraction: jest.fn()
         },
         AEPOptimize: {
           extensionVersion: jest.fn(
@@ -184,11 +187,8 @@ jest.doMock('react-native', () => {
             () => new Promise((resolve) => resolve(new Map()))
           ),
           multipleOffersDisplayed: jest.fn(),
-          generateDisplayInteractionXdmForMultipleOffers: jest.fn(
-            () => 
-              new Promise((resolve) => 
-                resolve(new Map())
-              )
+          multipleOffersGenerateDisplayInteractionXdm: jest.fn(
+            () => new Promise((resolve) => resolve(new Map()))
           )
         },
         AEPTarget: {

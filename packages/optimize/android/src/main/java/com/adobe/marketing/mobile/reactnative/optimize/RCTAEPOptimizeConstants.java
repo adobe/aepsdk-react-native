@@ -9,9 +9,8 @@
     governing permissions and limitations under the License.
  */
 
- package com.adobe.marketing.mobile.reactnative.optimize;
+package com.adobe.marketing.mobile.reactnative.optimize;
 
- class RCTAEPOptimizeConstants {
-    static final String PROPOSITION_KEY = "proposition";
-    static final String OFFER_ID_KEY = "offerId";
+class RCTAEPOptimizeConstants {
+    static final String UNIQUE_PROPOSITION_ID_KEY = "uniquePropositionId";
  }

@@ -11,6 +11,7 @@
 */
 
 import { PersonalizationSchema } from './PersonalizationSchema';
+import { PropositionItem, PropositionItemData } from './PropositionItem';
 
 export type ContentCardTemplate = 'SmallImage' | 'LargeImage' | 'ImageOnly';
 export type DismissButtonStyle = 'circle' | 'none' | 'simple';
@@ -58,16 +59,23 @@ export interface ContentCardMeta {
   surface?: string;
 }
 
-export interface ContentCardData {
-  expiryDate: number;
-  meta: ContentCardMeta;
-  content: SmallImageContentData | LargeImageContentData | ImageOnlyContentData;
-  contentType: 'application/json';
-  publishedDate: number;
-}
-
-export type ContentCard = {
+export interface ContentCardData extends PropositionItemData {
   id: string;
-  schema: PersonalizationSchema.CONTENT_CARD;
-  data: ContentCardData;
-};
+  schema: PersonalizationSchema.CONTENT_CARD
+  data: {
+    contentType: 'application/json';
+    expiryDate: number;
+    publishedDate: number;
+    meta: ContentCardMeta;
+    content: SmallImageContentData | LargeImageContentData | ImageOnlyContentData
+  };
+}
+export class ContentCard extends PropositionItem {
+  declare data: ContentCardData['data'];
+
+  constructor(contentCardData: ContentCardData) {
+    super(contentCardData);
+    this.data = contentCardData.data;
+  }
+
+}

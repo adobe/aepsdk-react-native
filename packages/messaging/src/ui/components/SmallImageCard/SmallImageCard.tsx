@@ -12,23 +12,18 @@
 
 import {
   Image,
-  ImageProps,
   ImageStyle,
   Pressable,
   PressableProps,
   StyleSheet,
   Text,
-  TextProps,
   TextStyle,
   View,
-  ViewProps,
   ViewStyle
 } from 'react-native';
-import Button, { ButtonProps } from '../Button/Button';
+import Button from '../Button/Button';
 import { SmallImageContentData } from '../../../models/ContentCard';
-import DismissButton, {
-  DismissButtonProps
-} from '../DismissButton/DismissButton';
+import DismissButton from '../DismissButton/DismissButton';
 import { useTheme } from '../../theme/ThemeProvider';
 import useAspectRatio from '../../hooks/useAspectRatio';
 
@@ -37,69 +32,32 @@ export interface SmallImageContentStyle {
   card?: ViewStyle;
   /** Applies to the container inside the content card, applied inside the card Pressable */
   container?: ViewStyle;
-  /** Applies to the container wrapping the image on the content card */
+
   imageContainer?: ViewStyle;
-  /** Applies to the image on the content card */
   image?: ImageStyle;
-  /** Applies to the text content and buttons wrapper on the content card */
   contentContainer?: ViewStyle;
   /** Applies to title and body properties, will be overridden by title and body styles */
   text?: TextStyle;
-  /** Applies to the title on the content card */
   title?: TextStyle;
-  /** Applies to the body on the content card */
   body?: TextStyle;
-  /** Applies to the container wrapping the buttons on the content card */
   buttonContainer?: ViewStyle;
-  /** Applies to the buttons on the content card */
   button?: PressableProps['style'];
-  /** Applies to the text on the buttons on the content card */
   buttonText?: TextStyle;
-  /** Applies to the dismiss button on the content card */
   dismissButton?: PressableProps['style'];
 }
 
 export interface SmallImageCardProps extends PressableProps {
-  /** The content of the content card */
   content: SmallImageContentData;
   imageUri?: string;
-  /** The style overrides for the content card */
+  height?: number;
   styleOverrides?: SmallImageContentStyle;
-  /** The function to call when the dismiss button is pressed */
   onDismiss?: () => void;
-  /** The function to call when the content card is pressed */
   onPress?: () => void;
-  /** The props to pass to the container of the content card */
-  ContainerProps?: ViewProps;
-  /** The props to pass to the image container of the content card */
-  ImageContainerProps?: ViewProps;
-  /** The props to pass to the image of the content card */
-  ImageProps?: ImageProps;
-  /** The props to pass to the text of the content card */
-  TextProps?: TextProps;
-  /** The props to pass to the body of the content card */
-  BodyProps?: TextProps;
-  /** The props to pass to the title of the content card */
-  TitleProps?: TextProps;
-  /** The props to pass to the button container of the content card */
-  ButtonContainerProps?: ViewProps;
-  /** The props to pass to the buttons of the content card */
-  ButtonProps?: ButtonProps;
-  /** The props to pass to the dismiss button of the content card */
-  DismissButtonProps?: DismissButtonProps;
 }
 
 const SmallImageCard: React.FC<SmallImageCardProps> = ({
-  BodyProps,
-  ButtonContainerProps,
-  ButtonProps,
-  ContainerProps,
-  DismissButtonProps,
-  ImageContainerProps,
-  ImageProps,
-  TextProps,
-  TitleProps,
   content,
+  height,
   imageUri,
   styleOverrides,
   style,
@@ -120,15 +78,9 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
       ]}
       {...props}
     >
-      <View
-        style={[styles.container, styleOverrides?.container]}
-        {...ContainerProps}
-      >
+      <View style={[styles.container, styleOverrides?.container]}>
         {imageUri && (
-          <View
-            style={[styles.imageContainer, styleOverrides?.imageContainer]}
-            {...ImageContainerProps}
-          >
+          <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
             <Image
               source={{ uri: imageUri }}
               style={[
@@ -136,7 +88,6 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                 { aspectRatio: imageAspectRatio },
                 styleOverrides?.image
               ]}
-              {...ImageProps}
             />
           </View>
         )}
@@ -152,31 +103,24 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                 styleOverrides?.text,
                 styleOverrides?.title
               ]}
-              {...TextProps}
-              {...TitleProps}
             >
               {content.title.content}
             </Text>
           )}
           {content?.body?.content && (
             <Text
-              {...BodyProps}
               style={[
                 styles.body,
                 { color: theme.colors.textPrimary },
                 styleOverrides?.text,
                 styleOverrides?.body
               ]}
-              {...TextProps}
-              {...BodyProps}
             >
               {content.body.content}
             </Text>
           )}
           <View
-            {...ButtonContainerProps}
             style={[styles.buttonContainer, styleOverrides?.buttonContainer]}
-            {...ButtonContainerProps}
           >
             {content?.buttons?.length &&
               content?.buttons?.length > 0 &&
@@ -185,10 +129,9 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                   key={button.id}
                   actionUrl={button.actionUrl}
                   title={button.text.content}
+                  onPress={onPress}
                   style={styleOverrides?.button}
                   textStyle={[styleOverrides?.text, styleOverrides?.buttonText]}
-                  {...ButtonProps}
-                  onPress={onPress}
                 />
               ))}
           </View>
@@ -196,7 +139,6 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
             <DismissButton
               onPress={onDismiss}
               type={content.dismissBtn.style}
-              {...DismissButtonProps}
             />
           )}
         </View>
@@ -211,26 +153,27 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
     margin: 15,
-    maxWidth: '100%'
+    flex: 1,
+    flexDirection: 'row',
+    gap: 8,
+    maxWidth: '100%',
+    alignItems: 'center'
   },
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1
+    minHeight: 120
   },
   imageContainer: {
     borderRadius: 12,
-    height: '100%',
-    flex: 1 / 3,
-    justifyContent: 'center'
+    width: 'auto',
+    height: '100%'
   },
   image: {
-    width: '100%',
+    height: '100%',
     resizeMode: 'contain'
   },
   contentContainer: {
-    flex: 2 / 3,
+    flex: 1,
     paddingVertical: 16,
     paddingHorizontal: 16,
     justifyContent: 'flex-start'

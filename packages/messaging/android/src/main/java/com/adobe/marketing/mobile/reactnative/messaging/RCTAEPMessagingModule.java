@@ -14,15 +14,15 @@ package com.adobe.marketing.mobile.reactnative.messaging;
 import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertMessageToMap;
 
 import android.app.Activity;
+import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.AdobeCallbackWithError;
 import com.adobe.marketing.mobile.AdobeError;
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.Message;
 import com.adobe.marketing.mobile.Messaging;
 import com.adobe.marketing.mobile.MessagingEdgeEventType;
-import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.messaging.MessagingUtils;
 import com.adobe.marketing.mobile.messaging.Proposition;
 import com.adobe.marketing.mobile.messaging.PropositionItem;
@@ -41,14 +41,56 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ConcurrentHashMap;
+
+
 
 public final class RCTAEPMessagingModule
     extends ReactContextBaseJavaModule implements PresentationDelegate {
+  // We cache uuid -> Proposition (not PropositionItem) for iOS parity: storing items on iOS lost
+  // weak parent references. Propositions currently contain a single item, so using the first item
+  // for tracking is valid.
+  private final Map<String, Proposition> propositionItemByUuid = new ConcurrentHashMap<>();
 
+  /**
+   * Parses the given Proposition and extracts the activity ID.
+   *
+   * Expected location: scopeDetails.activity.id in the proposition's event data.
+   * Returns null when any of the nested structures are missing or the id is not a String.
+   */
+  private String extractActivityId(Proposition proposition) {
+    try {
+      Map<String, Object> eventData = proposition.toEventData();
+      if (eventData == null) {
+        Log.d(TAG, "[MessagingBridge] Proposition toEventData() returned null; cannot extract activity.id");
+        return null;
+      }
+      Object scopeDetailsObj = eventData.get("scopeDetails");
+      if (!(scopeDetailsObj instanceof Map)) return null;
+      Map<String, Object> scopeDetails = (Map<String, Object>) scopeDetailsObj;
+      Object activityObj = scopeDetails.get("activity");
+      if (!(activityObj instanceof Map)) {
+        Log.d(TAG, "[MessagingBridge] Missing activity under scopeDetails; cannot extract activity.id");
+        return null;
+      }
+      Map<String, Object> activity = (Map<String, Object>) activityObj;
+      Object id = activity.get("id");
+      if (id instanceof String) {
+        return (String) id;
+      } else {
+        Log.d(TAG, "[MessagingBridge] Missing activity.id or not a String; skipping uuid cache mapping");
+        return null;
+      }
+    } catch (Exception e) {
+      Log.d(TAG, "[MessagingBridge] Exception extracting activity.id: " + e.getMessage(), e);
+      return null;
+    }
+  }
   private static final String TAG = "RCTAEPMessagingModule";
   private final Map<String, Message> messageCache = new HashMap<>();
   private final ReactApplicationContext reactContext;
@@ -101,20 +143,37 @@ public final class RCTAEPMessagingModule
                                          final Promise promise) {
     String bundleId = this.reactContext.getPackageName();
     Messaging.getPropositionsForSurfaces(
-        RCTAEPMessagingUtil.convertSurfaces(surfaces),
-        new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
-          @Override
-          public void fail(final AdobeError adobeError) {
-            promise.reject(adobeError.getErrorName(),
-                           "Unable to get Propositions");
-          }
+            RCTAEPMessagingUtil.convertSurfaces(surfaces),
+            new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
+              @Override
+              public void fail(final AdobeError adobeError) {
+                promise.reject(adobeError.getErrorName(),
+                        "Unable to get Propositions");
+              }
 
-          @Override
-          public void call(Map<Surface, List<Proposition>> propositionsMap) {
-            promise.resolve(RCTAEPMessagingUtil.convertSurfacePropositions(
-                propositionsMap, bundleId));
-          }
-        });
+              @Override
+              public void call(
+                      Map<Surface, List<Proposition>> propositionsMap) {
+                // Build UUID->Proposition map keyed by scopeDetails.activity.id
+                try {
+                  for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
+                    List<Proposition> propositions = entry.getValue();
+                    if (propositions == null) continue;
+                    for (Proposition proposition : propositions) {
+                      try {
+                        String key = extractActivityId(proposition);
+                        if (key != null) {
+                          propositionItemByUuid.put(key, proposition);
+                        }
+                      } catch (Throwable ignore) {}
+                    }
+                  }
+                } catch (Throwable ignore) {}
+
+                promise.resolve(RCTAEPMessagingUtil.convertSurfacePropositions(
+                        propositionsMap, bundleId));
+              }
+            });
   }
 
   @ReactMethod
@@ -132,7 +191,7 @@ public final class RCTAEPMessagingModule
     Messaging.updatePropositionsForSurfaces(
         RCTAEPMessagingUtil.convertSurfaces(surfaces), success -> {
           if (success) {
-            promise.resolve(null);
+             propositionItemByUuid.clear();
           } else {
             promise.reject(null, "Unable to update propositions for surfaces");
           }
@@ -185,9 +244,10 @@ public final class RCTAEPMessagingModule
   public void handleJavascriptMessage(final String messageId,
                                       final String handlerName) {
     Presentable<?> presentable = presentableCache.get(messageId);
-    if (presentable == null ||
-        !(presentable.getPresentation() instanceof InAppMessage))
+    if (presentable == null || !(presentable.getPresentation() instanceof InAppMessage)) {
+      Log.w(TAG, "handleJavascriptMessage: No presentable found for messageId: " + messageId);
       return;
+    }
 
     Presentable<InAppMessage> inAppMessagePresentable =
         (Presentable<InAppMessage>)presentable;
@@ -211,6 +271,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable(
         (Presentable<InAppMessage>)presentable);
     presentableCache.put(message.getId(), presentable);
+
     if (message != null) {
       Map<String, String> data = convertMessageToMap(message);
       emitEvent("onShow", data);
@@ -224,6 +285,7 @@ public final class RCTAEPMessagingModule
     Message message = MessagingUtils.getMessageForPresentable(
         (Presentable<InAppMessage>)presentable);
     presentableCache.remove(message.getId());
+    
     if (message != null) {
       Map<String, String> data = convertMessageToMap(message);
       emitEvent("onDismiss", data);
@@ -267,7 +329,6 @@ public final class RCTAEPMessagingModule
     if (shouldSaveMessage) {
       messageCache.put(message.getId(), message);
     }
-
     return shouldShowMessage;
   }
 
@@ -335,4 +396,52 @@ public final class RCTAEPMessagingModule
       }
     }
   }
+
+  /**
+   * Tracks interactions with a PropositionItem using the provided interaction and event type.
+   * This method is used by the React Native PropositionItem.track() method.
+   * 
+   * @param interaction A custom string value to be recorded in the interaction (nullable)
+   * @param eventType The MessagingEdgeEventType numeric value
+   * @param tokens Array containing the sub-item tokens for recording interaction (nullable)
+   */
+  @ReactMethod
+  public void trackPropositionItem(String uuid, @Nullable String interaction, int eventType, @Nullable ReadableArray tokens) {
+    try {
+      // Convert eventType int to MessagingEdgeEventType enum
+      final MessagingEdgeEventType edgeEventType = RCTAEPMessagingUtil.getEventType(eventType);
+      if (edgeEventType == null) {
+        return;
+      }
+      // Resolve PropositionItem by UUID
+      if (uuid == null) {
+        Log.d(TAG, "[MessagingBridge] Null uuid provided");
+        return;
+      }
+      final Proposition proposition = propositionItemByUuid.get(uuid);
+      if (proposition == null) {
+        Log.d(TAG, "[MessagingBridge] No cached proposition for uuid=" + uuid);
+        return;
+      }
+      final List<PropositionItem> items = proposition.getItems();
+      if (items == null || items.isEmpty()) {
+        return;
+      }
+      final PropositionItem propositionItem = items.get(0);
+
+      // Convert ReadableArray tokens -> List<String> (empty list if none)
+      List<String> tokenList = new ArrayList<>();
+      if (tokens != null) {
+        for (int i = 0; i < tokens.size(); i++) {
+          tokenList.add(tokens.getString(i));
+        }
+      }
+      Log.d(TAG, "[MessagingBridge] Tracking (direct) uuid=" + uuid + ", interaction=" + interaction + ", tokens=" + tokenList + ", eventType=" + edgeEventType.name());
+      propositionItem.track(interaction, edgeEventType, tokenList);
+
+    } catch (Exception e) {
+      Log.d(TAG, "Error tracking PropositionItem for uuid: " + uuid + ", error: " + e.getMessage(), e);
+    }
+  }
+
 }

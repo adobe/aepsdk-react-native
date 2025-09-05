@@ -11,11 +11,20 @@
 */
 
 import { PersonalizationSchema } from './PersonalizationSchema';
+import { PropositionItem, PropositionItemData } from './PropositionItem';
 
-export interface JSONPropositionItem {
-  id: string;
-  data: {
-    content: string;
-  };
-  schema: PersonalizationSchema.JSON_CONTENT;
+export interface JSONPropositionData extends PropositionItemData {
+	data: {
+		content: any;
+	};
+	schema: PersonalizationSchema.JSON_CONTENT;
+}
+
+export class JSONPropositionItem extends PropositionItem {
+	declare data: JSONPropositionData['data'];
+
+	constructor(jsonData: JSONPropositionData) {
+		super(jsonData);
+		this.data = jsonData.data;
+	}
 }

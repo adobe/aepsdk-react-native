@@ -14,18 +14,25 @@ import { EventSubscription, NativeModules } from 'react-native';
 import { NativeEventEmitter } from 'react-native';
 import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
-import { PropositionOfferPair } from './models/PropositionOfferPair';
+import Offer from './models/Offer';
 import { AdobePropositionCallback }  from './models/AdobePropositionCallback';
-import { cleanProposition } from './utils/cleanProposition';
+import AEPOptimizeError from './models/AEPOptimizeError';
+
 
 interface IOptimize {
   extensionVersion: () => Promise<string>;
   onPropositionUpdate: (adobeCallback: AdobePropositionCallback) => void;
   clearCachedPropositions: () => void;
-  getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>
-  updatePropositions: (decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) => void
-  displayed: (propositionOfferPairs: Array<PropositionOfferPair>) => void
-  generateDisplayInteractionXdm: (propositionOfferPairs: Array<PropositionOfferPair>) => Promise<Map<string, any>>
+  getPropositions: (decisionScopes: Array<DecisionScope>) => Promise<Map<string, Proposition>>;
+  updatePropositions: (
+    decisionScopes: Array<DecisionScope>,
+    xdm?: Map<string, any>,
+    data?: Map<string, any>,
+    onSuccess?: (response: Map<string, Proposition>) => void,
+    onError?: (error: AEPOptimizeError) => void
+  ) => void;
+  displayed: (offers: Array<Offer>) => void;
+  generateDisplayInteractionXdm: (offers: Array<Offer>) => Promise<Map<string, any>>;
 }
 
 const RCTAEPOptimize = NativeModules.AEPOptimize;
@@ -98,42 +105,43 @@ const Optimize: IOptimize = {
 * @param {Array<DecisionScope>} decisionScopes - containing scopes for which offers need to be updated
 * @param {Map<string, any>} xdm - containing additional XDM-formatted data to be sent in the personalization query request. 
 * @param {Map<string, any>} data - containing additional free-form data to be sent in the personalization query request
+* @param {UpdatePropositionsCallback} callback - optional callback that will be called with the response containing updated propositions and/or error information
 */
-  updatePropositions(decisionScopes: Array<DecisionScope>, xdm?: Map<string, any>, data?: Map<string, any>) {    
+  updatePropositions(
+    decisionScopes: Array<DecisionScope>,
+    xdm?: Map<string, any>,
+    data?: Map<string, any>,
+    onSuccess?: (response: Map<string, Proposition>) => void,
+    onError?: (error: AEPOptimizeError) => void
+  ) {
     var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
-    RCTAEPOptimize.updatePropositions(decisionScopeNames, xdm, data);
+    RCTAEPOptimize.updatePropositions(
+      decisionScopeNames,
+      xdm,
+      data,
+      typeof onSuccess === 'function' ? onSuccess : () => {},
+      typeof onError === 'function' ? onError : () => {}
+    );
   },  
 
-  /**
-  * Dispatches an event for the Edge network extension to send an Experience Event to the Edge
-  * network with the display interaction data for the given list of [Offer]s.
-  * @param {Array<PropositionOfferPair>} offers - an array of PropositionOfferPair objects that were displayed
-  */
-  displayed(propositionOfferPairs: Array<{proposition: Proposition, offerId: string}>) {
-    const cleanedPairs = propositionOfferPairs.map((pair) => ({
-      proposition: cleanProposition(pair.proposition),
-      offerId: pair.offerId
-    }));
-
-    RCTAEPOptimize.multipleOffersDisplayed(cleanedPairs);
+/**
+   * Dispatches an event for the Edge network extension to send an Experience Event to the Edge network with the display interaction data for the
+   * given list of Proposition offers.
+   * @param {Array<Offer>} offers - an array of Proposition Offers
+   */
+  displayed(offers: Array<Offer>) {
+    RCTAEPOptimize.multipleOffersDisplayed(offers);
   },
 
-  /**
-  * Generates a map containing XDM formatted data for `Experience Event - OptimizeProposition Interactions` 
-  * field group from the provided list of PropositionOfferPair objects.
-  * This function extracts unique OptimizePropositions from the list of offers based on their
-  * proposition ID and generates XDM data for the interaction.
-  * @param {Array<{proposition: Proposition, offerId: string}>} propositionOfferPairs - an array of {proposition: Proposition, offerId: string} objects
-  * @returns {Promise<Map<string, any>>} - a Promise that resolves with the Display Interaction XDM
-  */
-  generateDisplayInteractionXdm(propositionOfferPairs: Array<{proposition: Proposition, offerId: string}>): Promise<Map<string, any>> {
-    const cleanedPairs = propositionOfferPairs.map((pair) => ({
-      proposition: cleanProposition(pair.proposition),
-      offerId: pair.offerId
-    }));
-
-    return Promise.resolve(RCTAEPOptimize.generateDisplayInteractionXdmForMultipleOffers(cleanedPairs));
-  }
+/**
+ * Generates a map containing XDM formatted data for `Experience Event - OptimizeProposition Interactions` 
+ * field group from the provided list of Proposition Offers.
+ * @param {Array<Offer>} offers - an array of Proposition Offers
+ * @return {Promise<Map<string, any>>} - a promise that resolves to xdm map
+ */
+  generateDisplayInteractionXdm(offers: Array<Offer>) {
+    return RCTAEPOptimize.multipleOffersGenerateDisplayInteractionXdm(offers);
+  },
 };
 
 export default Optimize;
