@@ -25,6 +25,7 @@ import {
 import { ContentTemplate, TemplateType } from '../../types/Templates';
 import { ContentViewEvent } from '../../types/ContentViewEvent';
 import { Linking, PressableProps, useColorScheme } from 'react-native';
+import MessagingEdgeEventType from '../../../models/MessagingEdgeEventType';
 import SmallImageCard from '../SmallImageCard/SmallImageCard';
 import ImageOnlyCard from '../ImageOnlyCard/ImageOnlyCard';
 import LargeImageCard from '../LargeImageCard/LargeImageCard';
@@ -47,6 +48,7 @@ export interface ContentViewProps extends PressableProps {
     imageOnlyStyle?: ImageOnlyContentStyle;
   };
   listener?: ContentCardEventListener;
+  propositionItem?: any; // Optional propositionItem for tracking when template is a plain object
 }
 
 export const ContentView: React.FC<ContentViewProps> = ({
@@ -61,11 +63,19 @@ export const ContentView: React.FC<ContentViewProps> = ({
 
   const onDismiss = useCallback(() => {
     listener?.('onDismiss', template);
+    
+    // Track dismiss event using propositionItem
+    template.track?.(MessagingEdgeEventType.DISMISS);
+    
     setIsVisible(false);
-  }, [listener]);
+  }, [listener, template]);
 
   const onPress = useCallback(() => {
     listener?.('onInteract', template);
+    
+    // Track interaction event using propositionItem
+    template.track?.('content_clicked', MessagingEdgeEventType.INTERACT, null);
+    
     if (template.data?.content?.actionUrl) {
       try {
         Linking.openURL(template.data.content.actionUrl);
@@ -76,15 +86,20 @@ export const ContentView: React.FC<ContentViewProps> = ({
         );
       }
     }
-  }, [template.data?.content?.actionUrl]);
+  }, [template]);
 
   // Call listener on mount to signal view display (only once to prevent duplicates)
   useEffect(() => {
     if (!displayedRef.current) {
       listener?.('onDisplay', template);
+      
+      // Track display event using propositionItem
+      template.track?.(MessagingEdgeEventType.DISPLAY);
+      console.log('template.track', template.track);
+      
       displayedRef.current = true;
     }
-  }, [listener]);
+  }, [listener, template]);
 
   const imageUri = useMemo(() => {
     if (colorScheme === 'dark' && template.data?.content?.image?.darkUrl) {
