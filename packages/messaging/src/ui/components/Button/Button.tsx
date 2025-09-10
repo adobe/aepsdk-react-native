@@ -11,6 +11,7 @@
 */
 import { useCallback } from 'react';
 import {
+  GestureResponderEvent,
   Linking,
   Pressable,
   PressableProps,
@@ -23,7 +24,7 @@ export interface ButtonProps extends Omit<PressableProps, 'onPress'> {
   actionUrl?: string;
   id?: string;
   title: string;
-  onPress?: (interactId?: string) => void;
+  onPress?: (interactId?: string, event?: GestureResponderEvent) => void;
   interactId?: string;
   textStyle?: (TextStyle | undefined) | (TextStyle | undefined)[];
 }

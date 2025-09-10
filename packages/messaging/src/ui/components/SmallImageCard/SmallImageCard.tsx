@@ -26,6 +26,7 @@ import { SmallImageContentData } from '../../../models/ContentCard';
 import DismissButton from '../DismissButton/DismissButton';
 import { useTheme } from '../../theme/ThemeProvider';
 import useAspectRatio from '../../hooks/useAspectRatio';
+import { ComponentOverrideProps } from '../../types';
 
 export interface SmallImageContentStyle {
   /** Applies to the root of the content card */
@@ -46,14 +47,15 @@ export interface SmallImageContentStyle {
   dismissButton?: PressableProps['style'];
 }
 
-export interface SmallImageCardProps extends PressableProps {
-  content: SmallImageContentData;
-  imageUri?: string;
-  height?: number;
-  styleOverrides?: SmallImageContentStyle;
-  onDismiss?: () => void;
-  onPress?: () => void;
-}
+export type SmallImageCardProps = PressableProps &
+  ComponentOverrideProps & {
+    content: SmallImageContentData;
+    imageUri?: string;
+    height?: number;
+    styleOverrides?: SmallImageContentStyle;
+    onDismiss?: () => void;
+    onPress?: () => void;
+  };
 
 const SmallImageCard: React.FC<SmallImageCardProps> = ({
   content,
@@ -63,6 +65,16 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
   style,
   onDismiss,
   onPress,
+  ContainerProps,
+  ImageProps,
+  ContentContainerProps,
+  TextProps,
+  TitleProps,
+  BodyProps,
+  ButtonContainerProps,
+  ButtonProps,
+  DismissButtonProps,
+  ImageContainerProps,
   ...props
 }) => {
   const theme = useTheme();
@@ -78,9 +90,15 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
       ]}
       {...props}
     >
-      <View style={[styles.container, styleOverrides?.container]}>
+      <View
+        style={[styles.container, styleOverrides?.container]}
+        {...ContainerProps}
+      >
         {imageUri && (
-          <View style={[styles.imageContainer, styleOverrides?.imageContainer]}>
+          <View
+            style={[styles.imageContainer, styleOverrides?.imageContainer]}
+            {...ImageContainerProps}
+          >
             <Image
               source={{ uri: imageUri }}
               style={[
@@ -88,12 +106,14 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                 { aspectRatio: imageAspectRatio },
                 styleOverrides?.image
               ]}
+              {...ImageProps}
             />
           </View>
         )}
 
         <View
           style={[styles.contentContainer, styleOverrides?.contentContainer]}
+          {...ContentContainerProps}
         >
           {content?.title?.content && (
             <Text
@@ -103,6 +123,8 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                 styleOverrides?.text,
                 styleOverrides?.title
               ]}
+              {...TextProps}
+              {...TitleProps}
             >
               {content.title.content}
             </Text>
@@ -115,12 +137,15 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                 styleOverrides?.text,
                 styleOverrides?.body
               ]}
+              {...TextProps}
+              {...BodyProps}
             >
               {content.body.content}
             </Text>
           )}
           <View
             style={[styles.buttonContainer, styleOverrides?.buttonContainer]}
+            {...ButtonContainerProps}
           >
             {content?.buttons?.length &&
               content?.buttons?.length > 0 &&
@@ -132,6 +157,7 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
                   onPress={onPress}
                   style={styleOverrides?.button}
                   textStyle={[styleOverrides?.text, styleOverrides?.buttonText]}
+                  {...ButtonProps}
                 />
               ))}
           </View>
@@ -139,6 +165,7 @@ const SmallImageCard: React.FC<SmallImageCardProps> = ({
             <DismissButton
               onPress={onDismiss}
               type={content.dismissBtn.style}
+              {...DismissButtonProps}
             />
           )}
         </View>

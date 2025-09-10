@@ -20,20 +20,20 @@ import {
   Appearance,
   ColorSchemeName,
   Platform,
-  TextInput
+  TextInput,
+  FlatList
 } from 'react-native';
 import { useEffect } from 'react';
 import { useColorScheme } from '../hooks/useColorScheme';
 import {
   Messaging,
-  ContentView,
+  ContentCardView,
   ContentTemplate,
-  TemplateType,
   ThemeProvider
 } from '@adobe/react-native-aepmessaging';
 import { MobileCore } from '@adobe/react-native-aepcore';
 
-const ContentCardView = () => {
+const ContentCardsView = () => {
   const [content, setContent] = useState<ContentTemplate[] | null>(null);
   const [selectedView, setSelectedView] = useState<string>('Remote');
   const [showPicker, setShowPicker] = useState<boolean>(false);
@@ -71,30 +71,32 @@ const ContentCardView = () => {
       console.log(' No action text entered');
       return;
     }
-    
+
     setIsLoading(true);
     console.log('Tracking action:', trackInput);
-    
+
     try {
       // Define the surface based on platform
-      const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
-      
+      const surface =
+        Platform.OS === 'android'
+          ? 'rn/android/remote_image'
+          : 'rn/ios/remote_image';
+
       // Track the action
       MobileCore.trackAction(trackInput);
-      
+
       // Wait a moment for the action to be processed
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // Update propositions first
       console.log('Updating propositions for surface:', surface);
       await Messaging.updatePropositionsForSurfaces([surface]);
-      
+
       // Refresh content cards
       console.log('Refreshing content cards...');
       const newContent = await Messaging.getContentCardUI(surface);
       console.log('📱 New content:', newContent);
       setContent(newContent);
-      
     } catch (error) {
       console.error('Error tracking action or refreshing content:', error);
     } finally {
@@ -104,21 +106,25 @@ const ContentCardView = () => {
 
   useEffect(() => {
     // Define the surface based on platform
-    const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
+    const surface =
+      Platform.OS === 'android'
+        ? 'rn/android/remote_image'
+        : 'rn/ios/remote_image';
     console.log('Using surface:', surface);
-    
+
     // Track initial action
     MobileCore.trackAction('small_image');
-   
+
     // Wait for propositions to be updated from layout.tsx
     const timer = setTimeout(async () => {
-      console.log("Getting content cards (propositions should already be updated from _layout.tsx)...");
+      console.log(
+        'Getting content cards (propositions should already be updated from _layout.tsx)...'
+      );
       try {
         // Just get the content - propositions should already be updated in _layout.tsx
         const content = await Messaging.getContentCardUI(surface);
         console.log('Content retrieved');
         setContent(content);
-        
       } catch (error) {
         console.error('Error fetching content cards:', error);
         // Fallback: try updating propositions if they weren't ready
@@ -133,7 +139,7 @@ const ContentCardView = () => {
         }
       }
     }, 3000); // Wait 3 seconds for SDK initialization
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -273,7 +279,7 @@ const ContentCardView = () => {
         {selectedView === 'SmallImage' && (
           <View>
             {renderStyledText('[Basic] all fields')}
-            <ContentView
+            <ContentCardView
               key="1"
               template={SMALL_IMAGE_CONTENT_ALL_FIELDS}
               styleOverrides={{
@@ -315,7 +321,7 @@ const ContentCardView = () => {
                 }
               }}
             >
-              <ContentView
+              <ContentCardView
                 key="1"
                 template={SMALL_IMAGE_CONTENT_ALL_FIELDS}
                 listener={(event, card) => {
@@ -325,17 +331,17 @@ const ContentCardView = () => {
             </ThemeProvider>
 
             {renderStyledText('[dismiss button] NO ')}
-            <ContentView
+            <ContentCardView
               key="11"
               template={SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON}
             />
             {renderStyledText('[dismiss button] Simple')}
-            <ContentView
+            <ContentCardView
               key="12"
               template={SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE}
             />
             {renderStyledText('[image] Invalid')}
-            <ContentView
+            <ContentCardView
               key="2"
               template={SMALL_IMAGE_CONTENT_INVALID_IMAGE}
               styleOverrides={{
@@ -356,12 +362,12 @@ const ContentCardView = () => {
               }}
             />
             {renderStyledText('[dark/light] darkUrl')}
-            <ContentView
+            <ContentCardView
               key="3"
               template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
             />
             {renderStyledText('[style]title (2 lines), body (4 lines)')}
-            <ContentView
+            <ContentCardView
               key="4"
               template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
               styleOverrides={{
@@ -385,15 +391,12 @@ const ContentCardView = () => {
               }}
             />
             {renderStyledText('[button] 3')}
-            <ContentView
-              key="5"
-              template={SMALL_IMAGE_CONTENT_3_BUTTONS}
-            />
+            <ContentCardView key="5" template={SMALL_IMAGE_CONTENT_3_BUTTONS} />
             {renderStyledText(
               '[style] height (150) title (1 line), body (1 line)'
             )}
             <View style={{ height: 150 }}>
-              <ContentView
+              <ContentCardView
                 key="6"
                 template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
                 styleOverrides={{
@@ -410,7 +413,7 @@ const ContentCardView = () => {
             </View>
             {renderStyledText('image width (50%)')}
             <View>
-              <ContentView
+              <ContentCardView
                 key="6"
                 template={SMALL_IMAGE_CONTENT_IMAGE_DARK_URL}
                 styleOverrides={{
@@ -435,7 +438,7 @@ const ContentCardView = () => {
               'No button, image width (40%), title (2 lines), body (6 lines), height (180)'
             )}
             <View>
-              <ContentView
+              <ContentCardView
                 key="7"
                 template={SMALL_IMAGE_CONTENT_NO_BUTTON}
                 styleOverrides={{
@@ -457,7 +460,7 @@ const ContentCardView = () => {
             </View>
             {renderStyledText('No button, image (right aligned)')}
             <View>
-              <ContentView
+              <ContentCardView
                 key="8"
                 template={SMALL_IMAGE_CONTENT_NO_BUTTON}
                 styleOverrides={{
@@ -488,24 +491,30 @@ const ContentCardView = () => {
         {selectedView === 'LargeImage' && (
           <View>
             {renderStyledText('[basic] all fields')}
-            <ContentView key="1" template={LARGE_IMAGE_CONTENT_ALL_FIELDS} />
+            <ContentCardView
+              key="1"
+              template={LARGE_IMAGE_CONTENT_ALL_FIELDS}
+            />
             {renderStyledText('[button] 3')}
-            <ContentView key="2" template={LARGE_IMAGE_CONTENT_3_BUTTONS} />
+            <ContentCardView key="2" template={LARGE_IMAGE_CONTENT_3_BUTTONS} />
 
             {renderStyledText('[dismiss button] NO ')}
-            <ContentView
+            <ContentCardView
               key="3"
               template={LARGE_IMAGE_CONTENT_NO_DISMISS_BUTTON}
             />
 
             {renderStyledText('[image] Invalid')}
-            <ContentView key="4" template={LARGE_IMAGE_CONTENT_INVALID_IMAGE} />
+            <ContentCardView
+              key="4"
+              template={LARGE_IMAGE_CONTENT_INVALID_IMAGE}
+            />
             {renderStyledText('[dark/light] darkUrl')}
-            <ContentView key="5" template={LARGE_IMAGE_CONTENT_DARK_URL} />
+            <ContentCardView key="5" template={LARGE_IMAGE_CONTENT_DARK_URL} />
             {renderStyledText(
               '[style]title (2 lines), body (2 lines), image (1:1)'
             )}
-            <ContentView
+            <ContentCardView
               key="6"
               template={LARGE_IMAGE_CONTENT_LONG_TITLE}
               styleOverrides={{
@@ -546,7 +555,7 @@ const ContentCardView = () => {
                 }
               }}
             >
-              <ContentView
+              <ContentCardView
                 key="7"
                 template={LARGE_IMAGE_CONTENT_DARK_URL}
                 listener={(event, card) => {
@@ -562,7 +571,7 @@ const ContentCardView = () => {
         {selectedView === 'ImageOnly' && (
           <View>
             {renderStyledText('1. All fields')}
-            <ContentView
+            <ContentCardView
               key="1"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               listener={(event, card) => {
@@ -574,10 +583,8 @@ const ContentCardView = () => {
               }}
             />
 
-            {renderStyledText(
-              '2.Adobe default image, dismiss style circle'
-            )}
-            <ContentView
+            {renderStyledText('2.Adobe default image, dismiss style circle')}
+            <ContentCardView
               key="2"
               template={IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE}
               listener={(event, card) => {
@@ -590,19 +597,22 @@ const ContentCardView = () => {
             />
 
             {renderStyledText('3. No dismiss button - no card height')}
-            <ContentView
+            <ContentCardView
               key="3"
               template={IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON}
             />
 
             {renderStyledText('4. [image] Invalid')}
-            <ContentView key="4" template={IMAGE_ONLY_CONTENT_INVALID_IMAGE} />
+            <ContentCardView
+              key="4"
+              template={IMAGE_ONLY_CONTENT_INVALID_IMAGE}
+            />
 
             {renderStyledText('5.[action] No actionUrl')}
-            <ContentView key="5" template={IMAGE_ONLY_CONTENT_NO_ACTION} />
+            <ContentCardView key="5" template={IMAGE_ONLY_CONTENT_NO_ACTION} />
 
             {renderStyledText('6.[style] Custom aspect ratio (1:1)')}
-            <ContentView
+            <ContentCardView
               key="6"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
@@ -622,7 +632,7 @@ const ContentCardView = () => {
             />
 
             {renderStyledText('7.[style] Custom height (150)')}
-            <ContentView
+            <ContentCardView
               key="7"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
@@ -637,7 +647,7 @@ const ContentCardView = () => {
             {renderStyledText(
               '8. [style] Custom width (80%), set image container backgroud color'
             )}
-            <ContentView
+            <ContentCardView
               key="8"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
@@ -653,7 +663,7 @@ const ContentCardView = () => {
             />
 
             {renderStyledText('9. [style] Card customization')}
-            <ContentView
+            <ContentCardView
               key="9"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
@@ -671,7 +681,7 @@ const ContentCardView = () => {
             />
 
             {renderStyledText('10.[style] Image container customization')}
-            <ContentView
+            <ContentCardView
               key="10"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
@@ -691,7 +701,7 @@ const ContentCardView = () => {
             />
 
             {renderStyledText('11.[style] Combined styles')}
-            <ContentView
+            <ContentCardView
               key="11"
               template={IMAGE_ONLY_CONTENT_ALL_FIELDS}
               styleOverrides={{
@@ -712,44 +722,56 @@ const ContentCardView = () => {
             />
 
             {renderStyledText('12.[image] No darkUrl (only light mode)')}
-            <ContentView key="12" template={IMAGE_ONLY_CONTENT_NO_DARK_URL} />
+            <ContentCardView
+              key="12"
+              template={IMAGE_ONLY_CONTENT_NO_DARK_URL}
+            />
 
             {renderStyledText(
               '1.[image] No Light Mode (only dark mode) - no actionUrl'
             )}
-            <ContentView key="15" template={IMAGE_ONLY_CONTENT_NO_LIGHT_MODE} />
+            <ContentCardView
+              key="15"
+              template={IMAGE_ONLY_CONTENT_NO_LIGHT_MODE}
+            />
             <View style={{ height: 200 }} />
           </View>
         )}
         {selectedView === 'Remote' && (
           <View>
             {renderStyledText('[Remote] cards')}
-            
+
             {/* Track Action Section */}
-            <View style={{ 
-              marginHorizontal: 20, 
-              marginBottom: 20,
-              padding: 15,
-              backgroundColor: colorScheme === 'dark' ? '#2A2A2A' : '#F5F5F5',
-              borderRadius: 10,
-              borderWidth: 1,
-              borderColor: colorScheme === 'dark' ? '#444' : '#E0E0E0'
-            }}>
-              <Text style={{ 
-                color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
-                fontSize: 16,
-                fontWeight: '600',
-                marginBottom: 10,
-                textAlign: 'center'
-              }}>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginBottom: 20,
+                padding: 15,
+                backgroundColor: colorScheme === 'dark' ? '#2A2A2A' : '#F5F5F5',
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: colorScheme === 'dark' ? '#444' : '#E0E0E0'
+              }}
+            >
+              <Text
+                style={{
+                  color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
+                  fontSize: 16,
+                  fontWeight: '600',
+                  marginBottom: 10,
+                  textAlign: 'center'
+                }}
+              >
                 Track Action & Refresh Content
               </Text>
-              
-              <View style={{ 
-                flexDirection: 'row', 
-                alignItems: 'center',
-                marginBottom: 10
-              }}>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 10
+                }}
+              >
                 <TextInput
                   style={{
                     flex: 1,
@@ -759,11 +781,14 @@ const ContentCardView = () => {
                     borderRadius: 8,
                     paddingHorizontal: 12,
                     marginRight: 10,
-                    backgroundColor: colorScheme === 'dark' ? '#3A3A3A' : '#FFFFFF',
+                    backgroundColor:
+                      colorScheme === 'dark' ? '#3A3A3A' : '#FFFFFF',
                     color: colorScheme === 'dark' ? '#FFFFFF' : '#000000'
                   }}
                   placeholder="track action"
-                  placeholderTextColor={colorScheme === 'dark' ? '#888' : '#999'}
+                  placeholderTextColor={
+                    colorScheme === 'dark' ? '#888' : '#999'
+                  }
                   value={trackInput}
                   onChangeText={setTrackInput}
                   autoCapitalize="none"
@@ -786,21 +811,25 @@ const ContentCardView = () => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              
-              <Text style={{ 
-                color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
-                fontSize: 12,
-                textAlign: 'center',
-                fontStyle: 'italic'
-              }}>
-                Enter an action name to track it, or leave empty to just refresh content
+
+              <Text
+                style={{
+                  color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                  fontSize: 12,
+                  textAlign: 'center',
+                  fontStyle: 'italic'
+                }}
+              >
+                Enter an action name to track it, or leave empty to just refresh
+                content
               </Text>
             </View>
-            
+
             {/* Content Cards Display */}
+
             {content && content.length > 0 ? (
               content.map((item) => (
-                <ContentView
+                <ContentCardView
                   key={item.id}
                   template={item}
                   listener={(event, card) => {
@@ -819,37 +848,47 @@ const ContentCardView = () => {
                 />
               ))
             ) : (
-              <View style={{ 
-                padding: 20, 
-                margin: 20, 
-                backgroundColor: colorScheme === 'dark' ? '#3A3A3A' : '#F5F5F5',
-                borderRadius: 10,
-                alignItems: 'center'
-              }}>
-                <Text style={{ 
-                  color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
-                  fontSize: 16,
-                  textAlign: 'center',
-                  marginBottom: 10,
-                  fontWeight: '600'
-                }}>
+              <View
+                style={{
+                  padding: 20,
+                  margin: 20,
+                  backgroundColor:
+                    colorScheme === 'dark' ? '#3A3A3A' : '#F5F5F5',
+                  borderRadius: 10,
+                  alignItems: 'center'
+                }}
+              >
+                <Text
+                  style={{
+                    color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
+                    fontSize: 16,
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    fontWeight: '600'
+                  }}
+                >
                   No Content Cards Available
                 </Text>
-                <Text style={{ 
-                  color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
-                  fontSize: 14,
-                  textAlign: 'center',
-                  lineHeight: 20
-                }}>
-                  Content cards will appear here when they are configured in Adobe Journey Optimizer for surface: "rn/ios/remote_image"
+                <Text
+                  style={{
+                    color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                    fontSize: 14,
+                    textAlign: 'center',
+                    lineHeight: 20
+                  }}
+                >
+                  Content cards will appear here when they are configured in
+                  Adobe Journey Optimizer for surface: "rn/ios/remote_image"
                 </Text>
-                <Text style={{ 
-                  color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
-                  fontSize: 12,
-                  textAlign: 'center',
-                  marginTop: 10,
-                  fontStyle: 'italic'
-                }}>
+                <Text
+                  style={{
+                    color: colorScheme === 'dark' ? '#CCCCCC' : '#666666',
+                    fontSize: 12,
+                    textAlign: 'center',
+                    marginTop: 10,
+                    fontStyle: 'italic'
+                  }}
+                >
                   Try tracking an action above to refresh content cards.
                 </Text>
               </View>
@@ -860,13 +899,13 @@ const ContentCardView = () => {
     </ScrollView>
   );
 };
-export default ContentCardView;
+export default ContentCardsView;
 
 // All ContentTemplates updated with proper data structure
 
 const SMALL_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
   id: 'small-image-all-fields',
-  type: TemplateType.SMALL_IMAGE,
+  type: 'SmallImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -904,7 +943,8 @@ const SMALL_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
       },
       actionUrl: '',
       body: {
-        content: 'Get live scores, real-time updates, and exclusive content right at your fingertips.'
+        content:
+          'Get live scores, real-time updates, and exclusive content right at your fingertips.'
       },
       title: {
         content: 'Stay connected to all the action'
@@ -915,7 +955,7 @@ const SMALL_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
 
 const SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
   id: 'small-image-no-dismiss',
-  type: TemplateType.SMALL_IMAGE,
+  type: 'SmallImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -943,7 +983,8 @@ const SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
       ],
       actionUrl: '',
       body: {
-        content: 'Get live scores, real-time updates, and exclusive content right at your fingertips.'
+        content:
+          'Get live scores, real-time updates, and exclusive content right at your fingertips.'
       },
       title: {
         content: 'Stay connected to all the action'
@@ -954,7 +995,7 @@ const SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
 
 const SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE: ContentTemplate = {
   id: 'small-image-dismiss-button-simple',
-  type: TemplateType.SMALL_IMAGE,
+  type: 'SmallImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -992,7 +1033,8 @@ const SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE: ContentTemplate = {
       },
       actionUrl: '',
       body: {
-        content: 'Get live scores, real-time updates, and exclusive content right at your fingertips.'
+        content:
+          'Get live scores, real-time updates, and exclusive content right at your fingertips.'
       },
       title: {
         content: 'Stay connected to all the action'
@@ -1003,7 +1045,7 @@ const SMALL_IMAGE_CONTENT_DISMISS_BUTTON_SIMPLE: ContentTemplate = {
 
 const SMALL_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
   id: 'small-image-invalid-image',
-  type: TemplateType.SMALL_IMAGE,
+  type: 'SmallImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1014,8 +1056,9 @@ const SMALL_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
       surface: 'rn/ios/sample'
     },
     content: {
-     body: {
-        content: 'Get live scores, real-time updates, and exclusive content right at your fingertips.'
+      body: {
+        content:
+          'Get live scores, real-time updates, and exclusive content right at your fingertips.'
       },
       title: {
         content: 'Stay connected to all the action'
@@ -1045,7 +1088,7 @@ const SMALL_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
 
 const SMALL_IMAGE_CONTENT_IMAGE_DARK_URL: ContentTemplate = {
   id: 'small-image-dark-url',
-  type: TemplateType.SMALL_IMAGE,
+  type: 'SmallImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1057,7 +1100,8 @@ const SMALL_IMAGE_CONTENT_IMAGE_DARK_URL: ContentTemplate = {
     },
     content: {
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       title: {
         content: 'Get Ready for the Basketball Season Kickoff!'
@@ -1077,7 +1121,8 @@ const SMALL_IMAGE_CONTENT_IMAGE_DARK_URL: ContentTemplate = {
         style: 'circle'
       },
       image: {
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
         alt: '',
         url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
       }
@@ -1087,7 +1132,7 @@ const SMALL_IMAGE_CONTENT_IMAGE_DARK_URL: ContentTemplate = {
 
 const SMALL_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
   id: 'small-image-3-buttons',
-  type: TemplateType.SMALL_IMAGE,
+  type: 'SmallImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1099,7 +1144,8 @@ const SMALL_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
     },
     content: {
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       title: {
         content: 'Get Ready for the Basketball Season Kickoff!'
@@ -1144,7 +1190,7 @@ const SMALL_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
 
 const SMALL_IMAGE_CONTENT_NO_BUTTON: ContentTemplate = {
   id: 'small-image-no-button',
-  type: TemplateType.SMALL_IMAGE,
+  type: 'SmallImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1156,7 +1202,8 @@ const SMALL_IMAGE_CONTENT_NO_BUTTON: ContentTemplate = {
     },
     content: {
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       title: {
         content: 'Get Ready for the Basketball Season Kickoff!'
@@ -1177,7 +1224,7 @@ const SMALL_IMAGE_CONTENT_NO_BUTTON: ContentTemplate = {
 // Large Image Templates
 const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
   id: 'large-image-all-fields',
-  type: TemplateType.LARGE_IMAGE,
+  type: 'LargeImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1190,7 +1237,8 @@ const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
     content: {
       actionUrl: 'https://cardaction.com',
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       buttons: [
         {
@@ -1219,7 +1267,7 @@ const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
 
 const LARGE_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
   id: 'large-image-3-buttons',
-  type: TemplateType.LARGE_IMAGE,
+  type: 'LargeImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1232,7 +1280,8 @@ const LARGE_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
     content: {
       actionUrl: 'https://cardaction.com',
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       buttons: [
         {
@@ -1274,7 +1323,7 @@ const LARGE_IMAGE_CONTENT_3_BUTTONS: ContentTemplate = {
 
 const LARGE_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
   id: 'large-image-no-dismiss',
-  type: TemplateType.LARGE_IMAGE,
+  type: 'LargeImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1287,7 +1336,8 @@ const LARGE_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
     content: {
       actionUrl: 'https://cardaction.com',
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       buttons: [
         {
@@ -1315,7 +1365,7 @@ const LARGE_IMAGE_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
 
 const LARGE_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
   id: 'large-image-invalid',
-  type: TemplateType.LARGE_IMAGE,
+  type: 'LargeImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1328,7 +1378,8 @@ const LARGE_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
     content: {
       actionUrl: 'https://cardaction.com',
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       buttons: [
         {
@@ -1357,7 +1408,7 @@ const LARGE_IMAGE_CONTENT_INVALID_IMAGE: ContentTemplate = {
 
 const LARGE_IMAGE_CONTENT_DARK_URL: ContentTemplate = {
   id: 'large-image-dark-url',
-  type: TemplateType.LARGE_IMAGE,
+  type: 'LargeImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1370,7 +1421,8 @@ const LARGE_IMAGE_CONTENT_DARK_URL: ContentTemplate = {
     content: {
       actionUrl: 'https://cardaction.com',
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       buttons: [
         {
@@ -1385,7 +1437,8 @@ const LARGE_IMAGE_CONTENT_DARK_URL: ContentTemplate = {
       image: {
         alt: '',
         url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
       },
       dismissBtn: {
         style: 'none'
@@ -1399,7 +1452,7 @@ const LARGE_IMAGE_CONTENT_DARK_URL: ContentTemplate = {
 
 const LARGE_IMAGE_CONTENT_LONG_TITLE: ContentTemplate = {
   id: 'large-image-long-title',
-  type: TemplateType.LARGE_IMAGE,
+  type: 'LargeImage',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1412,7 +1465,8 @@ const LARGE_IMAGE_CONTENT_LONG_TITLE: ContentTemplate = {
     content: {
       actionUrl: 'https://cardaction.com',
       body: {
-        content: 'Tickets are on sale now! Don\'t miss out on securing your seat to witness the high-flying action from the best players in the game'
+        content:
+          "Tickets are on sale now! Don't miss out on securing your seat to witness the high-flying action from the best players in the game"
       },
       buttons: [
         {
@@ -1427,13 +1481,15 @@ const LARGE_IMAGE_CONTENT_LONG_TITLE: ContentTemplate = {
       image: {
         alt: '',
         url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
       },
       dismissBtn: {
         style: 'none'
       },
       title: {
-        content: 'This is large image title, it\'s very long very long very long very long'
+        content:
+          "This is large image title, it's very long very long very long very long"
       }
     }
   }
@@ -1442,7 +1498,7 @@ const LARGE_IMAGE_CONTENT_LONG_TITLE: ContentTemplate = {
 // Image Only Templates
 const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
   id: 'image-only-all-fields',
-  type: TemplateType.IMAGE_ONLY,
+  type: 'ImageOnly',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1456,7 +1512,8 @@ const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
       actionUrl: 'https://www.adobe.com/',
       image: {
         url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
         alt: 'flight offer'
       },
       dismissBtn: {
@@ -1468,7 +1525,7 @@ const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
 
 const IMAGE_ONLY_CONTENT_WITH_ACTION_URL: ContentTemplate = {
   id: 'image-only-with-action-url',
-  type: TemplateType.IMAGE_ONLY,
+  type: 'ImageOnly',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1482,7 +1539,8 @@ const IMAGE_ONLY_CONTENT_WITH_ACTION_URL: ContentTemplate = {
       actionUrl: 'https://google.com',
       image: {
         url: 'https://t4.ftcdn.net/jpg/13/35/40/27/240_F_1335402728_gCAPzivq5VytTJVCEcfIB2eX3ZCdE8cc.jpg',
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
         alt: 'with action URL - Google Images'
       },
       dismissBtn: {
@@ -1494,7 +1552,7 @@ const IMAGE_ONLY_CONTENT_WITH_ACTION_URL: ContentTemplate = {
 
 const IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE: ContentTemplate = {
   id: 'image-only-dismiss-circle',
-  type: TemplateType.IMAGE_ONLY,
+  type: 'ImageOnly',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1508,7 +1566,8 @@ const IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE: ContentTemplate = {
       actionUrl: 'https://google.com',
       image: {
         url: 'https://i.ibb.co/0X8R3TG/Messages-24.png',
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
         alt: 'flight offer'
       },
       dismissBtn: {
@@ -1520,7 +1579,7 @@ const IMAGE_ONLY_CONTENT_DISMISS_BUTTON_CIRCLE: ContentTemplate = {
 
 const IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
   id: 'image-only-no-dismiss',
-  type: TemplateType.IMAGE_ONLY,
+  type: 'ImageOnly',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1534,7 +1593,8 @@ const IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
       actionUrl: 'https://google.com',
       image: {
         url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
         alt: 'flight offer'
       }
     }
@@ -1543,7 +1603,7 @@ const IMAGE_ONLY_CONTENT_NO_DISMISS_BUTTON: ContentTemplate = {
 
 const IMAGE_ONLY_CONTENT_INVALID_IMAGE: ContentTemplate = {
   id: 'image-only-invalid-image',
-  type: TemplateType.IMAGE_ONLY,
+  type: 'ImageOnly',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1569,7 +1629,7 @@ const IMAGE_ONLY_CONTENT_INVALID_IMAGE: ContentTemplate = {
 
 const IMAGE_ONLY_CONTENT_NO_ACTION: ContentTemplate = {
   id: 'image-only-no-action',
-  type: TemplateType.IMAGE_ONLY,
+  type: 'ImageOnly',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1582,7 +1642,8 @@ const IMAGE_ONLY_CONTENT_NO_ACTION: ContentTemplate = {
     content: {
       image: {
         url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
         alt: 'non-clickable image'
       },
       dismissBtn: {
@@ -1594,7 +1655,7 @@ const IMAGE_ONLY_CONTENT_NO_ACTION: ContentTemplate = {
 
 const IMAGE_ONLY_CONTENT_NO_DARK_URL: ContentTemplate = {
   id: 'image-only-no-dark-url',
-  type: TemplateType.IMAGE_ONLY,
+  type: 'ImageOnly',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1619,7 +1680,7 @@ const IMAGE_ONLY_CONTENT_NO_DARK_URL: ContentTemplate = {
 
 const IMAGE_ONLY_CONTENT_NO_LIGHT_MODE: ContentTemplate = {
   id: 'image-only-different-image',
-  type: TemplateType.IMAGE_ONLY,
+  type: 'ImageOnly',
   schema: 'https://ns.adobe.com/personalization/message/content-card' as any,
   data: {
     expiryDate: Date.now() + 86400000, // 24 hours from now
@@ -1632,7 +1693,8 @@ const IMAGE_ONLY_CONTENT_NO_LIGHT_MODE: ContentTemplate = {
     content: {
       image: {
         url: '',
-        darkUrl: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
+        darkUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*',
         alt: 'basketball icon'
       },
       dismissBtn: {
