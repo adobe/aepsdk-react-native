@@ -44,7 +44,7 @@ export interface ContentCardContent {
   };
 }
 
-export type ImageOnlyContentData = Pick<
+export type ImageOnlyContent = Pick<
   ContentCardContent,
   'image' | 'dismissBtn' | 'actionUrl'
 >;
@@ -61,13 +61,13 @@ export interface ContentCardMeta {
 
 export interface ContentCardData extends PropositionItemData {
   id: string;
-  schema: PersonalizationSchema.CONTENT_CARD
+  schema: PersonalizationSchema.CONTENT_CARD;
   data: {
     contentType: 'application/json';
     expiryDate: number;
     publishedDate: number;
     meta: ContentCardMeta;
-    content: SmallImageContentData | LargeImageContentData | ImageOnlyContentData
+    content: SmallImageContentData | LargeImageContentData | ImageOnlyContent;
   };
 }
 export class ContentCard extends PropositionItem {
@@ -77,5 +77,4 @@ export class ContentCard extends PropositionItem {
     super(contentCardData);
     this.data = contentCardData.data;
   }
-
 }

@@ -12,34 +12,29 @@
 import React from 'react';
 import {
   Image,
-  ImageProps,
   ImageStyle,
   Pressable,
   PressableProps,
   StyleSheet,
   View,
-  ViewProps,
   ViewStyle
 } from 'react-native';
-import DismissButton, {
-  DismissButtonProps
-} from '../DismissButton/DismissButton';
-import { ImageOnlyContentData } from '../../../models/ContentCard';
+import DismissButton from '../DismissButton/DismissButton';
+import { ImageOnlyContent } from '../../../models/ContentCard';
 import useAspectRatio from '../../hooks/useAspectRatio';
+import { ComponentOverrideProps } from '../../types';
 
-export interface ImageOnlyContentProps {
-  content: ImageOnlyContentData;
+export type ImageOnlyContentProps = Pick<
+  ComponentOverrideProps,
+  'ContainerProps' | 'ImageContainerProps' | 'ImageProps' | 'DismissButtonProps'
+> & {
+  content: ImageOnlyContent;
   height?: number;
   imageUri?: string;
   styleOverrides?: ImageOnlyContentStyle;
   onDismiss?: () => void;
   onPress?: () => void;
-  ContainerProps?: ViewProps;
-  ImageContainerProps?: ViewProps;
-  ImageProps?: ImageProps;
-  DismissButtonProps?: DismissButtonProps;
-}
-
+};
 export interface ImageOnlyContentStyle {
   card?: Partial<ViewStyle>;
   imageContainer?: Partial<ViewStyle>;
@@ -65,8 +60,6 @@ const ImageOnlyCard: React.FC<ImageOnlyContentProps> = ({
   DismissButtonProps
 }) => {
   const imageAspectRatio = useAspectRatio(imageUri);
-  console.log(content.dismissBtn);
-  console.log(imageUri, imageAspectRatio);
 
   return (
     <Pressable

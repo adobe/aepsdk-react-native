@@ -14,6 +14,7 @@ export * from './Button/Button';
 export * from './ImageOnlyCard/ImageOnlyCard';
 export * from './SmallImageCard/SmallImageCard';
 export * from './LargeImageCard/LargeImageCard';
+export * from './ContentCardView/ContentCardView';
 export * from '../types/ContentViewEvent';
 export { ThemeProvider } from '../theme/ThemeProvider';
 export type { Themes } from '../theme/Theme';

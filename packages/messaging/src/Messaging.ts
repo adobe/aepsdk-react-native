@@ -21,7 +21,7 @@ import { MessagingDelegate } from './models/MessagingDelegate';
 import { MessagingProposition } from './models/MessagingProposition';
 import { ContentCard } from './models/ContentCard';
 import { PersonalizationSchema } from './models/PersonalizationSchema';
-import { ContentTemplate, TemplateType } from './ui/types/Templates';
+import { ContentTemplate } from './ui/types/Templates';
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -232,7 +232,13 @@ class Messaging {
   ): Promise<void> {
     return await RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
-
+  
+  /**
+   * @experimental
+   * Retrieves the content card UI data for a given surface.
+   * @param surface The surface to get the content card UI data for
+   * @returns The content card UI data for the given surface
+   */
   static async getContentCardUI(surface: string): Promise<ContentTemplate[]> {
     const messages = await Messaging.getPropositionsForSurfaces([surface]);
     const propositions = messages[surface];
@@ -252,7 +258,7 @@ class Messaging {
     }
 
     return contentCards.map((card: any) => {
-      const type = card.data?.meta?.adobe?.template ?? TemplateType.SMALL_IMAGE;
+      const type = card.data?.meta?.adobe?.template ?? 'SmallImage';
       return new ContentTemplate(card, type);
     });
   }
