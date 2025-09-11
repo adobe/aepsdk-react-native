@@ -150,7 +150,21 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
 
   if (!content) return null;
 
-  const styleOverrides = _styleOverrides?.[cardVariant];
+  const styleOverrides = useMemo<
+    | (SmallImageContentStyle & LargeImageContentStyle & ImageOnlyContentStyle)
+    | null
+  >(() => {
+    switch (cardVariant) {
+      case 'SmallImage':
+        return _styleOverrides?.smallImageStyle as SmallImageContentStyle;
+      case 'LargeImage':
+        return _styleOverrides?.largeImageStyle as LargeImageContentStyle;
+      case 'ImageOnly':
+        return _styleOverrides?.imageOnlyStyle as ImageOnlyContentStyle;
+      default:
+        return null;
+    }
+  }, [_styleOverrides, cardVariant]);
 
   return (
     <Pressable
@@ -332,7 +346,7 @@ const smallImageStyles = StyleSheet.create({
   image: {
     resizeMode: 'contain',
     width: '100%',
-    maxWidth: '100%',
+    maxWidth: '100%'
   }
 });
 
