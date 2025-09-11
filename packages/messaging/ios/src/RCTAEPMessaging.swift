@@ -133,87 +133,75 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
 
     /// Message Class Methods
     @objc
-    func clearMessage(
-        _ id: String,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
+    func clear(
+        _ id: String
     ) {
         let msg = messageCache[id]
         if msg != nil {
             messageCache.removeValue(forKey: msg!.id)
-            resolve(nil)
+            print("clear: \(id) removed")
+        } else {
+            print("clear: \(id) not found")
         }
-        reject(Constants.CACHE_MISS, nil, nil)
     }
 
     @objc
-    func dismissMessage(
+    func dismiss(
         _ id: String,
-        withSuppressAutoTrack suppressAutoTrack: Bool,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
+        withSuppressAutoTrack suppressAutoTrack: Bool
     ) {
         let msg = messageCache[id]
         if msg != nil {
             msg!.dismiss(suppressAutoTrack: suppressAutoTrack)
-            resolve(nil)
-            return
+            print("dismiss: \(id) to \(suppressAutoTrack)")
+        } else {
+            print("dismiss: \(id) not found")
         }
-        reject(Constants.CACHE_MISS, nil, nil)
     }
 
     @objc
     func setAutoTrack(
         _ id: String,
-        withSuppressAutoTrack suppressAutoTrack: Bool,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
+        autoTrack: Bool
     ) {
-
         let msg = messageCache[id]
-        if msg != nil {
-            msg!.autoTrack = suppressAutoTrack
-            resolve(nil)
-            return
+        if (msg != nil) {
+            msg!.autoTrack = autoTrack
+            print("setAutoTrack: \(id) to \(autoTrack)")
+        } else {
+            print("setAutoTrack: \(id) not found")
         }
-        reject(Constants.CACHE_MISS, nil, nil)
     }
 
     @objc
-    private func showMessage(
-        _ id: String,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
+    private func show(
+        _ id: String
     ) {
         let msg = messageCache[id]
         if msg != nil {
             msg!.show()
-            resolve(nil)
-            return
+            print("show: \(id) to \(autoTrack)")
+        } else {
+            print("show: \(id) not found")
         }
-        reject(Constants.CACHE_MISS, nil, nil)
-
     }
 
     @objc
-    func trackMessage(
+    func track(
         _ id: String,
         withInteraction interaction: String,
-        withEventType eventType: Int,
-        withResolver resolve: @escaping RCTPromiseResolveBlock,
-        withRejecter reject: @escaping RCTPromiseRejectBlock
+        withEventType eventType: Int
     ) {
-
         let msg = messageCache[id]
         let eventType =
             MessagingEdgeEventType.init(rawValue: eventType)
                 ?? MessagingEdgeEventType.dismiss
         if msg != nil {
             msg!.track(interaction, withEdgeEventType: eventType)
-            resolve(nil)
-            return
+            print("track: \(id) to \(interaction) and \(eventType)")
+        } else {
+            print("track: \(id) not found")
         }
-        reject(Constants.CACHE_MISS, nil, nil)
     }
 
     @objc

@@ -204,8 +204,12 @@ public final class RCTAEPMessagingModule
     }
   }
 
+  // dismiss needs to accept a boolean parameter to suppress autoTrack - 
+  // to maintain parity with the function signature on react native side,
+  // as iOS message.dismiss() accepts a boolean parameter to suppress autoTrack
+  // but on android side, message.dismiss() does not accept any parameters
   @ReactMethod
-  public void dismiss(final String messageId) {
+  public void dismiss(final String messageId, final boolean suppressAutoTrack) {
     if (messageId != null && messageCache.get(messageId) != null) {
       messageCache.get(messageId).dismiss();
     }
