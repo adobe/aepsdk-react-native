@@ -148,7 +148,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     @objc
     func dismiss(
         _ id: String,
-        withSuppressAutoTrack suppressAutoTrack: Bool
+        suppressAutoTrack: Bool
     ) {
         let msg = messageCache[id]
         if msg != nil {
@@ -180,7 +180,7 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         let msg = messageCache[id]
         if msg != nil {
             msg!.show()
-            print("show: \(id) to \(autoTrack)")
+            print("show: \(id) shown")
         } else {
             print("show: \(id) not found")
         }
@@ -189,8 +189,8 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
     @objc
     func track(
         _ id: String,
-        withInteraction interaction: String,
-        withEventType eventType: Int
+        interaction: String,
+        eventType: Int
     ) {
         let msg = messageCache[id]
         let eventType =
