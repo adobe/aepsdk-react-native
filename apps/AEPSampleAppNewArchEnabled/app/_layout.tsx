@@ -101,8 +101,8 @@ export default function RootLayout() {
         />
         <Drawer.Screen name="ConsentView" options={{ title: "ConsentView" }} />
         <Drawer.Screen
-          name="ContentCardView"
-          options={{ title: "ContentCardView" }}
+          name="ContentCardsView"
+          options={{ title: "ContentCardsView" }}
         />
         <Drawer.Screen
           name="EdgeBridgeView"

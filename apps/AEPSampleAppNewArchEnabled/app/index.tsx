@@ -34,7 +34,7 @@ export default function HomeScreen() {
       <Button onPress={() => router.push('/EdgeView')} title="Edge" />
       <Button onPress={() => router.push('/EdgeIdentityView')} title="EdgeIdentity" />
       <Button onPress={() => router.push('/ConsentView')} title="Consent" />
-      <Button onPress={() => router.push('/ContentCardView')} title="Content Card & Container" />
+      <Button onPress={() => router.push('/ContentCardsView')} title="Content Card & Container" />
       <Button onPress={() => router.push('/EdgeBridgeView')} title="Edge Bridge" />
       <Button onPress={() => router.push('/AssuranceView')} title="Assurance" />
       <Button
