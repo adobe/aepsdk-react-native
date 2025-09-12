@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { ContentCardView, ThemeProvider, useContentCardUI } from '@adobe/react-native-aepmessaging';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Appearance,
   ColorSchemeName,
@@ -25,37 +25,39 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { useColorScheme } from '../hooks/useColorScheme';
 import { Colors } from '../constants/Colors';
+import { useColorScheme } from '../hooks/useColorScheme';
 import { DemoItem, IMAGE_ONLY_ITEMS, LARGE_ITEMS, SMALL_ITEMS } from '../templates/contentCards/demoitems';
 
+const VIEW_OPTIONS = ['SmallImage', 'LargeImage', 'ImageOnly', 'Remote'] as const;
+type ViewOption = typeof VIEW_OPTIONS[number];
+
+const THEME_OPTIONS: Array<{
+  label: string;
+  value: ColorSchemeName;
+}> = [
+    { label: 'Light', value: 'light' },
+    { label: 'Dark', value: 'dark' },
+    { label: 'System', value: null }
+  ];
+
+const ITEMS_BY_VIEW: Partial<Record<ViewOption, DemoItem[]>> = {
+  SmallImage: SMALL_ITEMS,
+  LargeImage: LARGE_ITEMS,
+  ImageOnly: IMAGE_ONLY_ITEMS
+};
+
 const ContentCardsView = () => {
-  const [selectedView, setSelectedView] = useState<string>('Remote');
+  const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string>('System');
   const [trackInput, setTrackInput] = useState('');
   const colorScheme = useColorScheme();
 
-  const viewOptions = ['SmallImage', 'LargeImage', 'ImageOnly', 'Remote'];
   const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
   const { content, isLoading, refetch } = useContentCardUI(surface);
 
-  const itemsByView: Partial<Record<typeof viewOptions[number], DemoItem[]>> = useMemo(() => ({
-    SmallImage: SMALL_ITEMS,
-    LargeImage: LARGE_ITEMS,
-    ImageOnly: IMAGE_ONLY_ITEMS,
-  }), []);
-
-  const items = itemsByView[selectedView];
-
-  const themeOptions: Array<{
-    label: string;
-    value: ColorSchemeName;
-  }> = [
-      { label: 'Light', value: 'light' },
-      { label: 'Dark', value: 'dark' },
-      { label: 'System', value: null }
-    ];
+  const items = ITEMS_BY_VIEW[selectedView];
 
   const handleThemeChange = (theme: string, value: ColorSchemeName) => {
     setSelectedTheme(theme);
@@ -87,7 +89,7 @@ const ContentCardsView = () => {
       {/* Theme Switcher */}
       <View style={styles.headerContainer}>
         <View style={[styles.themeSwitcher, { backgroundColor: c.viewBg }]}>
-          {themeOptions.map((option) => (
+          {THEME_OPTIONS.map((option) => (
             <TouchableOpacity
               key={option.label}
               style={[
@@ -121,7 +123,7 @@ const ContentCardsView = () => {
         <Modal visible={showPicker} transparent={true} animationType="slide">
           <View style={styles.modalOverlay}>
             <View style={styles.modalCard}>
-              {viewOptions.map((option) => (
+              {VIEW_OPTIONS.map((option) => (
                 <TouchableOpacity
                   key={option}
                   style={styles.modalOption}
@@ -214,19 +216,21 @@ const ContentCardsView = () => {
         );
       }}
       ListHeaderComponent={Header}
-      ListEmptyComponent={selectedView === 'Remote' ? (
-        <View style={[styles.section, styles.panel, { backgroundColor: c.background, borderWidth: 0 }, styles.emptyContainer]}>
-          <Text style={[styles.titleText, styles.textCenter, styles.textTitle, { color: c.text }]}>
-            No Content Cards Available
-          </Text>
-          <Text style={[styles.textCenter, styles.textBody, styles.textLabel, { color: c.mutedText }]}>
-            Content cards will appear here when they are configured in Adobe Journey Optimizer for surface: "rn/ios/remote_image"
-          </Text>
-          <Text style={[styles.textCenter, styles.textCaption, { color: c.mutedText }]}>
-            Try tracking an action above to refresh content cards.
-          </Text>
-        </View>
-      ) : null}
+      ListEmptyComponent={() => (
+        (selectedView === 'Remote' && (
+          <View style={[styles.section, styles.panel, { backgroundColor: c.background, borderWidth: 0 }, styles.emptyContainer]}>
+            <Text style={[styles.titleText, styles.textCenter, styles.textTitle, { color: c.text }]}>
+              No Content Cards Available
+            </Text>
+            <Text style={[styles.textCenter, styles.textBody, styles.textLabel, { color: c.mutedText }]}>
+              Content cards will appear here when they are configured in Adobe Journey Optimizer for surface: "rn/ios/remote_image"
+            </Text>
+            <Text style={[styles.textCenter, styles.textCaption, { color: c.mutedText }]}>
+              Try tracking an action above to refresh content cards.
+            </Text>
+          </View>
+        ))
+      )}
       contentContainerStyle={styles.listContent}
     />
   );
