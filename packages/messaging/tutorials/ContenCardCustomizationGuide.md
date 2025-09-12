@@ -4,8 +4,6 @@
 
 The Adobe Experience Platform (AEP) React Native Messaging SDK provides a comprehensive and flexible content card system with multiple levels of customization. This guide explains how to customize content cards using the three-tier hierarchy: **Theme → Style Overrides → Props**.
 
-> **Note**: This documentation may not always be up to date due to ongoing updates in the source code. Please refer to the latest source code and type definitions for the most current API specifications and available properties.
-
 ## Table of Contents
 
 1. [Customization Hierarchy](#customization-hierarchy)
@@ -52,7 +50,7 @@ This means you can set a global brand color in your theme, override it for speci
 The theme system provides global styling for all content cards with automatic light/dark mode support.
 
 ```typescript
-import { ThemeProvider, Themes } from '@adobe/react-native-aepsdk-messaging';
+import { ThemeProvider, Themes } from '@adobe/react-native-aepmessaging';
 
 const customThemes: Themes = {
   light: {
@@ -88,36 +86,26 @@ function App() {
 }
 ```
 
-### Theme Colors Reference
+### Available Theme Colors
 
-| Color Property | Used For | Components Affected | Status |
-|----------------|----------|-------------------|---------|
-| `primary` | Primary brand color | Reserved for future use | Planned |
-| `secondary` | Secondary accent color | Reserved for future use Planned |
-| `background` | Card background color | All card templates | ✅ Active |
-| `textPrimary` | Main text content | Title, body text | ✅ Active |
-| `textSecondary` | Supporting text | Reserved for future use | 🚧 Planned |
-| `imagePlaceholder` | Image loading state | Image components | ✅ Active |
-| `buttonTextColor` | Button text | Action buttons | ✅ Active |
+The following colors can be customized in your theme:
 
-**Note about Reserved Colors**: Colors marked as "Reserved for future use" are included in the theme interface for forward compatibility. While they currently have default values, they are not yet consumed by any UI components. You can safely set these colors in your theme - when future SDK versions add components that use them, your existing theme will automatically apply these colors without requiring code changes.
+| Color Property | Description | Usage |
+|----------------|-------------|--------|
+| `background` | Card background color | All card templates |
+| `textPrimary` | Main text content | Title and body text |
+| `imagePlaceholder` | Image loading state | Placeholder while images load |
+| `buttonTextColor` | Button text color | Action button text |
 
-**Recommended Approach**: Define all theme colors including reserved ones to ensure consistent branding when new features are released:
-
+**Example:**
 ```typescript
 const myBrandTheme = {
   light: {
     colors: {
-      // Currently active colors
       background: '#FFFFFF',
       textPrimary: '#1A1A1A',
       imagePlaceholder: '#E5E5E5',
-      buttonTextColor: 'dodgerblue',
-      
-      // Future-ready colors - set these to your brand colors now
-      primary: '#FF6B35',      // Will be used for accent elements
-      secondary: '#004E89',    // Will be used for secondary actions  
-      textSecondary: '#666666' // Will be used for subtitle/caption text
+      buttonTextColor: '#007AFF'
     }
   }
 };
@@ -130,7 +118,7 @@ Style overrides provide component-level customization for each template type. Th
 ### SmallImageCard Style Overrides
 
 ```typescript
-import { SmallImageContentStyle } from '@adobe/react-native-aepsdk-messaging';
+import { SmallImageContentStyle } from '@adobe/react-native-aepmessaging';
 
 const smallImageStyleOverrides: SmallImageContentStyle = {
   // Root card container
@@ -224,7 +212,7 @@ const smallImageStyleOverrides: SmallImageContentStyle = {
 ### LargeImageCard Style Overrides
 
 ```typescript
-import { LargeImageContentStyle } from '@adobe/react-native-aepsdk-messaging';
+import { LargeImageContentStyle } from '@adobe/react-native-aepmessaging';
 
 const largeImageStyleOverrides: LargeImageContentStyle = {
   // Root card container
@@ -306,7 +294,7 @@ const largeImageStyleOverrides: LargeImageContentStyle = {
 ### ImageOnlyCard Style Overrides
 
 ```typescript
-import { ImageOnlyContentStyle } from '@adobe/react-native-aepsdk-messaging';
+import { ImageOnlyContentStyle } from '@adobe/react-native-aepmessaging';
 
 const imageOnlyStyleOverrides: ImageOnlyContentStyle = {
   // Root card container
@@ -351,7 +339,7 @@ For advanced customization, some components accept additional props that provide
 The `SmallImageCard` component extends React Native's `PressableProps` and supports the following specific props:
 
 ```typescript
-import { SmallImageCard } from '@adobe/react-native-aepsdk-messaging';
+import { SmallImageCard } from '@adobe/react-native-aepmessaging';
 
 <SmallImageCard
   content={contentData}
@@ -381,7 +369,7 @@ import { SmallImageCard } from '@adobe/react-native-aepsdk-messaging';
 #### SmallImageCard Advanced Props Example
 
 ```typescript
-import { SmallImageCard } from '@adobe/react-native-aepsdk-messaging';
+import { SmallImageCard } from '@adobe/react-native-aepmessaging';
 
 <SmallImageCard
   content={contentData}
@@ -450,7 +438,7 @@ import { SmallImageCard } from '@adobe/react-native-aepsdk-messaging';
 ### LargeImageCard Advanced Props
 
 ```typescript
-import { LargeImageCard } from '@adobe/react-native-aepsdk-messaging';
+import { LargeImageCard } from '@adobe/react-native-aepmessaging';
 
 <LargeImageCard
   content={contentData}
@@ -506,7 +494,7 @@ import { LargeImageCard } from '@adobe/react-native-aepsdk-messaging';
 ### ImageOnlyCard Advanced Props
 
 ```typescript
-import { ImageOnlyCard } from '@adobe/react-native-aepsdk-messaging';
+import { ImageOnlyCard } from '@adobe/react-native-aepmessaging';
 
 <ImageOnlyCard
   content={contentData}
@@ -542,7 +530,7 @@ import { ImageOnlyCard } from '@adobe/react-native-aepsdk-messaging';
 
 ```typescript
 import React from 'react';
-import { ContentView, ThemeProvider } from '@adobe/react-native-aepsdk-messaging';
+import { ContentCardView, ThemeProvider } from '@adobe/react-native-aepmessaging';
 
 // Custom theme for e-commerce
 const ecommerceTheme = {
@@ -619,7 +607,7 @@ function ProductCard({ template }) {
 
   return (
     <ThemeProvider customThemes={ecommerceTheme}>
-      <ContentView
+      <ContentCardView
         template={template}
         styleOverrides={productCardStyles}
         listener={handleInteraction}
@@ -668,36 +656,6 @@ const badTheme = {
 - Test on different screen sizes and orientations
 - Consider accessibility font scaling
 
-## Troubleshooting
-
-### Common Issues
-
-1. **Styles Not Applied**
-   - Check the hierarchy: Props > Style Overrides > Theme > Default
-   - Ensure StyleSheet properties are correctly named
-   - Verify theme provider wraps your components
-
-2. **Theme Colors Not Working**
-   - Confirm ThemeProvider is at the root level
-   - Check that theme object structure matches the Themes interface
-   - Verify useTheme hook is being called in components
-
-3. **Layout Issues**
-   - Review flexbox properties in style overrides
-   - Check for conflicting margin/padding values
-   - Ensure container and content dimensions are appropriate
-
-4. **Image Display Problems**
-   - Verify image URIs are valid and accessible
-   - Check aspect ratio calculations
-   - Ensure image containers have proper dimensions
-
-### Debug Tips
-- Use React DevTools to inspect component props and styles
-- Add temporary background colors to understand layout boundaries
-- Console.log theme values to verify they're being applied
-- Test with simplified style overrides first, then gradually add complexity
-
 ---
 
-This guide provides a comprehensive overview of the Content Card customization system. For additional support or feature requests, please refer to the Adobe Experience Platform documentation or submit issues to the project repository.
+This guide provides a comprehensive overview of the Content Card customization system. With the three-tier customization hierarchy (Theme → Style Overrides → Props), you can create beautiful, branded content cards that fit seamlessly into your app's design system.
