@@ -11,7 +11,9 @@ governing permissions and limitations under the License.
 */
 
 import { NativeModules } from 'react-native';
-import { MessagingEdgeEventType, PropositionItem, PropositionItemData, PersonalizationSchema } from '../src';
+import MessagingEdgeEventType from '../src/models/MessagingEdgeEventType';
+import { PersonalizationSchema } from '../src/models/PersonalizationSchema';
+import { PropositionItem, PropositionItemData } from '../src/models/PropositionItem';
 
 describe('PropositionItem', () => {
   const uuid = 'activity-uuid-123';
