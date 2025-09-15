@@ -60,6 +60,35 @@ Surface identifiers must be coordinated between two locations:
 
 **Important**: The surface identifiers in your Adobe Journey Optimizer campaigns must exactly match the surface identifiers used in your app code. Mismatched identifiers will result in no content cards being returned.
 
+## Template Types Overview
+
+Content cards support three template types: SmallImage, LargeImage, and ImageOnly.
+
+### Template Layouts
+
+#### SmallImage Template
+- **Layout:** Horizontal layout (flexDirection: 'row') with image on the left and content on the right
+- **Components:** Image, title text, body text, action buttons, dismiss button (all optional)
+- **Container Height:** 120px minimum height
+
+![SmallImage Template Layout](./resources/small-image-template.png)
+
+#### LargeImage Template  
+- **Layout:** Vertical layout with image at top and content below
+- **Components:** Image, title text, body text, action buttons, dismiss button (all optional)
+- **Image Width:** 100% of card width, maintains aspect ratio
+
+![LargeImage Template Layout](./resources/large-image-template.png)
+
+#### ImageOnly Template
+- **Layout:** Single image container
+- **Components:** Image, optional dismiss button overlaid on the image
+- **Image Size:** Full card size, maintains aspect ratio
+
+![ImageOnly Template Layout](./resources/image-only-template.png)
+
+For detailed customization options, see the [Content Card Customization Guide](./ContentCardCustomizationGuide.md).
+
 ## SDK Integration
 
 Before you can fetch and display content cards, you need to install and configure the AEP React Native SDK. For detailed setup instructions, see the main [SDK Installation and Configuration Guide](https://github.com/adobe/aepsdk-react-native#requirements).
@@ -87,7 +116,7 @@ import { Messaging } from '@adobe/react-native-aepmessaging';
 // Single surface example
 const surface = 'homepage';
 
-// Fetch content cards for a single surface
+//Example 1 - Fetch content cards for a single surface
 const updateContentCardsForSurface = async (): Promise<void> => {
   try {
     await Messaging.updatePropositionsForSurfaces([surface]);
@@ -97,7 +126,7 @@ const updateContentCardsForSurface = async (): Promise<void> => {
   }
 };
 
-// Multiple surfaces example (for batching requests)
+//Example 2 -  Multiple surfaces example (for batching requests)
 const surfaces: string[] = ['homepage', 'product-detail', 'checkout'];
 
 const updateContentCardsForMultipleSurfaces = async (): Promise<void> => {
@@ -119,7 +148,7 @@ After updating propositions, retrieve the content cards for a specific surface u
 ```typescript
 import { Messaging, ContentTemplate } from '@adobe/react-native-aepmessaging';
 
-// Simple approach: Get content card UI templates for a single surface
+//Example 1 - Simple approach: Get content card UI templates for a single surface
 const getContentCards = async (surface: string): Promise<ContentTemplate[]> => {
   try {
     const contentCards = await Messaging.getContentCardUI(surface);
@@ -131,7 +160,7 @@ const getContentCards = async (surface: string): Promise<ContentTemplate[]> => {
   }
 };
 
-// For multiple surfaces, call getContentCardUI for each surface
+//Example 2 - For multiple surfaces, call getContentCardUI for each surface
 const getContentCardsForMultipleSurfaces = async (surfaces: string[]): Promise<ContentTemplate[]> => {
   try {
     const allContentCards: ContentTemplate[] = [];
