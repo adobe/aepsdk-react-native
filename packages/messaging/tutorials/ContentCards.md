@@ -28,12 +28,6 @@ Surface identifiers are string values that represent specific locations in your 
 
 Use descriptive, hierarchical naming patterns:
 
-```typescript
-// Platform-specific surfaces
-const surface = Platform.OS === 'android' 
-  ? 'rn/android/homepage' 
-  : 'rn/ios/homepage';
-
 // Feature-based surfaces
 const surfaces = [
   'homepage',
@@ -44,13 +38,12 @@ const surfaces = [
 ];
 
 // Context-specific surfaces
-const surfaces = [
-  'rn/ios/remote_image',     // For remote image content cards
-  'rn/android/local_promo',  // For local promotional cards
-  'app/onboarding/step1'     // For onboarding flow
+const surfaces = [ <br>
+  'rn/ios/remote_image',     // For remote image content cards <br>
+  'rn/android/local_promo',  // For local promotional cards <br>
+  'app/onboarding/step1'     // For onboarding flow <br>
 ];
 ```
-
 ### Where to Configure Surface Identifiers
 
 Surface identifiers must be coordinated between two locations:
@@ -94,15 +87,87 @@ For detailed customization options, see the [Content Card Customization Guide](.
 Before you can fetch and display content cards, you need to install and configure the AEP React Native SDK. For detailed setup instructions, see the main [SDK Installation and Configuration Guide](https://github.com/adobe/aepsdk-react-native#requirements).
 
 **Required packages:**
-- `@adobe/react-native-aepcore` 
-- `@adobe/react-native-aepmessaging`
+- [`@adobe/react-native-aepcore`](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core) 
+- [`@adobe/react-native-aepedge`](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edge)
+- [`@adobe/react-native-aepedgeidentity`](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgeidentity)
+- [`@adobe/react-native-aepmessaging`](https://github.com/adobe/aepsdk-react-native/tree/content-card-ui/packages/messaging) 
+
+
+```
+//Important: Use the development branch for Messaging content card testing
+
+npm install "https://gitpkg.now.sh/adobe/aepsdk-react-native/packages/messaging?content-card-ui"
+```
+
+**Optional packages:**
+- [`@adobe/react-native-aepedgeconsent`](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgeconsent)
 
 **Required imports for content cards:**
 ```typescript
-import { Messaging, ContentTemplate, ContentCardView } from '@adobe/react-native-aepmessaging';
+import { 
+  Messaging,           // For manual API calls (advanced usage)
+  ContentTemplate,     // Type definitions
+  ContentCardView,     // Pre-built UI component
+  useContentCardUI     // Modern hook for simplified state management
+} from '@adobe/react-native-aepmessaging';
 ```
 
-## Fetching Content Cards 
+## Fetching Content Cards
+
+### Modern Approach: Using the useContentCardUI Hook (Recommended)
+
+The `useContentCardUI` hook provides a simplified, modern way to fetch and manage content cards with built-in state management, loading states, and error handling.
+
+```typescript
+import React from 'react';
+import { View } from 'react-native';
+import { useContentCardUI, ContentCardView } from '@adobe/react-native-aepmessaging';
+
+const ContentCardsScreen = () => {
+  const { content } = useContentCardUI('homepage');
+
+  return (
+    <View>
+      {content?.map((card) => (
+        <ContentCardView
+          key={card.id}
+          template={card}
+        />
+      ))}
+    </View>
+  );
+};
+
+export default ContentCardsScreen;
+```
+
+#### Benefits of the useContentCardUI Hook
+
+- **Simplified Implementation**: No need to manually manage state, loading, or error handling
+- **Automatic Lifecycle Management**: Automatically fetches content when surface changes
+- **Built-in Performance**: Optimized with proper dependency management and memoization
+- **Error Handling**: Includes built-in error states and retry functionality
+- **Easy Refresh**: Simple `refetch()` function for manual content updates
+- **Loading States**: Built-in loading indicators for better UX
+
+#### Hook API Reference
+
+```typescript
+const { content, isLoading, error, refetch } = useContentCardUI(surface);
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `content` | `ContentTemplate[]` | Array of content card templates ready for rendering |
+| `isLoading` | `boolean` | Loading state indicator (optional) |
+| `error` | `any \| null` | Error object if fetching fails (optional) |
+| `refetch` | `() => Promise<void>` | Function to manually refresh content cards (optional) |
+
+**Note**: While the basic example only uses `content`, the hook also provides `isLoading`, `error`, and `refetch` for enhanced functionality when needed.
+
+### Advanced Approach: Manual Implementation
+
+For advanced use cases where you need more control over the fetching process, you can use the manual approach:
 
 ### Step 1: Update Propositions for Surfaces
 
@@ -181,11 +246,17 @@ const getContentCardsForMultipleSurfaces = async (surfaces: string[]): Promise<C
 
 ## Rendering Content Cards
 
-The `getContentCardUI()` method returns `ContentTemplate` objects that can be rendered using the pre-built `ContentCardView` component provided by the SDK.
+Content cards can be rendered using the pre-built `ContentCardView` component provided by the SDK. You can use either the modern hook-based approach (recommended) or the manual implementation approach.
 
 ### React Native Implementation
 
-Here's how to implement content cards using the pre-built `ContentCardView` component:
+#### Modern Hook-Based Approach (Recommended)
+
+See the [Modern Approach: Using the useContentCardUI Hook](#modern-approach-using-the-usecontentcardui-hook-recommended) section above for the complete implementation.
+
+#### Manual Implementation Approach
+
+For advanced use cases, you can manually fetch and manage content cards:
 
 ```typescript
 import React, { useState, useEffect } from 'react';
@@ -276,9 +347,16 @@ const styles = StyleSheet.create({
 export default ContentCardsScreen;
 ```
 
+### Choosing the Right Approach
+
+| Approach | Best For | Advantages | When to Use |
+|----------|----------|------------|-------------|
+| **useContentCardUI Hook** | Most applications | • Minimal boilerplate<br>• Built-in state management<br>• Automatic error handling<br>• Easy to implement | • Standard content card implementation<br>• Getting started quickly<br>• Most common use cases |
+| **Manual Implementation** | Advanced use cases | • Full control over fetching<br>• Custom state management<br>• Complex business logic<br>• Multiple surface coordination | • Complex content card workflows<br>• Custom caching strategies<br>• Integration with existing state management |
+
 ### Benefits of Using ContentCardView
 
-The pre-built `ContentCardView` component provides several advantages:
+The pre-built `ContentCardView` component provides several advantages regardless of which fetching approach you choose:
 
 - **Automatic Layout**: Handles different card types (SmallImage, LargeImage, ImageOnly) automatically
 - **Built-in Event Tracking**: Automatically tracks display and interaction events
@@ -341,7 +419,7 @@ You can customize the appearance of content cards using the `styleOverrides` pro
 
 ## Automatic Event Tracking
 
-When using `ContentCardView`, event tracking is handled automatically. The component tracks user interactions and sends events to Adobe Journey Optimizer for campaign measurement and optimization.
+When using `ContentCardView`, event tracking is handled automatically regardless of whether you use the `useContentCardUI` hook or manual implementation. The component tracks user interactions and sends events to Adobe Journey Optimizer for campaign measurement and optimization.
 
 ### Events Automatically Tracked
 
