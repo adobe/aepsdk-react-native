@@ -25,11 +25,9 @@ import { MessagingPropositionItem } from './models/MessagingPropositionItem';
 import { PersonalizationSchema } from './models/PersonalizationSchema';
 import { PropositionItem, PropositionItemData } from './models/PropositionItem';
 import { Activity, Characteristics } from './models/ScopeDetails';
-import { ContentTemplate, ContentCardTemplate } from './ui/types/Templates';
 
 export * from './models/ContentCard';
-export * from './ui/components';
-export * from './ui/hooks';
+export * from './ui';
 
 export {
   Activity,
@@ -50,6 +48,4 @@ export {
   HTMLPropositionData,
   JSONPropositionItem,
   JSONPropositionData,
-  ContentTemplate,
-  ContentCardTemplate as TemplateType
 };

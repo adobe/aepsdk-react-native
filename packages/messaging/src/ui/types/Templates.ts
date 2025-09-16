@@ -1,10 +1,7 @@
 import { ButtonProps, ImageProps, TextProps } from 'react-native';
 import { ViewProps } from 'react-native';
-import { ContentCard, ContentCardData } from '../../models/ContentCard';
+import { ContentCard, ContentCardData, ContentCardTemplate } from '../../models/ContentCard';
 import { DismissButtonProps } from '../components/DismissButton/DismissButton';
-
-/** Represents template types for Content Card templates. */
-export type ContentCardTemplate = 'SmallImage' | 'LargeImage' | 'ImageOnly';
 
 export class ContentTemplate extends ContentCard {
   readonly type: ContentCardTemplate;
