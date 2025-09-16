@@ -3,20 +3,19 @@
   "jsx": "react-native",
   "compilerOptions": {
     "noEmit": false,
-    "strict": false,
     "rootDir": "./src",
     "outDir": "./dist",
-    "paths": {
-      "react": ["../../node_modules/@types/react"],
-      "react-native": ["../../node_modules/@types/react-native"]
-    },
-    "typeRoots": ["../../node_modules/@types"]
+    "declaration": true,
+    "preserveSymlinks": true,
+    "target": "es6",
+    "module": "NodeNext",
+    "jsx": "react-native",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "NodeNext",
+    "lib": ["es6", "dom", "ES2021"],
+    "esModuleInterop": true,
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": [
-    "__tests__",
-    "dist",
-    "node_modules",
-    "../../node_modules/@types/react-native/node_modules"
-  ]
+  "include": ["src"],
+  "exclude": ["__tests__", "dist", "node_modules"]
 }
