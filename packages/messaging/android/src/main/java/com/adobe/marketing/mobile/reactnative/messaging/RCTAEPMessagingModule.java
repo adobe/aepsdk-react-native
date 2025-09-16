@@ -192,6 +192,7 @@ public final class RCTAEPMessagingModule
         RCTAEPMessagingUtil.convertSurfaces(surfaces), success -> {
           if (success) {
              propositionItemByUuid.clear();
+             promise.resolve(null);
           } else {
             promise.reject(null, "Unable to update propositions for surfaces");
           }
