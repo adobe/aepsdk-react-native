@@ -192,9 +192,9 @@ public final class RCTAEPMessagingModule
   public void updatePropositionsForSurfaces(ReadableArray surfaces, final Promise promise) {
     Messaging.updatePropositionsForSurfaces(
         RCTAEPMessagingUtil.convertSurfaces(surfaces), success -> {
-          propositionItemByUuid.clear();
           if (success) {
-            promise.resolve(null);
+             propositionItemByUuid.clear();
+             promise.resolve(null);
           } else {
             promise.reject(null, "Unable to update propositions for surfaces");
           }
