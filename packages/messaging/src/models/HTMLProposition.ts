@@ -21,7 +21,7 @@ export interface HTMLPropositionData extends PropositionItemData {
 }
 
 export class HTMLProposition extends PropositionItem {
-	declare data: HTMLPropositionData['data'];
+	data: HTMLPropositionData['data'];
 
 	constructor(htmlData: HTMLPropositionData) {
 		super(htmlData);
