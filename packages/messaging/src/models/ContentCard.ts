@@ -72,7 +72,7 @@ export interface ContentCardData extends PropositionItemData {
 }
 
 export class ContentCard extends PropositionItem {
-  declare data: ContentCardData['data'];
+  data: ContentCardData['data'];
 
   constructor(contentCardData: ContentCardData) {
     super(contentCardData);
