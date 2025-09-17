@@ -1,0 +1,1 @@
+{"version":3,"names":["ContentCard","ContentTemplate","constructor","data","type"],"sourceRoot":"../../../../src","sources":["ui/types/Templates.ts"],"mappings":";;AAUA,SACEA,WAAW,QAGN,6BAA0B;AAGjC,OAAO,MAAMC,eAAe,SAASD,WAAW,CAAC;EAG/CE,WAAWA,CAACC,IAAqB,EAAEC,IAAyB,EAAE;IAC5D,KAAK,CAACD,IAAI,CAAC;IACX,IAAI,CAACC,IAAI,GAAGA,IAAI;EAClB;AACF;;AAEA;;AAcA","ignoreList":[]}
