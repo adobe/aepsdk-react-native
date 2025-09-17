@@ -4,16 +4,14 @@
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js",
-    "./models": "./dist/models/index.js",
-    "./ui": "./dist/ui/index.js"
-  },
+  "main": "dist/module/index",
+  "module": "dist/module/index",
+  "react-native": "src/index",
+  "source": "src/index",
+  "types": "dist/typescript/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
-    "tsc": "tsc"
+    "tsc": "bob build"
   },
   "repository": {
     "type": "git",
@@ -41,12 +39,27 @@
   },
   "devDependencies": {
     "react": "19.1.1",
-    "react-native": "0.81.0"
+    "react-native": "0.81.0",
+    "react-native-builder-bob": "0.33.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "dist",
+    "targets": [
+      [
+        "module",
+        {
+          "esm": true,
+          "jsxRuntime": "classic"
+        }
+      ],
+      "typescript"
+    ]
   }
 }

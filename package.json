@@ -2,13 +2,11 @@
   "name": "aepsdk-react-native",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "yarn@4.1.1",
   "workspaces": {
     "packages": [
       "packages/*",
-      "apps/AEPSampleAppNewArchEnabled"
-    ],
-    "nohoist": [
-      "**"
+      "apps/*"
     ]
   },
   "scripts": {
@@ -38,6 +36,7 @@
     "@babel/preset-env": "7.16.11",
     "@babel/preset-typescript": "^7.16.7",
     "@types/jest": "^27.5.2",
+    "@types/node": "^22.9.0",
     "@types/react": "^18.0.5",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^4.1.0",
@@ -48,8 +47,6 @@
     "metro-react-native-babel-preset": "^0.70.1",
     "ts-jest": "^29.1.1",
     "tslib": "^2.3.1",
-    "@types/node": "^22.9.0",
     "typescript": "^4.5.5"
-  },
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+  }
 }

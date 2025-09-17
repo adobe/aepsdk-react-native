@@ -18,11 +18,12 @@ import React, {
   useMemo
 } from 'react';
 import {
-  SmallImageContentStyle,
+  ComponentOverrideProps,
+  ContentTemplate,
+  ImageOnlyContentStyle,
   LargeImageContentStyle,
-  ImageOnlyContentStyle
-} from '..';
-import { ComponentOverrideProps, ContentTemplate } from '../../types/Templates';
+  SmallImageContentStyle
+} from '../../types/Templates';
 import { ContentViewEvent } from '../../types/ContentViewEvent';
 import {
   Image,
