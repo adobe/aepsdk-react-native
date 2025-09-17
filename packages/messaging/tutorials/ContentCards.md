@@ -12,7 +12,7 @@ Before implementing content cards, ensure you have:
 
 2. **Configured content card campaigns in Adobe Journey Optimizer** using your defined surface identifiers:
 
-     a. Create a [channel](https://experienceleague.adobe.com/en/docs/journey-optimizer/using/channels/content-card/configure/content-card-configuration).
+     a. Create a [channel](https://experienceleague.adobe.com/en/docs/journey-optimizer/using/channels/content-card/configure/content-card-configuration). (Define appid and surface)
 
      b. Create [content cards](https://experienceleague.adobe.com/en/docs/journey-optimizer/using/channels/content-card/create-content-card) - Follow "Add Content cards to a campaign".
      
@@ -43,7 +43,7 @@ const surfaces = [ <br>
   'rn/android/local_promo',  // For local promotional cards <br>
   'app/onboarding/step1'     // For onboarding flow <br>
 ];
-```
+
 ### Where to Configure Surface Identifiers
 
 Surface identifiers must be coordinated between two locations:
@@ -92,8 +92,7 @@ Before you can fetch and display content cards, you need to install and configur
 - [`@adobe/react-native-aepedgeidentity`](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgeidentity)
 - [`@adobe/react-native-aepmessaging`](https://github.com/adobe/aepsdk-react-native/tree/content-card-ui/packages/messaging) 
 
-
-```
+```shell
 //Important: Use the development branch for Messaging content card testing
 
 npm install "https://gitpkg.now.sh/adobe/aepsdk-react-native/packages/messaging?content-card-ui"
@@ -119,26 +118,31 @@ import {
 The `useContentCardUI` hook provides a simplified, modern way to fetch and manage content cards with built-in state management, loading states, and error handling.
 
 ```typescript
-import React from 'react';
-import { View } from 'react-native';
+iimport React from 'react';
+import { View, FlatList, Text } from 'react-native';
 import { useContentCardUI, ContentCardView } from '@adobe/react-native-aepmessaging';
 
 const ContentCardsScreen = () => {
-  const { content } = useContentCardUI('homepage');
+  const { content, isLoading, error } = useContentCardUI('homepage');
+
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error loading content cards</Text>;
 
   return (
-    <View>
-      {content?.map((card) => (
-        <ContentCardView
-          key={card.id}
-          template={card}
-        />
-      ))}
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={content}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item: card }) => (
+          <ContentCardView
+            template={card}
+          />
+        )}
+        ListEmptyComponent={<Text>No content cards available</Text>}
+      />
     </View>
   );
 };
-
-export default ContentCardsScreen;
 ```
 
 #### Benefits of the useContentCardUI Hook
