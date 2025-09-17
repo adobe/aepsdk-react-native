@@ -115,12 +115,12 @@ import {
 
 For data fetching, you can use either the hook-based approach (recommended) or the manual implementation approach.
 
-### Hook baseed Approach: Using the useContentCardUI Hook (Recommended)
+### Hook based Approach: Using the useContentCardUI Hook (Recommended)
 
 The `useContentCardUI` hook provides a simplified, modern way to fetch and manage content cards with built-in state management, loading states, and error handling.
 
 ```typescript
-iimport React from 'react';
+import React from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { useContentCardUI, ContentCardView } from '@adobe/react-native-aepmessaging';
 
@@ -156,7 +156,7 @@ const ContentCardsScreen = () => {
 - **Easy Refresh**: Simple `refetch()` function for manual content updates
 - **Loading States**: Built-in loading indicators for better UX
 
-#### Hook API Reference
+#### useContentCardUI Hook API Reference
 
 ```typescript
 const { content, isLoading, error, refetch } = useContentCardUI(surface);
@@ -171,9 +171,9 @@ const { content, isLoading, error, refetch } = useContentCardUI(surface);
 
 **Note**: While the basic example only uses `content`, the hook also provides `isLoading`, `error`, and `refetch` for enhanced functionality when needed.
 
-### Advanced Approach: Manual Implementation
+### Alternative Approach: Manual Implementation
 
-For advanced use cases where you need more control over the fetching process, you can use the manual approach:
+For alternative use cases where you need more control over the fetching process, you can use the manual approach:
 
 #### Step 1: Update Propositions for Surfaces
 
@@ -257,92 +257,31 @@ Content cards can be rendered using the pre-built `ContentCardView` component pr
 ### React Native Implementation
 
 ```typescript
-import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text } from 'react-native';
-import { Messaging, ContentTemplate, ContentCardView } from '@adobe/react-native-aepmessaging';
+import React from 'react';
+import { View, FlatList, Text } from 'react-native';
+import { useContentCardUI, ContentCardView } from '@adobe/react-native-aepmessaging';
 
-interface ContentCardsScreenProps {
-  surfacePath?: string;
-}
+const ContentCardsScreen = () => {
+  const { content, isLoading, error } = useContentCardUI('homepage');
 
-const ContentCardsScreen: React.FC<ContentCardsScreenProps> = ({ surfacePath = 'homepage' }) => {
-  const [contentCards, setContentCards] = useState<ContentTemplate[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    fetchContentCards();
-  }, [surfacePath]);
-
-  const fetchContentCards = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      
-      // Update propositions for the surface
-      await Messaging.updatePropositionsForSurfaces([surfacePath]);
-      
-      // Get content card UI templates (already filtered and processed)
-      const cards = await Messaging.getContentCardUI(surfacePath);
-      
-      setContentCards(cards || []);
-    } catch (error) {
-      console.error('Failed to fetch content cards:', error);
-      setContentCards([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleContentCardEvent = (event: string, card: ContentTemplate): void => {
-    console.log('Content card event:', event, card);
-    // Handle card interactions (display, dismiss, interact events)
-  };
-
-  if (loading) {
-    return (
-      <View style={styles.loading}>
-        <Text>Loading content cards...</Text>
-      </View>
-    );
-  }
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error loading content cards</Text>;
 
   return (
-    <ScrollView style={styles.container}>
-      {contentCards && contentCards.length > 0 ? (
-        contentCards.map((card) => (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={content}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item: card }) => (
           <ContentCardView
-            key={card.id}
             template={card}
-            listener={handleContentCardEvent}
           />
-        ))
-      ) : (
-        <View style={styles.emptyState}>
-          <Text>No content cards available</Text>
-        </View>
-      )}
-    </ScrollView>
+        )}
+        ListEmptyComponent={<Text>No content cards available</Text>}
+      />
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-});
-
-export default ContentCardsScreen;
 ```
 
 ### Choosing the Right Approach
