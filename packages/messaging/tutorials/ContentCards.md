@@ -101,19 +101,21 @@ npm install "https://gitpkg.now.sh/adobe/aepsdk-react-native/packages/messaging?
 **Optional packages:**
 - [`@adobe/react-native-aepedgeconsent`](https://github.com/adobe/aepsdk-react-native/tree/main/packages/edgeconsent)
 
-**Required imports for content cards:**
+**Imports for content cards:**
 ```typescript
 import { 
   Messaging,           // For manual API calls (advanced usage)
   ContentTemplate,     // Type definitions
   ContentCardView,     // Pre-built UI component
-  useContentCardUI     // Modern hook for simplified state management
+  useContentCardUI     // hook based approach for simplified state management
 } from '@adobe/react-native-aepmessaging';
 ```
 
 ## Fetching Content Cards
 
-### Modern Approach: Using the useContentCardUI Hook (Recommended)
+For data fetching, you can use either the hook-based approach (recommended) or the manual implementation approach.
+
+### Hook baseed Approach: Using the useContentCardUI Hook (Recommended)
 
 The `useContentCardUI` hook provides a simplified, modern way to fetch and manage content cards with built-in state management, loading states, and error handling.
 
@@ -173,7 +175,7 @@ const { content, isLoading, error, refetch } = useContentCardUI(surface);
 
 For advanced use cases where you need more control over the fetching process, you can use the manual approach:
 
-### Step 1: Update Propositions for Surfaces
+#### Step 1: Update Propositions for Surfaces
 
 To fetch content cards for specific surfaces configured in Adobe Journey Optimizer campaigns, call the `updatePropositionsForSurfaces` API. This method retrieves the latest content cards from the server and caches them in-memory for the application's lifecycle.
 
@@ -208,7 +210,7 @@ const updateContentCardsForMultipleSurfaces = async (): Promise<void> => {
 };
 ```
 
-### Step 2: Retrieve and Render Content Cards
+#### Step 2: Retrieve and Render Content Cards
 
 After updating propositions, retrieve the content cards for a specific surface using the `getContentCardUI` API. This convenience method handles proposition filtering and returns ready-to-use content card templates.
 
@@ -247,20 +249,12 @@ const getContentCardsForMultipleSurfaces = async (surfaces: string[]): Promise<C
   }
 };
 ```
-
+f
 ## Rendering Content Cards
 
-Content cards can be rendered using the pre-built `ContentCardView` component provided by the SDK. You can use either the modern hook-based approach (recommended) or the manual implementation approach.
+Content cards can be rendered using the pre-built `ContentCardView` component provided by the SDK. 
 
 ### React Native Implementation
-
-#### Modern Hook-Based Approach (Recommended)
-
-See the [Modern Approach: Using the useContentCardUI Hook](#modern-approach-using-the-usecontentcardui-hook-recommended) section above for the complete implementation.
-
-#### Manual Implementation Approach
-
-For advanced use cases, you can manually fetch and manage content cards:
 
 ```typescript
 import React, { useState, useEffect } from 'react';
