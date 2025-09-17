@@ -152,3 +152,6 @@ out/
 
 # ignore ds store
 .DS_Store
+
+# temporary allow messaging compiled code
+!packages/messaging/dist/
