@@ -346,7 +346,7 @@ public final class RCTAEPMessagingModule
   }
 
   // Messaging Delegate Callback
-  @ReactMethod(isBlockingSynchronousMethod = true)
+  @ReactMethod
   public void setMessageSettings(final boolean shouldShowMessage,
                                  final boolean shouldSaveMessage) {
     this.shouldShowMessage = shouldShowMessage;
