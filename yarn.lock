@@ -2881,12 +2881,12 @@
     csstype "^3.2.2"
 
 "@types/react@^18", "@types/react@^18.0.5":
-  version "18.3.27"
-  resolved "https://artifactory.corp.adobe.com/artifactory/api/npm/npm-adobe-release/@types/react/-/react-18.3.27.tgz#74a3b590ea183983dc65a474dc17553ae1415c34"
-  integrity sha512-cisd7gxkzjBKU2GgdYrTdtQx1SORymWyaAFhaxQPK9bYO9ot3Y5OikQRvY0VYQtvwjeQnizCINJAenh/V7MK2w==
+  version "18.3.23"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.23.tgz#86ae6f6b95a48c418fecdaccc8069e0fbb63696a"
+  integrity sha512-/LDXMQh55EzZQ0uVAZmKKhfENivEvWz6E+EYzh+/MCjMhNsotd+ZHhBGIjFDTi6+fz0OhQQQLbTgdQIxxCsC0w==
   dependencies:
     "@types/prop-types" "*"
-    csstype "^3.2.2"
+    csstype "^3.0.2"
 
 "@types/react@~19.1.10":
   version "19.1.17"
@@ -8042,7 +8042,7 @@ react-native@0.81.0:
     ws "^6.2.3"
     yargs "^17.6.2"
 
-react-native@0.81.5:
+react-native@0.81.5, react-native@^0.81.0:
   version "0.81.5"
   resolved "https://artifactory.corp.adobe.com/artifactory/api/npm/npm-adobe-release/react-native/-/react-native-0.81.5.tgz#6c963f137d3979b22aef2d8482067775c8fe2fed"
   integrity sha512-1w+/oSjEXZjMqsIvmkCRsOc8UBYv163bTWKTI8+1mxztvQPhCRYGTvZ/PL1w16xXHneIj/SLGfxWg2GWN2uexw==
