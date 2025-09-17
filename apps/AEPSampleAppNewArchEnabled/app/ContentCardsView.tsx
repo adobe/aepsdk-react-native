@@ -93,7 +93,6 @@ const Header = ({
     }
 
     MobileCore.trackAction(trackInput);
-
     await onTrackAction();
   }, [trackInput, onTrackAction]);
 

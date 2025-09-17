@@ -10,19 +10,19 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React from "react";
-import { Button, Text, View, ScrollView } from "react-native";
-import { MobileCore } from "@adobe/react-native-aepcore";
+import React from 'react';
+import { Button, Text, View, ScrollView } from 'react-native';
+import { MobileCore } from '@adobe/react-native-aepcore';
 import {
   Messaging,
   PersonalizationSchema,
-} from "@adobe/react-native-aepmessaging";
-import styles from "../styles/styles";
-import { useRouter } from "expo-router";
+  MessagingEdgeEventType
+} from '@adobe/react-native-aepmessaging';
+import styles from '../styles/styles';
+import { useRouter } from 'expo-router';
 
-const SURFACES = ["android-cbe-preview", "cbe/json", "android-cc"];
-const SURFACES_WITH_CONTENT_CARDS = ["android-cc"];
-
+const SURFACES = ['android-cbe-preview', 'cbe/json', 'android-cc'];
+const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
 
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
@@ -31,49 +31,47 @@ const messagingExtensionVersion = async () => {
 
 const refreshInAppMessages = () => {
   Messaging.refreshInAppMessages();
-  console.log("messages refreshed");
+  console.log('messages refreshed');
 };
 
 const setMessagingDelegate = () => {
   Messaging.setMessagingDelegate({
-    onDismiss: (msg) => console.log("dismissed!", msg),
+    onDismiss: (msg) => console.log('dismissed!', msg),
     onShow: (msg) => {
-      console.log("show", msg);
-      Messaging.handleJavascriptMessage(
-        msg.id,
-        "myInappCallback",
-        (content) => {
-          console.log("Received webview content:", content);
-        }
-      );
+      console.log('show', msg);
+      msg.handleJavascriptMessage('myInappCallback', (content: string) => {
+        console.log('Received webview content in onShow:', content);
+      });
     },
     shouldShowMessage: () => true,
     shouldSaveMessage: () => true,
-    urlLoaded: (url, message) => console.log(url, message),
+    urlLoaded: (url, message) => console.log(url, message)
   });
-  console.log("messaging delegate set");
+  console.log('messaging delegate set');
 };
+
 const getPropositionsForSurfaces = async () => {
   const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
   console.log('getPropositionsForSurfaces', JSON.stringify(messages));
 };
+
 const trackAction = async () => {
-  MobileCore.trackAction("tuesday", { full: true });
+  MobileCore.trackAction('iamjs', { full: true });
 };
 
 const updatePropositionsForSurfaces = async () => {
   Messaging.updatePropositionsForSurfaces(SURFACES);
-  console.log("Updated Propositions");
+  console.log('Updated Propositions');
 };
 
 const getCachedMessages = async () => {
   const messages = await Messaging.getCachedMessages();
-  console.log("Cached messages:", messages);
+  console.log('Cached messages:', messages);
 };
 
 const getLatestMessage = async () => {
   const message = await Messaging.getLatestMessage();
-  console.log("Latest Message:", message);
+  console.log('Latest Message:', message);
 };
 
 // this method can be used to track click interactions with content cards
@@ -88,9 +86,13 @@ const trackContentCardInteraction = async () => {
     for (const proposition of propositions) {
       for (const propositionItem of proposition.items) {
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          Messaging.trackContentCardInteraction(proposition, propositionItem);
+          // Cast to ContentCard for the legacy tracking method
+          Messaging.trackContentCardInteraction(
+            proposition,
+            propositionItem as any
+          );
           console.log(
-            "trackContentCardInteraction",
+            'trackContentCardInteraction',
             proposition,
             propositionItem
           );
@@ -112,19 +114,22 @@ const trackContentCardDisplay = async () => {
     for (const proposition of propositions) {
       for (const propositionItem of proposition.items) {
         if (propositionItem.schema === PersonalizationSchema.CONTENT_CARD) {
-          Messaging.trackContentCardDisplay(proposition, propositionItem);
-          console.log("trackContentCardDisplay", proposition, propositionItem);
+          // Cast to ContentCard for the legacy tracking method
+          Messaging.trackContentCardDisplay(
+            proposition,
+            propositionItem as any
+          );
+          console.log('trackContentCardDisplay', proposition, propositionItem);
         }
       }
     }
   }
 };
 
-
 // Method demonstrating unified tracking using PropositionItem methods
 const unifiedTrackingExample = async () => {
-  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);  
-  for (const surface of SURFACES) { 
+  const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
+  for (const surface of SURFACES) {
     const propositions = messages[surface] || [];
 
     for (const proposition of propositions) {
@@ -134,9 +139,7 @@ const unifiedTrackingExample = async () => {
       }
     }
   }
-}
-
-
+};
 
 function MessagingView() {
   const router = useRouter();
@@ -170,6 +173,10 @@ function MessagingView() {
         <Button
           title="trackContentCardDisplay()"
           onPress={trackContentCardDisplay}
+        />
+        <Button
+          title="Unified Tracking Example"
+          onPress={unifiedTrackingExample}
         />
       </ScrollView>
     </View>

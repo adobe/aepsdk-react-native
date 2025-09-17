@@ -38,7 +38,8 @@
             "useFrameworks": "static"
           },
           "android": {
-            "newArchEnabled": true
+            "newArchEnabled": true,
+            "kotlinVersion": "1.9.25"
           }
         }
       ],
