@@ -24,11 +24,11 @@ Before implementing content cards, ensure you have:
 
 Surface identifiers are string values that represent specific locations in your app where content cards will be displayed. These identifiers must match between your Adobe Journey Optimizer campaigns and your app code.
 
-### Surface Naming Conventions
+#### Surface Naming Conventions
 
 Use descriptive, hierarchical naming patterns:
 
-// Feature-based surfaces
+**Feature-based surfaces** <br>
 const surfaces = [
   'homepage',
   'product-detail', 
@@ -37,14 +37,14 @@ const surfaces = [
   'search-results'
 ];
 
-// Context-specific surfaces
+**Context-specific surfaces** <br>
 const surfaces = [ <br>
   'rn/ios/remote_image',     // For remote image content cards <br>
   'rn/android/local_promo',  // For local promotional cards <br>
   'app/onboarding/step1'     // For onboarding flow <br>
 ];
 
-### Where to Configure Surface Identifiers
+#### Where to Configure Surface Identifiers
 
 Surface identifiers must be coordinated between two locations:
 
