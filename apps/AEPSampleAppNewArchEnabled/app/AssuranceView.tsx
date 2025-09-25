@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   Button,
   StyleSheet,
@@ -18,30 +18,30 @@ import {
   View,
   TextInput,
   ScrollView,
-} from 'react-native';
-import {Assurance} from '@adobe/react-native-aepassurance';
-import {  useRouter } from 'expo-router';
+} from "react-native";
+import { Assurance } from "@adobe/react-native-aepassurance";
+import { useRouter } from "expo-router";
 
 const AssuranceView = () => {
-  const [version, setVersion] = useState('');
-  const [sessionURL, setsessionURL] = useState('your-assurance-url');
+  const [version, setVersion] = useState("");
+  const [sessionURL, setsessionURL] = useState("your-assurance-url");
 
   const router = useRouter();
 
-  Assurance.extensionVersion().then(version => {
+  Assurance.extensionVersion().then((version) => {
     setVersion(version);
   });
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{marginTop: 75}}>
-        <Button onPress={router.back}  title="Go to main page" />
+      <ScrollView contentContainerStyle={{ marginTop: 75 }}>
+        <Button onPress={router.back} title="Go to main page" />
         <Text style={styles.welcome}>Assurance v{version}</Text>
         <Button title="Start Session" onPress={startSessionClicked} />
         <TextInput
-          style={{height: 40, margin: 10}}
+          style={{ height: 40, margin: 10 }}
           placeholder="assurance://"
-          onChangeText={val => setsessionURL(val)}
+          onChangeText={(val) => setsessionURL(val)}
         />
       </ScrollView>
     </View>
@@ -55,13 +55,13 @@ const AssuranceView = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF",
   },
   welcome: {
     fontSize: 25,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
     marginTop: 80,
   },
