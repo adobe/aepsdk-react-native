@@ -1,8 +1,43 @@
 import React, { createContext } from "react";
 
-export type ContainerSettings = {
-  cardHeight: number;
-};
+export interface ContainerSettings {
+  templateType: 'inbox' | 'banner' | 'custom';
+  content: {
+    heading: {
+      content: string;
+    };
+    layout: {
+      orientation: 'horizontal' | 'vertical';
+    };
+    capacity: number;
+    emptyStateSettings: {
+      message: {
+        content: string;
+      };
+      image?: {
+        url: string;
+        darkUrl?: string;
+      };
+    };
+    unread_indicator?: {
+      unread_bg: {
+        clr: {
+          light: string;
+          dark: string;
+        };
+      };
+      unread_icon: {
+        placement: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+        image: {
+          url: string;
+          darkUrl?: string;
+        };
+      };
+    };
+    isUnreadEnabled: boolean;
+  };
+  showPagination?: boolean;
+}
 
 export const ContentCardContainerContext =
   createContext<ContainerSettings | null>(null);

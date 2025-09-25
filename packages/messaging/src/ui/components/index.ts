@@ -11,6 +11,7 @@
 */
 
 export * from './Button/Button';
+export * from './ContentCardContainer/ContentCardContainer';
 export * from './ContentCardView/ContentCardView';
 export * from '../types/ContentViewEvent';
 export { ThemeProvider } from '../theme/ThemeProvider';

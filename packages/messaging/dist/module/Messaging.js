@@ -12,7 +12,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
+import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 import Message from "./models/Message.js";
 import { MessagingProposition } from "./models/MessagingProposition.js";
 import { PersonalizationSchema } from "./models/PersonalizationSchema.js";
@@ -98,34 +98,34 @@ class Messaging {
   static setMessagingDelegate(delegate) {
     messagingDelegate = delegate;
     const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
-    eventEmitter.addListener('onShow', message => messagingDelegate?.onShow?.(new Message(message)));
-    eventEmitter.addListener('onDismiss', message => {
+    eventEmitter.addListener("onShow", message => messagingDelegate?.onShow?.(new Message(message)));
+    eventEmitter.addListener("onDismiss", message => {
       const messageInstance = new Message(message);
       messageInstance._clearJavascriptMessageHandlers();
       messagingDelegate?.onDismiss?.(messageInstance);
     });
-    eventEmitter.addListener('shouldShowMessage', message => {
+    eventEmitter.addListener("shouldShowMessage", message => {
       const messageInstance = new Message(message);
       const shouldShowMessage = messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
       const shouldSaveMessage = messagingDelegate?.shouldSaveMessage?.(messageInstance) ?? false;
       RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
     });
-    if (Platform.OS === 'ios') {
-      eventEmitter.addListener('urlLoaded', event => messagingDelegate?.urlLoaded?.(event.url, new Message(event.message)));
+    if (Platform.OS === "ios") {
+      eventEmitter.addListener("urlLoaded", event => messagingDelegate?.urlLoaded?.(event.url, new Message(event.message)));
     }
-    if (Platform.OS === 'android') {
-      eventEmitter.addListener('onContentLoaded', event => messagingDelegate?.onContentLoaded?.(new Message(event.message)));
+    if (Platform.OS === "android") {
+      eventEmitter.addListener("onContentLoaded", event => messagingDelegate?.onContentLoaded?.(new Message(event.message)));
     }
     RCTAEPMessaging.setMessagingDelegate();
     return () => {
-      eventEmitter.removeAllListeners('onDismiss');
-      eventEmitter.removeAllListeners('onShow');
-      eventEmitter.removeAllListeners('shouldShowMessage');
-      if (Platform.OS === 'ios') {
-        eventEmitter.removeAllListeners('urlLoaded');
+      eventEmitter.removeAllListeners("onDismiss");
+      eventEmitter.removeAllListeners("onShow");
+      eventEmitter.removeAllListeners("shouldShowMessage");
+      if (Platform.OS === "ios") {
+        eventEmitter.removeAllListeners("urlLoaded");
       }
-      if (Platform.OS === 'android') {
-        eventEmitter.removeAllListeners('onContentLoaded');
+      if (Platform.OS === "android") {
+        eventEmitter.removeAllListeners("onContentLoaded");
       }
     };
   }
@@ -166,9 +166,46 @@ class Messaging {
       return [];
     }
     return contentCards.map(card => {
-      const type = card.data?.meta?.adobe?.template ?? 'SmallImage';
+      const type = card.data?.meta?.adobe?.template ?? "SmallImage";
       return new ContentTemplate(card, type);
     });
+  }
+  static async getContentCardContainer(surface) {
+    console.log("getContentCardContainer", surface);
+    return {
+      templateType: "inbox",
+      content: {
+        heading: {
+          content: "Heading"
+        },
+        layout: {
+          orientation: "horizontal"
+        },
+        capacity: 10,
+        emptyStateSettings: {
+          message: {
+            content: "Empty State"
+          }
+        },
+        unread_indicator: {
+          unread_bg: {
+            clr: {
+              light: "#000000",
+              dark: "#000000"
+            }
+          },
+          unread_icon: {
+            placement: "topright",
+            image: {
+              url: "https://www.adobe.com",
+              darkUrl: "https://www.adobe.com"
+            }
+          }
+        },
+        isUnreadEnabled: false
+      },
+      showPagination: false
+    };
   }
 }
 export default Messaging;
