@@ -20,63 +20,91 @@ __metadata:
 "@adobe/react-native-aepassurance@npm:^7.0.0, @adobe/react-native-aepassurance@workspace:*, @adobe/react-native-aepassurance@workspace:packages/assurance":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepassurance@workspace:packages/assurance"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aepcampaignclassic@npm:^7.0.0, @adobe/react-native-aepcampaignclassic@workspace:*, @adobe/react-native-aepcampaignclassic@workspace:packages/campaignclassic":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepcampaignclassic@workspace:packages/campaignclassic"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aepcore@npm:^7.0.0, @adobe/react-native-aepcore@workspace:*, @adobe/react-native-aepcore@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepcore@workspace:packages/core"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aepedge@npm:^7.0.0, @adobe/react-native-aepedge@workspace:*, @adobe/react-native-aepedge@workspace:packages/edge":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepedge@workspace:packages/edge"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedgeidentity": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aepedgebridge@npm:^7.0.0, @adobe/react-native-aepedgebridge@workspace:*, @adobe/react-native-aepedgebridge@workspace:packages/edgebridge":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepedgebridge@workspace:packages/edgebridge"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aepedgeconsent@npm:^7.0.0, @adobe/react-native-aepedgeconsent@workspace:*, @adobe/react-native-aepedgeconsent@workspace:packages/edgeconsent":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepedgeconsent@workspace:packages/edgeconsent"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aepedgeidentity@npm:^7.0.0, @adobe/react-native-aepedgeidentity@workspace:*, @adobe/react-native-aepedgeidentity@workspace:packages/edgeidentity":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepedgeidentity@workspace:packages/edgeidentity"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
@@ -99,39 +127,55 @@ __metadata:
 "@adobe/react-native-aepoptimize@npm:^7.0.0, @adobe/react-native-aepoptimize@workspace:*, @adobe/react-native-aepoptimize@workspace:packages/optimize":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepoptimize@workspace:packages/optimize"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedge": ^7.0.0
     "@adobe/react-native-aepedgeidentity": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aepplaces@npm:^7.0.0, @adobe/react-native-aepplaces@workspace:*, @adobe/react-native-aepplaces@workspace:packages/places":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepplaces@workspace:packages/places"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aeptarget@npm:^7.0.0, @adobe/react-native-aeptarget@workspace:*, @adobe/react-native-aeptarget@workspace:packages/target":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aeptarget@workspace:packages/target"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedge": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
 "@adobe/react-native-aepuserprofile@npm:^7.0.0, @adobe/react-native-aepuserprofile@workspace:*, @adobe/react-native-aepuserprofile@workspace:packages/userprofile":
   version: 0.0.0-use.local
   resolution: "@adobe/react-native-aepuserprofile@workspace:packages/userprofile"
+  dependencies:
+    react: "npm:19.1.1"
+    react-native: "npm:0.81.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
-    react-native: ">=0.60.0"
+    react: "*"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
@@ -5185,7 +5229,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/native-stack@npm:^7.2.0":
+"@react-navigation/native-stack@npm:^7.2.0, @react-navigation/native-stack@npm:^7.3.1":
   version: 7.3.26
   resolution: "@react-navigation/native-stack@npm:7.3.26"
   dependencies:
@@ -6069,6 +6113,7 @@ __metadata:
     "@react-navigation/core": "npm:7.9.1"
     "@react-navigation/drawer": "npm:7.3.11"
     "@react-navigation/native": "npm:7.1.8"
+    "@react-navigation/native-stack": "npm:^7.3.1"
     "@react-navigation/routers": "npm:7.3.7"
     "@react-navigation/stack": "npm:7.3.1"
     "@types/jest": "npm:^29.5.12"
