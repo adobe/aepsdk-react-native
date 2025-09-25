@@ -1,5 +1,4 @@
 import Messaging from './Messaging';
-import { ContentCard, ContentCardData } from './models/ContentCard';
 import { InAppMessage } from './models/InAppMessage';
 import { HTMLProposition, HTMLPropositionData } from './models/HTMLProposition';
 import { JSONPropositionItem, JSONPropositionData } from './models/JSONProposition';
@@ -13,5 +12,5 @@ import { PropositionItem, PropositionItemData } from './models/PropositionItem';
 import { Activity, Characteristics } from './models/ScopeDetails';
 export * from './models/ContentCard';
 export * from './ui';
-export { Activity, Characteristics, ContentCard, ContentCardData, InAppMessage, Messaging, Message, MessagingDelegate, MessagingEdgeEventType, MessagingProposition, MessagingPropositionItem, PersonalizationSchema, PropositionItem, PropositionItemData, HTMLProposition, HTMLPropositionData, JSONPropositionItem, JSONPropositionData, };
+export { Activity, Characteristics, InAppMessage, Messaging, Message, MessagingDelegate, MessagingEdgeEventType, MessagingProposition, MessagingPropositionItem, PersonalizationSchema, PropositionItem, PropositionItemData, HTMLProposition, HTMLPropositionData, JSONPropositionItem, JSONPropositionData, };
 //# sourceMappingURL=index.d.ts.map

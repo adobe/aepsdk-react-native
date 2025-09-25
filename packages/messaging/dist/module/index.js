@@ -13,7 +13,6 @@ governing permissions and limitations under the License.
 */
 
 import Messaging from "./Messaging.js";
-import { ContentCard, ContentCardData } from "./models/ContentCard.js";
 import { InAppMessage } from "./models/InAppMessage.js";
 import { HTMLProposition, HTMLPropositionData } from "./models/HTMLProposition.js";
 import { JSONPropositionItem, JSONPropositionData } from "./models/JSONProposition.js";
@@ -27,5 +26,5 @@ import { PropositionItem, PropositionItemData } from "./models/PropositionItem.j
 import { Activity, Characteristics } from "./models/ScopeDetails.js";
 export * from "./models/ContentCard.js";
 export * from "./ui/index.js";
-export { Activity, Characteristics, ContentCard, ContentCardData, InAppMessage, Messaging, Message, MessagingDelegate, MessagingEdgeEventType, MessagingProposition, MessagingPropositionItem, PersonalizationSchema, PropositionItem, PropositionItemData, HTMLProposition, HTMLPropositionData, JSONPropositionItem, JSONPropositionData };
+export { Activity, Characteristics, InAppMessage, Messaging, Message, MessagingDelegate, MessagingEdgeEventType, MessagingProposition, MessagingPropositionItem, PersonalizationSchema, PropositionItem, PropositionItemData, HTMLProposition, HTMLPropositionData, JSONPropositionItem, JSONPropositionData };
 //# sourceMappingURL=index.js.map

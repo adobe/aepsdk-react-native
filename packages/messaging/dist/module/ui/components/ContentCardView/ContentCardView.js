@@ -70,8 +70,6 @@ export const ContentCardView = ({
     return template.data.content.image?.url;
   }, [colorScheme, template.data?.content?.image?.darkUrl, template.data?.content?.image?.url]);
   const imageAspectRatio = useAspectRatio(imageUri);
-
-  // Calculate styleOverrides before any early returns
   const styleOverrides = useMemo(() => {
     switch (cardVariant) {
       case 'SmallImage':

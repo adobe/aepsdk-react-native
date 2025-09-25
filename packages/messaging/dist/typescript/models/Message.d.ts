@@ -43,12 +43,25 @@ declare class Message {
      */
     handleJavascriptMessage(handlerName: string, handler: (content: string) => void): void;
     /**
+     * Asynchronously evaluates the specified JavaScript string in the context of the message's WebView.
+     * @param {string} javascriptString: The JavaScript string to evaluate.
+     * @param {function} callback: A callback to be invoked when the script execution completes with the result of the execution.
+    */
+    evaluateJavascript(javascriptString: string, callback: (result: string) => void): void;
+    /**
      * @internal - For internal use only.
      * Clears all the javascript message handlers for the message.
      * This function must be called if the callbacks registered in handleJavascriptMessage are no longer needed.
      * Failure to call this function may lead to memory leaks.
      */
     _clearJavascriptMessageHandlers(): void;
+    /**
+     * @internal - For internal use only.
+     * Clears all the javascript result handlers for the message.
+     * This function must be called if the callbacks registered in evaluateJavascript are no longer needed.
+     * Failure to call this function may lead to memory leaks.
+     */
+    _clearJavascriptResultHandlers(): void;
 }
 export default Message;
 //# sourceMappingURL=Message.d.ts.map
