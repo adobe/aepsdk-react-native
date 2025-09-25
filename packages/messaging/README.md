@@ -222,7 +222,7 @@ propositionItem.track(
 );
 ```
 
-When using `getPropositionsForSurfaces`, the returned objects can be wrapped with `MessagingProposition` to get typed items and convenient tracking via `PropositionItem.track(...)`.
+When using `getPropositionsForSurfaces`, the returned objects are already `MessagingProposition` instances with typed items and convenient tracking via `PropositionItem.track(...)`.
 
 ```javascript
 import { Messaging, MessagingProposition, MessagingEdgeEventType } from '@adobe/react-native-aepmessaging';
