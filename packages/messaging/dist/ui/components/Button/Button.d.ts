@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 import { GestureResponderEvent, PressableProps, TextStyle } from 'react-native';
 export interface ButtonProps extends Omit<PressableProps, 'onPress'> {
     actionUrl?: string;
