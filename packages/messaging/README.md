@@ -232,17 +232,12 @@ const messages = await Messaging.getPropositionsForSurfaces(SURFACES);
 
 for (const surface of SURFACES) {
   const propositions = messages[surface] || [];
-
   for (const proposition of propositions) {
-    const msgProp = new MessagingProposition(proposition);
-
-    if (msgProp.items.length > 0) {
-      const propositionItem = msgProp.items[0];
-
+    for (const propositionItem of proposition.items) {
       // Track interaction with custom data
-         propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
-     // Track with tokens for sub-item tracking
-        propositionItem.track('button_click', MessagingEdgeEventType.INTERACT, ['token-1', 'token-2']);
+      propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
+      // Track with tokens for sub-item tracking
+      propositionItem.track('button_click', MessagingEdgeEventType.INTERACT, ['token-1', 'token-2']);
     }
   }
 }
