@@ -12,7 +12,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Linking, Pressable, Text } from 'react-native';
 import { useTheme } from "../../theme/ThemeProvider.js";
 const Button = ({

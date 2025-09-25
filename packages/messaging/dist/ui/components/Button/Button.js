@@ -12,7 +12,7 @@ const tslib_1 = require("tslib");
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-const react_1 = require("react");
+const react_1 = tslib_1.__importStar(require("react"));
 const react_native_1 = require("react-native");
 const ThemeProvider_1 = require("../../theme/ThemeProvider");
 const Button = (_a) => {
