@@ -105,8 +105,19 @@ class Messaging {
   static async getPropositionsForSurfaces(
     surfaces: string[]
   ): Promise<Record<string, MessagingProposition[]>> {
-    return await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
+
+    const propositionsList = await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
+    let messagingPropositionsForSurfaces: Record<string, MessagingProposition[]> = {};
+    
+    for (const [surface, propositions] of Object.entries(propositionsList)) {
+      messagingPropositionsForSurfaces[surface] = propositions.map(
+        (proposition) => new MessagingProposition(proposition)
+      );
+    }
+
+    return messagingPropositionsForSurfaces;
   }
+  
   /**
    * @deprecated Use PropositionItem.track(...) instead.
    */
