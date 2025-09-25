@@ -80,6 +80,13 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   ...props
 }) => {
   console.log('ContentCardView', template);
+  
+  // Early returns for invalid data - must come before any hooks
+  if (!template.data) return null;
+  
+  const content = template?.data?.content as any;
+  if (!content) return null;
+
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
@@ -117,16 +124,6 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     }
   }, [template]);
 
-  // Call listener on mount to signal view display (only once to prevent duplicates)
-  useEffect(() => {
-    if (!isDisplayedRef.current) {
-      listener?.('onDisplay', template);
-      // Track display event using propositionItem
-      template.track?.(MessagingEdgeEventType.DISPLAY);
-      isDisplayedRef.current = true;
-    }
-  }, [listener, template]);
-
   const imageUri = useMemo(() => {
     if (colorScheme === 'dark' && template.data?.content?.image?.darkUrl) {
       return template.data.content.image.darkUrl;
@@ -139,17 +136,6 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   ]);
 
   const imageAspectRatio = useAspectRatio(imageUri);
-
-  // If not visible, return null to hide the entire view
-  if (!isVisible) {
-    return null;
-  }
-
-  if (!template.data) return null;
-
-  const content = template?.data?.content as any;
-
-  if (!content) return null;
 
   const styleOverrides = useMemo<
     | (SmallImageContentStyle & LargeImageContentStyle & ImageOnlyContentStyle)
@@ -167,7 +153,18 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     }
   }, [_styleOverrides, cardVariant]);
 
-  return (
+  // Call listener on mount to signal view display (only once and only when visible)
+  useEffect(() => {
+    if (isVisible && !isDisplayedRef.current) {
+      listener?.('onDisplay', template);
+      // Track display event using propositionItem
+      template.track?.(MessagingEdgeEventType.DISPLAY);
+      isDisplayedRef.current = true;
+    }
+  }, [isVisible, listener, template]);
+
+  // Use conditional rendering instead of early return to avoid hooks issues
+  return !isVisible ? null : (
     <Pressable
       onPress={onPress}
       style={(state) => [
