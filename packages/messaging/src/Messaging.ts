@@ -258,7 +258,6 @@ class Messaging {
       return [];
     }
     const contentCards = propositions
-      .map((proposition) => new MessagingProposition(proposition))
       .flatMap((proposition) =>
         proposition.items.filter(
           (item) => item.schema === PersonalizationSchema.CONTENT_CARD
