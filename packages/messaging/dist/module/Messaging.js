@@ -62,8 +62,14 @@ class Messaging {
    * @returns A record of surface names with their corresponding propositions
    */
   static async getPropositionsForSurfaces(surfaces) {
-    return await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
+    const propositionsList = await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
+    let messagingPropositionsForSurfaces = {};
+    for (const [surface, propositions] of Object.entries(propositionsList)) {
+      messagingPropositionsForSurfaces[surface] = propositions.map(proposition => new MessagingProposition(proposition));
+    }
+    return messagingPropositionsForSurfaces;
   }
+
   /**
    * @deprecated Use PropositionItem.track(...) instead.
    */
@@ -161,7 +167,7 @@ class Messaging {
     if (!propositions?.length) {
       return [];
     }
-    const contentCards = propositions.map(proposition => new MessagingProposition(proposition)).flatMap(proposition => proposition.items.filter(item => item.schema === PersonalizationSchema.CONTENT_CARD));
+    const contentCards = propositions.flatMap(proposition => proposition.items.filter(item => item.schema === PersonalizationSchema.CONTENT_CARD));
     if (!contentCards?.length) {
       return [];
     }
