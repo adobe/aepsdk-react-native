@@ -67,12 +67,15 @@ const StyledText = ({ text }: { text: string }) => {
 
 const Header = ({
   isLoading,
-  onTrackAction
+  onTrackAction,
+  selectedView,
+  setSelectedView
 }: {
   isLoading: boolean;
   onTrackAction: () => void;
+  selectedView: ViewOption;
+  setSelectedView: (view: ViewOption) => void;
 }) => {
-  const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string>('System');
   const [trackInput, setTrackInput] = useState('');
@@ -250,7 +253,7 @@ const Header = ({
 const MemoHeader = memo(Header);
 
 const ContentCardsView = () => {
-  const [selectedView] = useState<ViewOption>('Remote');
+  const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [trackInput, setTrackInput] = useState('');
   const colorScheme = useColorScheme();
 
@@ -299,7 +302,12 @@ const ContentCardsView = () => {
         return <ContentCardView template={item} />;
       }}
       ListHeaderComponent={
-        <MemoHeader isLoading={isLoading} onTrackAction={refetch} />
+        <MemoHeader 
+          isLoading={isLoading} 
+          onTrackAction={refetch}
+          selectedView={selectedView}
+          setSelectedView={setSelectedView}
+        />
       }
       ListEmptyComponent={() =>
         selectedView === 'Remote' && (
