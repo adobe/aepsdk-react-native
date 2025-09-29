@@ -38,12 +38,6 @@ export const ContentCardView = ({
   DismissButtonProps,
   ...props
 }) => {
-  console.log('ContentCardView', template);
-
-  // Early returns for invalid data - must come before any hooks
-  if (!template.data) return null;
-  const content = template?.data?.content;
-  if (!content) return null;
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
@@ -76,6 +70,8 @@ export const ContentCardView = ({
     return template.data.content.image?.url;
   }, [colorScheme, template.data?.content?.image?.darkUrl, template.data?.content?.image?.url]);
   const imageAspectRatio = useAspectRatio(imageUri);
+
+  // Calculate styleOverrides before any early returns
   const styleOverrides = useMemo(() => {
     switch (cardVariant) {
       case 'SmallImage':
@@ -89,18 +85,24 @@ export const ContentCardView = ({
     }
   }, [_styleOverrides, cardVariant]);
 
-  // Call listener on mount to signal view display (only once and only when visible)
+  // Call listener on mount to signal view display (only once to prevent duplicates)
   useEffect(() => {
-    if (isVisible && !isDisplayedRef.current) {
+    if (!isDisplayedRef.current) {
       listener?.('onDisplay', template);
       // Track display event using propositionItem
       template.track?.(MessagingEdgeEventType.DISPLAY);
       isDisplayedRef.current = true;
     }
-  }, [isVisible, listener, template]);
+  }, [listener, template]);
 
-  // Use conditional rendering instead of early return to avoid hooks issues
-  return !isVisible ? null : /*#__PURE__*/React.createElement(Pressable, _extends({
+  // All validation checks after ALL hooks are called
+  if (!isVisible) {
+    return null;
+  }
+  if (!template.data) return null;
+  const content = template?.data?.content;
+  if (!content) return null;
+  return /*#__PURE__*/React.createElement(Pressable, _extends({
     onPress: onPress,
     style: state => [styles.card, styleOverrides?.card, typeof style === 'function' ? style(state) : style]
   }, props), /*#__PURE__*/React.createElement(View, _extends({
