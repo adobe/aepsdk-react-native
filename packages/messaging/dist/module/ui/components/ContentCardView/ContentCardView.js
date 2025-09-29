@@ -38,7 +38,6 @@ export const ContentCardView = ({
   DismissButtonProps,
   ...props
 }) => {
-  console.log('ContentCardView', template);
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
@@ -64,16 +63,6 @@ export const ContentCardView = ({
       }
     }
   }, [template]);
-
-  // Call listener on mount to signal view display (only once to prevent duplicates)
-  useEffect(() => {
-    if (!isDisplayedRef.current) {
-      listener?.('onDisplay', template);
-      // Track display event using propositionItem
-      template.track?.(MessagingEdgeEventType.DISPLAY);
-      isDisplayedRef.current = true;
-    }
-  }, [listener, template]);
   const imageUri = useMemo(() => {
     if (colorScheme === 'dark' && template.data?.content?.image?.darkUrl) {
       return template.data.content.image.darkUrl;
@@ -82,13 +71,7 @@ export const ContentCardView = ({
   }, [colorScheme, template.data?.content?.image?.darkUrl, template.data?.content?.image?.url]);
   const imageAspectRatio = useAspectRatio(imageUri);
 
-  // If not visible, return null to hide the entire view
-  if (!isVisible) {
-    return null;
-  }
-  if (!template.data) return null;
-  const content = template?.data?.content;
-  if (!content) return null;
+  // Calculate styleOverrides before any early returns
   const styleOverrides = useMemo(() => {
     switch (cardVariant) {
       case 'SmallImage':
@@ -101,6 +84,24 @@ export const ContentCardView = ({
         return null;
     }
   }, [_styleOverrides, cardVariant]);
+
+  // Call listener on mount to signal view display (only once to prevent duplicates)
+  useEffect(() => {
+    if (!isDisplayedRef.current) {
+      listener?.('onDisplay', template);
+      // Track display event using propositionItem
+      template.track?.(MessagingEdgeEventType.DISPLAY);
+      isDisplayedRef.current = true;
+    }
+  }, [listener, template]);
+
+  // All validation checks after ALL hooks are called
+  if (!isVisible) {
+    return null;
+  }
+  if (!template.data) return null;
+  const content = template?.data?.content;
+  if (!content) return null;
   return /*#__PURE__*/React.createElement(Pressable, _extends({
     onPress: onPress,
     style: state => [styles.card, styleOverrides?.card, typeof style === 'function' ? style(state) : style]

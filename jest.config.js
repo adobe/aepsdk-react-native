@@ -11,4 +11,10 @@ module.exports = {
   testPathIgnorePatterns: ['./packages/template'],
   moduleDirectories: ['node_modules', './apps/AEPSampleAppNewArchEnabled/node_modules'],
   moduleFileExtensions: ['ts', 'tsx', 'js'],
+  moduleNameMapper: {
+    '^react-native$': '<rootDir>/apps/AEPSampleAppNewArchEnabled/node_modules/react-native'
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(react-native|@react-native|@react-navigation)/)'
+  ]
 };

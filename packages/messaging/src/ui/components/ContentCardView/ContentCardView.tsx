@@ -79,7 +79,6 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   DismissButtonProps,
   ...props
 }) => {
-  console.log('ContentCardView', template);
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
@@ -117,16 +116,6 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     }
   }, [template]);
 
-  // Call listener on mount to signal view display (only once to prevent duplicates)
-  useEffect(() => {
-    if (!isDisplayedRef.current) {
-      listener?.('onDisplay', template);
-      // Track display event using propositionItem
-      template.track?.(MessagingEdgeEventType.DISPLAY);
-      isDisplayedRef.current = true;
-    }
-  }, [listener, template]);
-
   const imageUri = useMemo(() => {
     if (colorScheme === 'dark' && template.data?.content?.image?.darkUrl) {
       return template.data.content.image.darkUrl;
@@ -139,17 +128,6 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   ]);
 
   const imageAspectRatio = useAspectRatio(imageUri);
-
-  // If not visible, return null to hide the entire view
-  if (!isVisible) {
-    return null;
-  }
-
-  if (!template.data) return null;
-
-  const content = template?.data?.content as any;
-
-  if (!content) return null;
 
   const styleOverrides = useMemo<
     | (SmallImageContentStyle & LargeImageContentStyle & ImageOnlyContentStyle)
@@ -166,6 +144,27 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
         return null;
     }
   }, [_styleOverrides, cardVariant]);
+
+  // Call listener on mount to signal view display (only once to prevent duplicates)
+  useEffect(() => {
+    if (!isDisplayedRef.current) {
+      listener?.('onDisplay', template);
+      // Track display event using propositionItem
+      template.track?.(MessagingEdgeEventType.DISPLAY);
+      isDisplayedRef.current = true;
+    }
+  }, [listener, template]);
+
+  // All validation checks after ALL hooks are called
+  if (!isVisible) {
+    return null;
+  }
+
+  if (!template.data) return null;
+
+  const content = template?.data?.content as any;
+
+  if (!content) return null;
 
   return (
     <Pressable
