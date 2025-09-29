@@ -79,14 +79,6 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   DismissButtonProps,
   ...props
 }) => {
-  console.log('ContentCardView', template);
-  
-  // Early returns for invalid data - must come before any hooks
-  if (!template.data) return null;
-  
-  const content = template?.data?.content as any;
-  if (!content) return null;
-
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
@@ -153,18 +145,28 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     }
   }, [_styleOverrides, cardVariant]);
 
-  // Call listener on mount to signal view display (only once and only when visible)
+  // Call listener on mount to signal view display (only once to prevent duplicates)
   useEffect(() => {
-    if (isVisible && !isDisplayedRef.current) {
+    if (!isDisplayedRef.current) {
       listener?.('onDisplay', template);
       // Track display event using propositionItem
       template.track?.(MessagingEdgeEventType.DISPLAY);
       isDisplayedRef.current = true;
     }
-  }, [isVisible, listener, template]);
+  }, [listener, template]);
 
-  // Use conditional rendering instead of early return to avoid hooks issues
-  return !isVisible ? null : (
+  // All validation checks after ALL hooks are called
+  if (!isVisible) {
+    return null;
+  }
+
+  if (!template.data) return null;
+
+  const content = template?.data?.content as any;
+
+  if (!content) return null;
+
+  return (
     <Pressable
       onPress={onPress}
       style={(state) => [
