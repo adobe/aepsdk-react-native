@@ -14,14 +14,15 @@ import {
   NativeModules,
   NativeEventEmitter,
   NativeModule,
-  Platform
-} from 'react-native';
-import Message from './models/Message';
-import { MessagingDelegate } from './models/MessagingDelegate';
-import { MessagingProposition } from './models/MessagingProposition';
-import { ContentCard } from './models/ContentCard';
-import { PersonalizationSchema } from './models/PersonalizationSchema';
-import { ContentTemplate } from './ui/types/Templates';
+  Platform,
+} from "react-native";
+import Message from "./models/Message";
+import { MessagingDelegate } from "./models/MessagingDelegate";
+import { MessagingProposition } from "./models/MessagingProposition";
+import { ContentCard } from "./models/ContentCard";
+import { PersonalizationSchema } from "./models/PersonalizationSchema";
+import { ContentTemplate } from "./ui/types/Templates";
+import { ContainerSettings } from "./ui/providers/ContentCardContainerProvider";
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -170,17 +171,17 @@ class Messaging {
 
     const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
 
-    eventEmitter.addListener('onShow', (message: Message) =>
+    eventEmitter.addListener("onShow", (message: Message) =>
       messagingDelegate?.onShow?.(new Message(message))
     );
 
-    eventEmitter.addListener('onDismiss', (message: Message) => {
+    eventEmitter.addListener("onDismiss", (message: Message) => {
       const messageInstance = new Message(message);
       messageInstance._clearJavascriptMessageHandlers();
       messagingDelegate?.onDismiss?.(messageInstance);
     });
 
-    eventEmitter.addListener('shouldShowMessage', (message: Message) => {
+    eventEmitter.addListener("shouldShowMessage", (message: Message) => {
       const messageInstance = new Message(message);
       const shouldShowMessage =
         messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
@@ -189,17 +190,17 @@ class Messaging {
       RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
     });
 
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       eventEmitter.addListener(
-        'urlLoaded',
+        "urlLoaded",
         (event: { url: string; message: Message }) =>
           messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
       );
     }
 
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       eventEmitter.addListener(
-        'onContentLoaded',
+        "onContentLoaded",
         (event: { message: Message }) =>
           messagingDelegate?.onContentLoaded?.(new Message(event.message))
       );
@@ -208,14 +209,14 @@ class Messaging {
     RCTAEPMessaging.setMessagingDelegate();
 
     return () => {
-      eventEmitter.removeAllListeners('onDismiss');
-      eventEmitter.removeAllListeners('onShow');
-      eventEmitter.removeAllListeners('shouldShowMessage');
-      if (Platform.OS === 'ios') {
-        eventEmitter.removeAllListeners('urlLoaded');
+      eventEmitter.removeAllListeners("onDismiss");
+      eventEmitter.removeAllListeners("onShow");
+      eventEmitter.removeAllListeners("shouldShowMessage");
+      if (Platform.OS === "ios") {
+        eventEmitter.removeAllListeners("urlLoaded");
       }
-      if (Platform.OS === 'android') {
-        eventEmitter.removeAllListeners('onContentLoaded');
+      if (Platform.OS === "android") {
+        eventEmitter.removeAllListeners("onContentLoaded");
       }
     };
   }
@@ -243,7 +244,7 @@ class Messaging {
   ): Promise<void> {
     return await RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
   }
-  
+
   /**
    * @experimental
    * Retrieves the content card UI data for a given surface.
@@ -268,9 +269,49 @@ class Messaging {
     }
 
     return contentCards.map((card: any) => {
-      const type = card.data?.meta?.adobe?.template ?? 'SmallImage';
+      const type = card.data?.meta?.adobe?.template ?? "SmallImage";
       return new ContentTemplate(card, type);
     });
+  }
+
+  static async getContentCardContainer(
+    surface: string
+  ): Promise<ContainerSettings> {
+    console.log("getContentCardContainer", surface);
+    return {
+      templateType: "inbox",
+      content: {
+        heading: {
+          content: "Heading",
+        },
+        layout: {
+          orientation: "horizontal",
+        },
+        capacity: 10,
+        emptyStateSettings: {
+          message: {
+            content: "Empty State",
+          },
+        },
+        unread_indicator: {
+          unread_bg: {
+            clr: {
+              light: "#000000",
+              dark: "#000000",
+            },
+          },
+          unread_icon: {
+            placement: "topright",
+            image: {
+              url: "https://www.adobe.com",
+              darkUrl: "https://www.adobe.com",
+            },
+          },
+        },
+        isUnreadEnabled: false,
+      },
+      showPagination: false,
+    };
   }
 }
 
