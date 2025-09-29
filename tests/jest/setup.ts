@@ -10,7 +10,19 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import * as ReactNative from 'react-native';
+// Use dynamic import to avoid TypeScript compilation issues
+let ReactNative: any;
+try {
+  ReactNative = require('react-native');
+} catch (error) {
+  // Fallback mock for when react-native is not available
+  ReactNative = {
+    NativeModules: {},
+    NativeEventEmitter: class {
+      addListener() {}
+    }
+  };
+}
 
 jest.doMock('react-native', () => {
   return Object.setPrototypeOf(
