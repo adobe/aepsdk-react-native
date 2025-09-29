@@ -24,7 +24,7 @@ jobs:
 
     - run:
         name: Install Node.js and Yarn Dependencies
-        command: yarn install --network-timeout 300000 --network-concurrency 1
+                command: yarn install --network-timeout 300000
         no_output_timeout: 20m
 
     - run:
@@ -60,7 +60,7 @@ jobs:
 
     - run:
         name: Install Node.js and Yarn Dependencies
-        command: yarn install --network-timeout 300000 --network-concurrency 1
+                command: yarn install --network-timeout 300000
         no_output_timeout: 20m
 
     - run:
@@ -102,7 +102,7 @@ jobs:
 
     - run:
         name: Install Node.js and Yarn Dependencies
-        command: yarn install --network-timeout 300000 --network-concurrency 1
+                command: yarn install --network-timeout 300000
         no_output_timeout: 20m
 
     - run:
