@@ -25,6 +25,8 @@ jobs:
         name: Install Node.js and Yarn Dependencies
         command: yarn install --network-timeout 300000
         no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
     - run:
         name: Build the Project
@@ -61,6 +63,8 @@ jobs:
         name: Install Node.js and Yarn Dependencies
         command: yarn install --network-timeout 300000
         no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
     - run:
         name: Build the Project
@@ -99,6 +103,8 @@ jobs:
         name: Install Node.js and Yarn Dependencies
         command: yarn install --network-timeout 300000
         no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
     - run:
         name: Build the Project
