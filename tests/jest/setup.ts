@@ -14,7 +14,18 @@ governing permissions and limitations under the License.
 (global as any).__DEV__ = true;
 (global as any).__fbBatchedBridgeConfig = { remoteModuleConfig: [] };
 
-import * as ReactNative from 'react-native';
+let ReactNative: any;
+try {
+  ReactNative = require('react-native');
+} catch (error) {
+  // Fallback mock for when react-native is not available
+  ReactNative = {
+    NativeModules: {},
+    NativeEventEmitter: class {
+      addListener() {}
+    }
+  };
+}
 
 jest.doMock('react-native', () => {
   return Object.setPrototypeOf(
