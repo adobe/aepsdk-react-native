@@ -13,7 +13,6 @@
 */
 
 export * from "./Button/Button.js";
-export * from "./ContentCardContainer/ContentCardContainer.js";
 export * from "./ContentCardView/ContentCardView.js";
 export * from "../types/ContentViewEvent.js";
 export { ThemeProvider } from "../theme/ThemeProvider.js";
