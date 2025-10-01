@@ -1,8 +1,9 @@
-import Message from './models/Message';
-import { MessagingDelegate } from './models/MessagingDelegate';
-import { MessagingProposition } from './models/MessagingProposition';
-import { ContentCard } from './models/ContentCard';
-import { ContentTemplate } from './ui/types/Templates';
+import Message from "./models/Message";
+import { MessagingDelegate } from "./models/MessagingDelegate";
+import { MessagingProposition } from "./models/MessagingProposition";
+import { ContentCard } from "./models/ContentCard";
+import { ContentTemplate } from "./ui/types/Templates";
+import { ContainerSettings } from "./ui/providers/ContentCardContainerProvider";
 export interface NativeMessagingModule {
     extensionVersion: () => Promise<string>;
     getCachedMessages: () => Message[];
@@ -89,6 +90,7 @@ declare class Messaging {
      * @returns The content card UI data for the given surface
      */
     static getContentCardUI(surface: string): Promise<ContentTemplate[]>;
+    static getContentCardContainer(surface: string): Promise<ContainerSettings>;
 }
 export default Messaging;
 //# sourceMappingURL=Messaging.d.ts.map
