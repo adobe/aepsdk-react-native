@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { FlatListProps } from "react-native";
 export interface ContentCardContainerProps<T> extends FlatListProps<T> {
     LoadingComponent?: React.ReactNode;

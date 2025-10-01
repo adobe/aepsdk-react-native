@@ -1,0 +1,1 @@
+{"version":3,"names":["Text","View","UnreadIcon","React","createElement"],"sourceRoot":"../../../../../src","sources":["ui/components/UnreadIcon/UnreadIcon.tsx"],"mappings":";;AAAA,SAASA,IAAI,EAAEC,IAAI,QAAQ,cAAc;AAEzC,SAASC,UAAUA,CAAA,EAAG;EACpB,oBACEC,KAAA,CAAAC,aAAA,CAACH,IAAI,qBACHE,KAAA,CAAAC,aAAA,CAACJ,IAAI,QAAC,YAAgB,CAClB,CAAC;AAEX;AAEA,eAAeE,UAAU","ignoreList":[]}
