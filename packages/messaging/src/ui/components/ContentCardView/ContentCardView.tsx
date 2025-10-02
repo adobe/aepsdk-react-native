@@ -37,10 +37,13 @@ import {
 } from 'react-native';
 import MessagingEdgeEventType from '../../../models/MessagingEdgeEventType';
 import DismissButton from '../DismissButton/DismissButton';
+import UnreadIcon from '../UnreadIcon/UnreadIcon';
 import { useTheme } from '../../theme';
 import useAspectRatio from '../../hooks/useAspectRatio';
 import { ContentCardTemplate } from '../../../models';
 import Button from '../Button/Button';
+import { useContext } from 'react';
+import { ContentCardContainerContext } from '../../providers/ContentCardContainerProvider';
 
 export type ContentCardEventListener = (
   event: ContentViewEvent,
@@ -81,8 +84,20 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
 }) => {
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
+  const [isRead, setIsRead] = useState(false);
   const isDisplayedRef = useRef(false);
   const theme = useTheme();
+  const containerSettings = useContext(ContentCardContainerContext);
+
+  // Get unread background color based on theme
+  const getUnreadBackgroundColor = () => {
+    if (!containerSettings?.content?.isUnreadEnabled || isRead || !containerSettings.content.unread_indicator?.unread_bg) {
+      return undefined;
+    }
+    
+    const unreadBg = containerSettings.content.unread_indicator.unread_bg;
+    return colorScheme === 'dark' ? unreadBg.clr.dark : unreadBg.clr.light;
+  };
 
   const cardVariant = useMemo<ContentCardTemplate>(
     () => variant ?? template.type ?? 'SmallImage',
@@ -103,6 +118,9 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
 
     // Track interaction event using propositionItem
     template.track?.('content_clicked', MessagingEdgeEventType.INTERACT, null);
+
+    // Mark as read when interacted with
+    setIsRead(true);
 
     if (template.data?.content?.actionUrl) {
       try {
@@ -181,7 +199,8 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
           cardVariant === 'SmallImage'
             ? smallImageStyles.container
             : styles.container,
-          styleOverrides?.container
+          styleOverrides?.container,
+          getUnreadBackgroundColor() && { backgroundColor: getUnreadBackgroundColor() }
         ]}
         {...ContainerProps}
       >
@@ -272,6 +291,44 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             {...DismissButtonProps}
           />
         )}
+        {containerSettings?.content?.isUnreadEnabled && !isRead && (() => {
+          const iconConfig = containerSettings.content.unread_indicator?.unread_icon;
+          const hasImageUrl = iconConfig?.image?.url;
+          const hasDarkUrl = iconConfig?.image?.darkUrl;
+          
+          // Determine icon type based on current color scheme
+          const relevantUrl = colorScheme === 'dark' ? hasDarkUrl : hasImageUrl;
+          const iconType = relevantUrl ? "image" : "dot";
+          
+          console.log('ContentCardView UnreadIcon debug:', {
+            isUnreadEnabled: containerSettings?.content?.isUnreadEnabled,
+            isRead,
+            hasImageUrl: !!hasImageUrl,
+            hasDarkUrl: !!hasDarkUrl,
+            colorScheme,
+            relevantUrl: !!relevantUrl,
+            iconType,
+            placement: iconConfig?.placement
+          });
+          
+          return (
+            <UnreadIcon
+              type={iconType}
+            position={
+              containerSettings.content.unread_indicator?.unread_icon?.placement === 'topleft' ? 'top-left' :
+              containerSettings.content.unread_indicator?.unread_icon?.placement === 'topright' ? 'top-right' :
+              containerSettings.content.unread_indicator?.unread_icon?.placement === 'bottomleft' ? 'bottom-left' :
+              containerSettings.content.unread_indicator?.unread_icon?.placement === 'bottomright' ? 'bottom-right' :
+              'top-right'
+            }
+            source={containerSettings.content.unread_indicator?.unread_icon?.image?.url ? 
+              { uri: containerSettings.content.unread_indicator.unread_icon.image.url } : undefined}
+            darkSource={containerSettings.content.unread_indicator?.unread_icon?.image?.darkUrl ? 
+              { uri: containerSettings.content.unread_indicator.unread_icon.image.darkUrl } : undefined}
+            size={20}
+          />
+          );
+        })()}
       </View>
     </Pressable>
   );

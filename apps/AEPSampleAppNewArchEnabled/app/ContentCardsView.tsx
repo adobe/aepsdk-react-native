@@ -14,9 +14,12 @@ import { MobileCore } from '@adobe/react-native-aepcore';
 import {
   ContentCardView,
   ThemeProvider,
-  useContentCardUI
+  useContentCardUI,
+  Messaging,
+  ContentCardContainerProvider
 } from '@adobe/react-native-aepmessaging';
 import React, { memo, useCallback, useEffect, useState } from 'react';
+
 import {
   Appearance,
   ColorSchemeName,
@@ -255,6 +258,7 @@ const MemoHeader = memo(Header);
 const ContentCardsView = () => {
   const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [trackInput, setTrackInput] = useState('');
+  const [containerSettings, setContainerSettings] = useState<any>(null);
   const colorScheme = useColorScheme();
 
   const surface =
@@ -262,6 +266,25 @@ const ContentCardsView = () => {
       ? 'rn/android/remote_image'
       : 'rn/ios/remote_image';
   const { content, isLoading, refetch } = useContentCardUI(surface);
+
+  // Load container settings for unread icon configuration
+  useEffect(() => {
+    const loadContainerSettings = async () => {
+      try {
+        const settings = await Messaging.getContentCardContainer(surface);
+        setContainerSettings(settings);
+        // Debug logging
+        // console.log('Container settings loaded:', JSON.stringify(settings, null, 2));
+        // console.log('isUnreadEnabled:', settings?.content?.isUnreadEnabled);
+        // console.log('unread_indicator:', settings?.content?.unread_indicator);
+        // console.log('unread_icon image URL:', settings?.content?.unread_indicator?.unread_icon?.image?.url);
+        // console.log('unread_icon darkUrl:', settings?.content?.unread_indicator?.unread_icon?.image?.darkUrl);
+      } catch (error) {
+        console.error('Failed to load container settings:', error);
+      }
+    };
+    loadContainerSettings();
+  }, [surface]);
 
   const items = ITEMS_BY_VIEW[selectedView];
 
@@ -271,36 +294,110 @@ const ContentCardsView = () => {
     MobileCore.trackAction('small_image');
   }, []);
 
-  return (
+  const renderContentCard = (item: any, isRemote: boolean) => {
+    const cardView = <ContentCardView 
+      template={isRemote ? item : item.template}
+      styleOverrides={!isRemote ? item.styleOverrides : undefined}
+      listener={!isRemote ? item.listener : undefined}
+    />;
+
+    if (!isRemote) {
+      return (
+        <View>
+          <StyledText text={item.renderText} />
+          {item.customThemes ? (
+            <ThemeProvider customThemes={item.customThemes as any}>
+              {cardView}
+            </ThemeProvider>
+          ) : (
+            cardView
+          )}
+        </View>
+      );
+    }
+    return cardView;
+  };
+
+  // Debug logging
+  // console.log('Rendering with containerSettings:', !!containerSettings);
+  // console.log('Selected view:', selectedView);
+  // console.log('Items count:', selectedView !== 'Remote' ? (items?.length || 0) : (content?.length || 0));
+
+  const content_with_provider = containerSettings ? (
+    <ContentCardContainerProvider settings={containerSettings}>
+      <FlatList
+        data={selectedView !== 'Remote' ? items || [] : content || []}
+        keyExtractor={(item: any) =>
+          selectedView !== 'Remote' ? item.key : item.id
+        }
+        renderItem={({ item }: any) => 
+          renderContentCard(item, selectedView === 'Remote')
+        }
+        ListHeaderComponent={
+          <MemoHeader 
+            isLoading={isLoading} 
+            onTrackAction={refetch}
+            selectedView={selectedView}
+            setSelectedView={setSelectedView}
+          />
+        }
+        ListEmptyComponent={() =>
+          selectedView === 'Remote' && (
+            <View
+              style={[
+                styles.section,
+                styles.panel,
+                { backgroundColor: colors.background, borderWidth: 0 },
+                styles.emptyContainer
+              ]}
+            >
+              <Text
+                style={[
+                  styles.titleText,
+                  styles.textCenter,
+                  styles.textTitle,
+                  { color: colors.text }
+                ]}
+              >
+                No Content Cards Available
+              </Text>
+              <Text
+                style={[
+                  styles.textCenter,
+                  styles.textBody,
+                  styles.textLabel,
+                  { color: colors.mutedText }
+                ]}
+              >
+                Content cards will appear here when they are configured in Adobe
+                Journey Optimizer for surface: "rn/ios/remote_image"
+              </Text>
+              <Text
+                style={[
+                  styles.textCenter,
+                  styles.textCaption,
+                  { color: colors.mutedText }
+                ]}
+              >
+                Try tracking an action above to refresh content cards.
+              </Text>
+            </View>
+          )
+        }
+        contentContainerStyle={styles.listContent}
+      />
+    </ContentCardContainerProvider>
+  ) : null;
+
+  return content_with_provider || (
     <FlatList
       data={selectedView !== 'Remote' ? items || [] : content || []}
       keyExtractor={(item: any) =>
         selectedView !== 'Remote' ? item.key : item.id
       }
-      renderItem={({ item }: any) => {
-        if (selectedView !== 'Remote') {
-          const node = (
-            <ContentCardView
-              template={item.template}
-              styleOverrides={item.styleOverrides}
-              listener={item.listener}
-            />
-          );
-          return (
-            <View>
-              <StyledText text={item.renderText} />
-              {item.customThemes ? (
-                <ThemeProvider customThemes={item.customThemes as any}>
-                  {node}
-                </ThemeProvider>
-              ) : (
-                node
-              )}
-            </View>
-          );
-        }
-        return <ContentCardView template={item} />;
-      }}
+      renderItem={({ item }: any) => 
+        renderContentCard(item, selectedView === 'Remote')
+      }
       ListHeaderComponent={
         <MemoHeader 
           isLoading={isLoading} 
