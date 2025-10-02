@@ -12,16 +12,6 @@ export function useContentContainer(surface: string) {
       setIsLoading(true);
       const settings = await Messaging.getContentCardContainer(surface);
       setSettings(settings);
-      console.log('--------------------------------');
-      console.log('--------------------------------');
-      console.log('--------------------------------');
-      console.log(
-        '[ContentCardContainer] settings\n' +
-        JSON.stringify({ surface, settings }, null, 2)
-      );
-      console.log('--------------------------------');
-      console.log('--------------------------------');
-      console.log('--------------------------------');
       setIsLoading(false);
     } catch (error) {
       setError(error);
