@@ -303,8 +303,8 @@ class Messaging {
           unread_icon: {
             placement: "topright",
             image: {
-              url: "",  // ← Empty URL = shows dot in light mode
-              darkUrl: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",  // ← Image in dark mode
+              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",  // Image in light mode
+              darkUrl: "",  // Empty URL = shows dot in dark mode
             },
           },
         },
