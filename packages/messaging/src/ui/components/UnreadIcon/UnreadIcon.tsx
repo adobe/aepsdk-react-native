@@ -1,9 +1,9 @@
-import { Text, View } from "react-native";
+  import { Text, View } from "react-native";
 
-function UnreadIcon() {
+  function UnreadIcon({ placement, image }: { placement: string|undefined, image: { url: string; darkUrl?: string | undefined; } | undefined }) {
   return (
     <View>
-      <Text>UnreadIcon</Text>
+      <Text>UnreadIcon: {placement} {image?.darkUrl} {image?.url}</Text>
     </View>
   );
 }

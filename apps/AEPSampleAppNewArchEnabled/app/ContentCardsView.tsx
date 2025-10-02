@@ -13,8 +13,8 @@ governing permissions and limitations under the License.
 import { MobileCore } from '@adobe/react-native-aepcore';
 import {
   ContentCardView,
-  ThemeProvider,
-  useContentCardUI
+  ContentCardContainer,
+  ThemeProvider
 } from '@adobe/react-native-aepmessaging';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import {
@@ -261,7 +261,6 @@ const ContentCardsView = () => {
     Platform.OS === 'android'
       ? 'rn/android/remote_image'
       : 'rn/ios/remote_image';
-  const { content, isLoading, refetch } = useContentCardUI(surface);
 
   const items = ITEMS_BY_VIEW[selectedView];
 
@@ -271,86 +270,57 @@ const ContentCardsView = () => {
     MobileCore.trackAction('small_image');
   }, []);
 
-  return (
-    <FlatList
-      data={selectedView !== 'Remote' ? items || [] : content || []}
-      keyExtractor={(item: any) =>
-        selectedView !== 'Remote' ? item.key : item.id
-      }
-      renderItem={({ item }: any) => {
-        if (selectedView !== 'Remote') {
-          const node = (
-            <ContentCardView
-              template={item.template}
-              styleOverrides={item.styleOverrides}
-              listener={item.listener}
-            />
-          );
-          return (
-            <View>
-              <StyledText text={item.renderText} />
-              {item.customThemes ? (
-                <ThemeProvider customThemes={item.customThemes as any}>
-                  {node}
-                </ThemeProvider>
-              ) : (
-                node
-              )}
-            </View>
-          );
-        }
-        return <ContentCardView template={item} />;
-      }}
-      ListHeaderComponent={
-        <MemoHeader 
-          isLoading={isLoading} 
-          onTrackAction={refetch}
+  if (selectedView === 'Remote') {
+    return (
+      <>
+        <MemoHeader
+          isLoading={false}
+          onTrackAction={() => {}}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
         />
-      }
-      ListEmptyComponent={() =>
-        selectedView === 'Remote' && (
-          <View
-            style={[
-              styles.section,
-              styles.panel,
-              { backgroundColor: colors.background, borderWidth: 0 },
-              styles.emptyContainer
-            ]}
-          >
-            <Text
-              style={[
-                styles.titleText,
-                styles.textCenter,
-                styles.textTitle,
-                { color: colors.text }
-              ]}
-            >
-              No Content Cards Available
-            </Text>
-            <Text
-              style={[
-                styles.textCenter,
-                styles.textBody,
-                styles.textLabel,
-                { color: colors.mutedText }
-              ]}
-            >
-              Content cards will appear here when they are configured in Adobe
-              Journey Optimizer for surface: "rn/ios/remote_image"
-            </Text>
-            <Text
-              style={[
-                styles.textCenter,
-                styles.textCaption,
-                { color: colors.mutedText }
-              ]}
-            >
-              Try tracking an action above to refresh content cards.
-            </Text>
+        <ContentCardContainer
+          surface={surface}
+          contentContainerStyle={styles.listContent}
+          data={[]} 
+          renderItem={() => null} 
+        />
+      </>
+    );
+  }
+
+  return (
+    <FlatList
+      data={items || []}
+      keyExtractor={(item: any) => item.key}
+      renderItem={({ item }: any) => {
+        const node = (
+          <ContentCardView
+            template={item.template}
+            styleOverrides={item.styleOverrides}
+            listener={item.listener}
+          />
+        );
+        return (
+          <View>
+            <StyledText text={item.renderText} />
+            {item.customThemes ? (
+              <ThemeProvider customThemes={item.customThemes as any}>
+                {node}
+              </ThemeProvider>
+            ) : (
+              node
+            )}
           </View>
-        )
+        );
+      }}
+      ListHeaderComponent={
+        <MemoHeader
+          isLoading={false}
+          onTrackAction={() => {}}
+          selectedView={selectedView}
+          setSelectedView={setSelectedView}
+        />
       }
       contentContainerStyle={styles.listContent}
     />
