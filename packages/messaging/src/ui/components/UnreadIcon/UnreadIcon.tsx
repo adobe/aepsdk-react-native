@@ -61,6 +61,7 @@ const UnreadIcon = ({
 }: UnreadIconProps) => {
   const colorScheme = useColorScheme();
   const settings = useContainerSettings();
+  const [imageLoadError, setImageLoadError] = useState(false);
   
   // Get unread indicator settings from context
   const unreadSettings = settings.content.unread_indicator;
