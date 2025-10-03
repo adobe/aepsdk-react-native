@@ -196,19 +196,21 @@ class Messaging {
         unread_indicator: {
           unread_bg: {
             clr: {
-              light: "#000000",
-              dark: "#000000"
+              light: "#FFF3E0",
+              // Light orange background for unread cards
+              dark: "#2D1B0E" // Dark orange background for unread cards
             }
           },
           unread_icon: {
             placement: "topright",
             image: {
-              url: "https://www.adobe.com",
-              darkUrl: "https://www.adobe.com"
+              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",
+              // Image in light mode
+              darkUrl: "" // Empty URL = shows dot in dark mode
             }
           }
         },
-        isUnreadEnabled: false
+        isUnreadEnabled: true // Enable unread features!
       },
       showPagination: false
     };

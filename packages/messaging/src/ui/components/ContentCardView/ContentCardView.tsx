@@ -291,44 +291,9 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             {...DismissButtonProps}
           />
         )}
-        {containerSettings?.content?.isUnreadEnabled && !isRead && (() => {
-          const iconConfig = containerSettings.content.unread_indicator?.unread_icon;
-          const hasImageUrl = iconConfig?.image?.url;
-          const hasDarkUrl = iconConfig?.image?.darkUrl;
-          
-          // Determine icon type based on current color scheme
-          const relevantUrl = colorScheme === 'dark' ? hasDarkUrl : hasImageUrl;
-          const iconType = relevantUrl ? "image" : "dot";
-          
-          console.log('ContentCardView UnreadIcon debug:', {
-            isUnreadEnabled: containerSettings?.content?.isUnreadEnabled,
-            isRead,
-            hasImageUrl: !!hasImageUrl,
-            hasDarkUrl: !!hasDarkUrl,
-            colorScheme,
-            relevantUrl: !!relevantUrl,
-            iconType,
-            placement: iconConfig?.placement
-          });
-          
-          return (
-            <UnreadIcon
-              type={iconType}
-            position={
-              containerSettings.content.unread_indicator?.unread_icon?.placement === 'topleft' ? 'top-left' :
-              containerSettings.content.unread_indicator?.unread_icon?.placement === 'topright' ? 'top-right' :
-              containerSettings.content.unread_indicator?.unread_icon?.placement === 'bottomleft' ? 'bottom-left' :
-              containerSettings.content.unread_indicator?.unread_icon?.placement === 'bottomright' ? 'bottom-right' :
-              'top-right'
-            }
-            source={containerSettings.content.unread_indicator?.unread_icon?.image?.url ? 
-              { uri: containerSettings.content.unread_indicator.unread_icon.image.url } : undefined}
-            darkSource={containerSettings.content.unread_indicator?.unread_icon?.image?.darkUrl ? 
-              { uri: containerSettings.content.unread_indicator.unread_icon.image.darkUrl } : undefined}
-            size={20}
-          />
-          );
-        })()}
+        {containerSettings?.content?.isUnreadEnabled && !isRead && (
+          <UnreadIcon />
+        )}
       </View>
     </Pressable>
   );

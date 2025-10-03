@@ -17,9 +17,12 @@ import React, { useEffect, useCallback, useState, useRef, useMemo } from 'react'
 import { Image, Linking, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import MessagingEdgeEventType from "../../../models/MessagingEdgeEventType.js";
 import DismissButton from "../DismissButton/DismissButton.js";
+import UnreadIcon from "../UnreadIcon/UnreadIcon.js";
 import { useTheme } from "../../theme/index.js";
 import useAspectRatio from "../../hooks/useAspectRatio.js";
 import Button from "../Button/Button.js";
+import { useContext } from 'react';
+import { ContentCardContainerContext } from "../../providers/ContentCardContainerProvider.js";
 export const ContentCardView = ({
   template,
   listener,
@@ -40,8 +43,19 @@ export const ContentCardView = ({
 }) => {
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
+  const [isRead, setIsRead] = useState(false);
   const isDisplayedRef = useRef(false);
   const theme = useTheme();
+  const containerSettings = useContext(ContentCardContainerContext);
+
+  // Get unread background color based on theme
+  const getUnreadBackgroundColor = () => {
+    if (!containerSettings?.content?.isUnreadEnabled || isRead || !containerSettings.content.unread_indicator?.unread_bg) {
+      return undefined;
+    }
+    const unreadBg = containerSettings.content.unread_indicator.unread_bg;
+    return colorScheme === 'dark' ? unreadBg.clr.dark : unreadBg.clr.light;
+  };
   const cardVariant = useMemo(() => variant ?? template.type ?? 'SmallImage', [variant, template.type]);
   const onDismiss = useCallback(() => {
     listener?.('onDismiss', template);
@@ -55,6 +69,9 @@ export const ContentCardView = ({
 
     // Track interaction event using propositionItem
     template.track?.('content_clicked', MessagingEdgeEventType.INTERACT, null);
+
+    // Mark as read when interacted with
+    setIsRead(true);
     if (template.data?.content?.actionUrl) {
       try {
         Linking.openURL(template.data.content.actionUrl);
@@ -70,8 +87,6 @@ export const ContentCardView = ({
     return template.data.content.image?.url;
   }, [colorScheme, template.data?.content?.image?.darkUrl, template.data?.content?.image?.url]);
   const imageAspectRatio = useAspectRatio(imageUri);
-
-  // Calculate styleOverrides before any early returns
   const styleOverrides = useMemo(() => {
     switch (cardVariant) {
       case 'SmallImage':
@@ -106,7 +121,9 @@ export const ContentCardView = ({
     onPress: onPress,
     style: state => [styles.card, styleOverrides?.card, typeof style === 'function' ? style(state) : style]
   }, props), /*#__PURE__*/React.createElement(View, _extends({
-    style: [cardVariant === 'SmallImage' ? smallImageStyles.container : styles.container, styleOverrides?.container]
+    style: [cardVariant === 'SmallImage' ? smallImageStyles.container : styles.container, styleOverrides?.container, getUnreadBackgroundColor() && {
+      backgroundColor: getUnreadBackgroundColor()
+    }]
   }, ContainerProps), imageUri && /*#__PURE__*/React.createElement(View, _extends({
     style: [cardVariant === 'SmallImage' ? smallImageStyles.imageContainer : styles.imageContainer, styleOverrides?.imageContainer]
   }, ImageContainerProps), /*#__PURE__*/React.createElement(Image, _extends({
@@ -139,7 +156,7 @@ export const ContentCardView = ({
   }, ButtonProps))))), content?.dismissBtn && content.dismissBtn?.style !== 'none' && /*#__PURE__*/React.createElement(DismissButton, _extends({
     onPress: onDismiss,
     type: content.dismissBtn.style
-  }, DismissButtonProps))));
+  }, DismissButtonProps)), containerSettings?.content?.isUnreadEnabled && !isRead && /*#__PURE__*/React.createElement(UnreadIcon, null)));
 };
 const styles = StyleSheet.create({
   card: {

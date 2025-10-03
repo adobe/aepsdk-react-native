@@ -9,6 +9,7 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
+import React, { useState } from 'react';
 import {
   Image,
   ImageProps,
@@ -19,6 +20,7 @@ import {
   ViewStyle,
   useColorScheme
 } from 'react-native';
+import useContainerSettings from '../../hooks/useContainerSettings';
 
 export interface UnreadIconProps extends ViewProps {
   imageStyle?: ImageStyle;
@@ -29,6 +31,22 @@ export interface UnreadIconProps extends ViewProps {
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   type?: 'dot' | 'image';
 }
+
+// Helper function to convert placement from settings to component position
+const convertPlacement = (placement: 'topleft' | 'topright' | 'bottomleft' | 'bottomright'): 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' => {
+  switch (placement) {
+    case 'topleft':
+      return 'top-left';
+    case 'topright':
+      return 'top-right';
+    case 'bottomleft':
+      return 'bottom-left';
+    case 'bottomright':
+      return 'bottom-right';
+    default:
+      return 'top-right';
+  }
+};
 
 const UnreadIcon = ({
   imageStyle,
@@ -42,24 +60,28 @@ const UnreadIcon = ({
   ...props
 }: UnreadIconProps) => {
   const colorScheme = useColorScheme();
+  const settings = useContainerSettings();
   
-  // Debug logging
-  console.log('UnreadIcon rendering:', {
-    type,
-    position,
-    size,
-    colorScheme,
-    hasSource: !!source,
-    hasDarkSource: !!darkSource
-  });
-
+  // Get unread indicator settings from context
+  const unreadSettings = settings.content.unread_indicator;
+  
+  // Use settings from context with fallbacks to props
+  const displaySize = size;
+  const displayPosition = unreadSettings?.unread_icon?.placement ? 
+    convertPlacement(unreadSettings.unread_icon.placement) : position;
+  const renderType = unreadSettings?.unread_icon?.image ? 'image' : type;
+  const imageSource = unreadSettings?.unread_icon?.image?.url ? 
+    { uri: unreadSettings.unread_icon.image.url } : source;
+  const darkImageSource = unreadSettings?.unread_icon?.image?.darkUrl ? 
+    { uri: unreadSettings.unread_icon.image.darkUrl } : darkSource;
+  
   const getPositionStyle = () => {
     const baseStyle = {
       position: 'absolute' as const,
       zIndex: 1000,
     };
 
-    switch (position) {
+    switch (displayPosition) {
       case 'top-left':
         return { ...baseStyle, top: 6, left: 6 };
       case 'top-right':
@@ -74,21 +96,66 @@ const UnreadIcon = ({
   };
 
   const getDotColor = () => {
+    // Use default contrasting colors for visibility
+    // Note: unread_bg.clr is for the card background, not the dot
     return colorScheme === 'dark' ? '#FF6B6B' : '#FF4444';
   };
 
   const renderContent = () => {
-    if (type === 'image' && (source || darkSource)) {
-      const imageSource = colorScheme === 'dark' && darkSource ? darkSource : source;
+    // Check if we should show dot instead of image based on URL availability
+    const shouldShowDot = 
+      (colorScheme === 'dark' && unreadSettings?.unread_icon?.image?.darkUrl === '') ||
+      (colorScheme === 'light' && unreadSettings?.unread_icon?.image?.url === '');
+
+    // If URL is explicitly empty string for current mode, show dot
+    if (shouldShowDot && unreadSettings?.unread_icon?.image) {
+      return (
+        <View
+          style={[
+            styles.dot,
+            {
+              width: displaySize,
+              height: displaySize,
+              borderRadius: displaySize / 2,
+              backgroundColor: getDotColor()
+            }
+          ]}
+        />
+      );
+    }
+
+    // If image failed to load, fallback to dot
+    if (renderType === 'image' && imageLoadError) {
+      return (
+        <View
+          style={[
+            styles.dot,
+            {
+              width: displaySize,
+              height: displaySize,
+              borderRadius: displaySize / 2,
+              backgroundColor: getDotColor()
+            }
+          ]}
+        />
+      );
+    }
+
+    if (renderType === 'image' && (imageSource || darkImageSource)) {
+      const finalImageSource = colorScheme === 'dark' && darkImageSource ? darkImageSource : imageSource;
       return (
         <Image
-          source={imageSource}
+          source={finalImageSource}
           style={[
             styles.image,
-            { width: size, height: size },
+            { width: displaySize, height: displaySize },
             imageStyle
           ]}
           resizeMode="contain"
+          onError={(error) => {
+            console.warn('Failed to load unread icon image:', error.nativeEvent.error);
+            setImageLoadError(true);
+          }}
         />
       );
     }
@@ -99,9 +166,9 @@ const UnreadIcon = ({
         style={[
           styles.dot,
           {
-            width: size,
-            height: size,
-            borderRadius: size / 2,
+            width: displaySize,
+            height: displaySize,
+            borderRadius: displaySize / 2,
             backgroundColor: getDotColor()
           }
         ]}
@@ -114,7 +181,7 @@ const UnreadIcon = ({
       style={[
         styles.container,
         getPositionStyle(),
-        { minWidth: size, minHeight: size },
+        { minWidth: displaySize, minHeight: displaySize },
         containerStyle,
         typeof style === 'object' ? style : undefined
       ]}
