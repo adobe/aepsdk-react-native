@@ -50,14 +50,11 @@ function ContentCardContainerInner<T extends ContentTemplate>({
     : (scheme === 'dark' ? '#FFFFFF' : '#000000');
 
   // Normalize/alias frequently used settings
-  const { content: contentSettings, templateType, showPagination } = settings;
-  const { heading, layout, capacity, emptyStateSettings, unread_indicator, isUnreadEnabled } = contentSettings;
+  const { content: contentSettings, showPagination } = settings;
+  const { heading, layout, emptyStateSettings, unread_indicator, isUnreadEnabled } = contentSettings;
 
   // Derived flags used across renders
   const isHorizontal = layout?.orientation === 'horizontal';
-  const showUnread = Boolean(
-    isUnreadEnabled && (templateType === 'inbox' || templateType === 'custom')
-  );
   const unreadIcon = unread_indicator?.unread_icon;
   const unreadBg = unread_indicator?.unread_bg?.clr;
   const bg = scheme === 'dark' ? unreadBg?.dark : unreadBg?.light;
@@ -78,37 +75,38 @@ function ContentCardContainerInner<T extends ContentTemplate>({
         break;
     }
 
-    // Base override: unread background color
-    let styleOverrides: any = showUnread
-      ? { [key]: { card: { backgroundColor: bg } } }
-      : undefined;
+    // Single merged overrides object (preserves LargeImage behavior)
+    const cardBase = {
+      ...(isHorizontal ? { alignSelf: 'center', width: '100%' } : null),
+      ...(isUnreadEnabled && bg ? { backgroundColor: bg } : null)
+    } as any;
 
-    // LargeImage + horizontal: cap image height and ensure min content height
-    if (isHorizontal && template === 'LargeImage') {
-      styleOverrides = {
-        [key]: {
-          ...styleOverrides?.[key],
+    const largeImageExtras = isHorizontal && template === 'LargeImage'
+      ? {
           image: styles.imageHeight,
-          imageContainer: styles.imageHeight,
+          imageContainer: [
+            styles.imageHeight,
+            isUnreadEnabled && bg ? { backgroundColor: bg } : null
+          ],
           contentContainer: styles.contentContainer,
-        },
-      } as any;
-    }
+          card: isUnreadEnabled && bg ? { backgroundColor: bg } : null
+        }
+      : null;
+
+    const styleOverrides = {
+      [key]: {
+        card: cardBase,
+        ...(largeImageExtras || {})
+      }
+    } as any;
 
     return (
-      <View style={isHorizontal && styles.cardWidth}>
-        <ContentCardView
-          template={item}
-          styleOverrides={styleOverrides}
-        />
-        {
-          showUnread
-            ? <UnreadIcon placement={unreadIcon?.placement} image={unreadIcon?.image} />
-            : null
-        }
+      <View style={isHorizontal ? styles.cardWidth : undefined}>
+        <ContentCardView template={item} styleOverrides={styleOverrides} style={{ flex: 0 }} />
+        <UnreadIcon placement={unreadIcon?.placement} image={unreadIcon?.image} />
       </View>
     );
-  }, [isHorizontal, showUnread, bg, unreadIcon]);
+  }, [isHorizontal, isUnreadEnabled, bg, unreadIcon]);
 
   if (isLoading) {
     return LoadingComponent as React.ReactElement;
@@ -128,16 +126,19 @@ function ContentCardContainerInner<T extends ContentTemplate>({
       <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
       <FlatList
         {...props}
-        data={(content as T[]).slice(0, capacity)}
+        data={content as T[]}
         ItemSeparatorComponent={() => (
           isHorizontal ? <View style={styles.horizontalSeparator} /> : <View style={styles.verticalSeparator} />
         )}
         ListEmptyComponent={
-          templateType === 'inbox' || templateType === 'custom'
+          settings.content.emptyStateSettings
             ? <EmptyStateContainer emptyStateSettings={emptyStateSettings} />
             : null
         }
-        contentContainerStyle={contentContainerStyle}
+        contentContainerStyle={[
+          contentContainerStyle,
+          isHorizontal && styles.listContent
+        ]}
         horizontal={isHorizontal}
         renderItem={renderItem}
       />
@@ -184,7 +185,9 @@ const styles = StyleSheet.create({
     height: 180
   },
   cardWidth: {
-    width: 380
+    width: 380,
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   heading: {
     fontWeight: '600',
@@ -196,4 +199,9 @@ const styles = StyleSheet.create({
   },
   horizontalSeparator: { width: 12 },
   verticalSeparator: { height: 12 },
+  listContent: {
+    alignItems: 'center',
+    paddingLeft: 10,
+    paddingRight: 10
+  },
 });

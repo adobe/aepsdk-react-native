@@ -296,19 +296,19 @@ class Messaging {
         unread_indicator: {
           unread_bg: {
             clr: {
-              light: "#000000",
-              dark: "#000000",
+              light: "#FFF3E0",
+              dark: "#2D1B0E",
             },
           },
           unread_icon: {
             placement: "topright",
             image: {
-              url: "https://www.adobe.com",
+              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",
               darkUrl: "https://www.adobe.com",
             },
           },
         },
-        isUnreadEnabled: false,
+        isUnreadEnabled: true,
       },
       showPagination: false,
     };

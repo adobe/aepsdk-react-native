@@ -333,6 +333,7 @@ const smallImageStyles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     maxWidth: '100%',
+    width: '100%',
     alignItems: 'center'
   },
   container: {
