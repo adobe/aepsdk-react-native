@@ -12,31 +12,27 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Image, StyleSheet, View, useColorScheme } from 'react-native';
 import useContainerSettings from "../../hooks/useContainerSettings.js";
-// Helper function to convert placement from settings to component position
-const convertPlacement = placement => {
-  switch (placement) {
-    case 'topleft':
-      return 'top-left';
-    case 'topright':
-      return 'top-right';
-    case 'bottomleft':
-      return 'bottom-left';
-    case 'bottomright':
-      return 'bottom-right';
-    default:
-      return 'top-right';
-  }
-};
+const Dot = ({
+  size,
+  backgroundColor
+}) => /*#__PURE__*/React.createElement(View, {
+  style: [styles.dot, {
+    width: size,
+    height: size,
+    borderRadius: size / 2,
+    backgroundColor
+  }]
+});
 const UnreadIcon = ({
   imageStyle,
   containerStyle,
   source,
   darkSource,
   size = 20,
-  position = 'top-right',
+  position = 'topright',
   type = 'dot',
   style,
   ...props
@@ -49,8 +45,7 @@ const UnreadIcon = ({
   const unreadSettings = settings.content.unread_indicator;
 
   // Use settings from context with fallbacks to props
-  const displaySize = size;
-  const displayPosition = unreadSettings?.unread_icon?.placement ? convertPlacement(unreadSettings.unread_icon.placement) : position;
+  const displayPosition = unreadSettings?.unread_icon?.placement ?? position;
   const renderType = unreadSettings?.unread_icon?.image ? 'image' : type;
   const imageSource = unreadSettings?.unread_icon?.image?.url ? {
     uri: unreadSettings.unread_icon.image.url
@@ -59,82 +54,49 @@ const UnreadIcon = ({
     uri: unreadSettings.unread_icon.image.darkUrl
   } : darkSource;
   const getPositionStyle = () => {
-    const baseStyle = {
-      position: 'absolute',
-      zIndex: 1000
-    };
     switch (displayPosition) {
-      case 'top-left':
-        return {
-          ...baseStyle,
-          top: 6,
-          left: 6
-        };
-      case 'top-right':
-        return {
-          ...baseStyle,
-          top: 6,
-          right: 6
-        };
-      case 'bottom-left':
-        return {
-          ...baseStyle,
-          bottom: 6,
-          left: 6
-        };
-      case 'bottom-right':
-        return {
-          ...baseStyle,
-          bottom: 6,
-          right: 6
-        };
+      case 'topleft':
+        return styles.positionTopLeft;
+      case 'topright':
+        return styles.positionTopRight;
+      case 'bottomleft':
+        return styles.positionBottomLeft;
+      case 'bottomright':
+        return styles.positionBottomRight;
       default:
-        return {
-          ...baseStyle,
-          top: 6,
-          right: 6
-        };
+        return styles.positionTopRight;
     }
   };
-  const getDotColor = () => {
-    // Use default contrasting colors for visibility
-    // Note: unread_bg.clr is for the card background, not the dot
-    return colorScheme === 'dark' ? '#FF6B6B' : '#FF4444';
-  };
+
+  // Use default contrasting colors for visibility
+  // Note: unread_bg.clr is for the card background, not the dot
+  const dotColor = useMemo(() => colorScheme === 'dark' ? '#FF6B6B' : '#FF4444', [colorScheme]);
+  const finalImageSource = useMemo(() => colorScheme === 'dark' && darkImageSource ? darkImageSource : imageSource, [colorScheme, darkImageSource, imageSource]);
   const renderContent = () => {
     // Check if we should show dot instead of image based on URL availability
     const shouldShowDot = colorScheme === 'dark' && unreadSettings?.unread_icon?.image?.darkUrl === '' || colorScheme === 'light' && unreadSettings?.unread_icon?.image?.url === '';
 
     // If URL is explicitly empty string for current mode, show dot
     if (shouldShowDot && unreadSettings?.unread_icon?.image) {
-      return /*#__PURE__*/React.createElement(View, {
-        style: [styles.dot, {
-          width: displaySize,
-          height: displaySize,
-          borderRadius: displaySize / 2,
-          backgroundColor: getDotColor()
-        }]
+      return /*#__PURE__*/React.createElement(Dot, {
+        size: size,
+        backgroundColor: dotColor
       });
     }
 
     // If image failed to load, fallback to dot
     if (renderType === 'image' && imageLoadError) {
-      return /*#__PURE__*/React.createElement(View, {
-        style: [styles.dot, {
-          width: displaySize,
-          height: displaySize,
-          borderRadius: displaySize / 2,
-          backgroundColor: getDotColor()
-        }]
+      return /*#__PURE__*/React.createElement(Dot, {
+        size: size,
+        backgroundColor: dotColor
       });
     }
     if (renderType === 'image' && (imageSource || darkImageSource)) {
-      const finalImageSource = colorScheme === 'dark' && darkImageSource ? darkImageSource : imageSource;
       return /*#__PURE__*/React.createElement(Image, {
         source: finalImageSource,
         style: [styles.image, {
-          width: displaySize,
-          height: displaySize
+          width: size,
+          height: size
         }, imageStyle],
         resizeMode: "contain",
         onError: error => {
@@ -145,27 +107,41 @@ const UnreadIcon = ({
     }
 
     // Default dot type
-    return /*#__PURE__*/React.createElement(View, {
-      style: [styles.dot, {
-        width: displaySize,
-        height: displaySize,
-        borderRadius: displaySize / 2,
-        backgroundColor: getDotColor()
-      }]
+    return /*#__PURE__*/React.createElement(Dot, {
+      size: size,
+      backgroundColor: dotColor
     });
   };
   return /*#__PURE__*/React.createElement(View, _extends({
     style: [styles.container, getPositionStyle(), {
-      minWidth: displaySize,
-      minHeight: displaySize
+      minWidth: size,
+      minHeight: size
     }, containerStyle, typeof style === 'object' ? style : undefined]
   }, props), renderContent());
 };
 export default UnreadIcon;
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    zIndex: 1000,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  positionTopLeft: {
+    top: 6,
+    left: 6
+  },
+  positionTopRight: {
+    top: 6,
+    right: 6
+  },
+  positionBottomLeft: {
+    bottom: 6,
+    left: 6
+  },
+  positionBottomRight: {
+    bottom: 6,
+    right: 6
   },
   dot: {
     shadowColor: '#000',

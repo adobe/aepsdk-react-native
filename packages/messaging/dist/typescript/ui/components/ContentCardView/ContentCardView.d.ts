@@ -13,6 +13,7 @@ export interface ContentViewProps extends PressableProps, ComponentOverrideProps
     };
     listener?: ContentCardEventListener;
     variant?: ContentCardTemplate;
+    isRead?: boolean;
 }
 export declare const ContentCardView: React.FC<ContentViewProps>;
 //# sourceMappingURL=ContentCardView.d.ts.map

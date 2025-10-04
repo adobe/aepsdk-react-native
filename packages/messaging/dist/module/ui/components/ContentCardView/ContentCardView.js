@@ -39,23 +39,27 @@ export const ContentCardView = ({
   ButtonContainerProps,
   ButtonProps,
   DismissButtonProps,
+  isRead: isReadProp,
   ...props
 }) => {
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
-  const [isRead, setIsRead] = useState(false);
+  const [internalIsRead, setInternalIsRead] = useState(false);
   const isDisplayedRef = useRef(false);
   const theme = useTheme();
   const containerSettings = useContext(ContentCardContainerContext);
 
+  // Support both controlled and uncontrolled modes
+  const isRead = isReadProp !== undefined ? isReadProp : internalIsRead;
+
   // Get unread background color based on theme
-  const getUnreadBackgroundColor = () => {
+  const unreadBackgroundColor = useMemo(() => {
     if (!containerSettings?.content?.isUnreadEnabled || isRead || !containerSettings.content.unread_indicator?.unread_bg) {
       return undefined;
     }
     const unreadBg = containerSettings.content.unread_indicator.unread_bg;
     return colorScheme === 'dark' ? unreadBg.clr.dark : unreadBg.clr.light;
-  };
+  }, [containerSettings, isRead, colorScheme]);
   const cardVariant = useMemo(() => variant ?? template.type ?? 'SmallImage', [variant, template.type]);
   const onDismiss = useCallback(() => {
     listener?.('onDismiss', template);
@@ -70,8 +74,10 @@ export const ContentCardView = ({
     // Track interaction event using propositionItem
     template.track?.('content_clicked', MessagingEdgeEventType.INTERACT, null);
 
-    // Mark as read when interacted with
-    setIsRead(true);
+    // Mark as read (only if uncontrolled mode)
+    if (isReadProp === undefined) {
+      setInternalIsRead(true);
+    }
     if (template.data?.content?.actionUrl) {
       try {
         Linking.openURL(template.data.content.actionUrl);
@@ -79,7 +85,7 @@ export const ContentCardView = ({
         console.warn(`Failed to open URL: ${template.data.content.actionUrl}`, error);
       }
     }
-  }, [template]);
+  }, [template, listener, isReadProp]);
   const imageUri = useMemo(() => {
     if (colorScheme === 'dark' && template.data?.content?.image?.darkUrl) {
       return template.data.content.image.darkUrl;
@@ -121,8 +127,8 @@ export const ContentCardView = ({
     onPress: onPress,
     style: state => [styles.card, styleOverrides?.card, typeof style === 'function' ? style(state) : style]
   }, props), /*#__PURE__*/React.createElement(View, _extends({
-    style: [cardVariant === 'SmallImage' ? smallImageStyles.container : styles.container, styleOverrides?.container, getUnreadBackgroundColor() && {
-      backgroundColor: getUnreadBackgroundColor()
+    style: [cardVariant === 'SmallImage' ? smallImageStyles.container : styles.container, styleOverrides?.container, unreadBackgroundColor && {
+      backgroundColor: unreadBackgroundColor
     }]
   }, ContainerProps), imageUri && /*#__PURE__*/React.createElement(View, _extends({
     style: [cardVariant === 'SmallImage' ? smallImageStyles.imageContainer : styles.imageContainer, styleOverrides?.imageContainer]

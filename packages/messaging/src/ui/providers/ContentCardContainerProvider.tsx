@@ -1,4 +1,5 @@
 import React, { createContext } from "react";
+import { SettingsPlacement } from "../components/UnreadIcon/UnreadIcon";
 
 export interface ContainerSettings {
   templateType: 'inbox' | 'banner' | 'custom';
@@ -27,7 +28,7 @@ export interface ContainerSettings {
         };
       };
       unread_icon: {
-        placement: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+        placement: SettingsPlacement;
         image: {
           url: string;
           darkUrl?: string;
