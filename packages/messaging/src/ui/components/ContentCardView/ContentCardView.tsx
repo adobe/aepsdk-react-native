@@ -155,7 +155,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     }
   }, [listener, template]);
 
-  // All validation checks after ALL hooks are called
+  // If not visible, return null to hide the entire view
   if (!isVisible) {
     return null;
   }

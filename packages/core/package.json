@@ -28,7 +28,7 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": ">=0.60.0"
   },
   "devDependencies": {
     "react": "19.1.1",

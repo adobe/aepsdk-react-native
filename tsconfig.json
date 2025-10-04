@@ -3,7 +3,6 @@
     "noEmit": true,
     "target": "es2016",
     "module": "commonjs",
-    "declaration": true,
     "importHelpers": true,
     "jsx": "react-native",
     "sourceMap": true,
