@@ -10,9 +10,12 @@
     language governing permissions and limitations under the License.
 */
 
-export * from './Button/Button';
-export * from './ContentCardContainer/ContentCardContainer';
-export * from './ContentCardView/ContentCardView';
-export * from '../types/ContentViewEvent';
-export { ThemeProvider } from '../theme/ThemeProvider';
-export type { Themes } from '../theme/Theme';
+export * from "./Button/Button";
+export * from "./ContentCardContainer/ContentCardContainer";
+export * from "./ContentCardView/ContentCardView";
+export * from "../types/ContentViewEvent";
+export * from "./Pagination/Pagination";
+export * from "./UnreadIcon/UnreadIcon";
+
+export { ThemeProvider } from "../theme/ThemeProvider";
+export type { Themes } from "../theme/Theme";

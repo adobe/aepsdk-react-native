@@ -35,12 +35,16 @@
     "@adobe/react-native-aepedge": "^7.0.0",
     "@adobe/react-native-aepedgeidentity": "^7.0.0",
     "react": "*",
-    "react-native": "*"
+    "react-native": ">=0.60.0"
   },
   "devDependencies": {
+    "@testing-library/react-native": "^13.3.3",
+    "@types/react-test-renderer": "^19",
     "react": "19.1.1",
     "react-native": "0.81.0",
-    "react-native-builder-bob": "0.33.1"
+    "react-native-builder-bob": "0.33.1",
+    "react-test-renderer": "^19.2.0",
+    "typescript": "^5.9.3"
   },
   "publishConfig": {
     "access": "public"

@@ -1,9 +1,10 @@
-/// <reference types="react" />
 import { FlatListProps } from "react-native";
+import { ReactElement } from "react";
 export interface ContentCardContainerProps<T> extends FlatListProps<T> {
-    LoadingComponent?: React.ReactNode;
-    ErrorComponent?: React.ReactNode;
-    FallbackComponent?: React.ReactNode;
+    LoadingComponent?: ReactElement | null;
+    ErrorComponent?: ReactElement | null;
+    FallbackComponent?: ReactElement | null;
+    EmptyComponent?: ReactElement | null;
     surface: string;
 }
 export declare function ContentCardContainer<T>({ LoadingComponent, ErrorComponent, FallbackComponent, surface, ...props }: ContentCardContainerProps<T>): React.ReactElement;

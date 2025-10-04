@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { PressableProps, TextStyle } from 'react-native';
 export interface DismissButtonProps extends PressableProps {
     textStyle?: TextStyle;

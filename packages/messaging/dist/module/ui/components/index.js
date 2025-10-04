@@ -16,5 +16,7 @@ export * from "./Button/Button.js";
 export * from "./ContentCardContainer/ContentCardContainer.js";
 export * from "./ContentCardView/ContentCardView.js";
 export * from "../types/ContentViewEvent.js";
+export * from "./Pagination/Pagination.js";
+export * from "./UnreadIcon/UnreadIcon.js";
 export { ThemeProvider } from "../theme/ThemeProvider.js";
 //# sourceMappingURL=index.js.map
