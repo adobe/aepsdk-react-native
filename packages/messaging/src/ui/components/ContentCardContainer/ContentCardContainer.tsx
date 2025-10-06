@@ -1,15 +1,15 @@
-import { useCallback } from "react";
+import { cloneElement, ReactElement, useCallback } from "react";
 import {
   ActivityIndicator,
+  DynamicColorIOS,
   FlatList,
   FlatListProps,
   ListRenderItem,
-  StyleSheet,
   Platform,
-  DynamicColorIOS,
+  StyleSheet,
   Text,
   useColorScheme,
-  View,
+  View
 } from "react-native";
 import { useContentCardUI, useContentContainer } from "../../hooks";
 import ContentCardContainerProvider, {
@@ -17,15 +17,15 @@ import ContentCardContainerProvider, {
 } from "../../providers/ContentCardContainerProvider";
 import { ContentTemplate } from "../../types/Templates";
 import { ContentCardView } from "../ContentCardView/ContentCardView";
-import EmptyStateContainer from "../EmptyStateContainer/EmptyStateContainer";
-import Pagination from "../Pagination/Pagination";
 import UnreadIcon from "../UnreadIcon/UnreadIcon";
+import EmptyState from "./EmptyState";
 
 // Public props for the container. Extends FlatList props but manages data internally.
 export interface ContentCardContainerProps<T> extends FlatListProps<T> {
-  LoadingComponent?: React.ReactNode;
-  ErrorComponent?: React.ReactNode;
-  FallbackComponent?: React.ReactNode;
+  LoadingComponent?: ReactElement | null;
+  ErrorComponent?: ReactElement | null;
+  FallbackComponent?: ReactElement | null;
+  EmptyComponent?: ReactElement | null;
   surface: string;
 }
 
@@ -35,14 +35,15 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   LoadingComponent = <ActivityIndicator />,
   ErrorComponent = null,
   FallbackComponent = null,
+  EmptyComponent,
   settings,
   surface,
   style,
   ...props
 }: ContentCardContainerProps<T> & {
   settings: ContainerSettings;
-}): React.ReactElement {
-  // Pull content cards for the given surface
+}) {
+  const colorScheme = useColorScheme();
   const { content, error, isLoading } = useContentCardUI(surface);
   const scheme = useColorScheme();
   const headingColor = Platform.OS === 'ios'
@@ -50,7 +51,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
     : (scheme === 'dark' ? '#FFFFFF' : '#000000');
 
   // Normalize/alias frequently used settings
-  const { content: contentSettings, showPagination } = settings;
+  const { content: contentSettings } = settings;
   const { heading, layout, emptyStateSettings, unread_indicator, isUnreadEnabled } = contentSettings;
 
   // Derived flags used across renders
@@ -109,20 +110,37 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   }, [isHorizontal, isUnreadEnabled, bg, unreadIcon]);
 
   if (isLoading) {
-    return LoadingComponent as React.ReactElement;
+    return LoadingComponent;
   }
 
   if (error) {
-    return ErrorComponent as React.ReactElement;
+    return ErrorComponent;
   }
 
   if (!content) {
-    return FallbackComponent as React.ReactElement;
+    return FallbackComponent;
+  }
+
+  if (content.length === 0) {
+    if (EmptyComponent) {
+      return cloneElement(EmptyComponent, {
+        ...emptyStateSettings,
+      }) as React.ReactElement;
+    }
+
+    return (
+      <EmptyState
+        image={emptyStateSettings?.image?.[colorScheme ?? "light"]?.url}
+        text={
+          emptyStateSettings?.message?.content ||
+          "No Content Available"
+        }
+      />
+    );
   }
 
   return (
     <ContentCardContainerProvider settings={settings}>
-      {showPagination ? <Pagination /> : null}
       <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
       <FlatList
         {...props}
@@ -130,11 +148,6 @@ function ContentCardContainerInner<T extends ContentTemplate>({
         ItemSeparatorComponent={() => (
           isHorizontal ? <View style={styles.horizontalSeparator} /> : <View style={styles.verticalSeparator} />
         )}
-        ListEmptyComponent={
-          settings.content.emptyStateSettings
-            ? <EmptyStateContainer emptyStateSettings={emptyStateSettings} />
-            : null
-        }
         contentContainerStyle={[
           contentContainerStyle,
           isHorizontal && styles.listContent
@@ -180,6 +193,7 @@ export function ContentCardContainer<T extends ContentTemplate>({
 const styles = StyleSheet.create({
   contentContainer: {
     minHeight: 140,
+    flex: 0
   },
   imageHeight: {
     height: 180
