@@ -14,6 +14,7 @@
     "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf dist",
     "build": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled -- yarn tsc",
     "test": "jest",
+    "test:ui": "npx lerna run test:ui --scope @adobe/react-native-aepmessaging",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
     "sampleapp:ios:pod:install": "cd apps/AEPSampleApp/ios && pod install",
     "sampleapp:ios:build": "cd apps/AEPSampleApp && npx react-native run-ios --verbose",

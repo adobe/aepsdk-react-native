@@ -11,7 +11,7 @@
     language governing permissions and limitations under the License.
 */
 
-import React, { createContext, useContext, ReactNode, useMemo } from 'react';
+import { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { Theme, Themes } from './Theme';
 

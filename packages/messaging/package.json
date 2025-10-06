@@ -11,7 +11,8 @@
   "types": "dist/typescript/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
-    "tsc": "bob build"
+    "tsc": "bob build",
+    "test:ui": "../../node_modules/.bin/jest --config jest.config.js"
   },
   "repository": {
     "type": "git",
