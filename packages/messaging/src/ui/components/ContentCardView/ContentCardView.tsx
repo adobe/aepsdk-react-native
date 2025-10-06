@@ -15,16 +15,16 @@ import React, {
   useCallback,
   useState,
   useRef,
-  useMemo
-} from 'react';
+  useMemo,
+} from "react";
 import {
   ComponentOverrideProps,
   ContentTemplate,
   ImageOnlyContentStyle,
   LargeImageContentStyle,
-  SmallImageContentStyle
-} from '../../types/Templates';
-import { ContentViewEvent } from '../../types/ContentViewEvent';
+  SmallImageContentStyle,
+} from "../../types/Templates";
+import { ContentViewEvent } from "../../types/ContentViewEvent";
 import {
   Image,
   Linking,
@@ -33,34 +33,51 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View
-} from 'react-native';
-import MessagingEdgeEventType from '../../../models/MessagingEdgeEventType';
-import DismissButton from '../DismissButton/DismissButton';
-import { useTheme } from '../../theme';
-import useAspectRatio from '../../hooks/useAspectRatio';
-import { ContentCardTemplate } from '../../../models';
-import Button from '../Button/Button';
+  View,
+} from "react-native";
+import MessagingEdgeEventType from "../../../models/MessagingEdgeEventType";
+import DismissButton from "../DismissButton/DismissButton";
+import { useTheme } from "../../theme";
+import useAspectRatio from "../../hooks/useAspectRatio";
+import { ContentCardTemplate } from "../../../models";
+import Button from "../Button/Button";
 
+/**
+ * Callback function that is called when a content card event occurs.
+ */
 export type ContentCardEventListener = (
-  event: ContentViewEvent,
+  /** The event that occurred, one of "onDismiss", "onDisplay", "onInteract" */
+  event?: ContentViewEvent,
+  /** The full content card data associated with the event */
   data?: ContentTemplate,
+  /** Any additional native event data that accompanies the event */
   nativeEvent?: any
 ) => void;
 
+/** Props for the ContentCardView component */
 export interface ContentViewProps
   extends PressableProps,
     ComponentOverrideProps {
+  /** The content card data to display */
   template: ContentTemplate;
+  /** Style overrides per template type for the content card */
   styleOverrides?: {
+    /** Style overrides for the small image content card */
     smallImageStyle?: SmallImageContentStyle;
+    /** Style overrides for the large image content card */
     largeImageStyle?: LargeImageContentStyle;
+    /** Style overrides for the image only content card */
     imageOnlyStyle?: ImageOnlyContentStyle;
   };
+  /** The function to call when a content card event occurs */
   listener?: ContentCardEventListener;
+  /** The variant of the content card to display */
   variant?: ContentCardTemplate;
 }
 
+/** Renders a content card view
+ * @param {ContentViewProps} props - The props for the ContentCardView component
+ */
 export const ContentCardView: React.FC<ContentViewProps> = ({
   template,
   listener,
@@ -85,12 +102,12 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   const theme = useTheme();
 
   const cardVariant = useMemo<ContentCardTemplate>(
-    () => variant ?? template.type ?? 'SmallImage',
+    () => variant ?? template.type ?? "SmallImage",
     [variant, template.type]
   );
 
   const onDismiss = useCallback(() => {
-    listener?.('onDismiss', template);
+    listener?.("onDismiss", template);
 
     // Track dismiss event using propositionItem
     template.track?.(MessagingEdgeEventType.DISMISS);
@@ -99,10 +116,10 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   }, [listener, template]);
 
   const onPress = useCallback(() => {
-    listener?.('onInteract', template);
+    listener?.("onInteract", template);
 
     // Track interaction event using propositionItem
-    template.track?.('content_clicked', MessagingEdgeEventType.INTERACT, null);
+    template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
 
     if (template.data?.content?.actionUrl) {
       try {
@@ -117,14 +134,14 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   }, [template]);
 
   const imageUri = useMemo(() => {
-    if (colorScheme === 'dark' && template.data?.content?.image?.darkUrl) {
+    if (colorScheme === "dark" && template.data?.content?.image?.darkUrl) {
       return template.data.content.image.darkUrl;
     }
     return template.data.content.image?.url;
   }, [
     colorScheme,
     template.data?.content?.image?.darkUrl,
-    template.data?.content?.image?.url
+    template.data?.content?.image?.url,
   ]);
 
   const imageAspectRatio = useAspectRatio(imageUri);
@@ -134,11 +151,11 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     | null
   >(() => {
     switch (cardVariant) {
-      case 'SmallImage':
+      case "SmallImage":
         return _styleOverrides?.smallImageStyle as SmallImageContentStyle;
-      case 'LargeImage':
+      case "LargeImage":
         return _styleOverrides?.largeImageStyle as LargeImageContentStyle;
-      case 'ImageOnly':
+      case "ImageOnly":
         return _styleOverrides?.imageOnlyStyle as ImageOnlyContentStyle;
       default:
         return null;
@@ -148,7 +165,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   // Call listener on mount to signal view display (only once to prevent duplicates)
   useEffect(() => {
     if (!isDisplayedRef.current) {
-      listener?.('onDisplay', template);
+      listener?.("onDisplay", template);
       // Track display event using propositionItem
       template.track?.(MessagingEdgeEventType.DISPLAY);
       isDisplayedRef.current = true;
@@ -172,44 +189,44 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
       style={(state) => [
         styles.card,
         styleOverrides?.card,
-        typeof style === 'function' ? style(state) : style
+        typeof style === "function" ? style(state) : style,
       ]}
       {...props}
     >
       <View
         style={[
-          cardVariant === 'SmallImage'
+          cardVariant === "SmallImage"
             ? smallImageStyles.container
             : styles.container,
-          styleOverrides?.container
+          styleOverrides?.container,
         ]}
         {...ContainerProps}
       >
         {imageUri && (
           <View
             style={[
-              cardVariant === 'SmallImage'
+              cardVariant === "SmallImage"
                 ? smallImageStyles.imageContainer
                 : styles.imageContainer,
-              styleOverrides?.imageContainer
+              styleOverrides?.imageContainer,
             ]}
             {...ImageContainerProps}
           >
             <Image
               source={{ uri: imageUri }}
               style={[
-                cardVariant === 'SmallImage'
+                cardVariant === "SmallImage"
                   ? smallImageStyles.image
                   : styles.image,
                 { aspectRatio: imageAspectRatio },
-                styleOverrides?.image
+                styleOverrides?.image,
               ]}
               resizeMode="contain"
               {...ImageProps}
             />
           </View>
         )}
-        {cardVariant !== 'ImageOnly' && (
+        {cardVariant !== "ImageOnly" && (
           <View
             style={[styles.contentContainer, styleOverrides?.contentContainer]}
             {...ContentContainerProps}
@@ -220,7 +237,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
                   styles.title,
                   { color: theme.colors.textPrimary },
                   styleOverrides?.text,
-                  styleOverrides?.title
+                  styleOverrides?.title,
                 ]}
                 {...TextProps}
                 {...TitleProps}
@@ -234,7 +251,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
                   styles.body,
                   { color: theme.colors.textPrimary },
                   styleOverrides?.text,
-                  styleOverrides?.body
+                  styleOverrides?.body,
                 ]}
                 {...TextProps}
                 {...BodyProps}
@@ -257,7 +274,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
                     style={styleOverrides?.button}
                     textStyle={[
                       styleOverrides?.text,
-                      styleOverrides?.buttonText
+                      styleOverrides?.buttonText,
                     ]}
                     {...ButtonProps}
                   />
@@ -265,7 +282,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             </View>
           </View>
         )}
-        {content?.dismissBtn && content.dismissBtn?.style !== 'none' && (
+        {content?.dismissBtn && content.dismissBtn?.style !== "none" && (
           <DismissButton
             onPress={onDismiss}
             type={content.dismissBtn.style}
@@ -280,110 +297,72 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
 const styles = StyleSheet.create({
   card: {
     margin: 15,
-    flex: 1
+    flex: 1,
   },
   container: {
-    flexDirection: 'column'
+    flexDirection: "column",
   },
   imageContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 12,
-    backgroundColor: '#f0f0f0'
+    backgroundColor: "#f0f0f0",
   },
   image: {
-    width: '100%',
-    resizeMode: 'contain'
+    width: "100%",
+    resizeMode: "contain",
   },
   contentContainer: {
     flex: 1,
     paddingVertical: 16,
     paddingHorizontal: 16,
-    justifyContent: 'flex-start'
+    justifyContent: "flex-start",
   },
   textContent: {
     flex: 1,
-    justifyContent: 'flex-start',
-    marginBottom: 16
+    justifyContent: "flex-start",
+    marginBottom: 16,
   },
   title: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
-    marginRight: 16
+    marginRight: 16,
   },
   body: {
     fontSize: 14,
-    lineHeight: 18
+    lineHeight: 18,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
     paddingTop: 8,
-    gap: 8
+    gap: 8,
   },
   button: {
-    marginHorizontal: 8
-  }
+    marginHorizontal: 8,
+  },
 });
 
 const smallImageStyles = StyleSheet.create({
   card: {
     borderRadius: 12,
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
-    maxWidth: '100%',
-    width: '100%',
-    alignItems: 'center'
+    maxWidth: "100%",
+    alignItems: "center",
   },
   container: {
-    flexDirection: 'row'
+    flexDirection: "row",
   },
   imageContainer: {
     borderRadius: 12,
-    maxWidth: '35%',
-    alignSelf: 'center'
+    maxWidth: "35%",
+    alignSelf: "center",
   },
   image: {
-    resizeMode: 'contain',
-    width: '100%',
-    maxWidth: '100%'
-  }
+    resizeMode: "contain",
+    width: "100%",
+    maxWidth: "100%",
+  },
 });
-
-// const largeImageStyles = StyleSheet.create({
-//   card: {
-//     ...styles.card,
-//     borderRadius: 12,
-//     gap: 8
-//   },
-//   container: {
-//     flexDirection: 'row'
-//   },
-//   imageContainer: {
-//     alignItems: 'center',
-//     borderRadius: 12,
-//     backgroundColor: '#f0f0f0'
-//   },
-//   image: {
-//     width: '100%',
-//     resizeMode: 'contain'
-//   },
-//   contentContainer: styles.contentContainer,
-//   textContent: styles.textContent,
-//   title: styles.title,
-//   body: styles.body,
-//   buttonContainer: styles.buttonContainer,
-//   button: styles.button
-// });
-
-// const imageOnlyStyles = StyleSheet.create({
-//   card: styles.card,
-//   imageContainer: {
-//     backgroundColor: '#f0f0f0'
-//   },
-//   image: {
-//     width: '100%',
-//     resizeMode: 'contain'
-//   }
-// });
