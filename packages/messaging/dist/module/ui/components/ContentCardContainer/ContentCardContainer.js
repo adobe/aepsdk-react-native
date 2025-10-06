@@ -1,21 +1,24 @@
 "use strict";
 
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, useColorScheme } from "react-native";
 import ContentCardContainerProvider from "../../providers/ContentCardContainerProvider.js";
 import { ContentCardView } from "../ContentCardView/ContentCardView.js";
-import { useCallback } from "react";
+import { cloneElement, useCallback } from "react";
 import { useContentCardUI, useContentContainer } from "../../hooks/index.js";
+import EmptyState from "./EmptyState.js";
 function ContentCardContainerInner({
   contentContainerStyle,
   LoadingComponent = /*#__PURE__*/React.createElement(ActivityIndicator, null),
   ErrorComponent = null,
   FallbackComponent = null,
+  EmptyComponent,
   settings,
   surface,
   style,
   ...props
 }) {
+  const colorScheme = useColorScheme();
   const {
     content,
     error,
@@ -36,6 +39,18 @@ function ContentCardContainerInner({
   }
   if (!content) {
     return FallbackComponent;
+  }
+  if (content.length === 0) {
+    const emptyProps = settings?.content?.emptyStateSettings;
+    if (EmptyComponent) {
+      return /*#__PURE__*/cloneElement(EmptyComponent, {
+        ...emptyProps
+      });
+    }
+    return /*#__PURE__*/React.createElement(EmptyState, {
+      image: emptyProps?.image?.[colorScheme ?? "light"]?.url,
+      text: settings?.content?.emptyStateSettings?.message?.content || "No Content Available"
+    });
   }
   return /*#__PURE__*/React.createElement(ContentCardContainerProvider, {
     settings: settings

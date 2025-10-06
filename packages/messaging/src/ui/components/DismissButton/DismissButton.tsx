@@ -15,13 +15,17 @@ import {
   StyleSheet,
   Text,
   TextStyle,
-  useColorScheme
-} from 'react-native';
+  useColorScheme,
+} from "react-native";
 
+/** Props for the DismissButton component. Extends the PressableProps from react-native. */
 export interface DismissButtonProps extends PressableProps {
+  /** The style of the text for the dismiss button */
   textStyle?: TextStyle;
+  /** The function to call when the dismiss button is pressed */
   onPress?: () => void;
-  type: 'simple' | 'circle';
+  /** The style of the dismiss button */
+  type: "simple" | "circle";
 }
 
 const DismissButton = ({
@@ -38,26 +42,26 @@ const DismissButton = ({
       onPress={onPress}
       style={(state) => [
         styles.container,
-        type === 'simple' && styles.simple,
-        type === 'circle' && [
+        type === "simple" && styles.simple,
+        type === "circle" && [
           styles.circle,
           {
             backgroundColor:
-              colorScheme === 'dark'
-                ? 'rgba(255,255,255,0.1)'
-                : 'rgba(0,0,0,0.1)'
-          }
+              colorScheme === "dark"
+                ? "rgba(255,255,255,0.1)"
+                : "rgba(0,0,0,0.1)",
+          },
         ],
         state.pressed && styles.pressed,
-        typeof style === 'function' ? style(state) : style
+        typeof style === "function" ? style(state) : style,
       ]}
       {...props}
     >
       <Text
         style={[
           styles.text,
-          { color: colorScheme === 'dark' ? 'white' : 'black' },
-          textStyle
+          { color: colorScheme === "dark" ? "white" : "black" },
+          textStyle,
         ]}
       >
         x
@@ -70,29 +74,29 @@ export default DismissButton;
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
+    position: "absolute",
     top: 6,
     right: 6,
     zIndex: 1000,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     minWidth: 18,
     minHeight: 18,
   },
   pressed: {
-    opacity: 0.7
+    opacity: 0.7,
   },
   simple: {
-    backgroundColor: 'transparent'
+    backgroundColor: "transparent",
   },
   circle: {
     borderRadius: 10,
     width: 18,
-    height: 18
+    height: 18,
   },
   text: {
     fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center'
-  }
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 });

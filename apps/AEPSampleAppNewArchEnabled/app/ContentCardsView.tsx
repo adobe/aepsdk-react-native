@@ -10,16 +10,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { MobileCore } from '@adobe/react-native-aepcore';
+import { MobileCore } from "@adobe/react-native-aepcore";
 import {
   ContentCardView,
   ThemeProvider,
   useContentCardUI,
-  Messaging,
-  ContentCardContainerProvider
-} from '@adobe/react-native-aepmessaging';
-import React, { memo, useCallback, useEffect, useState } from 'react';
-
+  Pagination,
+} from "@adobe/react-native-aepmessaging";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   Appearance,
   ColorSchemeName,
@@ -30,22 +28,22 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
-} from 'react-native';
-import { Colors } from '../constants/Colors';
-import { useColorScheme } from '../hooks/useColorScheme';
+  View,
+} from "react-native";
+import { Colors } from "../constants/Colors";
+import { useColorScheme } from "../hooks/useColorScheme";
 import {
   DemoItem,
   IMAGE_ONLY_ITEMS,
   LARGE_ITEMS,
-  SMALL_ITEMS
-} from '../templates/contentCards/demoitems';
+  SMALL_ITEMS,
+} from "../templates/contentCards/demoitems";
 
 const VIEW_OPTIONS = [
-  'SmallImage',
-  'LargeImage',
-  'ImageOnly',
-  'Remote'
+  "SmallImage",
+  "LargeImage",
+  "ImageOnly",
+  "Remote",
 ] as const;
 type ViewOption = (typeof VIEW_OPTIONS)[number];
 
@@ -53,15 +51,15 @@ const THEME_OPTIONS: Array<{
   label: string;
   value: ColorSchemeName;
 }> = [
-  { label: 'Light', value: 'light' },
-  { label: 'Dark', value: 'dark' },
-  { label: 'System', value: null }
+  { label: "Light", value: "light" },
+  { label: "Dark", value: "dark" },
+  { label: "System", value: null },
 ];
 
 const ITEMS_BY_VIEW: Partial<Record<ViewOption, DemoItem[]>> = {
   SmallImage: SMALL_ITEMS,
   LargeImage: LARGE_ITEMS,
-  ImageOnly: IMAGE_ONLY_ITEMS
+  ImageOnly: IMAGE_ONLY_ITEMS,
 };
 
 const StyledText = ({ text }: { text: string }) => {
@@ -80,8 +78,8 @@ const Header = ({
   setSelectedView: (view: ViewOption) => void;
 }) => {
   const [showPicker, setShowPicker] = useState<boolean>(false);
-  const [selectedTheme, setSelectedTheme] = useState<string>('System');
-  const [trackInput, setTrackInput] = useState('');
+  const [selectedTheme, setSelectedTheme] = useState<string>("System");
+  const [trackInput, setTrackInput] = useState("");
   const colorScheme = useColorScheme();
 
   const handleThemeChange = useCallback(
@@ -102,155 +100,9 @@ const Header = ({
     await onTrackAction();
   }, [trackInput, onTrackAction]);
 
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
 
-  return (
-    <>
-      {/* Theme Switcher */}
-      <View style={styles.headerContainer}>
-        <View
-          style={[styles.themeSwitcher, { backgroundColor: colors.viewBg }]}
-        >
-          {THEME_OPTIONS.map((option) => (
-            <TouchableOpacity
-              key={option.label}
-              style={[
-                styles.themeOption,
-                selectedTheme === option.label
-                  ? [
-                      styles.themeOptionSelected,
-                      { backgroundColor: colors.themeBg }
-                    ]
-                  : styles.themeOptionUnselected
-              ]}
-              onPress={() => handleThemeChange(option.label, option.value)}
-            >
-              <Text
-                style={[
-                  styles.textLabel,
-                  {
-                    fontWeight: selectedTheme === option.label ? '600' : '400',
-                    color: colors.text
-                  }
-                ]}
-              >
-                {option.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      {/* View Selector */}
-      <View style={styles.section}>
-        <TouchableOpacity
-          style={styles.buttonNeutral}
-          onPress={() => setShowPicker(true)}
-        >
-          <Text style={styles.textTitle}>{selectedView}</Text>
-        </TouchableOpacity>
-
-        <Modal visible={showPicker} transparent={true} animationType="slide">
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalCard}>
-              {VIEW_OPTIONS.map((option) => (
-                <TouchableOpacity
-                  key={option}
-                  style={styles.modalOption}
-                  onPress={() => {
-                    setSelectedView(option);
-                    setShowPicker(false);
-                  }}
-                >
-                  <Text
-                    style={[
-                      styles.textTitle,
-                      { color: selectedView === option ? '#007AFF' : '#000' }
-                    ]}
-                  >
-                    {option}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-              <TouchableOpacity
-                style={styles.modalCancel}
-                onPress={() => setShowPicker(false)}
-              >
-                <Text style={[styles.modalCancelText, styles.textTitle]}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      </View>
-
-      {selectedView === 'Remote' && (
-        <>
-          <StyledText text="[Remote] cards" />
-          {/* Track Action Section */}
-          <View
-            style={[
-              styles.section,
-              styles.panel,
-              { backgroundColor: colors.panel, borderColor: colors.panelBorder }
-            ]}
-          >
-            <Text
-              style={[
-                styles.titleText,
-                styles.textCenter,
-                styles.textTitle,
-                { color: colors.text }
-              ]}
-            >
-              Track Action & Refresh Content
-            </Text>
-
-            <View style={[styles.rowCenter, styles.trackRow]}>
-              <TextInput
-                style={[
-                  styles.trackInput,
-                  {
-                    backgroundColor: colors.inputBg,
-                    borderColor: colors.inputBorder,
-                    color: colors.text
-                  }
-                ]}
-                placeholder="track action"
-                placeholderTextColor={colors.placeholderText}
-                value={trackInput}
-                onChangeText={setTrackInput}
-                autoCapitalize="none"
-                autoCorrect={false}
-                spellCheck={false}
-              />
-              <TouchableOpacity
-                style={[styles.buttonPrimary, { opacity: isLoading ? 0.6 : 1 }]}
-                onPress={handleTrackAction}
-                disabled={isLoading}
-              >
-                <Text style={styles.trackButtonText}>
-                  {isLoading ? 'Loading...' : 'Track & Refresh Content'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text
-              style={[
-                styles.textCenter,
-                styles.textCaption,
-                { color: colors.mutedText }
-              ]}
-            >
-              Enter an action name to track it, or leave empty to just refresh
-              content
-            </Text>
-          </View>
-        </>
-      )}
-    </>
-  );
+  return <Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />;
 };
 
 const MemoHeader = memo(Header);
@@ -260,11 +112,12 @@ const ContentCardsView = () => {
   const [trackInput, setTrackInput] = useState('');
   const [containerSettings, setContainerSettings] = useState<any>(null);
   const colorScheme = useColorScheme();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const surface =
-    Platform.OS === 'android'
-      ? 'rn/android/remote_image'
-      : 'rn/ios/remote_image';
+    Platform.OS === "android"
+      ? "rn/android/remote_image"
+      : "rn/ios/remote_image";
   const { content, isLoading, refetch } = useContentCardUI(surface);
 
   // Load container settings for unread icon configuration
@@ -288,10 +141,10 @@ const ContentCardsView = () => {
 
   const items = ITEMS_BY_VIEW[selectedView];
 
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
 
   useEffect(() => {
-    MobileCore.trackAction('small_image');
+    MobileCore.trackAction("small_image");
   }, []);
 
   const renderContentCard = (item: any, isRemote: boolean) => {
@@ -459,27 +312,27 @@ const SPACING = { s: 10, m: 20, l: 24 };
 
 const styles = StyleSheet.create({
   infoText: {
-    color: 'darkgray',
+    color: "darkgray",
     fontSize: 18,
     paddingTop: SPACING.s,
-    paddingBottom: SPACING.s
+    paddingBottom: SPACING.s,
   },
   headerContainer: {
     marginTop: 60,
     marginBottom: 15,
-    alignItems: 'center'
+    alignItems: "center",
   },
   themeSwitcher: {
-    width: '65%',
+    width: "65%",
     borderRadius: 12,
     padding: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   section: {
     marginHorizontal: SPACING.m,
-    marginBottom: SPACING.m
+    marginBottom: SPACING.m,
   },
   themeOption: {
     flex: 1,
@@ -487,94 +340,94 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     marginHorizontal: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 2
+    shadowRadius: 2,
   },
   themeOptionSelected: {
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
-    elevation: 2
+    elevation: 2,
   },
   themeOptionUnselected: {
-    backgroundColor: 'transparent',
-    shadowColor: 'transparent',
+    backgroundColor: "transparent",
+    shadowColor: "transparent",
     shadowOpacity: 0,
-    elevation: 0
+    elevation: 0,
   },
   textTitle: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: "600",
   },
   textBody: {
     fontSize: 14,
-    lineHeight: SPACING.m
+    lineHeight: SPACING.m,
   },
   textCaption: {
     fontSize: 12,
-    fontStyle: 'italic'
+    fontStyle: "italic",
   },
   textLabel: {
-    fontSize: 14
+    fontSize: 14,
   },
   buttonNeutral: {
     height: 50,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: SPACING.s,
-    backgroundColor: '#fff'
+    backgroundColor: "#fff",
   },
   buttonPrimary: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     paddingHorizontal: 16,
     paddingVertical: SPACING.s,
-    borderRadius: 8
+    borderRadius: 8,
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalCard: {
     borderRadius: 10,
     padding: SPACING.m,
-    backgroundColor: 'white',
-    width: '80%'
+    backgroundColor: "white",
+    width: "80%",
   },
   modalOption: {
     paddingVertical: SPACING.s,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee'
+    borderBottomColor: "#eee",
   },
   modalCancel: {
     paddingVertical: SPACING.s,
-    marginTop: SPACING.s
+    marginTop: SPACING.s,
   },
   modalCancelText: {
-    color: '#FF3B30'
+    color: "#FF3B30",
   },
   panel: {
     borderRadius: SPACING.s,
     borderWidth: 1,
-    padding: 15
+    padding: 15,
   },
   titleText: {
-    fontWeight: '600',
-    marginBottom: SPACING.s
+    fontWeight: "600",
+    marginBottom: SPACING.s,
   },
   textCenter: {
-    textAlign: 'center'
+    textAlign: "center",
   },
   rowCenter: {
-    flexDirection: 'row',
-    alignItems: 'center'
+    flexDirection: "row",
+    alignItems: "center",
   },
   trackRow: {
-    marginBottom: SPACING.s
+    marginBottom: SPACING.s,
   },
   trackInput: {
     flex: 1,
@@ -582,19 +435,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
-    marginRight: SPACING.s
+    marginRight: SPACING.s,
   },
   trackButtonText: {
-    color: 'white',
-    fontWeight: '600'
+    color: "white",
+    fontWeight: "600",
   },
   emptyContainer: {
     borderRadius: SPACING.s,
     padding: SPACING.m,
     margin: SPACING.m,
-    alignItems: 'center'
+    alignItems: "center",
   },
   listContent: {
-    paddingBottom: SPACING.l
-  }
+    paddingBottom: SPACING.l,
+  },
 });

@@ -4,19 +4,22 @@ import {
   FlatListProps,
   ListRenderItem,
   StyleSheet,
+  useColorScheme,
 } from "react-native";
 import ContentCardContainerProvider, {
   ContainerSettings,
 } from "../../providers/ContentCardContainerProvider";
 import { ContentCardView } from "../ContentCardView/ContentCardView";
 import { ContentTemplate } from "../../types/Templates";
-import { useCallback } from "react";
+import { cloneElement, ReactElement, useCallback } from "react";
 import { useContentCardUI, useContentContainer } from "../../hooks";
+import EmptyState from "./EmptyState";
 
 export interface ContentCardContainerProps<T> extends FlatListProps<T> {
-  LoadingComponent?: React.ReactNode;
-  ErrorComponent?: React.ReactNode;
-  FallbackComponent?: React.ReactNode;
+  LoadingComponent?: ReactElement | null;
+  ErrorComponent?: ReactElement | null;
+  FallbackComponent?: ReactElement | null;
+  EmptyComponent?: ReactElement | null;
   surface: string;
 }
 
@@ -25,13 +28,15 @@ function ContentCardContainerInner<T>({
   LoadingComponent = <ActivityIndicator />,
   ErrorComponent = null,
   FallbackComponent = null,
+  EmptyComponent,
   settings,
   surface,
   style,
   ...props
 }: ContentCardContainerProps<T> & {
   settings: ContainerSettings;
-}): React.ReactElement {
+}) {
+  const colorScheme = useColorScheme();
   const { content, error, isLoading } = useContentCardUI(surface);
 
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
@@ -39,15 +44,35 @@ function ContentCardContainerInner<T>({
   }, []);
 
   if (isLoading) {
-    return LoadingComponent as React.ReactElement;
+    return LoadingComponent;
   }
 
   if (error) {
-    return ErrorComponent as React.ReactElement;
+    return ErrorComponent;
   }
 
   if (!content) {
-    return FallbackComponent as React.ReactElement;
+    return FallbackComponent;
+  }
+
+  if (content.length === 0) {
+    const emptyProps = settings?.content?.emptyStateSettings;
+
+    if (EmptyComponent) {
+      return cloneElement(EmptyComponent, {
+        ...emptyProps,
+      }) as React.ReactElement;
+    }
+
+    return (
+      <EmptyState
+        image={emptyProps?.image?.[colorScheme ?? "light"]?.url}
+        text={
+          settings?.content?.emptyStateSettings?.message?.content ||
+          "No Content Available"
+        }
+      />
+    );
   }
 
   return (

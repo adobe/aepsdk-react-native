@@ -12,4 +12,3 @@ export interface UnreadIconProps extends ViewProps {
 }
 declare const UnreadIcon: ({ imageStyle, containerStyle, source, darkSource, size, position, type, style, ...props }: UnreadIconProps) => React.JSX.Element;
 export default UnreadIcon;
-//# sourceMappingURL=UnreadIcon.d.ts.map
