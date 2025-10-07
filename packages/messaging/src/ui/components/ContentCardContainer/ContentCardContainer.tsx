@@ -1,11 +1,9 @@
-import { cloneElement, ReactElement, useCallback } from "react";
+import { cloneElement, ReactElement, useCallback, useMemo } from "react";
 import {
   ActivityIndicator,
-  DynamicColorIOS,
   FlatList,
   FlatListProps,
   ListRenderItem,
-  Platform,
   StyleSheet,
   Text,
   useColorScheme,
@@ -46,64 +44,35 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   const colorScheme = useColorScheme();
   const { content, error, isLoading } = useContentCardUI(surface);
   const scheme = useColorScheme();
-  const headingColor = Platform.OS === 'ios'
-    ? DynamicColorIOS({ light: '#000000', dark: '#FFFFFF' })
-    : (scheme === 'dark' ? '#FFFFFF' : '#000000');
 
   // Normalize/alias frequently used settings
   const { content: contentSettings } = settings;
   const { heading, layout, emptyStateSettings, unread_indicator, isUnreadEnabled } = contentSettings;
 
   // Derived flags used across renders
-  const isHorizontal = layout?.orientation === 'horizontal';
-  const unreadIcon = unread_indicator?.unread_icon;
-  const unreadBg = unread_indicator?.unread_bg?.clr;
-  const bg = scheme === 'dark' ? unreadBg?.dark : unreadBg?.light;
+  const headingColor = useMemo(() => scheme === 'dark' ? '#FFFFFF' : '#000000', [scheme]);
+  const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
+  const unreadIcon = useMemo(() => unread_indicator?.unread_icon, [unread_indicator?.unread_icon]);
+  const unreadBg = useMemo(() => unread_indicator?.unread_bg?.clr, [unread_indicator?.unread_bg?.clr]);
+  const bg = useMemo(() => scheme === 'dark' ? unreadBg?.dark : unreadBg?.light, [scheme, unreadBg?.dark, unreadBg?.light]);
 
   // Stable item renderer: maps template -> variant, builds style overrides, overlays unread icon
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
     const template = item.type;
-    let key: 'smallImageStyle' | 'largeImageStyle' | 'imageOnlyStyle';
-    switch (template) {
-      case 'SmallImage':
-        key = 'smallImageStyle';
-        break;
-      case 'LargeImage':
-        key = 'largeImageStyle';
-        break;
-      default:
-        key = 'imageOnlyStyle';
-        break;
-    }
-
-    // Single merged overrides object (preserves LargeImage behavior)
-    const cardBase = {
-      ...(isHorizontal ? { alignSelf: 'center', width: '100%' } : null),
-      ...(isUnreadEnabled && bg ? { backgroundColor: bg } : null)
-    } as any;
-
-    const largeImageExtras = isHorizontal && template === 'LargeImage'
-      ? {
-          image: styles.imageHeight,
-          imageContainer: [
-            styles.imageHeight,
-            isUnreadEnabled && bg ? { backgroundColor: bg } : null
-          ],
-          contentContainer: styles.contentContainer,
-          card: isUnreadEnabled && bg ? { backgroundColor: bg } : null
-        }
-      : null;
+    const key = ({ SmallImage: 'smallImageStyle', LargeImage: 'largeImageStyle', ImageOnly: 'imageOnlyStyle' })[template];
 
     const styleOverrides = {
       [key]: {
-        card: cardBase,
-        ...(largeImageExtras || {})
+        card: {
+          ...(isUnreadEnabled && bg ? { backgroundColor: bg } : null),
+          ...(isHorizontal && styles.horizontalContentContainer),
+        },
       }
-    } as any;
+    };
 
     return (
-      <View style={isHorizontal ? styles.cardWidth : undefined}>
-        <ContentCardView template={item} styleOverrides={styleOverrides} style={{ flex: 0 }} />
+      <View>
+        <ContentCardView template={item} styleOverrides={styleOverrides} />
         <UnreadIcon placement={unreadIcon?.placement} image={unreadIcon?.image} />
       </View>
     );
@@ -145,13 +114,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
       <FlatList
         {...props}
         data={content as T[]}
-        ItemSeparatorComponent={() => (
-          isHorizontal ? <View style={styles.horizontalSeparator} /> : <View style={styles.verticalSeparator} />
-        )}
-        contentContainerStyle={[
-          contentContainerStyle,
-          isHorizontal && styles.listContent
-        ]}
+        contentContainerStyle={contentContainerStyle}
         horizontal={isHorizontal}
         renderItem={renderItem}
       />
@@ -191,18 +154,6 @@ export function ContentCardContainer<T extends ContentTemplate>({
 }
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    minHeight: 140,
-    flex: 0
-  },
-  imageHeight: {
-    height: 180
-  },
-  cardWidth: {
-    width: 380,
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
   heading: {
     fontWeight: '600',
     fontSize: 18,
@@ -211,11 +162,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: '#000000',
   },
-  horizontalSeparator: { width: 12 },
-  verticalSeparator: { height: 12 },
-  listContent: {
-    alignItems: 'center',
-    paddingLeft: 10,
-    paddingRight: 10
+  horizontalContentContainer: {
+    justifyContent: 'center',
+    width: 300,
   },
 });
