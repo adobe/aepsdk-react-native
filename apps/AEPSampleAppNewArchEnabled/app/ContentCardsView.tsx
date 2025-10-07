@@ -16,6 +16,8 @@ import {
   ThemeProvider,
   useContentCardUI,
   Pagination,
+  Messaging,
+  ContentCardContainerProvider,
 } from "@adobe/react-native-aepmessaging";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {
@@ -102,7 +104,89 @@ const Header = ({
 
   const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
 
-  return <Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />;
+  return (
+    <View>
+      {/* View Picker */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Select View Type</Text>
+        <TouchableOpacity
+          style={[styles.buttonNeutral, { borderColor: colors.panelBorder }]}
+          onPress={() => setShowPicker(true)}
+        >
+          <Text style={{ color: colors.text }}>{selectedView}</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Track Action Input */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Track Action</Text>
+        <View style={[styles.rowCenter, styles.trackRow]}>
+          <TextInput
+            style={[styles.trackInput, { borderColor: colors.inputBorder, color: colors.text }]}
+            value={trackInput}
+            onChangeText={setTrackInput}
+            placeholder="Enter action name"
+            placeholderTextColor={colors.mutedText}
+          />
+          <TouchableOpacity
+            style={styles.buttonPrimary}
+            onPress={handleTrackAction}
+            disabled={!trackInput.trim() || isLoading}
+          >
+            <Text style={styles.trackButtonText}>
+              {isLoading ? 'Loading...' : 'Track'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Theme Switcher */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Theme</Text>
+        <View style={[styles.themeSwitcher, { backgroundColor: colors.background, borderColor: colors.panelBorder, borderWidth: 1 }]}>
+          {THEME_OPTIONS.map(({ label, value }) => (
+            <TouchableOpacity
+              key={label}
+              style={[
+                styles.themeOption,
+                selectedTheme === label
+                  ? [styles.themeOptionSelected, { backgroundColor: colors.tint }]
+                  : styles.themeOptionUnselected,
+              ]}
+              onPress={() => handleThemeChange(label, value)}
+            >
+              <Text style={[styles.textLabel, { color: selectedTheme === label ? '#fff' : colors.text }]}>
+                {label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      {/* View Picker Modal */}
+      <Modal visible={showPicker} transparent animationType="fade">
+        <TouchableOpacity style={styles.modalOverlay} onPress={() => setShowPicker(false)}>
+          <View style={[styles.modalCard, { backgroundColor: colors.background }]}>
+            {VIEW_OPTIONS.map((option) => (
+              <TouchableOpacity
+                key={option}
+                style={styles.modalOption}
+                onPress={() => {
+                  setSelectedView(option);
+                  setShowPicker(false);
+                }}
+              >
+                <Text style={{ color: colors.text }}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.modalCancel} onPress={() => setShowPicker(false)}>
+              <Text style={styles.modalCancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </View>
+  );
 };
 
 const MemoHeader = memo(Header);

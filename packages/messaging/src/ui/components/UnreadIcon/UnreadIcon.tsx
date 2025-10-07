@@ -64,7 +64,7 @@ const UnreadIcon = ({
   const [imageLoadError, setImageLoadError] = useState(false);
   
   // Get unread indicator settings from context
-  const unreadSettings = settings.content.unread_indicator;
+  const unreadSettings = settings?.content.unread_indicator;
   
   // Use settings from context with fallbacks to props
   const displayPosition = unreadSettings?.unread_icon?.placement ?? position;

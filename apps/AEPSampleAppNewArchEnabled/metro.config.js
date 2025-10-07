@@ -16,6 +16,12 @@ config.resolver.nodeModulesPaths = [
   path.resolve(monorepoRoot, 'node_modules'),
 ];
 
+// Force React and React Native to resolve from app's node_modules
+config.resolver.extraNodeModules = {
+  'react': path.resolve(projectRoot, 'node_modules/react'),
+  'react-native': path.resolve(projectRoot, 'node_modules/react-native'),
+};
+
 // Exclude problematic nested node_modules to prevent the bundling error
 config.resolver.blockList = [
   // Block nested node_modules inside packages
@@ -24,6 +30,9 @@ config.resolver.blockList = [
   /.*\/node_modules\/.*\/node_modules\/.*/,
 ];
 
+// Don't try to transpile react-native's internal source files
+config.resolver.disableHierarchicalLookup = false;
+
 // Use a separate cache for the monorepo to avoid conflicts
 config.cacheStores = [
   new FileStore({
@@ -31,7 +40,7 @@ config.cacheStores = [
   }),
 ];
 
-// Explicitly map workspace packages to their built versions
+// Explicitly map workspace packages - Metro will use their package.json "react-native" field
 config.resolver.alias = {
   '@adobe/react-native-aepassurance': path.resolve(monorepoRoot, 'packages/assurance'),
   '@adobe/react-native-aepcampaignclassic': path.resolve(monorepoRoot, 'packages/campaignclassic'),
@@ -45,6 +54,9 @@ config.resolver.alias = {
   '@adobe/react-native-aepplaces': path.resolve(monorepoRoot, 'packages/places'),
   '@adobe/react-native-aeptarget': path.resolve(monorepoRoot, 'packages/target'),
   '@adobe/react-native-aepuserprofile': path.resolve(monorepoRoot, 'packages/userprofile'),
+  // Ensure React is resolved from app's node_modules to avoid multiple instances
+  'react': path.resolve(projectRoot, 'node_modules/react'),
+  'react-native': path.resolve(projectRoot, 'node_modules/react-native'),
 };
 
 module.exports = config;

@@ -42,8 +42,7 @@ import { useTheme } from '../../theme';
 import useAspectRatio from '../../hooks/useAspectRatio';
 import { ContentCardTemplate } from '../../../models';
 import Button from '../Button/Button';
-import { useContext } from 'react';
-import { ContentCardContainerContext } from '../../providers/ContentCardContainerProvider';
+import useContainerSettings from '../../hooks/useContainerSettings';
 
 /**
  * Callback function that is called when a content card event occurs.
@@ -106,7 +105,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   const [internalIsRead, setInternalIsRead] = useState(false);
   const isDisplayedRef = useRef(false);
   const theme = useTheme();
-  const containerSettings = useContext(ContentCardContainerContext);
+  const containerSettings = useContainerSettings();
 
   // Support both controlled and uncontrolled modes
   const isRead = isReadProp !== undefined ? isReadProp : internalIsRead;
