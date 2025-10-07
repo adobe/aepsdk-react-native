@@ -1,13 +1,13 @@
 import { cloneElement, ReactElement, useCallback, useMemo } from "react";
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   FlatListProps,
   ListRenderItem,
   StyleSheet,
   Text,
-  useColorScheme,
-  View
+  useColorScheme
 } from "react-native";
 import { useContentCardUI, useContentContainer } from "../../hooks";
 import ContentCardContainerProvider, {
@@ -15,7 +15,6 @@ import ContentCardContainerProvider, {
 } from "../../providers/ContentCardContainerProvider";
 import { ContentTemplate } from "../../types/Templates";
 import { ContentCardView } from "../ContentCardView/ContentCardView";
-import UnreadIcon from "../UnreadIcon/UnreadIcon";
 import EmptyState from "./EmptyState";
 
 // Public props for the container. Extends FlatList props but manages data internally.
@@ -65,17 +64,12 @@ function ContentCardContainerInner<T extends ContentTemplate>({
       [key]: {
         card: {
           ...(isUnreadEnabled && bg ? { backgroundColor: bg } : null),
-          ...(isHorizontal && styles.horizontalContentContainer),
+          ...(isHorizontal && styles.horizontalCardStyles),
         },
       }
     };
 
-    return (
-      <View>
-        <ContentCardView template={item} styleOverrides={styleOverrides} />
-        <UnreadIcon placement={unreadIcon?.placement} image={unreadIcon?.image} />
-      </View>
-    );
+    return (<ContentCardView template={item} styleOverrides={styleOverrides} />);
   }, [isHorizontal, isUnreadEnabled, bg, unreadIcon]);
 
   if (isLoading) {
@@ -114,7 +108,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
       <FlatList
         {...props}
         data={content as T[]}
-        contentContainerStyle={contentContainerStyle}
+        contentContainerStyle={[contentContainerStyle, isHorizontal && styles.horizontalListContent]}
         horizontal={isHorizontal}
         renderItem={renderItem}
       />
@@ -159,11 +153,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 28,
     textAlign: 'center',
-    marginBottom: 16,
-    color: '#000000',
+    marginBottom: 16
   },
-  horizontalContentContainer: {
-    justifyContent: 'center',
-    width: 300,
+  horizontalCardStyles: {
+    width: Math.floor(Dimensions.get('window').width * 0.75),
+    flex: 0
+  },
+  horizontalListContent: {
+    alignItems: 'center'
   },
 });
