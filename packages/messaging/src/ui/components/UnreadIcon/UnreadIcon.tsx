@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 function UnreadIcon() {
   return (
     <View>
-      <Text>UnreadIcon</Text>    
+      <Text>UnreadIcon</Text>
     </View>
   );
 }
