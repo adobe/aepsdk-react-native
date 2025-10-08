@@ -30,7 +30,6 @@ export interface ContentViewProps extends PressableProps, ComponentOverrideProps
     listener?: ContentCardEventListener;
     /** The variant of the content card to display */
     variant?: ContentCardTemplate;
-    isRead?: boolean;
 }
 /** Renders a content card view
  * @param {ContentViewProps} props - The props for the ContentCardView component

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ImageProps, ImageStyle, ViewProps, ViewStyle } from 'react-native';
-export type SettingsPlacement = 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+import { SettingsPlacement } from '../../providers/ContentCardContainerProvider';
 export interface UnreadIconProps extends ViewProps {
     imageStyle?: ImageStyle;
     containerStyle?: ViewStyle;
