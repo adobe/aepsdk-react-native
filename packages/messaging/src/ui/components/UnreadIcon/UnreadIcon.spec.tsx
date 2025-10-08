@@ -11,7 +11,7 @@
 */
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, Image } from 'react-native';
 import UnreadIcon from './UnreadIcon';
 import ContentCardContainerProvider from '../../providers/ContentCardContainerProvider';
 
@@ -60,23 +60,21 @@ describe('UnreadIcon', () => {
 
   describe('Basic rendering', () => {
     it('should render successfully with container settings', () => {
-      expect(() => {
-        render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
-            <UnreadIcon />
-          </ContentCardContainerProvider>
-        );
-      }).not.toThrow();
+      const { getByTestId } = render(
+        <ContentCardContainerProvider settings={mockContainerSettings}>
+          <UnreadIcon testID="unread-icon" />
+        </ContentCardContainerProvider>
+      );
+      expect(getByTestId('unread-icon')).toBeTruthy();
     });
 
     it('should render with custom size', () => {
-      expect(() => {
-        render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
-            <UnreadIcon size={30} />
-          </ContentCardContainerProvider>
-        );
-      }).not.toThrow();
+      const { getByTestId } = render(
+        <ContentCardContainerProvider settings={mockContainerSettings}>
+          <UnreadIcon testID="unread-icon" size={30} />
+        </ContentCardContainerProvider>
+      );
+      expect(getByTestId('unread-icon')).toBeTruthy();
     });
 
     it('should render without crashing when settings provide null', () => {
@@ -620,6 +618,139 @@ describe('UnreadIcon', () => {
           </ContentCardContainerProvider>
         );
       }).not.toThrow();
+    });
+  });
+
+  describe('Behavioral verification', () => {
+    it('should render an Image when valid URL is provided', () => {
+      const { UNSAFE_getByType } = render(
+        <ContentCardContainerProvider settings={mockContainerSettings}>
+          <UnreadIcon />
+        </ContentCardContainerProvider>
+      );
+      
+      // Should render an Image component when URL is provided
+      expect(() => UNSAFE_getByType(Image)).not.toThrow();
+    });
+
+    it('should render dot when image URLs are empty', () => {
+      const settings = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: {
+            ...mockContainerSettings.content.unread_indicator,
+            unread_icon: {
+              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              image: {
+                url: '',
+                darkUrl: '',
+              },
+            },
+          },
+        },
+      };
+
+      const { UNSAFE_queryByType } = render(
+        <ContentCardContainerProvider settings={settings}>
+          <UnreadIcon />
+        </ContentCardContainerProvider>
+      );
+      
+      // Should not render Image when URLs are empty
+      expect(UNSAFE_queryByType(Image)).toBeNull();
+    });
+
+    it('should render image when source is provided even with type="dot"', () => {
+      const settingsWithoutImage = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: undefined,
+        },
+      };
+
+      const { UNSAFE_getByType } = render(
+        <ContentCardContainerProvider settings={settingsWithoutImage}>
+          <UnreadIcon type="dot" source={{ uri: 'https://example.com/icon.png' }} />
+        </ContentCardContainerProvider>
+      );
+      
+      // Should render Image when source is provided, even if type is "dot"
+      // The presence of source overrides the type prop
+      expect(() => UNSAFE_getByType(Image)).not.toThrow();
+    });
+
+    it('should use darkUrl in dark mode when provided', () => {
+      mockUseColorScheme.mockReturnValue('dark');
+      
+      const settings = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: {
+            ...mockContainerSettings.content.unread_indicator,
+            unread_icon: {
+              placement: 'topright' as const,
+              image: {
+                url: 'https://example.com/light.png',
+                darkUrl: 'https://example.com/dark.png',
+              },
+            },
+          },
+        },
+      };
+
+      const { UNSAFE_getByType } = render(
+        <ContentCardContainerProvider settings={settings}>
+          <UnreadIcon />
+        </ContentCardContainerProvider>
+      );
+      
+      const imageComponent = UNSAFE_getByType(Image);
+      expect(imageComponent.props.source).toEqual({ uri: 'https://example.com/dark.png' });
+    });
+
+    it('should fallback to light URL when no darkUrl in dark mode', () => {
+      mockUseColorScheme.mockReturnValue('dark');
+      
+      const settings = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: {
+            ...mockContainerSettings.content.unread_indicator,
+            unread_icon: {
+              placement: 'topright' as const,
+              image: {
+                url: 'https://example.com/light.png',
+              },
+            },
+          },
+        },
+      };
+
+      const { UNSAFE_getByType } = render(
+        <ContentCardContainerProvider settings={settings}>
+          <UnreadIcon />
+        </ContentCardContainerProvider>
+      );
+      
+      const imageComponent = UNSAFE_getByType(Image);
+      expect(imageComponent.props.source).toEqual({ uri: 'https://example.com/light.png' });
+    });
+
+    it('should use light URL in light mode', () => {
+      mockUseColorScheme.mockReturnValue('light');
+      
+      const { UNSAFE_getByType } = render(
+        <ContentCardContainerProvider settings={mockContainerSettings}>
+          <UnreadIcon />
+        </ContentCardContainerProvider>
+      );
+      
+      const imageComponent = UNSAFE_getByType(Image);
+      expect(imageComponent.props.source).toEqual({ uri: 'https://example.com/icon.png' });
     });
   });
 });
