@@ -42,18 +42,17 @@ function ContentCardContainerInner<T extends ContentTemplate>({
 }) {
   const colorScheme = useColorScheme();
   const { content, error, isLoading } = useContentCardUI(surface);
-  const scheme = useColorScheme();
 
   // Normalize/alias frequently used settings
   const { content: contentSettings } = settings;
   const { heading, layout, emptyStateSettings, unread_indicator, isUnreadEnabled } = contentSettings;
 
   // Derived flags used across renders
-  const headingColor = useMemo(() => scheme === 'dark' ? '#FFFFFF' : '#000000', [scheme]);
+  const headingColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
   const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
   const unreadIcon = useMemo(() => unread_indicator?.unread_icon, [unread_indicator?.unread_icon]);
   const unreadBg = useMemo(() => unread_indicator?.unread_bg?.clr, [unread_indicator?.unread_bg?.clr]);
-  const bg = useMemo(() => scheme === 'dark' ? unreadBg?.dark : unreadBg?.light, [scheme, unreadBg?.dark, unreadBg?.light]);
+  const bg = useMemo(() => colorScheme === 'dark' ? unreadBg?.dark : unreadBg?.light, [colorScheme, unreadBg?.dark, unreadBg?.light]);
 
   // Stable item renderer: maps template -> variant, builds style overrides, overlays unread icon
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
