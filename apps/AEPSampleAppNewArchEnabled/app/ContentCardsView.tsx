@@ -110,7 +110,7 @@ const Header = ({
       <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
         <Text style={[styles.titleText, { color: colors.text }]}>Select View Type</Text>
         <TouchableOpacity
-          style={[styles.buttonNeutral, { borderColor: colors.panelBorder }]}
+          style={[styles.buttonNeutral, { borderColor: colors.panelBorder, backgroundColor: colors.inputBg }]}
           onPress={() => setShowPicker(true)}
         >
           <Text style={{ color: colors.text }}>{selectedView}</Text>
@@ -130,11 +130,11 @@ const Header = ({
             autoCapitalize="none"
           />
           <TouchableOpacity
-            style={styles.buttonPrimary}
+            style={[styles.buttonPrimary, { backgroundColor: colors.tint }]}
             onPress={handleTrackAction}
             disabled={!trackInput.trim() || isLoading}
           >
-            <Text style={styles.trackButtonText}>
+            <Text style={[styles.trackButtonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>
               {isLoading ? 'Loading...' : 'Track'}
             </Text>
           </TouchableOpacity>
@@ -144,7 +144,7 @@ const Header = ({
       {/* Theme Switcher */}
       <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
         <Text style={[styles.titleText, { color: colors.text }]}>Theme</Text>
-        <View style={[styles.themeSwitcher, { backgroundColor: colors.background, borderColor: colors.panelBorder, borderWidth: 1 }]}>
+        <View style={[styles.themeSwitcher, { backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1 }]}>
           {THEME_OPTIONS.map(({ label, value }) => (
             <TouchableOpacity
               key={label}
@@ -156,7 +156,7 @@ const Header = ({
               ]}
               onPress={() => handleThemeChange(label, value)}
             >
-              <Text style={[styles.textLabel, { color: selectedTheme === label ? '#fff' : colors.text }]}>
+              <Text style={[styles.textLabel, { color: selectedTheme === label ? (colorScheme === 'dark' ? '#000' : '#fff') : colors.text }]}>
                 {label}
               </Text>
             </TouchableOpacity>
@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   themeSwitcher: {
-    width: "65%",
+    width: "80%",
     borderRadius: 12,
     padding: 4,
     flexDirection: "row",
@@ -459,11 +459,9 @@ const styles = StyleSheet.create({
   buttonNeutral: {
     height: 50,
     borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 5,
     justifyContent: "center",
     paddingHorizontal: SPACING.s,
-    backgroundColor: "#fff",
   },
   buttonPrimary: {
     backgroundColor: "#007AFF",
