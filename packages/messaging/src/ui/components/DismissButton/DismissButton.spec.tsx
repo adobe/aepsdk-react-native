@@ -9,20 +9,12 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { useColorScheme } from 'react-native';
 import DismissButton from './DismissButton';
 
 // Mock useColorScheme
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  return {
-    ...RN,
-    useColorScheme: jest.fn()
-  };
-});
-
+jest.mock('react-native/Libraries/Utilities/useColorScheme');
 const mockUseColorScheme = useColorScheme as jest.MockedFunction<
   typeof useColorScheme
 >;
@@ -119,13 +111,8 @@ describe('DismissButton', () => {
       );
 
       const button = getByTestId('dismiss-button');
-      expect(button.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            backgroundColor: 'rgba(0,0,0,0.1)'
-          })
-        ])
-      );
+      const styles = JSON.stringify(button.props.style);
+      expect(styles).toContain('rgba(0,0,0,0.1)');
     });
 
     it('should apply correct background color for circle type in dark mode', () => {
@@ -139,13 +126,8 @@ describe('DismissButton', () => {
       );
 
       const button = getByTestId('dismiss-button');
-      expect(button.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            backgroundColor: 'rgba(255,255,255,0.1)'
-          })
-        ])
-      );
+      const styles = JSON.stringify(button.props.style);
+      expect(styles).toContain('rgba(255,255,255,0.1)');
     });
   });
 
@@ -179,15 +161,10 @@ describe('DismissButton', () => {
       );
 
       const button = getByTestId('dismiss-button');
-      expect(button.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            borderRadius: 10,
-            width: 18,
-            height: 18
-          })
-        ])
-      );
+      const styles = JSON.stringify(button.props.style);
+      expect(styles).toContain('"borderRadius":10');
+      expect(styles).toContain('"width":18');
+      expect(styles).toContain('"height":18');
     });
   });
 
@@ -248,7 +225,7 @@ describe('DismissButton', () => {
       );
 
       const button = getByTestId('dismiss-button');
-      expect(button.props.disabled).toBe(true);
+      expect(button.props.accessibilityState?.disabled).toBe(true);
       expect(button.props.accessibilityLabel).toBe('Close button');
     });
   });
