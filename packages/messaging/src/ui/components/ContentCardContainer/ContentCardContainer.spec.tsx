@@ -62,14 +62,6 @@ describe('ContentCardContainer', () => {
     showPagination: false,
   };
 
-  const template = {
-    type: 'SmallImage',
-    // minimal shape used by ContentCardView when mocked
-    data: { content: {} },
-    track: jest.fn(),
-    isRead: false,
-  } as any;
-
   beforeEach(() => {
     jest.clearAllMocks();
     // Default Dimensions width for deterministic style assertions
