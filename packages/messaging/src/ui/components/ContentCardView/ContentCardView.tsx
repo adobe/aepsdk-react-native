@@ -75,7 +75,6 @@ export interface ContentViewProps
   listener?: ContentCardEventListener;
   /** The variant of the content card to display */
   variant?: ContentCardTemplate;
-  isRead?: boolean;
 }
 
 /** Renders a content card view
@@ -97,22 +96,25 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   ButtonContainerProps,
   ButtonProps,
   DismissButtonProps,
-  isRead: isReadProp,
   ...props
 }) => {
   const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
-  const [internalIsRead, setInternalIsRead] = useState(false);
   const isDisplayedRef = useRef(false);
   const theme = useTheme();
   const containerSettings = useContainerSettings();
+  // Force re-render when read state changes
+  const [, forceUpdate] = useState({});
 
-  // Support both controlled and uncontrolled modes
-  const isRead = isReadProp !== undefined ? isReadProp : internalIsRead;
+  // Get read state from template
+  const isRead = template.read;
 
   // Get unread background color based on theme
   const unreadBackgroundColor = useMemo(() => {
-    if (!containerSettings?.content?.isUnreadEnabled || isRead || !containerSettings.content.unread_indicator?.unread_bg) {
+    // Default to true if not specified
+    const isUnreadEnabled = containerSettings?.content?.isUnreadEnabled ?? true;
+    
+    if (!isUnreadEnabled || isRead || !containerSettings?.content?.unread_indicator?.unread_bg) {
       return undefined;
     }
     
@@ -140,10 +142,10 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     // Track interaction event using propositionItem
     template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
 
-    // Mark as read (only if uncontrolled mode)
-    if (isReadProp === undefined) {
-      setInternalIsRead(true);
-    }
+    // Mark as read when interacted with (matches Android behavior)
+    template.read = true;
+    // Trigger re-render to update unread indicator
+    forceUpdate({});
 
     if (template.data?.content?.actionUrl) {
       try {
@@ -155,7 +157,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
         );
       }
     }
-  }, [template, listener, isReadProp]);
+  }, [template, listener]);
 
   const imageUri = useMemo(() => {
     if (colorScheme === "dark" && template.data?.content?.image?.darkUrl) {
@@ -314,7 +316,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             {...DismissButtonProps}
           />
         )}
-        {containerSettings?.content?.isUnreadEnabled && !isRead && (
+        {(containerSettings?.content?.isUnreadEnabled ?? true) && !isRead && (
           <UnreadIcon />
         )}
       </View>

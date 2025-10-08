@@ -35,7 +35,8 @@ export interface ContainerSettings {
         };
       };
     };
-    isUnreadEnabled: boolean;
+    /** Whether the unread feature is enabled. Defaults to true. */
+    isUnreadEnabled?: boolean;
   };
   showPagination?: boolean;
 }

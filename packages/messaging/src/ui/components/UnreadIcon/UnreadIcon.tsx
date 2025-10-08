@@ -34,7 +34,12 @@ export interface UnreadIconProps extends ViewProps {
   type?: 'dot' | 'image';
 }
 
-const Dot = ({ size, backgroundColor }: { size: number; backgroundColor: string }) => (
+interface DotProps {
+  size: number;
+  backgroundColor: string;
+}
+
+const Dot = ({ size, backgroundColor }: DotProps) => (
   <View
     style={[
       styles.dot,
@@ -74,7 +79,7 @@ const UnreadIcon = ({
   const darkImageSource = unreadSettings?.unread_icon?.image?.darkUrl ? 
     { uri: unreadSettings.unread_icon.image.darkUrl } : darkSource;
   
-  const getPositionStyle = () => {
+  const positionStyle = useMemo(() => {
     switch (displayPosition) {
       case 'topleft':
         return styles.positionTopLeft;
@@ -87,7 +92,7 @@ const UnreadIcon = ({
       default:
         return styles.positionTopRight;
     }
-  };
+  }, [displayPosition]);
 
   // Use default contrasting colors for visibility
   // Note: unread_bg.clr is for the card background, not the dot
@@ -101,10 +106,12 @@ const UnreadIcon = ({
     [colorScheme, darkImageSource, imageSource]
   );
 
-  const renderContent = () => {
+  const content = useMemo(() => {
     // Check if we should show dot instead of image based on URL availability
     const shouldShowDot = 
-      (colorScheme === 'dark' && unreadSettings?.unread_icon?.image?.darkUrl === '') ||
+      (colorScheme === 'dark' && 
+        (unreadSettings?.unread_icon?.image?.darkUrl === '' || 
+         (!unreadSettings?.unread_icon?.image?.darkUrl && unreadSettings?.unread_icon?.image?.url === ''))) ||
       (colorScheme === 'light' && unreadSettings?.unread_icon?.image?.url === '');
 
     // If URL is explicitly empty string for current mode, show dot
@@ -137,20 +144,31 @@ const UnreadIcon = ({
 
     // Default dot type
     return <Dot size={size} backgroundColor={dotColor} />;
-  };
+  }, [
+    colorScheme,
+    unreadSettings?.unread_icon?.image,
+    size,
+    dotColor,
+    renderType,
+    imageLoadError,
+    imageSource,
+    darkImageSource,
+    finalImageSource,
+    imageStyle
+  ]);
 
   return (
     <View
       style={[
         styles.container,
-        getPositionStyle(),
+        positionStyle,
         { minWidth: size, minHeight: size },
         containerStyle,
-        typeof style === 'object' ? style : undefined
+        style
       ]}
       {...props}
     >
-      {renderContent()}
+      {content}
     </View>
   );
 };

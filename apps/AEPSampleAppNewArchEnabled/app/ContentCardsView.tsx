@@ -127,6 +127,7 @@ const Header = ({
             onChangeText={setTrackInput}
             placeholder="Enter action name"
             placeholderTextColor={colors.mutedText}
+            autoCapitalize="none"
           />
           <TouchableOpacity
             style={styles.buttonPrimary}
