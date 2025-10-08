@@ -1,5 +1,6 @@
 import React, { createContext } from "react";
-import { SettingsPlacement } from "../components/UnreadIcon/UnreadIcon";
+
+export type SettingsPlacement = 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
 
 export interface ContainerSettings {
   templateType: 'inbox' | 'banner' | 'custom';

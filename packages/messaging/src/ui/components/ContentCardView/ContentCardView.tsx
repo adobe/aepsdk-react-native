@@ -103,24 +103,26 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   const isDisplayedRef = useRef(false);
   const theme = useTheme();
   const containerSettings = useContainerSettings();
-  // Force re-render when read state changes
-  const [, forceUpdate] = useState({});
+  // Track read state in component state
+  const [isRead, setIsRead] = useState(template.isRead);
 
-  // Get read state from template
-  const isRead = template.read;
+  // Sync state when template changes
+  useEffect(() => {
+    setIsRead(template.isRead);
+  }, [template.isRead]);
+
+  // Default to true if not specified
+  const isUnreadEnabled = containerSettings?.content?.isUnreadEnabled ?? true;
 
   // Get unread background color based on theme
   const unreadBackgroundColor = useMemo(() => {
-    // Default to true if not specified
-    const isUnreadEnabled = containerSettings?.content?.isUnreadEnabled ?? true;
-    
     if (!isUnreadEnabled || isRead || !containerSettings?.content?.unread_indicator?.unread_bg) {
       return undefined;
     }
     
     const unreadBg = containerSettings.content.unread_indicator.unread_bg;
     return colorScheme === 'dark' ? unreadBg.clr.dark : unreadBg.clr.light;
-  }, [containerSettings, isRead, colorScheme]);
+  }, [isUnreadEnabled, isRead, containerSettings, colorScheme]);
 
   const cardVariant = useMemo<ContentCardTemplate>(
     () => variant ?? template.type ?? "SmallImage",
@@ -142,10 +144,9 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     // Track interaction event using propositionItem
     template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
 
-    // Mark as read when interacted with (matches Android behavior)
-    template.read = true;
-    // Trigger re-render to update unread indicator
-    forceUpdate({});
+    // Mark as read when interacted with
+    template.isRead = true;
+    setIsRead(true);
 
     if (template.data?.content?.actionUrl) {
       try {
@@ -316,7 +317,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             {...DismissButtonProps}
           />
         )}
-        {(containerSettings?.content?.isUnreadEnabled ?? true) && !isRead && (
+        {isUnreadEnabled && !isRead && (
           <UnreadIcon />
         )}
       </View>

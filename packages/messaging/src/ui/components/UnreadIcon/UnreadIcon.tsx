@@ -9,7 +9,7 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Image,
   ImageProps,
@@ -21,8 +21,7 @@ import {
   useColorScheme
 } from 'react-native';
 import useContainerSettings from '../../hooks/useContainerSettings';
-
-export type SettingsPlacement = 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+import { SettingsPlacement } from '../../providers/ContentCardContainerProvider';
 
 export interface UnreadIconProps extends ViewProps {
   imageStyle?: ImageStyle;
@@ -73,11 +72,25 @@ const UnreadIcon = ({
   
   // Use settings from context with fallbacks to props
   const displayPosition = unreadSettings?.unread_icon?.placement ?? position;
-  const renderType = unreadSettings?.unread_icon?.image ? 'image' : type;
+  
   const imageSource = unreadSettings?.unread_icon?.image?.url ? 
     { uri: unreadSettings.unread_icon.image.url } : source;
   const darkImageSource = unreadSettings?.unread_icon?.image?.darkUrl ? 
     { uri: unreadSettings.unread_icon.image.darkUrl } : darkSource;
+  
+  // Determine if we should render as image type (only if we have valid URLs)
+  const hasImageUrl = Boolean(
+    unreadSettings?.unread_icon?.image?.url || 
+    unreadSettings?.unread_icon?.image?.darkUrl ||
+    imageSource ||
+    darkImageSource
+  );
+  const renderType = hasImageUrl ? 'image' : type;
+
+  // Reset error state when image source changes
+  useEffect(() => {
+    setImageLoadError(false);
+  }, [imageSource, darkImageSource]);
   
   const positionStyle = useMemo(() => {
     switch (displayPosition) {
@@ -108,14 +121,22 @@ const UnreadIcon = ({
 
   const content = useMemo(() => {
     // Check if we should show dot instead of image based on URL availability
-    const shouldShowDot = 
-      (colorScheme === 'dark' && 
-        (unreadSettings?.unread_icon?.image?.darkUrl === '' || 
-         (!unreadSettings?.unread_icon?.image?.darkUrl && unreadSettings?.unread_icon?.image?.url === ''))) ||
-      (colorScheme === 'light' && unreadSettings?.unread_icon?.image?.url === '');
+    const isEmptyUrlForCurrentMode = () => {
+      const imageSettings = unreadSettings?.unread_icon?.image;
+      if (!imageSettings) return false;
+      
+      if (colorScheme === 'dark') {
+        // In dark mode, show dot if darkUrl is empty string or if both darkUrl doesn't exist and url is empty
+        return imageSettings.darkUrl === '' || 
+               (!imageSettings.darkUrl && imageSettings.url === '');
+      }
+      
+      // In light mode, show dot if url is empty string
+      return imageSettings.url === '';
+    };
 
     // If URL is explicitly empty string for current mode, show dot
-    if (shouldShowDot && unreadSettings?.unread_icon?.image) {
+    if (isEmptyUrlForCurrentMode()) {
       return <Dot size={size} backgroundColor={dotColor} />;
     }
 

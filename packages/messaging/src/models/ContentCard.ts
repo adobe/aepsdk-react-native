@@ -72,7 +72,7 @@ export interface ContentCardData extends PropositionItemData {
 }
 export class ContentCard extends PropositionItem {
   data: ContentCardData['data'];
-  read: boolean = false;
+  isRead: boolean = false;
 
   constructor(contentCardData: ContentCardData) {
     super(contentCardData);
