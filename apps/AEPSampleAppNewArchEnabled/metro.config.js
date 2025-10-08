@@ -23,7 +23,7 @@ config.resolver.blockList = [
   // Block any nested node_modules directories  
   /.*\/node_modules\/.*\/node_modules\/.*/,
 ];
-
+config.resolver.disableHierarchicalLookup = true;
 // Use a separate cache for the monorepo to avoid conflicts
 config.cacheStores = [
   new FileStore({
