@@ -1,20 +1,20 @@
 import { cloneElement, ReactElement, useCallback, useMemo } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   FlatListProps,
   ListRenderItem,
   StyleSheet,
   Text,
-  useColorScheme
+  useColorScheme,
+  useWindowDimensions
 } from "react-native";
 import { useContentCardUI, useContentContainer } from "../../hooks";
 import ContentCardContainerProvider, {
   ContainerSettings,
 } from "../../providers/ContentCardContainerProvider";
 import { ContentTemplate } from "../../types/Templates";
-import { ContentCardView } from "../ContentCardView/ContentCardView";
+import { ContentCardView, ContentViewProps } from "../ContentCardView/ContentCardView";
 import EmptyState from "./EmptyState";
 
 export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> {
@@ -23,6 +23,7 @@ export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> 
   FallbackComponent?: ReactElement | null;
   EmptyComponent?: ReactElement | null;
   surface: string;
+  contentCardViewProps?: Partial<ContentViewProps>;
 }
 
 // Core renderer: fetches content for a surface, derives layout, and renders a list of cards
@@ -35,40 +36,37 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   settings,
   surface,
   style,
+  contentCardViewProps,
   ...props
 }: ContentCardContainerProps<T> & {
   settings: ContainerSettings;
 }) {
   const colorScheme = useColorScheme();
+  const { width: windowWidth } = useWindowDimensions();
   const { content, error, isLoading } = useContentCardUI(surface);
 
   // Normalize/alias frequently used settings
   const { content: contentSettings } = settings;
-  const { heading, layout, emptyStateSettings, unread_indicator, isUnreadEnabled } = contentSettings;
+  const { heading, layout, emptyStateSettings } = contentSettings;
 
   // Derived flags used across renders
   const headingColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
   const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
-  const unreadIcon = useMemo(() => unread_indicator?.unread_icon, [unread_indicator?.unread_icon]);
-  const unreadBg = useMemo(() => unread_indicator?.unread_bg?.clr, [unread_indicator?.unread_bg?.clr]);
-  const bg = useMemo(() => colorScheme === 'dark' ? unreadBg?.dark : unreadBg?.light, [colorScheme, unreadBg?.dark, unreadBg?.light]);
 
-  // Stable item renderer: maps template -> variant, builds style overrides, overlays unread icon
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
-    const template = item.type;
-    const key = ({ SmallImage: 'smallImageStyle', LargeImage: 'largeImageStyle', ImageOnly: 'imageOnlyStyle' })[template];
-
-    const styleOverrides = {
-      [key]: {
-        card: {
-          ...(isUnreadEnabled && bg ? { backgroundColor: bg } : null),
-          ...(isHorizontal && styles.horizontalCardStyles),
-        },
-      }
-    };
-
-    return (<ContentCardView template={item} styleOverrides={styleOverrides} />);
-  }, [isHorizontal, isUnreadEnabled, bg, unreadIcon]);
+    return (
+      <ContentCardView
+        template={item}
+        {...contentCardViewProps}
+        style={[
+          isHorizontal && [
+            styles.horizontalCardStyles,
+            { width: Math.floor(windowWidth * 0.75) },
+          ],
+        ]}
+      />
+    );
+  }, [isHorizontal, contentCardViewProps, windowWidth]);
 
   if (isLoading) {
     return LoadingComponent;
@@ -154,7 +152,6 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   horizontalCardStyles: {
-    width: Math.floor(Dimensions.get('window').width * 0.75),
     flex: 0
   },
   horizontalListContent: {
