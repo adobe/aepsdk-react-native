@@ -74,8 +74,9 @@ export class ContentCard extends PropositionItem {
   data: ContentCardData['data'];
   isRead: boolean = false;
 
-  constructor(contentCardData: ContentCardData) {
+  constructor(contentCardData: ContentCardData, isRead: boolean = false) {
     super(contentCardData);
     this.data = contentCardData.data;
+    this.isRead = isRead;
   }
 }

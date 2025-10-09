@@ -52,6 +52,6 @@ export interface ContentCardData extends PropositionItemData {
 export declare class ContentCard extends PropositionItem {
     data: ContentCardData['data'];
     isRead: boolean;
-    constructor(contentCardData: ContentCardData);
+    constructor(contentCardData: ContentCardData, isRead?: boolean);
 }
 //# sourceMappingURL=ContentCard.d.ts.map
