@@ -19,7 +19,6 @@ import {
   Messaging,
   ContentCardContainerProvider,
 } from "@adobe/react-native-aepmessaging";
-import { useFocusEffect } from "@react-navigation/native";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   Appearance,
@@ -205,13 +204,6 @@ const ContentCardsView = () => {
       ? "rn/android/remote_image"
       : "rn/ios/remote_image";
   const { content, isLoading, refetch } = useContentCardUI(surface);
-
-  // Automatically refetch content cards when screen comes into focus
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [refetch])
-  );
 
   // Load container settings for unread icon configuration
   useEffect(() => {
