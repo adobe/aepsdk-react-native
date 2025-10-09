@@ -4,7 +4,7 @@ import { ContentCard, ContentCardData, ContentCardTemplate } from '../../models/
 import { DismissButtonProps } from '../components/DismissButton/DismissButton';
 export declare class ContentTemplate extends ContentCard {
     readonly type: ContentCardTemplate;
-    constructor(data: ContentCardData, type: ContentCardTemplate);
+    constructor(data: ContentCardData, type: ContentCardTemplate, isRead?: boolean);
 }
 /** Overrides for the structural pieces of the content card */
 export interface ComponentOverrideProps {

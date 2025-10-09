@@ -14,9 +14,11 @@
 
 import { PropositionItem } from "./PropositionItem.js";
 export class ContentCard extends PropositionItem {
-  constructor(contentCardData) {
+  isRead = false;
+  constructor(contentCardData, isRead = false) {
     super(contentCardData);
     this.data = contentCardData.data;
+    this.isRead = isRead;
   }
 }
 //# sourceMappingURL=ContentCard.js.map

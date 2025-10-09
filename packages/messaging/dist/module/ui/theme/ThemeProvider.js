@@ -13,7 +13,7 @@
     language governing permissions and limitations under the License.
 */
 
-import React, { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 const defaultTheme = {
   light: {
