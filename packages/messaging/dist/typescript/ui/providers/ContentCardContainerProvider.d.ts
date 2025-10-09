@@ -1,4 +1,5 @@
 import React from "react";
+export type SettingsPlacement = 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
 export interface ContainerSettings {
     templateType: 'inbox' | 'banner' | 'custom';
     content: {
@@ -26,14 +27,15 @@ export interface ContainerSettings {
                 };
             };
             unread_icon: {
-                placement: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+                placement: SettingsPlacement;
                 image: {
                     url: string;
                     darkUrl?: string;
                 };
             };
         };
-        isUnreadEnabled: boolean;
+        /** Whether the unread feature is enabled. Defaults to true. */
+        isUnreadEnabled?: boolean;
     };
     showPagination?: boolean;
 }

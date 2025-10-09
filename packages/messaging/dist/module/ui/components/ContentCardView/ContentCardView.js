@@ -13,13 +13,25 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     language governing permissions and limitations under the License.
 */
 
-import React, { useEffect, useCallback, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useMemo } from "react";
 import { Image, Linking, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import MessagingEdgeEventType from "../../../models/MessagingEdgeEventType.js";
 import DismissButton from "../DismissButton/DismissButton.js";
+import UnreadIcon from "../UnreadIcon/UnreadIcon.js";
 import { useTheme } from "../../theme/index.js";
 import useAspectRatio from "../../hooks/useAspectRatio.js";
 import Button from "../Button/Button.js";
+import useContainerSettings from "../../hooks/useContainerSettings.js";
+
+/**
+ * Callback function that is called when a content card event occurs.
+ */
+
+/** Props for the ContentCardView component */
+
+/** Renders a content card view
+ * @param {ContentViewProps} props - The props for the ContentCardView component
+ */
 export const ContentCardView = ({
   template,
   listener,
@@ -42,19 +54,43 @@ export const ContentCardView = ({
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
   const theme = useTheme();
-  const cardVariant = useMemo(() => variant ?? template.type ?? 'SmallImage', [variant, template.type]);
+  const containerSettings = useContainerSettings();
+  // Track read state in component state
+  const [isRead, setIsRead] = useState(template.isRead);
+
+  // Sync state when template changes
+  useEffect(() => {
+    setIsRead(template.isRead);
+  }, [template.isRead]);
+
+  // Default to true if not specified
+  const isUnreadEnabled = containerSettings?.content?.isUnreadEnabled ?? true;
+
+  // Get unread background color based on theme
+  const unreadBackgroundColor = useMemo(() => {
+    if (!isUnreadEnabled || isRead || !containerSettings?.content?.unread_indicator?.unread_bg) {
+      return undefined;
+    }
+    const unreadBg = containerSettings.content.unread_indicator.unread_bg;
+    return colorScheme === 'dark' ? unreadBg.clr.dark : unreadBg.clr.light;
+  }, [isUnreadEnabled, isRead, containerSettings, colorScheme]);
+  const cardVariant = useMemo(() => variant ?? template.type ?? "SmallImage", [variant, template.type]);
   const onDismiss = useCallback(() => {
-    listener?.('onDismiss', template);
+    listener?.("onDismiss", template);
 
     // Track dismiss event using propositionItem
     template.track?.(MessagingEdgeEventType.DISMISS);
     setIsVisible(false);
   }, [listener, template]);
   const onPress = useCallback(() => {
-    listener?.('onInteract', template);
+    listener?.("onInteract", template);
 
     // Track interaction event using propositionItem
-    template.track?.('content_clicked', MessagingEdgeEventType.INTERACT, null);
+    template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
+
+    // Mark as read when interacted with
+    template.isRead = true;
+    setIsRead(true);
     if (template.data?.content?.actionUrl) {
       try {
         Linking.openURL(template.data.content.actionUrl);
@@ -62,9 +98,9 @@ export const ContentCardView = ({
         console.warn(`Failed to open URL: ${template.data.content.actionUrl}`, error);
       }
     }
-  }, [template]);
+  }, [template, listener]);
   const imageUri = useMemo(() => {
-    if (colorScheme === 'dark' && template.data?.content?.image?.darkUrl) {
+    if (colorScheme === "dark" && template.data?.content?.image?.darkUrl) {
       return template.data.content.image.darkUrl;
     }
     return template.data.content.image?.url;
@@ -72,11 +108,11 @@ export const ContentCardView = ({
   const imageAspectRatio = useAspectRatio(imageUri);
   const styleOverrides = useMemo(() => {
     switch (cardVariant) {
-      case 'SmallImage':
+      case "SmallImage":
         return _styleOverrides?.smallImageStyle;
-      case 'LargeImage':
+      case "LargeImage":
         return _styleOverrides?.largeImageStyle;
-      case 'ImageOnly':
+      case "ImageOnly":
         return _styleOverrides?.imageOnlyStyle;
       default:
         return null;
@@ -86,7 +122,7 @@ export const ContentCardView = ({
   // Call listener on mount to signal view display (only once to prevent duplicates)
   useEffect(() => {
     if (!isDisplayedRef.current) {
-      listener?.('onDisplay', template);
+      listener?.("onDisplay", template);
       // Track display event using propositionItem
       template.track?.(MessagingEdgeEventType.DISPLAY);
       isDisplayedRef.current = true;
@@ -102,21 +138,23 @@ export const ContentCardView = ({
   if (!content) return null;
   return /*#__PURE__*/React.createElement(Pressable, _extends({
     onPress: onPress,
-    style: state => [styles.card, styleOverrides?.card, typeof style === 'function' ? style(state) : style]
+    style: state => [styles.card, styleOverrides?.card, typeof style === "function" ? style(state) : style]
   }, props), /*#__PURE__*/React.createElement(View, _extends({
-    style: [cardVariant === 'SmallImage' ? smallImageStyles.container : styles.container, styleOverrides?.container]
+    style: [cardVariant === "SmallImage" ? smallImageStyles.container : styles.container, styleOverrides?.container, unreadBackgroundColor && {
+      backgroundColor: unreadBackgroundColor
+    }]
   }, ContainerProps), imageUri && /*#__PURE__*/React.createElement(View, _extends({
-    style: [cardVariant === 'SmallImage' ? smallImageStyles.imageContainer : styles.imageContainer, styleOverrides?.imageContainer]
+    style: [cardVariant === "SmallImage" ? smallImageStyles.imageContainer : styles.imageContainer, styleOverrides?.imageContainer]
   }, ImageContainerProps), /*#__PURE__*/React.createElement(Image, _extends({
     source: {
       uri: imageUri
     },
-    style: [cardVariant === 'SmallImage' ? smallImageStyles.image : styles.image, {
+    style: [cardVariant === "SmallImage" ? smallImageStyles.image : styles.image, {
       aspectRatio: imageAspectRatio
     }, styleOverrides?.image],
     resizeMode: "contain"
-  }, ImageProps))), cardVariant !== 'ImageOnly' && /*#__PURE__*/React.createElement(View, _extends({
-    style: [styles.contentContainer, styleOverrides?.contentContainer]
+  }, ImageProps))), cardVariant !== "ImageOnly" && /*#__PURE__*/React.createElement(View, _extends({
+    style: [cardVariant === "SmallImage" ? smallImageStyles.contentContainer : styles.contentContainer, styleOverrides?.contentContainer]
   }, ContentContainerProps), content?.title?.content && /*#__PURE__*/React.createElement(Text, _extends({
     style: [styles.title, {
       color: theme.colors.textPrimary
@@ -134,10 +172,10 @@ export const ContentCardView = ({
     onPress: onPress,
     style: styleOverrides?.button,
     textStyle: [styleOverrides?.text, styleOverrides?.buttonText]
-  }, ButtonProps))))), content?.dismissBtn && content.dismissBtn?.style !== 'none' && /*#__PURE__*/React.createElement(DismissButton, _extends({
+  }, ButtonProps))))), content?.dismissBtn && content.dismissBtn?.style !== "none" && /*#__PURE__*/React.createElement(DismissButton, _extends({
     onPress: onDismiss,
     type: content.dismissBtn.style
-  }, DismissButtonProps))));
+  }, DismissButtonProps)), isUnreadEnabled && !isRead && /*#__PURE__*/React.createElement(UnreadIcon, null)));
 };
 const styles = StyleSheet.create({
   card: {
@@ -145,31 +183,30 @@ const styles = StyleSheet.create({
     flex: 1
   },
   container: {
-    flexDirection: 'column'
+    flexDirection: "column"
   },
   imageContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 12,
-    backgroundColor: '#f0f0f0'
+    backgroundColor: "#f0f0f0"
   },
   image: {
-    width: '100%',
-    resizeMode: 'contain'
+    width: "100%",
+    resizeMode: "contain"
   },
   contentContainer: {
-    flex: 1,
     paddingVertical: 16,
     paddingHorizontal: 16,
-    justifyContent: 'flex-start'
+    justifyContent: "flex-start"
   },
   textContent: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
     marginBottom: 16
   },
   title: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
     marginRight: 16
   },
@@ -178,9 +215,9 @@ const styles = StyleSheet.create({
     lineHeight: 18
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
     paddingTop: 8,
     gap: 8
   },
@@ -191,60 +228,29 @@ const styles = StyleSheet.create({
 const smallImageStyles = StyleSheet.create({
   card: {
     borderRadius: 12,
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
-    maxWidth: '100%',
-    alignItems: 'center'
+    maxWidth: "100%",
+    alignItems: "center"
   },
   container: {
-    flexDirection: 'row'
+    flexDirection: "row"
+  },
+  contentContainer: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    justifyContent: "flex-start"
   },
   imageContainer: {
     borderRadius: 12,
-    maxWidth: '35%',
-    alignSelf: 'center'
+    maxWidth: "35%",
+    alignSelf: "center"
   },
   image: {
-    resizeMode: 'contain',
-    width: '100%',
-    maxWidth: '100%'
+    resizeMode: "contain",
+    width: "100%",
+    maxWidth: "100%"
   }
 });
-
-// const largeImageStyles = StyleSheet.create({
-//   card: {
-//     ...styles.card,
-//     borderRadius: 12,
-//     gap: 8
-//   },
-//   container: {
-//     flexDirection: 'row'
-//   },
-//   imageContainer: {
-//     alignItems: 'center',
-//     borderRadius: 12,
-//     backgroundColor: '#f0f0f0'
-//   },
-//   image: {
-//     width: '100%',
-//     resizeMode: 'contain'
-//   },
-//   contentContainer: styles.contentContainer,
-//   textContent: styles.textContent,
-//   title: styles.title,
-//   body: styles.body,
-//   buttonContainer: styles.buttonContainer,
-//   button: styles.button
-// });
-
-// const imageOnlyStyles = StyleSheet.create({
-//   card: styles.card,
-//   imageContainer: {
-//     backgroundColor: '#f0f0f0'
-//   },
-//   image: {
-//     width: '100%',
-//     resizeMode: 'contain'
-//   }
-// });
 //# sourceMappingURL=ContentCardView.js.map

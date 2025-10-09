@@ -16,16 +16,21 @@ import {
   ContentCardContainer,
   ThemeProvider,
   useContentCardUI,
-  Pagination
-} from '@adobe/react-native-aepmessaging';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+  Pagination,
+  Messaging,
+  ContentCardContainerProvider,
+} from "@adobe/react-native-aepmessaging";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   Appearance,
   ColorSchemeName,
   FlatList,
+  Modal,
   Platform,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { Colors } from "../constants/Colors";
@@ -100,7 +105,90 @@ const Header = ({
 
   const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
 
-  return <Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />;
+  return (
+    <View>
+      {/* View Picker */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Select View Type</Text>
+        <TouchableOpacity
+          style={[styles.buttonNeutral, { borderColor: colors.panelBorder, backgroundColor: colors.inputBg }]}
+          onPress={() => setShowPicker(true)}
+        >
+          <Text style={{ color: colors.text }}>{selectedView}</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Track Action Input */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Track Action</Text>
+        <View style={[styles.rowCenter, styles.trackRow]}>
+          <TextInput
+            style={[styles.trackInput, { borderColor: colors.inputBorder, color: colors.text }]}
+            value={trackInput}
+            onChangeText={setTrackInput}
+            placeholder="Enter action name"
+            placeholderTextColor={colors.mutedText}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            style={[styles.buttonPrimary, { backgroundColor: colors.tint }]}
+            onPress={handleTrackAction}
+            disabled={!trackInput.trim() || isLoading}
+          >
+            <Text style={[styles.trackButtonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+              {isLoading ? 'Loading...' : 'Track'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Theme Switcher */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Theme</Text>
+        <View style={[styles.themeSwitcher, { backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1 }]}>
+          {THEME_OPTIONS.map(({ label, value }) => (
+            <TouchableOpacity
+              key={label}
+              style={[
+                styles.themeOption,
+                selectedTheme === label
+                  ? [styles.themeOptionSelected, { backgroundColor: colors.tint }]
+                  : styles.themeOptionUnselected,
+              ]}
+              onPress={() => handleThemeChange(label, value)}
+            >
+              <Text style={[styles.textLabel, { color: selectedTheme === label ? (colorScheme === 'dark' ? '#000' : '#fff') : colors.text }]}>
+                {label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      {/* View Picker Modal */}
+      <Modal visible={showPicker} transparent animationType="fade">
+        <TouchableOpacity style={styles.modalOverlay} onPress={() => setShowPicker(false)}>
+          <View style={[styles.modalCard, { backgroundColor: colors.background }]}>
+            {VIEW_OPTIONS.map((option) => (
+              <TouchableOpacity
+                key={option}
+                style={styles.modalOption}
+                onPress={() => {
+                  setSelectedView(option);
+                  setShowPicker(false);
+                }}
+              >
+                <Text style={{ color: colors.text }}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.modalCancel} onPress={() => setShowPicker(false)}>
+              <Text style={styles.modalCancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </View>
+  );
 };
 
 const MemoHeader = memo(Header);
@@ -108,6 +196,7 @@ const MemoHeader = memo(Header);
 const ContentCardsView = () => {
   const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [trackInput, setTrackInput] = useState('');
+  const [containerSettings, setContainerSettings] = useState<any>(null);
   const colorScheme = useColorScheme();
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -116,6 +205,25 @@ const ContentCardsView = () => {
       ? "rn/android/remote_image"
       : "rn/ios/remote_image";
   const { content, isLoading, refetch } = useContentCardUI(surface);
+
+  // Load container settings for unread icon configuration
+  useEffect(() => {
+    const loadContainerSettings = async () => {
+      try {
+        const settings = await Messaging.getContentCardContainer(surface);
+        setContainerSettings(settings);
+        // Debug logging
+        // console.log('Container settings loaded:', JSON.stringify(settings, null, 2));
+        // console.log('isUnreadEnabled:', settings?.content?.isUnreadEnabled);
+        // console.log('unread_indicator:', settings?.content?.unread_indicator);
+        // console.log('unread_icon image URL:', settings?.content?.unread_indicator?.unread_icon?.image?.url);
+        // console.log('unread_icon darkUrl:', settings?.content?.unread_indicator?.unread_icon?.image?.darkUrl);
+      } catch (error) {
+        console.error('Failed to load container settings:', error);
+      }
+    };
+    loadContainerSettings();
+  }, [surface]);
 
   const items = ITEMS_BY_VIEW[selectedView];
 
@@ -196,7 +304,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   themeSwitcher: {
-    width: "65%",
+    width: "80%",
     borderRadius: 12,
     padding: 4,
     flexDirection: "row",
@@ -247,11 +355,9 @@ const styles = StyleSheet.create({
   buttonNeutral: {
     height: 50,
     borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 5,
     justifyContent: "center",
     paddingHorizontal: SPACING.s,
-    backgroundColor: "#fff",
   },
   buttonPrimary: {
     backgroundColor: "#007AFF",

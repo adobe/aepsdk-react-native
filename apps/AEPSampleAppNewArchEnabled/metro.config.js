@@ -23,6 +23,8 @@ config.resolver.blockList = [
   // Block any nested node_modules directories  
   /.*\/node_modules\/.*\/node_modules\/.*/,
 ];
+
+// Don't try to transpile react-native's internal source files
 config.resolver.disableHierarchicalLookup = true;
 // Use a separate cache for the monorepo to avoid conflicts
 config.cacheStores = [

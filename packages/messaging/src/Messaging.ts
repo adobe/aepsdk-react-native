@@ -269,8 +269,12 @@ class Messaging {
     }
 
     return contentCards.map((card: any) => {
+    // Test: To mark first 2 cards as read, swap the two map lines above to add index, then replace isRead with:
+    // return contentCards.map((card: any, index: number) => {
       const type = card.data?.meta?.adobe?.template ?? "SmallImage";
-      return new ContentTemplate(card, type);
+      const isRead = card.data?.read ?? false;
+      // const isRead = card.data?.read ?? (index < 2);
+      return new ContentTemplate(card, type, isRead);
     });
   }
 
@@ -296,19 +300,19 @@ class Messaging {
         unread_indicator: {
           unread_bg: {
             clr: {
-              light: "#FFF3E0",
-              dark: "#2D1B0E",
+              light: "#FFF3E0",  // Light orange background for unread cards
+              dark: "#2D1B0E",   // Dark orange background for unread cards
             },
           },
           unread_icon: {
             placement: "topright",
             image: {
-              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",
-              darkUrl: "https://www.adobe.com",
+              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",  // Image in light mode
+              darkUrl: "",  // Empty URL = shows dot in dark mode
             },
           },
         },
-        isUnreadEnabled: true,
+        isUnreadEnabled: true,  // Enable unread features!
       },
       showPagination: false,
     };

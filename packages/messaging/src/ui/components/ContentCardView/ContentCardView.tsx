@@ -33,14 +33,16 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,
-} from "react-native";
-import MessagingEdgeEventType from "../../../models/MessagingEdgeEventType";
-import DismissButton from "../DismissButton/DismissButton";
-import { useTheme } from "../../theme";
-import useAspectRatio from "../../hooks/useAspectRatio";
-import { ContentCardTemplate } from "../../../models";
-import Button from "../Button/Button";
+  View
+} from 'react-native';
+import MessagingEdgeEventType from '../../../models/MessagingEdgeEventType';
+import DismissButton from '../DismissButton/DismissButton';
+import UnreadIcon from '../UnreadIcon/UnreadIcon';
+import { useTheme } from '../../theme';
+import useAspectRatio from '../../hooks/useAspectRatio';
+import { ContentCardTemplate } from '../../../models';
+import Button from '../Button/Button';
+import useContainerSettings from '../../hooks/useContainerSettings';
 
 /**
  * Callback function that is called when a content card event occurs.
@@ -100,6 +102,27 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
   const theme = useTheme();
+  const containerSettings = useContainerSettings();
+  // Track read state in component state
+  const [isRead, setIsRead] = useState(template.isRead);
+
+  // Sync state when template changes
+  useEffect(() => {
+    setIsRead(template.isRead);
+  }, [template.isRead]);
+
+  // Default to true if not specified
+  const isUnreadEnabled = containerSettings?.content?.isUnreadEnabled ?? true;
+
+  // Get unread background color based on theme
+  const unreadBackgroundColor = useMemo(() => {
+    if (!isUnreadEnabled || isRead || !containerSettings?.content?.unread_indicator?.unread_bg) {
+      return undefined;
+    }
+    
+    const unreadBg = containerSettings.content.unread_indicator.unread_bg;
+    return colorScheme === 'dark' ? unreadBg.clr.dark : unreadBg.clr.light;
+  }, [isUnreadEnabled, isRead, containerSettings, colorScheme]);
 
   const cardVariant = useMemo<ContentCardTemplate>(
     () => variant ?? template.type ?? "SmallImage",
@@ -121,6 +144,10 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     // Track interaction event using propositionItem
     template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
 
+    // Mark as read when interacted with
+    template.isRead = true;
+    setIsRead(true);
+
     if (template.data?.content?.actionUrl) {
       try {
         Linking.openURL(template.data.content.actionUrl);
@@ -131,7 +158,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
         );
       }
     }
-  }, [template]);
+  }, [template, listener]);
 
   const imageUri = useMemo(() => {
     if (colorScheme === "dark" && template.data?.content?.image?.darkUrl) {
@@ -199,6 +226,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             ? smallImageStyles.container
             : styles.container,
           styleOverrides?.container,
+          unreadBackgroundColor && { backgroundColor: unreadBackgroundColor }
         ]}
         {...ContainerProps}
       >
@@ -290,6 +318,9 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             type={content.dismissBtn.style}
             {...DismissButtonProps}
           />
+        )}
+        {isUnreadEnabled && !isRead && (
+          <UnreadIcon />
         )}
       </View>
     </Pressable>

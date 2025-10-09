@@ -1,11 +1,8 @@
 import { useContext } from "react";
-import { ContentCardContainerContext } from "../providers/ContentCardContainerProvider";
+import { ContentCardContainerContext, ContainerSettings } from "../providers/ContentCardContainerProvider";
 
-function useContainerSettings() {
+function useContainerSettings(): ContainerSettings | null {
   const settings = useContext(ContentCardContainerContext);
-  if (!settings) {
-    throw new Error("useContainerSettings must be used within a ContentCardContainerProvider");
-  }
   return settings;
 }
 
