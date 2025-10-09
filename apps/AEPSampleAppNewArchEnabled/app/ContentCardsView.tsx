@@ -16,6 +16,8 @@ import {
   ThemeProvider,
   useContentCardUI,
   Pagination,
+  Messaging,
+  ContentCardContainerProvider,
 } from "@adobe/react-native-aepmessaging";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {
@@ -102,7 +104,90 @@ const Header = ({
 
   const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
 
-  return <Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />;
+  return (
+    <View>
+      {/* View Picker */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Select View Type</Text>
+        <TouchableOpacity
+          style={[styles.buttonNeutral, { borderColor: colors.panelBorder, backgroundColor: colors.inputBg }]}
+          onPress={() => setShowPicker(true)}
+        >
+          <Text style={{ color: colors.text }}>{selectedView}</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Track Action Input */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Track Action</Text>
+        <View style={[styles.rowCenter, styles.trackRow]}>
+          <TextInput
+            style={[styles.trackInput, { borderColor: colors.inputBorder, color: colors.text }]}
+            value={trackInput}
+            onChangeText={setTrackInput}
+            placeholder="Enter action name"
+            placeholderTextColor={colors.mutedText}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            style={[styles.buttonPrimary, { backgroundColor: colors.tint }]}
+            onPress={handleTrackAction}
+            disabled={!trackInput.trim() || isLoading}
+          >
+            <Text style={[styles.trackButtonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+              {isLoading ? 'Loading...' : 'Track'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Theme Switcher */}
+      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+        <Text style={[styles.titleText, { color: colors.text }]}>Theme</Text>
+        <View style={[styles.themeSwitcher, { backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1 }]}>
+          {THEME_OPTIONS.map(({ label, value }) => (
+            <TouchableOpacity
+              key={label}
+              style={[
+                styles.themeOption,
+                selectedTheme === label
+                  ? [styles.themeOptionSelected, { backgroundColor: colors.tint }]
+                  : styles.themeOptionUnselected,
+              ]}
+              onPress={() => handleThemeChange(label, value)}
+            >
+              <Text style={[styles.textLabel, { color: selectedTheme === label ? (colorScheme === 'dark' ? '#000' : '#fff') : colors.text }]}>
+                {label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      {/* View Picker Modal */}
+      <Modal visible={showPicker} transparent animationType="fade">
+        <TouchableOpacity style={styles.modalOverlay} onPress={() => setShowPicker(false)}>
+          <View style={[styles.modalCard, { backgroundColor: colors.background }]}>
+            {VIEW_OPTIONS.map((option) => (
+              <TouchableOpacity
+                key={option}
+                style={styles.modalOption}
+                onPress={() => {
+                  setSelectedView(option);
+                  setShowPicker(false);
+                }}
+              >
+                <Text style={{ color: colors.text }}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.modalCancel} onPress={() => setShowPicker(false)}>
+              <Text style={styles.modalCancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </View>
+  );
 };
 
 const MemoHeader = memo(Header);
@@ -110,6 +195,7 @@ const MemoHeader = memo(Header);
 const ContentCardsView = () => {
   const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [trackInput, setTrackInput] = useState('');
+  const [containerSettings, setContainerSettings] = useState<any>(null);
   const colorScheme = useColorScheme();
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -119,6 +205,25 @@ const ContentCardsView = () => {
       : "rn/ios/remote_image";
   const { content, isLoading, refetch } = useContentCardUI(surface);
 
+  // Load container settings for unread icon configuration
+  useEffect(() => {
+    const loadContainerSettings = async () => {
+      try {
+        const settings = await Messaging.getContentCardContainer(surface);
+        setContainerSettings(settings);
+        // Debug logging
+        // console.log('Container settings loaded:', JSON.stringify(settings, null, 2));
+        // console.log('isUnreadEnabled:', settings?.content?.isUnreadEnabled);
+        // console.log('unread_indicator:', settings?.content?.unread_indicator);
+        // console.log('unread_icon image URL:', settings?.content?.unread_indicator?.unread_icon?.image?.url);
+        // console.log('unread_icon darkUrl:', settings?.content?.unread_indicator?.unread_icon?.image?.darkUrl);
+      } catch (error) {
+        console.error('Failed to load container settings:', error);
+      }
+    };
+    loadContainerSettings();
+  }, [surface]);
+
   const items = ITEMS_BY_VIEW[selectedView];
 
   const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
@@ -127,36 +232,110 @@ const ContentCardsView = () => {
     MobileCore.trackAction("small_image");
   }, []);
 
-  return (
+  const renderContentCard = (item: any, isRemote: boolean) => {
+    const cardView = <ContentCardView 
+      template={isRemote ? item : item.template}
+      styleOverrides={!isRemote ? item.styleOverrides : undefined}
+      listener={!isRemote ? item.listener : undefined}
+    />;
+
+    if (!isRemote) {
+      return (
+        <View>
+          <StyledText text={item.renderText} />
+          {item.customThemes ? (
+            <ThemeProvider customThemes={item.customThemes as any}>
+              {cardView}
+            </ThemeProvider>
+          ) : (
+            cardView
+          )}
+        </View>
+      );
+    }
+    return cardView;
+  };
+
+  // Debug logging
+  // console.log('Rendering with containerSettings:', !!containerSettings);
+  // console.log('Selected view:', selectedView);
+  // console.log('Items count:', selectedView !== 'Remote' ? (items?.length || 0) : (content?.length || 0));
+
+  const content_with_provider = containerSettings ? (
+    <ContentCardContainerProvider settings={containerSettings}>
+      <FlatList
+        data={selectedView !== 'Remote' ? items || [] : content || []}
+        keyExtractor={(item: any) =>
+          selectedView !== 'Remote' ? item.key : item.id
+        }
+        renderItem={({ item }: any) => 
+          renderContentCard(item, selectedView === 'Remote')
+        }
+        ListHeaderComponent={
+          <MemoHeader 
+            isLoading={isLoading} 
+            onTrackAction={refetch}
+            selectedView={selectedView}
+            setSelectedView={setSelectedView}
+          />
+        }
+        ListEmptyComponent={() =>
+          selectedView === 'Remote' && (
+            <View
+              style={[
+                styles.section,
+                styles.panel,
+                { backgroundColor: colors.background, borderWidth: 0 },
+                styles.emptyContainer
+              ]}
+            >
+              <Text
+                style={[
+                  styles.titleText,
+                  styles.textCenter,
+                  styles.textTitle,
+                  { color: colors.text }
+                ]}
+              >
+                No Content Cards Available
+              </Text>
+              <Text
+                style={[
+                  styles.textCenter,
+                  styles.textBody,
+                  styles.textLabel,
+                  { color: colors.mutedText }
+                ]}
+              >
+                Content cards will appear here when they are configured in Adobe
+                Journey Optimizer for surface: "rn/ios/remote_image"
+              </Text>
+              <Text
+                style={[
+                  styles.textCenter,
+                  styles.textCaption,
+                  { color: colors.mutedText }
+                ]}
+              >
+                Try tracking an action above to refresh content cards.
+              </Text>
+            </View>
+          )
+        }
+        contentContainerStyle={styles.listContent}
+      />
+    </ContentCardContainerProvider>
+  ) : null;
+
+  return content_with_provider || (
     <FlatList
       data={selectedView !== 'Remote' ? items || [] : content || []}
       keyExtractor={(item: any) =>
         selectedView !== 'Remote' ? item.key : item.id
       }
-      renderItem={({ item }: any) => {
-        if (selectedView !== 'Remote') {
-          const node = (
-            <ContentCardView
-              template={item.template}
-              styleOverrides={item.styleOverrides}
-              listener={item.listener}
-            />
-          );
-          return (
-            <View>
-              <StyledText text={item.renderText} />
-              {item.customThemes ? (
-                <ThemeProvider customThemes={item.customThemes as any}>
-                  {node}
-                </ThemeProvider>
-              ) : (
-                node
-              )}
-            </View>
-          );
-        }
-        return <ContentCardView template={item} />;
-      }}
+      renderItem={({ item }: any) => 
+        renderContentCard(item, selectedView === 'Remote')
+      }
       ListHeaderComponent={
         <MemoHeader 
           isLoading={isLoading} 
@@ -229,7 +408,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   themeSwitcher: {
-    width: "65%",
+    width: "80%",
     borderRadius: 12,
     padding: 4,
     flexDirection: "row",
@@ -280,11 +459,9 @@ const styles = StyleSheet.create({
   buttonNeutral: {
     height: 50,
     borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 5,
     justifyContent: "center",
     paddingHorizontal: SPACING.s,
-    backgroundColor: "#fff",
   },
   buttonPrimary: {
     backgroundColor: "#007AFF",

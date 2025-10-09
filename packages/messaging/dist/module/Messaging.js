@@ -172,8 +172,13 @@ class Messaging {
       return [];
     }
     return contentCards.map(card => {
+      //TODO Clean up mock for Testing: mark first card as already read 
+      //return contentCards.map((card: any, index: number) => {
       const type = card.data?.meta?.adobe?.template ?? "SmallImage";
-      return new ContentTemplate(card, type);
+      const isRead = card.data?.read ?? false;
+      // Test: To mark first 2 cards as read, uncomment line above (with index) and change isRead to:
+      // const isRead = card.data?.read ?? (index < 2);
+      return new ContentTemplate(card, type, isRead);
     });
   }
   static async getContentCardContainer(surface) {
@@ -196,19 +201,21 @@ class Messaging {
         unread_indicator: {
           unread_bg: {
             clr: {
-              light: "#000000",
-              dark: "#000000"
+              light: "#FFF3E0",
+              // Light orange background for unread cards
+              dark: "#2D1B0E" // Dark orange background for unread cards
             }
           },
           unread_icon: {
             placement: "topright",
             image: {
-              url: "https://www.adobe.com",
-              darkUrl: "https://www.adobe.com"
+              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",
+              // Image in light mode
+              darkUrl: "" // Empty URL = shows dot in dark mode
             }
           }
         },
-        isUnreadEnabled: false
+        isUnreadEnabled: true // Enable unread features!
       },
       showPagination: false
     };

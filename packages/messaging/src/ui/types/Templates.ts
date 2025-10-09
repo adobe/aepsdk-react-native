@@ -18,8 +18,8 @@ import { DismissButtonProps } from '../components/DismissButton/DismissButton';
 export class ContentTemplate extends ContentCard {
   readonly type: ContentCardTemplate;
 
-  constructor(data: ContentCardData, type: ContentCardTemplate) {
-    super(data);
+  constructor(data: ContentCardData, type: ContentCardTemplate, isRead: boolean = false) {
+    super(data, isRead);
     this.type = type;
   }
 }

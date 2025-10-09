@@ -2,8 +2,8 @@
 
 import { ContentCard } from "../../models/ContentCard.js";
 export class ContentTemplate extends ContentCard {
-  constructor(data, type) {
-    super(data);
+  constructor(data, type, isRead = false) {
+    super(data, isRead);
     this.type = type;
   }
 }
