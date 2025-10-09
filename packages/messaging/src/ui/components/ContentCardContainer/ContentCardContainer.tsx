@@ -17,8 +17,7 @@ import { ContentTemplate } from "../../types/Templates";
 import { ContentCardView } from "../ContentCardView/ContentCardView";
 import EmptyState from "./EmptyState";
 
-// Public props for the container. Extends FlatList props but manages data internally.
-export interface ContentCardContainerProps<T> extends FlatListProps<T> {
+export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> {
   LoadingComponent?: ReactElement | null;
   ErrorComponent?: ReactElement | null;
   FallbackComponent?: ReactElement | null;

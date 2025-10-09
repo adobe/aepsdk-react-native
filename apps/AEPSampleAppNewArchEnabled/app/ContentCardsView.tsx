@@ -137,8 +137,6 @@ const ContentCardsView = () => {
         <ContentCardContainer
           surface={surface}
           contentContainerStyle={styles.listContent}
-          data={[]} 
-          renderItem={() => null} 
         />
       </>
     );
