@@ -1,29 +1,33 @@
+import { cloneElement, ReactElement, useCallback, useMemo } from "react";
 import {
   ActivityIndicator,
   FlatList,
   FlatListProps,
   ListRenderItem,
   StyleSheet,
+  Text,
   useColorScheme,
+  useWindowDimensions
 } from "react-native";
+import { useContentCardUI, useContentContainer } from "../../hooks";
 import ContentCardContainerProvider, {
   ContainerSettings,
 } from "../../providers/ContentCardContainerProvider";
-import { ContentCardView } from "../ContentCardView/ContentCardView";
 import { ContentTemplate } from "../../types/Templates";
-import { cloneElement, ReactElement, useCallback } from "react";
-import { useContentCardUI, useContentContainer } from "../../hooks";
+import { ContentCardView, ContentViewProps } from "../ContentCardView/ContentCardView";
 import EmptyState from "./EmptyState";
 
-export interface ContentCardContainerProps<T> extends FlatListProps<T> {
+export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> {
   LoadingComponent?: ReactElement | null;
   ErrorComponent?: ReactElement | null;
   FallbackComponent?: ReactElement | null;
   EmptyComponent?: ReactElement | null;
   surface: string;
+  CardProps?: Partial<ContentViewProps>;
 }
 
-function ContentCardContainerInner<T>({
+// Core renderer: fetches content for a surface, derives layout, and renders a list of cards
+function ContentCardContainerInner<T extends ContentTemplate>({
   contentContainerStyle,
   LoadingComponent = <ActivityIndicator />,
   ErrorComponent = null,
@@ -32,16 +36,37 @@ function ContentCardContainerInner<T>({
   settings,
   surface,
   style,
+  CardProps,
   ...props
 }: ContentCardContainerProps<T> & {
   settings: ContainerSettings;
 }) {
   const colorScheme = useColorScheme();
+  const { width: windowWidth } = useWindowDimensions();
   const { content, error, isLoading } = useContentCardUI(surface);
 
+  // Normalize/alias frequently used settings
+  const { content: contentSettings } = settings;
+  const { heading, layout, emptyStateSettings } = contentSettings;
+
+  // Derived flags used across renders
+  const headingColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
+  const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
+
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
-    return <ContentCardView template={item as ContentTemplate} />;
-  }, []);
+    return (
+      <ContentCardView
+        template={item}
+        {...CardProps}
+        style={[
+          isHorizontal && [
+            styles.horizontalCardStyles,
+            { width: Math.floor(windowWidth * 0.75) },
+          ],
+        ]}
+      />
+    );
+  }, [isHorizontal, CardProps, windowWidth]);
 
   if (isLoading) {
     return LoadingComponent;
@@ -56,19 +81,17 @@ function ContentCardContainerInner<T>({
   }
 
   if (content.length === 0) {
-    const emptyProps = settings?.content?.emptyStateSettings;
-
     if (EmptyComponent) {
       return cloneElement(EmptyComponent, {
-        ...emptyProps,
+        ...emptyStateSettings,
       }) as React.ReactElement;
     }
 
     return (
       <EmptyState
-        image={emptyProps?.image?.[colorScheme ?? "light"]?.url}
+        image={emptyStateSettings?.image?.[colorScheme ?? "light"]?.url}
         text={
-          settings?.content?.emptyStateSettings?.message?.content ||
+          emptyStateSettings?.message?.content ||
           "No Content Available"
         }
       />
@@ -77,18 +100,19 @@ function ContentCardContainerInner<T>({
 
   return (
     <ContentCardContainerProvider settings={settings}>
+      <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
       <FlatList
         {...props}
         data={content as T[]}
-        contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
-        horizontal={settings?.content?.layout?.orientation === "horizontal"}
+        contentContainerStyle={[contentContainerStyle, isHorizontal && styles.horizontalListContent]}
+        horizontal={isHorizontal}
         renderItem={renderItem}
       />
     </ContentCardContainerProvider>
   );
 }
 
-export function ContentCardContainer<T>({
+export function ContentCardContainer<T extends ContentTemplate>({
   LoadingComponent = <ActivityIndicator />,
   ErrorComponent = null,
   FallbackComponent = null,
@@ -120,7 +144,17 @@ export function ContentCardContainer<T>({
 }
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
+  heading: {
+    fontWeight: '600',
+    fontSize: 18,
+    lineHeight: 28,
+    textAlign: 'center',
+    marginBottom: 16
+  },
+  horizontalCardStyles: {
+    flex: 0
+  },
+  horizontalListContent: {
+    alignItems: 'center'
   },
 });

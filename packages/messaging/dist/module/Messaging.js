@@ -172,11 +172,10 @@ class Messaging {
       return [];
     }
     return contentCards.map(card => {
-      //TODO Clean up mock for Testing: mark first card as already read 
-      //return contentCards.map((card: any, index: number) => {
+      // Test: To mark first 2 cards as read, swap the two map lines above to add index, then replace isRead with:
+      // return contentCards.map((card: any, index: number) => {
       const type = card.data?.meta?.adobe?.template ?? "SmallImage";
       const isRead = card.data?.read ?? false;
-      // Test: To mark first 2 cards as read, uncomment line above (with index) and change isRead to:
       // const isRead = card.data?.read ?? (index < 2);
       return new ContentTemplate(card, type, isRead);
     });

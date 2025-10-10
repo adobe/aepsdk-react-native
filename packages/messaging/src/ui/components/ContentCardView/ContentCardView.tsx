@@ -256,7 +256,9 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
         )}
         {cardVariant !== "ImageOnly" && (
           <View
-            style={[styles.contentContainer, styleOverrides?.contentContainer]}
+            style={[cardVariant === "SmallImage"
+              ? smallImageStyles.contentContainer
+              : styles.contentContainer, styleOverrides?.contentContainer]}
             {...ContentContainerProps}
           >
             {content?.title?.content && (
@@ -343,7 +345,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   contentContainer: {
-    flex: 1,
     paddingVertical: 16,
     paddingHorizontal: 16,
     justifyContent: "flex-start",
@@ -385,6 +386,12 @@ const smallImageStyles = StyleSheet.create({
   },
   container: {
     flexDirection: "row",
+  },
+  contentContainer: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    justifyContent: "flex-start",
   },
   imageContainer: {
     borderRadius: 12,
