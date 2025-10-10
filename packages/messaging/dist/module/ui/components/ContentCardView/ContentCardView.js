@@ -154,7 +154,7 @@ export const ContentCardView = ({
     }, styleOverrides?.image],
     resizeMode: "contain"
   }, ImageProps))), cardVariant !== "ImageOnly" && /*#__PURE__*/React.createElement(View, _extends({
-    style: [styles.contentContainer, styleOverrides?.contentContainer]
+    style: [cardVariant === "SmallImage" ? smallImageStyles.contentContainer : styles.contentContainer, styleOverrides?.contentContainer]
   }, ContentContainerProps), content?.title?.content && /*#__PURE__*/React.createElement(Text, _extends({
     style: [styles.title, {
       color: theme.colors.textPrimary
@@ -195,7 +195,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   contentContainer: {
-    flex: 1,
     paddingVertical: 16,
     paddingHorizontal: 16,
     justifyContent: "flex-start"
@@ -236,6 +235,12 @@ const smallImageStyles = StyleSheet.create({
   },
   container: {
     flexDirection: "row"
+  },
+  contentContainer: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    justifyContent: "flex-start"
   },
   imageContainer: {
     borderRadius: 12,
