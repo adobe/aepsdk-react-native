@@ -17,7 +17,7 @@ function ContentCardContainerInner({
   settings,
   surface,
   style,
-  contentCardViewProps,
+  CardProps,
   ...props
 }) {
   const colorScheme = useColorScheme();
@@ -48,12 +48,12 @@ function ContentCardContainerInner({
   }) => {
     return /*#__PURE__*/React.createElement(ContentCardView, _extends({
       template: item
-    }, contentCardViewProps, {
+    }, CardProps, {
       style: [isHorizontal && [styles.horizontalCardStyles, {
         width: Math.floor(windowWidth * 0.75)
       }]]
     }));
-  }, [isHorizontal, contentCardViewProps, windowWidth]);
+  }, [isHorizontal, CardProps, windowWidth]);
   if (isLoading) {
     return LoadingComponent;
   }

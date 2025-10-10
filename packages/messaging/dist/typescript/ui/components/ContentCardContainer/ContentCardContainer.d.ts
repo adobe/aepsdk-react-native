@@ -8,7 +8,7 @@ export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> 
     FallbackComponent?: ReactElement | null;
     EmptyComponent?: ReactElement | null;
     surface: string;
-    contentCardViewProps?: Partial<ContentViewProps>;
+    CardProps?: Partial<ContentViewProps>;
 }
 export declare function ContentCardContainer<T extends ContentTemplate>({ LoadingComponent, ErrorComponent, FallbackComponent, surface, ...props }: ContentCardContainerProps<T>): React.ReactElement;
 //# sourceMappingURL=ContentCardContainer.d.ts.map

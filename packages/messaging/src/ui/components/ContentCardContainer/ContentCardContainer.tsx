@@ -23,7 +23,7 @@ export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> 
   FallbackComponent?: ReactElement | null;
   EmptyComponent?: ReactElement | null;
   surface: string;
-  contentCardViewProps?: Partial<ContentViewProps>;
+  CardProps?: Partial<ContentViewProps>;
 }
 
 // Core renderer: fetches content for a surface, derives layout, and renders a list of cards
@@ -36,7 +36,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   settings,
   surface,
   style,
-  contentCardViewProps,
+  CardProps,
   ...props
 }: ContentCardContainerProps<T> & {
   settings: ContainerSettings;
@@ -57,7 +57,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
     return (
       <ContentCardView
         template={item}
-        {...contentCardViewProps}
+        {...CardProps}
         style={[
           isHorizontal && [
             styles.horizontalCardStyles,
@@ -66,7 +66,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
         ]}
       />
     );
-  }, [isHorizontal, contentCardViewProps, windowWidth]);
+  }, [isHorizontal, CardProps, windowWidth]);
 
   if (isLoading) {
     return LoadingComponent;
