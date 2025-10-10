@@ -1,4 +1,4 @@
-import { cloneElement, ReactElement, useCallback, useMemo } from "react";
+import { cloneElement, ReactElement, useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -47,17 +47,35 @@ function ContentCardContainerInner<T extends ContentTemplate>({
 
   // Normalize/alias frequently used settings
   const { content: contentSettings } = settings;
-  const { heading, layout, emptyStateSettings } = contentSettings;
+  const { capacity, heading, layout, emptyStateSettings } = contentSettings;
+
+  // Track dismissed card ids so we can backfill from the remaining list up to capacity
+  const [dismissedIds, setDismissedIds] = useState(new Set());
 
   // Derived flags used across renders
   const headingColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
   const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
+
+  // Compute visible items: filter out dismissed and take up to capacity
+  const visibleContent = useMemo(() => {
+    const all = content.filter((it) => it && !dismissedIds.has((it as any).id));
+    return all.slice(0, capacity) as T[];
+  }, [content, dismissedIds, capacity]);
 
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
     return (
       <ContentCardView
         template={item}
         {...CardProps}
+        listener={(event) => {
+          if (event === 'onDismiss') {
+            setDismissedIds((prev) => {
+              const next = new Set(prev);
+              next.add((item as any)?.id);
+              return next;
+            });
+          }
+        }}
         style={[
           isHorizontal && [
             styles.horizontalCardStyles,
@@ -103,7 +121,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
       <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
       <FlatList
         {...props}
-        data={content as T[]}
+        data={visibleContent}
         contentContainerStyle={[contentContainerStyle, isHorizontal && styles.horizontalListContent]}
         horizontal={isHorizontal}
         renderItem={renderItem}
