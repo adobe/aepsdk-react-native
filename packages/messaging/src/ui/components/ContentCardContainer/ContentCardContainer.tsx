@@ -67,7 +67,8 @@ function ContentCardContainerInner<T extends ContentTemplate>({
       <ContentCardView
         template={item}
         {...CardProps}
-        listener={(event) => {
+        listener={(...args) => {
+          const [event] = args;
           if (event === 'onDismiss') {
             setDismissedIds((prev) => {
               const next = new Set(prev);
@@ -75,6 +76,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
               return next;
             });
           }
+          CardProps?.listener?.(...args);
         }}
         style={[
           isHorizontal && [
