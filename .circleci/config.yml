@@ -9,13 +9,15 @@ jobs:
   unit-test:
     docker:
     - image: cimg/node:18.20
+    resource_class: large
 
     steps:
     - checkout
 
     - restore_cache:
         keys:
-        - yarn-cache-{{ checksum "yarn.lock" }}
+            - yarn-cache-{{ checksum "yarn.lock" }}
+            - yarn-cache-
 
     - run:
         name: Enable Corepack
@@ -23,7 +25,7 @@ jobs:
 
     - run:
         name: Install Node.js and Yarn Dependencies
-        command: yarn install --network-timeout 300000
+        command: yarn install --immutable --network-timeout 300000
         no_output_timeout: 20m
         environment:
           NODE_OPTIONS: "--max-old-space-size=4096"
@@ -37,10 +39,10 @@ jobs:
         command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
 
     - save_cache:
-        key: yarn-cache-{{ checksum "yarn.lock" }}
         paths:
-        - ./node_modules
-        - ./apps/AEPSampleAppNewArchEnabled/node_modules
+            - .yarn/cache
+            - .yarn/unplugged
+        key: yarn-cache-{{ checksum "yarn.lock" }}
 
     - run:
         name: Unit Tests
@@ -89,7 +91,8 @@ jobs:
 
     - restore_cache:
         keys:
-        - ios-yarn-cache-{{ checksum "yarn.lock" }}
+            - yarn-cache-{{ checksum "yarn.lock" }}
+            - yarn-cache-
 
     - run:
         name: Set Xcode Path
@@ -101,7 +104,7 @@ jobs:
 
     - run:
         name: Install Node.js and Yarn Dependencies
-        command: yarn install --network-timeout 300000
+        command: yarn install --immutable --network-timeout 300000
         no_output_timeout: 20m
         environment:
           NODE_OPTIONS: "--max-old-space-size=4096"
@@ -115,10 +118,10 @@ jobs:
         command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
 
     - save_cache:
-        key: ios-yarn-cache-{{ checksum "yarn.lock" }}
         paths:
-        - ./node_modules
-        - ./apps/AEPSampleAppNewArchEnabled/node_modules
+            - .yarn/cache
+            - .yarn/unplugged
+        key: yarn-cache-{{ checksum "yarn.lock" }}
 
     - run:
         name: Install Cocoapods
