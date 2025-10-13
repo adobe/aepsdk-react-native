@@ -638,7 +638,7 @@ describe('UnreadIcon', () => {
 
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-      const { UNSAFE_getByType, UNSAFE_getAllByType } = render(
+      const { UNSAFE_getByType } = render(
         <ContentCardContainerProvider settings={settings}>
           <UnreadIcon testID="unread-icon" />
         </ContentCardContainerProvider>
