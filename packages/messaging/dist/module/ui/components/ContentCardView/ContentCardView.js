@@ -127,7 +127,7 @@ export const ContentCardView = ({
     }, styleOverrides?.text, styleOverrides?.body]
   }, TextProps, BodyProps), content.body.content), /*#__PURE__*/React.createElement(View, _extends({
     style: [styles.buttonContainer, styleOverrides?.buttonContainer]
-  }, ButtonContainerProps), content?.buttons?.length && content?.buttons?.length > 0 && content.buttons.map(button => /*#__PURE__*/React.createElement(Button, _extends({
+  }, ButtonContainerProps), content?.buttons?.length > 0 && content.buttons.map(button => /*#__PURE__*/React.createElement(Button, _extends({
     key: button.id,
     actionUrl: button.actionUrl,
     title: button.text.content,
@@ -210,41 +210,4 @@ const smallImageStyles = StyleSheet.create({
     maxWidth: '100%'
   }
 });
-
-// const largeImageStyles = StyleSheet.create({
-//   card: {
-//     ...styles.card,
-//     borderRadius: 12,
-//     gap: 8
-//   },
-//   container: {
-//     flexDirection: 'row'
-//   },
-//   imageContainer: {
-//     alignItems: 'center',
-//     borderRadius: 12,
-//     backgroundColor: '#f0f0f0'
-//   },
-//   image: {
-//     width: '100%',
-//     resizeMode: 'contain'
-//   },
-//   contentContainer: styles.contentContainer,
-//   textContent: styles.textContent,
-//   title: styles.title,
-//   body: styles.body,
-//   buttonContainer: styles.buttonContainer,
-//   button: styles.button
-// });
-
-// const imageOnlyStyles = StyleSheet.create({
-//   card: styles.card,
-//   imageContainer: {
-//     backgroundColor: '#f0f0f0'
-//   },
-//   image: {
-//     width: '100%',
-//     resizeMode: 'contain'
-//   }
-// });
 //# sourceMappingURL=ContentCardView.js.map
