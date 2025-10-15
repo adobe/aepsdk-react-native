@@ -246,8 +246,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
               style={[styles.buttonContainer, styleOverrides?.buttonContainer]}
               {...ButtonContainerProps}
             >
-              {content?.buttons?.length &&
-                content?.buttons?.length > 0 &&
+              {content?.buttons?.length > 0 &&
                 content.buttons.map((button) => (
                   <Button
                     key={button.id}
@@ -350,39 +349,3 @@ const smallImageStyles = StyleSheet.create({
   }
 });
 
-// const largeImageStyles = StyleSheet.create({
-//   card: {
-//     ...styles.card,
-//     borderRadius: 12,
-//     gap: 8
-//   },
-//   container: {
-//     flexDirection: 'row'
-//   },
-//   imageContainer: {
-//     alignItems: 'center',
-//     borderRadius: 12,
-//     backgroundColor: '#f0f0f0'
-//   },
-//   image: {
-//     width: '100%',
-//     resizeMode: 'contain'
-//   },
-//   contentContainer: styles.contentContainer,
-//   textContent: styles.textContent,
-//   title: styles.title,
-//   body: styles.body,
-//   buttonContainer: styles.buttonContainer,
-//   button: styles.button
-// });
-
-// const imageOnlyStyles = StyleSheet.create({
-//   card: styles.card,
-//   imageContainer: {
-//     backgroundColor: '#f0f0f0'
-//   },
-//   image: {
-//     width: '100%',
-//     resizeMode: 'contain'
-//   }
-// });
