@@ -12,13 +12,10 @@ governing permissions and limitations under the License.
 
 import { MobileCore } from "@adobe/react-native-aepcore";
 import {
-  ContentCardView,
   ContentCardContainer,
+  ContentCardView,
   ThemeProvider,
-  useContentCardUI,
-  Pagination,
-  Messaging,
-  ContentCardContainerProvider,
+  useContentCardUI
 } from "@adobe/react-native-aepmessaging";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {
@@ -196,34 +193,15 @@ const MemoHeader = memo(Header);
 const ContentCardsView = () => {
   const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [trackInput, setTrackInput] = useState('');
-  const [containerSettings, setContainerSettings] = useState<any>(null);
   const colorScheme = useColorScheme();
   const [currentPage, setCurrentPage] = useState(1);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const surface =
     Platform.OS === "android"
       ? "rn/android/remote_image"
       : "rn/ios/remote_image";
-  const { content, isLoading, refetch } = useContentCardUI(surface);
-
-  // Load container settings for unread icon configuration
-  useEffect(() => {
-    const loadContainerSettings = async () => {
-      try {
-        const settings = await Messaging.getContentCardContainer(surface);
-        setContainerSettings(settings);
-        // Debug logging
-        // console.log('Container settings loaded:', JSON.stringify(settings, null, 2));
-        // console.log('isUnreadEnabled:', settings?.content?.isUnreadEnabled);
-        // console.log('unread_indicator:', settings?.content?.unread_indicator);
-        // console.log('unread_icon image URL:', settings?.content?.unread_indicator?.unread_icon?.image?.url);
-        // console.log('unread_icon darkUrl:', settings?.content?.unread_indicator?.unread_icon?.image?.darkUrl);
-      } catch (error) {
-        console.error('Failed to load container settings:', error);
-      }
-    };
-    loadContainerSettings();
-  }, [surface]);
+  const { isLoading, refetch } = useContentCardUI(surface);
 
   const items = ITEMS_BY_VIEW[selectedView];
 
@@ -233,16 +211,23 @@ const ContentCardsView = () => {
     MobileCore.trackAction("small_image");
   }, []);
 
+  // Use built-in container for Remote cards (fetches settings and renders horizontally by default)
+  const handleRemoteRefresh = useCallback(async () => {
+    await refetch();
+    setRefreshKey((k) => k + 1);
+  }, [refetch]);
+
   if (selectedView === 'Remote') {
     return (
       <>
         <MemoHeader
-          isLoading={false}
-          onTrackAction={() => {}}
+          isLoading={isLoading}
+          onTrackAction={handleRemoteRefresh}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
         />
         <ContentCardContainer
+          key={`cc-${surface}-${refreshKey}`}
           surface={surface}
           contentContainerStyle={styles.listContent}
         />
@@ -250,35 +235,46 @@ const ContentCardsView = () => {
     );
   }
 
+  const renderContentCard = (item: any, isRemote: boolean) => {
+    const cardView = <ContentCardView 
+      template={isRemote ? item : item.template}
+      styleOverrides={!isRemote ? item.styleOverrides : undefined}
+      listener={!isRemote ? item.listener : undefined}
+    />;
+
+    if (!isRemote) {
+      return (
+        <View>
+          <StyledText text={item.renderText} />
+          {item.customThemes ? (
+            <ThemeProvider customThemes={item.customThemes as any}>
+              {cardView}
+            </ThemeProvider>
+          ) : (
+            cardView
+          )}
+        </View>
+      );
+    }
+    return cardView;
+  };
+
+  // Debug logging
+  // console.log('Rendering with containerSettings:', !!containerSettings);
+  // console.log('Selected view:', selectedView);
+  // console.log('Items count:', selectedView !== 'Remote' ? (items?.length || 0) : (content?.length || 0));
+
   return (
     <FlatList
       data={items || []}
       keyExtractor={(item: any) => item.key}
-      renderItem={({ item }: any) => {
-        const node = (
-          <ContentCardView
-            template={item.template}
-            styleOverrides={item.styleOverrides}
-            listener={item.listener}
-          />
-        );
-        return (
-          <View>
-            <StyledText text={item.renderText} />
-            {item.customThemes ? (
-              <ThemeProvider customThemes={item.customThemes as any}>
-                {node}
-              </ThemeProvider>
-            ) : (
-              node
-            )}
-          </View>
-        );
-      }}
+      renderItem={({ item }: any) => 
+        renderContentCard(item, false)
+      }
       ListHeaderComponent={
-        <MemoHeader
-          isLoading={false}
-          onTrackAction={() => {}}
+        <MemoHeader 
+          isLoading={isLoading} 
+          onTrackAction={refetch}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
         />
