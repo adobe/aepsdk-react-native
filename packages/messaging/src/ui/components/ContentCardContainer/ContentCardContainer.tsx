@@ -158,6 +158,8 @@ export function ContentCardContainer<T extends ContentTemplate>({
       settings={settings}
       surface={surface}
       LoadingComponent={LoadingComponent}
+      ErrorComponent={ErrorComponent}
+      FallbackComponent={FallbackComponent}
       {...props}
     />
   );
