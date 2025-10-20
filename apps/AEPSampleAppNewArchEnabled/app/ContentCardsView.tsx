@@ -15,7 +15,8 @@ import {
   ContentCardContainer,
   ContentCardView,
   ThemeProvider,
-  useContentCardUI
+  useContentCardUI,
+  useContentContainer
 } from "@adobe/react-native-aepmessaging";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {
@@ -192,44 +193,41 @@ const MemoHeader = memo(Header);
 
 const ContentCardsView = () => {
   const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
-  const [trackInput, setTrackInput] = useState('');
-  const colorScheme = useColorScheme();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [refreshKey, setRefreshKey] = useState(0);
 
   const surface =
     Platform.OS === "android"
       ? "rn/android/remote_image"
       : "rn/ios/remote_image";
   const { isLoading, refetch } = useContentCardUI(surface);
+  const { 
+    settings, 
+    error, 
+    isLoading: isLoadingContainer, 
+    refetch: refetchContainer 
+  } = useContentContainer(surface);
 
   const items = ITEMS_BY_VIEW[selectedView];
-
-  const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
 
   useEffect(() => {
     MobileCore.trackAction("small_image");
   }, []);
-
-  // Use built-in container for Remote cards (fetches settings and renders horizontally by default)
-  const handleRemoteRefresh = useCallback(async () => {
-    await refetch();
-    setRefreshKey((k) => k + 1);
-  }, [refetch]);
 
   if (selectedView === 'Remote') {
     return (
       <>
         <MemoHeader
           isLoading={isLoading}
-          onTrackAction={handleRemoteRefresh}
+          onTrackAction={refetchContainer}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
         />
         <ContentCardContainer
-          key={`cc-${surface}-${refreshKey}`}
           surface={surface}
+          settings={settings}
+          isLoading={isLoadingContainer}
+          error={error}
           contentContainerStyle={styles.listContent}
+          refetch={refetchContainer}
         />
       </>
     );
@@ -258,11 +256,6 @@ const ContentCardsView = () => {
     }
     return cardView;
   };
-
-  // Debug logging
-  // console.log('Rendering with containerSettings:', !!containerSettings);
-  // console.log('Selected view:', selectedView);
-  // console.log('Items count:', selectedView !== 'Remote' ? (items?.length || 0) : (content?.length || 0));
 
   return (
     <FlatList
@@ -293,11 +286,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingTop: SPACING.s,
     paddingBottom: SPACING.s,
-  },
-  headerContainer: {
-    marginTop: 60,
-    marginBottom: 15,
-    alignItems: "center",
   },
   themeSwitcher: {
     width: "80%",
@@ -332,18 +320,6 @@ const styles = StyleSheet.create({
     shadowColor: "transparent",
     shadowOpacity: 0,
     elevation: 0,
-  },
-  textTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  textBody: {
-    fontSize: 14,
-    lineHeight: SPACING.m,
-  },
-  textCaption: {
-    fontSize: 12,
-    fontStyle: "italic",
   },
   textLabel: {
     fontSize: 14,
@@ -415,12 +391,6 @@ const styles = StyleSheet.create({
   trackButtonText: {
     color: "white",
     fontWeight: "600",
-  },
-  emptyContainer: {
-    borderRadius: SPACING.s,
-    padding: SPACING.m,
-    margin: SPACING.m,
-    alignItems: "center",
   },
   listContent: {
     paddingBottom: SPACING.l,
