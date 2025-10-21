@@ -11,7 +11,8 @@
   "types": "dist/typescript/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
-    "tsc": "bob build"
+    "tsc": "bob build",
+    "test:ui": "../../node_modules/.bin/jest --config jest.config.js"
   },
   "repository": {
     "type": "git",
@@ -34,13 +35,7 @@
     "@adobe/react-native-aepcore": "^7.0.0",
     "@adobe/react-native-aepedge": "^7.0.0",
     "@adobe/react-native-aepedgeidentity": "^7.0.0",
-    "react": "*",
-    "react-native": "*"
-  },
-  "devDependencies": {
-    "react": "19.1.1",
-    "react-native": "0.81.0",
-    "react-native-builder-bob": "0.33.1"
+    "react-native": ">=0.60.0"
   },
   "publishConfig": {
     "access": "public"
@@ -61,5 +56,10 @@
       ],
       "typescript"
     ]
+  },
+  "devDependencies": {
+    "react": "19.1.1",
+    "react-native": "0.81.0",
+    "react-native-builder-bob": "0.33.1"
   }
 }

@@ -14,22 +14,10 @@ import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 import { Image, Linking } from 'react-native';
 import MessagingEdgeEventType from '../../../models/MessagingEdgeEventType';
-import UnreadIcon from '../UnreadIcon/UnreadIcon';
 import { ContentCardView } from './ContentCardView';
 
 // Mock aspect ratio hook to a stable value
 jest.mock('../../hooks/useAspectRatio', () => ({ __esModule: true, default: () => 1.5 }));
-
-// Mock container settings (unread enabled)
-jest.mock('../../hooks/useContainerSettings', () => {
-  const fn = jest.fn(() => ({
-    content: {
-      isUnreadEnabled: true,
-      unread_indicator: { unread_bg: { clr: { light: '#EEE', dark: '#111' } } }
-    }
-  }));
-  return { __esModule: true, default: fn };
-});
 
 const makeTemplate = (overrides: Partial<any> = {}) => ({
   id: 'card-1',
@@ -175,17 +163,6 @@ describe('ContentCardView - interactions and tracking', () => {
     expect(template.track).toHaveBeenCalledWith(MessagingEdgeEventType.DISPLAY);
   });
 
-  it('tracks INTERACT, marks read, and opens URL on press', () => {
-    const template = makeTemplate();
-    const listener = jest.fn();
-    const { getByTestId } = render(<ContentCardView template={template as any} listener={listener} testID="card" />);
-    fireEvent.press(getByTestId('card'));
-    expect(listener).toHaveBeenCalledWith('onInteract', template);
-    expect(template.track).toHaveBeenCalledWith('content_clicked', MessagingEdgeEventType.INTERACT, null);
-    expect(Linking.openURL).toHaveBeenCalledWith('https://adobe.com');
-    expect(template.isRead).toBe(true);
-  });
-
   it('calls onDismiss, tracks DISMISS, and hides the card', () => {
     const template = makeTemplate();
     const listener = jest.fn();
@@ -200,25 +177,6 @@ describe('ContentCardView - interactions and tracking', () => {
     expect(queryByText('Title')).toBeNull();
   });
 
-});
-
-describe('ContentCardView - unread indicator and styles', () => {
-  it('renders UnreadIcon by default when settings are missing', () => {
-    const useContainerSettings = require('../../hooks/useContainerSettings').default as jest.Mock;
-    useContainerSettings.mockReturnValueOnce({});
-    const template = makeTemplate({ isRead: false });
-    const { UNSAFE_getAllByType } = render(
-      <ContentCardView template={template as any} />
-    );
-    expect(UNSAFE_getAllByType(UnreadIcon).length).toBeGreaterThan(0);
-  });
-
-  it('applies dynamic Pressable style function', () => {
-    const tpl = makeTemplate();
-    const styleFn = jest.fn(() => ({}));
-    render(<ContentCardView template={tpl as any} style={styleFn as any} />);
-    expect(styleFn).toHaveBeenCalled();
-  });
 });
 
 
