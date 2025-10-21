@@ -16,5 +16,5 @@
     "esModuleInterop": true,
   },
   "include": ["src"],
-  "exclude": ["__tests__", "dist", "node_modules"]
+  "exclude": ["__tests__", "dist", "node_modules", "**/*.spec.ts", "**/*.spec.tsx"]
 }
