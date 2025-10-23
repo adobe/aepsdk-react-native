@@ -1,4 +1,4 @@
-import { cloneElement, ReactElement, useCallback, useMemo } from "react";
+import { cloneElement, ReactElement, useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -9,7 +9,7 @@ import {
   useColorScheme,
   useWindowDimensions
 } from "react-native";
-import { useContentCardUI, useContentContainer } from "../../hooks";
+import { useContentCardUI } from "../../hooks";
 import ContentCardContainerProvider, {
   ContainerSettings,
 } from "../../providers/ContentCardContainerProvider";
@@ -23,10 +23,13 @@ export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> 
   FallbackComponent?: ReactElement | null;
   EmptyComponent?: ReactElement | null;
   surface: string;
+  settings: ContainerSettings | null;
+  isLoading?: boolean;
+  error?: boolean;
   CardProps?: Partial<ContentViewProps>;
+  refetch?: () => Promise<void>;
 }
 
-// Core renderer: fetches content for a surface, derives layout, and renders a list of cards
 function ContentCardContainerInner<T extends ContentTemplate>({
   contentContainerStyle,
   LoadingComponent = <ActivityIndicator />,
@@ -37,6 +40,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   surface,
   style,
   CardProps,
+  refetch,
   ...props
 }: ContentCardContainerProps<T> & {
   settings: ContainerSettings;
@@ -45,19 +49,35 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   const { width: windowWidth } = useWindowDimensions();
   const { content, error, isLoading } = useContentCardUI(surface);
 
-  // Normalize/alias frequently used settings
   const { content: contentSettings } = settings;
-  const { heading, layout, emptyStateSettings } = contentSettings;
+  const { capacity, heading, layout, emptyStateSettings } = contentSettings;
 
-  // Derived flags used across renders
+  const [dismissedIds, setDismissedIds] = useState(new Set());
+
   const headingColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
   const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
+
+  const displayCards = useMemo(() => {
+    const items = (content ?? []) as any[];
+    return items.filter((it) => it && !dismissedIds.has(it.id)).slice(0, capacity) as T[];
+  }, [content, dismissedIds, capacity]);
 
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
     return (
       <ContentCardView
         template={item}
         {...CardProps}
+        listener={(...args) => {
+          const [event] = args;
+          if (event === 'onDismiss') {
+            setDismissedIds((prev) => {
+              const next = new Set(prev);
+              next.add((item as any)?.id);
+              return next;
+            });
+          }
+          CardProps?.listener?.(...args);
+        }}
         style={[
           isHorizontal && [
             styles.horizontalCardStyles,
@@ -103,7 +123,8 @@ function ContentCardContainerInner<T extends ContentTemplate>({
       <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
       <FlatList
         {...props}
-        data={content as T[]}
+        data={displayCards}
+        extraData={refetch}
         contentContainerStyle={[contentContainerStyle, isHorizontal && styles.horizontalListContent]}
         horizontal={isHorizontal}
         renderItem={renderItem}
@@ -117,9 +138,11 @@ export function ContentCardContainer<T extends ContentTemplate>({
   ErrorComponent = null,
   FallbackComponent = null,
   surface,
+  settings,
+  isLoading,
+  error,
   ...props
 }: ContentCardContainerProps<T>): React.ReactElement {
-  const { settings, error, isLoading } = useContentContainer(surface);
 
   if (isLoading) {
     return LoadingComponent as React.ReactElement;
