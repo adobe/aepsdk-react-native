@@ -292,7 +292,7 @@ class Messaging {
         layout: {
           orientation: "horizontal",
         },
-        capacity: 10,
+        capacity: 2,
         emptyStateSettings: {
           message: {
             content: "Empty State",
@@ -306,7 +306,7 @@ class Messaging {
             },
           },
           unread_icon: {
-            placement: "topright",
+            placement: "topleft",
             image: {
               url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",  // Image in light mode
               darkUrl: "",  // Empty URL = shows dot in dark mode

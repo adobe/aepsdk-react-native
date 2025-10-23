@@ -10,19 +10,17 @@
     language governing permissions and limitations under the License.
 */
 
-import { render, screen } from '@testing-library/react-native';
+import { render, screen, act } from '@testing-library/react-native';
 import React from 'react';
 import { Dimensions, Text } from 'react-native';
 import EmptyState from './EmptyState';
 import { ContentCardContainer } from './ContentCardContainer';
 
-// Mock hooks used by the container
 jest.mock('../../hooks', () => ({
   useContentCardUI: jest.fn(),
   useContentContainer: jest.fn(),
 }));
 
-// Capture props passed to ContentCardView (name must start with mock for Jest scope rules)
 const mockContentCardView: jest.Mock = jest.fn((..._args: any[]) => null);
 jest.mock('../ContentCardView/ContentCardView', () => {
   return {
@@ -33,7 +31,6 @@ jest.mock('../ContentCardView/ContentCardView', () => {
   };
 });
 
-// Provide a pass-through for the provider
 jest.mock('../../providers/ContentCardContainerProvider', () => ({
   __esModule: true,
   default: ({ children }: any) => children,
@@ -65,60 +62,54 @@ describe('ContentCardContainer', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Default Dimensions width for deterministic style assertions
     jest.spyOn(Dimensions, 'get').mockReturnValue({ width: 400, height: 800, scale: 2, fontScale: 2 } as any);
   });
 
 
   describe('outer container states', () => {
     it('renders loading state', () => {
-      (useContentContainer as jest.Mock).mockReturnValue({ settings: baseSettings, isLoading: false, error: null });
       (useContentCardUI as jest.Mock).mockReturnValue({ content: undefined, isLoading: true, error: null });
 
       const Loading = <Text>Loading...</Text> as any;
       const CC: any = ContentCardContainer;
-      render(<CC surface={surface} LoadingComponent={Loading} />);
+      render(<CC surface={surface} settings={baseSettings} isLoading LoadingComponent={Loading} />);
       expect(screen.getByText('Loading...')).toBeTruthy();
     });
 
     it('renders error state', () => {
-      (useContentContainer as jest.Mock).mockReturnValue({ settings: baseSettings, isLoading: false, error: new Error('x') });
       (useContentCardUI as jest.Mock).mockReturnValue({ content: undefined, isLoading: false, error: null });
 
       const ErrorComp = <Text>Error!</Text> as any;
       const CC: any = ContentCardContainer;
-      render(<CC surface={surface} ErrorComponent={ErrorComp} />);
+      render(<CC surface={surface} settings={baseSettings} error={new Error('x')} ErrorComponent={ErrorComp} />);
       expect(screen.getByText('Error!')).toBeTruthy();
     });
 
-    it('renders fallback when no content yet', () => {
-      (useContentContainer as jest.Mock).mockReturnValue({ settings: undefined, isLoading: false, error: null });
+    it('renders fallback when no settings provided', () => {
       (useContentCardUI as jest.Mock).mockReturnValue({ content: undefined, isLoading: false, error: null });
 
       const Fallback = <Text>Fallback</Text> as any;
       const CC: any = ContentCardContainer;
-      render(<CC surface={surface} FallbackComponent={Fallback} />);
+      render(<CC surface={surface} settings={null} FallbackComponent={Fallback} />);
       expect(screen.getByText('Fallback')).toBeTruthy();
     });
 
     it('renders outer LoadingComponent when container is loading', () => {
-      (useContentContainer as jest.Mock).mockReturnValue({ settings: undefined, isLoading: true, error: null });
       (useContentCardUI as jest.Mock).mockReturnValue({ content: undefined, isLoading: false, error: null });
 
       const Loading = <Text testID="outer-loading">Loading outer...</Text> as any;
       const CC: any = ContentCardContainer;
-      render(<CC surface={surface} LoadingComponent={Loading} />);
+      render(<CC surface={surface} settings={baseSettings} isLoading LoadingComponent={Loading} />);
       expect(screen.getByTestId('outer-loading')).toBeTruthy();
     });
   });
 
   describe('empty content rendering', () => {
     it('renders empty state when content is empty', () => {
-      (useContentContainer as jest.Mock).mockReturnValue({ settings: baseSettings, isLoading: false, error: null });
       (useContentCardUI as jest.Mock).mockReturnValue({ content: [], isLoading: false, error: null });
 
       const CC: any = ContentCardContainer;
-      render(<CC surface={surface} />);
+      render(<CC surface={surface} settings={baseSettings} />);
       expect(screen.getByText('No Content Available')).toBeTruthy();
     });
 
@@ -133,11 +124,10 @@ describe('ContentCardContainer', () => {
           } as any
         }
       };
-      (useContentContainer as jest.Mock).mockReturnValue({ settings, isLoading: false, error: null });
       (useContentCardUI as jest.Mock).mockReturnValue({ content: [], isLoading: false, error: null });
 
       const CC: any = ContentCardContainer;
-      const { UNSAFE_getByType } = render(<CC surface={surface} />);
+      const { UNSAFE_getByType } = render(<CC surface={surface} settings={settings} />);
       const empty = UNSAFE_getByType(EmptyState);
       expect(empty.props.image).toBe('https://example.com/light-only.png');
       expect(empty.props.text).toBe('No Content Available');
@@ -151,7 +141,7 @@ describe('ContentCardContainer', () => {
       const template = { id: '1', type: 'SmallImage', data: { content: { title: { content: 'T' }, body: { content: 'B' }, image: { url: 'u' } } } };
       (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
       const CC: any = ContentCardContainer;
-      const { getByText } = render(<CC surface={surface} />);
+      const { getByText } = render(<CC surface={surface} settings={baseSettings} />);
       const heading = getByText('Heading');
       const styles = Array.isArray(heading.props.style) ? heading.props.style : [heading.props.style];
       expect(styles.some((s: any) => s && s.color === '#FFFFFF')).toBe(true);
@@ -165,7 +155,7 @@ describe('ContentCardContainer', () => {
 
       const ErrorComp = <Text testID="inner-error">Inner Error!</Text> as any;
       const CC: any = ContentCardContainer;
-      render(<CC surface={surface} ErrorComponent={ErrorComp} />);
+      render(<CC surface={surface} settings={baseSettings} ErrorComponent={ErrorComp} />);
       expect(screen.getByTestId('inner-error')).toBeTruthy();
     });
 
@@ -177,7 +167,7 @@ describe('ContentCardContainer', () => {
         <Text testID="inner-empty">{message?.content}</Text>
       );
       const CC: any = ContentCardContainer;
-      render(<CC surface={surface} EmptyComponent={<EmptyStub />} />);
+      render(<CC surface={surface} settings={baseSettings} EmptyComponent={<EmptyStub />} />);
       expect(screen.getByTestId('inner-empty')).toBeTruthy();
       expect(screen.getByText('No Content Available')).toBeTruthy();
     });
@@ -200,12 +190,42 @@ describe('ContentCardContainer', () => {
       (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
 
       const CC: any = ContentCardContainer;
-      render(<CC surface={surface} />);
+      render(<CC surface={surface} settings={baseSettings} />);
 
       expect(mockContentCardView).toHaveBeenCalled();
       const args = mockContentCardView.mock.calls[0][0];
       expect(args.template).toEqual(template);
       expect(args.style).toEqual(expect.arrayContaining([expect.anything()]));
+    });
+  });
+
+  describe('capacity and dismissal', () => {
+    it('renders up to capacity and backfills after dismiss', async () => {
+      const capSettings = {
+        ...baseSettings,
+        content: { ...baseSettings.content, capacity: 2 },
+      };
+      (useContentContainer as jest.Mock).mockReturnValue({ settings: capSettings, isLoading: false, error: null });
+      const t1 = { id: '1', type: 'SmallImage', data: { content: { title: { content: 'T1' }, body: { content: 'B1' }, image: { url: 'u1' } } } };
+      const t2 = { id: '2', type: 'SmallImage', data: { content: { title: { content: 'T2' }, body: { content: 'B2' }, image: { url: 'u2' } } } };
+      const t3 = { id: '3', type: 'SmallImage', data: { content: { title: { content: 'T3' }, body: { content: 'B3' }, image: { url: 'u3' } } } };
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [t1, t2, t3], isLoading: false, error: null });
+
+      const CC: any = ContentCardContainer;
+      const utils = render(<CC surface={surface} settings={capSettings} />);
+
+      expect(mockContentCardView.mock.calls.length).toBe(2);
+      const firstProps = mockContentCardView.mock.calls[0][0];
+
+      await act(async () => {
+        firstProps.listener?.('onDismiss', firstProps.template);
+      });
+      utils.rerender(<CC surface={surface} settings={capSettings} extraData={() => {}} />);
+
+      const renderedIds = mockContentCardView.mock.calls.map(c => c[0].template.id);
+      expect(renderedIds).toEqual(expect.arrayContaining(['3']));
+      const lastTwoIds = renderedIds.slice(-2);
+      expect(lastTwoIds).not.toEqual(expect.arrayContaining(['1']));
     });
   });
 });
