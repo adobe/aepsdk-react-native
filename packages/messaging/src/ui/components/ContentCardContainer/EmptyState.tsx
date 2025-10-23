@@ -9,7 +9,7 @@ interface EmptyStateProps {
 const EmptyState: React.FC<EmptyStateProps> = ({ image, text }) => {
   return (
     <CenteredView>
-      <Image source={{ uri: image }} />
+      <Image source={{ uri: image }}  style={{ width: 120, height: 120 }} resizeMode="contain"/>
       <Text>{text}</Text>
     </CenteredView>
   );

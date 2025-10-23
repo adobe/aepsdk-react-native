@@ -12,13 +12,15 @@ export interface ContainerSettings {
       orientation: 'horizontal' | 'vertical';
     };
     capacity: number;
-    emptyStateSettings: {
+    emptyStateSettings?: {
       message: {
         content: string;
       };
       image?: {
-        url: string;
-        darkUrl?: string;
+        url?: string;        // flat (light)
+        darkUrl?: string;    // flat (dark)
+        light?: { url?: string }; // nested (light)
+        dark?:  { url?: string }; // nested (dark)
       };
     };
     unread_indicator?: {

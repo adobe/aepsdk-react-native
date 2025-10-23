@@ -9,7 +9,12 @@ const EmptyState = ({
   return /*#__PURE__*/React.createElement(CenteredView, null, /*#__PURE__*/React.createElement(Image, {
     source: {
       uri: image
-    }
+    },
+    style: {
+      width: 120,
+      height: 120
+    },
+    resizeMode: "contain"
   }), /*#__PURE__*/React.createElement(Text, null, text));
 };
 export default EmptyState;

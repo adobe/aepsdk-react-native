@@ -10,13 +10,19 @@ export interface ContainerSettings {
             orientation: 'horizontal' | 'vertical';
         };
         capacity: number;
-        emptyStateSettings: {
+        emptyStateSettings?: {
             message: {
                 content: string;
             };
             image?: {
-                url: string;
+                url?: string;
                 darkUrl?: string;
+                light?: {
+                    url?: string;
+                };
+                dark?: {
+                    url?: string;
+                };
             };
         };
         unread_indicator?: {

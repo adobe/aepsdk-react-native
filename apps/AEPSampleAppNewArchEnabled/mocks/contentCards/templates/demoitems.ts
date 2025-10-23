@@ -25,7 +25,6 @@ import {
     SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON
   } from './smallImage';
   
-  
   export type DemoItem = {
     key: string;
     template: any; // ContentTemplate

@@ -109,7 +109,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
 
     return (
       <EmptyState
-        image={emptyStateSettings?.image?.[colorScheme ?? "light"]?.url}
+        image={emptyStateSettings?.image?.[colorScheme ?? "light"]?.url ?? ''}
         text={
           emptyStateSettings?.message?.content ||
           "No Content Available"
