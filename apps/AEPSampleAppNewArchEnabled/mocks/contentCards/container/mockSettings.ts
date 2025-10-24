@@ -1,5 +1,6 @@
 export const mockSettings = {
-    'mock/inbox': {
+  'mock/inbox': {
+    surfaceSettings: {
       templateType: 'inbox',
       content: {
         heading: { content: 'Inbox' },
@@ -9,50 +10,63 @@ export const mockSettings = {
         isUnreadEnabled: true,
       },
       showPagination: false,
-    },
-    'mock/carousel': {
-      templateType: 'inbox',
+    }
+  },
+  'mock/carousel': {
+    surfaceSettings: {
+      templateType: 'carousel',
       content: {
         heading: { content: 'Carousel' },
         layout: { orientation: 'horizontal' },
         capacity: 10,
         emptyStateSettings: { message: { content: 'Error loading carousel' } },
-        isUnreadEnabled: true,
+        isUnreadEnabled: false,
       },
       showPagination: false,
-    },
-    'mock/empty': {
+    }
+  },
+  'mock/empty': {
+    surfaceSettings: {
       templateType: 'inbox',
       content: {
         heading: { content: 'Empty' },
         layout: { orientation: 'vertical' },
         capacity: 10,
         emptyStateSettings: {
-            message: {
-             content: "No deals today come back soon!",
-            },
-            image: {
-             light: { url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png" },
-             darkUrl: "https://imagetoDownload.com/darkemptyimage",
-            }
-         },
+          message: {
+            content: "No deals today come back soon!",
+          },
+          image: {
+            light: { url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png" },
+            darkUrl: "https://imagetoDownload.com/darkemptyimage",
+          }
+        },
         isUnreadEnabled: true,
       },
     },
-    'mock/custom-card-view': {
+  },
+  'mock/container-with-styling': {
+    surfaceSettings: {
       templateType: 'inbox',
       content: {
-        heading: { content: 'Custom Card View' },
+        heading: { content: 'Container with Styling' },
         layout: { orientation: 'vertical' },
         capacity: 10,
-        emptyStateSettings: { message: { content: 'Error loading custom card view' } },
+        emptyStateSettings: { message: { content: 'Error loading container with styling' } },
+        unread_indicator: {
+          unread_bg: {
+            clr: {
+              light: "#dcfbd8",
+              dark: "#14532D",   
+            },
+          },
+          
+        },
         isUnreadEnabled: true,
       },
+      showPagination: false,
     },
-  } as const;
-
-export const mockContainerUIProps = {
-  'mock/container-with-styling': {
+    containerStyle: {
       rowGap: 12,
       alignItems: 'stretch',
       backgroundColor: '#FDF2F8',
@@ -64,26 +78,49 @@ export const mockContainerUIProps = {
       shadowRadius: 12,
       elevation: 6,
       margin: 10,
+    }
   },
   'mock/custom-card-view': {
+    surfaceSettings: {
+      templateType: 'carousel',
+      content: {
+        heading: { content: 'Custom Card View' },
+        layout: { orientation: 'horizontal' },
+        capacity: 10,
+        emptyStateSettings: { message: { content: 'Error loading custom card view' } },
+        isUnreadEnabled: true,
+        unread_indicator: {
+          unread_icon: {
+            placement: "bottomright",
+            image: {
+              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",
+              darkUrl: "",
+            },
+          },
+        },
+      },
+      showPagination: false,
+    },
     CardProps: {
       BodyProps: { numberOfLines: 2, ellipsizeMode: 'tail' },
       styleOverrides: {
         largeImageStyle: {
-          container: { height: 200, alignItems: 'center', backgroundColor: '#ADD8E6', borderRadius: 12 },
+          container: { height: 220, alignItems: 'center', backgroundColor: '#ADD8E6', borderRadius: 12, padding: 10 },
           imageContainer: { width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ADD8E6' },
           image: { width: 140, height: 90, resizeMode: 'cover', alignSelf: 'center', borderRadius: 12 },
           contentContainer: { alignSelf: 'stretch', alignItems: 'flex-start' },
         },
         smallImageStyle: {
-          container: { height: 200, flexDirection: 'row', backgroundColor: '#ADD8E6', borderRadius: 12, alignItems: 'center', padding: 8 },
+          container: { height: 220, flexDirection: 'row', backgroundColor: '#ADD8E6', borderRadius: 12, alignItems: 'center', padding: 10 },
         },
         imageOnlyStyle: {
-          imageContainer: { height: 200, backgroundColor: '#ADD8E6' },
-          image: { borderRadius: 12, height: 200 },
+          imageContainer: { height: 220, backgroundColor: '#ADD8E6' },
+          image: { borderRadius: 12, height: 220 },
         },
       },
     },
-    contentContainerStyle: { height: 200 },
+    containerStyle: { height: 220 },
   },
-} as const;
+}
+
+export type MockSurface = keyof typeof mockSettings;

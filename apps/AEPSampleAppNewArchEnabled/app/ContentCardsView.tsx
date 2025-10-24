@@ -12,8 +12,10 @@ governing permissions and limitations under the License.
 
 import { MobileCore } from "@adobe/react-native-aepcore";
 import {
+  ContainerSettings,
   ContentCardContainer,
   ContentCardView,
+  EmptyState,
   ThemeProvider,
   useContentCardUI,
   useContentContainer
@@ -33,19 +35,19 @@ import {
 } from "react-native";
 import { Colors } from "../constants/Colors";
 import { useColorScheme } from "../hooks/useColorScheme";
-import { mockContainerUIProps, mockSettings } from "../mocks/contentCards/container/mockSettings";
+import { mockSettings, MockSurface } from "../mocks/contentCards/container/mockSettings";
 import {
   DemoItem,
-  IMAGE_ONLY_ITEMS,
-  LARGE_ITEMS,
-  SMALL_ITEMS,
+  IMAGE_ONLY_TEMPLATES,
+  LARGE_IMAGE_TEMPLATES,
+  SMALL_IMAGE_TEMPLATES,
 } from "../mocks/contentCards/templates/demoitems";
 
 const VIEW_OPTIONS = [
   "Remote",
   "Inbox",
   "Carousel",
-  "Container w/ Styling",
+  "Container with Styling",
   "Empty",
   "Custom Card View",
   "Templates"
@@ -66,9 +68,9 @@ const TEMPLATE_OPTIONS: Array<{
   value: string;
   items: DemoItem[];
 }> = [
-    { label: "Small Image", value: "SmallImage", items: SMALL_ITEMS },
-    { label: "Large Image", value: "LargeImage", items: LARGE_ITEMS },
-    { label: "Image Only", value: "ImageOnly", items: IMAGE_ONLY_ITEMS },
+    { label: "Small Image", value: "SmallImage", items: SMALL_IMAGE_TEMPLATES },
+    { label: "Large Image", value: "LargeImage", items: LARGE_IMAGE_TEMPLATES },
+    { label: "Image Only", value: "ImageOnly", items: IMAGE_ONLY_TEMPLATES },
   ];
 type TemplateOption = typeof TEMPLATE_OPTIONS[number]['value'];
 
@@ -80,16 +82,14 @@ const StyledText = ({ text }: { text: string }) => {
   return <Text style={[styles.infoText, styles.textCenter]}>{text}</Text>;
 };
 
-type SwitcherProps = {
+const Switcher = ({ title, options, selected, onChange, colors, colorScheme }: {
   title: string;
   options: { label: string; value: string }[];
   selected: string;
   onChange: (value: string) => void;
   colors: any;
   colorScheme: ColorSchemeName;
-};
-
-const Switcher = ({ title, options, selected, onChange, colors, colorScheme }: SwitcherProps) => (
+}) => (
   <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
     <Text style={[styles.titleText, { color: colors.text }]}>{title}</Text>
     <View style={[styles.themeSwitcher, { backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1 }]}>
@@ -146,6 +146,7 @@ const Header = ({
 
     MobileCore.trackAction(trackInput);
     await onTrackAction();
+    setTrackInput('');
   }, [trackInput, onTrackAction]);
 
   const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
@@ -239,6 +240,7 @@ const Header = ({
 const MemoHeader = memo(Header);
 
 const ContentCardsView = () => {
+  const colorScheme = useColorScheme();
   const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateOption>('SmallImage');
 
@@ -283,38 +285,55 @@ const ContentCardsView = () => {
   }
 
   else if (selectedView !== 'Templates') {
-    type MockKey = 'mock/inbox' | 'mock/carousel' | 'mock/empty';
-
-    function getMockKey(view: ViewOption): MockKey {
-      switch (view) {
-        case 'Inbox':
-        case 'Container w/ Styling':
-          return 'mock/inbox';
-        case 'Carousel':
-        case 'Custom Card View':
-          return 'mock/carousel';
-        default:
-          return 'mock/empty';
-      }
+    function getMocks(view: ViewOption): MockSurface {
+      return `mock/${view.toLowerCase().replaceAll(' ', '-')}` as MockSurface;
     }
 
-    const key = getMockKey(selectedView);
-    const surfaceSettings = mockSettings[key];
+    const settings = mockSettings[
+      getMocks(selectedView)
+    ] as { surfaceSettings: ContainerSettings; containerStyle?: any; CardProps?: any };
+
+    if (selectedView === 'Empty') {
+      const es = settings.surfaceSettings.content?.emptyStateSettings;
+      return (
+        <>
+          <MemoHeader
+            isLoading={false}
+            onTrackAction={refetchContainer}
+            selectedView={selectedView}
+            setSelectedView={setSelectedView}
+            selectedTemplate={selectedTemplate}
+            onTemplateChange={setSelectedTemplate}
+          />
+          <EmptyState
+            image={es?.image?.[(colorScheme ?? 'light') as 'light' | 'dark']?.url ?? ''}
+            text={es?.message?.content ?? 'No Content Available'}
+          />
+        </>
+      );
+    }
+
     return (
       <>
         <MemoHeader
           isLoading={false}
-          onTrackAction={() => { }}
+          onTrackAction={refetchContainer}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
           selectedTemplate={selectedTemplate}
           onTemplateChange={setSelectedTemplate}
         />
         <ContentCardContainer
-          surface={selectedView === 'Empty' ? 'mock/empty' : surface}
-          settings={surfaceSettings}
-          contentContainerStyle={selectedView === 'Container w/ Styling' &&  mockContainerUIProps['mock/container-with-styling']}
-          CardProps={selectedView === 'Custom Card View' ? mockContainerUIProps['mock/custom-card-view'].CardProps : undefined}
+          surface={surface}
+          settings={settings.surfaceSettings}
+          contentContainerStyle={[
+            settings.containerStyle,
+            selectedView === 'Container with Styling' && colorScheme === 'dark' && {
+              backgroundColor: '#881337',
+              borderColor: '#F472B6',
+            },
+          ]}
+          CardProps={settings?.CardProps}
           isLoading={isLoadingContainer}
           error={error}
           refetch={refetchContainer}
