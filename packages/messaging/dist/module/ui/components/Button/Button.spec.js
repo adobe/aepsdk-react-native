@@ -11,11 +11,11 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import Button from "./Button.js";
 import { ThemeProvider } from "../../theme/ThemeProvider.js";
+import Button from "./Button.js";
 
 // Mock Linking.openURL
 jest.spyOn(Linking, 'openURL');
@@ -145,6 +145,21 @@ describe('Button', () => {
 
       // Verify the URL opening was attempted
       expect(Linking.openURL).toHaveBeenCalledWith(testUrl);
+    });
+    it('should warn if openURL throws', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const testUrl = 'https://example.com';
+      Linking.openURL.mockImplementationOnce(() => {
+        throw new Error('open failed');
+      });
+      render(/*#__PURE__*/React.createElement(Button, {
+        title: "Link",
+        actionUrl: testUrl
+      }));
+      const button = screen.getByText('Link');
+      expect(() => fireEvent.press(button)).not.toThrow();
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining(`Failed to open URL: ${testUrl}`), expect.any(Error));
+      warnSpy.mockRestore();
     });
     it('should not try to open URL when actionUrl is not provided', () => {
       render(/*#__PURE__*/React.createElement(Button, {
