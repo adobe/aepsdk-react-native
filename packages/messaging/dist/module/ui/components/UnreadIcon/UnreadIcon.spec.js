@@ -11,11 +11,11 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
+import { act, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
-import { render } from '@testing-library/react-native';
-import { useColorScheme, Image } from 'react-native';
-import UnreadIcon from "./UnreadIcon.js";
+import { Image, useColorScheme } from 'react-native';
 import ContentCardContainerProvider from "../../providers/ContentCardContainerProvider.js";
+import UnreadIcon from "./UnreadIcon.js";
 
 // Mock useColorScheme
 jest.mock('react-native/Libraries/Utilities/useColorScheme');
@@ -161,6 +161,55 @@ describe('UnreadIcon', () => {
           settings: settings
         }, /*#__PURE__*/React.createElement(UnreadIcon, null)));
       }).not.toThrow();
+    });
+    it('falls back to topright when props.position is unknown and no context placement', () => {
+      const settingsWithoutIndicator = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: undefined
+        }
+      };
+      const {
+        getByTestId
+      } = render(/*#__PURE__*/React.createElement(ContentCardContainerProvider, {
+        settings: settingsWithoutIndicator
+      }, /*#__PURE__*/React.createElement(UnreadIcon, {
+        testID: "unread-icon",
+        position: 'unknown'
+      })));
+      const container = getByTestId('unread-icon');
+      const styles = (Array.isArray(container.props.style) ? container.props.style : [container.props.style]).flat(Infinity);
+      const hasTopRight = styles.some(s => s && s.top === 6 && s.right === 6);
+      expect(hasTopRight).toBe(true);
+    });
+    it('falls back to topright when context placement is unknown', () => {
+      const settingsWithUnknownPlacement = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: {
+            ...mockContainerSettings.content.unread_indicator,
+            unread_icon: {
+              placement: 'unknown',
+              image: {
+                url: ''
+              }
+            }
+          }
+        }
+      };
+      const {
+        getByTestId
+      } = render(/*#__PURE__*/React.createElement(ContentCardContainerProvider, {
+        settings: settingsWithUnknownPlacement
+      }, /*#__PURE__*/React.createElement(UnreadIcon, {
+        testID: "unread-icon"
+      })));
+      const container = getByTestId('unread-icon');
+      const styles = (Array.isArray(container.props.style) ? container.props.style : [container.props.style]).flat(Infinity);
+      const hasTopRight = styles.some(s => s && s.top === 6 && s.right === 6);
+      expect(hasTopRight).toBe(true);
     });
   });
   describe('Light mode rendering', () => {
@@ -347,6 +396,22 @@ describe('UnreadIcon', () => {
         })));
       }).not.toThrow();
     });
+    it('renders default dot when no unread_indicator and no image props provided', () => {
+      // With no unread_indicator and no source/darkSource props, default content should be a dot (no Image)
+      const settingsWithoutIndicator = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: undefined
+        }
+      };
+      const {
+        UNSAFE_queryByType
+      } = render(/*#__PURE__*/React.createElement(ContentCardContainerProvider, {
+        settings: settingsWithoutIndicator
+      }, /*#__PURE__*/React.createElement(UnreadIcon, null)));
+      expect(UNSAFE_queryByType(Image)).toBeNull();
+    });
   });
   describe('Custom styles', () => {
     it('should accept and apply custom imageStyle', () => {
@@ -386,6 +451,30 @@ describe('UnreadIcon', () => {
           }
         })));
       }).not.toThrow();
+    });
+    it('renders Image when renderType is image via darkSource prop only (branch: imageSource || darkImageSource)', () => {
+      mockUseColorScheme.mockReturnValue('dark');
+      const settingsWithoutIndicator = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: undefined
+        }
+      };
+      const {
+        UNSAFE_getByType
+      } = render(/*#__PURE__*/React.createElement(ContentCardContainerProvider, {
+        settings: settingsWithoutIndicator
+      }, /*#__PURE__*/React.createElement(UnreadIcon, {
+        type: "dot",
+        darkSource: {
+          uri: 'https://custom.com/dark.png'
+        }
+      })));
+      const imageComponent = UNSAFE_getByType(Image);
+      expect(imageComponent.props.source).toEqual({
+        uri: 'https://custom.com/dark.png'
+      });
     });
   });
   describe('Size variations', () => {
@@ -486,6 +575,44 @@ describe('UnreadIcon', () => {
           settings: settings
         }, /*#__PURE__*/React.createElement(UnreadIcon, null)));
       }).not.toThrow();
+    });
+    it('renders dot when image load fails (onError branch)', async () => {
+      const settings = {
+        ...mockContainerSettings,
+        content: {
+          ...mockContainerSettings.content,
+          unread_indicator: {
+            ...mockContainerSettings.content.unread_indicator,
+            unread_icon: {
+              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              image: {
+                url: 'https://example.com/icon.png',
+                darkUrl: ''
+              }
+            }
+          }
+        }
+      };
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const {
+        UNSAFE_getByType
+      } = render(/*#__PURE__*/React.createElement(ContentCardContainerProvider, {
+        settings: settings
+      }, /*#__PURE__*/React.createElement(UnreadIcon, {
+        testID: "unread-icon"
+      })));
+      const image = UNSAFE_getByType(Image);
+      await act(async () => {
+        image.props.onError({
+          nativeEvent: {
+            error: 'failed'
+          }
+        });
+      });
+      await waitFor(() => {
+        expect(warnSpy).toHaveBeenCalledWith('Failed to load unread icon image:', 'failed');
+      });
+      warnSpy.mockRestore();
     });
   });
   describe('Edge cases', () => {

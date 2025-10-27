@@ -293,8 +293,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
               style={[styles.buttonContainer, styleOverrides?.buttonContainer]}
               {...ButtonContainerProps}
             >
-              {content?.buttons?.length &&
-                content?.buttons?.length > 0 &&
+              {content?.buttons?.length > 0 &&
                 content.buttons.map((button) => (
                   <Button
                     key={button.id}
@@ -404,3 +403,4 @@ const smallImageStyles = StyleSheet.create({
     maxWidth: "100%",
   },
 });
+

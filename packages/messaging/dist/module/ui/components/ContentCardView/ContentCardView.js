@@ -165,7 +165,7 @@ export const ContentCardView = ({
     }, styleOverrides?.text, styleOverrides?.body]
   }, TextProps, BodyProps), content.body.content), /*#__PURE__*/React.createElement(View, _extends({
     style: [styles.buttonContainer, styleOverrides?.buttonContainer]
-  }, ButtonContainerProps), content?.buttons?.length && content?.buttons?.length > 0 && content.buttons.map(button => /*#__PURE__*/React.createElement(Button, _extends({
+  }, ButtonContainerProps), content?.buttons?.length > 0 && content.buttons.map(button => /*#__PURE__*/React.createElement(Button, _extends({
     key: button.id,
     actionUrl: button.actionUrl,
     title: button.text.content,
