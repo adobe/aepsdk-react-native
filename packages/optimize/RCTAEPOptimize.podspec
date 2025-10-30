@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"  
-  s.dependency "AEPOptimize", ">= 5.0.0", "< 6.0.0"
+  s.dependency "AEPOptimize", ">= 5.6.1", "< 6.0.0"
 end

@@ -39,9 +39,9 @@ export default function RootLayout() {
     // For functional components, use useEffect with an empty dependency array.
     // For class components, call initializeWithAppId inside componentDidMount.
     MobileCore.setLogLevel(LogLevel.DEBUG);
-    MobileCore.initializeWithAppId("YOUR-APP-ID")
+    MobileCore.initializeWithAppId("3149c49c3910/1724d170a674/launch-95e3b932cf04")
       .then(() => {
-        console.log("AEP SDK Initialized");
+        console.log("AEP SDK Initialized", "3149c49c3910/1724d170a674/launch-95e3b932cf04");
         
         // // Set up messaging delegate after SDK initialization
         // const unsubscribe = Messaging.setMessagingDelegate({

@@ -22,4 +22,3 @@ expo-env.d.ts
 .idea/*
 !/.idea/file_to_keep.xml# Exclude native builds
 android/
-ios/
