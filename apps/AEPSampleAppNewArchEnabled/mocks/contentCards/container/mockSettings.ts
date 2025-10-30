@@ -5,7 +5,7 @@ export const mockSettings = {
       content: {
         heading: { content: 'Inbox' },
         layout: { orientation: 'vertical' },
-        capacity: 10,
+        capacity: 15,
         emptyStateSettings: { message: { content: 'Error loading inbox' } },
         isUnreadEnabled: true,
       },
@@ -18,7 +18,7 @@ export const mockSettings = {
       content: {
         heading: { content: 'Carousel' },
         layout: { orientation: 'horizontal' },
-        capacity: 10,
+        capacity: 15,
         emptyStateSettings: { message: { content: 'Error loading carousel' } },
         isUnreadEnabled: false,
       },
@@ -37,7 +37,7 @@ export const mockSettings = {
             content: "No deals today come back soon!",
           },
           image: {
-            light: { url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png" },
+            light: { url: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png" },
             darkUrl: "https://imagetoDownload.com/darkemptyimage",
           }
         },
@@ -105,21 +105,21 @@ export const mockSettings = {
       BodyProps: { numberOfLines: 2, ellipsizeMode: 'tail' },
       styleOverrides: {
         largeImageStyle: {
-          container: { height: 220, alignItems: 'center', backgroundColor: '#ADD8E6', borderRadius: 12, padding: 10 },
+          container: { height: 250, alignItems: 'center', backgroundColor: '#ADD8E6', borderRadius: 12, padding: 10 },
           imageContainer: { width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ADD8E6' },
           image: { width: 140, height: 90, resizeMode: 'cover', alignSelf: 'center', borderRadius: 12 },
           contentContainer: { alignSelf: 'stretch', alignItems: 'flex-start' },
         },
         smallImageStyle: {
-          container: { height: 220, flexDirection: 'row', backgroundColor: '#ADD8E6', borderRadius: 12, alignItems: 'center', padding: 10 },
+          container: { height: 250, flexDirection: 'row', backgroundColor: '#ADD8E6', borderRadius: 12, alignItems: 'center', padding: 10 },
         },
         imageOnlyStyle: {
-          imageContainer: { height: 220, backgroundColor: '#ADD8E6' },
-          image: { borderRadius: 12, height: 220 },
+          imageContainer: { backgroundColor: '#ADD8E6', height: 250, alignItems: 'center', justifyContent: 'center'},
+          //image: { borderRadius: 12 },
         },
       },
     },
-    containerStyle: { height: 220 },
+    containerStyle: { height: 250 },
   },
 }
 
