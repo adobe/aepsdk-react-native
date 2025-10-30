@@ -12,7 +12,8 @@ const EmptyState = ({
     },
     style: {
       width: 120,
-      height: 120
+      height: 120,
+      padding: 10
     },
     resizeMode: "contain"
   }), /*#__PURE__*/React.createElement(Text, null, text));
