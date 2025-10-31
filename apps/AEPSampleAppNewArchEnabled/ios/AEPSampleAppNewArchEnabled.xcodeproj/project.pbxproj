@@ -12,6 +12,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		423A54C1C1ED4120AF2B2B87 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC5FF02414342BA85AB462C /* noop-file.swift */; };
+		74F02C742EB3686F00E2AD38 /* AEPInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 74F02C732EB3686800E2AD38 /* AEPInitializer.m */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		B41E149DB7B82B03E34DBCDE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CAFFC862DDA16C50C44F8729 /* PrivacyInfo.xcprivacy */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
@@ -27,6 +28,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AEPSampleAppNewArchEnabled/main.m; sourceTree = "<group>"; };
 		4E70E35A07A9C95FA28564A0 /* Pods_AEPSampleAppNewArchEnabled.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPSampleAppNewArchEnabled.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C2E3173556A471DD304B334 /* Pods-AEPSampleAppNewArchEnabled.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPSampleAppNewArchEnabled.debug.xcconfig"; path = "Target Support Files/Pods-AEPSampleAppNewArchEnabled/Pods-AEPSampleAppNewArchEnabled.debug.xcconfig"; sourceTree = "<group>"; };
+		74F02C722EB3683C00E2AD38 /* AEPInitializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AEPInitializer.h; sourceTree = "<group>"; };
+		74F02C732EB3686800E2AD38 /* AEPInitializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AEPInitializer.m; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-AEPSampleAppNewArchEnabled.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPSampleAppNewArchEnabled.release.xcconfig"; path = "Target Support Files/Pods-AEPSampleAppNewArchEnabled/Pods-AEPSampleAppNewArchEnabled.release.xcconfig"; sourceTree = "<group>"; };
 		9EC5FF02414342BA85AB462C /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "AEPSampleAppNewArchEnabled/noop-file.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = AEPSampleAppNewArchEnabled/SplashScreen.storyboard; sourceTree = "<group>"; };
@@ -52,6 +55,8 @@
 		13B07FAE1A68108700A75B9A /* AEPSampleAppNewArchEnabled */ = {
 			isa = PBXGroup;
 			children = (
+				74F02C732EB3686800E2AD38 /* AEPInitializer.m */,
+				74F02C722EB3683C00E2AD38 /* AEPInitializer.h */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -330,6 +335,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				74F02C742EB3686F00E2AD38 /* AEPInitializer.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
 				423A54C1C1ED4120AF2B2B87 /* noop-file.swift in Sources */,

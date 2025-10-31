@@ -18,6 +18,8 @@
   UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
   [center requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error) {
     if (granted) {
+      NSLog(@"[Push] Authorization granted: %d", granted);
+
       dispatch_async(dispatch_get_main_queue(), ^{
         [application registerForRemoteNotifications];
       });
@@ -25,6 +27,8 @@
       NSLog(@"[Push] Authorization not granted: %@", error);
     }
   }];
+
+  // AEP SDK initialization is handled from JS via RCTAEPCore; no native init here
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
@@ -76,6 +80,26 @@
   }
 
   NSLog(@"[Push] Final APNs device token (hex): %@", tokenString);
+
+  // First, attempt to call our helper if it's linked
+  Class aepInitializer = NSClassFromString(@"AEPInitializer");
+  if (aepInitializer && [aepInitializer respondsToSelector:@selector(setPushToken:)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [aepInitializer performSelector:@selector(setPushToken:) withObject:deviceToken];
+#pragma clang diagnostic pop
+  } else {
+    // Fallback: call AEPMobileCore directly without importing headers
+    Class mobileCore = NSClassFromString(@"AEPMobileCore");
+    if (mobileCore && [mobileCore respondsToSelector:@selector(setPushIdentifier:)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+      [mobileCore performSelector:@selector(setPushIdentifier:) withObject:deviceToken];
+#pragma clang diagnostic pop
+    } else {
+      NSLog(@"[Push] AEPMobileCore not available; token not synced.");
+    }
+  }
 
   return [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
