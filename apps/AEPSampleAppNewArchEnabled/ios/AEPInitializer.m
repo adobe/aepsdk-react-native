@@ -21,6 +21,10 @@
   [AEPMobileCore setLogLevel:AEPLogLevelDebug];
   [AEPMobileCore configureWithAppId:appId];
 
+#if DEBUG
+  [AEPMobileCore updateConfiguration:@{ @"messaging.useSandbox": @YES }];
+#endif
+
   const UIApplicationState appState = application.applicationState;
   [AEPMobileCore registerExtensions:@[
     AEPMobileLifecycle.class,

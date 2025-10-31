@@ -42,7 +42,11 @@ export default function RootLayout() {
     MobileCore.initializeWithAppId("3149c49c3910/1724d170a674/launch-95e3b932cf04")
       .then(() => {
         console.log("AEP SDK Initialized", "3149c49c3910/1724d170a674/launch-95e3b932cf04");
-        
+
+        if (__DEV__) {
+          MobileCore.updateConfiguration({"messaging.useSandbox": true});
+        }
+
         // // Set up messaging delegate after SDK initialization
         // const unsubscribe = Messaging.setMessagingDelegate({
         //   onDismiss: (message) => {
@@ -72,6 +76,8 @@ export default function RootLayout() {
       .catch((error) => {
         console.error("AEP SDK Initialization error:", error);
       });
+      
+
   }, []);
 
   return (
