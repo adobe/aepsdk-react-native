@@ -60,6 +60,9 @@ export default function RootLayout() {
             "edge.environment": "int"
           });
           console.log("Edge environment set to 'int'");
+          const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/ios/remote_image';
+          console.log("update propositions before for surface:", surface);
+          return Messaging.updatePropositionsForSurfaces([surface]);
         })
         .catch((error: any) => {
           console.error("AEP SDK Initialization error:", error);
@@ -88,7 +91,7 @@ export default function RootLayout() {
         <Drawer.Screen name="ConsentView" options={{ title: "ConsentView" }} />
         <Drawer.Screen
           name="ContentCardsView"
-          options={{ title: "ContentCardsView" }}
+          options={{ title: "Content Card & Container" }}
         />
         <Drawer.Screen
           name="EdgeBridgeView"

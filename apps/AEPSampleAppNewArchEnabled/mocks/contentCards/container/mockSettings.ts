@@ -38,7 +38,7 @@ export const mockSettings = {
           },
           image: {
             light: { url: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png" },
-            darkUrl: "https://imagetoDownload.com/darkemptyimage",
+            darkUrl: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png",
           }
         },
         isUnreadEnabled: true,

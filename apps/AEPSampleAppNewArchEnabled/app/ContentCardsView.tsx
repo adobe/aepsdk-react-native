@@ -259,7 +259,7 @@ const ContentCardsView = () => {
   const items = selectedView === 'Templates' ? ITEMS_BY_VIEW[selectedTemplate] : undefined;
 
   useEffect(() => {
-    MobileCore.trackAction("small_image");
+   MobileCore.trackAction("small_image1");
   }, []);
 
   if (selectedView === 'Remote') {

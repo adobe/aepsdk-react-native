@@ -31,7 +31,7 @@ export const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
         ],
         image: {
           alt: '',
-          url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+          url: 'https://cdn.pixabay.com/photo/2022/06/24/06/53/cavalier-king-charles-spaniel-7281121_1280.jpg',
           darkUrl: ''
         },
         dismissBtn: {
@@ -88,7 +88,7 @@ export const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
         ],
         image: {
           alt: '',
-          url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+          url: 'https://cdn.pixabay.com/photo/2022/06/24/06/53/cavalier-king-charles-spaniel-7281121_1280.jpg'
         },
         dismissBtn: {
           style: 'simple'
@@ -130,7 +130,7 @@ export const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
         ],
         image: {
           alt: '',
-          url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s'
+          url: 'https://cdn.pixabay.com/photo/2022/06/24/06/53/cavalier-king-charles-spaniel-7281121_1280.jpg'
         },
         dismissBtn: {
           style: 'none'
@@ -215,7 +215,7 @@ export const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
         ],
         image: {
           alt: '',
-          url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+          url: 'https://cdn.pixabay.com/photo/2022/06/24/06/53/cavalier-king-charles-spaniel-7281121_1280.jpg',
           darkUrl:
             'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
         },
@@ -259,7 +259,7 @@ export const LARGE_IMAGE_CONTENT_ALL_FIELDS: ContentTemplate = {
         ],
         image: {
           alt: '',
-          url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+          url: 'https://cdn.pixabay.com/photo/2022/06/24/06/53/cavalier-king-charles-spaniel-7281121_1280.jpg',
           darkUrl:
             'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg?crop=0.760xw:1.00xh;0.204xw,0&resize=980:*'
         },
