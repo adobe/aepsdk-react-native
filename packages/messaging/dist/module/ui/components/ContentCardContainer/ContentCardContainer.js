@@ -83,7 +83,7 @@ function ContentCardContainerInner({
       });
     }
     return /*#__PURE__*/React.createElement(EmptyState, {
-      image: emptyStateSettings?.image?.[colorScheme ?? "light"]?.url,
+      image: emptyStateSettings?.image?.[colorScheme ?? "light"]?.url ?? '',
       text: emptyStateSettings?.message?.content || "No Content Available"
     });
   }
