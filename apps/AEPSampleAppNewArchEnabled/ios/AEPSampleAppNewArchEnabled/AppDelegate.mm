@@ -15,6 +15,7 @@
   self.initialProps = @{};
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  center.delegate = self; // Show notifications in foreground via willPresentNotification
   UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
   [center requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error) {
     if (granted) {
@@ -116,6 +117,26 @@
   // Log incoming remote notification payload
   NSLog(@"[Push] didReceiveRemoteNotification userInfo: %@", userInfo);
   return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+}
+
+// Show notifications while app is in foreground
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
+{
+  NSDictionary *userInfo = notification.request.content.userInfo;
+  NSLog(@"[Push] willPresentNotification userInfo: %@", userInfo);
+  completionHandler(UNNotificationPresentationOptionBanner | UNNotificationPresentationOptionList | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionBadge);
+}
+
+// Handle taps on notifications
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+didReceiveNotificationResponse:(UNNotificationResponse *)response
+         withCompletionHandler:(void (^)(void))completionHandler
+{
+  NSDictionary *userInfo = response.notification.request.content.userInfo;
+  NSLog(@"[Push] didReceiveNotificationResponse actionIdentifier=%@ userInfo=%@", response.actionIdentifier, userInfo);
+  completionHandler();
 }
 
 @end
