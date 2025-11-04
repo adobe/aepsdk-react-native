@@ -97,7 +97,7 @@ export const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
       content: {
         actionUrl: 'https://google.com',
         image: {
-          url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+          url: 'https://cdn.pixabay.com/photo/2022/06/24/06/53/cavalier-king-charles-spaniel-7281121_1280.jpg',
           darkUrl:
             'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
           alt: 'flight offer'
@@ -146,7 +146,7 @@ export const IMAGE_ONLY_CONTENT_ALL_FIELDS: ContentTemplate = {
       },
       content: {
         image: {
-          url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT8gAa1wUx9Ox2M6cZNwUJe32xE-l_4oqPVA&s',
+          url: 'https://cdn.pixabay.com/photo/2022/06/24/06/53/cavalier-king-charles-spaniel-7281121_1280.jpg',
           darkUrl:
             'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-dog-royalty-free-image-505534037-1565105327.jpg',
           alt: 'non-clickable image'

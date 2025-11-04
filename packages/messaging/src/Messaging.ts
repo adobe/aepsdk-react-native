@@ -292,7 +292,7 @@ class Messaging {
         layout: {
           orientation: "horizontal",
         },
-        capacity: 2,
+        capacity: 5,
         emptyStateSettings: {
           message: {
             content: "Empty State",

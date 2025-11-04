@@ -12,8 +12,10 @@ governing permissions and limitations under the License.
 
 import { MobileCore } from "@adobe/react-native-aepcore";
 import {
+  ContainerSettings,
   ContentCardContainer,
   ContentCardView,
+  EmptyState,
   ThemeProvider,
   useContentCardUI,
   useContentContainer
@@ -33,18 +35,22 @@ import {
 } from "react-native";
 import { Colors } from "../constants/Colors";
 import { useColorScheme } from "../hooks/useColorScheme";
+import { mockSettings, MockSurface } from "../mocks/contentCards/container/mockSettings";
 import {
   DemoItem,
-  IMAGE_ONLY_ITEMS,
-  LARGE_ITEMS,
-  SMALL_ITEMS,
-} from "../templates/contentCards/demoitems";
+  IMAGE_ONLY_TEMPLATES,
+  LARGE_IMAGE_TEMPLATES,
+  SMALL_IMAGE_TEMPLATES,
+} from "../mocks/contentCards/templates/demoitems";
 
 const VIEW_OPTIONS = [
-  "SmallImage",
-  "LargeImage",
-  "ImageOnly",
   "Remote",
+  "Inbox",
+  "Carousel",
+  "Container with Styling",
+  "Empty",
+  "Custom Card View",
+  "Templates"
 ] as const;
 type ViewOption = (typeof VIEW_OPTIONS)[number];
 
@@ -52,31 +58,73 @@ const THEME_OPTIONS: Array<{
   label: string;
   value: ColorSchemeName;
 }> = [
-  { label: "Light", value: "light" },
-  { label: "Dark", value: "dark" },
-  { label: "System", value: null },
-];
+    { label: "Light", value: "light" },
+    { label: "Dark", value: "dark" },
+    { label: "System", value: null },
+  ];
 
-const ITEMS_BY_VIEW: Partial<Record<ViewOption, DemoItem[]>> = {
-  SmallImage: SMALL_ITEMS,
-  LargeImage: LARGE_ITEMS,
-  ImageOnly: IMAGE_ONLY_ITEMS,
-};
+const TEMPLATE_OPTIONS: Array<{
+  label: string;
+  value: string;
+  items: DemoItem[];
+}> = [
+    { label: "Small Image", value: "SmallImage", items: SMALL_IMAGE_TEMPLATES },
+    { label: "Large Image", value: "LargeImage", items: LARGE_IMAGE_TEMPLATES },
+    { label: "Image Only", value: "ImageOnly", items: IMAGE_ONLY_TEMPLATES },
+  ];
+type TemplateOption = typeof TEMPLATE_OPTIONS[number]['value'];
+
+const ITEMS_BY_VIEW = Object.fromEntries(
+  TEMPLATE_OPTIONS.map(o => [o.value, o.items])
+) as Record<TemplateOption, DemoItem[]>;
 
 const StyledText = ({ text }: { text: string }) => {
   return <Text style={[styles.infoText, styles.textCenter]}>{text}</Text>;
 };
 
+const Switcher = ({ title, options, selected, onChange, colors, colorScheme }: {
+  title: string;
+  options: { label: string; value: string }[];
+  selected: string;
+  onChange: (value: string) => void;
+  colors: any;
+  colorScheme: ColorSchemeName;
+}) => (
+  <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+    <Text style={[styles.titleText, { color: colors.text }]}>{title}</Text>
+    <View style={[styles.themeSwitcher, { backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1 }]}>
+      {options.map(({ label, value }) => (
+        <TouchableOpacity
+          key={label}
+          style={[
+            styles.themeOption,
+            selected === value ? [styles.themeOptionSelected, { backgroundColor: colors.tint }] : styles.themeOptionUnselected,
+          ]}
+          onPress={() => onChange(value)}
+        >
+          <Text style={[styles.textLabel, { color: selected === value ? (colorScheme === 'dark' ? '#000' : '#fff') : colors.text }]}>
+            {label}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  </View>
+);
+
 const Header = ({
   isLoading,
   onTrackAction,
   selectedView,
-  setSelectedView
+  setSelectedView,
+  selectedTemplate,
+  onTemplateChange
 }: {
   isLoading: boolean;
   onTrackAction: () => void;
   selectedView: ViewOption;
   setSelectedView: (view: ViewOption) => void;
+  selectedTemplate: TemplateOption;
+  onTemplateChange: (template: TemplateOption) => void;
 }) => {
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string>("System");
@@ -87,8 +135,7 @@ const Header = ({
     (theme: string, value: ColorSchemeName) => {
       setSelectedTheme(theme);
       Appearance.setColorScheme(value);
-    },
-    []
+    }, []
   );
 
   // Track action and refresh content cards
@@ -99,12 +146,13 @@ const Header = ({
 
     MobileCore.trackAction(trackInput);
     await onTrackAction();
+    setTrackInput('');
   }, [trackInput, onTrackAction]);
 
   const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
 
   return (
-    <View>
+    <View style={{ marginTop: 10 }}>
       {/* View Picker */}
       <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
         <Text style={[styles.titleText, { color: colors.text }]}>Select View Type</Text>
@@ -116,52 +164,52 @@ const Header = ({
         </TouchableOpacity>
       </View>
 
-      {/* Track Action Input */}
-      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
-        <Text style={[styles.titleText, { color: colors.text }]}>Track Action</Text>
-        <View style={[styles.rowCenter, styles.trackRow]}>
-          <TextInput
-            style={[styles.trackInput, { borderColor: colors.inputBorder, color: colors.text }]}
-            value={trackInput}
-            onChangeText={setTrackInput}
-            placeholder="Enter action name"
-            placeholderTextColor={colors.mutedText}
-            autoCapitalize="none"
-          />
-          <TouchableOpacity
-            style={[styles.buttonPrimary, { backgroundColor: colors.tint }]}
-            onPress={handleTrackAction}
-            disabled={!trackInput.trim() || isLoading}
-          >
-            <Text style={[styles.trackButtonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>
-              {isLoading ? 'Loading...' : 'Track'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
       {/* Theme Switcher */}
-      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
-        <Text style={[styles.titleText, { color: colors.text }]}>Theme</Text>
-        <View style={[styles.themeSwitcher, { backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1 }]}>
-          {THEME_OPTIONS.map(({ label, value }) => (
-            <TouchableOpacity
-              key={label}
-              style={[
-                styles.themeOption,
-                selectedTheme === label
-                  ? [styles.themeOptionSelected, { backgroundColor: colors.tint }]
-                  : styles.themeOptionUnselected,
-              ]}
-              onPress={() => handleThemeChange(label, value)}
-            >
-              <Text style={[styles.textLabel, { color: selectedTheme === label ? (colorScheme === 'dark' ? '#000' : '#fff') : colors.text }]}>
-                {label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
+      <Switcher
+        title="Theme"
+        options={THEME_OPTIONS.map(({ label }) => ({ label, value: label }))}
+        selected={selectedTheme}
+        onChange={(label) => handleThemeChange(label, THEME_OPTIONS.find(o => o.label === label)!.value)}
+        colors={colors}
+        colorScheme={colorScheme}
+      />
+
+      {selectedView == 'Templates' ? (
+        /* Template Switcher */
+        <Switcher
+          title="Template"
+          options={TEMPLATE_OPTIONS.map(({ label, value }) => ({ label, value }))}
+          selected={selectedTemplate}
+          onChange={(val) => onTemplateChange(val as TemplateOption)}
+          colors={colors}
+          colorScheme={colorScheme}
+        />)
+
+        /* Track Action Input */
+        : (
+          <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
+            <Text style={[styles.titleText, { color: colors.text }]}>Track Action</Text>
+            <View style={styles.rowCenter}>
+              <TextInput
+                style={[styles.trackInput, { borderColor: colors.inputBorder, color: colors.text }]}
+                value={trackInput}
+                onChangeText={setTrackInput}
+                placeholder="Enter action name"
+                placeholderTextColor={colors.mutedText}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity
+                style={[styles.buttonPrimary, { backgroundColor: colors.tint }]}
+                onPress={handleTrackAction}
+                disabled={!trackInput.trim() || isLoading}
+              >
+                <Text style={[styles.trackButtonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+                  {isLoading ? 'Loading...' : 'Track'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
       {/* View Picker Modal */}
       <Modal visible={showPicker} transparent animationType="fade">
@@ -192,24 +240,26 @@ const Header = ({
 const MemoHeader = memo(Header);
 
 const ContentCardsView = () => {
+  const colorScheme = useColorScheme();
   const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateOption>('SmallImage');
 
   const surface =
     Platform.OS === "android"
       ? "rn/android/remote_image"
       : "rn/ios/remote_image";
   const { isLoading, refetch } = useContentCardUI(surface);
-  const { 
-    settings, 
-    error, 
-    isLoading: isLoadingContainer, 
-    refetch: refetchContainer 
+  const {
+    settings,
+    error,
+    isLoading: isLoadingContainer,
+    refetch: refetchContainer
   } = useContentContainer(surface);
 
-  const items = ITEMS_BY_VIEW[selectedView];
+  const items = selectedView === 'Templates' ? ITEMS_BY_VIEW[selectedTemplate] : undefined;
 
   useEffect(() => {
-    MobileCore.trackAction("small_image");
+   MobileCore.trackAction("small_image1");
   }, []);
 
   if (selectedView === 'Remote') {
@@ -220,13 +270,72 @@ const ContentCardsView = () => {
           onTrackAction={refetchContainer}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
+          selectedTemplate={selectedTemplate}
+          onTemplateChange={setSelectedTemplate}
         />
         <ContentCardContainer
           surface={surface}
           settings={settings}
           isLoading={isLoadingContainer}
           error={error}
-          contentContainerStyle={styles.listContent}
+          refetch={refetchContainer}
+        />
+      </>
+    );
+  }
+
+  else if (selectedView !== 'Templates') {
+    function getMocks(view: ViewOption): MockSurface {
+      return `mock/${view.toLowerCase().replaceAll(' ', '-')}` as MockSurface;
+    }
+
+    const settings = mockSettings[
+      getMocks(selectedView)
+    ] as { surfaceSettings: ContainerSettings; containerStyle?: any; CardProps?: any };
+
+    if (selectedView === 'Empty') {
+      const es = settings.surfaceSettings.content?.emptyStateSettings;
+      return (
+        <>
+          <MemoHeader
+            isLoading={false}
+            onTrackAction={refetchContainer}
+            selectedView={selectedView}
+            setSelectedView={setSelectedView}
+            selectedTemplate={selectedTemplate}
+            onTemplateChange={setSelectedTemplate}
+          />
+          <EmptyState
+            image={es?.image?.[(colorScheme ?? 'light') as 'light' | 'dark']?.url ?? ''}
+            text={es?.message?.content ?? 'No Content Available'}
+          />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <MemoHeader
+          isLoading={false}
+          onTrackAction={refetchContainer}
+          selectedView={selectedView}
+          setSelectedView={setSelectedView}
+          selectedTemplate={selectedTemplate}
+          onTemplateChange={setSelectedTemplate}
+        />
+        <ContentCardContainer
+          surface={surface}
+          settings={settings.surfaceSettings}
+          contentContainerStyle={[
+            settings.containerStyle,
+            selectedView === 'Container with Styling' && colorScheme === 'dark' && {
+              backgroundColor: '#881337',
+              borderColor: '#F472B6',
+            },
+          ]}
+          CardProps={settings?.CardProps}
+          isLoading={isLoadingContainer}
+          error={error}
           refetch={refetchContainer}
         />
       </>
@@ -234,7 +343,7 @@ const ContentCardsView = () => {
   }
 
   const renderContentCard = (item: any, isRemote: boolean) => {
-    const cardView = <ContentCardView 
+    const cardView = <ContentCardView
       template={isRemote ? item : item.template}
       styleOverrides={!isRemote ? item.styleOverrides : undefined}
       listener={!isRemote ? item.listener : undefined}
@@ -261,18 +370,19 @@ const ContentCardsView = () => {
     <FlatList
       data={items || []}
       keyExtractor={(item: any) => item.key}
-      renderItem={({ item }: any) => 
+      renderItem={({ item }: any) =>
         renderContentCard(item, false)
       }
       ListHeaderComponent={
-        <MemoHeader 
-          isLoading={isLoading} 
+        <MemoHeader
+          isLoading={isLoading}
           onTrackAction={refetch}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
+          selectedTemplate={selectedTemplate}
+          onTemplateChange={setSelectedTemplate}
         />
       }
-      contentContainerStyle={styles.listContent}
     />
   );
 };
@@ -288,16 +398,16 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.s,
   },
   themeSwitcher: {
-    width: "80%",
-    borderRadius: 12,
+    width: "100%",
+    borderRadius: SPACING.s,
     padding: 4,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
   section: {
-    marginHorizontal: SPACING.m,
-    marginBottom: SPACING.m,
+    marginHorizontal: SPACING.s,
+    marginBottom: SPACING.s,
   },
   themeOption: {
     flex: 1,
@@ -325,7 +435,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   buttonNeutral: {
-    height: 50,
+    height: 40,
     borderWidth: 1,
     borderRadius: 5,
     justifyContent: "center",
@@ -368,7 +478,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontWeight: "600",
-    marginBottom: SPACING.s,
+    marginBottom: 5
   },
   textCenter: {
     textAlign: "center",
@@ -377,22 +487,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  trackRow: {
-    marginBottom: SPACING.s,
-  },
   trackInput: {
     flex: 1,
     height: 40,
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: SPACING.s,
     marginRight: SPACING.s,
   },
   trackButtonText: {
     color: "white",
     fontWeight: "600",
-  },
-  listContent: {
-    paddingBottom: SPACING.l,
   },
 });

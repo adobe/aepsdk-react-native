@@ -25,7 +25,6 @@ import {
     SMALL_IMAGE_CONTENT_NO_DISMISS_BUTTON
   } from './smallImage';
   
-  
   export type DemoItem = {
     key: string;
     template: any; // ContentTemplate
@@ -39,7 +38,7 @@ import {
   };
   
   // SmallImage
-  export const SMALL_ITEMS: DemoItem[] = [
+  export const SMALL_IMAGE_TEMPLATES: DemoItem[] = [
     {
       key: '1',
       template: SMALL_IMAGE_CONTENT_ALL_FIELDS,
@@ -202,7 +201,7 @@ import {
     }
   ];
   
-  export const LARGE_ITEMS: DemoItem[] = [
+  export const LARGE_IMAGE_TEMPLATES: DemoItem[] = [
     {
       key: '1',
       template: LARGE_IMAGE_CONTENT_ALL_FIELDS,
@@ -277,7 +276,7 @@ import {
   }
   ]
   
-  export const IMAGE_ONLY_ITEMS: DemoItem[] = [
+  export const IMAGE_ONLY_TEMPLATES: DemoItem[] = [
     {
       key: '1',
       template: IMAGE_ONLY_CONTENT_ALL_FIELDS,
