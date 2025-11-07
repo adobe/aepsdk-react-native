@@ -100,35 +100,41 @@ function ContentCardContainerInner<T extends ContentTemplate>({
     return FallbackComponent;
   }
 
-  if (content.length === 0) {
-    if (EmptyComponent) {
-      return cloneElement(EmptyComponent, {
-        ...emptyStateSettings,
-      }) as React.ReactElement;
-    }
-
+  const EmptyList = () => {
     return (
-      <EmptyState
-        image={emptyStateSettings?.image?.[colorScheme ?? "light"]?.url ?? ''}
-        text={
-          emptyStateSettings?.message?.content ||
-          "No Content Available"
-        }
-      />
-    );
+      EmptyComponent ? cloneElement(EmptyComponent, {
+        ...emptyStateSettings,
+      }) as React.ReactElement : (
+        <EmptyState
+          image={
+            colorScheme === 'dark'
+              ? emptyStateSettings?.image?.darkUrl ?? ''
+              : emptyStateSettings?.image?.url ?? ''
+          }
+          text={
+            emptyStateSettings?.message?.content ||
+            "No Content Available"
+          }
+        />
+      )
+    )
   }
 
   return (
     <ContentCardContainerProvider settings={settings}>
       <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
-      <FlatList
-        {...props}
-        data={displayCards}
-        extraData={refetch}
-        contentContainerStyle={[contentContainerStyle, isHorizontal && styles.horizontalListContent]}
-        horizontal={isHorizontal}
-        renderItem={renderItem}
-      />
+      {displayCards.length === 0 ?
+        <EmptyList /> : (
+          <FlatList
+            {...props}
+            data={displayCards}
+            extraData={refetch}
+            contentContainerStyle={[contentContainerStyle, isHorizontal && styles.horizontalListContent]}
+            horizontal={isHorizontal}
+            renderItem={renderItem}
+          />
+          )
+      }
     </ContentCardContainerProvider>
   );
 }

@@ -37,8 +37,8 @@ export const mockSettings = {
             content: "No deals today come back soon!",
           },
           image: {
-            light: { url: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png" },
-            darkUrl: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png",
+            url: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png",
+            darkUrl: "https://cdni.iconscout.com/illustration/premium/thumb/not-found-error-illustration-svg-download-png-9824391.png",
           }
         },
         isUnreadEnabled: true,
