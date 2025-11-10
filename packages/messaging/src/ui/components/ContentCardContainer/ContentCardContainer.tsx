@@ -123,18 +123,19 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   return (
     <ContentCardContainerProvider settings={settings}>
       <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
-      {displayCards.length === 0 ?
-        <EmptyList /> : (
-          <FlatList
-            {...props}
-            data={displayCards}
-            extraData={refetch}
-            contentContainerStyle={[contentContainerStyle, isHorizontal && styles.horizontalListContent]}
-            horizontal={isHorizontal}
-            renderItem={renderItem}
-          />
-          )
-      }
+      <FlatList
+        {...props}
+        data={displayCards}
+        extraData={refetch}
+        contentContainerStyle={[
+          contentContainerStyle, 
+          isHorizontal && styles.horizontalListContent, 
+          {flexGrow: 1}
+        ]}
+        horizontal={isHorizontal}
+        renderItem={renderItem}
+        ListEmptyComponent={<EmptyList />}
+      />
     </ContentCardContainerProvider>
   );
 }

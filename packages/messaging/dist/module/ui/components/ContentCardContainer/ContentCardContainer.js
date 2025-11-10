@@ -91,12 +91,15 @@ function ContentCardContainerInner({
     style: [styles.heading, {
       color: headingColor
     }]
-  }, heading.content), displayCards.length === 0 ? /*#__PURE__*/React.createElement(EmptyList, null) : /*#__PURE__*/React.createElement(FlatList, _extends({}, props, {
+  }, heading.content), /*#__PURE__*/React.createElement(FlatList, _extends({}, props, {
     data: displayCards,
     extraData: refetch,
-    contentContainerStyle: [contentContainerStyle, isHorizontal && styles.horizontalListContent],
+    contentContainerStyle: [contentContainerStyle, isHorizontal && styles.horizontalListContent, {
+      flexGrow: 1
+    }],
     horizontal: isHorizontal,
-    renderItem: renderItem
+    renderItem: renderItem,
+    ListEmptyComponent: /*#__PURE__*/React.createElement(EmptyList, null)
   })));
 }
 export function ContentCardContainer({

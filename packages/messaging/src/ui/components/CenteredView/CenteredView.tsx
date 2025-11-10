@@ -1,9 +1,13 @@
 import { PropsWithChildren } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ViewProps } from "react-native";
 
-const CenteredView = ({ children }: PropsWithChildren) => (
-  <View style={styles.container}>{children}</View>
-);
+const CenteredView = ({ children, style, ...rest }: PropsWithChildren<ViewProps>) => {
+  return (
+    <View style={[styles.container, style]} {...rest}>
+      {children}
+    </View>
+  );
+};
 
 export default CenteredView;
 
@@ -12,6 +16,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 16
   },
 });
