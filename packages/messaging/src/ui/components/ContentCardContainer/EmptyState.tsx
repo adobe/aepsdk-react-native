@@ -45,7 +45,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
 
   return (
     <CenteredView 
-      style={[styles.container, styleOverrides?.container, {flexGrow: 1}]} 
+      style={[styles.container, styleOverrides?.container]} 
       {...ContainerProps}
     >
       <Image

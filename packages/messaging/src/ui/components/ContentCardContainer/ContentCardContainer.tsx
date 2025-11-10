@@ -130,7 +130,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
         contentContainerStyle={[
           contentContainerStyle, 
           isHorizontal && styles.horizontalListContent, 
-          {flexGrow: 1}
+          { flexGrow: 1 }
         ]}
         horizontal={isHorizontal}
         renderItem={renderItem}

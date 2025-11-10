@@ -17,9 +17,7 @@ const EmptyState = ({
   const ratio = useAspectRatio(image);
   const textColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
   return /*#__PURE__*/React.createElement(CenteredView, _extends({
-    style: [styles.container, styleOverrides?.container, {
-      flexGrow: 1
-    }]
+    style: [styles.container, styleOverrides?.container]
   }, ContainerProps), /*#__PURE__*/React.createElement(Image, _extends({
     source: {
       uri: image
