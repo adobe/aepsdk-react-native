@@ -292,28 +292,6 @@ const ContentCardsView = () => {
       getMocks(selectedView)
     ] as { surfaceSettings: ContainerSettings; containerStyle?: any; CardProps?: any };
 
-    if (selectedView === 'Empty') {
-      return (
-        <>
-          <MemoHeader
-            isLoading={false}
-            onTrackAction={refetchContainer}
-            selectedView={selectedView}
-            setSelectedView={setSelectedView}
-            selectedTemplate={selectedTemplate}
-            onTemplateChange={setSelectedTemplate}
-          />
-          <ContentCardContainer
-            surface={"rn/empty"}
-            settings={settings.surfaceSettings}
-            isLoading={isLoadingContainer}
-            error={error}
-            refetch={refetchContainer}
-          />
-        </>
-      );
-    }
-
     return (
       <>
         <MemoHeader

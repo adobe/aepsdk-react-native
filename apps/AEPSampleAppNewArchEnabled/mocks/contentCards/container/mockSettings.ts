@@ -31,7 +31,7 @@ export const mockSettings = {
       content: {
         heading: { content: 'Empty' },
         layout: { orientation: 'vertical' },
-        capacity: 10,
+        capacity: 0,
         emptyStateSettings: {
           message: {
             content: "No deals today come back soon!",
