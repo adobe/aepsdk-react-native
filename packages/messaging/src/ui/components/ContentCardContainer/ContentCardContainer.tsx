@@ -88,19 +88,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
     );
   }, [isHorizontal, CardProps, windowWidth]);
 
-  if (isLoading) {
-    return LoadingComponent;
-  }
-
-  if (error) {
-    return ErrorComponent;
-  }
-
-  if (!content) {
-    return FallbackComponent;
-  }
-
-  const EmptyList = () => {
+  const EmptyList = useCallback(() => {
     return (
       EmptyComponent ? cloneElement(EmptyComponent, {
         ...emptyStateSettings,
@@ -118,6 +106,18 @@ function ContentCardContainerInner<T extends ContentTemplate>({
         />
       )
     )
+  }, [colorScheme, emptyStateSettings, EmptyComponent]);
+
+  if (isLoading) {
+    return LoadingComponent;
+  }
+
+  if (error) {
+    return ErrorComponent;
+  }
+
+  if (!content) {
+    return FallbackComponent;
   }
 
   return (
@@ -130,7 +130,7 @@ function ContentCardContainerInner<T extends ContentTemplate>({
         contentContainerStyle={[
           contentContainerStyle, 
           isHorizontal && styles.horizontalListContent, 
-          { flexGrow: 1 }
+          styles.container
         ]}
         horizontal={isHorizontal}
         renderItem={renderItem}
@@ -176,6 +176,9 @@ export function ContentCardContainer<T extends ContentTemplate>({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   heading: {
     fontWeight: '600',
     fontSize: 18,

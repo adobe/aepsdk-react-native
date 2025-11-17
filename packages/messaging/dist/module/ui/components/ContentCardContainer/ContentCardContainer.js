@@ -67,6 +67,14 @@ function ContentCardContainerInner({
       }]]
     }));
   }, [isHorizontal, CardProps, windowWidth]);
+  const EmptyList = useCallback(() => {
+    return EmptyComponent ? /*#__PURE__*/cloneElement(EmptyComponent, {
+      ...emptyStateSettings
+    }) : /*#__PURE__*/React.createElement(EmptyState, {
+      image: colorScheme === 'dark' ? emptyStateSettings?.image?.darkUrl ?? '' : emptyStateSettings?.image?.url ?? '',
+      text: emptyStateSettings?.message?.content || "No Content Available"
+    });
+  }, [colorScheme, emptyStateSettings, EmptyComponent]);
   if (isLoading) {
     return LoadingComponent;
   }
@@ -76,14 +84,6 @@ function ContentCardContainerInner({
   if (!content) {
     return FallbackComponent;
   }
-  const EmptyList = () => {
-    return EmptyComponent ? /*#__PURE__*/cloneElement(EmptyComponent, {
-      ...emptyStateSettings
-    }) : /*#__PURE__*/React.createElement(EmptyState, {
-      image: colorScheme === 'dark' ? emptyStateSettings?.image?.darkUrl ?? '' : emptyStateSettings?.image?.url ?? '',
-      text: emptyStateSettings?.message?.content || "No Content Available"
-    });
-  };
   return /*#__PURE__*/React.createElement(ContentCardContainerProvider, {
     settings: settings
   }, /*#__PURE__*/React.createElement(Text, {
@@ -94,9 +94,7 @@ function ContentCardContainerInner({
   }, heading.content), /*#__PURE__*/React.createElement(FlatList, _extends({}, props, {
     data: displayCards,
     extraData: refetch,
-    contentContainerStyle: [contentContainerStyle, isHorizontal && styles.horizontalListContent, {
-      flexGrow: 1
-    }],
+    contentContainerStyle: [contentContainerStyle, isHorizontal && styles.horizontalListContent, styles.container],
     horizontal: isHorizontal,
     renderItem: renderItem,
     ListEmptyComponent: /*#__PURE__*/React.createElement(EmptyList, null)
@@ -130,6 +128,9 @@ export function ContentCardContainer({
   }, props));
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   heading: {
     fontWeight: '600',
     fontSize: 18,
