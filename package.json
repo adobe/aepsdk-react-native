@@ -28,7 +28,7 @@
     "sampleappnewarchenabled:ios:pod:update": "cd apps/AEPSampleAppNewArchEnabled/ios && pod update",
     "sampleappnewarchenabled:ios:pod:install": "cd apps/AEPSampleAppNewArchEnabled/ios && pod install",
     "sampleappnewarchenabled:ios:build": "cd apps/AEPSampleAppNewArchEnabled && expo run:ios",
-    "sampleappnewarchenabled:android:build": "cd apps/AEPSampleAppNewArchEnabled && expo run:android",
+    "sampleappnewarchenabled:android:build": "cd apps/AEPSampleAppNewArchEnabled && npx expo run:android",
     "sampleappnewarchenabled:start": "cd apps/AEPSampleAppNewArchEnabled && npx expo start",
     "sampleappnewarchenabled:ios:run": "cd apps/AEPSampleAppNewArchEnabled && npx expo run:ios",
     "sampleappnewarchenabled:android:run": "cd apps/AEPSampleAppNewArchEnabled && npx expo run:android"
