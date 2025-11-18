@@ -120,7 +120,7 @@ describe('ContentCardContainer', () => {
         content: {
           ...baseSettings.content,
           emptyStateSettings: {
-            image: { light: { url: 'https://example.com/light-only.png' } }
+            image: { url: 'https://example.com/light-only.png' }
           } as any
         }
       };

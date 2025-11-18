@@ -15,7 +15,6 @@ import {
   ContainerSettings,
   ContentCardContainer,
   ContentCardView,
-  EmptyState,
   ThemeProvider,
   useContentCardUI,
   useContentContainer
@@ -292,26 +291,6 @@ const ContentCardsView = () => {
     const settings = mockSettings[
       getMocks(selectedView)
     ] as { surfaceSettings: ContainerSettings; containerStyle?: any; CardProps?: any };
-
-    if (selectedView === 'Empty') {
-      const es = settings.surfaceSettings.content?.emptyStateSettings;
-      return (
-        <>
-          <MemoHeader
-            isLoading={false}
-            onTrackAction={refetchContainer}
-            selectedView={selectedView}
-            setSelectedView={setSelectedView}
-            selectedTemplate={selectedTemplate}
-            onTemplateChange={setSelectedTemplate}
-          />
-          <EmptyState
-            image={es?.image?.[(colorScheme ?? 'light') as 'light' | 'dark']?.url ?? ''}
-            text={es?.message?.content ?? 'No Content Available'}
-          />
-        </>
-      );
-    }
 
     return (
       <>
