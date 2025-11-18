@@ -48,6 +48,11 @@ jobs:
     steps:
       - checkout
 
+      - restore_cache:
+          keys:
+            - android-yarn-cache-{{ checksum "yarn.lock" }}
+            - android-yarn-cache-
+
       - run:
           name: Install Node.js and Yarn Dependencies
           command: yarn install
@@ -60,11 +65,33 @@ jobs:
           name: Expo Prebuild
           command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
 
+      - save_cache:
+          key: android-yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+            - ./apps/AEPSampleAppNewArchEnabled/node_modules
+
+      - restore_cache:
+          keys:
+            - android-gradle-cache-{{ checksum "apps/AEPSampleAppNewArchEnabled/android/build.gradle" }}-{{ checksum "apps/AEPSampleAppNewArchEnabled/android/app/build.gradle" }}
+            - android-gradle-cache-
+
       - run:
           name: Building Android Sample App
           command: yarn sampleappnewarchenabled:android:build
           environment:
             _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
+
+      - save_cache:
+          key: android-gradle-cache-{{ checksum "apps/AEPSampleAppNewArchEnabled/android/build.gradle" }}-{{ checksum "apps/AEPSampleAppNewArchEnabled/android/app/build.gradle" }}
+          paths:
+            - ~/.gradle
+            - ./apps/AEPSampleAppNewArchEnabled/android/.gradle
+            - ./apps/AEPSampleAppNewArchEnabled/android/build
+
+      - store_artifacts:
+          path: apps/AEPSampleAppNewArchEnabled/android/app/build/outputs/apk/debug
+          destination: apk
 
   build-sample-app-ios:
     macos:
@@ -124,8 +151,4 @@ workflows:
     jobs:
       - unit-test
       - build-sample-app-ios
-      # - build-sample-app-android
-      # Disable the Android build job because of the error below:
-      # Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'.
-      # > [CXX1210] /root/project/apps/AEPSampleApp/node_modules/react-native-reanimated/android/CMakeLists.txt debug|arm64-v8a : No compatible library found
-      # The Android build job will be enabled once the issue is resolved.
+      - build-sample-app-android
