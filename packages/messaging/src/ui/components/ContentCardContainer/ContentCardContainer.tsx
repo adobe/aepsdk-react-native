@@ -177,7 +177,7 @@ export function ContentCardContainer<T extends ContentTemplate>({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flexGrow: 1
   },
   heading: {
     fontWeight: '600',

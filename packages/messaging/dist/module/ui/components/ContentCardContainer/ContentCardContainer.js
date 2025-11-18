@@ -129,7 +129,7 @@ export function ContentCardContainer({
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flexGrow: 1
   },
   heading: {
     fontWeight: '600',
