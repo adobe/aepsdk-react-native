@@ -88,6 +88,26 @@ function ContentCardContainerInner<T extends ContentTemplate>({
     );
   }, [isHorizontal, CardProps, windowWidth]);
 
+  const EmptyList = useCallback(() => {
+    return (
+      EmptyComponent ? cloneElement(EmptyComponent, {
+        ...emptyStateSettings,
+      }) as React.ReactElement : (
+        <EmptyState
+          image={
+            colorScheme === 'dark'
+              ? emptyStateSettings?.image?.darkUrl ?? ''
+              : emptyStateSettings?.image?.url ?? ''
+          }
+          text={
+            emptyStateSettings?.message?.content ||
+            "No Content Available"
+          }
+        />
+      )
+    )
+  }, [colorScheme, emptyStateSettings, EmptyComponent]);
+
   if (isLoading) {
     return LoadingComponent;
   }
@@ -100,24 +120,6 @@ function ContentCardContainerInner<T extends ContentTemplate>({
     return FallbackComponent;
   }
 
-  if (content.length === 0) {
-    if (EmptyComponent) {
-      return cloneElement(EmptyComponent, {
-        ...emptyStateSettings,
-      }) as React.ReactElement;
-    }
-
-    return (
-      <EmptyState
-        image={emptyStateSettings?.image?.[colorScheme ?? "light"]?.url ?? ''}
-        text={
-          emptyStateSettings?.message?.content ||
-          "No Content Available"
-        }
-      />
-    );
-  }
-
   return (
     <ContentCardContainerProvider settings={settings}>
       <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
@@ -125,9 +127,14 @@ function ContentCardContainerInner<T extends ContentTemplate>({
         {...props}
         data={displayCards}
         extraData={refetch}
-        contentContainerStyle={[contentContainerStyle, isHorizontal && styles.horizontalListContent]}
+        contentContainerStyle={[
+          contentContainerStyle, 
+          isHorizontal && styles.horizontalListContent, 
+          styles.container
+        ]}
         horizontal={isHorizontal}
         renderItem={renderItem}
+        ListEmptyComponent={<EmptyList />}
       />
     </ContentCardContainerProvider>
   );
@@ -169,6 +176,9 @@ export function ContentCardContainer<T extends ContentTemplate>({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1
+  },
   heading: {
     fontWeight: '600',
     fontSize: 18,

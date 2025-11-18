@@ -31,14 +31,14 @@ export const mockSettings = {
       content: {
         heading: { content: 'Empty' },
         layout: { orientation: 'vertical' },
-        capacity: 10,
+        capacity: 0,
         emptyStateSettings: {
           message: {
             content: "No deals today come back soon!",
           },
           image: {
-            light: { url: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png" },
-            darkUrl: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png",
+            url: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png",
+            darkUrl: "https://cdni.iconscout.com/illustration/premium/thumb/not-found-error-illustration-svg-download-png-9824391.png",
           }
         },
         isUnreadEnabled: true,

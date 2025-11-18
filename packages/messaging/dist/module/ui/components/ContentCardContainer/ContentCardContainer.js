@@ -67,6 +67,14 @@ function ContentCardContainerInner({
       }]]
     }));
   }, [isHorizontal, CardProps, windowWidth]);
+  const EmptyList = useCallback(() => {
+    return EmptyComponent ? /*#__PURE__*/cloneElement(EmptyComponent, {
+      ...emptyStateSettings
+    }) : /*#__PURE__*/React.createElement(EmptyState, {
+      image: colorScheme === 'dark' ? emptyStateSettings?.image?.darkUrl ?? '' : emptyStateSettings?.image?.url ?? '',
+      text: emptyStateSettings?.message?.content || "No Content Available"
+    });
+  }, [colorScheme, emptyStateSettings, EmptyComponent]);
   if (isLoading) {
     return LoadingComponent;
   }
@@ -75,17 +83,6 @@ function ContentCardContainerInner({
   }
   if (!content) {
     return FallbackComponent;
-  }
-  if (content.length === 0) {
-    if (EmptyComponent) {
-      return /*#__PURE__*/cloneElement(EmptyComponent, {
-        ...emptyStateSettings
-      });
-    }
-    return /*#__PURE__*/React.createElement(EmptyState, {
-      image: emptyStateSettings?.image?.[colorScheme ?? "light"]?.url ?? '',
-      text: emptyStateSettings?.message?.content || "No Content Available"
-    });
   }
   return /*#__PURE__*/React.createElement(ContentCardContainerProvider, {
     settings: settings
@@ -97,9 +94,10 @@ function ContentCardContainerInner({
   }, heading.content), /*#__PURE__*/React.createElement(FlatList, _extends({}, props, {
     data: displayCards,
     extraData: refetch,
-    contentContainerStyle: [contentContainerStyle, isHorizontal && styles.horizontalListContent],
+    contentContainerStyle: [contentContainerStyle, isHorizontal && styles.horizontalListContent, styles.container],
     horizontal: isHorizontal,
-    renderItem: renderItem
+    renderItem: renderItem,
+    ListEmptyComponent: /*#__PURE__*/React.createElement(EmptyList, null)
   })));
 }
 export function ContentCardContainer({
@@ -130,6 +128,9 @@ export function ContentCardContainer({
   }, props));
 }
 const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1
+  },
   heading: {
     fontWeight: '600',
     fontSize: 18,

@@ -189,7 +189,7 @@ class Messaging {
           content: "Heading"
         },
         layout: {
-          orientation: "horizontal"
+          orientation: "vertical"
         },
         capacity: 5,
         emptyStateSettings: {
