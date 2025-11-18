@@ -124,7 +124,7 @@ workflows:
     jobs:
       - unit-test
       - build-sample-app-ios
-      # - build-sample-app-android
+      - build-sample-app-android
       # Disable the Android build job because of the error below:
       # Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'.
       # > [CXX1210] /root/project/apps/AEPSampleApp/node_modules/react-native-reanimated/android/CMakeLists.txt debug|arm64-v8a : No compatible library found
