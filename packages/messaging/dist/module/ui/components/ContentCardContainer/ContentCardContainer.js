@@ -2,11 +2,15 @@
 
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 import { cloneElement, useCallback, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, Text, useColorScheme, useWindowDimensions } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, useWindowDimensions } from "react-native";
 import { useContentCardUI } from "../../hooks/index.js";
 import ContentCardContainerProvider from "../../providers/ContentCardContainerProvider.js";
+import { useTheme } from "../../theme/index.js";
 import { ContentCardView } from "../ContentCardView/ContentCardView.js";
 import EmptyState from "./EmptyState.js";
+
+// TODO: consider localizing in the future
+const DEFAULT_EMPTY_MESSAGE = 'No Content Available';
 function ContentCardContainerInner({
   contentContainerStyle,
   LoadingComponent = /*#__PURE__*/React.createElement(ActivityIndicator, null),
@@ -17,10 +21,12 @@ function ContentCardContainerInner({
   surface,
   style,
   CardProps,
-  refetch,
   ...props
 }) {
-  const colorScheme = useColorScheme();
+  const {
+    colors,
+    isDark
+  } = useTheme();
   const {
     width: windowWidth
   } = useWindowDimensions();
@@ -39,42 +45,41 @@ function ContentCardContainerInner({
     emptyStateSettings
   } = contentSettings;
   const [dismissedIds, setDismissedIds] = useState(new Set());
-  const headingColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
   const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
   const displayCards = useMemo(() => {
     const items = content ?? [];
     return items.filter(it => it && !dismissedIds.has(it.id)).slice(0, capacity);
   }, [content, dismissedIds, capacity]);
+  const handleCardEvent = useCallback((event, data, nativeEvent) => {
+    if (event === 'onDismiss' && data?.id) {
+      setDismissedIds(prev => {
+        const next = new Set(prev);
+        next.add(data.id);
+        return next;
+      });
+    }
+    CardProps?.listener?.(event, data, nativeEvent);
+  }, [CardProps]);
   const renderItem = useCallback(({
     item
   }) => {
     return /*#__PURE__*/React.createElement(ContentCardView, _extends({
       template: item
     }, CardProps, {
-      listener: (...args) => {
-        const [event] = args;
-        if (event === 'onDismiss') {
-          setDismissedIds(prev => {
-            const next = new Set(prev);
-            next.add(item?.id);
-            return next;
-          });
-        }
-        CardProps?.listener?.(...args);
-      },
-      style: [isHorizontal && [styles.horizontalCardStyles, {
+      listener: handleCardEvent,
+      style: isHorizontal ? [styles.horizontalCardStyles, {
         width: Math.floor(windowWidth * 0.75)
-      }]]
+      }] : undefined
     }));
-  }, [isHorizontal, CardProps, windowWidth]);
+  }, [isHorizontal, CardProps, windowWidth, handleCardEvent]);
   const EmptyList = useCallback(() => {
     return EmptyComponent ? /*#__PURE__*/cloneElement(EmptyComponent, {
       ...emptyStateSettings
     }) : /*#__PURE__*/React.createElement(EmptyState, {
-      image: colorScheme === 'dark' ? emptyStateSettings?.image?.darkUrl ?? '' : emptyStateSettings?.image?.url ?? '',
-      text: emptyStateSettings?.message?.content || "No Content Available"
+      image: isDark ? emptyStateSettings?.image?.darkUrl ?? '' : emptyStateSettings?.image?.url ?? '',
+      text: emptyStateSettings?.message?.content || DEFAULT_EMPTY_MESSAGE
     });
-  }, [colorScheme, emptyStateSettings, EmptyComponent]);
+  }, [isDark, emptyStateSettings, EmptyComponent]);
   if (isLoading) {
     return LoadingComponent;
   }
@@ -86,14 +91,14 @@ function ContentCardContainerInner({
   }
   return /*#__PURE__*/React.createElement(ContentCardContainerProvider, {
     settings: settings
-  }, /*#__PURE__*/React.createElement(Text, {
+  }, heading?.content ? /*#__PURE__*/React.createElement(Text, {
     accessibilityRole: "header",
     style: [styles.heading, {
-      color: headingColor
+      color: colors.textPrimary
     }]
-  }, heading.content), /*#__PURE__*/React.createElement(FlatList, _extends({}, props, {
+  }, heading.content) : null, /*#__PURE__*/React.createElement(FlatList, _extends({}, props, {
     data: displayCards,
-    extraData: refetch,
+    keyExtractor: item => item.id,
     contentContainerStyle: [contentContainerStyle, isHorizontal && styles.horizontalListContent, styles.container],
     horizontal: isHorizontal,
     renderItem: renderItem,

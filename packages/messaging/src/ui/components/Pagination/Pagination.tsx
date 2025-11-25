@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import {
-  View,
-  StyleSheet,
-  useColorScheme,
-  TouchableOpacity,
   Animated,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from "react-native";
+import { useTheme } from "../../theme";
 
 const PaginationDot = ({
   page,
@@ -17,8 +17,8 @@ const PaginationDot = ({
 }: {
   page: number;
   isActive: boolean;
-  finalInactiveColor: string;
-  finalActiveColor: string;
+  finalInactiveColor?: string;
+  finalActiveColor?: string;
   dotSize: number;
   onPageChange: (page: number) => void;
 }) => {
@@ -26,7 +26,7 @@ const PaginationDot = ({
   const opacityAnim = useRef(new Animated.Value(isActive ? 1 : 0.6)).current;
 
   useEffect(() => {
-    Animated.parallel([
+    const animation = Animated.parallel([
       Animated.spring(scaleAnim, {
         toValue: isActive ? 1.2 : 1,
         useNativeDriver: true,
@@ -38,7 +38,13 @@ const PaginationDot = ({
         duration: 200,
         useNativeDriver: true,
       }),
-    ]).start();
+    ]);
+    animation.start();
+    return () => {
+      // stop both if unmounted
+      scaleAnim.stopAnimation();
+      opacityAnim.stopAnimation();
+    };
   }, [isActive, scaleAnim, opacityAnim]);
 
   return (
@@ -84,17 +90,13 @@ export const Pagination: React.FC<PaginationProps> = ({
   dotSize = 8,
   spacing = 8,
 }) => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { colors } = useTheme();
+  
   const slideAnim = useRef(new Animated.Value(0)).current;
   const prevVisiblePagesRef = useRef<number[]>([]);
 
-  // Default colors based on theme
-  const defaultActiveColor = isDark ? "#fff" : "#0a7ea4";
-  const defaultInactiveColor = isDark ? "#9BA1A6" : "#687076";
-
-  const finalActiveColor = activeColor || defaultActiveColor;
-  const finalInactiveColor = inactiveColor || defaultInactiveColor;
+  const finalActiveColor = activeColor || colors.activeColor;
+  const finalInactiveColor = inactiveColor || colors.inactiveColor;
 
   // Calculate which dots to show
   const getVisiblePages = () => {
@@ -122,28 +124,30 @@ export const Pagination: React.FC<PaginationProps> = ({
   // Animate sliding when visible pages change
   useEffect(() => {
     const prevVisiblePages = prevVisiblePagesRef.current;
-    
+    let started = false;
+  
     if (prevVisiblePages.length > 0 && totalPages > maxVisibleDots) {
       const prevStartPage = prevVisiblePages[0];
       const currentStartPage = visiblePages[0];
-      
+  
       if (prevStartPage !== currentStartPage) {
         const direction = currentStartPage > prevStartPage ? 1 : -1;
         const dotWidth = dotSize + spacing;
-        
-        // Start from offset position
         slideAnim.setValue(direction * dotWidth);
-        
-        // Animate back to center
         Animated.timing(slideAnim, {
           toValue: 0,
           duration: 300,
           useNativeDriver: true,
         }).start();
+        started = true;
       }
     }
-    
+  
     prevVisiblePagesRef.current = visiblePages;
+  
+    return () => {
+      if (started) slideAnim.stopAnimation();
+    };
   }, [visiblePages, slideAnim, dotSize, spacing, maxVisibleDots, totalPages]);
 
   if (totalPages <= 1) {

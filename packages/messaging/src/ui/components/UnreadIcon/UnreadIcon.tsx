@@ -9,7 +9,7 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Image,
   ImageProps,
@@ -18,10 +18,10 @@ import {
   View,
   ViewProps,
   ViewStyle,
-  useColorScheme
 } from 'react-native';
 import useContainerSettings from '../../hooks/useContainerSettings';
 import { SettingsPlacement } from '../../providers/ContentCardContainerProvider';
+import { useTheme } from '../../theme';
 
 export interface UnreadIconProps extends ViewProps {
   imageStyle?: ImageStyle;
@@ -35,7 +35,7 @@ export interface UnreadIconProps extends ViewProps {
 
 interface DotProps {
   size: number;
-  backgroundColor: string;
+  backgroundColor?: string;
 }
 
 const Dot = ({ size, backgroundColor }: DotProps) => (
@@ -63,7 +63,7 @@ const UnreadIcon = ({
   style,
   ...props
 }: UnreadIconProps) => {
-  const colorScheme = useColorScheme();
+  const { colors, isDark } = useTheme();
   const settings = useContainerSettings();
   const [imageLoadError, setImageLoadError] = useState(false);
   
@@ -107,16 +107,9 @@ const UnreadIcon = ({
     }
   }, [displayPosition]);
 
-  // Use default contrasting colors for visibility
-  // Note: unread_bg.clr is for the card background, not the dot
-  const dotColor = useMemo(() => 
-    colorScheme === 'dark' ? '#FF6B6B' : '#FF4444',
-    [colorScheme]
-  );
-
   const finalImageSource = useMemo(() => 
-    colorScheme === 'dark' && darkImageSource ? darkImageSource : imageSource,
-    [colorScheme, darkImageSource, imageSource]
+    isDark && darkImageSource ? darkImageSource : imageSource,
+    [isDark, darkImageSource, imageSource]
   );
 
   const content = useMemo(() => {
@@ -125,7 +118,7 @@ const UnreadIcon = ({
       const imageSettings = unreadSettings?.unread_icon?.image;
       if (!imageSettings) return false;
       
-      if (colorScheme === 'dark') {
+      if (isDark) {
         // In dark mode, show dot if darkUrl is empty string or if both darkUrl doesn't exist and url is empty
         return imageSettings.darkUrl === '' || 
                (!imageSettings.darkUrl && imageSettings.url === '');
@@ -137,12 +130,12 @@ const UnreadIcon = ({
 
     // If URL is explicitly empty string for current mode, show dot
     if (isEmptyUrlForCurrentMode()) {
-      return <Dot size={size} backgroundColor={dotColor} />;
+      return <Dot size={size} backgroundColor={colors.dotColor} />;
     }
 
     // If image failed to load, fallback to dot
     if (renderType === 'image' && imageLoadError) {
-      return <Dot size={size} backgroundColor={dotColor} />;
+      return <Dot size={size} backgroundColor={colors.dotColor} />;
     }
 
     if (renderType === 'image' && (imageSource || darkImageSource)) {
@@ -164,12 +157,12 @@ const UnreadIcon = ({
     }
 
     // Default dot type
-    return <Dot size={size} backgroundColor={dotColor} />;
+    return <Dot size={size} backgroundColor={colors.dotColor} />;
   }, [
-    colorScheme,
+    isDark,
     unreadSettings?.unread_icon?.image,
     size,
-    dotColor,
+    colors.dotColor,
     renderType,
     imageLoadError,
     imageSource,
@@ -199,7 +192,6 @@ export default UnreadIcon;
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    zIndex: 1000,
     justifyContent: 'center',
     alignItems: 'center',
   },

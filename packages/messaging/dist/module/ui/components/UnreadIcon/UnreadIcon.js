@@ -12,9 +12,10 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import React, { useState, useMemo, useEffect } from 'react';
-import { Image, StyleSheet, View, useColorScheme } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 import useContainerSettings from "../../hooks/useContainerSettings.js";
+import { useTheme } from "../../theme/index.js";
 const Dot = ({
   size,
   backgroundColor
@@ -37,7 +38,10 @@ const UnreadIcon = ({
   style,
   ...props
 }) => {
-  const colorScheme = useColorScheme();
+  const {
+    colors,
+    isDark
+  } = useTheme();
   const settings = useContainerSettings();
   const [imageLoadError, setImageLoadError] = useState(false);
 
@@ -75,17 +79,13 @@ const UnreadIcon = ({
         return styles.positionTopRight;
     }
   }, [displayPosition]);
-
-  // Use default contrasting colors for visibility
-  // Note: unread_bg.clr is for the card background, not the dot
-  const dotColor = useMemo(() => colorScheme === 'dark' ? '#FF6B6B' : '#FF4444', [colorScheme]);
-  const finalImageSource = useMemo(() => colorScheme === 'dark' && darkImageSource ? darkImageSource : imageSource, [colorScheme, darkImageSource, imageSource]);
+  const finalImageSource = useMemo(() => isDark && darkImageSource ? darkImageSource : imageSource, [isDark, darkImageSource, imageSource]);
   const content = useMemo(() => {
     // Check if we should show dot instead of image based on URL availability
     const isEmptyUrlForCurrentMode = () => {
       const imageSettings = unreadSettings?.unread_icon?.image;
       if (!imageSettings) return false;
-      if (colorScheme === 'dark') {
+      if (isDark) {
         // In dark mode, show dot if darkUrl is empty string or if both darkUrl doesn't exist and url is empty
         return imageSettings.darkUrl === '' || !imageSettings.darkUrl && imageSettings.url === '';
       }
@@ -98,7 +98,7 @@ const UnreadIcon = ({
     if (isEmptyUrlForCurrentMode()) {
       return /*#__PURE__*/React.createElement(Dot, {
         size: size,
-        backgroundColor: dotColor
+        backgroundColor: colors.dotColor
       });
     }
 
@@ -106,7 +106,7 @@ const UnreadIcon = ({
     if (renderType === 'image' && imageLoadError) {
       return /*#__PURE__*/React.createElement(Dot, {
         size: size,
-        backgroundColor: dotColor
+        backgroundColor: colors.dotColor
       });
     }
     if (renderType === 'image' && (imageSource || darkImageSource)) {
@@ -127,9 +127,9 @@ const UnreadIcon = ({
     // Default dot type
     return /*#__PURE__*/React.createElement(Dot, {
       size: size,
-      backgroundColor: dotColor
+      backgroundColor: colors.dotColor
     });
-  }, [colorScheme, unreadSettings?.unread_icon?.image, size, dotColor, renderType, imageLoadError, imageSource, darkImageSource, finalImageSource, imageStyle]);
+  }, [isDark, unreadSettings?.unread_icon?.image, size, colors.dotColor, renderType, imageLoadError, imageSource, darkImageSource, finalImageSource, imageStyle]);
   return /*#__PURE__*/React.createElement(View, _extends({
     style: [styles.container, positionStyle, {
       minWidth: size,
@@ -141,7 +141,6 @@ export default UnreadIcon;
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    zIndex: 1000,
     justifyContent: 'center',
     alignItems: 'center'
   },

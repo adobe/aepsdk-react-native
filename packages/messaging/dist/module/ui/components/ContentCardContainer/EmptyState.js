@@ -1,10 +1,10 @@
 "use strict";
 
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-import { useMemo } from "react";
-import { Image, StyleSheet, Text, useColorScheme } from "react-native";
+import { Image, StyleSheet, Text } from "react-native";
 import useAspectRatio from "../../hooks/useAspectRatio.js";
-import CenteredView from "../CenteredView/CenteredView.js";
+import { useTheme } from "../../theme/index.js";
+import FullScreenCenterView from "../FullScreenCenterView/FullScreenCenterView.js";
 const EmptyState = ({
   image,
   text,
@@ -13,10 +13,11 @@ const EmptyState = ({
   ImageProps,
   TextProps
 }) => {
-  const colorScheme = useColorScheme();
+  const {
+    colors
+  } = useTheme();
   const ratio = useAspectRatio(image);
-  const textColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
-  return /*#__PURE__*/React.createElement(CenteredView, _extends({
+  return /*#__PURE__*/React.createElement(FullScreenCenterView, _extends({
     style: [styles.container, styleOverrides?.container]
   }, ContainerProps), /*#__PURE__*/React.createElement(Image, _extends({
     source: {
@@ -28,7 +29,7 @@ const EmptyState = ({
     resizeMode: "contain"
   }, ImageProps)), /*#__PURE__*/React.createElement(Text, _extends({
     style: [styles.text, {
-      color: textColor
+      color: colors.textPrimary
     }, styleOverrides?.text]
   }, TextProps), text));
 };

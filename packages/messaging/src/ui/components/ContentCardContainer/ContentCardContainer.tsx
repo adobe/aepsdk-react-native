@@ -6,16 +6,20 @@ import {
   ListRenderItem,
   StyleSheet,
   Text,
-  useColorScheme,
   useWindowDimensions
 } from "react-native";
 import { useContentCardUI } from "../../hooks";
 import ContentCardContainerProvider, {
   ContainerSettings,
 } from "../../providers/ContentCardContainerProvider";
+import { useTheme } from "../../theme";
+import { ContentViewEvent } from "../../types/ContentViewEvent";
 import { ContentTemplate } from "../../types/Templates";
 import { ContentCardView, ContentViewProps } from "../ContentCardView/ContentCardView";
 import EmptyState from "./EmptyState";
+
+// TODO: consider localizing in the future
+const DEFAULT_EMPTY_MESSAGE = 'No Content Available';
 
 export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> {
   LoadingComponent?: ReactElement | null;
@@ -27,7 +31,6 @@ export interface ContentCardContainerProps<T> extends Partial<FlatListProps<T>> 
   isLoading?: boolean;
   error?: boolean;
   CardProps?: Partial<ContentViewProps>;
-  refetch?: () => Promise<void>;
 }
 
 function ContentCardContainerInner<T extends ContentTemplate>({
@@ -40,21 +43,19 @@ function ContentCardContainerInner<T extends ContentTemplate>({
   surface,
   style,
   CardProps,
-  refetch,
   ...props
 }: ContentCardContainerProps<T> & {
   settings: ContainerSettings;
 }) {
-  const colorScheme = useColorScheme();
+  const { colors, isDark } = useTheme();
   const { width: windowWidth } = useWindowDimensions();
   const { content, error, isLoading } = useContentCardUI(surface);
 
   const { content: contentSettings } = settings;
   const { capacity, heading, layout, emptyStateSettings } = contentSettings;
 
-  const [dismissedIds, setDismissedIds] = useState(new Set());
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
-  const headingColor = useMemo(() => colorScheme === 'dark' ? '#FFFFFF' : '#000000', [colorScheme]);
   const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
 
   const displayCards = useMemo(() => {
@@ -62,31 +63,34 @@ function ContentCardContainerInner<T extends ContentTemplate>({
     return items.filter((it) => it && !dismissedIds.has(it.id)).slice(0, capacity) as T[];
   }, [content, dismissedIds, capacity]);
 
+  const handleCardEvent = useCallback(
+    (event?: ContentViewEvent, data?: ContentTemplate, nativeEvent?: any) => {
+      if (event === 'onDismiss' && data?.id) {
+        setDismissedIds((prev) => {
+          const next = new Set(prev);
+          next.add(data.id as any);
+          return next;
+        });
+      }
+      CardProps?.listener?.(event, data, nativeEvent);
+    },
+    [CardProps]
+  );
+
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
     return (
       <ContentCardView
         template={item}
         {...CardProps}
-        listener={(...args) => {
-          const [event] = args;
-          if (event === 'onDismiss') {
-            setDismissedIds((prev) => {
-              const next = new Set(prev);
-              next.add((item as any)?.id);
-              return next;
-            });
+        listener={handleCardEvent}
+        style={
+          isHorizontal 
+            ? [styles.horizontalCardStyles, { width: Math.floor(windowWidth * 0.75) }]
+            : undefined
           }
-          CardProps?.listener?.(...args);
-        }}
-        style={[
-          isHorizontal && [
-            styles.horizontalCardStyles,
-            { width: Math.floor(windowWidth * 0.75) },
-          ],
-        ]}
       />
     );
-  }, [isHorizontal, CardProps, windowWidth]);
+  }, [isHorizontal, CardProps, windowWidth, handleCardEvent]);
 
   const EmptyList = useCallback(() => {
     return (
@@ -95,18 +99,18 @@ function ContentCardContainerInner<T extends ContentTemplate>({
       }) as React.ReactElement : (
         <EmptyState
           image={
-            colorScheme === 'dark'
+            isDark
               ? emptyStateSettings?.image?.darkUrl ?? ''
               : emptyStateSettings?.image?.url ?? ''
           }
           text={
             emptyStateSettings?.message?.content ||
-            "No Content Available"
+            DEFAULT_EMPTY_MESSAGE
           }
         />
       )
     )
-  }, [colorScheme, emptyStateSettings, EmptyComponent]);
+  }, [isDark, emptyStateSettings, EmptyComponent]);
 
   if (isLoading) {
     return LoadingComponent;
@@ -122,14 +126,22 @@ function ContentCardContainerInner<T extends ContentTemplate>({
 
   return (
     <ContentCardContainerProvider settings={settings}>
-      <Text accessibilityRole="header" style={[styles.heading, { color: headingColor }]}>{heading.content}</Text>
+      {heading?.content ? (
+        <Text
+          accessibilityRole="header"
+          style={[styles.heading, { color: colors.textPrimary }]}
+        >
+          {heading.content}
+        </Text>
+      ) : null}
+
       <FlatList
         {...props}
         data={displayCards}
-        extraData={refetch}
+        keyExtractor={(item: { id: string }) => item.id}
         contentContainerStyle={[
-          contentContainerStyle, 
-          isHorizontal && styles.horizontalListContent, 
+          contentContainerStyle,
+          isHorizontal && styles.horizontalListContent,
           styles.container
         ]}
         horizontal={isHorizontal}

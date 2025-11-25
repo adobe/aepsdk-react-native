@@ -291,7 +291,7 @@ class Messaging {
         layout: {
           orientation: "vertical",
         },
-        capacity: 5,
+        capacity: 15,
         emptyStateSettings: {
           message: {
             content: "Empty State",

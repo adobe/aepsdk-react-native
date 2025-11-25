@@ -17,6 +17,7 @@ import { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 const defaultTheme = {
   light: {
+    isDark: false,
     colors: {
       primary: '#007AFF',
       secondary: '#5856D6',
@@ -24,10 +25,15 @@ const defaultTheme = {
       textPrimary: '#000000',
       textSecondary: '#8E8E93',
       imagePlaceholder: '#C7C7CC',
-      buttonTextColor: 'dodgerblue'
+      buttonTextColor: 'dodgerblue',
+      activeColor: '#0a7ea4',
+      inactiveColor: '#687076',
+      dotColor: '#FF4444',
+      imageContainerColor: '#f0f0f0'
     }
   },
   dark: {
+    isDark: true,
     colors: {
       primary: '#0A84FF',
       secondary: '#5E5CE6',
@@ -35,7 +41,11 @@ const defaultTheme = {
       textPrimary: '#FFFFFF',
       textSecondary: '#8E8E93',
       imagePlaceholder: '#48484A',
-      buttonTextColor: 'dodgerblue'
+      buttonTextColor: 'dodgerblue',
+      activeColor: '#fff',
+      inactiveColor: '#9BA1A6',
+      dotColor: '#FF6B6B',
+      imageContainerColor: '#f0f0f0'
     }
   }
 };
@@ -55,23 +65,30 @@ export const ThemeProvider = ({
   const systemColorScheme = useColorScheme();
 
   // Memoize the merged themes to avoid recreation on every render
-  const mergedThemes = useMemo(() => ({
-    light: {
-      colors: {
-        ...defaultTheme.light.colors,
-        ...(customThemes?.light?.colors || {})
+  const mergedThemes = useMemo(() => {
+    return {
+      light: {
+        ...defaultTheme.light,
+        colors: {
+          ...defaultTheme.light.colors,
+          ...(customThemes?.light?.colors || {})
+        }
+      },
+      dark: {
+        ...defaultTheme.dark,
+        colors: {
+          ...defaultTheme.dark.colors,
+          ...(customThemes?.dark?.colors || {})
+        }
       }
-    },
-    dark: {
-      colors: {
-        ...defaultTheme.dark.colors,
-        ...(customThemes?.dark?.colors || {})
-      }
-    }
-  }), [customThemes]);
+    };
+  }, [customThemes]);
 
   // Memoize the active theme
-  const activeTheme = useMemo(() => mergedThemes[systemColorScheme ?? 'light'], [mergedThemes, systemColorScheme]);
+  const activeTheme = useMemo(() => {
+    const scheme = systemColorScheme ?? 'light';
+    return mergedThemes[scheme];
+  }, [mergedThemes, systemColorScheme]);
 
   // Memoize the context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => activeTheme, [activeTheme]);

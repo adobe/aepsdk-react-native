@@ -12,7 +12,8 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import { Pressable, StyleSheet, Text, useColorScheme } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
+import { useTheme } from "../../theme/index.js";
 
 /** Props for the DismissButton component. Extends the PressableProps from react-native. */
 
@@ -23,17 +24,19 @@ const DismissButton = ({
   style,
   ...props
 }) => {
-  const colorScheme = useColorScheme();
+  const {
+    colors
+  } = useTheme();
   return /*#__PURE__*/React.createElement(Pressable, _extends({
     onPress: onPress,
     style: state => [styles.container, type === "simple" && styles.simple, type === "circle" && [styles.circle, {
-      backgroundColor: colorScheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
+      backgroundColor: `${colors.textPrimary}1A`
     }], state.pressed && styles.pressed, typeof style === "function" ? style(state) : style]
   }, props), /*#__PURE__*/React.createElement(Text, {
     style: [styles.text, {
-      color: colorScheme === "dark" ? "white" : "black"
+      color: colors.textPrimary
     }, textStyle]
-  }, "x"));
+  }, '\u00D7'));
 };
 export default DismissButton;
 const styles = StyleSheet.create({
@@ -41,7 +44,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 6,
     right: 6,
-    zIndex: 1000,
     justifyContent: "center",
     alignItems: "center",
     minWidth: 18,

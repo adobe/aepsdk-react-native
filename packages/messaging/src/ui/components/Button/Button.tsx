@@ -11,10 +11,12 @@
 */
 import React, { useCallback } from 'react';
 import {
+  AccessibilityRole,
   GestureResponderEvent,
   Linking,
   Pressable,
   PressableProps,
+  StyleProp,
   Text,
   TextStyle
 } from 'react-native';
@@ -26,25 +28,31 @@ export interface ButtonProps extends Omit<PressableProps, 'onPress'> {
   title: string;
   onPress?: (interactId?: string, event?: GestureResponderEvent) => void;
   interactId?: string;
-  textStyle?: (TextStyle | undefined) | (TextStyle | undefined)[];
+  textStyle?: StyleProp<TextStyle>;
+  accessibilityRole?: AccessibilityRole;
 }
 
 const Button: React.FC<ButtonProps> = ({
   actionUrl,
-  id,
   title,
   onPress,
   interactId,
   textStyle,
   style,
+  accessibilityRole = 'button',
   ...props
 }) => {
-  const theme = useTheme();
-  const handlePress = useCallback(() => {
-    onPress?.(interactId);
+  const { colors } = useTheme();
+  const handlePress = useCallback(async (event: GestureResponderEvent) => {
+    onPress?.(interactId, event);
     if (actionUrl) {
       try {
-        Linking.openURL(actionUrl);
+        const supported = await Linking.canOpenURL(actionUrl);
+        if (supported) {
+          await Linking.openURL(actionUrl);
+        } else {
+          console.warn(`Cannot open URL: ${actionUrl}`);
+        }
       } catch (error) {
         console.warn(`Failed to open URL: ${actionUrl}`, error);
       }
@@ -52,8 +60,13 @@ const Button: React.FC<ButtonProps> = ({
   }, [actionUrl, interactId, onPress]);
 
   return (
-    <Pressable onPress={handlePress} style={style} {...props}>
-      <Text style={[{ color: theme?.colors?.buttonTextColor }, textStyle]}>
+    <Pressable  
+      accessibilityRole={accessibilityRole} 
+      onPress={handlePress} 
+      style={style} 
+      {...props}
+    >
+      <Text style={[{ color: colors?.buttonTextColor }, textStyle]}>
         {title}
       </Text>
     </Pressable>
