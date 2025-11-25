@@ -18,7 +18,6 @@ export const useContentCardUI = (surface: string) => {
       await Messaging.updatePropositionsForSurfaces([surface]);
       const content = await Messaging.getContentCardUI(surface);
       setContent(content);
-      setIsLoading(false);
     } catch (error) {
       console.error(error);
       setContent([]);

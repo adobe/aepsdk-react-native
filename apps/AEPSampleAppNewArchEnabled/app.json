@@ -3,7 +3,7 @@
     "name": "AEPSampleAppNewArchEnabled",
     "slug": "AEPSampleAppNewArchEnabled",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.adobe.MessagingDemoAppSwiftUI"
+      "bundleIdentifier": "com.AEPSampleAppNewArchEnabled"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.adobe.marketing.mobile.messagingsample"
+      "package": "com.AEPSampleAppNewArchEnabled"
     },
     "web": {
       "bundler": "metro",

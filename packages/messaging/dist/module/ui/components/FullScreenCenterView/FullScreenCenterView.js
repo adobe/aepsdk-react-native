@@ -2,7 +2,7 @@
 
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 import { StyleSheet, View } from "react-native";
-const CenteredView = ({
+const FullScreenCenterView = ({
   children,
   style,
   ...rest
@@ -11,7 +11,7 @@ const CenteredView = ({
     style: [styles.container, style]
   }, rest), children);
 };
-export default CenteredView;
+export default FullScreenCenterView;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
     alignItems: "center"
   }
 });
-//# sourceMappingURL=CenteredView.js.map
+//# sourceMappingURL=FullScreenCenterView.js.map

@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
 
-const CenteredView = ({ children, style, ...rest }: PropsWithChildren<ViewProps>) => {
+const FullScreenCenterView = ({ children, style, ...rest }: PropsWithChildren<ViewProps>) => {
   return (
     <View style={[styles.container, style]} {...rest}>
       {children}
@@ -9,7 +9,7 @@ const CenteredView = ({ children, style, ...rest }: PropsWithChildren<ViewProps>
   );
 };
 
-export default CenteredView;
+export default FullScreenCenterView;
 
 const styles = StyleSheet.create({
   container: {

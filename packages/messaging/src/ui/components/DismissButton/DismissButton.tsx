@@ -14,9 +14,9 @@ import {
   PressableProps,
   StyleSheet,
   Text,
-  TextStyle,
-  useColorScheme,
+  TextStyle
 } from "react-native";
+import { useTheme } from "../../theme";
 
 /** Props for the DismissButton component. Extends the PressableProps from react-native. */
 export interface DismissButtonProps extends PressableProps {
@@ -35,7 +35,7 @@ const DismissButton = ({
   style,
   ...props
 }: DismissButtonProps) => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
 
   return (
     <Pressable
@@ -46,10 +46,7 @@ const DismissButton = ({
         type === "circle" && [
           styles.circle,
           {
-            backgroundColor:
-              colorScheme === "dark"
-                ? "rgba(255,255,255,0.1)"
-                : "rgba(0,0,0,0.1)",
+            backgroundColor:  `${colors.textPrimary}1A`,
           },
         ],
         state.pressed && styles.pressed,
@@ -60,11 +57,12 @@ const DismissButton = ({
       <Text
         style={[
           styles.text,
-          { color: colorScheme === "dark" ? "white" : "black" },
+          { color: colors.textPrimary },
           textStyle,
         ]}
       >
-        x
+        {/* Unicode for multiplication sign */}
+        {'\u00D7'}
       </Text>
     </Pressable>
   );
@@ -77,7 +75,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 6,
     right: 6,
-    zIndex: 1000,
     justifyContent: "center",
     alignItems: "center",
     minWidth: 18,

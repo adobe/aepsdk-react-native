@@ -277,7 +277,6 @@ const ContentCardsView = () => {
           settings={settings}
           isLoading={isLoadingContainer}
           error={error}
-          refetch={refetchContainer}
         />
       </>
     );
@@ -315,7 +314,6 @@ const ContentCardsView = () => {
           CardProps={settings?.CardProps}
           isLoading={isLoadingContainer}
           error={error}
-          refetch={refetchContainer}
         />
       </>
     );

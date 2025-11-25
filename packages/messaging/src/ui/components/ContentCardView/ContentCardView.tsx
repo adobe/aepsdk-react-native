@@ -32,7 +32,6 @@ import {
   PressableProps,
   StyleSheet,
   Text,
-  useColorScheme,
   View
 } from 'react-native';
 import MessagingEdgeEventType from '../../../models/MessagingEdgeEventType';
@@ -40,7 +39,7 @@ import DismissButton from '../DismissButton/DismissButton';
 import UnreadIcon from '../UnreadIcon/UnreadIcon';
 import { useTheme } from '../../theme';
 import useAspectRatio from '../../hooks/useAspectRatio';
-import { ContentCardTemplate } from '../../../models';
+import { ContentCardContent, ContentCardTemplate } from '../../../models';
 import Button from '../Button/Button';
 import useContainerSettings from '../../hooks/useContainerSettings';
 
@@ -98,10 +97,9 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   DismissButtonProps,
   ...props
 }) => {
-  const colorScheme = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
-  const theme = useTheme();
+  const { colors, isDark } = useTheme();
   const containerSettings = useContainerSettings();
   // Track read state in component state
   const [isRead, setIsRead] = useState(template.isRead);
@@ -121,8 +119,8 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     }
     
     const unreadBg = containerSettings.content.unread_indicator.unread_bg;
-    return colorScheme === 'dark' ? unreadBg.clr.dark : unreadBg.clr.light;
-  }, [isUnreadEnabled, isRead, containerSettings, colorScheme]);
+    return isDark ? unreadBg.clr.dark : unreadBg.clr.light;
+  }, [isUnreadEnabled, isRead, containerSettings, isDark]);
 
   const cardVariant = useMemo<ContentCardTemplate>(
     () => variant ?? template.type ?? "SmallImage",
@@ -138,35 +136,45 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     setIsVisible(false);
   }, [listener, template]);
 
-  const onPress = useCallback(() => {
+  const onPress = useCallback(async () => {
     listener?.("onInteract", template);
 
     // Track interaction event using propositionItem
     template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
 
     // Mark as read when interacted with
-    template.isRead = true;
     setIsRead(true);
 
-    if (template.data?.content?.actionUrl) {
+    const actionUrl = template.data.content.actionUrl;
+    if (actionUrl) {
       try {
-        Linking.openURL(template.data.content.actionUrl);
+        const supported = await Linking.canOpenURL(actionUrl);
+        if (supported) {
+          await Linking.openURL(actionUrl);
+        } else {
+          console.warn(`Cannot open URL: ${actionUrl}`);
+        }
       } catch (error) {
         console.warn(
-          `Failed to open URL: ${template.data.content.actionUrl}`,
+          `Failed to open URL: ${actionUrl}`,
           error
         );
       }
     }
   }, [template, listener]);
 
+  const onButtonPress = useCallback((buttonId?: string) => {
+    listener?.("onInteract", template, { buttonId });
+    setIsRead(true);
+  }, [listener, template]);
+
   const imageUri = useMemo(() => {
-    if (colorScheme === "dark" && template.data?.content?.image?.darkUrl) {
+    if (isDark && template.data?.content?.image?.darkUrl) {
       return template.data.content.image.darkUrl;
     }
     return template.data.content.image?.url;
   }, [
-    colorScheme,
+    isDark,
     template.data?.content?.image?.darkUrl,
     template.data?.content?.image?.url,
   ]);
@@ -206,7 +214,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
 
   if (!template.data) return null;
 
-  const content = template?.data?.content as any;
+  const content = template?.data?.content as ContentCardContent;
 
   if (!content) return null;
 
@@ -235,7 +243,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             style={[
               cardVariant === "SmallImage"
                 ? smallImageStyles.imageContainer
-                : styles.imageContainer,
+                : (styles.imageContainer, { backgroundColor: colors.imageContainerColor }),
               styleOverrides?.imageContainer,
             ]}
             {...ImageContainerProps}
@@ -265,7 +273,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
               <Text
                 style={[
                   styles.title,
-                  { color: theme.colors.textPrimary },
+                  { color: colors.textPrimary },
                   styleOverrides?.text,
                   styleOverrides?.title,
                 ]}
@@ -279,7 +287,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
               <Text
                 style={[
                   styles.body,
-                  { color: theme.colors.textPrimary },
+                  { color: colors.textPrimary },
                   styleOverrides?.text,
                   styleOverrides?.body,
                 ]}
@@ -293,13 +301,14 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
               style={[styles.buttonContainer, styleOverrides?.buttonContainer]}
               {...ButtonContainerProps}
             >
-              {content?.buttons?.length > 0 &&
+              {(Array.isArray(content?.buttons) && content.buttons.length > 0) &&
                 content.buttons.map((button) => (
                   <Button
                     key={button.id}
+                    interactId={button.id}
                     actionUrl={button.actionUrl}
                     title={button.text.content}
-                    onPress={onPress}
+                    onPress={onButtonPress}
                     style={styleOverrides?.button}
                     textStyle={[
                       styleOverrides?.text,
@@ -337,7 +346,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: "center",
     borderRadius: 12,
-    backgroundColor: "#f0f0f0",
   },
   image: {
     width: "100%",

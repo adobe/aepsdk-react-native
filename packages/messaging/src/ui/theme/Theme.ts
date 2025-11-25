@@ -28,6 +28,7 @@ export interface Themes {
  */
 export interface Theme {
   colors: Colors;
+  isDark: boolean;
 }
 
 /**
@@ -49,4 +50,8 @@ export interface Colors {
   textSecondary?: string;
   imagePlaceholder?: string;
   buttonTextColor?: string;
+  activeColor?: string;
+  inactiveColor?: string;
+  dotColor?: string;
+  imageContainerColor?: string;
 }

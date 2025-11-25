@@ -17,31 +17,39 @@ import { Linking, Pressable, Text } from 'react-native';
 import { useTheme } from "../../theme/ThemeProvider.js";
 const Button = ({
   actionUrl,
-  id,
   title,
   onPress,
   interactId,
   textStyle,
   style,
+  accessibilityRole = 'button',
   ...props
 }) => {
-  const theme = useTheme();
-  const handlePress = useCallback(() => {
-    onPress?.(interactId);
+  const {
+    colors
+  } = useTheme();
+  const handlePress = useCallback(async event => {
+    onPress?.(interactId, event);
     if (actionUrl) {
       try {
-        Linking.openURL(actionUrl);
+        const supported = await Linking.canOpenURL(actionUrl);
+        if (supported) {
+          await Linking.openURL(actionUrl);
+        } else {
+          console.warn(`Cannot open URL: ${actionUrl}`);
+        }
       } catch (error) {
         console.warn(`Failed to open URL: ${actionUrl}`, error);
       }
     }
   }, [actionUrl, interactId, onPress]);
   return /*#__PURE__*/React.createElement(Pressable, _extends({
+    accessibilityRole: accessibilityRole,
     onPress: handlePress,
     style: style
   }, props), /*#__PURE__*/React.createElement(Text, {
     style: [{
-      color: theme?.colors?.buttonTextColor
+      color: colors?.buttonTextColor
     }, textStyle]
   }, title));
 };

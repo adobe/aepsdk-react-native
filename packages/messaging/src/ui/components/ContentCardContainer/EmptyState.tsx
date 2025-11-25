@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   Image,
   ImageProps,
@@ -7,12 +6,12 @@ import {
   Text,
   TextProps,
   TextStyle,
-  useColorScheme,
   ViewProps,
   ViewStyle
 } from "react-native";
 import useAspectRatio from "../../hooks/useAspectRatio";
-import CenteredView from "../CenteredView/CenteredView";
+import { useTheme } from "../../theme";
+import FullScreenCenterView from "../FullScreenCenterView/FullScreenCenterView";
 
 interface EmptyStateProps extends ViewProps {
   image: string;
@@ -35,16 +34,11 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   ImageProps,
   TextProps
 }) => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const ratio = useAspectRatio(image);
 
-  const textColor = useMemo(
-    () => colorScheme === 'dark' ? '#FFFFFF' : '#000000',
-    [colorScheme]
-  );
-
   return (
-    <CenteredView 
+    <FullScreenCenterView 
       style={[styles.container, styleOverrides?.container]} 
       {...ContainerProps}
     >
@@ -55,12 +49,12 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         {...ImageProps}
       />
       <Text 
-        style={[styles.text, { color: textColor }, styleOverrides?.text]} 
+        style={[styles.text, { color: colors.textPrimary }, styleOverrides?.text]} 
         {...TextProps}
       >
         {text}
       </Text>
-    </CenteredView>
+    </FullScreenCenterView>
   );
 };
 
