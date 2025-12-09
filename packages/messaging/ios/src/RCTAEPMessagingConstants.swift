@@ -17,10 +17,13 @@ class Constants {
     static let SHOULD_SHOW_MESSAGE_EVENT = "shouldShowMessage"
     static let URL_LOADED_EVENT = "urlLoaded"
     static let ON_JAVASCRIPT_MESSAGE_EVENT = "onJavascriptMessage"
+    static let ON_JAVASCRIPT_RESULT_EVENT = "onJavascriptResult"
     static let SUPPORTED_EVENTS = [
         ON_DISMISS_EVENT, ON_SHOW_EVENT, SHOULD_SHOW_MESSAGE_EVENT, URL_LOADED_EVENT, ON_JAVASCRIPT_MESSAGE_EVENT
     ]
     static let MESSAGE_ID_KEY = "messageId"
     static let HANDLER_NAME_KEY = "handlerName"
+    static let JAVASCRIPT_STRING_KEY = "javascriptString"
     static let CONTENT_KEY = "content"
+    static let RESULT_KEY = "result"
 }

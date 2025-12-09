@@ -286,6 +286,28 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         }
     }
 
+    @objc
+    func evaluateJavascript(
+        _ messageId: String,
+        javascriptString: String
+    ) {
+        guard let message = jsHandlerMessageCache[messageId] else { 
+            print("[RCTAEPMessaging] handleJavascriptMessage: No message found in cache for messageId: \(messageId)")
+            return 
+        }
+
+        message.evaluateJavascript(javascriptString) { [weak self] result in
+            self?.emitNativeEvent(
+                name: Constants.ON_JAVASCRIPT_RESULT_EVENT,
+                body: [
+                    Constants.MESSAGE_ID_KEY: messageId,
+                    Constants.JAVASCRIPT_STRING_KEY: javascriptString,
+                    Constants.RESULT_KEY: result ?? ""
+                ]
+            )
+        }
+    }
+
     /// MARK: - Unified PropositionItem Tracking Methods
     
     /**
