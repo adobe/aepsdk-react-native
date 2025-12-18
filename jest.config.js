@@ -1,6 +1,6 @@
 module.exports = {
   maxConcurrency: 10,
-  preset: 'react-native',
+  testEnvironment: 'node',
   transform: {
     '^.+\\.(js|jsx)$': 'babel-jest',
     '^.+\\.(ts|tsx)$': 'ts-jest'
@@ -14,4 +14,7 @@ module.exports = {
   testPathIgnorePatterns: ['./packages/template'],
   moduleDirectories: ['node_modules', './apps/AEPSampleAppNewArchEnabled/node_modules'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  moduleNameMapper: {
+    '^react-native$': '<rootDir>/apps/AEPSampleAppNewArchEnabled/node_modules/react-native'
+  },
 };
