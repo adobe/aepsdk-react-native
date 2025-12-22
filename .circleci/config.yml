@@ -68,7 +68,8 @@ jobs:
 
   build-sample-app-ios:
     macos:
-      xcode: 15.2
+      xcode: 15.2.0
+    resource_class: m2pro.medium
 
     steps:
       - checkout
