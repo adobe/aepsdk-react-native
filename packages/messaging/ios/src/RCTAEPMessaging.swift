@@ -292,17 +292,34 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         javascriptString: String
     ) {
         guard let message = jsHandlerMessageCache[messageId] else { 
-            print("[RCTAEPMessaging] handleJavascriptMessage: No message found in cache for messageId: \(messageId)")
+            print("[RCTAEPMessaging] evaluateJavascript: No message found in cache for messageId: \(messageId)")
             return 
         }
 
-        message.evaluateJavascript(javascriptString) { [weak self] result in
+        guard let messageWebView = message.view as? WKWebView else {
+            print("[RCTAEPMessaging] evaluateJavascript: Could not get WKWebView from message")
+            return
+        }
+        
+        messageWebView.evaluateJavaScript(javascriptString) { [weak self] result, error in
+            if let error = error {
+                print("[RCTAEPMessaging] evaluateJavascript error: \(error)")
+            }
+            
+            // Convert result to string
+            let resultString: String
+            if let result = result {
+                resultString = String(describing: result)
+            } else {
+                resultString = ""
+            }
+            
             self?.emitNativeEvent(
                 name: Constants.ON_JAVASCRIPT_RESULT_EVENT,
                 body: [
                     Constants.MESSAGE_ID_KEY: messageId,
                     Constants.JAVASCRIPT_STRING_KEY: javascriptString,
-                    Constants.RESULT_KEY: result ?? ""
+                    Constants.RESULT_KEY: resultString
                 ]
             )
         }

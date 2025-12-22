@@ -105,7 +105,7 @@ describe('Messaging', () => {
     let message = new Message({id, autoTrack});
     let javascriptString = 'javascriptString';
     let callback = jest.fn();
-    await message.handleJavascriptMessage(javascriptString, callback);
+    await message.evaluateJavascript(javascriptString, callback);
     expect(spy).toHaveBeenCalledWith(id, javascriptString);
   });
 
