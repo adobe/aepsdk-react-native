@@ -155,6 +155,16 @@ class Message {
   _clearJavascriptMessageHandlers() {
     delete jsMessageHandlers[this.id];
   }
+
+  /**
+   * @internal - For internal use only.
+   * Clears all the javascript result handlers for the message.
+   * This function must be called if the callbacks registered in evaluateJavascript are no longer needed.
+   * Failure to call this function may lead to memory leaks.
+   */
+  _clearJavascriptResultHandlers() {
+    delete jsResultHandlers[this.id];
+  }
 }
 
 export default Message;

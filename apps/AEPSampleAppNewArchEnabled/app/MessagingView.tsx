@@ -49,6 +49,9 @@ const setMessagingDelegate = () => {
       msg.handleJavascriptMessage('myInappCallback', (content: string) => {
         console.log('Received webview content in onShow:', content);
       });
+      msg.evaluateJavascript("(function() {console.log('my test'); return 'some result';})();", (result: string) => {
+        console.log('Result:', result);
+      });
     },
     shouldShowMessage: () => true,
     shouldSaveMessage: () => true,
