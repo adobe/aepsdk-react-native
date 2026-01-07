@@ -125,10 +125,8 @@ const unifiedTrackingExample = async () => {
     const propositions = messages[surface] || [];
 
     for (const proposition of propositions) {
-      const propositionWrapper = new MessagingProposition(proposition);       
-      if (propositionWrapper.items.length > 0) {
-        const propositionItem = propositionWrapper.items[0];
-        propositionItem.track(MessagingEdgeEventType.DISPLAY); 
+      for (const propositionItem of proposition.items) {
+        propositionItem.track(MessagingEdgeEventType.DISPLAY);
         propositionItem.track('content_card_clicked', MessagingEdgeEventType.INTERACT, null);
       }
     }
