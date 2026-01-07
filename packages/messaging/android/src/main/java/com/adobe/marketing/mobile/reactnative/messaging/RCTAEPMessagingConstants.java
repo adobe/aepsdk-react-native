@@ -14,6 +14,9 @@ package com.adobe.marketing.mobile.reactnative.messaging;
 class RCTAEPMessagingConstants {
     static final String MESSAGE_ID_KEY = "messageId";
     static final String HANDLER_NAME_KEY = "handlerName";
+    static final String JAVASCRIPT_STRING_KEY = "javascriptString";
     static final String CONTENT_KEY = "content";
+    static final String RESULT_KEY = "result";
     static final String ON_JAVASCRIPT_MESSAGE_EVENT = "onJavascriptMessage";
+    static final String ON_JAVASCRIPT_RESULT_EVENT = "onJavascriptResult";
  }

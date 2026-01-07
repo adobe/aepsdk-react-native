@@ -152,6 +152,7 @@ jest.doMock('react-native', () => {
           handleJavascriptMessage: jest.fn(
             () => new Promise((resolve) => resolve(new Object()))
           ),
+          evaluateJavascript: jest.fn(),
           clear: jest.fn(),
           updatePropositionsForSurfaces: jest.fn(),
           getPropositionsForSurfaces: jest.fn(

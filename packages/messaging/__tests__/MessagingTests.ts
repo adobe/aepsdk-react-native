@@ -98,6 +98,17 @@ describe('Messaging', () => {
     expect(spy).toHaveBeenCalledWith(id, handlerName);
   });
 
+  it('evaluateJavascript is called', async () => {
+    const spy = jest.spyOn(NativeModules.AEPMessaging, 'evaluateJavascript');
+    let id = 'id';
+    let autoTrack = true;
+    let message = new Message({id, autoTrack});
+    let javascriptString = 'javascriptString';
+    let callback = jest.fn();
+    await message.evaluateJavascript(javascriptString, callback);
+    expect(spy).toHaveBeenCalledWith(id, javascriptString);
+  });
+
   it('should call updatePropositionsForSurfaces', async () => {
     const spy = jest.spyOn(NativeModules.AEPMessaging, 'updatePropositionsForSurfaces');
     await Messaging.updatePropositionsForSurfaces([

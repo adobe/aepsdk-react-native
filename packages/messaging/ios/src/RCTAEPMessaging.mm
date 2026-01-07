@@ -60,6 +60,10 @@ RCT_EXTERN_METHOD(handleJavascriptMessage
                   : (NSString *)messageId handlerName
                   : (NSString *)handlerName)
 
+RCT_EXTERN_METHOD(evaluateJavascript
+                  : (NSString *)messageId javascriptString
+                  : (NSString *)javascriptString)
+
 RCT_EXTERN_METHOD(trackPropositionItem
                   : (NSString *)uuid interaction
                   : (NSString * _Nullable)interaction eventType
