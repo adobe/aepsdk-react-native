@@ -21,7 +21,7 @@ export interface JSONPropositionData extends PropositionItemData {
 }
 
 export class JSONPropositionItem extends PropositionItem {
-	declare data: JSONPropositionData['data'];
+	data: JSONPropositionData['data'];
 
 	constructor(jsonData: JSONPropositionData) {
 		super(jsonData);

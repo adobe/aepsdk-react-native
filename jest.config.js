@@ -1,14 +1,31 @@
+const { defaults: tsjPreset } = require("ts-jest/presets");
+
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  maxConcurrency: 10,
-  preset: './apps/AEPSampleAppNewArchEnabled/node_modules/react-native/jest-preset.js',
+  ...tsjPreset,
+  preset: "react-native",
+  testEnvironment: "node",
   transform: {
-    '^.+\\.(js)$': '<rootDir>/node_modules/babel-jest',
-    '\\.(ts|tsx)$': 'ts-jest'
+    "^.+\\.jsx$": "babel-jest",
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        tsconfig: "tsconfig.jest.json",
+      },
+    ],
   },
-  setupFiles: ['./tests/jest/setup.ts'],
-  testMatch: ['**/packages/**/__tests__/*.ts'],
-  modulePaths: ['node_modules', './apps/AEPSampleAppNewArchEnabled/node_modules'],
-  testPathIgnorePatterns: ['./packages/template'],
-  moduleDirectories: ['node_modules', './apps/AEPSampleAppNewArchEnabled/node_modules'],
-  moduleFileExtensions: ['ts', 'tsx', 'js'],
+  setupFiles: ["<rootDir>/tests/jest/setup.ts"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  moduleNameMapper: {
+    "^react-native$": "<rootDir>/node_modules/react-native",
+  },
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/dist/",
+    "/lib/",
+    "/android/",
+    "/ios/",
+    "/apps/",
+    "/packages/messaging/src/ui/"
+  ],
 };

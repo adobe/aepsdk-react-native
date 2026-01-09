@@ -14,17 +14,21 @@ import {
   NativeModules,
   NativeEventEmitter,
   NativeModule,
-  Platform
-} from 'react-native';
-import Message from './models/Message';
-import { MessagingDelegate } from './models/MessagingDelegate';
-import { MessagingProposition } from './models/MessagingProposition';
-import { ContentCard } from './models/ContentCard';
+  Platform,
+} from "react-native";
+import Message from "./models/Message";
+import { MessagingDelegate } from "./models/MessagingDelegate";
+import { MessagingProposition } from "./models/MessagingProposition";
+import { ContentCard } from "./models/ContentCard";
+import { PersonalizationSchema } from "./models/PersonalizationSchema";
+import { ContentTemplate } from "./ui/types/Templates";
+import { ContainerSettings } from "./ui/providers/ContentCardContainerProvider";
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
   getCachedMessages: () => Message[];
   getLatestMessage: () => Message;
+  getContentCardUI: (surface: string) => Promise<ContentTemplate[]>;
   getPropositionsForSurfaces: (
     surfaces: string[]
   ) => Record<string, MessagingProposition[]>;
@@ -34,10 +38,21 @@ export interface NativeMessagingModule {
     shouldShowMessage: boolean,
     shouldSaveMessage: boolean
   ) => void;
-  updatePropositionsForSurfaces: (surfaces: string[]) => void;
-  trackContentCardDisplay: (proposition: MessagingProposition, contentCard: ContentCard) => void;
-  trackContentCardInteraction: (proposition: MessagingProposition, contentCard: ContentCard) => void;
-  trackPropositionItem: (itemId: string, interaction: string | null, eventType: number, tokens: string[] | null) => void;
+  updatePropositionsForSurfaces: (surfaces: string[]) => Promise<void>;
+  trackContentCardDisplay: (
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ) => void;
+  trackContentCardInteraction: (
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ) => void;
+  trackPropositionItem: (
+    itemId: string,
+    interaction: string | null,
+    eventType: number,
+    tokens: string[] | null
+  ) => void;
 }
 
 const RCTAEPMessaging: NativeModule & NativeMessagingModule =
@@ -107,28 +122,44 @@ class Messaging {
   /**
    * @deprecated Use PropositionItem.track(...) instead.
    */
-  static trackContentCardDisplay(proposition: MessagingProposition, contentCard: ContentCard): void {
+  static trackContentCardDisplay(
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ): void {
     RCTAEPMessaging.trackContentCardDisplay(proposition, contentCard);
   }
 
   /**
    * @deprecated Use PropositionItem.track(...) instead.
    */
-  static trackContentCardInteraction(proposition: MessagingProposition, contentCard: ContentCard): void {
+  static trackContentCardInteraction(
+    proposition: MessagingProposition,
+    contentCard: ContentCard
+  ): void {
     RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);
   }
 
   /**
    * Tracks interactions with a PropositionItem using the provided interaction and event type.
    * This method is used internally by the PropositionItem.track() method.
-   * 
+   *
    * @param {string} itemId - The unique identifier of the PropositionItem
    * @param {string | null} interaction - A custom string value to be recorded in the interaction
    * @param {number} eventType - The MessagingEdgeEventType numeric value
    * @param {string[] | null} tokens - Array containing the sub-item tokens for recording interaction
    */
-  static trackPropositionItem(itemId: string, interaction: string | null, eventType: number, tokens: string[] | null): void {
-    RCTAEPMessaging.trackPropositionItem(itemId, interaction, eventType, tokens);
+  static trackPropositionItem(
+    itemId: string,
+    interaction: string | null,
+    eventType: number,
+    tokens: string[] | null
+  ): void {
+    RCTAEPMessaging.trackPropositionItem(
+      itemId,
+      interaction,
+      eventType,
+      tokens
+    );
   }
 
   /**
@@ -140,17 +171,17 @@ class Messaging {
 
     const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
 
-    eventEmitter.addListener('onShow', (message: Message) =>
+    eventEmitter.addListener("onShow", (message: Message) =>
       messagingDelegate?.onShow?.(new Message(message))
     );
 
-    eventEmitter.addListener('onDismiss', (message: Message) => {
+    eventEmitter.addListener("onDismiss", (message: Message) => {
       const messageInstance = new Message(message);
       messageInstance._clearJavascriptMessageHandlers();
       messagingDelegate?.onDismiss?.(messageInstance);
     });
 
-    eventEmitter.addListener('shouldShowMessage', (message: Message) => {
+    eventEmitter.addListener("shouldShowMessage", (message: Message) => {
       const messageInstance = new Message(message);
       const shouldShowMessage =
         messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
@@ -159,26 +190,34 @@ class Messaging {
       RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
     });
 
-    if (Platform.OS === 'ios') {
-      eventEmitter.addListener('urlLoaded', (event: {url: string, message: Message}) =>
-        messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
+    if (Platform.OS === "ios") {
+      eventEmitter.addListener(
+        "urlLoaded",
+        (event: { url: string; message: Message }) =>
+          messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
       );
     }
 
-    if (Platform.OS === 'android') {
-      eventEmitter.addListener('onContentLoaded', (event: {message: Message}) =>
-        messagingDelegate?.onContentLoaded?.(new Message(event.message))
+    if (Platform.OS === "android") {
+      eventEmitter.addListener(
+        "onContentLoaded",
+        (event: { message: Message }) =>
+          messagingDelegate?.onContentLoaded?.(new Message(event.message))
       );
     }
 
     RCTAEPMessaging.setMessagingDelegate();
 
     return () => {
-      eventEmitter.removeAllListeners('onDismiss');
-      eventEmitter.removeAllListeners('onShow');
-      eventEmitter.removeAllListeners('shouldShowMessage');
-      eventEmitter.removeAllListeners('urlLoaded');
-      eventEmitter.removeAllListeners('onContentLoaded');
+      eventEmitter.removeAllListeners("onDismiss");
+      eventEmitter.removeAllListeners("onShow");
+      eventEmitter.removeAllListeners("shouldShowMessage");
+      if (Platform.OS === "ios") {
+        eventEmitter.removeAllListeners("urlLoaded");
+      }
+      if (Platform.OS === "android") {
+        eventEmitter.removeAllListeners("onContentLoaded");
+      }
     };
   }
 
@@ -200,8 +239,83 @@ class Messaging {
    * Dispatches an event to fetch propositions for the provided surfaces from remote.
    * @param surfaces A list of surface names to update
    */
-  static updatePropositionsForSurfaces(surfaces: string[]) {
-    RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
+  static async updatePropositionsForSurfaces(
+    surfaces: string[]
+  ): Promise<void> {
+    return await RCTAEPMessaging.updatePropositionsForSurfaces(surfaces);
+  }
+
+  /**
+   * @experimental
+   * Retrieves the content card UI data for a given surface.
+   * @param surface The surface to get the content card UI data for
+   * @returns The content card UI data for the given surface
+   */
+  static async getContentCardUI(surface: string): Promise<ContentTemplate[]> {
+    const messages = await Messaging.getPropositionsForSurfaces([surface]);
+    const propositions = messages[surface];
+    if (!propositions?.length) {
+      return [];
+    }
+    const contentCards = propositions
+      .flatMap((proposition) =>
+        proposition.items.filter(
+          (item) => item.schema === PersonalizationSchema.CONTENT_CARD
+        )
+      );
+
+    if (!contentCards?.length) {
+      return [];
+    }
+
+    return contentCards.map((card: any) => {
+    // Test: To mark first 2 cards as read, swap the two map lines above to add index, then replace isRead with:
+    // return contentCards.map((card: any, index: number) => {
+      const type = card.data?.meta?.adobe?.template ?? "SmallImage";
+      const isRead = card.data?.read ?? false;
+      // const isRead = card.data?.read ?? (index < 2);
+      return new ContentTemplate(card, type, isRead);
+    });
+  }
+
+  static async getContentCardContainer(
+    surface: string
+  ): Promise<ContainerSettings> {
+    console.log("getContentCardContainer", surface);
+    return {
+      templateType: "inbox",
+      content: {
+        heading: {
+          content: "Heading",
+        },
+        layout: {
+          orientation: "vertical",
+        },
+        capacity: 15,
+        emptyStateSettings: {
+          message: {
+            content: "Empty State",
+          },
+        },
+        unread_indicator: {
+          unread_bg: {
+            clr: {
+              light: "#FFF3E0",  // Light orange background for unread cards
+              dark: "#2D1B0E",   // Dark orange background for unread cards
+            },
+          },
+          unread_icon: {
+            placement: "topleft",
+            image: {
+              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",  // Image in light mode
+              darkUrl: "",  // Empty URL = shows dot in dark mode
+            },
+          },
+        },
+        isUnreadEnabled: true,  // Enable unread features!
+      },
+      showPagination: false,
+    };
   }
 }
 

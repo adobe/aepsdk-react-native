@@ -11,38 +11,39 @@ governing permissions and limitations under the License.
 
 import React from 'react';
 import { View, Button } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
+  const router = useRouter();
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button onPress={() => navigation.navigate('CoreView')} title="Core/Lifecycle/Signal" />
-      <Button onPress={() => navigation.navigate('ProfileView')} title="UserProfile" />
+      <Button onPress={() => router.push('/CoreView')} title="Core/Lifecycle/Signal" />
+      <Button onPress={() => router.push('/ProfileView')} title="UserProfile" />
       <Button
-        onPress={() => navigation.navigate('IdentityView')}
+        onPress={() => router.push('/IdentityView')}
         title="Identity"
       />
       <Button
-        onPress={() => navigation.navigate('MessagingView')}
+        onPress={() => router.push('/MessagingView')}
         title="Messaging"
       />
       <Button
-        onPress={() => navigation.navigate('OptimizeView')}
+        onPress={() => router.push('/OptimizeView')}
         title="Optimize"
       />
-      <Button onPress={() => navigation.navigate('EdgeView')} title="Edge" />
-      <Button onPress={() => navigation.navigate('EdgeIdentityView')} title="EdgeIdentity" />
-      <Button onPress={() => navigation.navigate('ConsentView')} title="Consent" />
-      <Button onPress={() => navigation.navigate('EdgeBridgeView')} title="Edge Bridge" />
-      <Button onPress={() => navigation.navigate('AssuranceView')} title="Assurance" />
+      <Button onPress={() => router.push('/EdgeView')} title="Edge" />
+      <Button onPress={() => router.push('/EdgeIdentityView')} title="EdgeIdentity" />
+      <Button onPress={() => router.push('/ConsentView')} title="Consent" />
+      <Button onPress={() => router.push('/ContentCardsView')} title="Content Card & Container" />
+      <Button onPress={() => router.push('/EdgeBridgeView')} title="Edge Bridge" />
+      <Button onPress={() => router.push('/AssuranceView')} title="Assurance" />
       <Button
-        onPress={() => navigation.navigate('TargetView')}
+        onPress={() => router.push('/TargetView')}
         title="Target"
       />
 
       <Button
-        onPress={() => navigation.navigate('PlacesView')}
+        onPress={() => router.push('/PlacesView')}
         title="Places"
       />
 
