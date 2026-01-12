@@ -21,7 +21,7 @@ import UnreadIcon from "../UnreadIcon/UnreadIcon.js";
 import { useTheme } from "../../theme/index.js";
 import useAspectRatio from "../../hooks/useAspectRatio.js";
 import Button from "../Button/Button.js";
-import useContainerSettings from "../../hooks/useContainerSettings.js";
+import useInboxSettings from "../../hooks/useInboxSettings.js";
 
 /**
  * Callback function that is called when a content card event occurs.
@@ -56,7 +56,7 @@ export const ContentCardView = ({
     colors,
     isDark
   } = useTheme();
-  const containerSettings = useContainerSettings();
+  const containerSettings = useInboxSettings();
   // Track read state in component state
   const [isRead, setIsRead] = useState(template.isRead);
 

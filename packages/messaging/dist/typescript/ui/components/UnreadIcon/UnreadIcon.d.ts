@@ -1,6 +1,6 @@
 import React from 'react';
 import { ImageProps, ImageStyle, ViewProps, ViewStyle } from 'react-native';
-import { SettingsPlacement } from '../../providers/ContentCardContainerProvider';
+import { SettingsPlacement } from '../../providers/InboxProvider';
 export interface UnreadIconProps extends ViewProps {
     imageStyle?: ImageStyle;
     containerStyle?: ViewStyle;

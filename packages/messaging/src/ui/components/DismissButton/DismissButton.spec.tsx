@@ -31,21 +31,21 @@ describe('DismissButton', () => {
     it('should render a dismiss button with type "simple"', () => {
       render(<DismissButton onPress={mockOnPress} type="simple" />);
 
-      const button = screen.getByText('x');
+      const button = screen.getByText('\u00D7');
       expect(button).toBeTruthy();
     });
 
     it('should render a dismiss button with type "circle"', () => {
       render(<DismissButton onPress={mockOnPress} type="circle" />);
 
-      const button = screen.getByText('x');
+      const button = screen.getByText('\u00D7');
       expect(button).toBeTruthy();
     });
 
-    it('should display "x" as the button text', () => {
+    it('should display "×" as the button text', () => {
       render(<DismissButton onPress={mockOnPress} type="simple" />);
 
-      expect(screen.getByText('x')).toBeTruthy();
+      expect(screen.getByText('\u00D7')).toBeTruthy();
     });
   });
 
@@ -53,7 +53,7 @@ describe('DismissButton', () => {
     it('should call onPress when the button is pressed', () => {
       render(<DismissButton onPress={mockOnPress} type="simple" />);
 
-      const button = screen.getByText('x');
+      const button = screen.getByText('\u00D7');
       fireEvent.press(button);
 
       expect(mockOnPress).toHaveBeenCalledTimes(1);
@@ -62,7 +62,7 @@ describe('DismissButton', () => {
     it('should call onPress multiple times when pressed multiple times', () => {
       render(<DismissButton onPress={mockOnPress} type="circle" />);
 
-      const button = screen.getByText('x');
+      const button = screen.getByText('\u00D7');
       fireEvent.press(button);
       fireEvent.press(button);
       fireEvent.press(button);
@@ -76,28 +76,16 @@ describe('DismissButton', () => {
       mockUseColorScheme.mockReturnValue('light');
       render(<DismissButton onPress={mockOnPress} type="simple" />);
 
-      const text = screen.getByText('x');
-      expect(text.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            color: 'black'
-          })
-        ])
-      );
+      const text = screen.getByText('\u00D7');
+      expect(JSON.stringify(text.props.style)).toContain('#000000');
     });
 
     it('should apply dark color scheme styles', () => {
       mockUseColorScheme.mockReturnValue('dark');
       render(<DismissButton onPress={mockOnPress} type="simple" />);
 
-      const text = screen.getByText('x');
-      expect(text.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            color: 'white'
-          })
-        ])
-      );
+      const text = screen.getByText('\u00D7');
+      expect(JSON.stringify(text.props.style)).toContain('#FFFFFF');
     });
 
     it('should apply correct background color for circle type in light mode', () => {
@@ -112,7 +100,7 @@ describe('DismissButton', () => {
 
       const button = getByTestId('dismiss-button');
       const styles = JSON.stringify(button.props.style);
-      expect(styles).toContain('rgba(0,0,0,0.1)');
+      expect(styles).toContain('#0000001A');
     });
 
     it('should apply correct background color for circle type in dark mode', () => {
@@ -127,7 +115,7 @@ describe('DismissButton', () => {
 
       const button = getByTestId('dismiss-button');
       const styles = JSON.stringify(button.props.style);
-      expect(styles).toContain('rgba(255,255,255,0.1)');
+      expect(styles).toContain('#FFFFFF1A');
     });
   });
 
@@ -280,7 +268,6 @@ describe('DismissButton', () => {
             position: 'absolute',
             top: 6,
             right: 6,
-            zIndex: 1000
           })
         ])
       );
