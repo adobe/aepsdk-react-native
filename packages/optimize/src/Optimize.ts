@@ -119,7 +119,13 @@ const Optimize: IOptimize = {
       decisionScopeNames,
       xdm,
       data,
-      typeof onSuccess === 'function' ? onSuccess : () => {},
+      typeof onSuccess === 'function' ? (propositions: any) => {
+        const map = new Map<string, Proposition>();
+        for (const [key, value] of Object.entries(propositions)) {
+          map.set(key, new Proposition(value as any));  
+        }      
+        onSuccess(map);
+      } : () => {},
       typeof onError === 'function' ? onError : () => {}
     );
   },  

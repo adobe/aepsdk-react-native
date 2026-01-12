@@ -208,6 +208,7 @@ public final class RCTAEPMessagingModule
     }
   }
 
+
   @ReactMethod
   public void dismiss(final String messageId) {
     if (messageId != null && messageCache.get(messageId) != null) {
