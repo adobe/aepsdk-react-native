@@ -34,7 +34,7 @@ export interface InboxProps<T> extends Partial<FlatListProps<T>> {
 }
 
 function InboxInner<T extends ContentTemplate>({
-  inboxStyle,
+  contentContainerStyle,
   LoadingComponent = <ActivityIndicator />,
   ErrorComponent = null,
   FallbackComponent = null,
@@ -139,8 +139,8 @@ function InboxInner<T extends ContentTemplate>({
         {...props}
         data={displayCards}
         keyExtractor={(item: { id: string }) => item.id}
-        inboxStyle={[
-          inboxStyle,
+        contentContainerStyle={[
+          contentContainerStyle,
           isHorizontal && styles.horizontalListContent,
           styles.inbox
         ]}
