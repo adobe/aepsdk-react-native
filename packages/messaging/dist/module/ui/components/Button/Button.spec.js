@@ -11,14 +11,15 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
 */
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { Linking } from 'react-native';
 import { ThemeProvider } from "../../theme/ThemeProvider.js";
 import Button from "./Button.js";
 
-// Mock Linking.openURL
+// Mock Linking
 jest.spyOn(Linking, 'openURL');
+jest.spyOn(Linking, 'canOpenURL');
 
 // Helper to render with theme
 const renderWithTheme = (component, customThemes) => {
@@ -30,6 +31,8 @@ describe('Button', () => {
   const mockOnPress = jest.fn();
   beforeEach(() => {
     jest.clearAllMocks();
+    Linking.canOpenURL.mockResolvedValue(true);
+    Linking.openURL.mockResolvedValue(undefined);
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -77,7 +80,10 @@ describe('Button', () => {
       }));
       const button = screen.getByText('Press Me');
       fireEvent.press(button);
-      expect(mockOnPress).toHaveBeenCalledWith('test-interact-id');
+
+      // First argument should be interactId; second (event) may be undefined in tests
+      expect(mockOnPress).toHaveBeenCalled();
+      expect((mockOnPress.mock.calls[0] ?? [])[0]).toBe('test-interact-id');
     });
     it('should call onPress multiple times when pressed multiple times', () => {
       render(/*#__PURE__*/React.createElement(Button, {
@@ -99,7 +105,7 @@ describe('Button', () => {
     });
   });
   describe('actionUrl handling', () => {
-    it('should open URL when actionUrl is provided and button is pressed', () => {
+    it('should open URL when actionUrl is provided and button is pressed', async () => {
       const testUrl = 'https://example.com';
       render(/*#__PURE__*/React.createElement(Button, {
         title: "Link",
@@ -107,9 +113,9 @@ describe('Button', () => {
       }));
       const button = screen.getByText('Link');
       fireEvent.press(button);
-      expect(Linking.openURL).toHaveBeenCalledWith(testUrl);
+      await waitFor(() => expect(Linking.openURL).toHaveBeenCalledWith(testUrl));
     });
-    it('should call both onPress and open URL when both are provided', () => {
+    it('should call both onPress and open URL when both are provided', async () => {
       const testUrl = 'https://example.com';
       render(/*#__PURE__*/React.createElement(Button, {
         title: "Link",
@@ -119,9 +125,9 @@ describe('Button', () => {
       const button = screen.getByText('Link');
       fireEvent.press(button);
       expect(mockOnPress).toHaveBeenCalledTimes(1);
-      expect(Linking.openURL).toHaveBeenCalledWith(testUrl);
+      await waitFor(() => expect(Linking.openURL).toHaveBeenCalledWith(testUrl));
     });
-    it('should call onPress with interactId and open URL', () => {
+    it('should call onPress with interactId and open URL', async () => {
       const testUrl = 'https://example.com';
       render(/*#__PURE__*/React.createElement(Button, {
         title: "Link",
@@ -131,10 +137,11 @@ describe('Button', () => {
       }));
       const button = screen.getByText('Link');
       fireEvent.press(button);
-      expect(mockOnPress).toHaveBeenCalledWith('link-interact-id');
-      expect(Linking.openURL).toHaveBeenCalledWith(testUrl);
+      expect(mockOnPress).toHaveBeenCalled();
+      expect((mockOnPress.mock.calls[0] ?? [])[0]).toBe('link-interact-id');
+      await waitFor(() => expect(Linking.openURL).toHaveBeenCalledWith(testUrl));
     });
-    it('should call openURL even if it might fail', () => {
+    it('should call openURL even if it might fail', async () => {
       const testUrl = 'https://example.com';
       render(/*#__PURE__*/React.createElement(Button, {
         title: "Link",
@@ -144,21 +151,20 @@ describe('Button', () => {
       fireEvent.press(button);
 
       // Verify the URL opening was attempted
-      expect(Linking.openURL).toHaveBeenCalledWith(testUrl);
+      await waitFor(() => expect(Linking.openURL).toHaveBeenCalledWith(testUrl));
     });
-    it('should warn if openURL throws', () => {
+    it('should warn if openURL throws', async () => {
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       const testUrl = 'https://example.com';
-      Linking.openURL.mockImplementationOnce(() => {
-        throw new Error('open failed');
-      });
+      Linking.canOpenURL.mockResolvedValueOnce(true);
+      Linking.openURL.mockImplementationOnce(() => Promise.reject(new Error('open failed')));
       render(/*#__PURE__*/React.createElement(Button, {
         title: "Link",
         actionUrl: testUrl
       }));
       const button = screen.getByText('Link');
       expect(() => fireEvent.press(button)).not.toThrow();
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining(`Failed to open URL: ${testUrl}`), expect.any(Error));
+      await waitFor(() => expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining(`Failed to open URL: ${testUrl}`), expect.any(Error)));
       warnSpy.mockRestore();
     });
     it('should not try to open URL when actionUrl is not provided', () => {
@@ -167,6 +173,17 @@ describe('Button', () => {
         onPress: mockOnPress
       }));
       const button = screen.getByText('No Link');
+      fireEvent.press(button);
+      expect(Linking.openURL).not.toHaveBeenCalled();
+    });
+    it('should not open URL if canOpenURL returns false', () => {
+      Linking.canOpenURL.mockResolvedValueOnce(false);
+      const testUrl = 'https://example.com';
+      render(/*#__PURE__*/React.createElement(Button, {
+        title: "Link",
+        actionUrl: testUrl
+      }));
+      const button = screen.getByText('Link');
       fireEvent.press(button);
       expect(Linking.openURL).not.toHaveBeenCalled();
     });
@@ -393,7 +410,8 @@ describe('Button', () => {
       }));
       const button = screen.getByText('Test');
       fireEvent.press(button);
-      expect(mockOnPress).toHaveBeenCalledWith(undefined);
+      expect(mockOnPress).toHaveBeenCalled();
+      expect((mockOnPress.mock.calls[0] ?? [])[0]).toBeUndefined();
     });
     it('should handle empty string as actionUrl', () => {
       render(/*#__PURE__*/React.createElement(Button, {
@@ -408,7 +426,7 @@ describe('Button', () => {
     });
   });
   describe('Callback stability', () => {
-    it('should maintain stable callback reference', () => {
+    it('should maintain stable callback reference', async () => {
       const {
         rerender
       } = render(/*#__PURE__*/React.createElement(Button, {
@@ -419,7 +437,7 @@ describe('Button', () => {
       const button = screen.getByText('Stable');
       fireEvent.press(button);
       expect(mockOnPress).toHaveBeenCalledTimes(1);
-      expect(Linking.openURL).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(Linking.openURL).toHaveBeenCalledTimes(1));
 
       // Rerender with same props
       rerender(/*#__PURE__*/React.createElement(Button, {
@@ -429,7 +447,7 @@ describe('Button', () => {
       }));
       fireEvent.press(button);
       expect(mockOnPress).toHaveBeenCalledTimes(2);
-      expect(Linking.openURL).toHaveBeenCalledTimes(2);
+      await waitFor(() => expect(Linking.openURL).toHaveBeenCalledTimes(2));
     });
     it('should update callback when dependencies change', () => {
       const {
@@ -441,7 +459,8 @@ describe('Button', () => {
       }));
       const button = screen.getByText('Dynamic');
       fireEvent.press(button);
-      expect(mockOnPress).toHaveBeenCalledWith('id-1');
+      expect(mockOnPress).toHaveBeenCalled();
+      expect((mockOnPress.mock.calls[0] ?? [])[0]).toBe('id-1');
 
       // Rerender with different interactId
       rerender(/*#__PURE__*/React.createElement(Button, {
@@ -450,7 +469,7 @@ describe('Button', () => {
         interactId: "id-2"
       }));
       fireEvent.press(button);
-      expect(mockOnPress).toHaveBeenCalledWith('id-2');
+      expect((mockOnPress.mock.calls[1] ?? [])[0]).toBe('id-2');
     });
   });
 });
