@@ -8,36 +8,45 @@ orbs:
 jobs:
   unit-test:
     docker:
-      - image: cimg/node:18.20
+    - image: cimg/node:18.20
+    resource_class: large
 
     steps:
-      - checkout
+    - checkout
 
-      - restore_cache:
-          keys:
+    - restore_cache:
+        keys:
             - yarn-cache-{{ checksum "yarn.lock" }}
+            - yarn-cache-
 
-      - run:
-          name: Install Node.js and Yarn Dependencies
-          command: yarn install
+    - run:
+        name: Enable Corepack
+        command: corepack enable
 
-      - run:
-          name: Build the Project
-          command: yarn run build
+    - run:
+        name: Install Node.js and Yarn Dependencies
+        command: yarn install --immutable --network-timeout 300000
+        no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
-      - run:
-          name: Expo Prebuild
-          command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
+    - run:
+        name: Build the Project
+        command: yarn run build
 
-      - save_cache:
-          key: yarn-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-            - ./apps/AEPSampleAppNewArchEnabled/node_modules
+    - run:
+        name: Expo Prebuild
+        command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
 
-      - run:
-          name: Unit Tests
-          command: yarn test --watchAll=false --runInBand
+    - save_cache:
+        paths:
+            - .yarn/cache
+            - .yarn/unplugged
+        key: yarn-cache-{{ checksum "yarn.lock" }}
+
+    - run:
+        name: Unit Tests
+        command: yarn test --watchAll=false --runInBand
 
   build-sample-app-android:
     executor:
@@ -46,25 +55,32 @@ jobs:
       resource_class: large
 
     steps:
-      - checkout
+    - checkout
 
-      - run:
-          name: Install Node.js and Yarn Dependencies
-          command: yarn install
+    - run:
+        name: Enable Corepack
+        command: corepack enable
 
-      - run:
-          name: Build the Project
-          command: yarn run build
+    - run:
+        name: Install Node.js and Yarn Dependencies
+        command: yarn install --network-timeout 300000
+        no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
-      - run:
-          name: Expo Prebuild
-          command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
+    - run:
+        name: Build the Project
+        command: yarn run build
 
-      - run:
-          name: Building Android Sample App
-          command: yarn sampleappnewarchenabled:android:build
-          environment:
-            _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
+    - run:
+        name: Expo Prebuild
+        command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
+
+    - run:
+        name: Building Android Sample App
+        command: yarn sampleappnewarchenabled:android:build
+        environment:
+        _JAVA_OPTIONS: "-Xmx4096M -XX:MaxMetaspaceSize=512m"
 
   build-sample-app-ios:
     macos:
@@ -72,61 +88,69 @@ jobs:
     resource_class: m2pro.medium
 
     steps:
-      - checkout
+    - checkout
 
-      - restore_cache:
-          keys:
-            - ios-yarn-cache-{{ checksum "yarn.lock" }}
+    - restore_cache:
+        keys:
+            - yarn-cache-{{ checksum "yarn.lock" }}
+            - yarn-cache-
 
-      - run:
-          name: Set Xcode Path
-          command: sudo xcode-select -s /Applications/Xcode.app
+    - run:
+        name: Set Xcode Path
+        command: sudo xcode-select -s /Applications/Xcode.app
 
-      - run:
-          name: Install Node.js and Yarn Dependencies
-          command: yarn install
+    - run:
+        name: Enable Corepack
+        command: corepack enable
 
-      - run:
-          name: Build the Project
-          command: yarn run build
+    - run:
+        name: Install Node.js and Yarn Dependencies
+        command: yarn install --immutable --network-timeout 300000
+        no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
-      - run:
-          name: Expo Prebuild
-          command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
+    - run:
+        name: Build the Project
+        command: yarn run build
 
-      - save_cache:
-          key: ios-yarn-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-            - ./apps/AEPSampleAppNewArchEnabled/node_modules
+    - run:
+        name: Expo Prebuild
+        command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
 
-      - run:
-          name: Install Cocoapods
-          command: sudo gem install cocoapods
+    - save_cache:
+        paths:
+            - .yarn/cache
+            - .yarn/unplugged
+        key: yarn-cache-{{ checksum "yarn.lock" }}
 
-      - run:
-          name: Install Pods
-          command: yarn sampleappnewarchenabled:ios:pod:install
+    - run:
+        name: Install Cocoapods
+        command: sudo gem install cocoapods
 
-      - run:
-          name: Building iOS Sample App
-          command: |
-            cd apps/AEPSampleAppNewArchEnabled/ios
-            xcodebuild \
-              -workspace AEPSampleAppNewArchEnabled.xcworkspace \
-              -scheme AEPSampleAppNewArchEnabled \
-              -sdk iphonesimulator \
-              -destination "generic/platform=iOS Simulator" \
-              clean build
+    - run:
+        name: Install Pods
+        command: yarn sampleappnewarchenabled:ios:pod:install
+
+    - run:
+        name: Building iOS Sample App
+        command: |
+          cd apps/AEPSampleAppNewArchEnabled/ios
+          xcodebuild \
+            -workspace AEPSampleAppNewArchEnabled.xcworkspace \
+            -scheme AEPSampleAppNewArchEnabled \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            clean build
 
 workflows:
   version: 2.1
   ci-workflow:
     jobs:
-      - unit-test
-      - build-sample-app-ios
-      # - build-sample-app-android
-      # Disable the Android build job because of the error below:
-      # Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'.
-      # > [CXX1210] /root/project/apps/AEPSampleApp/node_modules/react-native-reanimated/android/CMakeLists.txt debug|arm64-v8a : No compatible library found
-      # The Android build job will be enabled once the issue is resolved.
+    - unit-test
+    - build-sample-app-ios
+    # - build-sample-app-android
+    # Disable the Android build job because of the error below:
+    # Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'.
+    # > [CXX1210] /root/project/apps/AEPSampleApp/node_modules/react-native-reanimated/android/CMakeLists.txt debug|arm64-v8a : No compatible library found
+    # The Android build job will be enabled once the issue is resolved.

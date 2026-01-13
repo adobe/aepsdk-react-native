@@ -29,7 +29,12 @@
   "peerDependencies": {
     "@adobe/react-native-aepcore": "^7.0.0",
     "@adobe/react-native-aepedgeidentity": "^7.0.0",
+    "react": "*",
     "react-native": ">=0.60.0"
+  },
+  "devDependencies": {
+    "react": "19.1.1",
+    "react-native": "0.81.0"
   },
   "publishConfig": {
     "access": "public"

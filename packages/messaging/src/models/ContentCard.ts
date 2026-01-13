@@ -13,46 +13,70 @@
 import { PersonalizationSchema } from './PersonalizationSchema';
 import { PropositionItem, PropositionItemData } from './PropositionItem';
 
-type ContentCardTemplate = 'SmallImage';
-type DismissButtonStyle = 'circle' | 'none' | 'simple';
+export type ContentCardTemplate = 'SmallImage' | 'LargeImage' | 'ImageOnly';
+export type DismissButtonStyle = 'circle' | 'none' | 'simple';
+
+export interface ContentCardButton {
+  readonly interactId: string;
+  readonly actionUrl?: string;
+  readonly id?: string;
+  readonly text: {
+    readonly content: string;
+  };
+}
+
+export interface ContentCardContent {
+  readonly image?: {
+    readonly alt?: string;
+    readonly url: string;
+    readonly darkUrl?: string;
+  };
+  readonly buttons?: readonly ContentCardButton[];
+  readonly dismissBtn?: {
+    readonly style: DismissButtonStyle;
+  };
+  readonly actionUrl?: string;
+  readonly body?: {
+    readonly content: string;
+  };
+  readonly title: {
+    readonly content: string;
+  };
+}
+
+export type ImageOnlyContent = Pick<
+  ContentCardContent,
+  'image' | 'dismissBtn' | 'actionUrl'
+>;
+
+export type LargeImageContentData = ContentCardContent;
+
+export type SmallImageContentData = ContentCardContent;
+
+export interface ContentCardMeta {
+  [key: string]: any;
+  adobe: { template: ContentCardTemplate };
+  surface?: string;
+}
 
 export interface ContentCardData extends PropositionItemData {
   id: string;
+  schema: PersonalizationSchema.CONTENT_CARD;
   data: {
     contentType: 'application/json';
     expiryDate: number;
     publishedDate: number;
-    content: {
-      actionUrl: string;
-
-      body: { content: string };
-      title: { content: string };
-      buttons: Array<{
-        actionUrl: string;
-        id: string;
-        text: { content: string };
-        interactId: string;
-      }>;
-      image: { alt: string; url: string };
-      dismissBtn: { style: DismissButtonStyle };
-    };
-    meta: {
-      [key: string]: any;
-      adobe: { template: ContentCardTemplate };
-      dismissState: boolean;
-      readState: boolean;
-      surface: string;
-    };
+    meta: ContentCardMeta;
+    content: SmallImageContentData | LargeImageContentData | ImageOnlyContent;
   };
-  schema: PersonalizationSchema.CONTENT_CARD;
 }
-
 export class ContentCard extends PropositionItem {
-  declare data: ContentCardData['data']; // Override data type for better typing
+  data: ContentCardData['data'];
+  isRead: boolean = false;
 
-  constructor(contentCardData: ContentCardData) {
+  constructor(contentCardData: ContentCardData, isRead: boolean = false) {
     super(contentCardData);
     this.data = contentCardData.data;
+    this.isRead = isRead;
   }
-
 }

@@ -36,6 +36,7 @@ yarn add @adobe/react-native-aepmessaging
 ### Initializing with SDK:
 
 To initialize the SDK, use the following methods:
+
 - [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
 - [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
@@ -48,8 +49,8 @@ import {
   Messaging,
   MessagingDelegate,
   MessagingEdgeEventType,
-  Message
-} from '@adobe/react-native-aepmessaging';
+  Message,
+} from "@adobe/react-native-aepmessaging";
 ```
 
 ## API reference
@@ -68,7 +69,7 @@ extensionVersion(): Promise<string>
 
 ```javascript
 Messaging.extensionVersion().then((version) =>
-  console.log('AdobeExperienceSDK: Messaging version: ' + version)
+  console.log("AdobeExperienceSDK: Messaging version: " + version)
 );
 ```
 
@@ -139,7 +140,7 @@ const messagingDelegate = {
 
   urlLoaded(url: string, message: Message) {
     // Action after message loads an URL
-  }
+  },
 };
 
 Messaging.setMessagingDelegate(messagingDelegate);
@@ -152,7 +153,7 @@ const messagingDelegate = {
   shouldShowMessage(message: Message) {
     Messaging.saveMessage(message);
     return false;
-  }
+  },
 };
 ```
 
@@ -169,7 +170,7 @@ updatePropositionsForSurfaces(surfaces: string[])
 **Example**
 
 ```javascript
-Messaging.updatePropositionsForSurfaces(['mobileapp://my-surface']);
+Messaging.updatePropositionsForSurfaces(["mobileapp://my-surface"]);
 ```
 
 ### getPropositionsForSurfaces
@@ -186,7 +187,7 @@ getPropositionsForSurfaces(surfaces: string[])
 **Example**
 
 ```javascript
-const propositions = Messaging.getPropositionsForSurfaces(['my-surface']);
+const propositions = Messaging.getPropositionsForSurfaces(["my-surface"]);
 console.log(propositions);
 ```
 
@@ -345,7 +346,7 @@ track(interaction: ?string, eventType: MessagingEdgeEventType)
 
 ```javascript
 var message: Message;
-message.track('sample text', MessagingEdgeEventType.IN_APP_DISMISS);
+message.track("sample text", MessagingEdgeEventType.IN_APP_DISMISS);
 ```
 
 ### setAutoTrack
@@ -412,7 +413,7 @@ type MessagingDelegate = {
 
   urlLoaded(url: string, message: Message): void, // iOS Only
 
-  onContentLoaded(message: Message): void // Android Only
+  onContentLoaded(message: Message): void, // Android Only
 };
 ```
 
@@ -438,7 +439,7 @@ const messagingDelegate = {
 
   onContentLoaded(message: Message) {
     // Action after message loads content
-  }
+  },
 };
 ```
 
@@ -450,7 +451,7 @@ Below is an example of when the developer may choose to suppress an in-app messa
 
 ```javascript
 function shouldShowMessage(message: Message): boolean {
-  if (someOtherWorkflowStatus == 'inProgress') {
+  if (someOtherWorkflowStatus == "inProgress") {
     return false;
   }
 
@@ -465,12 +466,12 @@ Continuing with the above example, the developer has stored the message that was
 var cachedMessage: Message;
 
 function otherWorkflowFinished() {
-  anotherWorkflowStatus = 'complete';
+  anotherWorkflowStatus = "complete";
   cachedMessage.show();
 }
 
 function shouldShowMessage(message: Message): boolean {
-  if (anotherWorkflowStatus === 'inProgress') {
+  if (anotherWorkflowStatus === "inProgress") {
     // store the current message for later use
     Messaging.saveMessage(message);
     cachedMessage = message;
@@ -485,12 +486,11 @@ function shouldShowMessage(message: Message): boolean {
 
 ```javascript
 function otherWorkflowFinished() {
-  anotherWorkflowStatus = 'complete';
+  anotherWorkflowStatus = "complete";
   currentMessage.show();
   currentMessage.clearMessage();
 }
 ```
-
 
 ## Tracking interactions with content cards
 
@@ -501,6 +501,7 @@ Deprecated in 7.2.0: Use `Proposition.track(...)` instead. This API will be remo
 Tracks a Display interaction with the given ContentCard
 
 **Syntax**
+
 ```javascript
 Messaging.trackContentCardDisplay(proposition, contentCard);
 ```
@@ -512,10 +513,10 @@ Deprecated in 7.2.0: Use `Proposition.track(...)` instead. This API will be remo
 Tracks a Click interaction with the given ContentCard
 
 **Syntax**
+
 ```javascript
 Messaging.trackContentCardInteraction(proposition, contentCard);
 ```
-
 
 ## Tutorials
 [Native handling of Javascript Events](./tutorials/In-App%20Messaging.md)

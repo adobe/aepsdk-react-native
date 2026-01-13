@@ -14,24 +14,29 @@
   "jest": {
     "preset": "jest-expo"
   },
+  "installConfig": {
+    "hoistingLimits": "workspaces",
+    "selfReferences": false
+  },
   "dependencies": {
-    "@adobe/react-native-aepassurance": "^7.0.0",
-    "@adobe/react-native-aepcampaignclassic": "^7.0.0",
-    "@adobe/react-native-aepcore": "^7.0.0",
-    "@adobe/react-native-aepedge": "^7.0.0",
-    "@adobe/react-native-aepedgebridge": "^7.0.0",
-    "@adobe/react-native-aepedgeconsent": "^7.0.0",
-    "@adobe/react-native-aepedgeidentity": "^7.0.0",
-    "@adobe/react-native-aepmessaging": "^7.0.0",
-    "@adobe/react-native-aepoptimize": "^7.0.0",
-    "@adobe/react-native-aepplaces": "^7.0.0",
-    "@adobe/react-native-aeptarget": "^7.0.0",
-    "@adobe/react-native-aepuserprofile": "^7.0.0",
+    "@adobe/react-native-aepassurance": "workspace:*",
+    "@adobe/react-native-aepcampaignclassic": "workspace:*",
+    "@adobe/react-native-aepcore": "workspace:*",
+    "@adobe/react-native-aepedge": "workspace:*",
+    "@adobe/react-native-aepedgebridge": "workspace:*",
+    "@adobe/react-native-aepedgeconsent": "workspace:*",
+    "@adobe/react-native-aepedgeidentity": "workspace:*",
+    "@adobe/react-native-aepmessaging": "workspace:*",
+    "@adobe/react-native-aepoptimize": "workspace:*",
+    "@adobe/react-native-aepplaces": "workspace:*",
+    "@adobe/react-native-aeptarget": "workspace:*",
+    "@adobe/react-native-aepuserprofile": "workspace:*",
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/bottom-tabs": "7.3.12",
     "@react-navigation/core": "7.9.1",
     "@react-navigation/drawer": "7.3.11",
-    "@react-navigation/native": "7.1.8",
+    "@react-navigation/native": "7.1.17",
+    "@react-navigation/native-stack": "^7.3.1",
     "@react-navigation/routers": "7.3.7",
     "@react-navigation/stack": "7.3.1",
     "expo": "~52.0.46",
@@ -46,7 +51,7 @@
     "expo-web-browser": "~14.0.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-native": "0.76.9",
+    "react-native": "0.76.0",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",
@@ -68,7 +73,7 @@
   "expo": {
     "install": {
       "exclude": [
-        "react-native@~0.74.0",
+        "react-native@~0.81.0",
         "react-native-reanimated@~3.10.0",
         "react-native-gesture-handler@~2.16.1",
         "react-native-screens@~3.31.1"

@@ -26,6 +26,9 @@ import { PersonalizationSchema } from './models/PersonalizationSchema';
 import { PropositionItem, PropositionItemData } from './models/PropositionItem';
 import { Activity, Characteristics } from './models/ScopeDetails';
 
+export * from './models/ContentCard';
+export * from './ui';
+
 export {
   Activity,
   Characteristics,
