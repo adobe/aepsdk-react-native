@@ -274,6 +274,37 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         }
     }
 
+    @objc
+    func evaluateJavascript(
+        _ messageId: String,
+        javascriptString: String
+    ) {
+        guard let message = jsHandlerMessageCache[messageId] else { 
+            print("[RCTAEPMessaging] evaluateJavascript: No message found in cache for messageId: \(messageId)")
+            return 
+        }
+
+        guard let messageWebView = message.view as? WKWebView else {
+            print("[RCTAEPMessaging] evaluateJavascript: Could not get WKWebView from message")
+            return
+        }
+        
+        messageWebView.evaluateJavaScript(javascriptString) { [weak self] result, error in
+            if let error = error {
+                print("[RCTAEPMessaging] evaluateJavascript error: \(error)")
+            }
+
+            self?.emitNativeEvent(
+                name: Constants.ON_JAVASCRIPT_RESULT_EVENT,
+                body: [
+                    Constants.MESSAGE_ID_KEY: messageId,
+                    Constants.JAVASCRIPT_STRING_KEY: javascriptString,
+                    Constants.RESULT_KEY: result ?? NSNull()
+                ]
+            )
+        }
+    }
+
     /// MARK: - Unified PropositionItem Tracking Methods
     
     /**

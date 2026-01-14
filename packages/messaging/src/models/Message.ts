@@ -17,6 +17,11 @@ const RCTAEPMessaging = NativeModules.AEPMessaging;
 // Registery to store inAppMessage callbacks for each message in Message.handleJavascriptMessage
 // Record - {messageId : {handlerName : callback}}
 const jsMessageHandlers: Record<string, Record<string, (content: string) => void>> = {};
+
+// Registery to store inAppMessage result callbacks for each message in Message.evaluateJavascript
+// Record - {messageId : {javascriptString : callback}}
+const jsResultHandlers: Record<string, Record<string, (result: string) => void>> = {};
+
 const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
 
 // invokes the callback registered in Message.handleJavascriptMessage with the content received from the inAppMessage webview
@@ -24,6 +29,15 @@ handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
   const {messageId, handlerName, content} = event;
   if (jsMessageHandlers[messageId] && jsMessageHandlers[messageId][handlerName]) {
     jsMessageHandlers[messageId][handlerName](content);
+  }
+});
+
+handleJSMessageEventEmitter.addListener('onJavascriptResult', (event) => {
+  const {messageId, javascriptString, result} = event;
+  if (jsResultHandlers[messageId] && jsResultHandlers[messageId][javascriptString]) {
+    // Convert result to string to maintain API parity
+    const resultString = result == null ? '' : String(result);
+    jsResultHandlers[messageId][javascriptString](resultString);
   }
 });
 
@@ -118,6 +132,32 @@ class Message {
   }
 
   /**
+   * Asynchronously evaluates the specified JavaScript string in the context of the message's WebView.
+   * @param {string} javascriptString: The JavaScript string to evaluate.
+   * @param {function} callback: A callback to be invoked when the script execution completes with the result of the execution.
+  */
+  evaluateJavascript(javascriptString: string, callback: (result: string) => void) {
+    // validate parameters
+    if (!javascriptString) {
+      console.warn('[AEP Messaging] evaluateJavascript: javascriptString is required');
+      return;
+    }
+
+    if (typeof callback !== 'function') {
+      console.warn('[AEP Messaging] evaluateJavascript: callback must be a function');
+      return;
+    }
+
+    // cache the callback
+    if (!jsResultHandlers[this.id]) {
+      jsResultHandlers[this.id] = {};
+    }
+    jsResultHandlers[this.id][javascriptString] = callback;
+
+    RCTAEPMessaging.evaluateJavascript(this.id, javascriptString);
+  }
+
+  /**
    * @internal - For internal use only.
    * Clears all the javascript message handlers for the message.
    * This function must be called if the callbacks registered in handleJavascriptMessage are no longer needed.
@@ -125,6 +165,16 @@ class Message {
    */
   _clearJavascriptMessageHandlers() {
     delete jsMessageHandlers[this.id];
+  }
+
+  /**
+   * @internal - For internal use only.
+   * Clears all the javascript result handlers for the message.
+   * This function must be called if the callbacks registered in evaluateJavascript are no longer needed.
+   * Failure to call this function may lead to memory leaks.
+   */
+  _clearJavascriptResultHandlers() {
+    delete jsResultHandlers[this.id];
   }
 }
 
