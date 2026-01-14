@@ -70,6 +70,7 @@ JavaScript body passed to react native callback: callbacks are cool!
 
 You can execute JavaScript in an in-app message from native code by completing the following steps:
 - [Implement and assign a `Messaging Delegate`](#implement-and-assign-a-messaging-delegate-1)
+- [Call the Javascript method](#call-the-javascript-method)
 
 ## Implement and assign a `Messaging Delegate`
 
