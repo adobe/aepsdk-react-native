@@ -10,6 +10,10 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+// Define globals before importing react-native (required for newer RN versions)
+(global as any).__DEV__ = true;
+(global as any).__fbBatchedBridgeConfig = { remoteModuleConfig: [] };
+
 import * as ReactNative from 'react-native';
 
 jest.doMock('react-native', () => {
@@ -246,6 +250,10 @@ jest.doMock('react-native', () => {
       },
       NativeEventEmitter: class {
         addListener() {}
+      },
+      Platform: {
+        OS: 'ios',
+        select: jest.fn((obj: any) => obj.ios)
       }
     },
     ReactNative

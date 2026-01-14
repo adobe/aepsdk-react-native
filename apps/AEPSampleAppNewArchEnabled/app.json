@@ -34,7 +34,7 @@
         "expo-build-properties",
         {
           "ios": {
-            "newArchEnabled": true, 
+            "newArchEnabled": true,
             "useFrameworks": "static"
           },
           "android": {
@@ -42,7 +42,8 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
