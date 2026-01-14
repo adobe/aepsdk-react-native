@@ -35,7 +35,9 @@ handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
 handleJSMessageEventEmitter.addListener('onJavascriptResult', (event) => {
   const {messageId, javascriptString, result} = event;
   if (jsResultHandlers[messageId] && jsResultHandlers[messageId][javascriptString]) {
-    jsResultHandlers[messageId][javascriptString](result);
+    // Convert result to string to maintain API parity
+    const resultString = result == null ? '' : String(result);
+    jsResultHandlers[messageId][javascriptString](resultString);
   }
 });
 

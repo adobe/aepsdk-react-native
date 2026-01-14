@@ -272,7 +272,7 @@ public final class RCTAEPMessagingModule
       params.put(RCTAEPMessagingConstants.MESSAGE_ID_KEY, messageId);
       params.put(RCTAEPMessagingConstants.JAVASCRIPT_STRING_KEY, javascriptString);
       params.put(RCTAEPMessagingConstants.RESULT_KEY, result);
-      emitEvent(RCTAEPMessagingConstants.ON_JAVASCRIPT_MESSAGE_EVENT, params);
+      emitEvent(RCTAEPMessagingConstants.ON_JAVASCRIPT_RESULT_EVENT, params);
     });
   }
 

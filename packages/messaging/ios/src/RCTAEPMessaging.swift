@@ -305,21 +305,13 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
             if let error = error {
                 print("[RCTAEPMessaging] evaluateJavascript error: \(error)")
             }
-            
-            // Convert result to string
-            let resultString: String
-            if let result = result {
-                resultString = String(describing: result)
-            } else {
-                resultString = ""
-            }
-            
+
             self?.emitNativeEvent(
                 name: Constants.ON_JAVASCRIPT_RESULT_EVENT,
                 body: [
                     Constants.MESSAGE_ID_KEY: messageId,
                     Constants.JAVASCRIPT_STRING_KEY: javascriptString,
-                    Constants.RESULT_KEY: resultString
+                    Constants.RESULT_KEY: result ?? NSNull()
                 ]
             )
         }
