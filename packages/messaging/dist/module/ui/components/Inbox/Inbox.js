@@ -1,16 +1,18 @@
 "use strict";
 
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-import { cloneElement, useCallback, useMemo, useState } from "react";
+import { cloneElement, useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, useWindowDimensions } from "react-native";
 import { useContentCardUI } from "../../hooks/index.js";
 import InboxProvider from "../../providers/InboxProvider.js";
 import { useTheme } from "../../theme/index.js";
+import { generateCardHash } from "../../utils/generateCardHash.js";
 import { ContentCardView } from "../ContentCardView/ContentCardView.js";
 import EmptyState from "./EmptyState.js";
 
 // TODO: consider localizing in the future
 const DEFAULT_EMPTY_MESSAGE = 'No Content Available';
+const cardStatusStore = new Map();
 function InboxInner({
   contentContainerStyle,
   LoadingComponent = /*#__PURE__*/React.createElement(ActivityIndicator, null),
@@ -42,53 +44,67 @@ function InboxInner({
     capacity,
     heading,
     layout,
-    emptyStateSettings
+    emptyStateSettings,
+    isUnreadEnabled
   } = contentSettings;
-  const [dismissedIds, setDismissedIds] = useState(new Set());
-  const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
-  const displayCards = useMemo(() => {
-    const items = content ?? [];
-    return items.filter(it => it && !dismissedIds.has(it.id)).slice(0, capacity);
-  }, [content, dismissedIds, capacity]);
-  const handleCardEvent = useCallback((event, data, nativeEvent) => {
-    if (event === 'onDismiss' && data?.id) {
-      setDismissedIds(prev => {
-        const next = new Set(prev);
-        next.add(data.id);
-        return next;
+  const getStore = useCallback(() => {
+    if (!cardStatusStore.has(surface)) {
+      cardStatusStore.set(surface, {
+        dismissed: new Set(),
+        interacted: new Set()
       });
     }
+    return cardStatusStore.get(surface);
+  }, [surface]);
+  const [dismissedIds, setDismissedIds] = useState(() => new Set(getStore().dismissed));
+  const [interactedIds, setInteractedIds] = useState(() => isUnreadEnabled ? new Set(getStore().interacted) : new Set());
+  useEffect(() => {
+    const store = getStore();
+    setDismissedIds(new Set(store.dismissed));
+    if (isUnreadEnabled) setInteractedIds(new Set(store.interacted));
+  }, [content, isUnreadEnabled, getStore]);
+  const isHorizontal = layout?.orientation === 'horizontal';
+  const displayCards = useMemo(() => {
+    return content.filter(it => !dismissedIds.has(generateCardHash(it))).map(it => {
+      const cardHash = generateCardHash(it);
+      const shouldBeRead = isUnreadEnabled && (interactedIds.has(cardHash) || it.isRead === true);
+      return shouldBeRead ? {
+        ...it,
+        isRead: true
+      } : it;
+    }).slice(0, capacity);
+  }, [content, capacity, isUnreadEnabled, dismissedIds, interactedIds]);
+  const handleCardEvent = useCallback((event, data, nativeEvent) => {
+    const cardHash = generateCardHash(data);
+    const store = getStore();
+    if (event === 'onDismiss' && !store.dismissed.has(cardHash)) {
+      store.dismissed.add(cardHash);
+      setDismissedIds(prev => new Set(prev).add(cardHash));
+    } else if (event === 'onInteract' && isUnreadEnabled && !store.interacted.has(cardHash)) {
+      store.interacted.add(cardHash);
+      setInteractedIds(prev => new Set(prev).add(cardHash));
+    }
     CardProps?.listener?.(event, data, nativeEvent);
-  }, [CardProps]);
+  }, [CardProps, isUnreadEnabled, getStore]);
   const renderItem = useCallback(({
     item
-  }) => {
-    return /*#__PURE__*/React.createElement(ContentCardView, _extends({
-      template: item
-    }, CardProps, {
-      listener: handleCardEvent,
-      style: isHorizontal ? [styles.horizontalCardStyles, {
-        width: Math.floor(windowWidth * 0.75)
-      }] : undefined
-    }));
-  }, [isHorizontal, CardProps, windowWidth, handleCardEvent]);
-  const EmptyList = useCallback(() => {
-    return EmptyComponent ? /*#__PURE__*/cloneElement(EmptyComponent, {
-      ...emptyStateSettings
-    }) : /*#__PURE__*/React.createElement(EmptyState, {
-      image: isDark ? emptyStateSettings?.image?.darkUrl ?? '' : emptyStateSettings?.image?.url ?? '',
-      text: emptyStateSettings?.message?.content || DEFAULT_EMPTY_MESSAGE
-    });
-  }, [isDark, emptyStateSettings, EmptyComponent]);
-  if (isLoading) {
-    return LoadingComponent;
-  }
-  if (error) {
-    return ErrorComponent;
-  }
-  if (!content) {
-    return FallbackComponent;
-  }
+  }) => /*#__PURE__*/React.createElement(ContentCardView, _extends({
+    template: item
+  }, CardProps, {
+    listener: handleCardEvent,
+    style: isHorizontal ? [styles.horizontalCardStyles, {
+      width: Math.floor(windowWidth * 0.75)
+    }] : undefined
+  })), [isHorizontal, CardProps, windowWidth, handleCardEvent]);
+  const EmptyList = useCallback(() => EmptyComponent ? /*#__PURE__*/cloneElement(EmptyComponent, {
+    ...emptyStateSettings
+  }) : /*#__PURE__*/React.createElement(EmptyState, {
+    image: isDark ? emptyStateSettings?.image?.darkUrl ?? '' : emptyStateSettings?.image?.url ?? '',
+    text: emptyStateSettings?.message?.content || DEFAULT_EMPTY_MESSAGE
+  }), [isDark, emptyStateSettings, EmptyComponent]);
+  if (isLoading) return LoadingComponent;
+  if (error) return ErrorComponent;
+  if (!content) return FallbackComponent;
   return /*#__PURE__*/React.createElement(InboxProvider, {
     settings: settings
   }, heading?.content ? /*#__PURE__*/React.createElement(Text, {
@@ -115,15 +131,10 @@ export function Inbox({
   error,
   ...props
 }) {
-  if (isLoading) {
-    return LoadingComponent;
-  }
-  if (error) {
-    return ErrorComponent;
-  }
-  if (!settings) {
-    return FallbackComponent;
-  }
+  if (isLoading) return LoadingComponent;
+  if (error) return ErrorComponent;
+  if (!settings) return FallbackComponent;
+  ;
   return /*#__PURE__*/React.createElement(InboxInner, _extends({
     settings: settings,
     surface: surface,

@@ -1,0 +1,2 @@
+export { generateCardHash } from './generateCardHash';
+
