@@ -36,11 +36,6 @@ jest.mock('../../providers/InboxProvider', () => ({
   default: ({ children }: any) => children,
 }));
 
-// jest.mock('../../hooks/useAspectRatio', () => ({
-//   __esModule: true,
-//   default: () => 1.5,
-// }));
-
 const { useContentCardUI, useInbox } = jest.requireMock('../../hooks');
 
 describe('Inbox', () => {
@@ -232,7 +227,6 @@ describe('Inbox', () => {
       await waitFor(() => {
         expect(mockContentCardView.mock.calls.length).toBeGreaterThanOrEqual(2);
       });
-      // Get the last render's calls (component may render multiple times)
       const lastTwoCalls = mockContentCardView.mock.calls.slice(-2);
       expect(lastTwoCalls.length).toBe(2);
       const firstProps = lastTwoCalls[0][0];
