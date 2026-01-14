@@ -147,6 +147,7 @@ class Messaging {
     eventEmitter.addListener('onDismiss', (message: Message) => {
       const messageInstance = new Message(message);
       messageInstance._clearJavascriptMessageHandlers();
+      messageInstance._clearJavascriptResultHandlers();
       messagingDelegate?.onDismiss?.(messageInstance);
     });
 

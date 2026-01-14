@@ -258,6 +258,25 @@ public final class RCTAEPMessagingModule
     });
   }
 
+  @ReactMethod
+  public void evaluateJavascript(final String messageId, final String javascriptString) {
+    Presentable<?> presentable = presentableCache.get(messageId);
+    if (presentable == null || !(presentable.getPresentation() instanceof InAppMessage)) {
+      Log.w(TAG, "evaluateJavascript: No presentable found for messageId: " + messageId);
+      return;
+    }
+
+    Presentable<InAppMessage> inAppMessagePresentable = (Presentable<InAppMessage>) presentable;
+    InAppMessageEventHandler eventHandler = inAppMessagePresentable.getPresentation().getEventHandler();
+    eventHandler.evaluateJavascript(javascriptString, result -> {
+      Map<String, String> params = new HashMap<>();
+      params.put(RCTAEPMessagingConstants.MESSAGE_ID_KEY, messageId);
+      params.put(RCTAEPMessagingConstants.JAVASCRIPT_STRING_KEY, javascriptString);
+      params.put(RCTAEPMessagingConstants.RESULT_KEY, result);
+      emitEvent(RCTAEPMessagingConstants.ON_JAVASCRIPT_RESULT_EVENT, params);
+    });
+  }
+
   // Messaging Delegate functions
   @Override
   public void onShow(final Presentable<?> presentable) {
