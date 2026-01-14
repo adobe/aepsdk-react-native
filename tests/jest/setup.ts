@@ -249,6 +249,10 @@ jest.doMock('react-native', () => {
       },
       NativeEventEmitter: class {
         addListener() {}
+      },
+      Platform: {
+        OS: 'ios',
+        select: jest.fn((obj: any) => obj.ios)
       }
     },
     ReactNative
