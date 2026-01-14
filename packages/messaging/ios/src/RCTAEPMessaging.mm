@@ -68,4 +68,23 @@ RCT_EXTERN_METHOD(trackPropositionItem
                   : (RCTPromiseResolveBlock)resolve withRejecter
                   : (RCTPromiseRejectBlock)reject);
 
+RCT_EXTERN_METHOD(setAutoTrack
+                  : (NSString *)messageId autoTrack
+                  : (BOOL)autoTrack);
+
+RCT_EXTERN_METHOD(show
+                  : (NSString *)messageId);
+
+RCT_EXTERN_METHOD(dismiss
+                  : (NSString *)messageId suppressAutoTrack
+                  : (BOOL)suppressAutoTrack);
+
+RCT_EXTERN_METHOD(track
+                  : (NSString *)messageId interaction
+                  : (NSString *)interaction eventType
+                  : (NSInteger)eventType);
+
+RCT_EXTERN_METHOD(clear
+                  : (NSString *)messageId);
+
 @end

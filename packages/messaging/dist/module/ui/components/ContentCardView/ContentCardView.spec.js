@@ -12,7 +12,7 @@
     language governing permissions and limitations under the License.
 */
 
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { Image, Linking } from 'react-native';
 import MessagingEdgeEventType from "../../../models/MessagingEdgeEventType.js";
@@ -25,8 +25,8 @@ jest.mock('../../hooks/useAspectRatio', () => ({
   default: () => 1.5
 }));
 
-// Mock container settings (unread enabled)
-jest.mock('../../hooks/useContainerSettings', () => {
+// Mock inbox settings (unread enabled)
+jest.mock('../../hooks/useInboxSettings', () => {
   const fn = jest.fn(() => ({
     content: {
       isUnreadEnabled: true,
@@ -195,10 +195,9 @@ describe('ContentCardView - rendering variants', () => {
   });
 });
 describe('ContentCardView - interactions and tracking', () => {
-  it('does not crash if Linking.openURL throws (error case)', () => {
-    const openSpy = jest.spyOn(Linking, 'openURL').mockImplementationOnce(() => {
-      throw new Error('open failed');
-    });
+  it('does not crash if Linking.openURL throws (error case)', async () => {
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValueOnce(true);
+    const openSpy = jest.spyOn(Linking, 'openURL').mockImplementationOnce(() => Promise.reject(new Error('open failed')));
     const template = makeTemplate();
     const listener = jest.fn();
     const {
@@ -209,7 +208,7 @@ describe('ContentCardView - interactions and tracking', () => {
       testID: "card"
     }));
     expect(() => fireEvent.press(getByTestId('card'))).not.toThrow();
-    expect(openSpy).toHaveBeenCalled();
+    await waitFor(() => expect(openSpy).toHaveBeenCalled());
     expect(listener).toHaveBeenCalledWith('onInteract', template);
   });
   it('onPress with no track and no actionUrl does not throw or open URL', () => {
@@ -238,9 +237,11 @@ describe('ContentCardView - interactions and tracking', () => {
     expect(listener).toHaveBeenCalledWith('onDisplay', template);
     expect(template.track).toHaveBeenCalledWith(MessagingEdgeEventType.DISPLAY);
   });
-  it('tracks INTERACT, marks read, and opens URL on press', () => {
+  it('tracks INTERACT and opens URL on press', async () => {
     const template = makeTemplate();
     const listener = jest.fn();
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValueOnce(true);
+    jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
     const {
       getByTestId
     } = render(/*#__PURE__*/React.createElement(ContentCardView, {
@@ -251,8 +252,7 @@ describe('ContentCardView - interactions and tracking', () => {
     fireEvent.press(getByTestId('card'));
     expect(listener).toHaveBeenCalledWith('onInteract', template);
     expect(template.track).toHaveBeenCalledWith('content_clicked', MessagingEdgeEventType.INTERACT, null);
-    expect(Linking.openURL).toHaveBeenCalledWith('https://adobe.com');
-    expect(template.isRead).toBe(true);
+    await waitFor(() => expect(Linking.openURL).toHaveBeenCalledWith('https://adobe.com'));
   });
   it('calls onDismiss, tracks DISMISS, and hides the card', () => {
     const template = makeTemplate();
@@ -265,7 +265,7 @@ describe('ContentCardView - interactions and tracking', () => {
       listener: listener
     }));
     // Dismiss button renders as 'x'
-    fireEvent.press(getByText('x'));
+    fireEvent.press(getByText('\u00D7'));
     expect(listener).toHaveBeenCalledWith('onDismiss', template);
     expect(template.track).toHaveBeenCalledWith(MessagingEdgeEventType.DISMISS);
     // Card should no longer render title after dismiss
@@ -274,8 +274,8 @@ describe('ContentCardView - interactions and tracking', () => {
 });
 describe('ContentCardView - unread indicator and styles', () => {
   it('renders UnreadIcon by default when settings are missing', () => {
-    const useContainerSettings = require('../../hooks/useContainerSettings').default;
-    useContainerSettings.mockReturnValueOnce({});
+    const useInboxSettings = require('../../hooks/useInboxSettings').default;
+    useInboxSettings.mockReturnValueOnce({});
     const template = makeTemplate({
       isRead: false
     });

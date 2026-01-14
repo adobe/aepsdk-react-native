@@ -47,7 +47,7 @@ describe('Messaging', () => {
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
-    await message.setAutoTrack(false);
+    message.setAutoTrack(false);
     expect(spy).toHaveBeenCalledWith(id, false);
   });
 
@@ -56,7 +56,7 @@ describe('Messaging', () => {
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
-    await message.show();
+    message.show();
     expect(spy).toHaveBeenCalledWith(id);
   });
 
@@ -65,7 +65,7 @@ describe('Messaging', () => {
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
-    await message.dismiss(true);
+    message.dismiss(true);
     expect(spy).toHaveBeenCalledWith(id, true);
   });
 
@@ -76,7 +76,7 @@ describe('Messaging', () => {
     let message = new Message({id, autoTrack});
     let interaction = 'display';
     let eventType = MessagingEdgeEventType.DISPLAY;
-    await message.track(interaction, eventType);
+    message.track(interaction, eventType);
     expect(spy).toHaveBeenCalledWith(id, interaction, eventType);
   });
 
@@ -85,7 +85,7 @@ describe('Messaging', () => {
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
-    await message.clear();
+    message.clear();
     expect(spy).toHaveBeenCalledWith(id);
   });
 
@@ -96,7 +96,7 @@ describe('Messaging', () => {
     let message = new Message({id, autoTrack});
     let handlerName = 'handlerName';
     let handler = jest.fn();
-    await message.handleJavascriptMessage(handlerName, handler);
+    message.handleJavascriptMessage(handlerName, handler);
     expect(spy).toHaveBeenCalledWith(id, handlerName);
   });
 

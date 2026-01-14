@@ -10,7 +10,7 @@
     language governing permissions and limitations under the License.
 */
 
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { Image, Linking } from 'react-native';
 import MessagingEdgeEventType from '../../../models/MessagingEdgeEventType';
@@ -20,8 +20,8 @@ import { ContentCardView } from './ContentCardView';
 // Mock aspect ratio hook to a stable value
 jest.mock('../../hooks/useAspectRatio', () => ({ __esModule: true, default: () => 1.5 }));
 
-// Mock container settings (unread enabled)
-jest.mock('../../hooks/useContainerSettings', () => {
+// Mock inbox settings (unread enabled)
+jest.mock('../../hooks/useInboxSettings', () => {
   const fn = jest.fn(() => ({
     content: {
       isUnreadEnabled: true,
@@ -137,10 +137,11 @@ describe('ContentCardView - rendering variants', () => {
 });
 
 describe('ContentCardView - interactions and tracking', () => {
-  it('does not crash if Linking.openURL throws (error case)', () => {
-    const openSpy = jest.spyOn(Linking, 'openURL').mockImplementationOnce(() => {
-      throw new Error('open failed');
-    });
+  it('does not crash if Linking.openURL throws (error case)', async () => {
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValueOnce(true as any);
+    const openSpy = jest
+      .spyOn(Linking, 'openURL')
+      .mockImplementationOnce(() => Promise.reject(new Error('open failed')) as any);
 
     const template = makeTemplate();
     const listener = jest.fn();
@@ -149,7 +150,7 @@ describe('ContentCardView - interactions and tracking', () => {
     );
 
     expect(() => fireEvent.press(getByTestId('card'))).not.toThrow();
-    expect(openSpy).toHaveBeenCalled();
+    await waitFor(() => expect(openSpy).toHaveBeenCalled());
     expect(listener).toHaveBeenCalledWith('onInteract', template);
   });
 
@@ -175,15 +176,18 @@ describe('ContentCardView - interactions and tracking', () => {
     expect(template.track).toHaveBeenCalledWith(MessagingEdgeEventType.DISPLAY);
   });
 
-  it('tracks INTERACT, marks read, and opens URL on press', () => {
+  it('tracks INTERACT and opens URL on press', async () => {
     const template = makeTemplate();
     const listener = jest.fn();
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValueOnce(true as any);
+    jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined as any);
     const { getByTestId } = render(<ContentCardView template={template as any} listener={listener} testID="card" />);
     fireEvent.press(getByTestId('card'));
     expect(listener).toHaveBeenCalledWith('onInteract', template);
     expect(template.track).toHaveBeenCalledWith('content_clicked', MessagingEdgeEventType.INTERACT, null);
-    expect(Linking.openURL).toHaveBeenCalledWith('https://adobe.com');
-    expect(template.isRead).toBe(true);
+    await waitFor(() =>
+      expect(Linking.openURL).toHaveBeenCalledWith('https://adobe.com')
+    );
   });
 
   it('calls onDismiss, tracks DISMISS, and hides the card', () => {
@@ -193,7 +197,7 @@ describe('ContentCardView - interactions and tracking', () => {
       <ContentCardView template={template as any} listener={listener} />
     );
     // Dismiss button renders as 'x'
-    fireEvent.press(getByText('x'));
+    fireEvent.press(getByText('\u00D7'));
     expect(listener).toHaveBeenCalledWith('onDismiss', template);
     expect(template.track).toHaveBeenCalledWith(MessagingEdgeEventType.DISMISS);
     // Card should no longer render title after dismiss
@@ -204,8 +208,8 @@ describe('ContentCardView - interactions and tracking', () => {
 
 describe('ContentCardView - unread indicator and styles', () => {
   it('renders UnreadIcon by default when settings are missing', () => {
-    const useContainerSettings = require('../../hooks/useContainerSettings').default as jest.Mock;
-    useContainerSettings.mockReturnValueOnce({});
+    const useInboxSettings = require('../../hooks/useInboxSettings').default as jest.Mock;
+    useInboxSettings.mockReturnValueOnce({});
     const template = makeTemplate({ isRead: false });
     const { UNSAFE_getAllByType } = render(
       <ContentCardView template={template as any} />

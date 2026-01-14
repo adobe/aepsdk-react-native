@@ -22,7 +22,7 @@ import { MessagingProposition } from "./models/MessagingProposition";
 import { ContentCard } from "./models/ContentCard";
 import { PersonalizationSchema } from "./models/PersonalizationSchema";
 import { ContentTemplate } from "./ui/types/Templates";
-import { ContainerSettings } from "./ui/providers/ContentCardContainerProvider";
+import { InboxSettings } from "./ui/providers/InboxProvider";
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -278,12 +278,11 @@ class Messaging {
     });
   }
 
-  static async getContentCardContainer(
+  static async getInbox(
     surface: string
-  ): Promise<ContainerSettings> {
-    console.log("getContentCardContainer", surface);
+  ): Promise<InboxSettings> {
+    console.log("getInbox", surface);
     return {
-      templateType: "inbox",
       content: {
         heading: {
           content: "Heading",

@@ -41,7 +41,7 @@ import { useTheme } from '../../theme';
 import useAspectRatio from '../../hooks/useAspectRatio';
 import { ContentCardContent, ContentCardTemplate } from '../../../models';
 import Button from '../Button/Button';
-import useContainerSettings from '../../hooks/useContainerSettings';
+import useInboxSettings from '../../hooks/useInboxSettings';
 
 /**
  * Callback function that is called when a content card event occurs.
@@ -100,14 +100,9 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   const isDisplayedRef = useRef(false);
   const { colors, isDark } = useTheme();
-  const containerSettings = useContainerSettings();
-  // Track read state in component state
-  const [isRead, setIsRead] = useState(template.isRead);
+  const containerSettings = useInboxSettings();
 
-  // Sync state when template changes
-  useEffect(() => {
-    setIsRead(template.isRead);
-  }, [template.isRead]);
+  const isRead = template.isRead ?? false;
 
   // Default to true if not specified
   const isUnreadEnabled = containerSettings?.content?.isUnreadEnabled ?? true;
@@ -142,8 +137,6 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
     // Track interaction event using propositionItem
     template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
 
-    // Mark as read when interacted with
-    setIsRead(true);
 
     const actionUrl = template.data.content.actionUrl;
     if (actionUrl) {
@@ -165,7 +158,6 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
 
   const onButtonPress = useCallback((buttonId?: string) => {
     listener?.("onInteract", template, { buttonId });
-    setIsRead(true);
   }, [listener, template]);
 
   const imageUri = useMemo(() => {

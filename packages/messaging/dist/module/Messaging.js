@@ -180,10 +180,9 @@ class Messaging {
       return new ContentTemplate(card, type, isRead);
     });
   }
-  static async getContentCardContainer(surface) {
-    console.log("getContentCardContainer", surface);
+  static async getInbox(surface) {
+    console.log("getInbox", surface);
     return {
-      templateType: "inbox",
       content: {
         heading: {
           content: "Heading"

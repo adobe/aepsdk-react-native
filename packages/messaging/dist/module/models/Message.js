@@ -12,7 +12,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 const RCTAEPMessaging = NativeModules.AEPMessaging;
 
 // Registery to store inAppMessage callbacks for each message in Message.handleJavascriptMessage
@@ -65,7 +65,14 @@ class Message {
    * of the autoTrack setting.
    */
   dismiss(suppressAutoTrack) {
-    RCTAEPMessaging.dismiss(this.id, suppressAutoTrack ? true : false);
+    // iOS message.dismiss() accepts a boolean parameter to suppress autoTrack
+    // but on android side, message.dismiss() does not accept any parameters
+    if (Platform.OS === 'android') {
+      RCTAEPMessaging.dismiss(this.id);
+    }
+    if (Platform.OS === 'ios') {
+      RCTAEPMessaging.dismiss(this.id, suppressAutoTrack ? true : false);
+    }
   }
 
   /**

@@ -19,8 +19,8 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
-import useContainerSettings from '../../hooks/useContainerSettings';
-import { SettingsPlacement } from '../../providers/ContentCardContainerProvider';
+import useInboxSettings from '../../hooks/useInboxSettings';
+import { SettingsPlacement } from '../../providers/InboxProvider';
 import { useTheme } from '../../theme';
 
 export interface UnreadIconProps extends ViewProps {
@@ -64,7 +64,7 @@ const UnreadIcon = ({
   ...props
 }: UnreadIconProps) => {
   const { colors, isDark } = useTheme();
-  const settings = useContainerSettings();
+  const settings = useInboxSettings();
   const [imageLoadError, setImageLoadError] = useState(false);
   
   // Get unread indicator settings from context

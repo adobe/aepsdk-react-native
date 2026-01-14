@@ -82,8 +82,10 @@ describe('Optimize', () => {
   });
 
   it('AEPOptimize updateProposition callback handles successful response', async () => {
-    const mockResponse = new Map<string, Proposition>();
-    mockResponse.set('scope1', new Proposition(propositionJson as any));
+    // Mock native response as a plain object (mimicking iOS/Android behavior)
+    const mockResponse = {
+      'scope1': propositionJson
+    };
     // Mock the native method to call the callback with mock data
     const mockMethod = jest.fn().mockImplementation((...args: any[]) => {
       const callback = args[3];
@@ -100,6 +102,54 @@ describe('Optimize', () => {
     await Optimize.updatePropositions(decisionScopes, undefined, undefined, callback as any, undefined);
     expect(callbackResponse).not.toBeNull();
     expect(callbackResponse!.get('scope1')).toBeInstanceOf(Proposition);
+  });
+
+  it('AEPOptimize updateProposition callback converts plain object to Map', async () => {
+    // Mock native response as a plain object (mimicking iOS/Android behavior)
+    const mockNativeResponse = {
+      'scope1': propositionJson,
+      'scope2': propositionJson
+    };
+    
+    // Mock the native method to call the callback with a plain object
+    const mockMethod = jest.fn().mockImplementation((...args: any[]) => {
+      const callback = args[3];
+      if (typeof callback === 'function') {
+        callback(mockNativeResponse);
+      }
+    });
+    NativeModules.AEPOptimize.updatePropositions = mockMethod;
+    
+    let decisionScopes = [new DecisionScope("scope1"), new DecisionScope("scope2")];
+    let callbackResponse: Map<string, Proposition> | null = null;
+    
+    const callback = (propositions: Map<string, Proposition>) => {
+      callbackResponse = propositions;
+    };
+    
+    await Optimize.updatePropositions(decisionScopes, undefined, undefined, callback as any, undefined);
+    
+    // Verify callback was called
+    expect(callbackResponse).not.toBeNull();
+    
+    // Verify response is a Map (has .get method)
+    expect(callbackResponse).toBeInstanceOf(Map);
+    expect(typeof callbackResponse!.get).toBe('function');
+    
+    // Verify Map contains correct entries
+    expect(callbackResponse!.size).toBe(2);
+    expect(callbackResponse!.has('scope1')).toBe(true);
+    expect(callbackResponse!.has('scope2')).toBe(true);
+    
+    // Verify .get() method works correctly
+    const proposition1 = callbackResponse!.get('scope1');
+    expect(proposition1).toBeDefined();
+    expect(proposition1).toBeInstanceOf(Proposition);
+    expect(proposition1!.id).toBe(propositionJson.id);
+    
+    const proposition2 = callbackResponse!.get('scope2');
+    expect(proposition2).toBeDefined();
+    expect(proposition2).toBeInstanceOf(Proposition);
   });
 
   it('AEPOptimize updateProposition callback handles error response', async () => {
@@ -124,8 +174,10 @@ describe('Optimize', () => {
   });
 
   it('AEPOptimize updateProposition calls both success and error callbacks', async () => {
-    const mockSuccessResponse = new Map<string, Proposition>();
-    mockSuccessResponse.set('scope1', new Proposition(propositionJson as any));
+    // Mock native response as a plain object (mimicking iOS/Android behavior)
+    const mockSuccessResponse = {
+      'scope1': propositionJson
+    };
     const mockError = { message: 'Test error', code: 500 };
 
     // Mock the native method to call both callbacks

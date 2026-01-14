@@ -21,7 +21,7 @@ import UnreadIcon from "../UnreadIcon/UnreadIcon.js";
 import { useTheme } from "../../theme/index.js";
 import useAspectRatio from "../../hooks/useAspectRatio.js";
 import Button from "../Button/Button.js";
-import useContainerSettings from "../../hooks/useContainerSettings.js";
+import useInboxSettings from "../../hooks/useInboxSettings.js";
 
 /**
  * Callback function that is called when a content card event occurs.
@@ -56,14 +56,8 @@ export const ContentCardView = ({
     colors,
     isDark
   } = useTheme();
-  const containerSettings = useContainerSettings();
-  // Track read state in component state
-  const [isRead, setIsRead] = useState(template.isRead);
-
-  // Sync state when template changes
-  useEffect(() => {
-    setIsRead(template.isRead);
-  }, [template.isRead]);
+  const containerSettings = useInboxSettings();
+  const isRead = template.isRead ?? false;
 
   // Default to true if not specified
   const isUnreadEnabled = containerSettings?.content?.isUnreadEnabled ?? true;
@@ -89,9 +83,6 @@ export const ContentCardView = ({
 
     // Track interaction event using propositionItem
     template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
-
-    // Mark as read when interacted with
-    setIsRead(true);
     const actionUrl = template.data.content.actionUrl;
     if (actionUrl) {
       try {
@@ -110,7 +101,6 @@ export const ContentCardView = ({
     listener?.("onInteract", template, {
       buttonId
     });
-    setIsRead(true);
   }, [listener, template]);
   const imageUri = useMemo(() => {
     if (isDark && template.data?.content?.image?.darkUrl) {
