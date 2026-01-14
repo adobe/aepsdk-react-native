@@ -1,4 +1,4 @@
-import { cloneElement, ReactElement, useCallback, useMemo, useState } from "react";
+import { cloneElement, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,11 +15,14 @@ import InboxProvider, {
 import { useTheme } from "../../theme";
 import { ContentViewEvent } from "../../types/ContentViewEvent";
 import { ContentTemplate } from "../../types/Templates";
+import { generateCardHash } from "../../utils/generateCardHash";
 import { ContentCardView, ContentViewProps } from "../ContentCardView/ContentCardView";
 import EmptyState from "./EmptyState";
 
 // TODO: consider localizing in the future
 const DEFAULT_EMPTY_MESSAGE = 'No Content Available';
+
+const cardStatusStore = new Map<string, { dismissed: Set<string>; interacted: Set<string> }>();
 
 export interface InboxProps<T> extends Partial<FlatListProps<T>> {
   LoadingComponent?: ReactElement | null;
@@ -52,77 +55,70 @@ function InboxInner<T extends ContentTemplate>({
   const { content, error, isLoading } = useContentCardUI(surface);
 
   const { content: contentSettings } = settings;
-  const { capacity, heading, layout, emptyStateSettings } = contentSettings;
+  const { capacity, heading, layout, emptyStateSettings, isUnreadEnabled } = contentSettings;
 
-  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  const getStore = useCallback(() => {
+    if (!cardStatusStore.has(surface)) {
+      cardStatusStore.set(surface, { dismissed: new Set(), interacted: new Set() });
+    }
+    return cardStatusStore.get(surface)!;
+  }, [surface]);
 
-  const isHorizontal = useMemo(() => layout?.orientation === 'horizontal', [layout?.orientation]);
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(() => new Set(getStore().dismissed));
+  const [interactedIds, setInteractedIds] = useState<Set<string>>(() => 
+    isUnreadEnabled ? new Set(getStore().interacted) : new Set());
+
+  useEffect(() => {
+    const store = getStore();
+    setDismissedIds(new Set(store.dismissed));
+    if (isUnreadEnabled) setInteractedIds(new Set(store.interacted));
+  }, [content, isUnreadEnabled, getStore]);
+
+  const isHorizontal = layout?.orientation === 'horizontal';
 
   const displayCards = useMemo(() => {
-    const items = (content ?? []) as any[];
-    return items.filter((it) => it && !dismissedIds.has(it.id)).slice(0, capacity) as T[];
-  }, [content, dismissedIds, capacity]);
+    return content
+      .filter((it) => !dismissedIds.has(generateCardHash(it)))
+      .map((it) => {
+        const cardHash = generateCardHash(it);
+        const shouldBeRead = isUnreadEnabled && (interactedIds.has(cardHash) || it.isRead === true);
+        return shouldBeRead ? { ...it, isRead: true } : it;
+      })
+      .slice(0, capacity) as T[];
+  }, [content, capacity, isUnreadEnabled, dismissedIds, interactedIds]);
 
-  const handleCardEvent = useCallback(
-    (event?: ContentViewEvent, data?: ContentTemplate, nativeEvent?: any) => {
-      if (event === 'onDismiss' && data?.id) {
-        setDismissedIds((prev) => {
-          const next = new Set(prev);
-          next.add(data.id as any);
-          return next;
-        });
-      }
-      CardProps?.listener?.(event, data, nativeEvent);
-    },
-    [CardProps]
-  );
+  const handleCardEvent = useCallback((event?: ContentViewEvent, data?: ContentTemplate, nativeEvent?: any) => {
+    const cardHash = generateCardHash(data);
+    const store = getStore();
+    if (event === 'onDismiss' && !store.dismissed.has(cardHash)) {
+      store.dismissed.add(cardHash);
+      setDismissedIds((prev) => new Set(prev).add(cardHash));
+    } else if (event === 'onInteract' && isUnreadEnabled && !store.interacted.has(cardHash)) {
+      store.interacted.add(cardHash);
+      setInteractedIds((prev) => new Set(prev).add(cardHash));
+    }
+    CardProps?.listener?.(event, data, nativeEvent);
+  }, [CardProps, isUnreadEnabled, getStore]);
 
-  const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
-    return (
-      <ContentCardView
-        template={item}
-        {...CardProps}
-        listener={handleCardEvent}
-        style={
-          isHorizontal 
-            ? [styles.horizontalCardStyles, { width: Math.floor(windowWidth * 0.75) }]
-            : undefined
-          }
-      />
-    );
-  }, [isHorizontal, CardProps, windowWidth, handleCardEvent]);
+  const renderItem: ListRenderItem<T> = useCallback(({ item }) => (
+    <ContentCardView
+      template={item}
+      {...CardProps}
+      listener={handleCardEvent}
+      style={isHorizontal ? [styles.horizontalCardStyles, { width: Math.floor(windowWidth * 0.75) }] : undefined}
+    />
+  ), [isHorizontal, CardProps, windowWidth, handleCardEvent]);
 
-  const EmptyList = useCallback(() => {
-    return (
-      EmptyComponent ? cloneElement(EmptyComponent, {
-        ...emptyStateSettings,
-      }) as React.ReactElement : (
-        <EmptyState
-          image={
-            isDark
-              ? emptyStateSettings?.image?.darkUrl ?? ''
-              : emptyStateSettings?.image?.url ?? ''
-          }
-          text={
-            emptyStateSettings?.message?.content ||
-            DEFAULT_EMPTY_MESSAGE
-          }
-        />
-      )
-    )
-  }, [isDark, emptyStateSettings, EmptyComponent]);
+  const EmptyList = useCallback(() => EmptyComponent ?
+    cloneElement(EmptyComponent, { ...emptyStateSettings }) as React.ReactElement :
+    <EmptyState
+      image={isDark ? emptyStateSettings?.image?.darkUrl ?? '' : emptyStateSettings?.image?.url ?? ''}
+      text={emptyStateSettings?.message?.content || DEFAULT_EMPTY_MESSAGE}
+    />, [isDark, emptyStateSettings, EmptyComponent]);
 
-  if (isLoading) {
-    return LoadingComponent;
-  }
-
-  if (error) {
-    return ErrorComponent;
-  }
-
-  if (!content) {
-    return FallbackComponent;
-  }
+  if (isLoading) return LoadingComponent;
+  if (error) return ErrorComponent;
+  if (!content) return FallbackComponent;
 
   return (
     <InboxProvider settings={settings}>
@@ -163,17 +159,9 @@ export function Inbox<T extends ContentTemplate>({
   ...props
 }: InboxProps<T>): React.ReactElement {
 
-  if (isLoading) {
-    return LoadingComponent as React.ReactElement;
-  }
-
-  if (error) {
-    return ErrorComponent as React.ReactElement;
-  }
-
-  if (!settings) {
-    return FallbackComponent as React.ReactElement;
-  }
+  if (isLoading) return LoadingComponent as React.ReactElement;
+  if (error) return ErrorComponent as React.ReactElement;
+  if (!settings) return FallbackComponent as React.ReactElement;;
 
   return (
     <InboxInner

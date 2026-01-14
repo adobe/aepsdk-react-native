@@ -1,1 +1,1 @@
-{"version":3,"names":["default","InboxProvider"],"sourceRoot":"../../../src","sources":["ui/index.ts"],"mappings":";;AAAA,cAAc,uBAAc;AAC5B,cAAc,kBAAS;AACvB,cAAc,kBAAS;AACvB,cAAc,kBAAS;AACvB,cAAc,8BAA2B;AACzC,SAASA,OAAO,IAAIC,aAAa,QAAQ,8BAA2B","ignoreList":[]}
+{"version":3,"names":["default","InboxProvider"],"sourceRoot":"../../../src","sources":["ui/index.ts"],"mappings":";;AAAA,cAAc,uBAAc;AAC5B,cAAc,kBAAS;AACvB,cAAc,kBAAS;AACvB,cAAc,kBAAS;AACvB,cAAc,kBAAS;AACvB,cAAc,8BAA2B;AACzC,SAASA,OAAO,IAAIC,aAAa,QAAQ,8BAA2B","ignoreList":[]}

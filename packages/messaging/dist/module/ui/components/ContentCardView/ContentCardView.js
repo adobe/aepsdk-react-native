@@ -57,13 +57,7 @@ export const ContentCardView = ({
     isDark
   } = useTheme();
   const containerSettings = useInboxSettings();
-  // Track read state in component state
-  const [isRead, setIsRead] = useState(template.isRead);
-
-  // Sync state when template changes
-  useEffect(() => {
-    setIsRead(template.isRead);
-  }, [template.isRead]);
+  const isRead = template.isRead ?? false;
 
   // Default to true if not specified
   const isUnreadEnabled = containerSettings?.content?.isUnreadEnabled ?? true;
@@ -89,9 +83,6 @@ export const ContentCardView = ({
 
     // Track interaction event using propositionItem
     template.track?.("content_clicked", MessagingEdgeEventType.INTERACT, null);
-
-    // Mark as read when interacted with
-    setIsRead(true);
     const actionUrl = template.data.content.actionUrl;
     if (actionUrl) {
       try {
@@ -110,7 +101,6 @@ export const ContentCardView = ({
     listener?.("onInteract", template, {
       buttonId
     });
-    setIsRead(true);
   }, [listener, template]);
   const imageUri = useMemo(() => {
     if (isDark && template.data?.content?.image?.darkUrl) {
