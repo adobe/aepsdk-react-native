@@ -10,7 +10,7 @@
     language governing permissions and limitations under the License.
 */
 
-import { render, screen, act } from '@testing-library/react-native';
+import { render, screen, act, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { Dimensions, Text } from 'react-native';
 import EmptyState from './EmptyState';
@@ -35,6 +35,11 @@ jest.mock('../../providers/InboxProvider', () => ({
   __esModule: true,
   default: ({ children }: any) => children,
 }));
+
+// jest.mock('../../hooks/useAspectRatio', () => ({
+//   __esModule: true,
+//   default: () => 1.5,
+// }));
 
 const { useContentCardUI, useInbox } = jest.requireMock('../../hooks');
 
@@ -109,6 +114,17 @@ describe('Inbox', () => {
 
       const CC: any = Inbox;
       render(<CC surface={surface} settings={baseSettings} />);
+      expect(screen.getByText('No Content Available')).toBeTruthy();
+    });
+
+    it('handles empty content array', () => {
+      (useInbox as jest.Mock).mockReturnValue({ settings: baseSettings, isLoading: false, error: null });
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [], isLoading: false, error: null });
+
+      const CC: any = Inbox;
+      render(<CC surface={surface} settings={baseSettings} />);
+
+      expect(mockContentCardView.mock.calls.length).toBe(0);
       expect(screen.getByText('No Content Available')).toBeTruthy();
     });
 
@@ -213,18 +229,96 @@ describe('Inbox', () => {
       const CC: any = Inbox;
       const utils = render(<CC surface={surface} settings={capSettings} />);
 
-      expect(mockContentCardView.mock.calls.length).toBe(2);
-      const firstProps = mockContentCardView.mock.calls[0][0];
+      await waitFor(() => {
+        expect(mockContentCardView.mock.calls.length).toBeGreaterThanOrEqual(2);
+      });
+      // Get the last render's calls (component may render multiple times)
+      const lastTwoCalls = mockContentCardView.mock.calls.slice(-2);
+      expect(lastTwoCalls.length).toBe(2);
+      const firstProps = lastTwoCalls[0][0];
 
       await act(async () => {
         firstProps.listener?.('onDismiss', firstProps.template);
       });
+      mockContentCardView.mockClear();
       utils.rerender(<CC surface={surface} settings={capSettings} extraData={() => {}} />);
 
+      await waitFor(() => {
+        expect(mockContentCardView.mock.calls.length).toBeGreaterThanOrEqual(1);
+      });
       const renderedIds = mockContentCardView.mock.calls.map(c => c[0].template.id);
       expect(renderedIds).toEqual(expect.arrayContaining(['3']));
-      const lastTwoIds = renderedIds.slice(-2);
-      expect(lastTwoIds).not.toEqual(expect.arrayContaining(['1']));
+      expect(renderedIds).not.toContain('1');
+    });
+  });
+
+  describe('layout and styling', () => {
+    it('renders cards vertically when layout orientation is vertical', () => {
+      const verticalSettings = {
+        ...baseSettings,
+        content: { ...baseSettings.content, layout: { orientation: 'vertical' as const } },
+      };
+      (useInbox as jest.Mock).mockReturnValue({ settings: verticalSettings, isLoading: false, error: null });
+      const template = { id: '1', type: 'SmallImage', data: { content: { title: { content: 'T' }, body: { content: 'B' }, image: { url: 'u' } } } };
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+
+      const CC: any = Inbox;
+      render(<CC surface={surface} settings={verticalSettings} />);
+
+      expect(mockContentCardView).toHaveBeenCalled();
+      const args = mockContentCardView.mock.calls[0][0];
+      expect(args.style).toBeUndefined();
+    });
+
+    it('does not render heading when heading content is not provided', () => {
+      const settingsWithoutHeading = {
+        ...baseSettings,
+        content: { ...baseSettings.content, heading: undefined },
+      };
+      (useInbox as jest.Mock).mockReturnValue({ settings: settingsWithoutHeading, isLoading: false, error: null });
+      const template = { id: '1', type: 'SmallImage', data: { content: { title: { content: 'T' }, body: { content: 'B' }, image: { url: 'u' } } } };
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+
+      const CC: any = Inbox;
+      const { queryByText } = render(<CC surface={surface} settings={settingsWithoutHeading} />);
+
+      expect(queryByText('Heading')).toBeNull();
+    });
+  });
+
+  describe('interaction tracking', () => {
+    it('does not add duplicate entries to store on multiple interactions', async () => {
+      const testSurface = 'test-surface-duplicate-interact';
+      (useInbox as jest.Mock).mockReturnValue({ settings: baseSettings, isLoading: false, error: null });
+      const template = { id: '1', type: 'SmallImage', data: { content: { title: { content: 'T' }, body: { content: 'B' }, image: { url: 'u' } } } };
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+
+      const CC: any = Inbox;
+      render(<CC surface={testSurface} settings={baseSettings} />);
+
+      await waitFor(() => {
+        expect(mockContentCardView.mock.calls.length).toBeGreaterThan(0);
+      });
+
+      const args = mockContentCardView.mock.calls[0][0];
+
+      await act(async () => {
+        args.listener?.('onInteract', args.template);
+        args.listener?.('onInteract', args.template);
+        args.listener?.('onInteract', args.template);
+      });
+
+      const newContent = [{ ...template }];
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: newContent, isLoading: false, error: null });
+      mockContentCardView.mockClear();
+
+      render(<CC surface={testSurface} settings={baseSettings} />);
+      await waitFor(() => {
+        expect(mockContentCardView.mock.calls.length).toBeGreaterThan(0);
+      });
+
+      const updatedArgs = mockContentCardView.mock.calls[0][0];
+      expect(updatedArgs.template.isRead).toBe(true);
     });
   });
 });
