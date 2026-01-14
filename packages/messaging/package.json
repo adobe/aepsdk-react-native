@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepmessaging",
-  "version": "7.2.1",
+  "version": "7.3.0",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
