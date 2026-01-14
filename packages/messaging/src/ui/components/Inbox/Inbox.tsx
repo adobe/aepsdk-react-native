@@ -77,6 +77,7 @@ function InboxInner<T extends ContentTemplate>({
   const isHorizontal = layout?.orientation === 'horizontal';
 
   const displayCards = useMemo(() => {
+    if (!content) return [] as T[];
     return content
       .filter((it) => !dismissedIds.has(generateCardHash(it)))
       .map((it) => {
