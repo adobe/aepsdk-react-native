@@ -65,3 +65,33 @@ When the user clicks the button inside of this in-app message, the handler confi
 ```bash
 JavaScript body passed to react native callback: callbacks are cool!
 ```
+
+# Execute JavaScript methods from native code
+
+You can execute JavaScript in an in-app message from native code by completing the following steps:
+- [Implement and assign a `Messaging Delegate`](#implement-and-assign-a-messaging-delegate-1)
+
+## Implement and assign a `Messaging Delegate`
+
+To register a JavaScript event handler with a Message object, you will first need to implement and set a MessagingDelegate.
+Please read the [documentation](../README.md/#programmatically-control-the-display-of-in-app-messages) for more detailed instructions on implementing and using a MessagingDelegate.
+
+## Call the JavaScript method
+
+In the `onShow` function of `MessagingDelegate`, call `evaluateJavascript(javascriptString: string, callback: (result: string) => void)`.
+
+### Example
+
+```typescript
+Messaging.setMessagingDelegate({
+    onShow: msg => {
+      console.log('show', msg);
+      msg.evaluateJavascript(
+        "(function() {console.log('my test'); return 'some result';})();", 
+        (result: string) => {
+          console.log('Result:', result);
+        }
+      );
+    }
+  });
+```
