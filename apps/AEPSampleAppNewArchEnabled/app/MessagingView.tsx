@@ -30,7 +30,6 @@ import { useRouter } from 'expo-router';
 const SURFACES = ['android-cbe-preview', 'cbe/json', 'android-cc'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
 
-
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();
   console.log(`AdobeExperienceSDK: Messaging version: ${version}`);
@@ -53,8 +52,21 @@ const setMessagingDelegate = () => {
         console.log('Result:', result);
       });
     },
-    shouldShowMessage: () => true,
-    shouldSaveMessage: () => true,
+    shouldShowMessage: msg => {
+      const msgId = msg.id; // use this message id to save the message in the cache
+      console.log('msgId', msgId);
+
+      // return true to show the message else return false to suppress the message
+      // if you want to save the message in order to show it later, set shouldSaveMessage to true
+      return true; 
+    },
+    shouldSaveMessage: msg => {
+      const msgId = msg.id; // use this message id to save the message in the cache
+      console.log('msgId', msgId);
+
+      // return true to save the message in the cache else return false to not save the message
+      return true; 
+    },
     urlLoaded: (url, message) => console.log(url, message),
   });
   console.log('messaging delegate set');
@@ -81,6 +93,13 @@ const getLatestMessage = async () => {
   const message = await Messaging.getLatestMessage();
   console.log('Latest Message:', message);
 };
+
+const showMessage = async () => {
+  const messageId = 'MESSAGE_ID'; // replace MESSAGE_ID with the id of the message you want to show
+  const message = new Message({id: messageId, autoTrack: true}); 
+  message.show();
+  console.log(`message with id ${messageId} shown`);
+}
 
 // this method can be used to track click interactions with content cards
 const trackContentCardInteraction = async () => {
@@ -159,6 +178,7 @@ function MessagingView() {
         />
         <Button title="getCachedMessages()" onPress={getCachedMessages} />
         <Button title="getLatestMessage()" onPress={getLatestMessage} />
+        <Button title="showMessage()" onPress={showMessage} />
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackPropositionInteraction()" onPress={trackContentCardInteraction} />
         <Button title="trackContentCardDisplay()" onPress={trackContentCardDisplay} />
