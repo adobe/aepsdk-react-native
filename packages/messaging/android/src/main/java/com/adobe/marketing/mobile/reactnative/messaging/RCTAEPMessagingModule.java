@@ -374,7 +374,6 @@ public final class RCTAEPMessagingModule
     this.shouldShowMessage = shouldShowMessage;
     this.shouldSaveMessage = shouldSaveMessage;
     latch.countDown();
-    return true;
   }
 
   /**
