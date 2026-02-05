@@ -1,42 +1,44 @@
 PODS:
-  - AEPAssurance (5.0.1):
+  - AEPAssurance (5.0.3):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
   - AEPCampaignClassic (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
-  - AEPCore (5.4.0):
+  - AEPCore (5.7.0):
     - AEPRulesEngine (< 6.0.0, >= 5.0.0)
-    - AEPServices (< 6.0.0, >= 5.4.0)
+    - AEPServices (< 6.0.0, >= 5.7.0)
   - AEPEdge (5.0.3):
     - AEPCore (< 6.0.0, >= 5.3.1)
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
   - AEPEdgeBridge (5.1.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
-  - AEPEdgeConsent (5.0.0):
+  - AEPEdgeConsent (5.0.1):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPEdge (< 6.0.0, >= 5.0.0)
   - AEPEdgeIdentity (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
-  - AEPIdentity (5.4.0):
-    - AEPCore (< 6.0.0, >= 5.4.0)
-  - AEPLifecycle (5.4.0):
-    - AEPCore (< 6.0.0, >= 5.4.0)
-  - AEPMessaging (5.6.0):
-    - AEPCore (< 6.0.0, >= 5.3.0)
+  - AEPIdentity (5.7.0):
+    - AEPCore (< 6.0.0, >= 5.7.0)
+  - AEPLifecycle (5.7.0):
+    - AEPCore (< 6.0.0, >= 5.7.0)
+  - AEPMessaging (5.8.1):
+    - AEPCore (< 6.0.0, >= 5.7.0)
     - AEPEdge (< 6.0.0, >= 5.0.2)
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
-    - AEPServices (< 6.0.0, >= 5.3.0)
-  - AEPOptimize (5.3.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPMessagingLiveActivity (< 6.0.0, >= 5.7.0)
+    - AEPServices (< 6.0.0, >= 5.7.0)
+  - AEPMessagingLiveActivity (5.7.0)
+  - AEPOptimize (5.6.1):
+    - AEPCore (< 6.0.0, >= 5.4.0)
     - AEPEdge (< 6.0.0, >= 5.0.0)
   - AEPPlaces (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
   - AEPRulesEngine (5.0.0)
-  - AEPServices (5.4.0)
-  - AEPSignal (5.4.0):
-    - AEPCore (< 6.0.0, >= 5.4.0)
+  - AEPServices (5.7.0)
+  - AEPSignal (5.7.0):
+    - AEPCore (< 6.0.0, >= 5.7.0)
   - AEPTarget (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
   - AEPUserProfile (5.0.0):
@@ -144,10 +146,10 @@ PODS:
     - AEPCampaignClassic (< 6.0.0, >= 5.0.0)
     - React
   - RCTAEPCore (7.0.0):
-    - AEPCore (<= 7.0.0, >= 5.4.0)
-    - AEPIdentity (<= 7.0.0, >= 5.4.0)
-    - AEPLifecycle (<= 7.0.0, >= 5.4.0)
-    - AEPSignal (<= 7.0.0, >= 5.4.0)
+    - AEPCore (< 6.0.0, >= 5.4.0)
+    - AEPIdentity (< 6.0.0, >= 5.4.0)
+    - AEPLifecycle (< 6.0.0, >= 5.4.0)
+    - AEPSignal (< 6.0.0, >= 5.4.0)
     - React
   - RCTAEPEdge (7.0.0):
     - AEPEdge (< 6.0.0, >= 5.0.0)
@@ -1238,6 +1240,8 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - AEPMessaging (from `https://github.com/adobe/aepsdk-messaging-ios.git`, tag `5.9.0-live-activities-2`)
+  - AEPMessagingLiveActivity (from `https://github.com/adobe/aepsdk-messaging-ios.git`, tag `5.9.0-live-activities-2`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -1341,7 +1345,6 @@ SPEC REPOS:
     - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
-    - AEPMessaging
     - AEPOptimize
     - AEPPlaces
     - AEPRulesEngine
@@ -1364,6 +1367,12 @@ SPEC REPOS:
     - SocketRocket
 
 EXTERNAL SOURCES:
+  AEPMessaging:
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
+    :tag: 5.9.0-live-activities-2
+  AEPMessagingLiveActivity:
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
+    :tag: 5.9.0-live-activities-2
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -1498,22 +1507,31 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
+CHECKOUT OPTIONS:
+  AEPMessaging:
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
+    :tag: 5.9.0-live-activities-2
+  AEPMessagingLiveActivity:
+    :git: https://github.com/adobe/aepsdk-messaging-ios.git
+    :tag: 5.9.0-live-activities-2
+
 SPEC CHECKSUMS:
-  AEPAssurance: df04baeace42befb0cc213fd6cdfe51651d11ba6
+  AEPAssurance: 3ab00d47a40bc6c6cb2000689e0dcfa595cda250
   AEPCampaignClassic: bb177cc477846b15c38cfba77b8ec5127abf2105
-  AEPCore: 8cdc5390163f2b761e7f3eed1cae92b8a11c0237
+  AEPCore: d1b0905c5a9531a883d9e8c31212ff61ca900be0
   AEPEdge: 105afc7958acd7c016d57f7ac1d6f632bf05e6ee
   AEPEdgeBridge: 2302555a67bf4677a903c42dedf9b3ab0dd941b9
-  AEPEdgeConsent: d7db1d19eb4c1e2146360ed3c8df315f671b26d5
+  AEPEdgeConsent: 5f28a8ed6cd86812a73b1f5a4dbde9c81e486bf1
   AEPEdgeIdentity: 3161ff33434586962946912d6b8e9e8fca1c4d23
-  AEPIdentity: 44513e103592e8cc60508dde9f0b049c82897c07
-  AEPLifecycle: 619ce7bf7b64a2caff7a172e9f12f0b6da636142
-  AEPMessaging: 34d796c0a078c3e669b88150aae7dc468a308dcd
-  AEPOptimize: 0932b2662624188bb7012d772b94c99e9232849d
+  AEPIdentity: 1d491f04c11cbea9d94c6e2bc1b956b1264e3f42
+  AEPLifecycle: da35d7393f0d635472719d292b9e4142123cb13c
+  AEPMessaging: 0d1d1e3303dc18627ef24ae131014afd7cc9b1c1
+  AEPMessagingLiveActivity: deadeacb2e5f467355f706266bc591b9361afa19
+  AEPOptimize: ac17a3311f3763ec2c2786243c5b8272acaf83dd
   AEPPlaces: 9eec5f88306033ce8190ec30727cbdd4008cc018
   AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
-  AEPServices: ce27e3f2de75a9b24b3d27c7b5f1bb519724f8cb
-  AEPSignal: 9b34890eea1b81714aa45b7d7f8deb82206b0ca2
+  AEPServices: e1f14e286a8680cecbe0bcdf6ea47f46573635c4
+  AEPSignal: 6e10c4d1dca8fb1ed8601cb4224ebd30fc241a59
   AEPTarget: 78197ae0f5455eeb837f8ed9fdc4f3f697cb3dd8
   AEPUserProfile: cf36305d683d993d528337a46b7a269029b63e5d
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
@@ -1537,7 +1555,7 @@ SPEC CHECKSUMS:
   RCT-Folly: cd21f1661364f975ae76b3308167ad66b09f53f5
   RCTAEPAssurance: 85c5ae07d4c4dcd857b50e550e0de44cff70efb2
   RCTAEPCampaignClassic: 9dd5dd68297c3fda6d45e90862fcc187409c5950
-  RCTAEPCore: e6a59e7f7fb80fef2530b1aac0806fef4cae3dda
+  RCTAEPCore: e1e6c47040d35eaea4a6ef910bcd8418f7920efc
   RCTAEPEdge: d01fa96ccedd5e63c1351e9c89db24de5075bd22
   RCTAEPEdgeBridge: feb15a24b7061baaab110d55085a7ab84b69bc25
   RCTAEPEdgeConsent: 3b32e623fd1d62058270d801b3d19b48549ba6d2
@@ -1596,6 +1614,6 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
 
-PODFILE CHECKSUM: 28c6df2071ba56279db6503a2577505ae5b10b15
+PODFILE CHECKSUM: 676d5021a4ab2a5402416f040941328580018039
 
 COCOAPODS: 1.16.2

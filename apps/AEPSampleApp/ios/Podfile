@@ -28,6 +28,10 @@ end
 target 'aepsampleapp' do
   config = use_native_modules!
 
+  # AEPMessaging with Live Activities support
+  pod 'AEPMessaging', :git => 'https://github.com/adobe/aepsdk-messaging-ios.git', :tag => '5.9.0-live-activities-2'
+  pod 'AEPMessagingLiveActivity', :git => 'https://github.com/adobe/aepsdk-messaging-ios.git', :tag => '5.9.0-live-activities-2'
+
   use_react_native!(
     :path => config[:reactNativePath],
     # Enables Flipper.
