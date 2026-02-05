@@ -96,7 +96,7 @@ export default function App() {
 
   useEffect(() => {
     // Log architecture info
-    const hasTurboModules = (global as any).__turboModuleProxy != null;
+    /*const hasTurboModules = (global as any).__turboModuleProxy != null;
     const isFabricEnabled = (global as any).nativeFabricUIManager != null;
     console.log('===========================================');
     console.log('🏗️  ARCHITECTURE INFO:');
@@ -104,7 +104,7 @@ export default function App() {
     console.log(`   TurboModules Proxy: ${hasTurboModules ? '✅ ENABLED' : '❌ DISABLED (AEP uses Bridge modules)'}`);
     console.log(`   Running: ${isFabricEnabled ? '✅ NEW ARCHITECTURE (Fabric)' : '❌ OLD ARCHITECTURE'}`);
     console.log('===========================================');
-
+   */
     // If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
   
     // const initOptions = {
