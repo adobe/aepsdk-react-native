@@ -14,6 +14,7 @@
 		5CD679DC8D32E3E1A898E7D1 /* libPods-aepsampleapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D450A9C878D9C489E459D9F0 /* libPods-aepsampleapp.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A49979B6B45700B869FA6EC5 /* libPods-aepsampleapp-aepsampleappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EA40767FBC1E395AFF245F6 /* libPods-aepsampleapp-aepsampleappTests.a */; };
+		C2A17F28CBF0D382EE4ACC70 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DD90B4BFFFA25EEA1D0BE83E /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = aepsampleapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C180776A1A5B857370CC2D23 /* Pods-aepsampleapp-aepsampleappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aepsampleapp-aepsampleappTests.release.xcconfig"; path = "Target Support Files/Pods-aepsampleapp-aepsampleappTests/Pods-aepsampleapp-aepsampleappTests.release.xcconfig"; sourceTree = "<group>"; };
 		D450A9C878D9C489E459D9F0 /* libPods-aepsampleapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aepsampleapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD90B4BFFFA25EEA1D0BE83E /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = aepsampleapp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -94,6 +96,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				1B59F6792BB4EE8B00ED6F0D /* dummy.swift */,
 				1B59F6782BB4EE8B00ED6F0D /* aepsampleapp-Bridging-Header.h */,
+				DD90B4BFFFA25EEA1D0BE83E /* PrivacyInfo.xcprivacy */,
 			);
 			name = aepsampleapp;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				C2A17F28CBF0D382EE4ACC70 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +487,6 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
-					"-fcxx-modules",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -518,7 +521,6 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
-					"-fcxx-modules",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -601,7 +603,6 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
-					"-fcxx-modules",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -609,6 +610,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				USE_HERMES = true;
 			};
 			name = Debug;
@@ -673,7 +675,6 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
-					"-fcxx-modules",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",

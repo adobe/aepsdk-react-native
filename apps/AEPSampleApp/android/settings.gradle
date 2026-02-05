@@ -1,4 +1,23 @@
+pluginManagement {
+    includeBuild("../node_modules/@react-native/gradle-plugin")
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+plugins { id("com.facebook.react.settings") }
+
+def nodeExecutable = System.getenv("HOME") + "/.nvm/versions/node/v22.13.0/bin/node"
+def cliScript = file("../node_modules/@react-native-community/cli/build/bin.js").absolutePath
+
+extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
+    ex.autolinkLibrariesFromCommand(
+        [nodeExecutable, cliScript, "config"],
+        file(".."),
+        settings.layout.rootDirectory.dir("..").files("yarn.lock", "package-lock.json", "package.json", "react-native.config.js")
+    )
+}
+
 rootProject.name = 'AEPSampleApp'
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
-includeBuild('../node_modules/@react-native/gradle-plugin')
