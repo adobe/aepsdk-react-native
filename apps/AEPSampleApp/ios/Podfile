@@ -25,6 +25,11 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+# Widget Extension target - needs AEPMessagingLiveActivity for Live Activities
+target 'WidgetMessagingDemoExtension' do
+  pod 'AEPMessagingLiveActivity', :git => 'https://github.com/adobe/aepsdk-messaging-ios.git', :tag => '5.9.0-live-activities-2'
+end
+
 target 'aepsampleapp' do
   config = use_native_modules!
 

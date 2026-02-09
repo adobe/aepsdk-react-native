@@ -28,6 +28,7 @@ import TargetView from './extensions/TargetView';
 import PlacesView from './extensions/PlacesView';
 import {NavigationProps} from './types/props';
 import CampaignClassicView from './extensions/CampaignClassicView';
+import LiveActivityView from './extensions/LiveActivityView';
 import { MobileCore , LogLevel} from '@adobe/react-native-aepcore';
 import { useEffect } from 'react';
 
@@ -50,6 +51,10 @@ function HomeScreen({navigation}: NavigationProps) {
       <Button
         onPress={() => navigation.navigate('MessagingView')}
         title="Messaging"
+      />
+      <Button
+        onPress={() => navigation.navigate('LiveActivityView')}
+        title="Live Activities (iOS)"
       />
 
       <Button
@@ -137,6 +142,7 @@ export default function App() {
         <Drawer.Screen name="EdgeIdentityView" component={EdgeIdentityView} />
         <Drawer.Screen name="IdentityView" component={IdentityView} />
         <Drawer.Screen name="MessagingView" component={MessagingView} />
+        <Drawer.Screen name="LiveActivityView" component={LiveActivityView} />
         <Drawer.Screen name="OptimizeView" component={OptimizeView} />
         <Drawer.Screen name="PlacesView" component={PlacesView} />
         <Drawer.Screen name="ProfileView" component={ProfileView} />
