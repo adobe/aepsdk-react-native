@@ -84,7 +84,7 @@ PODS:
   - RCTAEPEdge (7.0.0):
     - AEPEdge (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPEdgeBridge (7.0.0):
+  - RCTAEPEdgeBridge (7.0.1):
     - AEPEdgeBridge (< 6.0.0, >= 5.0.0)
     - React
   - RCTAEPEdgeConsent (7.0.0):
@@ -93,13 +93,13 @@ PODS:
   - RCTAEPEdgeIdentity (7.0.0):
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPMessaging (7.0.0):
+  - RCTAEPMessaging (7.3.0):
     - AEPMessaging (< 6.0.0, >= 5.3.0)
     - React
-  - RCTAEPOptimize (7.0.0):
+  - RCTAEPOptimize (7.1.1):
     - AEPOptimize (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPPlaces (7.0.0):
+  - RCTAEPPlaces (7.0.1):
     - AEPPlaces (< 6.0.0, >= 5.0.0)
     - React
   - RCTAEPTarget (7.0.0):
@@ -3291,12 +3291,12 @@ SPEC CHECKSUMS:
   RCTAEPCampaignClassic: 9dd5dd68297c3fda6d45e90862fcc187409c5950
   RCTAEPCore: e1e6c47040d35eaea4a6ef910bcd8418f7920efc
   RCTAEPEdge: d01fa96ccedd5e63c1351e9c89db24de5075bd22
-  RCTAEPEdgeBridge: feb15a24b7061baaab110d55085a7ab84b69bc25
+  RCTAEPEdgeBridge: 4d27ecca9f530899b397ccdd7afe9f4a61261b0c
   RCTAEPEdgeConsent: 3b32e623fd1d62058270d801b3d19b48549ba6d2
   RCTAEPEdgeIdentity: 9c76adfae37907c9473b90b8af552f4373c53905
-  RCTAEPMessaging: 2b7d034848d5bba305a0b2691d905f28a7783a92
-  RCTAEPOptimize: 17929a9474b9d176fa5130c0eff96ab2c7f0fc9e
-  RCTAEPPlaces: 7f56433f98989ca6df68524524ca04c1aebb619f
+  RCTAEPMessaging: aedaa653b0a259885a80286ab2c1b826978e6be1
+  RCTAEPOptimize: b0c551927dde7d791a1830b1e22396b708fc9f30
+  RCTAEPPlaces: f269cd87db4278e5b7327b573685db275f7ce3eb
   RCTAEPTarget: e7cba160c73c4c03b3a45c7e6838fa66379a99eb
   RCTAEPUserProfile: edc724f4d2e2f8d6c5047f0d3b8081b538a1a81f
   RCTDeprecation: 2b70c6e3abe00396cefd8913efbf6a2db01a2b36
