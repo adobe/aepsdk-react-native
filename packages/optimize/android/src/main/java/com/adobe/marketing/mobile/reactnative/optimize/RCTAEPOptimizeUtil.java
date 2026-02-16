@@ -15,8 +15,13 @@ import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
+import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.adobe.marketing.mobile.optimize.AEPOptimizeError;
+import com.adobe.marketing.mobile.util.DataReader;
+import com.adobe.marketing.mobile.util.DataReaderException;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
@@ -25,6 +30,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -271,5 +277,151 @@ class RCTAEPOptimizeUtil {
             errorMap.putString("aepError", error.getAdobeError().getErrorName());
         }
         return errorMap;
+    }
+
+    /**
+     * Resolves promise with Display interaction XDM for the offer, or rejects if offer not found.
+     * Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     */
+    static void generateDisplayInteractionXdm(String offerId, ReadableMap propositionMap, Promise promise) {
+        Map<String, Object> eventData = convertReadableMapToMap(propositionMap);
+        OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
+        Offer offer = findOfferById(proposition, offerId);
+        if (offer != null) {
+            promise.resolve(convertMapToWritableMap(offer.generateDisplayInteractionXdm()));
+        } else {
+            promise.reject("generateDisplayInteractionXdm", "Error in generating Display interaction XDM for offer with id: " + offerId);
+        }
+    }
+
+    /**
+     * Resolves promise with Tap interaction XDM for the offer, or rejects if offer not found.
+     * Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     */
+    static void generateTapInteractionXdm(String offerId, ReadableMap propositionMap, Promise promise) {
+        Map<String, Object> eventData = convertReadableMapToMap(propositionMap);
+        OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
+        Offer offer = findOfferById(proposition, offerId);
+        if (offer != null) {
+            promise.resolve(convertMapToWritableMap(offer.generateTapInteractionXdm()));
+        } else {
+            promise.reject("generateTapInteractionXdm", "Error in generating Tap interaction XDM for offer with id: " + offerId);
+        }
+    }
+
+    /**
+     * Resolves promise with Reference XDM for the proposition, or rejects on error.
+     * Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     */
+    static void generateReferenceXdm(ReadableMap propositionMap, Promise promise) {
+        Map<String, Object> propositionEventData = convertReadableMapToMap(propositionMap);
+        OptimizeProposition proposition = OptimizeProposition.fromEventData(propositionEventData);
+        if (proposition != null) {
+            promise.resolve(convertMapToWritableMap(proposition.generateReferenceXdm()));
+        } else {
+            promise.reject("generateReferenceXdm", "Error in generating Reference XDM.");
+        }
+    }
+
+    private static Offer findOfferById(OptimizeProposition proposition, String offerId) {
+        if (proposition == null) return null;
+        for (Offer offer : proposition.getOffers()) {
+            if (offer.getId().equalsIgnoreCase(offerId)) return offer;
+        }
+        return null;
+    }
+
+    /**
+     * Marks the offer as displayed. Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     */
+    static void offerDisplayed(String offerId, ReadableMap propositionMap) {
+        Offer offer = findOfferById(OptimizeProposition.fromEventData(convertReadableMapToMap(propositionMap)), offerId);
+        if (offer != null) offer.displayed();
+    }
+
+    /**
+     * Marks the offer as tapped. Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     */
+    static void offerTapped(String offerId, ReadableMap propositionMap) {
+        Offer offer = findOfferById(OptimizeProposition.fromEventData(convertReadableMapToMap(propositionMap)), offerId);
+        if (offer != null) offer.tapped();
+    }
+
+    /**
+     * Displays the given offers (from cache). Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     */
+    static void multipleOffersDisplayed(ReadableArray offersArray, Map<String, OptimizeProposition> propositionCache) {
+        List<Offer> nativeOffers = getNativeOffers(offersArray, propositionCache);
+        if (!nativeOffers.isEmpty()) {
+            OfferUtils.displayed(nativeOffers);
+        }
+    }
+
+    /**
+     * Resolves with Display interaction XDM for the given offers, or rejects if none found.
+     * Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     */
+    static void multipleOffersGenerateDisplayInteractionXdm(
+            ReadableArray offersArray,
+            Map<String, OptimizeProposition> propositionCache,
+            Promise promise) {
+        List<Offer> nativeOffers = getNativeOffers(offersArray, propositionCache);
+        if (!nativeOffers.isEmpty()) {
+            promise.resolve(convertMapToWritableMap(OfferUtils.generateDisplayInteractionXdm(nativeOffers)));
+        } else {
+            promise.reject("multipleOffersGenerateDisplayInteractionXdm",
+                    "Error in generating Display interaction XDM for multiple offers: " + offersArray.toString());
+        }
+    }
+
+    /**
+     * Caches propositions by activity ID for later lookup (e.g. by getNativeOffers).
+     * Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     */
+    static void cachePropositionOffers(
+            final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap,
+            final Map<String, OptimizeProposition> cache) {
+        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
+            OptimizeProposition proposition = entry.getValue();
+            if (proposition == null) continue;
+
+            String activityId = null;
+            try {
+                Map<String, Object> activity = proposition.getActivity();
+                if (activity != null && activity.containsKey("id")) {
+                    activityId = DataReader.getString(activity, "id");
+                } else {
+                    Map<String, Object> scopeDetails = proposition.getScopeDetails();
+                    if (scopeDetails != null && scopeDetails.containsKey("activity")) {
+                        Map<String, Object> scopeDetailsActivity = DataReader.getTypedMap(Object.class, scopeDetails, "activity");
+                        if (scopeDetailsActivity != null && scopeDetailsActivity.containsKey("id")) {
+                            activityId = DataReader.getString(scopeDetailsActivity, "id");
+                        }
+                    }
+                }
+            } catch (DataReaderException e) {
+                Log.w(TAG, "Failed to extract activity ID from proposition: " + e.getMessage());
+                continue;
+            }
+            if (activityId != null) {
+                cache.put(activityId, proposition);
+            }
+        }
+    }
+
+    /**
+     * Emits "onPropositionsUpdate" to JS with the given propositions map.
+     * Shared by {@link RCTAEPOptimizeModule} and {@link NativeAEPOptimizeModule}.
+     * @param checkActiveInstance if true, only emit when context.hasActiveReactInstance() (Turbo path); if false, emit always (Interop path, original behavior).
+     */
+    static void emitOnPropositionsUpdate(
+            final ReactApplicationContext context,
+            final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap,
+            final boolean checkActiveInstance) {
+        WritableMap writableMap = createCallbackResponse(decisionScopePropositionMap);
+        if (!checkActiveInstance || context.hasActiveReactInstance()) {
+            context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("onPropositionsUpdate", writableMap);
+        }
     }
 }

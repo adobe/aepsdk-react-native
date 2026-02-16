@@ -21,11 +21,8 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
 import com.adobe.marketing.mobile.optimize.OfferType;
-import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
-import com.adobe.marketing.mobile.util.DataReader;
-import com.adobe.marketing.mobile.util.DataReaderException;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -33,12 +30,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -64,14 +57,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void offerDisplayed(final String offerId, final ReadableMap propositionMap) {
-        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
-        for (Offer offer : proposition.getOffers()) {
-            if (offer.getId().equalsIgnoreCase(offerId)) {
-                offer.displayed();
-                break;
-            }
-        }
+        RCTAEPOptimizeUtil.offerDisplayed(offerId, propositionMap);
     }
 
     @ReactMethod
@@ -81,9 +67,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void clearCachedPropositions() {
-        // clear the react native cache
-        clearPropositionsCache();
-        // clear the native cache
+        propositionCache.clear();
         Optimize.clearCachedPropositions();
     }
 
@@ -108,13 +92,11 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-
-                cachePropositionOffers(decisionScopePropositionMap);
+                RCTAEPOptimizeUtil.cachePropositionOffers(decisionScopePropositionMap, propositionCache);
                 Log.d(TAG, "updatePropositions callback success.");
                 if (successCallback != null) {
-                    final WritableMap response = RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap);
-                    Log.d(TAG, "Invoking JS successCallback with success: " + response.toString());
-                    successCallback.invoke(response);
+                    Log.d(TAG, "Invoking JS successCallback with success");
+                    successCallback.invoke(RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap));
                 }
             }
         });
@@ -132,74 +114,20 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-                cachePropositionOffers(decisionScopePropositionMap);
-                final WritableMap writableMap = new WritableNativeMap();
-                for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
-                    writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
-                }
-                promise.resolve(writableMap);
+                RCTAEPOptimizeUtil.cachePropositionOffers(decisionScopePropositionMap, propositionCache);
+                promise.resolve(RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap));
             }
         });
     }
 
-    private void cachePropositionOffers(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
-            OptimizeProposition proposition = entry.getValue();
-            if (proposition == null) {
-                continue;
-            }
-
-            String activityId = null;
-            try {
-                Map<String, Object> activity = proposition.getActivity();
-                if (activity != null && activity.containsKey("id")) {
-                    activityId = DataReader.getString(activity, "id");
-                } else {
-                    Map<String, Object> scopeDetails = proposition.getScopeDetails();
-                    if (scopeDetails != null && scopeDetails.containsKey("activity")) {
-                        Map<String, Object> scopeDetailsActivity = DataReader.getTypedMap(Object.class, scopeDetails, "activity");
-                        if (scopeDetailsActivity != null && scopeDetailsActivity.containsKey("id")) {
-                            activityId = DataReader.getString(scopeDetailsActivity, "id");
-                        }
-                    }
-                }
-            } catch (DataReaderException e) {
-                Log.w(TAG, "Failed to extract activity ID from proposition: " + e.getMessage());
-                continue;
-            }
-
-            if (activityId != null) {
-                propositionCache.put(activityId, proposition);
-            }
-        }
-    }
-
-    private void clearPropositionsCache() {
-        propositionCache.clear();
-    }
-
     @ReactMethod
     public void multipleOffersDisplayed(final ReadableArray offersArray) {
-        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray, propositionCache);
-
-        if (!nativeOffers.isEmpty()) {
-            Log.d(TAG, "multipleOffersDisplayed: calling display for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
-            OfferUtils.displayed(nativeOffers);
-        }
+        RCTAEPOptimizeUtil.multipleOffersDisplayed(offersArray, propositionCache);
     }
 
     @ReactMethod
     public void multipleOffersGenerateDisplayInteractionXdm(final ReadableArray offersArray, final Promise promise) {
-        List<Offer> nativeOffers = RCTAEPOptimizeUtil.getNativeOffers(offersArray, propositionCache);
-
-        if (!nativeOffers.isEmpty()) {
-            Log.d(TAG, "multipleOffersGenerateDisplayInteractionXdm: calling generateDisplayInteractionXdm for: " + nativeOffers.size() + " offers: " + nativeOffers.toString());
-            final Map<String, Object> interactionXdm = OfferUtils.generateDisplayInteractionXdm(nativeOffers);
-            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
-            promise.resolve(writableMap);
-        } else {
-            promise.reject("multipleOffersGenerateDisplayInteractionXdm", "Error in generating Display interaction XDM for multiple offers: " + offersArray.toString());
-        }
+        RCTAEPOptimizeUtil.multipleOffersGenerateDisplayInteractionXdm(offersArray, propositionCache, promise);
     }
 
     @ReactMethod
@@ -207,77 +135,30 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-                cachePropositionOffers(decisionScopePropositionMap);
-                sendUpdatedPropositionsEvent(decisionScopePropositionMap);
+                RCTAEPOptimizeUtil.cachePropositionOffers(decisionScopePropositionMap, propositionCache);
+                RCTAEPOptimizeUtil.emitOnPropositionsUpdate(reactContext, decisionScopePropositionMap, false);
             }
         });
     }
 
     @ReactMethod
     public void offerTapped(final String offerId, final ReadableMap propositionMap) {
-        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
-        for (Offer offer : proposition.getOffers()) {
-            if (offer.getId().equalsIgnoreCase(offerId)) {
-                offer.tapped();
-                break;
-            }
-        }
+        RCTAEPOptimizeUtil.offerTapped(offerId, propositionMap);
     }
 
     @ReactMethod
     public void generateDisplayInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
-        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
-        Offer offerDisplayed = null;
-        for (Offer offer : proposition.getOffers()) {
-            if (offer.getId().equalsIgnoreCase(offerId)) {
-                offerDisplayed = offer;
-                break;
-            }
-        }
-
-        if (offerDisplayed != null) {
-            final Map<String, Object> interactionXdm = offerDisplayed.generateDisplayInteractionXdm();
-            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
-            promise.resolve(writableMap);
-        } else {
-            promise.reject("generateDisplayInteractionXdm", "Error in generating Display interaction XDM for offer with id: " + offerId);
-        }
+        RCTAEPOptimizeUtil.generateDisplayInteractionXdm(offerId, propositionMap, promise);
     }
 
     @ReactMethod
     public void generateTapInteractionXdm(final String offerId, final ReadableMap propositionMap, final Promise promise) {
-        final Map<String, Object> eventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
-        Offer offerTapped = null;
-        for (Offer offer : proposition.getOffers()) {
-            if (offer.getId().equalsIgnoreCase(offerId)) {
-                offerTapped = offer;
-                break;
-            }
-        }
-
-        if (offerTapped != null) {
-            final Map<String, Object> interactionXdm = offerTapped.generateTapInteractionXdm();
-            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(interactionXdm);
-            promise.resolve(writableMap);
-        } else {
-            promise.reject("generateTapInteractionXdm", "Error in generating Tap interaction XDM for offer with id: " + offerId);
-        }
+        RCTAEPOptimizeUtil.generateTapInteractionXdm(offerId, propositionMap, promise);
     }
 
     @ReactMethod
     public void generateReferenceXdm(final ReadableMap propositionMap, final Promise promise) {
-        final Map<String, Object> propositionEventData = RCTAEPOptimizeUtil.convertReadableMapToMap(propositionMap);
-        final OptimizeProposition proposition = OptimizeProposition.fromEventData(propositionEventData);
-        if (proposition != null) {
-            Map<String, Object> referenceXdm = proposition.generateReferenceXdm();
-            final WritableMap writableMap = RCTAEPOptimizeUtil.convertMapToWritableMap(referenceXdm);
-            promise.resolve(writableMap);
-        } else {
-            promise.reject("generateReferenceXdm", "Error in generating Reference XDM.");
-        }
+        RCTAEPOptimizeUtil.generateReferenceXdm(propositionMap, promise);
     }
 
     // Required for React Native built in EventEmitter Calls.
@@ -301,11 +182,4 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
         return offer;
     }
 
-    private void sendUpdatedPropositionsEvent(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-        final WritableMap writableMap = new WritableNativeMap();
-        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
-            writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
-        }
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("onPropositionsUpdate", writableMap);
-    }
 }

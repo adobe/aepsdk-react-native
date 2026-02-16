@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 import Offer from './Offer';
 
-const RCTAEPOptimize = require('react-native').NativeModules.AEPOptimize;
+import NativeAEPOptimize from '../NativeAEPOptimize';
 
 interface Activity {
     id?: string;
@@ -80,7 +80,7 @@ class Proposition {
     generateReferenceXdm(): Promise<Map<string, any>> {
         const entries = Object.entries(this).filter(([_,value]) => typeof(value) !== "function");
         const proposition = Object.fromEntries(entries);    
-        return Promise.resolve(RCTAEPOptimize.generateReferenceXdm(proposition));
+        return NativeAEPOptimize.generateReferenceXdm(proposition) as Promise<Map<string, any>>;
     };
 }
 

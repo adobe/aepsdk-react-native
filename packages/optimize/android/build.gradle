@@ -9,6 +9,14 @@ buildscript {
     }
 }
 
+def isNewArchitectureEnabled() {
+    return rootProject.hasProperty("newArchEnabled") && rootProject.newArchEnabled == "true"
+}
+
+if (isNewArchitectureEnabled()) {
+    apply plugin: 'com.facebook.react'
+}
+
 apply plugin: 'com.android.library'
 
 def safeExtGet(prop, fallback) {
@@ -28,6 +36,12 @@ android {
         targetSdkVersion safeExtGet('targetSdkVersion', 34)
         versionCode 1
         versionName "1.0"
+        // Build-time switch: true = Interop root (AEPOptimize), false = Turbo root (NativeAEPOptimize).
+        // Only one root is constructed; the other is dead code. App may override in app/build.gradle.
+        buildConfigField "boolean", "USE_INTEROP_ROOT", "false"
+    }
+    buildFeatures {
+        buildConfig true
     }
     lintOptions {
         abortOnError false
