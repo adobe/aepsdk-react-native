@@ -4,14 +4,15 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*", 
-      "apps/AEPSampleAppNewArchEnabled"
+      "packages/*",
+      "apps/AEPSampleApp"
     ],
     "nohoist": [
       "**"
     ]
   },
   "scripts": {
+    "postinstall": "node apps/AEPSampleApp/scripts/link-local-optimize.js",
     "clean": "rm yarn.lock & find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf dist",
     "build": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled -- tsc",

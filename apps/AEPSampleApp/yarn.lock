@@ -2,65 +2,41 @@
 # yarn lockfile v1
 
 
-"@adobe/react-native-aepassurance@^7.0.0":
+"@adobe/react-native-aepassurance@file:../../packages/assurance":
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepassurance/-/react-native-aepassurance-7.0.0.tgz#5b0dae99c167439291f12c99c68fdbee6f48e771"
-  integrity sha512-HK8wjFVYwtueAkdkjupeuOLvbdJ3Tu1AgYwApcmFaJsWpP1MmAeBpgpLgNzDAbe+LE553wiVAZpf3IVMX50JvQ==
 
-"@adobe/react-native-aepcampaignclassic@^7.0.0":
+"@adobe/react-native-aepcampaignclassic@file:../../packages/campaignclassic":
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepcampaignclassic/-/react-native-aepcampaignclassic-7.0.0.tgz#a599dc09f71d4a7afc98baa1a42d91d00b2d32d4"
-  integrity sha512-PR9x0zD8w/z+YYf8oSo4wEe3TOZdS6/Sm3IsoI4/q0yuChOO/PtYMBnSYtQr0FLdKip2cdF0IG2WZ+W56YgJCg==
 
-"@adobe/react-native-aepcore@^7.0.0":
+"@adobe/react-native-aepcore@file:../../packages/core":
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepcore/-/react-native-aepcore-7.0.0.tgz#ca465545134752b19ebd9f942c548ede9ec856e1"
-  integrity sha512-Iz3WMApOIVd5SD2Dti4kJjM1CBUpM8hndS+OLenu9k4pT9Yk2J7B2iDBwsGXr+lOmGNykiaA09VBC8c74LOm7w==
 
-"@adobe/react-native-aepedge@^7.0.0":
+"@adobe/react-native-aepedge@file:../../packages/edge":
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepedge/-/react-native-aepedge-7.0.0.tgz#a39948911d32c852a86f8d9b2b26f341af9c5478"
-  integrity sha512-mhRqAyeolx6Kds5xWwfvRukaxMRMVq8GhneEfryBP1SWID8YQ3e9T9qc6w1fjhGipg9se4jzWvgbz5g43Cw28g==
 
-"@adobe/react-native-aepedgebridge@^7.0.1":
+"@adobe/react-native-aepedgebridge@file:../../packages/edgebridge":
   version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepedgebridge/-/react-native-aepedgebridge-7.0.1.tgz#15abd1243288395e7ec9645a5a532023bab978f4"
-  integrity sha512-nlCV2lCUV4R4Qjrv02+8IJe2SMBVhDrjbf9Cs+1/zg3CIPnL06wjx0R6K2Qzywb/f41eeZHmm8ir/BRQC5yimg==
 
-"@adobe/react-native-aepedgeconsent@^7.0.0":
+"@adobe/react-native-aepedgeconsent@file:../../packages/edgeconsent":
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepedgeconsent/-/react-native-aepedgeconsent-7.0.0.tgz#b18a2439daa896f61bad4c623ad166a25717c142"
-  integrity sha512-ZKn4bnsLqkMhKYklZPv5H/TO4X5qZK8IFZyw5jdjrDADmVV0o8fLRxQDgFIrlj4DLQnJCFXLCg+VNjPveVRXPA==
 
-"@adobe/react-native-aepedgeidentity@^7.0.0":
+"@adobe/react-native-aepedgeidentity@file:../../packages/edgeidentity":
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepedgeidentity/-/react-native-aepedgeidentity-7.0.0.tgz#b01baf3c887d4f05c4a90d42700caf407d272267"
-  integrity sha512-wfEaLJ82coqZq81ghdhTmVpv80wk3do6YW1EcD/eGk01IzBtmtIpRUIZOM6at+TbJSWjf6xkQQAe1jLi5ihWbA==
 
-"@adobe/react-native-aepmessaging@^7.3.0":
+"@adobe/react-native-aepmessaging@file:../../packages/messaging":
   version "7.3.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepmessaging/-/react-native-aepmessaging-7.3.0.tgz#6b5f599f08eb85be87c9577d9373605a45ad6375"
-  integrity sha512-ahvyZZwjD6rsfvgEHq+lPPT0NNu4OqecpDa9ygEyO4AggRKiQKCxekF6FqBuKcTYvH8an1tPW41yvLmx9as6xw==
 
-"@adobe/react-native-aepoptimize@^7.1.1":
+"@adobe/react-native-aepoptimize@file:../../packages/optimize":
   version "7.1.1"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepoptimize/-/react-native-aepoptimize-7.1.1.tgz#fb6f24be084a2908c407b7a6976b5a9d45f1875d"
-  integrity sha512-gKwV1SG2oJpjemZK7rU9fNenUdcmUW/9JuSitW7pD/noyJcuirQ7AH5/hj6lZR/5ytPxcisqP3T2S5M9+EdTvw==
 
-"@adobe/react-native-aepplaces@^7.0.1":
+"@adobe/react-native-aepplaces@file:../../packages/places":
   version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepplaces/-/react-native-aepplaces-7.0.1.tgz#5932a8d806277d9e733bb0b272f000e12a4f1a7e"
-  integrity sha512-eZPFIYPGiX5Fuhl4WZAaWa6e7LsCZIRgxICFt0f66koS0mwQO2hQm4Q9wI8GQtOYEKtoR3ePBeimqoLA0QkT+A==
 
-"@adobe/react-native-aeptarget@^7.0.0":
+"@adobe/react-native-aeptarget@file:../../packages/target":
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aeptarget/-/react-native-aeptarget-7.0.0.tgz#f7fda3495c38487b40d0bc0c2ca9952d241135d7"
-  integrity sha512-UFGkNY3VkzDzvqHcGtalvDZHW2KpnVpxg8MREBToB4yN5Yw2KatckfUlp26UCJgnPFR2O2oTnOspkFpOADVXyA==
 
-"@adobe/react-native-aepuserprofile@^7.0.0":
+"@adobe/react-native-aepuserprofile@file:../../packages/userprofile":
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@adobe/react-native-aepuserprofile/-/react-native-aepuserprofile-7.0.0.tgz#9292dd97e309ba0f36719dda24028f2dd00714e0"
-  integrity sha512-HT1mwZHijntMXNCGwaFzF+XobYmwebtqRc4Mg9g0pjSF6DuN5lD9qdHWIceccdnLHErP1T7eIPjgmAYYN0Weew==
 
 "@ampproject/remapping@^2.2.0":
   version "2.3.0"

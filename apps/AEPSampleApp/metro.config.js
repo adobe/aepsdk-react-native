@@ -20,6 +20,19 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 const { resolve, join } = require('path');
 
+const packagesDir = resolve(__dirname, '../../packages');
+const adobePackages = [
+    'assurance', 'campaignclassic', 'core', 'edge', 'edgebridge', 'edgeconsent',
+    'edgeidentity', 'messaging', 'optimize', 'places', 'target', 'userprofile',
+];
+const appNodeModules = join(__dirname, 'node_modules');
+const extraNodeModules = {
+    tslib: join(appNodeModules, 'tslib'),
+};
+adobePackages.forEach((name) => {
+    extraNodeModules['@adobe/react-native-aep' + name] = join(packagesDir, name);
+});
+
 const config = {
     transformer: {
         getTransformOptions: async () => ({
@@ -29,28 +42,12 @@ const config = {
             },
         }),
     },
-    watchFolders: [resolve(__dirname, '../../packages')],
+    watchFolders: [packagesDir],
     resolver: {
-        extraNodeModules: new Proxy(
-            {},
-            {
-                get: (target, name) => {
-                    if (typeof name !== 'string') {
-                        return target[name];
-                    }
-                    if (
-                        name &&
-                        name.startsWith &&
-                        name.startsWith('@adobe/react-native-aep')
-                    ) {
-                        const packageName = name.replace('@adobe/react-native-aep', '');
-                        console.log('------packageName -> ' + packageName);
-                        return join(__dirname, `../../packages/${packageName}`);
-                    }
-                    return join(__dirname, `node_modules/${name}`);
-                },
-            },
-        ),
+        unstable_enableSymlinks: true,
+        unstable_enablePackageExports: true,
+        extraNodeModules,
+        nodeModulesPaths: [join(__dirname, 'node_modules')],
     },
 };
 

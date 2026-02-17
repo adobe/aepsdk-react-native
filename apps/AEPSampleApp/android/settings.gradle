@@ -8,7 +8,7 @@ pluginManagement {
 }
 plugins { id("com.facebook.react.settings") }
 
-def nodeExecutable = System.getenv("HOME") + "/.nvm/versions/node/v22.13.0/bin/node"
+def nodeExecutable = System.getenv("NODE_BINARY") ?: "node"
 def cliScript = file("../node_modules/@react-native-community/cli/build/bin.js").absolutePath
 
 extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
