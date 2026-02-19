@@ -17,7 +17,7 @@ import {Messaging} from '@adobe/react-native-aepmessaging';
 import styles from '../styles/styles';
 import {NavigationProps} from '../types/props';
 
-const SURFACES = ['surface1', 'surface2'];
+const SURFACES = ['android-cc'];
 
 const messagingExtensionVersion = async () => {
   const version = await Messaging.extensionVersion();

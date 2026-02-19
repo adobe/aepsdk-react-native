@@ -12,6 +12,16 @@
     "jsSrcsDir": "src",
     "android": {
       "javaPackageName": "com.adobe.marketing.mobile.reactnative.optimize"
+    },
+    "ios": {
+      "modules": {
+        "NativeAEPOptimize": {
+          "className": "RCTAEPOptimize"
+        }
+      },
+      "modulesProvider": {
+        "NativeAEPOptimize": "RCTAEPOptimize"
+      }
     }
   },
   "scripts": {

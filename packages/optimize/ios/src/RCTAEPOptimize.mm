@@ -11,47 +11,36 @@
  */
 
 #import "RCTAEPOptimize.h"
-#import <React/RCTEventEmitter.h>
 @import AEPOptimize;
 @import AEPServices;
 @import Foundation;
 
+#if RCT_NEW_ARCH_ENABLED
+#import <memory>
+#import <ReactCodegen/NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
+#import <ReactCommon/RCTTurboModule.h>
+#endif
+
 static NSString *const TAG = @"RCTAEPOptimize";
 
 @implementation RCTAEPOptimize {
-  bool hasListeners;
   NSMutableDictionary<NSString *, AEPOptimizeProposition *> *propositionCache;
 }
 
 - (instancetype)init {
   self = [super init];
-  hasListeners = false;
   propositionCache = [[NSMutableDictionary alloc] init];
   return self;
 }
 
-+ (BOOL)requiresMainQueueSetup {
-  return NO;
-}
-
-RCT_EXPORT_MODULE(AEPOptimize);
-
-- (dispatch_queue_t)methodQueue {
-  return dispatch_get_main_queue();
-}
-
-RCT_EXPORT_METHOD(extensionVersion
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+- (void)extensionVersion:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject {
   [AEPLog traceWithLabel:TAG message:@"extensionVersion is called."];
   resolve([AEPMobileOptimize extensionVersion]);
 }
 
-RCT_EXPORT_METHOD(clearCachedPropositions) {
+- (void)clearCachedPropositions {
   [AEPLog traceWithLabel:TAG message:@"clearCachedPropositions is called."];
-  // clear the react native cache
   [self clearPropositionsCache];
-  // clear the native cache
   [AEPMobileOptimize clearCachedPropositions];
 }
 
@@ -68,12 +57,12 @@ RCT_EXPORT_METHOD(clearCachedPropositions) {
     return propositionDictionary;
 }
 
-// Unified method that handles both callback and non-callback cases
-RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
+// Unified method that handles both callback and non-callback cases (used by Turbo spec)
+- (void)updatePropositions:(NSArray<NSString *> *)decisionScopesArray
                   withXdm:(NSDictionary *)xdm
                   andData:(NSDictionary *)data
                   successCallback:(RCTResponseSenderBlock)successCallback
-                  errorCallback:(RCTResponseSenderBlock)errorCallback) {
+                  errorCallback:(RCTResponseSenderBlock)errorCallback {
     [AEPLog traceWithLabel:TAG message:@"updatePropositions is called."];
     NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopesArray];
     [AEPMobileOptimize updatePropositions:scopes
@@ -97,10 +86,9 @@ RCT_EXPORT_METHOD(updatePropositions:(NSArray<NSString *> *)decisionScopesArray
 }
 
 
-RCT_EXPORT_METHOD(getPropositions
-                  : (NSArray<NSString *> *)decisionScopes resolver
-                  : (RCTPromiseResolveBlock)resolve rejector
-                  : (RCTPromiseRejectBlock)reject) {
+- (void)getPropositions:(NSArray<NSString *> *)decisionScopes
+              resolver:(RCTPromiseResolveBlock)resolve
+               rejector:(RCTPromiseRejectBlock)reject {
 
   [AEPLog traceWithLabel:TAG message:@"getPropositions is called."];
   NSArray<AEPDecisionScope *> *decisionScopesArray =
@@ -131,32 +119,17 @@ RCT_EXPORT_METHOD(getPropositions
            }];
 }
 
-RCT_EXPORT_METHOD(onPropositionsUpdate) {
+- (void)onPropositionsUpdate {
   [AEPLog traceWithLabel:TAG message:@"onPropositionsUpdate is called."];
   [AEPMobileOptimize onPropositionsUpdate:^(
                          NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *>
                              *decisionScopePropositionDict) {
-
     [self cachePropositions:decisionScopePropositionDict];
-    NSDictionary<NSString *, NSDictionary<NSString *, id> *>
-        *propositionDictionary = [[NSMutableDictionary alloc] init];
-
-    for (AEPDecisionScope *key in decisionScopePropositionDict) {
-        AEPOptimizeProposition *proposition = decisionScopePropositionDict[key];
-      [propositionDictionary
-          setValue:[self convertPropositionToDict:proposition]
-            forKey:key.name];
-    }
-
-    if (self->hasListeners) {
-      [self sendEventWithName:@"onPropositionsUpdate" body:propositionDictionary];
-    }
+    // Turbo-only: event emission would require RCTEventEmitter; left as cache-only for now.
   }];
 }
 
-RCT_EXPORT_METHOD(offerTapped
-                  : (NSString *)offerId propositionDictionary
-                  : (NSDictionary<NSString *, id> *)dictionary) {
+- (void)offerTapped:(NSString *)offerId propositionDictionary:(NSDictionary<NSString *, id> *)dictionary {
   [AEPLog debugWithLabel:TAG message:@"Offer Tapped"];
     AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
@@ -168,9 +141,7 @@ RCT_EXPORT_METHOD(offerTapped
   }
 }
 
-RCT_EXPORT_METHOD(offerDisplayed
-                  : (NSString *)offerId propositionDictionary
-                  : (NSDictionary<NSString *, id> *)dictionary) {
+- (void)offerDisplayed:(NSString *)offerId propositionDictionary:(NSDictionary<NSString *, id> *)dictionary {
   [AEPLog debugWithLabel:TAG message:@"Offer Displayed"];
     AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
@@ -182,10 +153,9 @@ RCT_EXPORT_METHOD(offerDisplayed
   }
 }
 
-RCT_EXPORT_METHOD(generateReferenceXdm
-                  : (NSDictionary<NSString *, id> *)dictionary resolver
-                  : (RCTPromiseResolveBlock)resolve rejector
-                  : (RCTPromiseRejectBlock)reject) {
+- (void)generateReferenceXdm:(NSDictionary<NSString *, id> *)dictionary
+                    resolver:(RCTPromiseResolveBlock)resolve
+                     rejector:(RCTPromiseRejectBlock)reject {
   [AEPLog debugWithLabel:TAG message:@"Proposition generateReferenceXdm"];
     AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSDictionary<NSString *, id> *referenceXDM =
@@ -193,11 +163,10 @@ RCT_EXPORT_METHOD(generateReferenceXdm
   resolve(referenceXDM);
 }
 
-RCT_EXPORT_METHOD(generateTapInteractionXdm
-                  : (NSString *)offerId propositionDictionary
-                  : (NSDictionary<NSString *, id> *)dictionary resolver
-                  : (RCTPromiseResolveBlock)resolve rejector
-                  : (RCTPromiseRejectBlock)reject) {
+- (void)generateTapInteractionXdm:(NSString *)offerId
+               propositionDictionary:(NSDictionary<NSString *, id> *)dictionary
+                            resolver:(RCTPromiseResolveBlock)resolve
+                             rejector:(RCTPromiseRejectBlock)reject {
   [AEPLog debugWithLabel:TAG message:@"generateTapInteractionXdm"];
     AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
@@ -222,11 +191,10 @@ RCT_EXPORT_METHOD(generateTapInteractionXdm
   }
 }
 
-RCT_EXPORT_METHOD(generateDisplayInteractionXdm
-                  : (NSString *)offerId propositionDictionary
-                  : (NSDictionary<NSString *, id> *)dictionary resolver
-                  : (RCTPromiseResolveBlock)resolve rejector
-                  : (RCTPromiseRejectBlock)reject) {
+- (void)generateDisplayInteractionXdm:(NSString *)offerId
+                  propositionDictionary:(NSDictionary<NSString *, id> *)dictionary
+                               resolver:(RCTPromiseResolveBlock)resolve
+                                rejector:(RCTPromiseRejectBlock)reject {
   [AEPLog debugWithLabel:TAG message:@"generateDisplayInteractionXdm"];
     AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
@@ -251,8 +219,7 @@ RCT_EXPORT_METHOD(generateDisplayInteractionXdm
   }
 }
 
-RCT_EXPORT_METHOD(multipleOffersDisplayed
-                  : (NSArray<NSDictionary<NSString *, id> *> *)offersArray) {
+- (void)multipleOffersDisplayed:(NSArray<NSDictionary<NSString *, id> *> *)offersArray {
                     
     [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed is called."];
 
@@ -264,10 +231,9 @@ RCT_EXPORT_METHOD(multipleOffersDisplayed
     }
 }
 
-RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
-                  : (NSArray<NSDictionary<NSString *, id> *> *)offersArray resolver
-                  : (RCTPromiseResolveBlock)resolve rejector
-                  : (RCTPromiseRejectBlock)reject) {
+- (void)multipleOffersGenerateDisplayInteractionXdm:(NSArray<NSDictionary<NSString *, id> *> *)offersArray
+                                            resolver:(RCTPromiseResolveBlock)resolve
+                                             rejector:(RCTPromiseRejectBlock)reject {
     
     [AEPLog debugWithLabel:TAG message:@"multipleOffersGenerateDisplayInteractionXdm is called."];
     
@@ -513,11 +479,84 @@ RCT_EXPORT_METHOD(multipleOffersGenerateDisplayInteractionXdm
 }
 
 - (void)startObserving {
-  hasListeners = true;
+  // Turbo-only: no RCTEventEmitter; no-op.
 }
 
 - (void)stopObserving {
-  hasListeners = false;
+  // Turbo-only: no-op.
 }
+
+#if RCT_NEW_ARCH_ENABLED
+#pragma mark - NativeAEPOptimizeSpec (Turbo Module protocol)
+
++ (NSString *)moduleName {
+  return @"NativeAEPOptimize";
+}
+
+- (void)extensionVersion:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [self extensionVersion:resolve rejecter:reject];
+}
+
+- (void)getPropositions:(NSArray *)decisionScopeNames
+                resolve:(RCTPromiseResolveBlock)resolve
+                 reject:(RCTPromiseRejectBlock)reject {
+  [self getPropositions:decisionScopeNames resolver:resolve rejector:reject];
+}
+
+- (void)updatePropositions:(NSArray *)decisionScopeNames
+                       xdm:(NSDictionary *)xdm
+                      data:(NSDictionary *)data
+                 onSuccess:(RCTResponseSenderBlock)onSuccess
+                   onError:(RCTResponseSenderBlock)onError {
+  [self updatePropositions:decisionScopeNames withXdm:xdm andData:data successCallback:onSuccess errorCallback:onError];
+}
+
+- (void)offerDisplayed:(NSString *)offerId propositionMap:(NSDictionary *)propositionMap {
+  [self offerDisplayed:offerId propositionDictionary:propositionMap];
+}
+
+- (void)offerTapped:(NSString *)offerId propositionMap:(NSDictionary *)propositionMap {
+  [self offerTapped:offerId propositionDictionary:propositionMap];
+}
+
+- (void)generateDisplayInteractionXdm:(NSString *)offerId
+                       propositionMap:(NSDictionary *)propositionMap
+                              resolve:(RCTPromiseResolveBlock)resolve
+                               reject:(RCTPromiseRejectBlock)reject {
+  [self generateDisplayInteractionXdm:offerId propositionDictionary:propositionMap resolver:resolve rejector:reject];
+}
+
+- (void)generateTapInteractionXdm:(NSString *)offerId
+                   propositionMap:(NSDictionary *)propositionMap
+                          resolve:(RCTPromiseResolveBlock)resolve
+                           reject:(RCTPromiseRejectBlock)reject {
+  [self generateTapInteractionXdm:offerId propositionDictionary:propositionMap resolver:resolve rejector:reject];
+}
+
+- (void)generateReferenceXdm:(NSDictionary *)propositionMap
+                     resolve:(RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject {
+  [self generateReferenceXdm:propositionMap resolver:resolve rejector:reject];
+}
+
+- (void)multipleOffersGenerateDisplayInteractionXdm:(NSArray *)offersArray
+                                           resolve:(RCTPromiseResolveBlock)resolve
+                                            reject:(RCTPromiseRejectBlock)reject {
+  [self multipleOffersGenerateDisplayInteractionXdm:offersArray resolver:resolve rejector:reject];
+}
+
+- (void)addListener:(NSString *)eventName {
+  // Turbo-only: no RCTEventEmitter superclass; listener stored if needed for future event support.
+}
+
+- (void)removeListeners:(double)count {
+  // Turbo-only: no-op without RCTEventEmitter.
+}
+
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params {
+  return std::make_shared<facebook::react::NativeAEPOptimizeSpecJSI>(params);
+}
+#endif
 
 @end

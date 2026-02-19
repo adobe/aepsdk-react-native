@@ -1,19 +1,18 @@
 /*
- Copyright 2022 Adobe. All rights reserved.
- This file is licensed to you under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License. You may obtain a copy
- of the License at http://www.apache.org/licenses/LICENSE-2.0
- Unless required by applicable law or agreed to in writing, software distributed under
- the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- OF ANY KIND, either express or implied. See the License for the specific language
- governing permissions and limitations under the License.
+ * Copyright 2022 Adobe. All rights reserved.
+ * RCTAEPOptimize Turbo Native Module (iOS).
+ * Structure follows the reference: AepTurboCore (turboPackageCore/turboCore)
+ * https://reactnative.dev/docs/turbo-native-modules-introduction?platforms=ios
+ * Forward-declare spec to avoid importing ReactCodegen in the header (non-modular include errors).
  */
-
-#import <React/RCTBridgeModule.h>
 #import <Foundation/Foundation.h>
-#import <React/RCTEventEmitter.h>
 
-@interface RCTAEPOptimize : RCTEventEmitter <RCTBridgeModule>
+@protocol NativeAEPOptimizeSpec;
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface RCTAEPOptimize : NSObject <NativeAEPOptimizeSpec>
 
 @end
 
+NS_ASSUME_NONNULL_END
