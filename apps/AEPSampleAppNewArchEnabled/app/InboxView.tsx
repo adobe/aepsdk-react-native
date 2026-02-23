@@ -246,7 +246,7 @@ const InboxView = () => {
   const surface =
     Platform.OS === "android"
       ? "rn/android/remote_image"
-      : "rn/ios/remote_image";
+      : "rn/cards";
   const { isLoading, refetch } = useContentCardUI(surface);
   const {
     settings,

@@ -8,6 +8,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { MobileCore , LogLevel} from '@adobe/react-native-aepcore';
 import { Messaging } from '@adobe/react-native-aepmessaging';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
+import { Assurance } from "@adobe/react-native-aepassurance";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -38,40 +40,43 @@ export default function RootLayout() {
     // Initialize SDK once in App.tsx or the entry file.
     // For functional components, use useEffect with an empty dependency array.
     // For class components, call initializeWithAppId inside componentDidMount.
-    MobileCore.setLogLevel(LogLevel.DEBUG);
-    MobileCore.initializeWithAppId("YOUR-APP-ID")
-      .then(() => {
-        console.log("AEP SDK Initialized");
-        
-        // // Set up messaging delegate after SDK initialization
-        // const unsubscribe = Messaging.setMessagingDelegate({
-        //   onDismiss: (message) => {
-        //     console.log('Message dismissed:', message);
-        //   },
-        //   onShow: (message) => {
-        //     console.log('Message shown:', message);
-        //   },
-        //   shouldShowMessage: (message) => {
-        //     console.log('Should show message:', message);
-        //     return true; // Always show messages in sample app
-        //   },
-        //   shouldSaveMessage: (message) => {
-        //     console.log('Should save message:', message);
-        //     return true; // Always save messages in sample app
-        //   },
-        //   urlLoaded: (url, message) => {
-        //     console.log('URL loaded:', url, 'for message:', message);
-        //   },
-        // });
-        
-        // console.log("Messaging delegate set up successfully");
-        
-        // Store unsubscribe function if needed for cleanup
-        // You could return it from useEffect if you need to clean up on unmount
-      })
-      .catch((error) => {
-        console.error("AEP SDK Initialization error:", error);
-      });
+    MobileCore.setLogLevel(LogLevel.VERBOSE);
+    Assurance.startSession('testaem://?adb_validation_sessionid=1fd620f6-5a02-47eb-862b-a7e4486bb2a0')
+
+    const STAGING_APP_ID = "staging/1b50a869c4a2/fdc0aa7e8407/launch-b2877bc9c255-development";
+    const PRODUCTION_APP_ID = "3149c49c3910/473386a6e5b0/launch-6099493a8c97-development";
+
+    const STAGING = false; // set to false for production
+
+     if (STAGING) {
+      // For staging: Initialize with staging app ID and set edge environment
+      MobileCore.initializeWithAppId(STAGING_APP_ID)
+        .then(() => {
+          console.log("AEP SDK Initialized with Staging App ID");
+          
+          // Set edge environment to "int" AFTER initialization
+          MobileCore.updateConfiguration({'global.privacy': 'optedin','edge.environment': 'int'})
+          console.log("Edge environment set to 'int'");
+          const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/cards';
+          console.log("update propositions before for surface:", surface);
+          return Messaging.updatePropositionsForSurfaces([surface]);
+        })
+        .catch((error: any) => {
+          console.error("AEP SDK Initialization error:", error);
+        });
+    } else {
+      // For production: Initialize with production app ID (no edge config needed)
+      MobileCore.initializeWithAppId(PRODUCTION_APP_ID)
+        .then(() => {
+          console.log("AEP SDK Initialized with Production App ID");
+          // const surface = Platform.OS === 'android' ? 'rn/android/remote_image' : 'rn/cards';
+          // console.log("update propositions before for surface:", surface);
+          // Messaging.updatePropositionsForSurfaces([surface]);
+        })
+        .catch((error: any) => {
+          console.error("AEP SDK Initialization error:", error);
+        });
+    }
   }, []);
 
   return (
