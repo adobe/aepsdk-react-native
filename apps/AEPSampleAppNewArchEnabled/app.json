@@ -3,7 +3,7 @@
     "name": "AEPSampleAppNewArchEnabled",
     "slug": "AEPSampleAppNewArchEnabled",
     "version": "1.0.0",
-    "orientation": "default",
+    "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -38,8 +38,7 @@
             "useFrameworks": "static"
           },
           "android": {
-            "newArchEnabled": true,
-            "kotlinVersion": "1.9.25"
+            "newArchEnabled": true
           }
         }
       ],
