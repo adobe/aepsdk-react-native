@@ -105,7 +105,7 @@ jobs:
 
     - run:
         name: Enable Corepack
-        command: corepack enable
+        command: sudo corepack enable
 
     - run:
         name: Install Node.js and Yarn Dependencies
