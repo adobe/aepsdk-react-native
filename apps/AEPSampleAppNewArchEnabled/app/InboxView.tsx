@@ -304,7 +304,7 @@ const InboxView = () => {
         <Inbox
           surface={surface}
           settings={settings.surfaceSettings}
-          inboxStyle={[
+          contentContainerStyle={[
             settings.inboxStyle,
             selectedView === 'Inbox with Styling' && colorScheme === 'dark' && {
               backgroundColor: '#881337',

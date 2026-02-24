@@ -14,7 +14,7 @@ import EmptyState from "./EmptyState.js";
 const DEFAULT_EMPTY_MESSAGE = 'No Content Available';
 const cardStatusStore = new Map();
 function InboxInner({
-  inboxStyle,
+  contentContainerStyle,
   LoadingComponent = /*#__PURE__*/React.createElement(ActivityIndicator, null),
   ErrorComponent = null,
   FallbackComponent = null,
@@ -65,6 +65,7 @@ function InboxInner({
   }, [content, isUnreadEnabled, getStore]);
   const isHorizontal = layout?.orientation === 'horizontal';
   const displayCards = useMemo(() => {
+    if (!content) return [];
     return content.filter(it => !dismissedIds.has(generateCardHash(it))).map(it => {
       const cardHash = generateCardHash(it);
       const shouldBeRead = isUnreadEnabled && (interactedIds.has(cardHash) || it.isRead === true);
@@ -115,7 +116,7 @@ function InboxInner({
   }, heading.content) : null, /*#__PURE__*/React.createElement(FlatList, _extends({}, props, {
     data: displayCards,
     keyExtractor: item => item.id,
-    inboxStyle: [inboxStyle, isHorizontal && styles.horizontalListContent, styles.inbox],
+    contentContainerStyle: [contentContainerStyle, isHorizontal && styles.horizontalListContent, styles.inbox],
     horizontal: isHorizontal,
     renderItem: renderItem,
     ListEmptyComponent: /*#__PURE__*/React.createElement(EmptyList, null)

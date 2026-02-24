@@ -22,7 +22,6 @@ export const generateCardHash = card => {
   if (content) {
     const parts = [content.actionUrl || '', content.title?.content || '', content.body?.content || '', content.image?.url || content.image?.darkUrl || '', card.type || card.data?.meta?.adobe?.template || ''];
     const contentHash = parts.join('|');
-    // Only use content hash if we have at least one non-empty part
     if (parts.some(p => p.trim().length > 0)) {
       return `content:${contentHash}`;
     }
