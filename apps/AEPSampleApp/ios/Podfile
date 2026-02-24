@@ -15,10 +15,6 @@ use_frameworks! :linkage => :static
 target 'aepsampleapp' do
   config = use_native_modules!
 
-  # Fix "import of module 'glog.log_severity' appears within namespace 'google'" when building
-  # Turbo Modules (e.g. RCTAEPOptimize) that import ReactCodegen. Must be before use_react_native!.
-  pod 'glog', :podspec => "#{config[:reactNativePath]}/third-party-podspecs/glog.podspec", :modular_headers => false
-
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
@@ -42,50 +38,6 @@ target 'aepsampleapp' do
       if t.name.start_with?("AEP")
         t.build_configurations.each do |bc|
             bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
-        end
-      end
-      # Fix "import of module 'glog.log_severity' within namespace 'google'" when building Turbo Modules
-      if t.name == 'glog'
-        t.build_configurations.each do |bc|
-          bc.build_settings['DEFINES_MODULE'] = 'NO'
-        end
-      end
-      # Fix ReactCommon framework headers missing SchedulerPriority / primitives when consumed by RCTAEPOptimize
-      if t.name == 'ReactCommon'
-        rn_common = File.join(installer.sandbox.root.parent, '..', config[:reactNativePath], 'ReactCommon')
-        rn_common_abs = File.expand_path(rn_common)
-        t.build_configurations.each do |bc|
-          bc.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
-        end
-        if Dir.exist?(rn_common_abs)
-          t.build_configurations.each do |bc|
-            current = bc.build_settings['HEADER_SEARCH_PATHS'] || '$(inherited)'
-            extra = [
-              "\"#{File.join(rn_common_abs, 'callinvoker')}\"",
-              "\"#{rn_common_abs}\"",
-              "\"#{File.join(rn_common_abs, 'react')}\""
-            ].join(' ')
-            bc.build_settings['HEADER_SEARCH_PATHS'] = "#{current} #{extra}"
-          end
-        end
-      end
-      # Ensure RCTAEPOptimize can resolve ReactCommon/SchedulerPriority.h when building ReactCodegen module.
-      if t.name == 'RCTAEPOptimize'
-        t.build_configurations.each do |bc|
-          bc.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
-        end
-        rn_common = File.join(installer.sandbox.root.parent, '..', config[:reactNativePath], 'ReactCommon')
-        rn_common_abs = File.expand_path(rn_common)
-        if Dir.exist?(rn_common_abs)
-          t.build_configurations.each do |bc|
-            current = bc.build_settings['HEADER_SEARCH_PATHS'] || '$(inherited)'
-            extra = [
-              "\"#{File.join(rn_common_abs, 'callinvoker')}\"",
-              "\"#{rn_common_abs}\"",
-              "\"#{File.join(rn_common_abs, 'react')}\""
-            ].join(' ')
-            bc.build_settings['HEADER_SEARCH_PATHS'] = "#{extra} #{current}"
-          end
         end
       end
     end
