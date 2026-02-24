@@ -105,7 +105,9 @@ jobs:
 
     - run:
         name: Enable Corepack
-        command: sudo corepack enable
+        command: |
+          corepack enable --install-directory ~/bin
+          export PATH=$HOME/bin:$PATH
 
     - run:
         name: Install Node.js and Yarn Dependencies
