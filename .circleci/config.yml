@@ -22,7 +22,7 @@ jobs:
 
     - run:
         name: Enable Corepack
-        command: corepack enable
+        command: sudo corepack enable
 
     - run:
         name: Install Node.js and Yarn Dependencies
@@ -60,7 +60,7 @@ jobs:
 
     - run:
         name: Enable Corepack
-        command: corepack enable
+        command: sudo corepack enable
 
     - run:
         name: Install Node.js and Yarn Dependencies
@@ -85,8 +85,8 @@ jobs:
 
   build-sample-app-ios:
     macos:
-      xcode: 16.2.0
-    resource_class: m2pro.medium
+      xcode: 16.4.0
+    resource_class: m4pro.medium
 
     steps:
     - checkout
@@ -100,12 +100,12 @@ jobs:
         name: Set Xcode Path
         command: sudo xcode-select -s /Applications/Xcode.app
 
-      - node/install:
-          node-version: '22.12.0'
+    - node/install:
+        node-version: '22.12.0'
 
     - run:
         name: Enable Corepack
-        command: corepack enable
+        command: sudo corepack enable
 
     - run:
         name: Install Node.js and Yarn Dependencies

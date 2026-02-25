@@ -39,7 +39,7 @@ const surfaces = [
 
 **Context-specific surfaces** <br>
 const surfaces = [ <br>
-  'rn/ios/remote_image',     // For remote image content cards <br>
+  'rn/cards',     // For remote image content cards <br>
   'rn/android/local_promo',  // For local promotional cards <br>
   'app/onboarding/step1'     // For onboarding flow <br>
 ];

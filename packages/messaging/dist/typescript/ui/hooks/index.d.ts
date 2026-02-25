@@ -1,4 +1,4 @@
 export * from './useContentCardUI';
-export * from './useContentContainer';
-export * from './useContainerSettings';
+export * from './useInbox';
+export * from './useInboxSettings';
 //# sourceMappingURL=index.d.ts.map

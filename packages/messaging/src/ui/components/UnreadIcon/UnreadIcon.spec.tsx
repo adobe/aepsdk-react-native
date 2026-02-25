@@ -13,7 +13,7 @@
 import { act, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { Image, useColorScheme } from 'react-native';
-import ContentCardContainerProvider from '../../providers/ContentCardContainerProvider';
+import InboxProvider from '../../providers/InboxProvider';
 import UnreadIcon from './UnreadIcon';
 
 // Mock useColorScheme
@@ -23,8 +23,7 @@ const mockUseColorScheme = useColorScheme as jest.MockedFunction<
 >;
 
 describe('UnreadIcon', () => {
-  const mockContainerSettings = {
-    templateType: 'inbox' as const,
+  const mockInboxSettings = {
     content: {
       heading: { content: 'Test' },
       layout: { orientation: 'vertical' as const },
@@ -60,20 +59,20 @@ describe('UnreadIcon', () => {
   });
 
   describe('Basic rendering', () => {
-    it('should render successfully with container settings', () => {
+    it('should render successfully with inbox settings', () => {
       const { getByTestId } = render(
-        <ContentCardContainerProvider settings={mockContainerSettings}>
+        <InboxProvider settings={mockInboxSettings}>
           <UnreadIcon testID="unread-icon" />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       expect(getByTestId('unread-icon')).toBeTruthy();
     });
 
     it('should render with custom size', () => {
       const { getByTestId } = render(
-        <ContentCardContainerProvider settings={mockContainerSettings}>
+        <InboxProvider settings={mockInboxSettings}>
           <UnreadIcon testID="unread-icon" size={30} />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       expect(getByTestId('unread-icon')).toBeTruthy();
     });
@@ -81,9 +80,9 @@ describe('UnreadIcon', () => {
     it('should render without crashing when settings provide null', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={null as any}>
+          <InboxProvider settings={null as any}>
             <UnreadIcon type="dot" />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -93,22 +92,22 @@ describe('UnreadIcon', () => {
     it('should render with topright placement', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should render with topleft placement', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
-              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              ...mockInboxSettings.content.unread_indicator.unread_icon,
               placement: 'topleft' as const,
             },
           },
@@ -117,22 +116,22 @@ describe('UnreadIcon', () => {
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settings}>
+          <InboxProvider settings={settings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should render with bottomright placement', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
-              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              ...mockInboxSettings.content.unread_indicator.unread_icon,
               placement: 'bottomright' as const,
             },
           },
@@ -141,22 +140,22 @@ describe('UnreadIcon', () => {
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settings}>
+          <InboxProvider settings={settings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should render with bottomleft placement', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
-              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              ...mockInboxSettings.content.unread_indicator.unread_icon,
               placement: 'bottomleft' as const,
             },
           },
@@ -165,26 +164,26 @@ describe('UnreadIcon', () => {
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settings}>
+          <InboxProvider settings={settings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('falls back to topright when props.position is unknown and no context placement', () => {
       const settingsWithoutIndicator = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       const { getByTestId } = render(
-        <ContentCardContainerProvider settings={settingsWithoutIndicator}>
+        <InboxProvider settings={settingsWithoutIndicator}>
           <UnreadIcon testID="unread-icon" position={'unknown' as any} />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       const container = getByTestId('unread-icon');
       const styles = (Array.isArray(container.props.style) ? container.props.style : [container.props.style]).flat(Infinity);
@@ -194,20 +193,20 @@ describe('UnreadIcon', () => {
 
     it('falls back to topright when context placement is unknown', () => {
       const settingsWithUnknownPlacement = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: { placement: 'unknown' as any, image: { url: '' } },
           },
         },
       };
 
       const { getByTestId } = render(
-        <ContentCardContainerProvider settings={settingsWithUnknownPlacement}>
+        <InboxProvider settings={settingsWithUnknownPlacement}>
           <UnreadIcon testID="unread-icon" />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       const container = getByTestId('unread-icon');
       const styles = (Array.isArray(container.props.style) ? container.props.style : [container.props.style]).flat(Infinity);
@@ -224,22 +223,22 @@ describe('UnreadIcon', () => {
     it('should render in light mode with image URL', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should render dot when URL is empty string in light mode', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
-              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              ...mockInboxSettings.content.unread_indicator.unread_icon,
               image: {
                 url: '',
                 darkUrl: '',
@@ -251,9 +250,9 @@ describe('UnreadIcon', () => {
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settings}>
+          <InboxProvider settings={settings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -266,13 +265,13 @@ describe('UnreadIcon', () => {
 
     it('should render in dark mode with darkUrl provided', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
-              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              ...mockInboxSettings.content.unread_indicator.unread_icon,
               image: {
                 url: 'https://example.com/light.png',
                 darkUrl: 'https://example.com/dark.png',
@@ -284,9 +283,9 @@ describe('UnreadIcon', () => {
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settings}>
+          <InboxProvider settings={settings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -294,20 +293,20 @@ describe('UnreadIcon', () => {
     it('should render dot when darkUrl is empty string in dark mode', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should fallback to light mode image when no darkUrl provided', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
               placement: 'topright' as const,
               image: {
@@ -320,9 +319,9 @@ describe('UnreadIcon', () => {
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settings}>
+          <InboxProvider settings={settings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -331,18 +330,18 @@ describe('UnreadIcon', () => {
   describe('Props-based rendering', () => {
     it('should render with custom source prop when no settings provided', () => {
       const settingsWithoutImage = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settingsWithoutImage}>
+          <InboxProvider settings={settingsWithoutImage}>
             <UnreadIcon source={{ uri: 'https://custom.com/icon.png' }} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -351,78 +350,78 @@ describe('UnreadIcon', () => {
       mockUseColorScheme.mockReturnValue('dark');
       
       const settingsWithoutImage = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settingsWithoutImage}>
+          <InboxProvider settings={settingsWithoutImage}>
             <UnreadIcon 
               source={{ uri: 'https://custom.com/light.png' }}
               darkSource={{ uri: 'https://custom.com/dark.png' }}
             />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should render with custom position prop', () => {
       const settingsWithoutImage = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settingsWithoutImage}>
+          <InboxProvider settings={settingsWithoutImage}>
             <UnreadIcon position="bottomleft" />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should render as dot when type prop is "dot"', () => {
       const settingsWithoutImage = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settingsWithoutImage}>
+          <InboxProvider settings={settingsWithoutImage}>
             <UnreadIcon type="dot" />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should render as image when type prop is "image"', () => {
       const settingsWithoutImage = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settingsWithoutImage}>
+          <InboxProvider settings={settingsWithoutImage}>
             <UnreadIcon 
               type="image" 
               source={{ uri: 'https://custom.com/icon.png' }}
             />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -430,17 +429,17 @@ describe('UnreadIcon', () => {
     it('renders default dot when no unread_indicator and no image props provided', () => {
       // With no unread_indicator and no source/darkSource props, default content should be a dot (no Image)
       const settingsWithoutIndicator = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       const { UNSAFE_queryByType } = render(
-        <ContentCardContainerProvider settings={settingsWithoutIndicator}>
+        <InboxProvider settings={settingsWithoutIndicator}>
           <UnreadIcon />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       expect(UNSAFE_queryByType(Image)).toBeNull();
     });
@@ -452,9 +451,9 @@ describe('UnreadIcon', () => {
       
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon imageStyle={customImageStyle} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -464,9 +463,9 @@ describe('UnreadIcon', () => {
       
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon containerStyle={customContainerStyle} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -474,12 +473,12 @@ describe('UnreadIcon', () => {
     it('should handle both imageStyle and containerStyle together', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon 
               imageStyle={{ opacity: 0.8 }}
               containerStyle={{ padding: 5 }}
             />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -487,17 +486,17 @@ describe('UnreadIcon', () => {
     it('renders Image when renderType is image via darkSource prop only (branch: imageSource || darkImageSource)', () => {
       mockUseColorScheme.mockReturnValue('dark');
       const settingsWithoutIndicator = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       const { UNSAFE_getByType } = render(
-        <ContentCardContainerProvider settings={settingsWithoutIndicator}>
+        <InboxProvider settings={settingsWithoutIndicator}>
           <UnreadIcon type="dot" darkSource={{ uri: 'https://custom.com/dark.png' }} />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
 
       const imageComponent = UNSAFE_getByType(Image);
@@ -509,9 +508,9 @@ describe('UnreadIcon', () => {
     it('should render with default size of 20', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -519,9 +518,9 @@ describe('UnreadIcon', () => {
     it('should render with custom size of 30', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon size={30} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -529,9 +528,9 @@ describe('UnreadIcon', () => {
     it('should render with custom size of 15', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon size={15} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -539,9 +538,9 @@ describe('UnreadIcon', () => {
     it('should handle very large size', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon size={100} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -549,9 +548,9 @@ describe('UnreadIcon', () => {
     it('should handle very small size', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon size={5} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -561,30 +560,30 @@ describe('UnreadIcon', () => {
     it('should prioritize context settings over props', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon position="bottomleft" />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('should use props when context settings are not available', () => {
       const settingsWithoutImage = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settingsWithoutImage}>
+          <InboxProvider settings={settingsWithoutImage}>
             <UnreadIcon 
               position="bottomleft"
               source={{ uri: 'https://custom.com/icon.png' }}
             />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -593,13 +592,13 @@ describe('UnreadIcon', () => {
   describe('Image error handling', () => {
     it('should render without crashing when image URL is invalid', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
-              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              ...mockInboxSettings.content.unread_indicator.unread_icon,
               image: {
                 url: 'invalid-url',
                 darkUrl: '',
@@ -611,22 +610,22 @@ describe('UnreadIcon', () => {
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settings}>
+          <InboxProvider settings={settings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
 
     it('renders dot when image load fails (onError branch)', async () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
-              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              ...mockInboxSettings.content.unread_indicator.unread_icon,
               image: {
                 url: 'https://example.com/icon.png',
                 darkUrl: '',
@@ -639,9 +638,9 @@ describe('UnreadIcon', () => {
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
       const { UNSAFE_getByType } = render(
-        <ContentCardContainerProvider settings={settings}>
+        <InboxProvider settings={settings}>
           <UnreadIcon testID="unread-icon" />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
 
       const image = UNSAFE_getByType(Image);
@@ -663,11 +662,11 @@ describe('UnreadIcon', () => {
   describe('Edge cases', () => {
     it('should handle undefined image URLs', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
               placement: 'topright' as const,
               image: {
@@ -681,9 +680,9 @@ describe('UnreadIcon', () => {
 
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={settings}>
+          <InboxProvider settings={settings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -691,9 +690,9 @@ describe('UnreadIcon', () => {
     it('should handle zero size', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon size={0} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -701,9 +700,9 @@ describe('UnreadIcon', () => {
     it('should handle negative size', () => {
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon size={-10} />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -714,9 +713,9 @@ describe('UnreadIcon', () => {
       mockUseColorScheme.mockReturnValue('light');
       
       const { rerender } = render(
-        <ContentCardContainerProvider settings={mockContainerSettings}>
+        <InboxProvider settings={mockInboxSettings}>
           <UnreadIcon />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       
       // Switch to dark mode
@@ -724,9 +723,9 @@ describe('UnreadIcon', () => {
       
       expect(() => {
         rerender(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -736,9 +735,9 @@ describe('UnreadIcon', () => {
       
       expect(() => {
         render(
-          <ContentCardContainerProvider settings={mockContainerSettings}>
+          <InboxProvider settings={mockInboxSettings}>
             <UnreadIcon />
-          </ContentCardContainerProvider>
+          </InboxProvider>
         );
       }).not.toThrow();
     });
@@ -747,9 +746,9 @@ describe('UnreadIcon', () => {
   describe('Behavioral verification', () => {
     it('should render an Image when valid URL is provided', () => {
       const { UNSAFE_getByType } = render(
-        <ContentCardContainerProvider settings={mockContainerSettings}>
+        <InboxProvider settings={mockInboxSettings}>
           <UnreadIcon />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       
       // Should render an Image component when URL is provided
@@ -758,13 +757,13 @@ describe('UnreadIcon', () => {
 
     it('should render dot when image URLs are empty', () => {
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
-              ...mockContainerSettings.content.unread_indicator.unread_icon,
+              ...mockInboxSettings.content.unread_indicator.unread_icon,
               image: {
                 url: '',
                 darkUrl: '',
@@ -775,9 +774,9 @@ describe('UnreadIcon', () => {
       };
 
       const { UNSAFE_queryByType } = render(
-        <ContentCardContainerProvider settings={settings}>
+        <InboxProvider settings={settings}>
           <UnreadIcon />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       
       // Should not render Image when URLs are empty
@@ -786,17 +785,17 @@ describe('UnreadIcon', () => {
 
     it('should render image when source is provided even with type="dot"', () => {
       const settingsWithoutImage = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: undefined,
         },
       };
 
       const { UNSAFE_getByType } = render(
-        <ContentCardContainerProvider settings={settingsWithoutImage}>
+        <InboxProvider settings={settingsWithoutImage}>
           <UnreadIcon type="dot" source={{ uri: 'https://example.com/icon.png' }} />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       
       // Should render Image when source is provided, even if type is "dot"
@@ -808,11 +807,11 @@ describe('UnreadIcon', () => {
       mockUseColorScheme.mockReturnValue('dark');
       
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
               placement: 'topright' as const,
               image: {
@@ -825,9 +824,9 @@ describe('UnreadIcon', () => {
       };
 
       const { UNSAFE_getByType } = render(
-        <ContentCardContainerProvider settings={settings}>
+        <InboxProvider settings={settings}>
           <UnreadIcon />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       
       const imageComponent = UNSAFE_getByType(Image);
@@ -838,11 +837,11 @@ describe('UnreadIcon', () => {
       mockUseColorScheme.mockReturnValue('dark');
       
       const settings = {
-        ...mockContainerSettings,
+        ...mockInboxSettings,
         content: {
-          ...mockContainerSettings.content,
+          ...mockInboxSettings.content,
           unread_indicator: {
-            ...mockContainerSettings.content.unread_indicator,
+            ...mockInboxSettings.content.unread_indicator,
             unread_icon: {
               placement: 'topright' as const,
               image: {
@@ -854,9 +853,9 @@ describe('UnreadIcon', () => {
       };
 
       const { UNSAFE_getByType } = render(
-        <ContentCardContainerProvider settings={settings}>
+        <InboxProvider settings={settings}>
           <UnreadIcon />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       
       const imageComponent = UNSAFE_getByType(Image);
@@ -867,9 +866,9 @@ describe('UnreadIcon', () => {
       mockUseColorScheme.mockReturnValue('light');
       
       const { UNSAFE_getByType } = render(
-        <ContentCardContainerProvider settings={mockContainerSettings}>
+        <InboxProvider settings={mockInboxSettings}>
           <UnreadIcon />
-        </ContentCardContainerProvider>
+        </InboxProvider>
       );
       
       const imageComponent = UNSAFE_getByType(Image);

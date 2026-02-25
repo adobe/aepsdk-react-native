@@ -14,7 +14,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 */
 import React, { useEffect, useMemo, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import useContainerSettings from "../../hooks/useContainerSettings.js";
+import useInboxSettings from "../../hooks/useInboxSettings.js";
 import { useTheme } from "../../theme/index.js";
 const Dot = ({
   size,
@@ -42,7 +42,7 @@ const UnreadIcon = ({
     colors,
     isDark
   } = useTheme();
-  const settings = useContainerSettings();
+  const settings = useInboxSettings();
   const [imageLoadError, setImageLoadError] = useState(false);
 
   // Get unread indicator settings from context

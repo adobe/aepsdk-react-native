@@ -1,0 +1,1 @@
+{"version":3,"names":["useContext","InboxContext","useInboxSettings","settings"],"sourceRoot":"../../../../src","sources":["ui/hooks/useInboxSettings.ts"],"mappings":";;AAAA,SAASA,UAAU,QAAQ,OAAO;AAClC,SAASC,YAAY,QAAuB,+BAA4B;AAExE,SAASC,gBAAgBA,CAAA,EAAyB;EAChD,MAAMC,QAAQ,GAAGH,UAAU,CAACC,YAAY,CAAC;EACzC,OAAOE,QAAQ;AACjB;AAEA,eAAeD,gBAAgB","ignoreList":[]}
