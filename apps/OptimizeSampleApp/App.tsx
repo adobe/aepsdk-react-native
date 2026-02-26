@@ -9,8 +9,9 @@ import {
   View,
   ActivityIndicator,
   SafeAreaView,
+  Pressable,
 } from 'react-native';
-import { MobileCore, LogLevel } from '@adobe/react-native-aepcore';
+import { MobileCore, LogLevel, getExtensionVersion } from '@adobe/react-native-aepcore';
 
 const APP_ID = 'YOUR-APP-ID'; // Replace with your Adobe Mobile Services App ID
 
@@ -36,6 +37,11 @@ function App() {
         setReady(true);
       });
   }, []);
+
+  const getCoreVersion = async () => {
+    const version = await getExtensionVersion();
+    console.log('Core version turbo module:', version);
+  };
 
   if (!ready) {
     return (
@@ -64,6 +70,9 @@ function App() {
         <View style={styles.card}>
           <Text style={styles.label}>Core extension version</Text>
           <Text style={styles.version}>{coreVersion ?? '—'}</Text>
+          <Pressable style={styles.button} onPress={getCoreVersion}>
+            <Text style={styles.buttonText}>Log Core Turbo version</Text>
+          </Pressable>
         </View>
       )}
     </SafeAreaView>
@@ -106,6 +115,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
+  },
+  button: {
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#007aff',
+    borderRadius: 8,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
   },
   errorLabel: {
     fontSize: 14,

@@ -17,11 +17,12 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
+  s.dependency "React-Codegen"
   s.dependency 'AEPCore', '>= 5.4.0', '< 6.0.0'
   s.dependency 'AEPLifecycle', '>= 5.4.0', '< 6.0.0'
   s.dependency 'AEPIdentity', '>= 5.4.0', '< 6.0.0'
   s.dependency 'AEPSignal', '>= 5.4.0', '< 6.0.0'
 
-  s.source_files  = "ios/src/**/*.{h,m}"
+  s.source_files  = "ios/src/**/*.{h,m,mm}"
 
 end

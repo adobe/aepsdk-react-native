@@ -44,6 +44,7 @@ PODS:
     - AEPLifecycle (< 6.0.0, >= 5.4.0)
     - AEPSignal (< 6.0.0, >= 5.4.0)
     - React
+    - React-Codegen
   - RCTDeprecation (0.83.0)
   - RCTRequired (0.83.0)
   - RCTSwiftUI (0.83.0)
@@ -67,6 +68,7 @@ PODS:
     - React-RCTText (= 0.83.0)
     - React-RCTVibration (= 0.83.0)
   - React-callinvoker (0.83.0)
+  - React-Codegen (0.1.0)
   - React-Core (0.83.0):
     - boost
     - DoubleConversion
@@ -2647,6 +2649,7 @@ SPEC REPOS:
     - AEPRulesEngine
     - AEPServices
     - AEPSignal
+    - React-Codegen
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2825,7 +2828,7 @@ SPEC CHECKSUMS:
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 238c9e9049b294383e515ff74fffedb233098505
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
-  RCTAEPCore: 39f578b989e45556b813fbcf6bc301bcf46c5a04
+  RCTAEPCore: 833da0cb90cbfa986a458cb5fed0b29b0b55bbb4
   RCTDeprecation: 2b70c6e3abe00396cefd8913efbf6a2db01a2b36
   RCTRequired: f3540eee8094231581d40c5c6d41b0f170237a81
   RCTSwiftUI: 5928f7ca7e9e2f1a82d85d4c79ea3065137ad81c
@@ -2833,6 +2836,7 @@ SPEC CHECKSUMS:
   RCTTypeSafety: 6359ff3fcbe18c52059f4d4ce301e47f9da5f0d5
   React: f6f8fc5c01e77349cdfaf49102bcb928ac31d8ed
   React-callinvoker: 032b6d1d03654b9fb7de9e2b3b978d3cb1a893ad
+  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: ce3dea95f8ae196e9bfba71e3a5ef6057385890b
   React-CoreModules: 78916168da700dfe90ecba15734e0e9c5b726814
   React-cxxreact: 04f73d81cfe783a57a88ef8683c76edc5bda3af8

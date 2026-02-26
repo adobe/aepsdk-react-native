@@ -27,7 +27,8 @@ public class RCTAEPCorePackage implements ReactPackage {
         return Arrays.<NativeModule>asList(new RCTAEPCoreModule(reactContext),
                 new RCTAEPIdentityModule(reactContext),
                 new RCTAEPLifecycleModule(reactContext),
-                new RCTAEPSignalModule(reactContext));
+                new RCTAEPSignalModule(reactContext),
+                new RCTCoreTurboModule(reactContext));
     }
 
     // Deprecated from RN 0.47
