@@ -38,6 +38,9 @@ const config = {
                     if (typeof name !== 'string') {
                         return target[name];
                     }
+                    // Force react-native and react to always use the app's copy (avoids
+                    // aep-turbo-core's nested node_modules/react-native with wrong layout)
+               
                     if (
                         name &&
                         name.startsWith &&
