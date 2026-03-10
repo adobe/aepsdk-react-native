@@ -19,7 +19,7 @@ import { LogLevel } from './models/LogLevel';
 import { MobileVisitorAuthenticationState } from './models/MobileVisitorAuthenticationState';
 import { PrivacyStatus } from './models/PrivacyStatus';
 import VisitorID from './models/VisitorID';
-import { getExtensionVersion } from './CoreTurbo';
+import { getExtensionVersion, getOptimizeVersion } from './CoreTurbo';
 
 export {
   // Native models
@@ -34,5 +34,6 @@ export {
   MobileCore,
   Signal,
   // CoreTurbo Turbo Module
-  getExtensionVersion
+  getExtensionVersion,
+  getOptimizeVersion
 };

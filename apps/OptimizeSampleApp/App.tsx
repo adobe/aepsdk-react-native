@@ -11,7 +11,7 @@ import {
   SafeAreaView,
   Pressable,
 } from 'react-native';
-import { MobileCore, LogLevel, getExtensionVersion } from '@adobe/react-native-aepcore';
+import { MobileCore, LogLevel, getExtensionVersion, getOptimizeVersion } from '@adobe/react-native-aepcore';
 
 const APP_ID = 'YOUR-APP-ID'; // Replace with your Adobe Mobile Services App ID
 
@@ -37,7 +37,10 @@ function App() {
         setReady(true);
       });
   }, []);
-
+const getoptimizeVersion = async () => {
+  const version = await getOptimizeVersion();
+  console.log('Optimize version turbo module:', version);
+};
   const getCoreVersion = async () => {
     const version = await getExtensionVersion();
     console.log('Core version turbo module:', version);
@@ -70,8 +73,8 @@ function App() {
         <View style={styles.card}>
           <Text style={styles.label}>Core extension version</Text>
           <Text style={styles.version}>{coreVersion ?? '—'}</Text>
-          <Pressable style={styles.button} onPress={getCoreVersion}>
-            <Text style={styles.buttonText}>Log Core Turbo version</Text>
+          <Pressable style={styles.button} onPress={getoptimizeVersion}>
+            <Text style={styles.buttonText}>Log optimize  version</Text>
           </Pressable>
         </View>
       )}

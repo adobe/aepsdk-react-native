@@ -2,10 +2,18 @@ PODS:
   - AEPCore (5.8.0):
     - AEPRulesEngine (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.8.0)
+  - AEPEdge (5.0.3):
+    - AEPCore (< 6.0.0, >= 5.3.1)
+    - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
+  - AEPEdgeIdentity (5.0.0):
+    - AEPCore (< 6.0.0, >= 5.0.0)
   - AEPIdentity (5.8.0):
     - AEPCore (< 6.0.0, >= 5.8.0)
   - AEPLifecycle (5.8.0):
     - AEPCore (< 6.0.0, >= 5.8.0)
+  - AEPOptimize (5.6.1):
+    - AEPCore (< 6.0.0, >= 5.4.0)
+    - AEPEdge (< 6.0.0, >= 5.0.0)
   - AEPRulesEngine (5.0.0)
   - AEPServices (5.8.0)
   - AEPSignal (5.8.0):
@@ -42,6 +50,7 @@ PODS:
     - AEPCore (< 6.0.0, >= 5.4.0)
     - AEPIdentity (< 6.0.0, >= 5.4.0)
     - AEPLifecycle (< 6.0.0, >= 5.4.0)
+    - AEPOptimize (< 6.0.0, >= 5.0.0)
     - AEPSignal (< 6.0.0, >= 5.4.0)
     - React
     - React-Codegen
@@ -2644,8 +2653,11 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AEPCore
+    - AEPEdge
+    - AEPEdgeIdentity
     - AEPIdentity
     - AEPLifecycle
+    - AEPOptimize
     - AEPRulesEngine
     - AEPServices
     - AEPSignal
@@ -2815,8 +2827,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AEPCore: 65d2f2c9ef750ce89557dba59a71e729306f0629
+  AEPEdge: 105afc7958acd7c016d57f7ac1d6f632bf05e6ee
+  AEPEdgeIdentity: 3161ff33434586962946912d6b8e9e8fca1c4d23
   AEPIdentity: 2dcdaa0288641441a7c1b1c97f1ed8113d40cc2d
   AEPLifecycle: 1ff56cdd009b043c2ad412ddf8952beefd1f3e3d
+  AEPOptimize: ac17a3311f3763ec2c2786243c5b8272acaf83dd
   AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
   AEPServices: a5608a9d3749701030e12fe379f53e40fa6f8e6f
   AEPSignal: 63a1c25c5f99c775a78bc398d728ed50a3bc6184
@@ -2828,7 +2843,7 @@ SPEC CHECKSUMS:
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 238c9e9049b294383e515ff74fffedb233098505
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
-  RCTAEPCore: 833da0cb90cbfa986a458cb5fed0b29b0b55bbb4
+  RCTAEPCore: 232912c2e4ab957621160ff8634d000fc50fac2b
   RCTDeprecation: 2b70c6e3abe00396cefd8913efbf6a2db01a2b36
   RCTRequired: f3540eee8094231581d40c5c6d41b0f170237a81
   RCTSwiftUI: 5928f7ca7e9e2f1a82d85d4c79ea3065137ad81c
@@ -2902,6 +2917,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 7a9f26c70daf0b08d82ec2f862e9a8872442129e
 
-PODFILE CHECKSUM: bfd1fcf9c3941f260a097ec1347451ccbd917913
+PODFILE CHECKSUM: a36f120e6c96f3c2be0f48d55f515160e89e5eef
 
 COCOAPODS: 1.16.2

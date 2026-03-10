@@ -42,6 +42,15 @@ target 'OptimizeSampleApp' do
           config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
         end
       end
+
+      if target.name == 'RCTAEPCore'
+        target.build_configurations.each do |config|
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= '$(inherited)'
+          config.build_settings['HEADER_SEARCH_PATHS'] += ' "$(PODS_ROOT)/../build/generated/ios/ReactCodegen"'
+          config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
+          config.build_settings['OTHER_CPLUSPLUSFLAGS'] = '$(inherited) -fcxx-modules'
+        end
+      end
     end
   end
 end

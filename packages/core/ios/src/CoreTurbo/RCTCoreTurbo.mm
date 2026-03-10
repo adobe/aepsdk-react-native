@@ -1,9 +1,10 @@
 /*
 Copyright 2022 Adobe. All rights reserved.
-RCTCoreTurbo – Turbo Native Module (iOS). Logs Mobile Core extension version and returns it.
+RCTCoreTurbo – Turbo Native Module (iOS). Logs Core and Optimize extension versions (AEP SDK from cloud).
 */
 #import "RCTCoreTurbo.h"
 @import AEPCore;
+@import AEPOptimize;
 
 @implementation RCTCoreTurbo
 
@@ -18,6 +19,14 @@ RCTCoreTurbo – Turbo Native Module (iOS). Logs Mobile Core extension version a
 {
   NSString *version = [AEPMobileCore extensionVersion];
   NSLog(@"[CoreTurbo] Mobile Core extension version: %@", version);
+  resolve(version ?: @"");
+}
+
+- (void)getOptimizeVersion:(RCTPromiseResolveBlock)resolve
+                   reject:(RCTPromiseRejectBlock)reject
+{
+  NSString *version = [AEPMobileOptimize extensionVersion];
+  NSLog(@"[CoreTurbo] AEP Optimize extension version: %@", version);
   resolve(version ?: @"");
 }
 

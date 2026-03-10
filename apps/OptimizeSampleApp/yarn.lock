@@ -7,10 +7,10 @@ __metadata:
 
 "@adobe/react-native-aepcore@file:../../packages/core::locator=OptimizeSampleApp%40workspace%3A.":
   version: 7.0.0
-  resolution: "@adobe/react-native-aepcore@file:../../packages/core#../../packages/core::hash=284b1b&locator=OptimizeSampleApp%40workspace%3A."
+  resolution: "@adobe/react-native-aepcore@file:../../packages/core#../../packages/core::hash=3484fe&locator=OptimizeSampleApp%40workspace%3A."
   peerDependencies:
     react-native: ">=0.60.0"
-  checksum: ee96c79dfef314bd248e0953a3cab3582d3bfd8fce426294e16c68259cd05e2945af9e2d9e4c15f90c41f4ff333cb2ddae964de4e7d28b5a5d0a01769de7b16d
+  checksum: 0a5e7a24d4a9374dd4bbfbc9e2a875002b6a97709e2323b4bcd4ea06527a91f3f0862e2baa271d284bb7c20ba82375fdffc0a7705bba9e402cc5080c12b3a91a
   languageName: node
   linkType: hard
 

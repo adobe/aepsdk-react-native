@@ -22,7 +22,13 @@ Pod::Spec.new do |s|
   s.dependency 'AEPLifecycle', '>= 5.4.0', '< 6.0.0'
   s.dependency 'AEPIdentity', '>= 5.4.0', '< 6.0.0'
   s.dependency 'AEPSignal', '>= 5.4.0', '< 6.0.0'
+  s.dependency 'AEPOptimize', '>= 5.0.0', '< 6.0.0'
 
   s.source_files  = "ios/src/**/*.{h,m,mm}"
 
+  s.pod_target_xcconfig = {
+    "CLANG_ENABLE_MODULES" => "YES",
+    "OTHER_CPLUSPLUSFLAGS" => "$(inherited) -fcxx-modules",
+    "HEADER_SEARCH_PATHS" => "$(inherited) \"$(PODS_ROOT)/../build/generated/ios/ReactCodegen\" \"$(PODS_ROOT)/Headers/Public/ReactCodegen\""
+  }
 end

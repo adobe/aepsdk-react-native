@@ -13,6 +13,7 @@ import { TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
   getExtensionVersion(): Promise<string>;
+  getOptimizeVersion(): Promise<string>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NativeCoreTurbo');

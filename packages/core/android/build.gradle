@@ -46,4 +46,5 @@ dependencies {
     api "com.adobe.marketing.mobile:signal"
     api "com.adobe.marketing.mobile:identity"
     api "com.adobe.marketing.mobile:lifecycle"
+    api "com.adobe.marketing.mobile:optimize"
 }

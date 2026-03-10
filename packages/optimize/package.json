@@ -39,17 +39,17 @@
   "installConfig": {
     "hoistingLimits": "dependencies"
   },
- "codegenConfig": {
-  "name": "AEPOptimizeSpec",
-  "type": "modules",
-  "jsSrcsDir": "src",
-  "android": {
-    "javaPackageName": "com.nativelocalstorage"
-  },
-"ios": {
-        "modulesProvider": {
-          "NativeAEPOptimize": "RCTAEPOptimize"
-        }
-     }
-}
+  "codegenConfig": {
+    "name": "AEPOptimizeSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.nativelocalstorage"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPOptimize": "RCTAEPOptimize"
+      }
+    }
+  }
 }
