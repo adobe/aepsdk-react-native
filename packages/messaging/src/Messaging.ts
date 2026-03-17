@@ -22,7 +22,10 @@ import { MessagingProposition } from "./models/MessagingProposition";
 import { ContentCard } from "./models/ContentCard";
 import { PersonalizationSchema } from "./models/PersonalizationSchema";
 import { ContentTemplate } from "./ui/types/Templates";
-import { InboxSettings } from "./ui/providers/InboxProvider";
+import {
+  InboxSettings,
+  SettingsPlacement,
+} from "./ui/providers/InboxProvider";
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -60,6 +63,141 @@ const RCTAEPMessaging: NativeModule & NativeMessagingModule =
 
 declare var messagingDelegate: MessagingDelegate;
 var messagingDelegate: MessagingDelegate;
+
+function optString(map: Record<string, any> | undefined, key: string): string | undefined {
+  if (!map || typeof map !== 'object') return undefined;
+  const val = map[key] ?? map[key.toLowerCase()];
+  return typeof val === 'string' ? val : undefined;
+}
+
+function optInt(map: Record<string, any> | undefined, key: string, fallback: number): number {
+  if (!map || typeof map !== 'object') return fallback;
+  const val = map[key] ?? map[key.toLowerCase()];
+  if (typeof val === 'number' && !isNaN(val)) return val;
+  if (typeof val === 'string') {
+    const n = parseInt(val, 10);
+    return isNaN(n) ? fallback : n;
+  }
+  return fallback;
+}
+
+function optBoolean(map: Record<string, any> | undefined, key: string, fallback: boolean): boolean {
+  if (!map || typeof map !== 'object') return fallback;
+  const val = map[key] ?? map[key.toLowerCase()];
+  if (typeof val === 'boolean') return val;
+  if (val === 'true' || val === 1) return true;
+  if (val === 'false' || val === 0) return false;
+  return fallback;
+}
+
+function optTypedMap(map: Record<string, any> | undefined, key: string): Record<string, any> {
+  if (!map || typeof map !== 'object') return {};
+  const val = map[key] ?? map[key.toLowerCase()];
+  return val && typeof val === 'object' && !Array.isArray(val) ? val : {};
+}
+
+function createAepText(map: Record<string, any> | undefined, key: string): { content: string } | undefined {
+  const nested = optTypedMap(map, key);
+  const content = optString(nested, 'content') ?? optString(nested, 'txt');
+  return content !== undefined ? { content } : undefined;
+}
+
+function createAepColor(clrMap: Record<string, any>): { light: string; dark: string } | undefined {
+  if (!clrMap || typeof clrMap !== 'object') return undefined;
+  const light = optString(clrMap, 'light') ?? optString(clrMap, 'default') ?? '#FFFFFF';
+  const dark = optString(clrMap, 'dark') ?? light;
+  return { light, dark };
+}
+
+function createAepImage(map: Record<string, any> | undefined): { url: string; darkUrl?: string } | undefined {
+  if (!map || typeof map !== 'object') return undefined;
+  const url = optString(map, 'url') ?? optString(map, 'src');
+  if (!url) return undefined;
+  const darkUrl = optString(map, 'darkUrl') ?? optString(map, 'dark');
+  return { url, darkUrl };
+}
+
+function createAlignment(placement: string | undefined): SettingsPlacement {
+  const p = (placement ?? '').toLowerCase();
+  if (['topleft', 'topright', 'bottomleft', 'bottomright'].includes(p)) {
+    return p as SettingsPlacement;
+  }
+  return 'topleft';
+}
+
+function getDefaultInboxSettings(): InboxSettings {
+  return {
+    content: {
+      heading: { content: 'Inbox' },
+      layout: { orientation: 'vertical' },
+      capacity: 15,
+      emptyStateSettings: { message: { content: 'No Content Available' } },
+      isUnreadEnabled: true,
+    },
+    showPagination: false,
+  };
+}
+
+function createInboxSettingsFromContent(contentMap: Record<string, any>): InboxSettings {
+  const heading = createAepText(contentMap, 'heading') ?? createAepText(contentMap, 'Heading');
+  const layoutMap = optTypedMap(contentMap, 'layout');
+  const orientation = (optString(layoutMap, 'orientation') ?? 'vertical') as 'horizontal' | 'vertical';
+  const capacity = optInt(contentMap, 'capacity', 15);
+
+  if (!heading || !heading.content) {
+    return getDefaultInboxSettings();
+  }
+
+  const emptyStateSettings = optTypedMap(contentMap, 'emptyStateSettings') ||
+    optTypedMap(contentMap, 'empty_state_settings') || {};
+  const emptyMessage = createAepText(emptyStateSettings, 'message') ?? createAepText(emptyStateSettings, 'Message');
+  const emptyImage = createAepImage(optTypedMap(emptyStateSettings, 'image'));
+
+  const unreadIndicator = optTypedMap(contentMap, 'unread_indicator') ||
+    optTypedMap(contentMap, 'unreadIndicator') || {};
+  const unreadBg = optTypedMap(unreadIndicator, 'unread_bg') || optTypedMap(unreadIndicator, 'unreadBg') || {};
+  const unreadBgClr = optTypedMap(unreadBg, 'clr') || {};
+  const unreadBgColor = createAepColor(unreadBgClr);
+
+  const unreadIcon = optTypedMap(unreadIndicator, 'unread_icon') || optTypedMap(unreadIndicator, 'unreadIcon') || {};
+  const placement = createAlignment(optString(unreadIndicator, 'placement') ?? optString(unreadIcon, 'placement'));
+  const unreadIconImage = createAepImage(optTypedMap(unreadIcon, 'image'));
+
+  const isUnreadEnabled = optBoolean(contentMap, 'isUnreadEnabled', true) ||
+    optBoolean(contentMap, 'is_unread_enabled', true);
+
+  const content: InboxSettings['content'] = {
+    heading,
+    layout: { orientation },
+    capacity,
+    emptyStateSettings: {
+      message: emptyMessage ?? { content: 'No Content Available' },
+      ...(emptyImage && { image: emptyImage }),
+    },
+    isUnreadEnabled,
+  };
+
+  if (isUnreadEnabled && (unreadBgColor || unreadIconImage)) {
+    content.unread_indicator = {
+      unread_bg: {
+        clr: unreadBgColor ?? { light: '#FFF3E0', dark: '#2D1B0E' },
+      },
+      unread_icon: {
+        placement,
+        image: unreadIconImage ?? {
+          url: 'https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png',
+          darkUrl: '',
+        },
+      },
+    };
+  }
+
+  return {
+    content,
+    showPagination: optBoolean(contentMap, 'showPagination', false) ||
+      optBoolean(contentMap, 'show_pagination', false),
+  };
+}
 
 class Messaging {
   /**
@@ -279,43 +417,43 @@ class Messaging {
     });
   }
 
-  static async getInbox(
-    surface: string
-  ): Promise<InboxSettings> {
-    console.log("getInbox", surface);
-    return {
-      content: {
-        heading: {
-          content: "Heading",
-        },
-        layout: {
-          orientation: "vertical",
-        },
-        capacity: 15,
-        emptyStateSettings: {
-          message: {
-            content: "Empty State",
-          },
-        },
-        unread_indicator: {
-          unread_bg: {
-            clr: {
-              light: "#FFF3E0",  // Light orange background for unread cards
-              dark: "#2D1B0E",   // Dark orange background for unread cards
-            },
-          },
-          unread_icon: {
-            placement: "topleft",
-            image: {
-              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",  // Image in light mode
-              darkUrl: "",  // Empty URL = shows dot in dark mode
-            },
-          },
-        },
-        isUnreadEnabled: true,  // Enable unread features!
-      },
-      showPagination: false,
-    };
+
+  static async getInbox(surface: string): Promise<InboxSettings> {
+    const propositionsMap = await Messaging.getPropositionsForSurfaces([surface]);
+    const propositions = propositionsMap[surface];
+
+    if (!propositions?.length) {
+      return getDefaultInboxSettings();
+    }
+
+    const inboxPropositions = propositions.filter(
+      (p) =>
+        p.items?.length > 0 &&
+        (p.items[0].schema === PersonalizationSchema.INBOX ||
+          String(p.items[0].schema).includes('inbox'))
+    );
+
+    if (inboxPropositions.length === 0) {
+      return getDefaultInboxSettings();
+    }
+
+    const sortedByRank = [...inboxPropositions].sort(
+      (a, b) => ((b as any).rank ?? 0) - ((a as any).rank ?? 0)
+    );
+    const inboxProposition = sortedByRank[0];
+    const firstItem = inboxProposition.items[0];
+    const rawItem = firstItem as any;
+
+    const contentMap =
+      rawItem?.inboxSchemaData?.content ??
+      rawItem?.data?.inboxSchemaData?.content ??
+      rawItem?.data?.content;
+
+    if (!contentMap || typeof contentMap !== 'object') {
+      return getDefaultInboxSettings();
+    }
+
+    return createInboxSettingsFromContent(contentMap);
   }
 }
 
