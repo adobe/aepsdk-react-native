@@ -152,3 +152,9 @@ out/
 
 # ignore ds store
 .DS_Store
+
+# React Native CLI app `apps/AwesomeProject`: CocoaPods, Gradle, Metro, and Xcode
+# artifacts are covered by `apps/AwesomeProject/.gitignore` and patterns above (**/build/, **/Pods/, .gradle).
+
+# Cursor / local notes (not committed)
+/cursor-docs/
