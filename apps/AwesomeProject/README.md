@@ -9,6 +9,11 @@ This app lives under `apps/AwesomeProject` and is a **Yarn workspace** of the pa
 - **Metro** is configured in `metro.config.js` to resolve `@adobe/react-native-aep*` from `packages/`.
 - Convenience scripts from root: `yarn awesomeproject:start`, `yarn awesomeproject:ios:run`, `yarn awesomeproject:android:run`, `yarn awesomeproject:ios:pod`.
 
+### Adobe SDK in this app
+
+- Set your Launch / Data Collection app ID in **`src/constants.ts`** (`LAUNCH_APP_ID`). The sample uses `YOUR-APP-ID` until you replace it.
+- On launch, **`MobileCore.initializeWithAppId`** runs in `App.tsx` (debug log level). **Assurance** session URL field + **Optimize** actions mirror the New Arch sample; async results and callbacks append to the **callback log** panel (`testID`s `aepsdk-callback-log-*`) for future Appium checks.
+
 # Getting Started
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.

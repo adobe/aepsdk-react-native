@@ -5900,6 +5900,7 @@ __metadata:
     react: 19.2.3
     react-native: 0.84.1
     react-native-safe-area-context: ^5.5.2
+    react-native-webview: ^13.15.0
     react-test-renderer: 19.2.3
     typescript: ^5.8.3
   languageName: unknown
@@ -15270,6 +15271,19 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 1c843206108358faef5cd8e25834de729a90319c3fa3f765923536fdd99b86b07a3e850b89ebe6503725a022dd9dddd5de76ef6e102d290cc5935dcf9c60198d
+  languageName: node
+  linkType: hard
+
+"react-native-webview@npm:^13.15.0":
+  version: 13.16.1
+  resolution: "react-native-webview@npm:13.16.1"
+  dependencies:
+    escape-string-regexp: ^4.0.0
+    invariant: 2.2.4
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: c202500df090114877d7a92549dbac1c36bdcc2010d50ddffb57aedcec81870d9695f1e4e3ef852cbe02a8ef952ef8626b120b774813c396a32b4fdc5838a4a5
   languageName: node
   linkType: hard
 
