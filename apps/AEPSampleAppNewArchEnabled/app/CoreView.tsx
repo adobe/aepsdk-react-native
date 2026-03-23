@@ -69,7 +69,8 @@ function getSdkIdentities() {
 }
 
 function updateConfiguration() {
-  MobileCore.updateConfiguration({'global.privacy': 'optedin'});
+  console.log('Updating configuration');
+ // MobileCore.updateConfiguration({'global.privacy': 'optedin','edge.environment': 'int'});
 }
 
 function clearUpdatedConfiguration() {

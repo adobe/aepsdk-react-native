@@ -1,3 +1,5 @@
+ENV['RCT_NEW_ARCH_ENABLED'] = '1'
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
@@ -8,9 +10,11 @@ require Pod::Executable.execute_command('node', ['-p',
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
-# Required for AEP SDK with New Architecture - use static frameworks
-# This prevents C++ module import errors during the build process
-use_frameworks! :linkage => :static
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
 
 target 'aepsampleapp' do
   config = use_native_modules!
@@ -33,11 +37,45 @@ target 'aepsampleapp' do
       :mac_catalyst_enabled => false,
       :ccache_enabled => true
     )
-    
-    installer.pods_project.targets.each do |t|
-      if t.name.start_with?("AEP")
-        t.build_configurations.each do |bc|
-            bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
+    # AEP pods: Swift settings (static framework / Objective-C interop)
+    installer.pods_project.targets.each do |target|
+      if target.name.start_with?('AEP')
+        target.build_configurations.each do |bc|
+          bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
+          bc.build_settings['SWIFT_STRICT_CONCURRENCY'] = 'minimal'
+          bc.build_settings['SWIFT_SUPPRESS_WARNINGS'] = 'YES'
+          bc.build_settings['SWIFT_EMIT_MODULE_INTERFACE'] = 'NO'
+        end
+      end
+    end
+    # Fix glog build issue in RN 0.78+: tell CocoaPods not to treat glog as a module
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        if target.name == 'glog'
+          config.build_settings['DEFINES_MODULE'] = 'NO'
+        end
+      end
+    end
+    # Turbo Module (Objective-C): Clang modules for RCTAEPOptimize; allow non-modular includes for codegen/glog
+    installer.pods_project.targets.each do |target|
+      if target.name == 'RCTAEPOptimize'
+        target.build_configurations.each do |bc|
+          bc.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
+          bc.build_settings['CLANG_ENABLE_OBJC_ARC'] = 'YES'
+          bc.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+        end
+      end
+    end
+    # Force link static library so Turbo Module is not stripped (same pattern as AepTurboCore)
+    installer.aggregate_targets.each do |aggregate_target|
+      if aggregate_target.name == 'Pods-aepsampleapp'
+        aggregate_target.user_project.native_targets.each do |native_target|
+          if native_target.name == 'aepsampleapp'
+            native_target.build_configurations.each do |bc|
+              bc.build_settings['OTHER_LDFLAGS'] ||= ['$(inherited)']
+              bc.build_settings['OTHER_LDFLAGS'] << '-force_load $(PODS_CONFIGURATION_BUILD_DIR)/RCTAEPOptimize/libRCTAEPOptimize.a'
+            end
+          end
         end
       end
     end

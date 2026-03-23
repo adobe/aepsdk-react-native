@@ -14,9 +14,18 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/adobe/aepsdk-react-native.git", :branch => "optimize" }
 
-  s.source_files  = 'ios/**/*.{h,m}'
-  s.requires_arc = true
+  s.source_files         = 'ios/**/*.{h,m,mm}'
+  s.public_header_files  = 'ios/**/*.h'
+  s.requires_arc         = true
 
-  s.dependency "React"  
+  s.dependency "React"
   s.dependency "AEPOptimize", ">= 5.0.0", "< 6.0.0"
+
+  # Turbo Module: link codegen spec (protocol + JSI) so NativeAEPOptimize is discoverable at runtime.
+  install_modules_dependencies(s)
+
+  s.pod_target_xcconfig = {
+    "CLANG_ENABLE_MODULES" => "YES",
+    "OTHER_CPLUSPLUSFLAGS" => "$(inherited) -fcxx-modules"
+  }
 end

@@ -1,0 +1,38 @@
+# Commands for Creating Dependency Graphs
+
+## 1. Madge (code/import dependency graph)
+# Install once (optional): yarn add -D madge
+# Generate graph from a folder (outputs SVG):
+npx madge --image dependency-graph.svg ./packages
+
+# From repo root for all packages:
+npx madge --image dependency-graph.svg ./packages ./apps
+
+# JSON output (for further processing):
+npx madge --json ./packages > dependency-graph.json
+
+
+## 2. Dependency-cruiser (with Graphviz/dot)
+# Install Graphviz first: brew install graphviz (macOS)
+# Then:
+npx depcruise packages --output-type dot | dot -T svg > dependency-graph.svg
+
+# Or with dependency-cruiser installed: yarn add -D dependency-cruiser
+# npx depcruise packages apps --output-type dot | dot -T svg > dependency-graph.svg
+
+
+## 3. Yarn (package-level dependency tree)
+# List why a package is installed and its tree:
+yarn why <package-name>
+
+# Full dependency tree for the workspace:
+yarn workspaces list --json
+
+
+## 4. NPM (if using npm instead)
+npm ls --all > dependency-tree.txt
+# Or for a visual tree: npx npm-remote-ls <package-name>
+
+
+## Quick one-liner (Madge, no install – from repo root)
+npx madge --image dependency-graph.svg .

@@ -6,6 +6,19 @@
   "license": "Apache-2.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "codegenConfig": {
+    "name": "NativeAEPOptimizeSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.optimize"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPOptimize": "RCTNativeAEPOptimize"
+      }
+    }
+  },
   "scripts": {
     "cleanup": "rm -rf node_modules",
     "tsc": "tsc"
