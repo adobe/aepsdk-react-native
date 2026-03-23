@@ -19,6 +19,147 @@ import { PersonalizationSchema } from "./models/PersonalizationSchema.js";
 import { ContentTemplate } from "./ui/types/Templates.js";
 const RCTAEPMessaging = NativeModules.AEPMessaging;
 var messagingDelegate;
+function optString(map, key) {
+  if (!map || typeof map !== 'object') return undefined;
+  const val = map[key] ?? map[key.toLowerCase()];
+  return typeof val === 'string' ? val : undefined;
+}
+function optInt(map, key, fallback) {
+  if (!map || typeof map !== 'object') return fallback;
+  const val = map[key] ?? map[key.toLowerCase()];
+  if (typeof val === 'number' && !isNaN(val)) return val;
+  if (typeof val === 'string') {
+    const n = parseInt(val, 10);
+    return isNaN(n) ? fallback : n;
+  }
+  return fallback;
+}
+function optBoolean(map, key, fallback) {
+  if (!map || typeof map !== 'object') return fallback;
+  const val = map[key] ?? map[key.toLowerCase()];
+  if (typeof val === 'boolean') return val;
+  if (val === 'true' || val === 1) return true;
+  if (val === 'false' || val === 0) return false;
+  return fallback;
+}
+function optTypedMap(map, key) {
+  if (!map || typeof map !== 'object') return {};
+  const val = map[key] ?? map[key.toLowerCase()];
+  return val && typeof val === 'object' && !Array.isArray(val) ? val : {};
+}
+function createAepText(map, key) {
+  const nested = optTypedMap(map, key);
+  const content = optString(nested, 'content') ?? optString(nested, 'txt');
+  return content !== undefined ? {
+    content
+  } : undefined;
+}
+function createAepColor(clrMap) {
+  if (!clrMap || typeof clrMap !== 'object') return undefined;
+  const light = optString(clrMap, 'light') ?? optString(clrMap, 'default') ?? '#FFFFFF';
+  const dark = optString(clrMap, 'dark') ?? light;
+  return {
+    light,
+    dark
+  };
+}
+function createAepImage(map) {
+  if (!map || typeof map !== 'object') return undefined;
+  const url = optString(map, 'url') ?? optString(map, 'src');
+  if (!url) return undefined;
+  const darkUrl = optString(map, 'darkUrl') ?? optString(map, 'dark');
+  return {
+    url,
+    darkUrl
+  };
+}
+function createAlignment(placement) {
+  const p = (placement ?? '').toLowerCase();
+  if (['topleft', 'topright', 'bottomleft', 'bottomright'].includes(p)) {
+    return p;
+  }
+  return 'topleft';
+}
+function getDefaultInboxSettings() {
+  return {
+    content: {
+      heading: {
+        content: 'Inbox'
+      },
+      layout: {
+        orientation: 'vertical'
+      },
+      capacity: 15,
+      emptyStateSettings: {
+        message: {
+          content: 'No Content Available'
+        }
+      },
+      isUnreadEnabled: true
+    },
+    showPagination: false
+  };
+}
+function createInboxSettingsFromContent(contentMap, activityId) {
+  const heading = createAepText(contentMap, 'heading') ?? createAepText(contentMap, 'Heading');
+  const layoutMap = optTypedMap(contentMap, 'layout');
+  const orientation = optString(layoutMap, 'orientation') ?? 'vertical';
+  const capacity = optInt(contentMap, 'capacity', 15);
+  if (!heading || !heading.content) {
+    return getDefaultInboxSettings();
+  }
+  const emptyStateSettings = optTypedMap(contentMap, 'emptyStateSettings') || optTypedMap(contentMap, 'empty_state_settings') || {};
+  const emptyMessage = createAepText(emptyStateSettings, 'message') ?? createAepText(emptyStateSettings, 'Message');
+  const emptyImage = createAepImage(optTypedMap(emptyStateSettings, 'image'));
+  const unreadIndicator = optTypedMap(contentMap, 'unread_indicator') || optTypedMap(contentMap, 'unreadIndicator') || {};
+  const unreadBg = optTypedMap(unreadIndicator, 'unread_bg') || optTypedMap(unreadIndicator, 'unreadBg') || {};
+  const unreadBgClr = optTypedMap(unreadBg, 'clr') || {};
+  const unreadBgColor = createAepColor(unreadBgClr);
+  const unreadIcon = optTypedMap(unreadIndicator, 'unread_icon') || optTypedMap(unreadIndicator, 'unreadIcon') || {};
+  const placement = createAlignment(optString(unreadIndicator, 'placement') ?? optString(unreadIcon, 'placement'));
+  const unreadIconImage = createAepImage(optTypedMap(unreadIcon, 'image'));
+  const isUnreadEnabled = optBoolean(contentMap, 'isUnreadEnabled', true) || optBoolean(contentMap, 'is_unread_enabled', true);
+  const content = {
+    heading,
+    layout: {
+      orientation
+    },
+    capacity,
+    emptyStateSettings: {
+      message: emptyMessage ?? {
+        content: 'No Content Available'
+      },
+      ...(emptyImage && {
+        image: emptyImage
+      })
+    },
+    isUnreadEnabled
+  };
+  if (isUnreadEnabled && (unreadBgColor || unreadIconImage)) {
+    content.unread_indicator = {
+      unread_bg: {
+        clr: unreadBgColor ?? {
+          light: '#FFF3E0',
+          dark: '#2D1B0E'
+        }
+      },
+      unread_icon: {
+        placement,
+        image: unreadIconImage ?? {
+          url: 'https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png',
+          darkUrl: ''
+        }
+      }
+    };
+  }
+  return {
+    ...(activityId && {
+      activityId
+    }),
+    content,
+    showPagination: optBoolean(contentMap, 'showPagination', false) || optBoolean(contentMap, 'show_pagination', false)
+  };
+}
 class Messaging {
   /**
    * Returns the version of the AEPMessaging extension
@@ -182,42 +323,25 @@ class Messaging {
     });
   }
   static async getInbox(surface) {
-    console.log("getInbox", surface);
-    return {
-      content: {
-        heading: {
-          content: "Heading"
-        },
-        layout: {
-          orientation: "vertical"
-        },
-        capacity: 15,
-        emptyStateSettings: {
-          message: {
-            content: "Empty State"
-          }
-        },
-        unread_indicator: {
-          unread_bg: {
-            clr: {
-              light: "#FFF3E0",
-              // Light orange background for unread cards
-              dark: "#2D1B0E" // Dark orange background for unread cards
-            }
-          },
-          unread_icon: {
-            placement: "topleft",
-            image: {
-              url: "https://icons.veryicon.com/png/o/leisure/crisp-app-icon-library-v3/notification-5.png",
-              // Image in light mode
-              darkUrl: "" // Empty URL = shows dot in dark mode
-            }
-          }
-        },
-        isUnreadEnabled: true // Enable unread features!
-      },
-      showPagination: false
-    };
+    const propositionsMap = await Messaging.getPropositionsForSurfaces([surface]);
+    const propositions = propositionsMap[surface];
+    if (!propositions?.length) {
+      return getDefaultInboxSettings();
+    }
+    const inboxPropositions = propositions.filter(p => p.items?.length > 0 && (p.items[0].schema === PersonalizationSchema.INBOX || String(p.items[0].schema).includes('inbox')));
+    if (inboxPropositions.length === 0) {
+      return getDefaultInboxSettings();
+    }
+    const sortedByRank = [...inboxPropositions].sort((a, b) => (b.rank ?? 0) - (a.rank ?? 0));
+    const inboxProposition = sortedByRank[0];
+    const firstItem = inboxProposition.items[0];
+    const rawItem = firstItem;
+    const contentMap = rawItem?.inboxSchemaData?.content ?? rawItem?.data?.inboxSchemaData?.content ?? rawItem?.data?.content;
+    if (!contentMap || typeof contentMap !== 'object') {
+      return getDefaultInboxSettings();
+    }
+    const activityId = inboxProposition.scopeDetails?.activity?.id;
+    return createInboxSettingsFromContent(contentMap, activityId);
   }
 }
 export default Messaging;

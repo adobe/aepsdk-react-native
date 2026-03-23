@@ -16,6 +16,7 @@ import { useTheme } from "../../theme";
 import { ContentViewEvent } from "../../types/ContentViewEvent";
 import { ContentTemplate } from "../../types/Templates";
 import { generateCardHash } from "../../utils/generateCardHash";
+import { loadInboxState, saveInboxState } from "../../utils/inboxStorage";
 import { ContentCardView, ContentViewProps } from "../ContentCardView/ContentCardView";
 import EmptyState from "./EmptyState";
 
@@ -65,14 +66,35 @@ function InboxInner<T extends ContentTemplate>({
   }, [surface]);
 
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(() => new Set(getStore().dismissed));
-  const [interactedIds, setInteractedIds] = useState<Set<string>>(() => 
+  const [interactedIds, setInteractedIds] = useState<Set<string>>(() =>
     isUnreadEnabled ? new Set(getStore().interacted) : new Set());
 
+  const [storageLoaded, setStorageLoaded] = useState(false);
   useEffect(() => {
+    const activityId = settings.activityId;
+    if (!activityId) {
+      setStorageLoaded(true);
+      return;
+    }
+    let cancelled = false;
+    loadInboxState(activityId).then((persisted) => {
+      if (cancelled) return;
+      const store = getStore();
+      persisted.dismissed.forEach((id) => store.dismissed.add(id));
+      persisted.interacted.forEach((id) => store.interacted.add(id));
+      setDismissedIds(new Set(store.dismissed));
+      if (isUnreadEnabled) setInteractedIds(new Set(store.interacted));
+      setStorageLoaded(true);
+    });
+    return () => { cancelled = true; };
+  }, [settings.activityId, isUnreadEnabled, getStore]);
+
+  useEffect(() => {
+    if (!storageLoaded) return;
     const store = getStore();
     setDismissedIds(new Set(store.dismissed));
     if (isUnreadEnabled) setInteractedIds(new Set(store.interacted));
-  }, [content, isUnreadEnabled, getStore]);
+  }, [content, isUnreadEnabled, getStore, storageLoaded]);
 
   const isHorizontal = layout?.orientation === 'horizontal';
 
@@ -94,12 +116,24 @@ function InboxInner<T extends ContentTemplate>({
     if (event === 'onDismiss' && !store.dismissed.has(cardHash)) {
       store.dismissed.add(cardHash);
       setDismissedIds((prev) => new Set(prev).add(cardHash));
+      if (settings.activityId) {
+        saveInboxState(settings.activityId, {
+          dismissed: [...store.dismissed],
+          interacted: [...store.interacted],
+        });
+      }
     } else if (event === 'onInteract' && isUnreadEnabled && !store.interacted.has(cardHash)) {
       store.interacted.add(cardHash);
       setInteractedIds((prev) => new Set(prev).add(cardHash));
+      if (settings.activityId) {
+        saveInboxState(settings.activityId, {
+          dismissed: [...store.dismissed],
+          interacted: [...store.interacted],
+        });
+      }
     }
     CardProps?.listener?.(event, data, nativeEvent);
-  }, [CardProps, isUnreadEnabled, getStore]);
+  }, [CardProps, isUnreadEnabled, getStore, settings.activityId]);
 
   const renderItem: ListRenderItem<T> = useCallback(({ item }) => (
     <ContentCardView

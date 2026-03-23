@@ -17,7 +17,8 @@ import {
   ContentCardView,
   ThemeProvider,
   useContentCardUI,
-  useInbox
+  useInbox,
+  Messaging
 } from "@adobe/react-native-aepmessaging";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {
@@ -258,8 +259,8 @@ const InboxView = () => {
   const items = selectedView === 'Templates' ? ITEMS_BY_VIEW[selectedTemplate] : undefined;
 
   useEffect(() => {
-   MobileCore.trackAction("small_image1");
-  }, []);
+   void Messaging.updatePropositionsForSurfaces([surface]);
+  }, [surface]);
 
   if (selectedView === 'Remote') {
     return (
@@ -292,15 +293,6 @@ const InboxView = () => {
     ] as { surfaceSettings: InboxSettings; inboxStyle?: any; CardProps?: any };
 
     return (
-      <>
-        <MemoHeader
-          isLoading={false}
-          onTrackAction={refetchInbox}
-          selectedView={selectedView}
-          setSelectedView={setSelectedView}
-          selectedTemplate={selectedTemplate}
-          onTemplateChange={setSelectedTemplate}
-        />
         <Inbox
           surface={surface}
           settings={settings.surfaceSettings}
@@ -314,8 +306,15 @@ const InboxView = () => {
           CardProps={settings?.CardProps}
           isLoading={isLoadingInbox}
           error={error}
+          ListHeaderComponent={<MemoHeader
+            isLoading={false}
+            onTrackAction={refetchInbox}
+            selectedView={selectedView}
+            setSelectedView={setSelectedView}
+            selectedTemplate={selectedTemplate}
+            onTemplateChange={setSelectedTemplate}
+          />}
         />
-      </>
     );
   }
 

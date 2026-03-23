@@ -1,6 +1,8 @@
 import React from "react";
 export type SettingsPlacement = 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
 export interface InboxSettings {
+    /** Activity ID from scopeDetails.activity - stable across server responses, used for persisting read status */
+    activityId?: string;
     content: {
         heading: {
             content: string;

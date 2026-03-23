@@ -7,6 +7,7 @@ import { useContentCardUI } from "../../hooks/index.js";
 import InboxProvider from "../../providers/InboxProvider.js";
 import { useTheme } from "../../theme/index.js";
 import { generateCardHash } from "../../utils/generateCardHash.js";
+import { loadInboxState, saveInboxState } from "../../utils/inboxStorage.js";
 import { ContentCardView } from "../ContentCardView/ContentCardView.js";
 import EmptyState from "./EmptyState.js";
 
@@ -58,11 +59,37 @@ function InboxInner({
   }, [surface]);
   const [dismissedIds, setDismissedIds] = useState(() => new Set(getStore().dismissed));
   const [interactedIds, setInteractedIds] = useState(() => isUnreadEnabled ? new Set(getStore().interacted) : new Set());
+
+  // Load persisted read/dismiss state when activityId is available (must run before content effect)
+  const [storageLoaded, setStorageLoaded] = useState(false);
   useEffect(() => {
+    const activityId = settings.activityId;
+    if (!activityId) {
+      setStorageLoaded(true);
+      return;
+    }
+    let cancelled = false;
+    loadInboxState(activityId).then(persisted => {
+      if (cancelled) return;
+      const store = getStore();
+      persisted.dismissed.forEach(id => store.dismissed.add(id));
+      persisted.interacted.forEach(id => store.interacted.add(id));
+      setDismissedIds(new Set(store.dismissed));
+      if (isUnreadEnabled) setInteractedIds(new Set(store.interacted));
+      setStorageLoaded(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [settings.activityId, isUnreadEnabled, getStore]);
+
+  // Sync store to state when content changes (after storage load so we don't overwrite persisted state)
+  useEffect(() => {
+    if (!storageLoaded) return;
     const store = getStore();
     setDismissedIds(new Set(store.dismissed));
     if (isUnreadEnabled) setInteractedIds(new Set(store.interacted));
-  }, [content, isUnreadEnabled, getStore]);
+  }, [content, isUnreadEnabled, getStore, storageLoaded]);
   const isHorizontal = layout?.orientation === 'horizontal';
   const displayCards = useMemo(() => {
     if (!content) return [];
@@ -81,12 +108,24 @@ function InboxInner({
     if (event === 'onDismiss' && !store.dismissed.has(cardHash)) {
       store.dismissed.add(cardHash);
       setDismissedIds(prev => new Set(prev).add(cardHash));
+      if (settings.activityId) {
+        saveInboxState(settings.activityId, {
+          dismissed: [...store.dismissed],
+          interacted: [...store.interacted]
+        });
+      }
     } else if (event === 'onInteract' && isUnreadEnabled && !store.interacted.has(cardHash)) {
       store.interacted.add(cardHash);
       setInteractedIds(prev => new Set(prev).add(cardHash));
+      if (settings.activityId) {
+        saveInboxState(settings.activityId, {
+          dismissed: [...store.dismissed],
+          interacted: [...store.interacted]
+        });
+      }
     }
     CardProps?.listener?.(event, data, nativeEvent);
-  }, [CardProps, isUnreadEnabled, getStore]);
+  }, [CardProps, isUnreadEnabled, getStore, settings.activityId]);
   const renderItem = useCallback(({
     item
   }) => /*#__PURE__*/React.createElement(ContentCardView, _extends({

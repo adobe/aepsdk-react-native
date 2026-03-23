@@ -14,6 +14,8 @@ package com.adobe.marketing.mobile.reactnative.messaging;
 import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertMessageToMap;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -464,6 +466,41 @@ public final class RCTAEPMessagingModule
 
     } catch (Exception e) {
       Log.d(TAG, "Error tracking PropositionItem for uuid: " + uuid + ", error: " + e.getMessage(), e);
+    }
+  }
+
+  private static final String INBOX_PREFS = "AEPMessagingInbox";
+  private static final String INBOX_KEY_PREFIX = "aep_messaging_inbox_";
+
+  @ReactMethod
+  public void getInboxState(String activityId, final Promise promise) {
+    try {
+      if (activityId == null || activityId.isEmpty()) {
+        promise.resolve(null);
+        return;
+      }
+      SharedPreferences prefs = reactContext.getSharedPreferences(INBOX_PREFS, Context.MODE_PRIVATE);
+      String value = prefs.getString(INBOX_KEY_PREFIX + activityId, null);
+      promise.resolve(value);
+    } catch (Exception e) {
+      Log.e(TAG, "[MessagingBridge] getInboxState error: " + e.getMessage(), e);
+      promise.resolve(null);
+    }
+  }
+
+  @ReactMethod
+  public void setInboxState(String activityId, String stateJson, final Promise promise) {
+    try {
+      if (activityId == null || activityId.isEmpty()) {
+        promise.resolve(null);
+        return;
+      }
+      SharedPreferences prefs = reactContext.getSharedPreferences(INBOX_PREFS, Context.MODE_PRIVATE);
+      prefs.edit().putString(INBOX_KEY_PREFIX + activityId, stateJson).apply();
+      promise.resolve(null);
+    } catch (Exception e) {
+      Log.e(TAG, "[MessagingBridge] setInboxState error: " + e.getMessage(), e);
+      promise.reject("setInboxState", e.getMessage(), e);
     }
   }
 

@@ -3,6 +3,7 @@ import React, { createContext } from "react";
 export type SettingsPlacement = 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
 
 export interface InboxSettings {
+  activityId?: string;
   content: {
     heading: {
       content: string;

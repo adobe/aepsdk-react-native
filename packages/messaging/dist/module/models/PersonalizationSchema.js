@@ -17,6 +17,7 @@ export let PersonalizationSchema = /*#__PURE__*/function (PersonalizationSchema)
   PersonalizationSchema["DEFAULT_CONTENT"] = "https://ns.adobe.com/personalization/default-content-item";
   PersonalizationSchema["HTML_CONTENT"] = "https://ns.adobe.com/personalization/html-content-item";
   PersonalizationSchema["IN_APP"] = "https://ns.adobe.com/personalization/message/in-app";
+  PersonalizationSchema["INBOX"] = "https://ns.adobe.com/personalization/message/inbox";
   PersonalizationSchema["JSON_CONTENT"] = "https://ns.adobe.com/personalization/json-content-item";
   PersonalizationSchema["NATIVE_ALERT"] = "https://ns.adobe.com/personalization/message/native-alert";
   PersonalizationSchema["RULESET_ITEM"] = "https://ns.adobe.com/personalization/ruleset-item";

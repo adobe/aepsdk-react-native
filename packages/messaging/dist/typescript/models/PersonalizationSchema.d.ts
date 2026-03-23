@@ -3,6 +3,7 @@ export declare enum PersonalizationSchema {
     DEFAULT_CONTENT = "https://ns.adobe.com/personalization/default-content-item",
     HTML_CONTENT = "https://ns.adobe.com/personalization/html-content-item",
     IN_APP = "https://ns.adobe.com/personalization/message/in-app",
+    INBOX = "https://ns.adobe.com/personalization/message/inbox",
     JSON_CONTENT = "https://ns.adobe.com/personalization/json-content-item",
     NATIVE_ALERT = "https://ns.adobe.com/personalization/message/native-alert",
     RULESET_ITEM = "https://ns.adobe.com/personalization/ruleset-item"

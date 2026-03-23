@@ -72,6 +72,17 @@ RCT_EXTERN_METHOD(trackPropositionItem
                   : (RCTPromiseResolveBlock)resolve withRejecter
                   : (RCTPromiseRejectBlock)reject);
 
+RCT_EXTERN_METHOD(getInboxState
+                  : (NSString *)activityId withResolver
+                  : (RCTPromiseResolveBlock)resolve withRejecter
+                  : (RCTPromiseRejectBlock)reject);
+
+RCT_EXTERN_METHOD(setInboxState
+                  : (NSString *)activityId stateJson
+                  : (NSString *)stateJson withResolver
+                  : (RCTPromiseResolveBlock)resolve withRejecter
+                  : (RCTPromiseRejectBlock)reject);
+
 RCT_EXTERN_METHOD(setAutoTrack
                   : (NSString *)messageId autoTrack
                   : (BOOL)autoTrack);

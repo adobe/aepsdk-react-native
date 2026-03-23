@@ -9,6 +9,7 @@ export function useInbox(surface) {
   const fetchInbox = useCallback(async () => {
     try {
       setIsLoading(true);
+      await Messaging.updatePropositionsForSurfaces([surface]);
       const settings = await Messaging.getInbox(surface);
       setSettings(settings);
     } catch (error) {

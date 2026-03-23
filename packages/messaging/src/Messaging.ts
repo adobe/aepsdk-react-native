@@ -138,7 +138,10 @@ function getDefaultInboxSettings(): InboxSettings {
   };
 }
 
-function createInboxSettingsFromContent(contentMap: Record<string, any>): InboxSettings {
+function createInboxSettingsFromContent(
+  contentMap: Record<string, any>,
+  activityId?: string
+): InboxSettings {
   const heading = createAepText(contentMap, 'heading') ?? createAepText(contentMap, 'Heading');
   const layoutMap = optTypedMap(contentMap, 'layout');
   const orientation = (optString(layoutMap, 'orientation') ?? 'vertical') as 'horizontal' | 'vertical';
@@ -193,6 +196,7 @@ function createInboxSettingsFromContent(contentMap: Record<string, any>): InboxS
   }
 
   return {
+    ...(activityId && { activityId }),
     content,
     showPagination: optBoolean(contentMap, 'showPagination', false) ||
       optBoolean(contentMap, 'show_pagination', false),
@@ -453,7 +457,8 @@ class Messaging {
       return getDefaultInboxSettings();
     }
 
-    return createInboxSettingsFromContent(contentMap);
+    const activityId = inboxProposition.scopeDetails?.activity?.id;
+    return createInboxSettingsFromContent(contentMap, activityId);
   }
 }
 
