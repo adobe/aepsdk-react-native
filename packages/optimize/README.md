@@ -34,6 +34,8 @@ yarn add @adobe/react-native-aepoptimize
 > [!NOTE]  
 > The `@adobe/react-native-aepoptimize` package introduced a **breaking change** affecting the `score` data type, causing a build failure due to a lossy conversion from `double` to `int`. To resolve this, **upgrade to version 6.1.0 or later**. Refer to the [Adobe SDK Release Notes](https://developer.adobe.com/client-sdks/home/release-notes/) for details.
 
+For iOS **New Architecture (Turbo Modules)** setup and implementation details, see [ios/TURBO_MODULE.md](ios/TURBO_MODULE.md).
+
 ## Usage
 
 ### Initializing with SDK:

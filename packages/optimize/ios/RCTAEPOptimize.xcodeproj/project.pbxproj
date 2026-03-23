@@ -3,12 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3D1E4A332730C59500197A0E /* AEPOptimize.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D1E4A322730C59500197A0E /* AEPOptimize.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
-		B3E7B58A1CC2AC0600A0062D /* RCTAEPOptimize.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTAEPOptimize.m */; };
+		749AD3852F4EC6BA006F071B /* RCTAEPOptimize.mm in Sources */ = {isa = PBXBuildFile; fileRef = 749AD3842F4EC6BA006F071B /* RCTAEPOptimize.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +26,8 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRCTAEPOptimize.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTAEPOptimize.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1E4A322730C59500197A0E /* AEPOptimize.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AEPOptimize.xcframework; path = libs/AEPOptimize.xcframework; sourceTree = "<group>"; };
-		B3E7B5881CC2AC0600A0062D /* RCTAEPOptimize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTAEPOptimize.h; path = src/RCTAEPOptimize.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* RCTAEPOptimize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTAEPOptimize.m; path = src/RCTAEPOptimize.m; sourceTree = "<group>"; };
+		749AD3832F4EC6BA006F071B /* RCTAEPOptimize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTAEPOptimize.h; sourceTree = "<group>"; };
+		749AD3842F4EC6BA006F071B /* RCTAEPOptimize.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RCTAEPOptimize.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,8 +60,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				B3E7B5881CC2AC0600A0062D /* RCTAEPOptimize.h */,
-				B3E7B5891CC2AC0600A0062D /* RCTAEPOptimize.m */,
+				749AD3832F4EC6BA006F071B /* RCTAEPOptimize.h */,
+				749AD3842F4EC6BA006F071B /* RCTAEPOptimize.mm */,
 				134814211AA4EA7D00B7C361 /* Products */,
 				3DBE4C66736CBD4532EDD160 /* Pods */,
 				CD135C931E8E85A1B0AE30CD /* Frameworks */,
@@ -133,7 +133,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* RCTAEPOptimize.m in Sources */,
+				749AD3852F4EC6BA006F071B /* RCTAEPOptimize.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

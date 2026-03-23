@@ -34,5 +34,18 @@
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
+  },
+  "codegenConfig": {
+    "name": "CoreTurboSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeCoreTurbo": "RCTCoreTurbo"
+      }
+    }
   }
 }
