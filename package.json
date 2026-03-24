@@ -38,8 +38,13 @@
     "awesomeproject:ios:run": "cd apps/AwesomeProject && yarn ios",
     "awesomeproject:android:run": "cd apps/AwesomeProject && yarn android",
     "awesomeproject:android:assembleDebug": "cd apps/AwesomeProject/android && ./gradlew assembleDebug",
+    "awesomeproject:ios:build": "cd apps/AwesomeProject/ios && xcodebuild -workspace AwesomeProject.xcworkspace -scheme AwesomeProject -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ./build",
+    "e2e": "node ./e2e/run-e2e.mjs",
+    "e2e:build": "node ./e2e/run-e2e-build.mjs",
     "e2e:android": "yarn workspace aepsdk-e2e wdio:android",
-    "e2e:android:build": "yarn awesomeproject:android:assembleDebug && yarn e2e:android"
+    "e2e:android:build": "yarn awesomeproject:android:assembleDebug && yarn e2e:android",
+    "e2e:ios": "yarn workspace aepsdk-e2e wdio:ios",
+    "e2e:ios:build": "yarn awesomeproject:ios:build && yarn e2e:ios"
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",

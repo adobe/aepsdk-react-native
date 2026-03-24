@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "wdio:android": "wdio run ./wdio.android.conf.js"
+    "wdio:android": "wdio run ./wdio.android.conf.js",
+    "wdio:ios": "wdio run ./wdio.ios.conf.js"
   },
   "devDependencies": {
     "@wdio/appium-service": "^9.12.0",

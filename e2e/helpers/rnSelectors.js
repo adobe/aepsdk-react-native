@@ -10,6 +10,9 @@
 /** Must match `applicationId` (see apps/AwesomeProject/android/app/build.gradle). */
 export const ANDROID_APP_ID = 'com.awesomeproject';
 
+/** Must match `PRODUCT_BUNDLE_IDENTIFIER` (see apps/AwesomeProject/ios/.../project.pbxproj). */
+export const IOS_APP_ID = 'org.reactjs.native.example.AwesomeProject';
+
 /**
  * Android: RN `testID` maps to `resource-id`. On many RN builds the hierarchy shows a **short**
  * id (e.g. `aepsdk-app-title`); UiAutomator2 is reliable for that. If your tree only has
@@ -24,7 +27,27 @@ export function androidByTestIdFull(testId) {
   return `id=${ANDROID_APP_ID}:id/${testId}`;
 }
 
-/** iOS (future): RN `testID` often maps to accessibility id → WebdriverIO `~value`. */
+/** iOS: RN `testID` maps to accessibility id → WebdriverIO `~value`. */
 export function iosByTestId(testId) {
   return `~${testId}`;
+}
+
+/** Current session platform from WebDriver capabilities (set after session starts). */
+export function getE2ePlatform() {
+  const name = browser.capabilities.platformName;
+  return name === 'iOS' ? 'iOS' : 'Android';
+}
+
+/** RN `testID` locator for the active platform (UiAutomator2 vs accessibility id). */
+export function byTestId(testId) {
+  return getE2ePlatform() === 'iOS' ? iosByTestId(testId) : androidByTestId(testId);
+}
+
+/** Bring AwesomeProject to the foreground (Android `appId` vs iOS `bundleId`). */
+export async function activateAwesomeProject() {
+  if (getE2ePlatform() === 'iOS') {
+    await browser.execute('mobile: activateApp', { bundleId: IOS_APP_ID });
+  } else {
+    await browser.execute('mobile: activateApp', { appId: ANDROID_APP_ID });
+  }
 }
