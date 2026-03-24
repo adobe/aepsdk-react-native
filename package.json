@@ -6,7 +6,8 @@
     "packages": [
       "packages/*",
       "apps/AEPSampleAppNewArchEnabled",
-      "apps/AwesomeProject"
+      "apps/AwesomeProject",
+      "e2e"
     ],
     "nohoist": [
       "**"
@@ -35,7 +36,10 @@
     "awesomeproject:start": "cd apps/AwesomeProject && yarn start",
     "awesomeproject:ios:pod": "cd apps/AwesomeProject/ios && pod install",
     "awesomeproject:ios:run": "cd apps/AwesomeProject && yarn ios",
-    "awesomeproject:android:run": "cd apps/AwesomeProject && yarn android"
+    "awesomeproject:android:run": "cd apps/AwesomeProject && yarn android",
+    "awesomeproject:android:assembleDebug": "cd apps/AwesomeProject/android && ./gradlew assembleDebug",
+    "e2e:android": "yarn workspace aepsdk-e2e wdio:android",
+    "e2e:android:build": "yarn awesomeproject:android:assembleDebug && yarn e2e:android"
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",

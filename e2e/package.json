@@ -1,0 +1,20 @@
+{
+  "name": "aepsdk-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "wdio:android": "wdio run ./wdio.android.conf.js"
+  },
+  "devDependencies": {
+    "@wdio/appium-service": "^9.12.0",
+    "@wdio/cli": "^9.12.0",
+    "@wdio/globals": "^9.12.0",
+    "@wdio/local-runner": "^9.12.0",
+    "@wdio/mocha-framework": "^9.12.0",
+    "@wdio/spec-reporter": "^9.12.0",
+    "dotenv": "^16.4.5",
+    "expect-webdriverio": "^5.0.0",
+    "webdriverio": "^9.12.0"
+  }
+}
