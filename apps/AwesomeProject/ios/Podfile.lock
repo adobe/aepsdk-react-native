@@ -77,6 +77,7 @@ PODS:
   - RCTAEPOptimize (7.1.1):
     - AEPOptimize (< 6.0.0, >= 5.0.0)
     - React
+    - React-Codegen
   - RCTAEPPlaces (7.0.1):
     - AEPPlaces (< 6.0.0, >= 5.0.0)
     - React
@@ -109,6 +110,7 @@ PODS:
     - React-RCTText (= 0.84.1)
     - React-RCTVibration (= 0.84.1)
   - React-callinvoker (0.84.1)
+  - React-Codegen (0.1.0)
   - React-Core (0.84.1):
     - hermes-engine
     - RCTDeprecation
@@ -2071,6 +2073,7 @@ SPEC REPOS:
     - AEPSignal
     - AEPTarget
     - AEPUserProfile
+    - React-Codegen
 
 EXTERNAL SOURCES:
   FBLazyVector:
@@ -2278,7 +2281,7 @@ SPEC CHECKSUMS:
   RCTAEPEdgeConsent: 94d66ceefac0058a1586b0b876e37f178d3733d2
   RCTAEPEdgeIdentity: 2ed3fdc9a3150e9bcf268b128c22f293ab4df6aa
   RCTAEPMessaging: a3496d6f9745ec56d35df30a9d353c48347f4c6d
-  RCTAEPOptimize: 160b9d7aa20c4524e70b930934dbd5c0f7a58f14
+  RCTAEPOptimize: e39c070a816ac202309ff4c1a3a2028b710947ef
   RCTAEPPlaces: 4050bda86286605a8683b4c078baac1662ca013a
   RCTAEPTarget: e8bcf8864758faf07635719ffa0eff6a06861910
   RCTAEPUserProfile: 799d618ffbbfc389175c8a8cd5afcc36d852709a
@@ -2289,6 +2292,7 @@ SPEC CHECKSUMS:
   RCTTypeSafety: d13e192a37f151ce354641184bf4239844a3be17
   React: 1ba7d364ade7d883a1ec055bfc3606f35fdee17b
   React-callinvoker: bc2a26f8d84fb01f003fc6de6c9337b64715f95b
+  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: bdaa87b276ca31877632a982ecf7c36f8c826414
   React-Core-prebuilt: 4d3992e70f6fe7f8801e14d8bb9f3aa00e9bbcd7
   React-CoreModules: b24989f62d56390ae08ca4f65e6f38fe6802de42

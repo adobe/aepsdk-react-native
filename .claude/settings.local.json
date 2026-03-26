@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pod install:*)",
+      "Bash(xcodebuild -workspace AwesomeProject.xcworkspace -scheme AwesomeProject -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ./build)",
+      "Bash(grep -E \"^.*\\(error:|BUILD SUCCEEDED|BUILD FAILED\\).*$\")",
+      "Bash(xcrun simctl:*)",
+      "Bash(appium --version)",
+      "Bash(export NVM_DIR=\"$HOME/.nvm\")",
+      "Bash(source \"$NVM_DIR/nvm.sh\")",
+      "Bash(yarn e2e:ios:build:turbo)",
+      "Bash(grep -r RCTAppDependencyProvider apps/AwesomeProject/ios/Pods/ --include=*.rb --include=*.podspec -l)",
+      "Bash(python3 -m json.tool)",
+      "Bash(yarn awesomeproject:ios:build)",
+      "Bash(yarn e2e:ios)",
+      "Bash(find apps/AwesomeProject/ios/build/generated -name *.h)",
+      "Bash(USE_INTEROP_ROOT=0 pod install)",
+      "Bash(IOS_CONFIGURATION=Release yarn e2e:ios)",
+      "Bash(yarn e2e:ios:build:release:interop)",
+      "Bash(yarn android:*)",
+      "Bash(yarn e2e:android:build:release:interop)",
+      "Bash(grep -v \"^--$\")",
+      "Bash(find /Users/namarora/aepsdk-react-native/apps/AwesomeProject/node_modules/react-native -name download-hermes.js -o -name hermes-download*)",
+      "Bash(ANDROID_CONFIGURATION=release yarn e2e:android)"
+    ]
+  }
+}

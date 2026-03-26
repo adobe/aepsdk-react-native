@@ -371,81 +371,78 @@ export function OptimizeExperienceScreen({ appendLog }: Props) {
 
   return (
     <View testID="aepsdk-optimize-screen">
+      <Text style={styles.welcome} testID="aepsdk-optimize-heading">
+        Optimize
+      </Text>
+
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Extension Version"
+          onPress={optimizeExtensionVersion}
+          testID="aepsdk-optimize-btn-extension-version"
+        />
+      </View>
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Update Propositions"
+          onPress={updatePropositions}
+          testID="aepsdk-optimize-btn-update-propositions"
+        />
+      </View>
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Test Update Propositions Callback"
+          onPress={testUpdatePropositionsCallback}
+          testID="aepsdk-optimize-btn-update-propositions-callback"
+        />
+      </View>
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Get Propositions"
+          onPress={getPropositions}
+          testID="aepsdk-optimize-btn-get-propositions"
+        />
+      </View>
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Clear Cached Proposition"
+          onPress={clearCachedProposition}
+          testID="aepsdk-optimize-btn-clear-cache"
+        />
+      </View>
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Subscribe to Proposition Update"
+          onPress={onPropositionUpdate}
+          testID="aepsdk-optimize-btn-proposition-update"
+        />
+      </View>
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Multiple Offers Displayed"
+          onPress={multipleOffersDisplayed}
+          testID="aepsdk-optimize-btn-multiple-displayed"
+        />
+      </View>
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Multiple Offers Generate Display Interaction XDM"
+          onPress={multipleOffersGenerateDisplayInteractionXdm}
+          testID="aepsdk-optimize-btn-generate-display-xdm"
+        />
+      </View>
+
+      <Text
+        style={{ ...styles.welcome, fontSize: 20 }}
+        testID="aepsdk-optimize-sdk-version-text">
+        SDK Version: {version}
+      </Text>
+      <Text style={styles.welcome}>Personalized Offers</Text>
+
       <FlatList
         data={LIST_ROWS}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        ListHeaderComponent={
-          <>
-            <Text style={styles.welcome} testID="aepsdk-optimize-heading">
-              Optimize
-            </Text>
-
-            <View style={{ margin: 5 }}>
-              <Button
-                title="Extension Version"
-                onPress={optimizeExtensionVersion}
-                testID="aepsdk-optimize-btn-extension-version"
-              />
-            </View>
-            <View style={{ margin: 5 }}>
-              <Button
-                title="Update Propositions"
-                onPress={updatePropositions}
-                testID="aepsdk-optimize-btn-update-propositions"
-              />
-            </View>
-            <View style={{ margin: 5 }}>
-              <Button
-                title="Test Update Propositions Callback"
-                onPress={testUpdatePropositionsCallback}
-                testID="aepsdk-optimize-btn-update-propositions-callback"
-              />
-            </View>
-            <View style={{ margin: 5 }}>
-              <Button
-                title="Get Propositions"
-                onPress={getPropositions}
-                testID="aepsdk-optimize-btn-get-propositions"
-              />
-            </View>
-            <View style={{ margin: 5 }}>
-              <Button
-                title="Clear Cached Proposition"
-                onPress={clearCachedProposition}
-                testID="aepsdk-optimize-btn-clear-cache"
-              />
-            </View>
-            <View style={{ margin: 5 }}>
-              <Button
-                title="Subscribe to Proposition Update"
-                onPress={onPropositionUpdate}
-                testID="aepsdk-optimize-btn-proposition-update"
-              />
-            </View>
-            <View style={{ margin: 5 }}>
-              <Button
-                title="Multiple Offers Displayed"
-                onPress={multipleOffersDisplayed}
-                testID="aepsdk-optimize-btn-multiple-displayed"
-              />
-            </View>
-            <View style={{ margin: 5 }}>
-              <Button
-                title="Multiple Offers Generate Display Interaction XDM"
-                onPress={multipleOffersGenerateDisplayInteractionXdm}
-                testID="aepsdk-optimize-btn-generate-display-xdm"
-              />
-            </View>
-
-            <Text
-              style={{ ...styles.welcome, fontSize: 20 }}
-              testID="aepsdk-optimize-sdk-version-text">
-              SDK Version: {version}
-            </Text>
-            <Text style={styles.welcome}>Personalized Offers</Text>
-          </>
-        }
         scrollEnabled={false}
         nestedScrollEnabled
         removeClippedSubviews={false}

@@ -48,7 +48,7 @@
     },
     "ios": {
       "modulesProvider": {
-        "NativeAEPOptimize": "RCTNativeAEPOptimize"
+        "NativeAEPOptimize": "RCTAEPOptimize"
       }
     }
   }

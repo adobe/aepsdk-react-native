@@ -9,11 +9,18 @@
  governing permissions and limitations under the License.
  */
 
-#import <React/RCTBridgeModule.h>
 #import <Foundation/Foundation.h>
-#import <React/RCTEventEmitter.h>
+#import <NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
 
-@interface RCTAEPOptimize : RCTEventEmitter <RCTBridgeModule>
+#if USE_INTEROP_ROOT
+  // Interop path: RCTEventEmitter base class for sendEventWithName: support.
+  // Still conforms to NativeAEPOptimizeSpec so getTurboModule: can return
+  // NativeAEPOptimizeSpecJSI and satisfy the codegen RCTModuleProvider check.
+  #import <React/RCTEventEmitter.h>
+  @interface RCTAEPOptimize : RCTEventEmitter <NativeAEPOptimizeSpec>
+#else
+  // Turbo Module path: pure JSI bridging via codegen-generated spec.
+  @interface RCTAEPOptimize : NSObject <NativeAEPOptimizeSpec>
+#endif
 
 @end
-

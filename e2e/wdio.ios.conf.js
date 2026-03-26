@@ -8,18 +8,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** Monorepo root (parent of `e2e/`). */
 const repoRoot = path.join(__dirname, '..');
 
-/**
- * Default simulator .app after building with fixed DerivedData, e.g.:
- *   yarn awesomeproject:ios:build
- * @see apps/AwesomeProject/ios — bundle id `org.reactjs.native.example.AwesomeProject`
- */
-const DEFAULT_DEBUG_APP = path.join(
-  repoRoot,
-  'apps/AwesomeProject/ios/build/Build/Products/Debug-iphonesimulator/AwesomeProject.app',
-);
-
 /** Load `e2e/.env` so IOS_UDID / IOS_DEVICE_NAME / AWESOME_PROJECT_APP work without exporting in the shell. */
 dotenv.config({ path: path.join(__dirname, '.env') });
+
+/**
+ * Default simulator .app after building with fixed DerivedData, e.g.:
+ *   yarn awesomeproject:ios:build          → Debug-iphonesimulator
+ *   yarn awesomeproject:ios:build:release  → Release-iphonesimulator
+ *
+ * Override via IOS_CONFIGURATION=Release (set by e2e:ios:build:release:* scripts).
+ * @see apps/AwesomeProject/ios — bundle id `org.reactjs.native.example.AwesomeProject`
+ */
+const iosConfiguration = process.env.IOS_CONFIGURATION || 'Debug';
+const DEFAULT_DEBUG_APP = path.join(
+  repoRoot,
+  `apps/AwesomeProject/ios/build/Build/Products/${iosConfiguration}-iphonesimulator/AwesomeProject.app`,
+);
 
 /**
  * Resolves which .app Appium should install for the session.
