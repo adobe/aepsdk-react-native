@@ -10,9 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import Proposition from'./Proposition';
-import { NativeModules } from 'react-native';
-const { AEPOptimize: RCTAEPOptimize } = NativeModules;
+import Proposition from './Proposition';
+import NativeAEPOptimize from '../NativeAEPOptimize';
 
 interface OfferData {
     id: string;
@@ -75,7 +74,7 @@ class Offer {
     displayed(proposition: Proposition): void {
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");        
         const cleanedProposition = Object.fromEntries(entries);  
-        RCTAEPOptimize.offerDisplayed(this.id, cleanedProposition);
+        NativeAEPOptimize.offerDisplayed(this.id, cleanedProposition);
     };
 
     /**
@@ -87,7 +86,7 @@ class Offer {
         console.log("Offer is tapped");
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");
         const cleanedProposition = Object.fromEntries(entries);        
-        RCTAEPOptimize.offerTapped(this.id, cleanedProposition);
+        NativeAEPOptimize.offerTapped(this.id, cleanedProposition);
     };
 
     /**
@@ -101,8 +100,8 @@ class Offer {
     generateDisplayInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {        
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");
         const cleanedProposition = Object.fromEntries(entries);
-        return Promise.resolve(RCTAEPOptimize.generateDisplayInteractionXdm(this.id, cleanedProposition));        
-    };   
+        return NativeAEPOptimize.generateDisplayInteractionXdm(this.id, cleanedProposition) as Promise<Map<string, any>>;
+    };
 
     /**
     * Generates a map containing XDM formatted data for {Experience Event - Proposition Interactions} field group from this proposition arguement.    
@@ -115,7 +114,7 @@ class Offer {
     generateTapInteractionXdm(proposition: Proposition): Promise<Map<string, any>> {
         const entries = Object.entries(proposition).filter(([_, value]) => typeof(value) !== "function");
         const cleanedProposition = Object.fromEntries(entries);
-        return Promise.resolve(RCTAEPOptimize.generateTapInteractionXdm(this.id, cleanedProposition));
+        return NativeAEPOptimize.generateTapInteractionXdm(this.id, cleanedProposition) as Promise<Map<string, any>>;
     };   
 };
 

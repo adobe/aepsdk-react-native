@@ -38,5 +38,18 @@
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
+  },
+  "codegenConfig": {
+    "name": "NativeAEPOptimizeSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.optimize"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPOptimize": "RCTNativeAEPOptimize"
+      }
+    }
   }
 }

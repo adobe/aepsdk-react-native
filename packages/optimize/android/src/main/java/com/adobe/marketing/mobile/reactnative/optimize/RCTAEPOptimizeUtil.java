@@ -9,14 +9,18 @@
     governing permissions and limitations under the License.
  */
 
- package com.adobe.marketing.mobile.reactnative.optimize;
+package com.adobe.marketing.mobile.reactnative.optimize;
+
 import android.util.Log;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Offer;
+import com.adobe.marketing.mobile.optimize.OfferUtils;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 import com.adobe.marketing.mobile.optimize.AEPOptimizeError;
+import com.adobe.marketing.mobile.util.DataReader;
+import com.adobe.marketing.mobile.util.DataReaderException;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
@@ -25,16 +29,23 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 /**
- * Utility class for converting data models to {@link com.facebook.react.bridge.WritableMap}
+ * Shared utility class used by both {@link RCTAEPOptimizeModule} (Interop) and
+ * {@link NativeAEPOptimizeModule} (Turbo).
  */
 class RCTAEPOptimizeUtil {
     private static final String TAG = "RCTAEPOptimize";
     private RCTAEPOptimizeUtil() {}
+
+    // ---- Proposition / Offer conversion ----
+
     static WritableMap convertPropositionToWritableMap(final OptimizeProposition proposition) {
         final WritableMap propositionWritableMap = new WritableNativeMap();
         if (proposition == null) {
@@ -56,6 +67,7 @@ class RCTAEPOptimizeUtil {
         }
         return propositionWritableMap;
     }
+
     static WritableMap convertOfferToWritableMap(final Offer offer) {
         final WritableMap offerWritableMap = new WritableNativeMap();
         if (offer == null) {
@@ -83,6 +95,9 @@ class RCTAEPOptimizeUtil {
         offerWritableMap.putMap("data", dataWritableMap);
         return offerWritableMap;
     }
+
+    // ---- Generic bridge conversions ----
+
     static WritableArray convertListToWritableArray(final List<Object> objectList) {
         final WritableArray writableArray = new WritableNativeArray();
         for (final Object object : objectList) {
@@ -102,6 +117,7 @@ class RCTAEPOptimizeUtil {
         }
         return writableArray;
     }
+
     static WritableMap convertMapToWritableMap(final Map<String, Object> map) {
         final WritableMap writableMap = new WritableNativeMap();
         for (final Map.Entry<String, Object> entry : map.entrySet()) {
@@ -122,6 +138,7 @@ class RCTAEPOptimizeUtil {
         }
         return writableMap;
     }
+
     static List<DecisionScope> createDecisionScopes(final ReadableArray decisionScopesArray) {
         final List<DecisionScope> decisionScopeList = new ArrayList<>(decisionScopesArray.size());
         for (int i = 0; i < decisionScopesArray.size(); i++) {
@@ -132,12 +149,7 @@ class RCTAEPOptimizeUtil {
         }
         return decisionScopeList;
     }
-    /**
-     * Converts {@link ReadableMap} Map to {@link Map}
-     *
-     * @param readableMap instance of {@code ReadableMap}
-     * @return instance of {@code Map}
-     */
+
     static Map<String, Object> convertReadableMapToMap(final ReadableMap readableMap) {
         ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
         Map<String, Object> map = new HashMap<>();
@@ -166,11 +178,12 @@ class RCTAEPOptimizeUtil {
         }
         return map;
     }
+
     private static List<Object> convertReadableArrayToList(final ReadableArray readableArray) {
         final List<Object> list = new ArrayList<>(readableArray.size());
         for (int i = 0; i < readableArray.size(); i++) {
             ReadableType indexType = readableArray.getType(i);
-            switch(indexType) {
+            switch (indexType) {
                 case Boolean:
                     list.add(i, readableArray.getBoolean(i));
                     break;
@@ -195,33 +208,27 @@ class RCTAEPOptimizeUtil {
 
     static List<Offer> getNativeOffers(final ReadableArray offersArray, Map<String, OptimizeProposition> propositionCache) {
         List<Offer> nativeOffers = new ArrayList<>();
-
         if (offersArray == null || offersArray.size() == 0) {
             Log.d(TAG, "getNativeOffers: offersArray is null or empty");
             return nativeOffers;
         }
-
         for (int i = 0; i < offersArray.size(); i++) {
             ReadableMap offer = offersArray.getMap(i);
             if (offer == null) {
                 Log.d(TAG, "getNativeOffers: offer is null for index: " + i);
                 continue;
             }
-
             String uniquePropositionId = offer.getString(RCTAEPOptimizeConstants.UNIQUE_PROPOSITION_ID_KEY);
             String offerId = offer.getString("id");
-
             if (uniquePropositionId == null || offerId == null) {
                 Log.d(TAG, "getNativeOffers: uniquePropositionId or offerId is null for offer: " + offer.toString());
                 continue;
             }
-
             OptimizeProposition proposition = propositionCache.get(uniquePropositionId);
             if (proposition == null) {
                 Log.d(TAG, "getNativeOffers: proposition not found in cache for uniquePropositionId: " + uniquePropositionId);
                 continue;
             }
-
             for (Offer propositionOffer : proposition.getOffers()) {
                 if (propositionOffer.getId().equalsIgnoreCase(offerId)) {
                     nativeOffers.add(propositionOffer);
@@ -229,30 +236,19 @@ class RCTAEPOptimizeUtil {
                 }
             }
         }
-
         return nativeOffers;
     }
 
-    /**
-     * Helper method to create callback response
-     * @param propositionsMap
-     * @return WritableMap
-     */
     static WritableMap createCallbackResponse(final Map<DecisionScope, OptimizeProposition> propositionsMap) {
         final WritableMap propositionsWritableMap = new WritableNativeMap();
-        
         if (propositionsMap != null && !propositionsMap.isEmpty()) {
             for (final Map.Entry<DecisionScope, OptimizeProposition> entry : propositionsMap.entrySet()) {
                 propositionsWritableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
             }
         }
-        
         return propositionsWritableMap;
     }
 
-    /**
-     * Converts an AEPOptimizeError to a WritableMap for React Native error callback
-     */
     static WritableMap convertAEPOptimizeErrorToWritableMap(final AEPOptimizeError error) {
         final WritableMap errorMap = new WritableNativeMap();
         if (error == null) {
@@ -271,5 +267,119 @@ class RCTAEPOptimizeUtil {
             errorMap.putString("aepError", error.getAdobeError().getErrorName());
         }
         return errorMap;
+    }
+
+    // ---- Shared helpers used by both Module variants ----
+
+    static void generateDisplayInteractionXdm(String offerId, ReadableMap propositionMap, Promise promise) {
+        Map<String, Object> eventData = convertReadableMapToMap(propositionMap);
+        OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
+        Offer offer = findOfferById(proposition, offerId);
+        if (offer != null) {
+            promise.resolve(convertMapToWritableMap(offer.generateDisplayInteractionXdm()));
+        } else {
+            promise.reject("generateDisplayInteractionXdm", "Error in generating Display interaction XDM for offer with id: " + offerId);
+        }
+    }
+
+    static void generateTapInteractionXdm(String offerId, ReadableMap propositionMap, Promise promise) {
+        Map<String, Object> eventData = convertReadableMapToMap(propositionMap);
+        OptimizeProposition proposition = OptimizeProposition.fromEventData(eventData);
+        Offer offer = findOfferById(proposition, offerId);
+        if (offer != null) {
+            promise.resolve(convertMapToWritableMap(offer.generateTapInteractionXdm()));
+        } else {
+            promise.reject("generateTapInteractionXdm", "Error in generating Tap interaction XDM for offer with id: " + offerId);
+        }
+    }
+
+    static void generateReferenceXdm(ReadableMap propositionMap, Promise promise) {
+        Map<String, Object> propositionEventData = convertReadableMapToMap(propositionMap);
+        OptimizeProposition proposition = OptimizeProposition.fromEventData(propositionEventData);
+        if (proposition != null) {
+            promise.resolve(convertMapToWritableMap(proposition.generateReferenceXdm()));
+        } else {
+            promise.reject("generateReferenceXdm", "Error in generating Reference XDM.");
+        }
+    }
+
+    private static Offer findOfferById(OptimizeProposition proposition, String offerId) {
+        if (proposition == null) return null;
+        for (Offer offer : proposition.getOffers()) {
+            if (offer.getId().equalsIgnoreCase(offerId)) return offer;
+        }
+        return null;
+    }
+
+    static void offerDisplayed(String offerId, ReadableMap propositionMap) {
+        Offer offer = findOfferById(OptimizeProposition.fromEventData(convertReadableMapToMap(propositionMap)), offerId);
+        if (offer != null) offer.displayed();
+    }
+
+    static void offerTapped(String offerId, ReadableMap propositionMap) {
+        Offer offer = findOfferById(OptimizeProposition.fromEventData(convertReadableMapToMap(propositionMap)), offerId);
+        if (offer != null) offer.tapped();
+    }
+
+    static void multipleOffersDisplayed(ReadableArray offersArray, Map<String, OptimizeProposition> propositionCache) {
+        List<Offer> nativeOffers = getNativeOffers(offersArray, propositionCache);
+        if (!nativeOffers.isEmpty()) {
+            OfferUtils.displayed(nativeOffers);
+        }
+    }
+
+    static void multipleOffersGenerateDisplayInteractionXdm(
+            ReadableArray offersArray,
+            Map<String, OptimizeProposition> propositionCache,
+            Promise promise) {
+        List<Offer> nativeOffers = getNativeOffers(offersArray, propositionCache);
+        if (!nativeOffers.isEmpty()) {
+            promise.resolve(convertMapToWritableMap(OfferUtils.generateDisplayInteractionXdm(nativeOffers)));
+        } else {
+            promise.reject("multipleOffersGenerateDisplayInteractionXdm",
+                    "Error in generating Display interaction XDM for multiple offers: " + offersArray.toString());
+        }
+    }
+
+    static void cachePropositionOffers(
+            final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap,
+            final Map<String, OptimizeProposition> cache) {
+        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
+            OptimizeProposition proposition = entry.getValue();
+            if (proposition == null) continue;
+
+            String activityId = null;
+            try {
+                Map<String, Object> activity = proposition.getActivity();
+                if (activity != null && activity.containsKey("id")) {
+                    activityId = DataReader.getString(activity, "id");
+                } else {
+                    Map<String, Object> scopeDetails = proposition.getScopeDetails();
+                    if (scopeDetails != null && scopeDetails.containsKey("activity")) {
+                        Map<String, Object> scopeDetailsActivity = DataReader.getTypedMap(Object.class, scopeDetails, "activity");
+                        if (scopeDetailsActivity != null && scopeDetailsActivity.containsKey("id")) {
+                            activityId = DataReader.getString(scopeDetailsActivity, "id");
+                        }
+                    }
+                }
+            } catch (DataReaderException e) {
+                Log.w(TAG, "Failed to extract activity ID from proposition: " + e.getMessage());
+                continue;
+            }
+            if (activityId != null) {
+                cache.put(activityId, proposition);
+            }
+        }
+    }
+
+    static void emitOnPropositionsUpdate(
+            final ReactApplicationContext context,
+            final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap,
+            final boolean checkActiveInstance) {
+        WritableMap writableMap = createCallbackResponse(decisionScopePropositionMap);
+        if (!checkActiveInstance || context.hasActiveReactInstance()) {
+            context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("onPropositionsUpdate", writableMap);
+        }
     }
 }

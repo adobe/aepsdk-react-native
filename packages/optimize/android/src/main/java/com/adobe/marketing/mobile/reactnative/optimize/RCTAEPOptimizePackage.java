@@ -10,29 +10,67 @@
  */
 package com.adobe.marketing.mobile.reactnative.optimize;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.facebook.react.ReactPackage;
+import com.facebook.react.BaseReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.ViewManager;
-import com.facebook.react.bridge.JavaScriptModule;
-public class RCTAEPOptimizePackage implements ReactPackage {
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
+
+/**
+ * Registers the Optimize native module per React Native Turbo Module doc.
+ * Build-time switch: only one root is registered.
+ * USE_INTEROP_ROOT true  -> AEPOptimize (bridge); isTurboModule = false.
+ * USE_INTEROP_ROOT false -> NativeAEPOptimize (Turbo); isTurboModule = true.
+ */
+public class RCTAEPOptimizePackage extends BaseReactPackage {
+
+    private static final String NAME_INTEROP = "AEPOptimize";
+    private static final String NAME_TURBO = "NativeAEPOptimize";
 
     @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RCTAEPOptimizeModule(reactContext));
-    }
-
-    // Deprecated from RN 0.47
-    public List<Class<? extends JavaScriptModule>> createJSModules() {
-      return Collections.emptyList();
+    public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+        if (BuildConfig.USE_INTEROP_ROOT) {
+            if (NAME_INTEROP.equals(name)) {
+                return new RCTAEPOptimizeModule(reactContext);
+            }
+        } else {
+            if (NAME_TURBO.equals(name)) {
+                return new NativeAEPOptimizeModule(reactContext);
+            }
+        }
+        return null;
     }
 
     @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-      return Collections.emptyList();
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        return new ReactModuleInfoProvider() {
+            @Override
+            public Map<String, ReactModuleInfo> getReactModuleInfos() {
+                Map<String, ReactModuleInfo> map = new HashMap<>();
+                if (BuildConfig.USE_INTEROP_ROOT) {
+                    map.put(NAME_INTEROP, new ReactModuleInfo(
+                            NAME_INTEROP,
+                            NAME_INTEROP,
+                            false,
+                            false,
+                            false,
+                            false
+                    ));
+                } else {
+                    map.put(NAME_TURBO, new ReactModuleInfo(
+                            NAME_TURBO,
+                            NAME_TURBO,
+                            false,
+                            false,
+                            false,
+                            true
+                    ));
+                }
+                return map;
+            }
+        };
     }
 }
