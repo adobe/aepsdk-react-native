@@ -42,12 +42,12 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       style={[styles.container, styleOverrides?.container]} 
       {...InboxProps}
     >
-      <Image
+      {image && <Image
         source={{ uri: image }}
         style={[styles.image, { aspectRatio: ratio }, styleOverrides?.image]}
         resizeMode="contain"
         {...ImageProps}
-      />
+      />}
       <Text 
         style={[styles.text, { color: colors.textPrimary }, styleOverrides?.text]} 
         {...TextProps}
