@@ -8,18 +8,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** Monorepo root (parent of `e2e/`). */
 const repoRoot = path.join(__dirname, '..');
 
-/** Default debug APK from `assembleDebug` (matches `com.awesomeproject` in App.tsx / build.gradle). */
-const DEFAULT_DEBUG_APK = path.join(
-  repoRoot,
-  'apps/AwesomeProject/android/app/build/outputs/apk/debug/app-debug.apk',
-);
-
 /** Load `e2e/.env` so ANDROID_UDID / ANDROID_DEVICE_NAME / AWESOME_PROJECT_APK work without exporting in the shell. */
 dotenv.config({ path: path.join(__dirname, '.env') });
 
+const androidConfiguration = process.env.ANDROID_CONFIGURATION || 'debug';
+
+/** Default APK path resolved from ANDROID_CONFIGURATION (debug or release). */
+const DEFAULT_APK = path.join(
+  repoRoot,
+  `apps/AwesomeProject/android/app/build/outputs/apk/${androidConfiguration}/app-${androidConfiguration}.apk`,
+);
+
 /**
  * Resolves which APK Appium should install for the session.
- * Priority: AWESOME_PROJECT_APK → default debug APK if file exists → omit (package/activity only).
+ * Priority: AWESOME_PROJECT_APK → default APK (debug or release) if file exists → omit (package/activity only).
  * Set E2E_SKIP_APK=1 to never pass `app` (use an already-installed build).
  */
 function resolveApkPath() {
@@ -33,12 +35,12 @@ function resolveApkPath() {
     return path.isAbsolute(raw) ? raw : path.resolve(__dirname, raw);
   }
 
-  if (fs.existsSync(DEFAULT_DEBUG_APK)) {
-    return DEFAULT_DEBUG_APK;
+  if (fs.existsSync(DEFAULT_APK)) {
+    return DEFAULT_APK;
   }
 
   console.warn(
-    `[aepsdk-e2e] No APK for Appium install. Expected:\n  ${DEFAULT_DEBUG_APK}\n` +
+    `[aepsdk-e2e] No APK for Appium install. Expected:\n  ${DEFAULT_APK}\n` +
       `  Run: yarn awesomeproject:android:assembleDebug\n` +
       `  Or set AWESOME_PROJECT_APK, or E2E_SKIP_APK=1 if the app is already on the device.`,
   );
