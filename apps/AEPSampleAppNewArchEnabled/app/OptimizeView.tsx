@@ -26,7 +26,6 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  FlatList,
 } from 'react-native';
 import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
 import {  useRouter } from 'expo-router';
