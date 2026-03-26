@@ -125,19 +125,6 @@ function createAlignment(placement: string | undefined): SettingsPlacement {
   return 'topleft';
 }
 
-function getDefaultInboxSettings(): InboxSettings {
-  return {
-    content: {
-      heading: { content: 'Inbox' },
-      layout: { orientation: 'vertical' },
-      capacity: 15,
-      emptyStateSettings: { message: { content: 'No Content Available' } },
-      isUnreadEnabled: true,
-    },
-    showPagination: false,
-  };
-}
-
 function createInboxSettingsFromContent(
   contentMap: Record<string, any>,
   activityId?: string
@@ -148,7 +135,9 @@ function createInboxSettingsFromContent(
   const capacity = optInt(contentMap, 'capacity', 15);
 
   if (!heading || !heading.content) {
-    return getDefaultInboxSettings();
+    throw new Error(
+      'Messaging.getInbox: inbox content is missing a valid heading (heading.content).'
+    );
   }
 
   const emptyStateSettings = optTypedMap(contentMap, 'emptyStateSettings') ||
@@ -422,12 +411,18 @@ class Messaging {
   }
 
 
+  /**
+   * Loads inbox UI settings from the inbox proposition for the given surface.
+   * @throws {Error} When no propositions, no inbox proposition, or invalid inbox content is returned.
+   */
   static async getInbox(surface: string): Promise<InboxSettings> {
     const propositionsMap = await Messaging.getPropositionsForSurfaces([surface]);
     const propositions = propositionsMap[surface];
 
     if (!propositions?.length) {
-      return getDefaultInboxSettings();
+      throw new Error(
+        `Messaging.getInbox: no propositions returned for surface "${surface}".`
+      );
     }
 
     const inboxPropositions = propositions.filter(
@@ -438,7 +433,9 @@ class Messaging {
     );
 
     if (inboxPropositions.length === 0) {
-      return getDefaultInboxSettings();
+      throw new Error(
+        `Messaging.getInbox: no inbox proposition found for surface "${surface}".`
+      );
     }
 
     const sortedByRank = [...inboxPropositions].sort(
@@ -454,7 +451,9 @@ class Messaging {
       rawItem?.data?.content;
 
     if (!contentMap || typeof contentMap !== 'object') {
-      return getDefaultInboxSettings();
+      throw new Error(
+        `Messaging.getInbox: inbox proposition has no valid content configuration for surface "${surface}".`
+      );
     }
 
     const activityId = inboxProposition.scopeDetails?.activity?.id;
