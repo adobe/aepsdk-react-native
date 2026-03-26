@@ -143,10 +143,7 @@ function MessagingView() {
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back} title="Go to main page" />
         <Text style={styles.welcome}>Messaging</Text>
-        <Button
-          title="extensionVersion()"
-          onPress={messagingExtensionVersion}
-        />
+        <Button title="extensionVersion()" onPress={messagingExtensionVersion} />
         <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
         <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
         <Button
@@ -160,18 +157,9 @@ function MessagingView() {
         <Button title="getCachedMessages()" onPress={getCachedMessages} />
         <Button title="getLatestMessage()" onPress={getLatestMessage} />
         <Button title="trackAction()" onPress={trackAction} />
-        <Button
-          title="trackPropositionInteraction()"
-          onPress={trackContentCardInteraction}
-        />
-        <Button
-          title="trackContentCardDisplay()"
-          onPress={trackContentCardDisplay}
-        />
-        <Button
-          title="Unified Tracking Example"
-          onPress={unifiedTrackingExample}
-        />
+        <Button title="trackPropositionInteraction()" onPress={trackContentCardInteraction} />
+        <Button title="trackContentCardDisplay()" onPress={trackContentCardDisplay} />
+        <Button title="Unified Tracking Example" onPress={unifiedTrackingExample} />
       </ScrollView>
     </View>
   );

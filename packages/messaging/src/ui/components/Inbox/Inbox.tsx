@@ -10,15 +10,17 @@
     language governing permissions and limitations under the License.
 */
 
-import { cloneElement, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import React, { cloneElement, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   FlatListProps,
   ListRenderItem,
+  ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions
+  useWindowDimensions,
+  View,
 } from "react-native";
 import { useContentCardUI } from "../../hooks";
 import InboxProvider, {
@@ -59,12 +61,14 @@ function InboxInner<T extends ContentTemplate>({
   surface,
   style,
   CardProps,
+  ListHeaderComponent,
   ...props
 }: InboxProps<T> & {
   settings: InboxSettings;
 }) {
   const { colors, isDark } = useTheme();
-  const { width: windowWidth } = useWindowDimensions();
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const isLandscape = windowWidth > windowHeight;
   const { content, error, isLoading } = useContentCardUI(surface);
 
   const { content: contentSettings } = settings;
@@ -167,9 +171,10 @@ function InboxInner<T extends ContentTemplate>({
   if (error) return ErrorComponent;
   if (!content) return FallbackComponent;
 
-  return (
-    <InboxProvider settings={settings}>
-      {heading?.content ? (
+  const topOfInbox =
+      <View>
+        {ListHeaderComponent && ListHeaderComponent as React.ReactElement}
+        {heading?.content ? (
         <Text
           accessibilityRole="header"
           style={[styles.heading, { color: colors.textPrimary }]}
@@ -177,22 +182,46 @@ function InboxInner<T extends ContentTemplate>({
           {heading.content}
         </Text>
       ) : null}
+      </View>
 
-      <FlatList
-        {...props}
-        data={displayCards}
-        keyExtractor={(item: { id: string }) => item.id}
-        contentContainerStyle={[
-          contentContainerStyle,
-          isHorizontal && styles.horizontalListContent,
-          styles.inbox
-        ]}
-        horizontal={isHorizontal}
-        renderItem={renderItem}
-        ListEmptyComponent={<EmptyList />}
-      />
-    </InboxProvider>
+
+  const listBody = (
+    <FlatList
+      {...props}
+      data={displayCards}
+      keyExtractor={(item: { id: string }) => item.id}
+      contentContainerStyle={[
+        contentContainerStyle,
+        isHorizontal && styles.horizontalListContent,
+        styles.inbox
+      ]}
+      horizontal={isHorizontal}
+      renderItem={renderItem}
+      ListEmptyComponent={<EmptyList />}
+      ListHeaderComponent={!isHorizontal && ListHeaderComponent ? topOfInbox : undefined}
+    />
   );
+
+  const horizontalChrome =
+    isHorizontal ? (
+      isLandscape ? (
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 8 }}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+        >
+          {topOfInbox}
+          {listBody}
+        </ScrollView>
+      ) : (
+        <View>
+          {topOfInbox}
+          {listBody}
+        </View>
+      )
+    ) : listBody;
+
+  return <InboxProvider settings={settings}>{horizontalChrome}</InboxProvider>;
 }
 
 export function Inbox<T extends ContentTemplate>({
@@ -238,5 +267,5 @@ const styles = StyleSheet.create({
   },
   horizontalListContent: {
     alignItems: 'center'
-  },
+  }
 });

@@ -1,5 +1,5 @@
 /*
-Copyright 2025 Adobe. All rights reserved.
+Copyright 2026 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -211,8 +211,18 @@ const Header = ({
           </View>
         )}
 
-      {/* View Picker Modal */}
-      <Modal visible={showPicker} transparent animationType="fade">
+      <Modal
+        visible={showPicker}
+        transparent
+        animationType="fade"
+        supportedOrientations={[
+          'portrait',
+          'portrait-upside-down',
+          'landscape',
+          'landscape-left',
+          'landscape-right',
+        ]}
+      >
         <TouchableOpacity style={styles.modalOverlay} onPress={() => setShowPicker(false)}>
           <View style={[styles.modalCard, { backgroundColor: colors.background }]}>
             {VIEW_OPTIONS.map((option) => (
@@ -244,10 +254,10 @@ const InboxView = () => {
   const [selectedView, setSelectedView] = useState<ViewOption>('Remote');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateOption>('SmallImage');
 
-  const surface =
-    Platform.OS === "android"
-      ? "rn/android/remote_image"
-      : "rn/cards";
+  const surface = "spujari_bug_bash"
+    // Platform.OS === "android"
+    //   ? "rn/android/remote_image"
+    //   : "rn/cards"";
   const { isLoading, refetch } = useContentCardUI(surface);
   const {
     settings,
@@ -264,22 +274,22 @@ const InboxView = () => {
 
   if (selectedView === 'Remote') {
     return (
-      <>
-        <MemoHeader
-          isLoading={isLoading}
-          onTrackAction={refetchInbox}
-          selectedView={selectedView}
-          setSelectedView={setSelectedView}
-          selectedTemplate={selectedTemplate}
-          onTemplateChange={setSelectedTemplate}
-        />
-        <Inbox
-          surface={surface}
-          settings={settings}
-          isLoading={isLoadingInbox}
-          error={error}
-        />
-      </>
+      <Inbox
+        surface={surface}
+        settings={settings}
+        isLoading={isLoadingInbox}
+        error={error}
+        ListHeaderComponent={
+          <MemoHeader
+            isLoading={isLoading}
+            onTrackAction={refetchInbox}
+            selectedView={selectedView}
+            setSelectedView={setSelectedView}
+            selectedTemplate={selectedTemplate}
+            onTemplateChange={setSelectedTemplate}
+          />
+        }
+      />
     );
   }
 
