@@ -21,7 +21,10 @@
       "Bash(yarn e2e:android:build:release:interop)",
       "Bash(grep -v \"^--$\")",
       "Bash(find /Users/namarora/aepsdk-react-native/apps/AwesomeProject/node_modules/react-native -name download-hermes.js -o -name hermes-download*)",
-      "Bash(ANDROID_CONFIGURATION=release yarn e2e:android)"
+      "Bash(ANDROID_CONFIGURATION=release yarn e2e:android)",
+      "Bash(echo:*)",
+      "Read(//Users/namarora/.nvm/alias/**)",
+      "Bash(/dev/null cat:*)"
     ]
   }
 }

@@ -8,7 +8,21 @@ pluginManagement {
 }
 plugins { id("com.facebook.react.settings") }
 
-def nodeExecutable = System.getenv("HOME") + "/.nvm/versions/node/v22.13.0/bin/node"
+// Dynamically find node via nvm's default alias, then fall back to PATH.
+// Avoids hardcoding a version that may not be installed on every machine.
+def nodeExecutable = { ->
+    def home = System.getenv("HOME")
+    def nvmDir = System.getenv("NVM_DIR") ?: "$home/.nvm"
+    def defaultAlias = new File("$nvmDir/alias/default")
+    if (defaultAlias.exists()) {
+        def ver = defaultAlias.text.trim()
+        if (!ver.startsWith("v")) ver = "v$ver"
+        def candidate = new File("$nvmDir/versions/node/$ver/bin/node")
+        if (candidate.exists()) return candidate.absolutePath
+    }
+    // Fallback: 'node' must be on PATH
+    return "node"
+}()
 def cliScript = file("../node_modules/@react-native-community/cli/build/bin.js").absolutePath
 
 extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
