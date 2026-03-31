@@ -34,6 +34,11 @@ All non-obvious project knowledge lives in [`agent-docs/`](./agent-docs/README.m
 3. **Clean Pods + build when switching `USE_INTEROP_ROOT`** — iOS flag is compile-time; stale artifacts silently ignore the new value.
 4. **`getTurboModule:` is required on both TurboModule and interop paths** (RN 0.84+).
 
+## Git rules for agents
+
+- **Never commit autonomously.** Always show the diff / proposed changes and ask the user for explicit approval before running `git commit`, `git push`, or any destructive git operation.
+- Only proceed with a commit when the user explicitly says so (e.g. "commit this", "yes go ahead").
+
 ## Adding new knowledge
 
 - New error encountered → `agent-docs/errors/<area>-<description>.md` (copy `agent-docs/_TEMPLATE.md`)
