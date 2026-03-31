@@ -13,12 +13,18 @@
 import { render, screen, act, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { Dimensions, Text } from 'react-native';
+import { generateCardHash } from '../../utils/generateCardHash';
 import EmptyState from './EmptyState';
 import { Inbox } from './Inbox';
 
 jest.mock('../../hooks', () => ({
   useContentCardUI: jest.fn(),
   useInbox: jest.fn(),
+}));
+
+jest.mock('../../utils/inboxStorage', () => ({
+  loadInboxState: jest.fn().mockResolvedValue({ dismissed: [], interacted: [] }),
+  saveInboxState: jest.fn().mockResolvedValue(undefined),
 }));
 
 const mockContentCardView: jest.Mock = jest.fn((..._args: any[]) => null);
@@ -42,6 +48,7 @@ jest.mock('../../providers/InboxProvider', () => ({
 // }));
 
 const { useContentCardUI, useInbox } = jest.requireMock('../../hooks');
+const { loadInboxState, saveInboxState } = jest.requireMock('../../utils/inboxStorage');
 
 describe('Inbox', () => {
   const surface = 'test-surface';
@@ -319,6 +326,153 @@ describe('Inbox', () => {
 
       const updatedArgs = mockContentCardView.mock.calls[0][0];
       expect(updatedArgs.template.isRead).toBe(true);
+    });
+  });
+
+  describe('loadInboxState effect (persisted state merge)', () => {
+    const template = {
+      id: '1',
+      type: 'SmallImage',
+      data: { content: { title: { content: 'T' }, body: { content: 'B' }, image: { url: 'u' } } },
+    };
+
+    it('merges persisted dismissed ids from loadInboxState into the store so those cards are not shown', async () => {
+      const hash = generateCardHash(template as any);
+      (loadInboxState as jest.Mock).mockResolvedValueOnce({ dismissed: [hash], interacted: [] });
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+
+      const settingsWithActivity = {
+        ...baseSettings,
+        activityId: 'activity-load-merge',
+      };
+      const CC: any = Inbox;
+      render(<CC surface="surface-load-merge" settings={settingsWithActivity} />);
+
+      await waitFor(() => {
+        expect(loadInboxState).toHaveBeenCalledWith('activity-load-merge');
+      });
+      await waitFor(() => {
+        expect(screen.getByText('No Content Available')).toBeTruthy();
+      });
+    });
+
+    it('merges persisted interacted ids when isUnreadEnabled and marks matching cards as read', async () => {
+      const hash = generateCardHash(template as any);
+      (loadInboxState as jest.Mock).mockResolvedValueOnce({ dismissed: [], interacted: [hash] });
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+
+      const settingsWithActivity = {
+        ...baseSettings,
+        activityId: 'activity-load-interacted',
+        content: { ...baseSettings.content, isUnreadEnabled: true },
+      };
+      const CC: any = Inbox;
+      render(<CC surface="surface-load-interacted" settings={settingsWithActivity} />);
+
+      await waitFor(() => expect(loadInboxState).toHaveBeenCalledWith('activity-load-interacted'));
+      await waitFor(() => expect(mockContentCardView.mock.calls.length).toBeGreaterThan(0));
+      const props = mockContentCardView.mock.calls[mockContentCardView.mock.calls.length - 1][0];
+      expect(props.template.isRead).toBe(true);
+    });
+
+    it('applies cleanup so resolving loadInboxState after unmount does not throw', async () => {
+      let resolveLoad: (v: { dismissed: string[]; interacted: string[] }) => void;
+      const loadPromise = new Promise<{ dismissed: string[]; interacted: string[] }>((resolve) => {
+        resolveLoad = resolve;
+      });
+      (loadInboxState as jest.Mock).mockImplementationOnce(() => loadPromise);
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+
+      const settingsWithActivity = {
+        ...baseSettings,
+        activityId: 'activity-load-cancel',
+      };
+      const CC: any = Inbox;
+      const { unmount } = render(<CC surface="surface-load-cancel" settings={settingsWithActivity} />);
+
+      unmount();
+      await act(async () => {
+        resolveLoad!({ dismissed: [], interacted: [] });
+        await loadPromise;
+      });
+    });
+  });
+
+  describe('saveInboxState on card events', () => {
+    const template = {
+      id: '1',
+      type: 'SmallImage',
+      data: { content: { title: { content: 'T' }, body: { content: 'B' }, image: { url: 'u' } } },
+    };
+
+    it('calls saveInboxState on onDismiss when activityId is set', async () => {
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+      const settingsWithActivity = {
+        ...baseSettings,
+        activityId: 'activity-save-dismiss',
+      };
+      const CC: any = Inbox;
+      render(<CC surface="surface-save-dismiss" settings={settingsWithActivity} />);
+
+      await waitFor(() => expect(mockContentCardView.mock.calls.length).toBeGreaterThan(0));
+      const props = mockContentCardView.mock.calls[0][0];
+      const expectedHash = generateCardHash(template as any);
+
+      await act(async () => {
+        props.listener?.('onDismiss', props.template);
+      });
+
+      expect(saveInboxState).toHaveBeenCalledWith(
+        'activity-save-dismiss',
+        expect.objectContaining({
+          dismissed: expect.arrayContaining([expectedHash]),
+          interacted: [],
+        })
+      );
+    });
+
+    it('calls saveInboxState on onInteract when activityId is set and unread is enabled', async () => {
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+      const settingsWithActivity = {
+        ...baseSettings,
+        activityId: 'activity-save-interact',
+        content: { ...baseSettings.content, isUnreadEnabled: true },
+      };
+      const CC: any = Inbox;
+      render(<CC surface="surface-save-interact" settings={settingsWithActivity} />);
+
+      await waitFor(() => expect(mockContentCardView.mock.calls.length).toBeGreaterThan(0));
+      const props = mockContentCardView.mock.calls[0][0];
+      const expectedHash = generateCardHash(template as any);
+
+      await act(async () => {
+        props.listener?.('onInteract', props.template);
+      });
+
+      expect(saveInboxState).toHaveBeenCalledWith(
+        'activity-save-interact',
+        expect.objectContaining({
+          dismissed: [],
+          interacted: expect.arrayContaining([expectedHash]),
+        })
+      );
+    });
+
+    it('does not call saveInboxState on dismiss when activityId is missing', async () => {
+      (useContentCardUI as jest.Mock).mockReturnValue({ content: [template], isLoading: false, error: null });
+      (saveInboxState as jest.Mock).mockClear();
+
+      const CC: any = Inbox;
+      render(<CC surface="surface-no-activity" settings={baseSettings} />);
+
+      await waitFor(() => expect(mockContentCardView.mock.calls.length).toBeGreaterThan(0));
+      const props = mockContentCardView.mock.calls[0][0];
+
+      await act(async () => {
+        props.listener?.('onDismiss', props.template);
+      });
+
+      expect(saveInboxState).not.toHaveBeenCalled();
     });
   });
 });

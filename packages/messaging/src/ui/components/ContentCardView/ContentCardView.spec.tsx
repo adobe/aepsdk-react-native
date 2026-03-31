@@ -137,6 +137,10 @@ describe('ContentCardView - rendering variants', () => {
 });
 
 describe('ContentCardView - interactions and tracking', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('does not crash if Linking.openURL throws (error case)', async () => {
     jest.spyOn(Linking, 'canOpenURL').mockResolvedValueOnce(true as any);
     const openSpy = jest
@@ -188,6 +192,52 @@ describe('ContentCardView - interactions and tracking', () => {
     await waitFor(() =>
       expect(Linking.openURL).toHaveBeenCalledWith('https://adobe.com')
     );
+  });
+
+  it('warns when card actionUrl cannot be opened (canOpenURL returns false)', async () => {
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const canOpenSpy = jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(false as any);
+    jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined as any);
+
+    const template = makeTemplate();
+    const listener = jest.fn();
+    const { getByTestId } = render(
+      <ContentCardView template={template as any} listener={listener} testID="card" />
+    );
+    fireEvent.press(getByTestId('card'));
+
+    await waitFor(() => {
+      expect(canOpenSpy).toHaveBeenCalledWith('https://adobe.com');
+      expect(warnSpy).toHaveBeenCalledWith('Cannot open URL: https://adobe.com');
+    });
+    warnSpy.mockRestore();
+  });
+
+  it('calls listener with onInteract, template, and buttonId when a CTA button is pressed', async () => {
+    const template = makeTemplate({
+      type: 'LargeImage',
+      data: {
+        content: {
+          title: { content: 'Title' },
+          body: { content: 'Body' },
+          image: { url: 'https://example.com/img.png' },
+          dismissBtn: { style: 'close' },
+          buttons: [
+            { id: 'btn1', text: { content: 'Go' }, actionUrl: 'https://example.com/go' },
+          ],
+        },
+      },
+    });
+    const listener = jest.fn();
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(true as any);
+    jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined as any);
+
+    const { getByText } = render(
+      <ContentCardView template={template as any} listener={listener} />
+    );
+    fireEvent.press(getByText('Go'));
+
+    expect(listener).toHaveBeenCalledWith('onInteract', template, { buttonId: 'btn1' });
   });
 
   it('calls onDismiss, tracks DISMISS, and hides the card', () => {
