@@ -1,0 +1,87 @@
+# Known Gotchas & Non-Obvious Rules
+
+**Last updated:** 2026-03-30
+
+> Quick reference for things that burned us and aren't obvious from reading the code.
+
+---
+
+## iOS
+
+### 1. Never delete `ios/build` after `pod install`
+RN codegen writes `RCTAppDependencyProvider.h` into `apps/AwesomeProject/ios/build/generated/ios/ReactAppDependencyProvider/` during pod install's pre-install hook. If you delete `ios/build` after that, xcodebuild fails with "No such file or directory".
+
+**Rule:** Clean sequence is `rm -rf Pods Podfile.lock build` → `pod install` → `xcodebuild`. Never `rm -rf build` a second time.
+
+See: `errors/e2e-ios-build-rctappdependencyprovider-not-found.md`
+
+---
+
+### 2. `getTurboModule:` is required even on the interop path (RN 0.84+)
+In RN 0.84, codegen generates `RCTModuleProviders.mm` which checks `conformsToProtocol:@protocol(RCTModuleProvider)` at startup. If `getTurboModule:` is missing, the module is invisible to TurboModuleRegistry even if the bridge registers it via `RCT_EXPORT_MODULE`.
+
+**Rule:** Always implement `getTurboModule:` returning `NativeAEP<Module>SpecJSI` — outside the `#if USE_INTEROP_ROOT` block so both paths include it.
+
+See: `context/architecture.md`, `migrations/optimize-turbo.md`
+
+---
+
+### 3. `.m` → `.mm` rename is required for TurboModule
+`getTurboModule:` returns a C++ type (`std::shared_ptr<NativeAEP<Module>SpecJSI>`). Obj-C (`.m`) cannot handle C++ types — the file must be Obj-C++ (`.mm`).
+
+---
+
+### 4. Pods must be cleaned when switching USE_INTEROP_ROOT
+iOS flag is compile-time. Switching `USE_INTEROP_ROOT` without cleaning Pods + build produces a stale binary that ignores the new value.
+
+---
+
+### 5. `use_frameworks! :linkage => :static` + `-no-verify-emitted-module-interface`
+AEP SDK requires static frameworks. All AEP pod targets also need `OTHER_SWIFT_FLAGS = '-no-verify-emitted-module-interface'` in Podfile `post_install` or Swift verification errors appear at link time.
+
+---
+
+## Android
+
+### 6. `USE_INTEROP_ROOT` is runtime on Android, compile-time on iOS
+Android reads `BuildConfig.USE_INTEROP_ROOT` at runtime in `RCTAEPOptimizePackage.java` to pick the module. You do not need to clean/rebuild when toggling — just change `build.gradle` and rebuild.
+
+---
+
+## E2E / Appium
+
+### 7. Always source nvm before running e2e commands
+Appium 3 is installed under nvm-managed Node. `yarn e2e:*` scripts spawn appium as a subprocess and need it on PATH. In a fresh shell, nvm is not sourced automatically.
+
+```bash
+export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && yarn e2e:ios:build:turbo
+```
+
+---
+
+### 8. Android E2E APK path was hardcoded to debug in wdio config
+`wdio.android.conf.js` had the APK path hardcoded to the debug build. Release E2E builds fail because the APK isn't at the expected path.
+
+See: `errors/e2e-android-build-cmake-clean-glob-mismatch.md`
+
+---
+
+## JS / Metro
+
+### 9. Metro symlink workaround required for local package development
+When developing packages locally (symlinked), Metro needs `watchFolders` + `resolver.nodeModulesPaths` configured in `metro.config.js`. Without it, Metro cannot resolve `@adobe/react-native-aep*` from outside `node_modules`.
+
+See: `docs/development.md`
+
+---
+
+## General
+
+### 10. Module name must match exactly across JS, iOS, and Android
+| Location | Expected name |
+|----------|--------------|
+| `TurboModuleRegistry.getEnforcing(...)` | `'NativeAEP<Module>'` |
+| iOS `moduleName` / `RCT_EXPORT_MODULE(...)` | `NativeAEP<Module>` |
+| Android `getName()` | `NativeAEP<Module>` |
+
+Any mismatch causes a silent "module not found" or `undefined is not an object` at runtime.

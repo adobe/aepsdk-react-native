@@ -24,7 +24,24 @@
       "Bash(ANDROID_CONFIGURATION=release yarn e2e:android)",
       "Bash(echo:*)",
       "Read(//Users/namarora/.nvm/alias/**)",
-      "Bash(/dev/null cat:*)"
+      "Bash(/dev/null cat:*)",
+      "Bash(find /Users/namarora/aepsdk-react-native -name *[Pp]ush* -o -name *[Nn]otification*)",
+      "Bash(grep -r \"FCM\\\\|Firebase\\\\|push.*token\\\\|device.*token\" /Users/namarora/aepsdk-react-native/packages/core --include=*.java --include=*.kt --include=*.m --include=*.h)",
+      "Bash(xargs ls:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(curl -s \"https://api.github.com/repos/adobe/aepsdk-campaignclassic-android/contents/CHANGELOG.md\")",
+      "WebFetch(domain:aep-sdks.gitbook.io)",
+      "WebFetch(domain:developer.adobe.com)",
+      "Read(//private/tmp/acp_campaignclassic/**)",
+      "Bash(jar tf:*)",
+      "Bash(jar xf:*)",
+      "Bash(javap -c -p /tmp/acp_campaignclassic/com/adobe/marketing/mobile/CampaignClassicCore.class)",
+      "Bash(javap:*)",
+      "Bash(grep -A5 \"access$300\\\\|hasRegistration\\\\|sha256\\\\|SHA-256\\\\|hashCode\\\\|getSha\\\\|computeHash\\\\|TOKEN_HASH\\\\|TOKENHASH\\\\|ADOBEMOBILE_STORED\")",
+      "Bash(git mv:*)",
+      "Bash(git add:*)"
     ]
   }
 }
