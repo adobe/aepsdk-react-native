@@ -2,6 +2,7 @@ import { expect } from '@wdio/globals';
 import {
   activateAwesomeProject,
   byTestId,
+  clearCallbackLog,
   scrollAppScrollToTestId,
   scrollAppScrollToTestIdAndClick,
 } from '../../helpers/rnSelectors.js';
@@ -37,10 +38,8 @@ const GET_PROPOSITIONS_SIZE_LOG = /getPropositions: size=[1-9]/;
 describe('Optimize updatePropositions + getPropositions (Target mbox)', function () {
   before(async function () {
     await activateAwesomeProject();
-  });
 
-  it('updatePropositions populates cache; getPropositions returns Target HTML offer', async function () {
-    // ── 1. Wait for SDK to be ready ──────────────────────────────────────────
+    // Wait for SDK ready before clearing log
     const sdkStatus = await $(byTestId('aepsdk-sdk-init-status'));
     await sdkStatus.waitForDisplayed({ timeout: 120000 });
     await browser.waitUntil(
@@ -51,7 +50,12 @@ describe('Optimize updatePropositions + getPropositions (Target mbox)', function
       },
     );
 
-    // ── 2. Call updatePropositions (callback variant) ────────────────────────
+    // Clear log so spec assertions only see this spec's output
+    await clearCallbackLog();
+  });
+
+  it('updatePropositions populates cache; getPropositions returns Target HTML offer', async function () {
+    // ── 1. Call updatePropositions (callback variant) ────────────────────────
     // Scroll DOWN to reach the button (pushes log panel off screen).
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',

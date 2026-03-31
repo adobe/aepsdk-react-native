@@ -47,7 +47,8 @@
       "Bash(adb:*)",
       "Bash(yarn workspace:*)",
       "Bash(yarn e2e:ios:build:release:turbo)",
-      "Bash(yarn e2e:android:build:release:turbo)"
+      "Bash(yarn e2e:android:build:release:turbo)",
+      "Bash(brew install:*)"
     ]
   }
 }

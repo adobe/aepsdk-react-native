@@ -2,6 +2,7 @@ import { expect } from '@wdio/globals';
 import {
   activateAwesomeProject,
   byTestId,
+  clearCallbackLog,
   scrollAppScrollToTestIdAndClick,
 } from '../../helpers/rnSelectors.js';
 
@@ -12,9 +13,8 @@ const OPTIMIZE_VERSION_SUCCESS =
 describe('Optimize extension version', function () {
   before(async function () {
     await activateAwesomeProject();
-  });
 
-  it('logs extension version to callback panel (no error)', async function () {
+    // Wait for SDK ready before clearing log (init logs land during startup)
     const sdkStatus = await $(byTestId('aepsdk-sdk-init-status'));
     await sdkStatus.waitForDisplayed({ timeout: 120000 });
     await browser.waitUntil(
@@ -24,6 +24,12 @@ describe('Optimize extension version', function () {
         timeoutMsg: 'SDK did not reach ready (MobileCore.initializeWithAppId)',
       },
     );
+
+    // Clear log so spec assertions only see this spec's output
+    await clearCallbackLog();
+  });
+
+  it('logs extension version to callback panel (no error)', async function () {
 
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',

@@ -145,10 +145,33 @@ The Target HTML offer renders inside a `<WebView>` which has no `testID`. Appium
 3. **Scroll the element into view before reading it.** UiAutomator2 (Android) and XCUITest (iOS) only expose elements that are currently visible in the viewport. After scrolling DOWN to tap a button, any element that was above it (e.g. `CallbackLogPanel`) is gone from the hierarchy. Call `scrollAppScrollToTestId('aepsdk-app-scroll', 'aepsdk-sdk-init-status')` before reading the log (target `aepsdk-sdk-init-status`, not `aepsdk-callback-log-content` — the log is inside a nested ScrollView that UiScrollable can't traverse from the outer scroll). See `errors/e2e-android-element-not-found-scrolled-off-screen.md`.
    - **iOS caveat:** Never use `mobile: swipe` with `elementId` on a ScrollView that contains nested scrollable containers (WebView, nested ScrollView). The gesture lands at the element center, which may fall on a nested container that consumes it. Use coordinate-based `performActions` in the upper portion (15–45%) of the screen instead. See `errors/e2e-ios-scroll-nested-webview-intercepts-gesture.md`.
 4. **Assert via callback log** when the result renders in a WebView (no testID, Appium can't inspect DOM).
-4. **Assert via UI element** (testID) when the result renders as a `<Text>` or `<Button>` — faster and more meaningful.
-5. **Use descriptive `timeoutMsg`** on every `waitUntil` — includes the expected value and likely cause so failures are self-diagnosing.
-6. **Add negative assertions** (`not.toContain('error')`) alongside positive ones.
-7. **Document in this runbook** when writing a new spec — capture the pattern, scope/API names, and any timeout decisions.
+5. **Assert via UI element** (testID) when the result renders as a `<Text>` or `<Button>` — faster and more meaningful.
+6. **Use descriptive `timeoutMsg`** on every `waitUntil` — includes the expected value and likely cause so failures are self-diagnosing.
+7. **Add negative assertions** (`not.toContain('error')`) alongside positive ones.
+8. **Use `clearCallbackLog()` only once in the `before` hook** — clears SDK init logs so spec assertions start clean. Do NOT call it mid-test between steps; it causes stale element references on Android (React re-renders the log panel, invalidating UiAutomator2 element IDs). The log accumulates across steps within a single `it()` and assertions use regex to match the relevant line.
+9. **Document in this runbook** when writing a new spec — capture the pattern, scope/API names, and any timeout decisions.
+
+---
+
+### Validation gate: all 4 release builds must pass
+
+After writing or modifying any E2E spec, all **four** release build+test scripts must pass before considering the work done:
+
+```bash
+export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh"
+
+# Run serially — each does clean build + wdio
+yarn e2e:ios:build:release:turbo
+yarn e2e:ios:build:release:interop
+yarn e2e:android:build:release:turbo
+yarn e2e:android:build:release:interop
+```
+
+**Before each run:** uninstall the app on the target platform to eliminate system caches:
+- Android: `adb uninstall com.awesomeproject`
+- iOS: `xcrun simctl uninstall booted org.reactjs.native.example.AwesomeProject`
+
+**If a test fails:** report the failure and root cause to the user first. Do NOT start fixing without approval.
 
 ---
 

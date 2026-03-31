@@ -61,6 +61,15 @@ export function androidScrollIntoViewInAppScroll(scrollTestId, targetTestId) {
 }
 
 /**
+ * Clear the callback log panel by tapping the "Clear log" button.
+ * Should be called in `before` hooks to ensure each spec starts with a clean log,
+ * avoiding false positives from residual entries and reducing scroll distance.
+ */
+export async function clearCallbackLog() {
+  await scrollAppScrollToTestIdAndClick('aepsdk-app-scroll', 'aepsdk-btn-clear-log');
+}
+
+/**
  * Scroll the main app scroll view until `targetTestId` is visible — does NOT click.
  * Use this to bring an element into view for reading (e.g. the log panel after scrolling
  * down to tap a button that pushed it off screen).
