@@ -61,8 +61,53 @@ export function androidScrollIntoViewInAppScroll(scrollTestId, targetTestId) {
 }
 
 /**
+ * Scroll the main app scroll view until `targetTestId` is visible — does NOT click.
+ * Use this to bring an element into view for reading (e.g. the log panel after scrolling
+ * down to tap a button that pushed it off screen).
+ * Android: UiScrollable scrollIntoView (searches in both directions).
+ * iOS: coordinate-based swipe in the upper portion of the screen to avoid nested
+ *       scrollable containers (e.g. HTML offer WebView) that intercept the gesture.
+ */
+export async function scrollAppScrollToTestId(scrollTestId, targetTestId) {
+  if (getE2ePlatform() === 'Android') {
+    const sel = androidScrollIntoViewInAppScroll(scrollTestId, targetTestId);
+    await $(sel).waitForDisplayed({ timeout: 10000 });
+    return;
+  }
+
+  const target = await $(byTestId(targetTestId));
+
+  for (let i = 0; i < 20; i++) {
+    if (await target.isDisplayed().catch(() => false)) return;
+    // Swipe DOWN in the upper quarter of the screen (scroll content up toward top).
+    // Using the upper region avoids nested scrollable containers (HTML offer WebView)
+    // that sit lower in the page and intercept gestures.
+    const { width, height } = await browser.getWindowRect();
+    const x = Math.floor(width / 2);
+    const startY = Math.floor(height * 0.15);
+    const endY = Math.floor(height * 0.45);
+    await browser.performActions([
+      {
+        type: 'pointer',
+        id: 'finger1',
+        parameters: { pointerType: 'touch' },
+        actions: [
+          { type: 'pointerMove', duration: 0, x, y: startY },
+          { type: 'pointerDown', button: 0 },
+          { type: 'pause', duration: 300 },
+          { type: 'pointerMove', duration: 600, x, y: endY },
+          { type: 'pointerUp', button: 0 },
+        ],
+      },
+    ]);
+    await browser.releaseActions();
+  }
+}
+
+/**
  * Scroll the main app scroll view until `targetTestId` is visible, then tap it.
- * Android: UiScrollable `scrollIntoView`. iOS: repeated `mobile: swipe` on the app (see XCUITest driver).
+ * Android: UiScrollable `scrollIntoView`. iOS: coordinate-based swipe in the upper
+ *          portion of the screen to avoid nested scrollable containers + tap.
  */
 export async function scrollAppScrollToTestIdAndClick(scrollTestId, targetTestId) {
   if (getE2ePlatform() === 'Android') {
@@ -72,30 +117,35 @@ export async function scrollAppScrollToTestIdAndClick(scrollTestId, targetTestId
   }
 
   const target = await $(byTestId(targetTestId));
-  const scrollEl = await $(byTestId(scrollTestId));
-  await scrollEl.waitForDisplayed({ timeout: 60000 });
-
-  const swipeOnScroll = async () => {
-    const id =
-      scrollEl.elementId ??
-      (typeof scrollEl.getElementId === 'function'
-        ? await scrollEl.getElementId()
-        : undefined);
-    const args = id
-      ? { elementId: id, direction: 'up', velocity: 2500 }
-      : { direction: 'up', velocity: 2500 };
-    await browser.execute('mobile: swipe', args);
-  };
 
   for (let i = 0; i < 40; i++) {
-    const visible = await target
-      .isDisplayed()
-      .catch(() => false);
+    const visible = await target.isDisplayed().catch(() => false);
     if (visible) {
       await target.click();
       return;
     }
-    await swipeOnScroll();
+    // Swipe UP in the upper quarter of the screen (scroll content down to reveal items below).
+    // Using the upper region avoids the HTML offer WebView and other nested scrollable
+    // containers that sit lower in the page and intercept gestures.
+    const { width, height } = await browser.getWindowRect();
+    const x = Math.floor(width / 2);
+    const startY = Math.floor(height * 0.45);
+    const endY = Math.floor(height * 0.15);
+    await browser.performActions([
+      {
+        type: 'pointer',
+        id: 'finger1',
+        parameters: { pointerType: 'touch' },
+        actions: [
+          { type: 'pointerMove', duration: 0, x, y: startY },
+          { type: 'pointerDown', button: 0 },
+          { type: 'pause', duration: 300 },
+          { type: 'pointerMove', duration: 600, x, y: endY },
+          { type: 'pointerUp', button: 0 },
+        ],
+      },
+    ]);
+    await browser.releaseActions();
   }
 
   throw new Error(

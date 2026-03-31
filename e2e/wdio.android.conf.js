@@ -55,6 +55,7 @@ const buildCapabilities = () => {
     'appium:appPackage': 'com.awesomeproject',
     'appium:appActivity': 'com.awesomeproject.MainActivity',
     'appium:noReset': true,
+    'appium:forceAppLaunch': true,
     'appium:newCommandTimeout': 120,
     'appium:waitForIdleTimeout': 10000,
   };

@@ -9,7 +9,7 @@
 - **Runner:** WebdriverIO 9 + Appium 3 (XCUITest on iOS, UiAutomator2 on Android)
 - **Specs:** `e2e/test/specs/**/*.spec.js`
 - **Config:** `e2e/wdio.ios.conf.js` / `e2e/wdio.android.conf.js`
-- **Helpers:** `e2e/helpers/rnSelectors.js` — `byTestId()`, `scrollAppScrollToTestIdAndClick()`, `activateAwesomeProject()`
+- **Helpers:** `e2e/helpers/rnSelectors.js` — `byTestId()`, `scrollAppScrollToTestId()`, `scrollAppScrollToTestIdAndClick()`, `activateAwesomeProject()`
 - **Env vars:** `e2e/.env` (gitignored) — copy from `e2e/.env.example`
 
 ---
@@ -87,6 +87,88 @@ The `e2e:ios:build:turbo` / `e2e:ios:build:interop` scripts do this automaticall
 
 ---
 
+## Runbook: writing E2E specs for new APIs
+
+Keep this section updated every time a new spec is written. It captures the pattern used, why, and common pitfalls so future specs don't repeat the same mistakes.
+
+---
+
+### Pattern: Fire-and-forget API validated via a paired read API
+
+**APIs:** `updatePropositions` (fire-and-forget) + `getPropositions` (cache read)
+**Spec:** `e2e/test/specs/optimize-update-get-propositions.spec.js`
+**Decision scope:** `DecisionScope('mboxAug')` — Target mbox
+
+**Why fire-and-forget makes direct assertion hard:**
+`updatePropositions()` returns nothing. There is no promise to await. The SDK sends the request to Target and caches the response asynchronously. Calling `getPropositions` immediately after may return `size=0` if the network hasn't responded yet.
+
+**Solution — use the callback variant as a gate:**
+`testUpdatePropositionsCallback` calls `Optimize.updatePropositions(..., onSuccess, onError)`. The `onSuccess` callback logs `updatePropositions onSuccess: {payload}` — this is a reliable signal that:
+1. Target responded successfully
+2. The SDK cache is populated
+3. `getPropositions` will now return data
+
+**Full validation sequence:**
+```
+1. Wait for SDK ready (aepsdk-sdk-init-status contains 'ready')
+2. Tap aepsdk-optimize-btn-update-propositions-callback
+3. waitUntil: log contains /updatePropositions onSuccess:/  ← network gate
+4. Tap aepsdk-optimize-btn-get-propositions
+5. Assert: log contains /getPropositions: size=[1-9]/
+6. Assert: log contains 'mboxAug'              ← scope present
+7. Assert: log contains 'This is a sample HTML Offer'  ← offer content
+8. Assert: log does NOT contain 'onError' or 'error'
+```
+
+**Why assert via log, not the WebView UI:**
+The Target HTML offer renders inside a `<WebView>` which has no `testID`. Appium's native context cannot inspect WebView DOM content. The callback log (`aepsdk-callback-log-content`) receives the full JSON payload from `getPropositions` including the offer `content` field — this is the reliable assertion target.
+
+**Timeout guidance:**
+- SDK init: 120s (cold start + network)
+- `updatePropositions onSuccess`: 60s (Target network latency)
+- `getPropositions` assertions: 30s (local cache read, should be fast)
+
+**Common failure modes:**
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| `updatePropositions onSuccess` never appears | Target activity not live or network down | Check Target activity status; verify `mboxAug` is active |
+| `getPropositions: size=0` | Called before updatePropositions completed | Use callback variant as gate (step 3 above) |
+| Log contains offer content but wrong HTML | Target activity content changed | Update `TARGET_OFFER_CONTENT` constant in the spec |
+| `getPropositions error` in log | SDK not initialized or scope name typo | Check `aepsdk-sdk-init-status` is 'ready'; verify scope name |
+
+---
+
+### General rules for new E2E specs
+
+1. **Always wait for `aepsdk-sdk-init-status` = 'ready' first** — every spec needs this gate.
+2. **Fire-and-forget APIs:** use their callback variant to get a completion signal before calling a paired read API.
+3. **Scroll the element into view before reading it.** UiAutomator2 (Android) and XCUITest (iOS) only expose elements that are currently visible in the viewport. After scrolling DOWN to tap a button, any element that was above it (e.g. `CallbackLogPanel`) is gone from the hierarchy. Call `scrollAppScrollToTestId('aepsdk-app-scroll', 'aepsdk-sdk-init-status')` before reading the log (target `aepsdk-sdk-init-status`, not `aepsdk-callback-log-content` — the log is inside a nested ScrollView that UiScrollable can't traverse from the outer scroll). See `errors/e2e-android-element-not-found-scrolled-off-screen.md`.
+   - **iOS caveat:** Never use `mobile: swipe` with `elementId` on a ScrollView that contains nested scrollable containers (WebView, nested ScrollView). The gesture lands at the element center, which may fall on a nested container that consumes it. Use coordinate-based `performActions` in the upper portion (15–45%) of the screen instead. See `errors/e2e-ios-scroll-nested-webview-intercepts-gesture.md`.
+4. **Assert via callback log** when the result renders in a WebView (no testID, Appium can't inspect DOM).
+4. **Assert via UI element** (testID) when the result renders as a `<Text>` or `<Button>` — faster and more meaningful.
+5. **Use descriptive `timeoutMsg`** on every `waitUntil` — includes the expected value and likely cause so failures are self-diagnosing.
+6. **Add negative assertions** (`not.toContain('error')`) alongside positive ones.
+7. **Document in this runbook** when writing a new spec — capture the pattern, scope/API names, and any timeout decisions.
+
+---
+
+## Android config notes
+
+- **`appium:forceAppLaunch: true`** is required in `wdio.android.conf.js`. Without it, Appium reuses the existing app process (including scroll position and cached state from previous sessions). All specs can fail if the app was left scrolled to the bottom.
+- **`ANDROID_CONFIGURATION=release`** must be set in `e2e/.env` (or as env var) when testing release builds. Default is `debug`. The config resolves the APK path from this value.
+- **`ANDROID_DEVICE_NAME`** in `.env` should match the actual device model from `adb devices -l`, not the emulator AVD name.
+
+---
+
+## iOS config notes
+
+- **`appium:forceAppLaunch: true`** is required in `wdio.ios.conf.js` (same reason as Android — prevents stale scroll position between sessions).
+- **iOS scroll helpers use coordinate-based `performActions`** (not `mobile: swipe`). The app contains nested scrollable containers (HTML offer WebView, `CallbackLogPanel` nested ScrollView). `mobile: swipe` with `elementId` dispatches the gesture at the center of the visible bounds, which often falls on a nested container that consumes the gesture. Coordinate-based swipes in the upper 15–45% of the screen avoid this entirely.
+- **`IOS_DEVICE_NAME`** defaults to `iPhone 16`. Override in `.env` to match your simulator.
+- **`IOS_PLATFORM_VERSION`** can be set to target a specific iOS version.
+
+---
+
 ## Troubleshooting quick links
 
 - Appium element not found → `errors/e2e-appium-android-rn-testid-locator-no-such-element.md`
@@ -95,3 +177,6 @@ The `e2e:ios:build:turbo` / `e2e:ios:build:interop` scripts do this automaticall
 - `RCTAppDependencyProvider` missing → `errors/e2e-ios-build-rctappdependencyprovider-not-found.md`
 - Bundle ID unknown on iOS release → `errors/e2e-ios-appium-bundle-id-unknown-release-build.md`
 - Interop / TurboModule undefined function → `errors/e2e-ios-interop-undefined-function-no-turbomodule.md`
+- All specs fail: app title not found → `errors/e2e-android-element-not-found-scrolled-off-screen.md` (add `forceAppLaunch`)
+- App not launching / wrong APK → `errors/e2e-android-app-not-launching-wrong-configuration.md`
+- iOS scroll not working / stuck on WebView → `errors/e2e-ios-scroll-nested-webview-intercepts-gesture.md`

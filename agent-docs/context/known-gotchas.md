@@ -50,7 +50,31 @@ Android reads `BuildConfig.USE_INTEROP_ROOT` at runtime in `RCTAEPOptimizePackag
 
 ## E2E / Appium
 
-### 7. Always source nvm before running e2e commands
+### 7. UiAutomator2/XCUITest only sees elements in the current viewport — scroll before reading
+
+After calling `scrollAppScrollToTestIdAndClick()` to tap a button deep in the page, any element that was ABOVE that button (e.g. `CallbackLogPanel`) gets pushed off-screen and disappears from the element hierarchy entirely. Calling `.getText()` on it will throw "element wasn't found".
+
+**Rule:** Always call `scrollAppScrollToTestId('aepsdk-app-scroll', 'aepsdk-sdk-init-status')` after any deep scroll-and-tap, before reading the log. Target `aepsdk-sdk-init-status` (not `aepsdk-callback-log-content`) because the log text is inside a nested ScrollView that UiScrollable can't traverse from the outer scroll. Use `scrollAppScrollToTestId` (no-click variant) for scroll-only operations.
+
+Additional: `wdio.android.conf.js` must have `appium:forceAppLaunch: true` — without it, Appium reuses the existing app process (scroll position persists from prior sessions, causing ALL specs to fail on the very first element lookup).
+
+In `App.tsx` the layout order is: init status → Core → Assurance → **CallbackLogPanel** → OptimizeExperienceScreen. The log is above the optimize buttons.
+
+See: `errors/e2e-android-element-not-found-scrolled-off-screen.md`
+
+---
+
+### 8. iOS: `mobile: swipe` on a ScrollView lands on nested WebView — use coordinate-based swipes
+
+XCUITest dispatches `mobile: swipe` at the **center** of the element's visible bounds. If a nested scrollable container (e.g. HTML offer WebView, nested ScrollView) occupies that center, the gesture is consumed by the nested container and the outer ScrollView doesn't scroll.
+
+**Rule:** On iOS, use `browser.performActions` with screen coordinates in the **upper portion** (15–45% from top) of the screen instead of `mobile: swipe` with `elementId`. This avoids nested containers that sit in the middle/lower part of the page.
+
+See: `errors/e2e-ios-scroll-nested-webview-intercepts-gesture.md`
+
+---
+
+### 9. Always source nvm before running e2e commands
 Appium 3 is installed under nvm-managed Node. `yarn e2e:*` scripts spawn appium as a subprocess and need it on PATH. In a fresh shell, nvm is not sourced automatically.
 
 ```bash
@@ -59,7 +83,7 @@ export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && yarn e2e:ios:build:tu
 
 ---
 
-### 8. Android E2E APK path was hardcoded to debug in wdio config
+### 10. Android E2E APK path was hardcoded to debug in wdio config
 `wdio.android.conf.js` had the APK path hardcoded to the debug build. Release E2E builds fail because the APK isn't at the expected path.
 
 See: `errors/e2e-android-build-cmake-clean-glob-mismatch.md`
@@ -68,7 +92,7 @@ See: `errors/e2e-android-build-cmake-clean-glob-mismatch.md`
 
 ## JS / Metro
 
-### 9. Metro symlink workaround required for local package development
+### 11. Metro symlink workaround required for local package development
 When developing packages locally (symlinked), Metro needs `watchFolders` + `resolver.nodeModulesPaths` configured in `metro.config.js`. Without it, Metro cannot resolve `@adobe/react-native-aep*` from outside `node_modules`.
 
 See: `docs/development.md`
@@ -77,7 +101,7 @@ See: `docs/development.md`
 
 ## General
 
-### 10. Module name must match exactly across JS, iOS, and Android
+### 12. Module name must match exactly across JS, iOS, and Android
 | Location | Expected name |
 |----------|--------------|
 | `TurboModuleRegistry.getEnforcing(...)` | `'NativeAEP<Module>'` |

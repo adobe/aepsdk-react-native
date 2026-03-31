@@ -41,7 +41,13 @@
       "Bash(javap:*)",
       "Bash(grep -A5 \"access$300\\\\|hasRegistration\\\\|sha256\\\\|SHA-256\\\\|hashCode\\\\|getSha\\\\|computeHash\\\\|TOKEN_HASH\\\\|TOKENHASH\\\\|ADOBEMOBILE_STORED\")",
       "Bash(git mv:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(adb devices:*)",
+      "Bash(adb shell:*)",
+      "Bash(adb:*)",
+      "Bash(yarn workspace:*)",
+      "Bash(yarn e2e:ios:build:release:turbo)",
+      "Bash(yarn e2e:android:build:release:turbo)"
     ]
   }
 }

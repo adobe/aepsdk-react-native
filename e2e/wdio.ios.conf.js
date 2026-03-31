@@ -61,6 +61,7 @@ const buildCapabilities = () => {
     'appium:automationName': 'XCUITest',
     'appium:deviceName': process.env.IOS_DEVICE_NAME || 'iPhone 16',
     'appium:noReset': true,
+    'appium:forceAppLaunch': true,
     'appium:newCommandTimeout': 120,
     'appium:wdaLaunchTimeout': 120000,
   };
