@@ -52,6 +52,7 @@ export async function loadInboxState(
 }
 
 /**
+ * @experimental First React Native inbox UI — subject to change while we expand testing.
  * Save inbox state to native storage for persistence across app launches.
  * @param activityId - From scopeDetails.activity in the inbox proposition
  * @param state - Dismissed and interacted card IDs to persist

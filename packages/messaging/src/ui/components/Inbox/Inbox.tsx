@@ -224,6 +224,9 @@ function InboxInner<T extends ContentTemplate>({
   return <InboxProvider settings={settings}>{horizontalChrome}</InboxProvider>;
 }
 
+/**
+ * @experimental First React Native inbox UI — subject to change while we expand testing.
+ */
 export function Inbox<T extends ContentTemplate>({
   LoadingComponent = <ActivityIndicator />,
   ErrorComponent = null,

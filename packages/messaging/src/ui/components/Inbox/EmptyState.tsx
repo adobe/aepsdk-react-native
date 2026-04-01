@@ -38,6 +38,9 @@ interface EmptyStateProps extends ViewProps {
   TextProps?: Partial<TextProps>;
 }
 
+/**
+ * @experimental First React Native inbox UI — subject to change while we expand testing.
+ */
 const EmptyState: React.FC<EmptyStateProps> = ({
   image,  
   text,

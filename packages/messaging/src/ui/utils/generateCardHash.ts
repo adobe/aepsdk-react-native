@@ -1,6 +1,7 @@
 import { ContentTemplate } from '../types/Templates';
 
 /**
+ * @experimental First React Native inbox / content-card UI — subject to change while we expand testing.
  * Generate a stable identifier (hash) for a card based on its content
  * This ensures the same card is identified even if the ID changes between refetches
  * 

@@ -15,7 +15,8 @@ import Messaging from '../../Messaging';
 import { ContentTemplate } from '../types/Templates';
 
 /**
- * Hook to fetch the content card UI for a given surface.
+ * @experimental
+ * Hook to fetch content card UI for a given surface via `Messaging.getContentCardUI`.
  * @param surface - The surface to fetch the content card UI for.
  * @returns An object containing the content card UI, error, loading state, and a refetch function.
  */

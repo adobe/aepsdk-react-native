@@ -64,6 +64,7 @@ export interface InboxProviderProps {
   settings: InboxSettings;
 }
 
+/** @experimental */
 function InboxProvider({
   children,
   settings,

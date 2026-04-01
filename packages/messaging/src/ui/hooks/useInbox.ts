@@ -14,6 +14,10 @@ import { useCallback, useEffect, useState } from "react";
 import Messaging from "../../Messaging";
 import { InboxSettings } from "../providers/InboxProvider";
 
+/**
+ * @experimental
+ * Fetches inbox UI settings for a surface via `Messaging.getInbox`.
+ */
 export function useInbox(surface: string) {
   const [settings, setSettings] = useState<InboxSettings | null>(null);
   const [error, setError] = useState<any>(null);
@@ -28,6 +32,7 @@ export function useInbox(surface: string) {
       setSettings(settings);
     } catch (error) {
       setError(error);
+      console.error('error', error);
     } finally {
       setIsLoading(false);
     }

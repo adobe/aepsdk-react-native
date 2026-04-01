@@ -76,8 +76,9 @@ export interface ContentViewProps
   variant?: ContentCardTemplate;
 }
 
-/** Renders a content card view
- * @param {ContentViewProps} props - The props for the ContentCardView component
+/**
+ * @experimental First React Native content-card / inbox UI — subject to change while we expand testing.
+ * Renders a content card view.
  */
 export const ContentCardView: React.FC<ContentViewProps> = ({
   template,

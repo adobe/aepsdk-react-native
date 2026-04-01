@@ -412,6 +412,7 @@ class Messaging {
 
 
   /**
+   * @experimental
    * Loads inbox UI settings from the inbox proposition for the given surface.
    * @throws {Error} When no propositions, no inbox proposition, or invalid inbox content is returned.
    */

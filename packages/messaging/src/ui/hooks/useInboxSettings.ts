@@ -13,6 +13,9 @@
 import { useContext } from "react";
 import { InboxContext, InboxSettings } from "../providers/InboxProvider";
 
+/**
+ * @experimental First React Native inbox UI — subject to change while we expand testing.
+ */
 function useInboxSettings(): InboxSettings | null {
   const settings = useContext(InboxContext);
   return settings;
