@@ -20,12 +20,12 @@ describe('useAspectRatio', () => {
   });
 
   it('returns 1 when uri is undefined', () => {
-    const { result } = renderHook(() => useAspectRatio(undefined));
+    const { result } = renderHook(() => useAspectRatio());
     expect(result.current).toBe(1);
   });
 
   it('returns width/height when Image.getSize succeeds', async () => {
-    jest.spyOn(Image, 'getSize').mockImplementation((uri, success) => {
+    jest.spyOn(Image, 'getSize').mockImplementation((_uri, success) => {
       success(400, 100);
     });
 
@@ -38,8 +38,8 @@ describe('useAspectRatio', () => {
 
   it('returns 1 when Image.getSize fails', async () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    jest.spyOn(Image, 'getSize').mockImplementation((uri, _s, failure) => {
-      failure(new Error('bad'));
+    jest.spyOn(Image, 'getSize').mockImplementation((_uri, _s, failure) => {
+      failure?.(new Error('bad'));
     });
 
     const { result } = renderHook(() => useAspectRatio('https://example.com/b.png'));
