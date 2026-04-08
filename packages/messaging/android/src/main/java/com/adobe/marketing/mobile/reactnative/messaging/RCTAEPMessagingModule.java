@@ -191,16 +191,10 @@ public final class RCTAEPMessagingModule
   }
 
   @ReactMethod
-  public void updatePropositionsForSurfaces(ReadableArray surfaces, final Promise promise) {
-    Messaging.updatePropositionsForSurfaces(
-        RCTAEPMessagingUtil.convertSurfaces(surfaces), success -> {
-          if (success) {
-             propositionItemByUuid.clear();
-             promise.resolve(null);
-          } else {
-            promise.reject(null, "Unable to update propositions for surfaces");
-          }
-        });
+  public void updatePropositionsForSurfaces(ReadableArray surfaces) {
+     Messaging.updatePropositionsForSurfaces(
+        RCTAEPMessagingUtil.convertSurfaces(surfaces));
+        propositionItemByUuid.clear();
   }
 
   // Message Methods
@@ -370,12 +364,13 @@ public final class RCTAEPMessagingModule
   }
 
   // Messaging Delegate Callback
-  @ReactMethod
-  public void setMessageSettings(final boolean shouldShowMessage,
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  public boolean setMessageSettings(final boolean shouldShowMessage,
                                  final boolean shouldSaveMessage) {
     this.shouldShowMessage = shouldShowMessage;
     this.shouldSaveMessage = shouldSaveMessage;
     latch.countDown();
+    return true;
   }
 
   /**
