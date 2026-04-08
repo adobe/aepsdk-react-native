@@ -138,6 +138,56 @@ The Target HTML offer renders inside a `<WebView>` which has no `testID`. Appium
 
 ---
 
+### Pattern: Fire-and-forget API with no callback — verify via Android logcat
+
+**APIs:** `Offer.tapped(proposition)`, `Offer.displayed(proposition)`
+**Spec:** `e2e/test/specs/optimize-tapped-proposition.spec.js`
+**Decision scope:** `DecisionScope('mboxAug')` — Target mbox
+
+**Why this needs a different pattern:**
+Unlike `updatePropositions` which has a callback variant, `offer.tapped()` is truly fire-and-forget — no return value, no callback, no promise. It dispatches a native `Optimize Track Propositions Request` event internally, which the SDK forwards to Edge as a `decisioning.propositionInteract` event. The only way to verify the SDK actually processed the tap is to inspect the native logcat.
+
+**Solution — dual verification (callback log + Android logcat):**
+
+1. **Callback log** (JS-level): A dedicated button (`aepsdk-optimize-btn-tap-target-offer`) calls `offer.tapped(proposition)` and logs the result via `appendLog`. This confirms the JS side executed without error.
+
+2. **Android logcat** (native-level): Use `drainAndroidLogcat()` before the action to clear the buffer, then `getAndroidSdkLogcat()` after to capture `AdobeExperienceSDK` entries. Assert the logcat contains:
+   - `Optimize Track Propositions Request` — event was dispatched
+   - `decisioning.propositionInteract` — correct event type
+   - `mboxAug` — correct scope
+   - `trackpropositions` — correct request type
+
+**Helper functions** (in `e2e/helpers/rnSelectors.js`):
+```js
+drainAndroidLogcat()      // Call BEFORE the action — clears logcat buffer
+getAndroidSdkLogcat()     // Call AFTER — returns AdobeExperienceSDK entries as string
+```
+
+Both are no-ops on iOS. `browser.getLogs('logcat')` drains the buffer on each call, so drain→act→read gives a clean window of entries.
+
+**Full validation sequence:**
+```
+1. Wait for SDK ready
+2. updatePropositions callback → wait for onSuccess (populate cache)
+3. getPropositions → verify size > 0 (populate targetProposition state)
+4. drainAndroidLogcat()
+5. Tap aepsdk-optimize-btn-tap-target-offer
+6. Assert callback log: /Offer.tapped() invoked/, contains 'mboxAug', no 'skipped'
+7. pause(2000) — give SDK time to dispatch the native event
+8. Assert logcat: 'Optimize Track Propositions Request', 'propositionInteract', 'mboxAug'
+```
+
+**When to use this pattern:**
+- The API is fire-and-forget with **no callback and no paired read API**
+- You need to verify the SDK actually dispatched an Edge event, not just that JS ran
+- Currently **Android only** — iOS has no logcat equivalent in Appium
+
+**When NOT to use this pattern:**
+- The API has a callback variant (use the callback as a gate instead — e.g. updatePropositions)
+- The API returns a value or populates a cache that can be read (use a paired read API)
+
+---
+
 ### General rules for new E2E specs
 
 1. **Always wait for `aepsdk-sdk-init-status` = 'ready' first** — every spec needs this gate.

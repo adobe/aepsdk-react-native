@@ -61,6 +61,40 @@ export function androidScrollIntoViewInAppScroll(scrollTestId, targetTestId) {
 }
 
 /**
+ * Drain the Android logcat buffer and return nothing. Call this before the action
+ * you want to verify so that the next `getAndroidSdkLogcat()` only returns entries
+ * from after this point.
+ * No-op on iOS.
+ */
+export async function drainAndroidLogcat() {
+  if (getE2ePlatform() !== 'Android') return;
+  try {
+    await browser.getLogs('logcat');
+  } catch { /* ignore if unavailable */ }
+}
+
+/**
+ * Read recent Android logcat entries and return all lines from the
+ * `AdobeExperienceSDK` tag as a single string. Used to verify native SDK events
+ * (e.g. Edge requests) for fire-and-forget APIs that have no JS callback.
+ *
+ * Call `drainAndroidLogcat()` before the action, then call this after.
+ * Returns '' on iOS.
+ */
+export async function getAndroidSdkLogcat() {
+  if (getE2ePlatform() !== 'Android') return '';
+  try {
+    const logs = await browser.getLogs('logcat');
+    return logs
+      .map((entry) => (typeof entry === 'string' ? entry : entry.message || ''))
+      .filter((msg) => msg.includes('AdobeExperienceSDK'))
+      .join('\n');
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Clear the callback log panel by tapping the "Clear log" button.
  * Should be called in `before` hooks to ensure each spec starts with a clean log,
  * avoiding false positives from residual entries and reducing scroll distance.
