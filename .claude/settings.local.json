@@ -48,7 +48,14 @@
       "Bash(yarn workspace:*)",
       "Bash(yarn e2e:ios:build:release:turbo)",
       "Bash(yarn e2e:android:build:release:turbo)",
-      "Bash(brew install:*)"
+      "Bash(brew install:*)",
+      "Bash(node -e \":*)",
+      "Bash(yarn e2e:ios --spec e2e/test/specs/optimize-tapped-proposition.spec.js)",
+      "Bash(npx wdio:*)",
+      "Bash(grep -r com.adobe /Users/namarora/aepsdk-react-native/apps/AwesomeProject/ios/Pods/AEP* --include=*.swift --include=*.h --include=*.m)",
+      "Bash(grep:*)",
+      "Bash(export NVM_DIR=$HOME/.nvm)",
+      "Bash(source $NVM_DIR/nvm.sh)"
     ]
   }
 }
