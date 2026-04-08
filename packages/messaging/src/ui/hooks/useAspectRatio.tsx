@@ -24,7 +24,7 @@ function useAspectRatio(uri?: string) {
     Image.getSize(
       uri,
       (width, height) => {
-        setImageAspectRatio(width / height);
+        setImageAspectRatio(height > 0 ? width / height : 1);
       },
       (error) => {
         console.log('Error getting image size:', error);

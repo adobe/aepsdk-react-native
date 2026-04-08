@@ -117,11 +117,12 @@ function InboxInner<T extends ContentTemplate>({
   const displayCards = useMemo(() => {
     if (!content) return [] as T[];
     return content
-      .filter((it) => !dismissedIds.has(generateCardHash(it)))
-      .map((it) => {
-        const cardHash = generateCardHash(it);
-        const shouldBeRead = isUnreadEnabled && (interactedIds.has(cardHash) || it.isRead === true);
-        return shouldBeRead ? { ...it, isRead: true } : it;
+      .map((it) => ({ item: it, hash: generateCardHash(it) }))
+      .filter(({ hash }) => !dismissedIds.has(hash))
+      .map(({ item, hash }) => {
+        const shouldBeRead =
+          isUnreadEnabled && (interactedIds.has(hash) || item.isRead === true);
+        return shouldBeRead ? { ...item, isRead: true } : item;
       })
       .slice(0, capacity) as T[];
   }, [content, capacity, isUnreadEnabled, dismissedIds, interactedIds]);
@@ -198,7 +199,7 @@ function InboxInner<T extends ContentTemplate>({
       horizontal={isHorizontal}
       renderItem={renderItem}
       ListEmptyComponent={<EmptyList />}
-      ListHeaderComponent={!isHorizontal && ListHeaderComponent ? topOfInbox : undefined}
+      ListHeaderComponent={!isHorizontal ? topOfInbox : undefined}
     />
   );
 
@@ -225,7 +226,7 @@ function InboxInner<T extends ContentTemplate>({
 }
 
 /**
- * @experimental First React Native inbox UI — subject to change while we expand testing.
+ * @experimental First React Native inbox UI
  */
 export function Inbox<T extends ContentTemplate>({
   LoadingComponent = <ActivityIndicator />,
@@ -240,7 +241,7 @@ export function Inbox<T extends ContentTemplate>({
 
   if (isLoading) return LoadingComponent as React.ReactElement;
   if (error) return ErrorComponent as React.ReactElement;
-  if (!settings) return FallbackComponent as React.ReactElement;;
+  if (!settings) return FallbackComponent as React.ReactElement;
 
   return (
     <InboxInner

@@ -1,5 +1,5 @@
 /*
-Copyright 2025 Adobe. All rights reserved.
+Copyright 2026 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -17,11 +17,6 @@ export interface InboxPersistedState {
   interacted: string[];
 }
 
-export type AsyncStorageLike = {
-  getItem(key: string): Promise<string | null>;
-  setItem(key: string, value: string): Promise<void>;
-};
-
 const RCTAEPMessaging = NativeModules.AEPMessaging;
 
 /**
@@ -32,8 +27,7 @@ const RCTAEPMessaging = NativeModules.AEPMessaging;
  * @returns Persisted state or empty defaults if not found
  */
 export async function loadInboxState(
-  activityId: string,
-  _storage?: AsyncStorageLike | null
+  activityId: string
 ): Promise<InboxPersistedState> {
   if (!activityId || !RCTAEPMessaging?.getInboxState) {
     return { dismissed: [], interacted: [] };
@@ -59,8 +53,7 @@ export async function loadInboxState(
  */
 export async function saveInboxState(
   activityId: string,
-  state: InboxPersistedState,
-  _storage?: AsyncStorageLike | null
+  state: InboxPersistedState
 ): Promise<void> {
   if (!activityId || !RCTAEPMessaging?.setInboxState) return;
   try {

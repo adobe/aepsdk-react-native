@@ -86,7 +86,7 @@ __metadata:
   dependencies:
     "@testing-library/react-native": "npm:^13.3.3"
     "@types/react-test-renderer": "npm:^19"
-    react: "npm:*"
+    react: "npm:19.1.0"
     react-native: "npm:^0.81.0"
     react-native-builder-bob: "npm:0.33.1"
     react-test-renderer: "npm:19.1.0"
@@ -16397,13 +16397,6 @@ __metadata:
   peerDependencies:
     react: ^19.2.0
   checksum: 10c0/cc116b908489316f06881bf7392c5fad4b5f66be42d2f04788f4179a19e86674d54f1006b33fe9eba28bde6edb4cb38764ab75b416f28d02e0182c5552c97551
-  languageName: node
-  linkType: hard
-
-"react@npm:*":
-  version: 19.2.4
-  resolution: "react@npm:19.2.4"
-  checksum: 10c0/cd2c9ff67a720799cc3b38a516009986f7fc4cb8d3e15716c6211cf098d1357ee3e348ab05ad0600042bbb0fd888530ba92e329198c92eafa0994f5213396596
   languageName: node
   linkType: hard
 

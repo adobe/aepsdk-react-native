@@ -36,6 +36,18 @@ describe('useAspectRatio', () => {
     });
   });
 
+  it('returns 1 when Image.getSize reports height 0', async () => {
+    jest.spyOn(Image, 'getSize').mockImplementation((_uri, success) => {
+      success(400, 0);
+    });
+
+    const { result } = renderHook(() => useAspectRatio('https://example.com/zero.png'));
+
+    await waitFor(() => {
+      expect(result.current).toBe(1);
+    });
+  });
+
   it('returns 1 when Image.getSize fails', async () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     jest.spyOn(Image, 'getSize').mockImplementation((_uri, _s, failure) => {

@@ -40,7 +40,7 @@ export function useInbox(surface: string) {
 
   useEffect(() => {
     fetchInbox();
-  }, [surface]);
+  }, [surface, fetchInbox]);
 
   return { settings, error, isLoading, refetch: fetchInbox };
 }

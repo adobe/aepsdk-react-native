@@ -77,7 +77,7 @@ export interface ContentViewProps
 }
 
 /**
- * @experimental First React Native content-card / inbox UI — subject to change while we expand testing.
+ * @experimental
  * Renders a content card view.
  */
 export const ContentCardView: React.FC<ContentViewProps> = ({
@@ -213,6 +213,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
 
   return (
     <Pressable
+      accessibilityLabel={content?.title?.content ?? 'Content Card'}
       onPress={onPress}
       style={(state) => [
         styles.card,
@@ -236,7 +237,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
             style={[
               cardVariant === "SmallImage"
                 ? smallImageStyles.imageContainer
-                : (styles.imageContainer, { backgroundColor: colors.imageContainerColor }),
+                : [styles.imageContainer, { backgroundColor: colors.imageContainerColor }],
               styleOverrides?.imageContainer,
             ]}
             {...ImageContainerProps}
@@ -321,7 +322,7 @@ export const ContentCardView: React.FC<ContentViewProps> = ({
           />
         )}
         {isUnreadEnabled && !isRead && (
-          <UnreadIcon />
+          <UnreadIcon accessibilityLabel="Unread Icon" />
         )}
       </View>
     </Pressable>
@@ -349,11 +350,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: "flex-start",
   },
-  textContent: {
-    flex: 1,
-    justifyContent: "flex-start",
-    marginBottom: 16,
-  },
   title: {
     fontSize: 16,
     fontWeight: "600",
@@ -370,10 +366,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     paddingTop: 8,
     gap: 8,
-  },
-  button: {
-    marginHorizontal: 8,
-  },
+  }
 });
 
 const smallImageStyles = StyleSheet.create({

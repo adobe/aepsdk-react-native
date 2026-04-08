@@ -13,8 +13,8 @@
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
+  Pressable,
   StyleSheet,
-  TouchableOpacity,
   View
 } from "react-native";
 import { useTheme } from "../../theme";
@@ -60,10 +60,15 @@ const PaginationDot = ({
   }, [isActive, scaleAnim, opacityAnim]);
 
   return (
-    <TouchableOpacity
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected: isActive }}
+      accessibilityLabel={`Page ${page + 1}`}
       onPress={() => onPageChange(page)}
-      style={styles.dotContainer}
-      activeOpacity={0.7}
+      style={({ pressed }) => [
+        styles.dotContainer,
+        { opacity: pressed ? 0.7 : 1 },
+      ]}
     >
       <Animated.View
         style={[
@@ -77,7 +82,7 @@ const PaginationDot = ({
           },
         ]}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -198,7 +203,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-    backgroundColor: 'blue',
     flex: 1,
   },
   dotsContainer: {

@@ -39,6 +39,7 @@ const DismissButton = ({
 
   return (
     <Pressable
+      accessibilityLabel="Dismiss Button"
       onPress={onPress}
       style={(state) => [
         styles.container,

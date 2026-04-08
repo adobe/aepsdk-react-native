@@ -11,7 +11,7 @@
 */
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
-import { Animated, TouchableOpacity } from 'react-native';
+import { Animated } from 'react-native';
 import { Pagination } from './Pagination';
 
 // Use fake timers for animation timing
@@ -45,10 +45,10 @@ describe('Pagination - interactions', () => {
   it('renders dots and calls onPageChange when a dot is pressed', () => {
     const onPageChange = jest.fn();
     render(<Pagination currentPage={1} totalPages={3} onPageChange={onPageChange} />);
-    const touchables = screen.UNSAFE_getAllByType(TouchableOpacity);
-    expect(touchables.length).toBe(3);
+    const dots = screen.getAllByRole('button');
+    expect(dots.length).toBe(3);
     // press the last dot (page index 2)
-    fireEvent.press(touchables[2]);
+    fireEvent.press(dots[2]);
     expect(onPageChange).toHaveBeenCalledWith(2);
   });
 
@@ -129,11 +129,11 @@ describe('Pagination - sliding and windowing', () => {
       <Pagination currentPage={9} totalPages={10} maxVisibleDots={5} onPageChange={onPageChange} />
     );
     // Expect visible pages to be [5,6,7,8,9]; pressing first dot should send 5
-    const touchables = screen.UNSAFE_getAllByType(TouchableOpacity);
-    expect(touchables.length).toBe(5);
-    fireEvent.press(touchables[0]);
+    const dots = screen.getAllByRole('button');
+    expect(dots.length).toBe(5);
+    fireEvent.press(dots[0]);
     expect(onPageChange).toHaveBeenCalledWith(5);
-    fireEvent.press(touchables[4]);
+    fireEvent.press(dots[4]);
     expect(onPageChange).toHaveBeenCalledWith(9);
   });
 
