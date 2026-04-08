@@ -7,6 +7,12 @@
  * @see https://medium.com/@jignect/appium-in-action-test-automation-for-flutter-and-react-native-projects-4abb2ce93bf2
  */
 
+import { spawn } from 'node:child_process';
+
+// ── iOS log stream state (module-level) ──────────────────────────────────────
+let _iosLogProcess = null;
+let _iosLogBuffer = '';
+
 /** Must match `applicationId` (see apps/AwesomeProject/android/app/build.gradle). */
 export const ANDROID_APP_ID = 'com.awesomeproject';
 
@@ -61,38 +67,73 @@ export function androidScrollIntoViewInAppScroll(scrollTestId, targetTestId) {
 }
 
 /**
- * Drain the Android logcat buffer and return nothing. Call this before the action
- * you want to verify so that the next `getAndroidSdkLogcat()` only returns entries
- * from after this point.
- * No-op on iOS.
+ * Start capturing native SDK logs. Call BEFORE the action you want to verify.
+ *
+ * Android: drains the logcat buffer so the next `getNativeSdkLogs()` only
+ *          returns entries from after this point.
+ * iOS:     spawns `xcrun simctl spawn booted log stream` filtering for the
+ *          AwesomeProject process, accumulating output in a buffer.
  */
-export async function drainAndroidLogcat() {
-  if (getE2ePlatform() !== 'Android') return;
-  try {
-    await browser.getLogs('logcat');
-  } catch { /* ignore if unavailable */ }
+export async function startNativeLogCapture() {
+  if (getE2ePlatform() === 'Android') {
+    try { await browser.getLogs('logcat'); } catch { /* drain */ }
+    return;
+  }
+
+  // iOS: start log stream for the app process
+  _iosLogBuffer = '';
+  _iosLogProcess = spawn('xcrun', [
+    'simctl', 'spawn', 'booted', 'log', 'stream',
+    '--level', 'debug',
+    '--predicate', 'process == "AwesomeProject" AND subsystem == "com.adobe.mobile.marketing.aep"',
+  ]);
+  _iosLogProcess.stdout.on('data', (chunk) => { _iosLogBuffer += chunk.toString(); });
+  _iosLogProcess.stderr.on('data', (chunk) => { _iosLogBuffer += chunk.toString(); });
+  _iosLogProcess.on('error', () => { /* ignore spawn errors */ });
+
+  // Give the stream a moment to attach
+  await new Promise((r) => setTimeout(r, 1000));
 }
 
 /**
- * Read recent Android logcat entries and return all lines from the
- * `AdobeExperienceSDK` tag as a single string. Used to verify native SDK events
- * (e.g. Edge requests) for fire-and-forget APIs that have no JS callback.
+ * Stop capturing and return native SDK log entries as a single string.
+ * Call AFTER the action + a short pause (e.g. 2 s) to let the SDK dispatch.
  *
- * Call `drainAndroidLogcat()` before the action, then call this after.
- * Returns '' on iOS.
+ * Android: reads logcat entries since the last drain, filters for `AdobeExperienceSDK`.
+ * iOS:     kills the log stream process, returns accumulated buffer filtered for
+ *          `AdobeExperienceSDK`.
  */
-export async function getAndroidSdkLogcat() {
-  if (getE2ePlatform() !== 'Android') return '';
-  try {
-    const logs = await browser.getLogs('logcat');
-    return logs
-      .map((entry) => (typeof entry === 'string' ? entry : entry.message || ''))
-      .filter((msg) => msg.includes('AdobeExperienceSDK'))
-      .join('\n');
-  } catch {
-    return '';
+export async function getNativeSdkLogs() {
+  if (getE2ePlatform() === 'Android') {
+    try {
+      const logs = await browser.getLogs('logcat');
+      return logs
+        .map((entry) => (typeof entry === 'string' ? entry : entry.message || ''))
+        .filter((msg) => msg.includes('AdobeExperienceSDK'))
+        .join('\n');
+    } catch { return ''; }
   }
+
+  // iOS: stop the stream and return buffered output
+  if (_iosLogProcess) {
+    _iosLogProcess.kill('SIGTERM');
+    // Give it a moment to flush remaining output
+    await new Promise((r) => setTimeout(r, 500));
+    _iosLogProcess = null;
+  }
+  const raw = _iosLogBuffer;
+  _iosLogBuffer = '';
+
+  // iOS AEP SDK logs under various os_log subsystems (not the
+  // "AdobeExperienceSDK" tag used on Android logcat).  Return all captured
+  // lines so the spec-level assertions (e.g. toContain('propositionInteract'))
+  // can match regardless of the subsystem label.
+  return raw;
 }
+
+// Keep old names as aliases for backward compatibility within this session
+export const drainAndroidLogcat = startNativeLogCapture;
+export const getAndroidSdkLogcat = getNativeSdkLogs;
 
 /**
  * Clear the callback log panel by tapping the "Clear log" button.

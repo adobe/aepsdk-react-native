@@ -41,8 +41,8 @@ function AppBody() {
   >('pending');
 
   useEffect(() => {
-    MobileCore.setLogLevel(LogLevel.DEBUG);
-    appendLog(`MobileCore.setLogLevel(DEBUG); initialize appId=${LAUNCH_APP_ID}`);
+    MobileCore.setLogLevel(LogLevel.VERBOSE);
+    appendLog(`MobileCore.setLogLevel(VERBOSE); initialize appId=${LAUNCH_APP_ID}`);
     MobileCore.initializeWithAppId(LAUNCH_APP_ID)
       .then(() => {
         appendLog('MobileCore.initializeWithAppId: success');

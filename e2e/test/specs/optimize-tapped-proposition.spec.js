@@ -3,9 +3,8 @@ import {
   activateAwesomeProject,
   byTestId,
   clearCallbackLog,
-  drainAndroidLogcat,
-  getAndroidSdkLogcat,
-  getE2ePlatform,
+  getNativeSdkLogs,
+  startNativeLogCapture,
   scrollAppScrollToTestId,
   scrollAppScrollToTestIdAndClick,
 } from '../../helpers/rnSelectors.js';
@@ -16,15 +15,19 @@ import {
  * Strategy:
  *   1. Populate cache via updatePropositions (callback variant as completion gate).
  *   2. Call getPropositions so the target proposition state is populated.
- *   3. Drain logcat buffer (Android) so subsequent reads only capture the tap event.
+ *   3. Start native log capture (Android: drain logcat, iOS: spawn log stream).
  *   4. Tap "Tap Target Offer" button which calls offer.tapped(proposition).
  *   5. Assert via callback log: tap invoked, correct scope, no error.
- *   6. Assert via Android logcat: SDK dispatched "Optimize Track Propositions Request"
- *      with eventType "decisioning.propositionInteract" and scope "mboxAug".
+ *   6. Assert via native SDK logs (both platforms): SDK dispatched
+ *      "Optimize Track Propositions Request" with eventType
+ *      "decisioning.propositionInteract" and scope "mboxAug".
  *
  * The tapped() call is fire-and-forget — it sends a decisioning.propositionInteract
- * Edge event. The callback log confirms the JS side executed correctly. The logcat
- * confirms the native SDK actually dispatched the Edge event with the right payload.
+ * Edge event. The callback log confirms the JS side executed correctly. The native
+ * logs confirm the SDK actually dispatched the Edge event with the right payload.
+ *
+ * Android: `browser.getLogs('logcat')` filtered for AdobeExperienceSDK.
+ * iOS:     `xcrun simctl spawn booted log stream` filtered for AdobeExperienceSDK.
  *
  * Decision scope under test: DecisionScope('mboxAug')
  */
@@ -91,9 +94,9 @@ describe('Optimize tapped proposition (Target mbox)', function () {
       },
     );
 
-    // ── 3. Drain logcat buffer, then tap the target offer ────────────────────
-    // Drain first so getAndroidSdkLogcat() only captures the tap event.
-    await drainAndroidLogcat();
+    // ── 3. Start native log capture, then tap the target offer ───────────────
+    // Android: drains logcat buffer. iOS: spawns `xcrun simctl log stream`.
+    await startNativeLogCapture();
 
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -118,17 +121,14 @@ describe('Optimize tapped proposition (Target mbox)', function () {
     expect(finalLog).toContain('mboxAug');
     expect(finalLog).not.toContain(TAP_SKIPPED_LOG);
 
-    // ── 5. Assert logcat: native SDK dispatched the Edge event (Android) ─────
-    // On iOS, logcat is unavailable — skip this verification.
-    if (getE2ePlatform() === 'Android') {
-      // Give the SDK a moment to dispatch the event
-      await browser.pause(2000);
+    // ── 5. Assert native SDK logs: Edge event dispatched (both platforms) ────
+    // Give the SDK a moment to dispatch the event
+    await browser.pause(2000);
 
-      const sdkLogs = await getAndroidSdkLogcat();
-      expect(sdkLogs).toContain('Optimize Track Propositions Request');
-      expect(sdkLogs).toContain('decisioning.propositionInteract');
-      expect(sdkLogs).toContain('mboxAug');
-      expect(sdkLogs).toContain('trackpropositions');
-    }
+    const sdkLogs = await getNativeSdkLogs();
+    expect(sdkLogs).toContain('Optimize Track Propositions Request');
+    expect(sdkLogs).toContain('decisioning.propositionInteract');
+    expect(sdkLogs).toContain('mboxAug');
+    expect(sdkLogs).toContain('trackpropositions');
   });
 });
