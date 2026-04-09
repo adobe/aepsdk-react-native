@@ -1,9 +1,20 @@
 {
   "extends": "../../tsconfig.json",
+  "jsx": "react-native",
   "compilerOptions": {
     "noEmit": false,
     "rootDir": "./src",
-    "outDir": "./dist"
+    "declaration": true,
+    "preserveSymlinks": true,
+    "target": "es6",
+    "module": "NodeNext",
+    "jsx": "react-native",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "NodeNext",
+    "lib": ["es6", "dom", "ES2021"],
+    "esModuleInterop": true,
   },
-  "exclude": ["__tests__", "dist"]
+  "include": ["src"],
+  "exclude": ["__tests__", "dist", "node_modules"]
 }

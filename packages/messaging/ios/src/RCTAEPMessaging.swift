@@ -126,9 +126,14 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         withRejecter reject: @escaping RCTPromiseRejectBlock
     ) {
         let mapped = surfaces.map { Surface(path: $0) }
-        Messaging.updatePropositionsForSurfaces(mapped)
-        propositionByUuid.removeAll()
-        resolve(nil)
+        Messaging.updatePropositionsForSurfaces(mapped) { success in
+            if success {
+                self.propositionByUuid.removeAll()
+                resolve(nil)
+            } else {
+                reject("Unable to update propositions for surfaces", nil, nil)
+            }
+        }
     }
 
     /// Message Class Methods
@@ -361,7 +366,29 @@ public class RCTAEPMessaging: RCTEventEmitter, MessagingDelegate {
         resolve(nil)
     }
 
+    private static let inboxKeyPrefix = "aep_messaging_inbox_"
 
+    @objc
+    func getInboxState(_ activityId: String, withResolver resolve: @escaping RCTPromiseResolveBlock, withRejecter reject: @escaping RCTPromiseRejectBlock) {
+        guard !activityId.isEmpty else {
+            resolve(nil)
+            return
+        }
+        let key = RCTAEPMessaging.inboxKeyPrefix + activityId
+        let value = UserDefaults.standard.string(forKey: key)
+        resolve(value)
+    }
+
+    @objc
+    func setInboxState(_ activityId: String, stateJson: String, withResolver resolve: @escaping RCTPromiseResolveBlock, withRejecter reject: @escaping RCTPromiseRejectBlock) {
+        guard !activityId.isEmpty else {
+            resolve(nil)
+            return
+        }
+        let key = RCTAEPMessaging.inboxKeyPrefix + activityId
+        UserDefaults.standard.set(stateJson, forKey: key)
+        resolve(nil)
+    }
 
     // Map uuid (scopeDetails.activity.id) -> parent Proposition
     private var propositionByUuid = [String: Proposition]()
