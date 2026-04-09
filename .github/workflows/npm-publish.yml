@@ -17,6 +17,8 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 20.19.4
+      - name: Enable Corepack
+        run: corepack enable
       - name: install dependencies
         run: yarn install
       - name: Authenticate with Registry
