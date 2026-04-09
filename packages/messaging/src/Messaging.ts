@@ -31,7 +31,6 @@ export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
   getCachedMessages: () => Message[];
   getLatestMessage: () => Message;
-  getContentCardUI: (surface: string) => Promise<ContentTemplate[]>;
   getPropositionsForSurfaces: (
     surfaces: string[]
   ) => Record<string, MessagingProposition[]>;
@@ -41,7 +40,7 @@ export interface NativeMessagingModule {
     shouldShowMessage: boolean,
     shouldSaveMessage: boolean
   ) => void;
-  updatePropositionsForSurfaces: (surfaces: string[]) => Promise<void>;
+  updatePropositionsForSurfaces: (surfaces: string[]) => void;
   trackContentCardDisplay: (
     proposition: MessagingProposition,
     contentCard: ContentCard
