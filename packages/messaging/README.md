@@ -36,6 +36,7 @@ yarn add @adobe/react-native-aepmessaging
 ### Initializing with SDK:
 
 To initialize the SDK, use the following methods:
+
 - [MobileCore.initializeWithAppId(appId)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initializewithappid)
 - [MobileCore.initialize(initOptions)](https://github.com/adobe/aepsdk-react-native/tree/main/packages/core#initialize)
 
@@ -48,8 +49,8 @@ import {
   Messaging,
   MessagingDelegate,
   MessagingEdgeEventType,
-  Message
-} from '@adobe/react-native-aepmessaging';
+  Message,
+} from "@adobe/react-native-aepmessaging";
 ```
 
 ## API reference
@@ -68,7 +69,7 @@ extensionVersion(): Promise<string>
 
 ```javascript
 Messaging.extensionVersion().then((version) =>
-  console.log('AdobeExperienceSDK: Messaging version: ' + version)
+  console.log("AdobeExperienceSDK: Messaging version: " + version)
 );
 ```
 
@@ -139,7 +140,7 @@ const messagingDelegate = {
 
   urlLoaded(url: string, message: Message) {
     // Action after message loads an URL
-  }
+  },
 };
 
 Messaging.setMessagingDelegate(messagingDelegate);
@@ -152,7 +153,7 @@ const messagingDelegate = {
   shouldShowMessage(message: Message) {
     Messaging.saveMessage(message);
     return false;
-  }
+  },
 };
 ```
 
@@ -169,7 +170,7 @@ updatePropositionsForSurfaces(surfaces: string[])
 **Example**
 
 ```javascript
-Messaging.updatePropositionsForSurfaces(['mobileapp://my-surface']);
+Messaging.updatePropositionsForSurfaces(["mobileapp://my-surface"]);
 ```
 
 ### getPropositionsForSurfaces
@@ -186,7 +187,7 @@ getPropositionsForSurfaces(surfaces: string[])
 **Example**
 
 ```javascript
-const propositions = Messaging.getPropositionsForSurfaces(['my-surface']);
+const propositions = Messaging.getPropositionsForSurfaces(["my-surface"]);
 console.log(propositions);
 ```
 
@@ -345,7 +346,7 @@ track(interaction: ?string, eventType: MessagingEdgeEventType)
 
 ```javascript
 var message: Message;
-message.track('sample text', MessagingEdgeEventType.IN_APP_DISMISS);
+message.track("sample text", MessagingEdgeEventType.IN_APP_DISMISS);
 ```
 
 ### setAutoTrack
@@ -412,7 +413,7 @@ type MessagingDelegate = {
 
   urlLoaded(url: string, message: Message): void, // iOS Only
 
-  onContentLoaded(message: Message): void // Android Only
+  onContentLoaded(message: Message): void, // Android Only
 };
 ```
 
@@ -438,7 +439,7 @@ const messagingDelegate = {
 
   onContentLoaded(message: Message) {
     // Action after message loads content
-  }
+  },
 };
 ```
 
@@ -450,7 +451,7 @@ Below is an example of when the developer may choose to suppress an in-app messa
 
 ```javascript
 function shouldShowMessage(message: Message): boolean {
-  if (someOtherWorkflowStatus == 'inProgress') {
+  if (someOtherWorkflowStatus == "inProgress") {
     return false;
   }
 
@@ -465,12 +466,12 @@ Continuing with the above example, the developer has stored the message that was
 var cachedMessage: Message;
 
 function otherWorkflowFinished() {
-  anotherWorkflowStatus = 'complete';
+  anotherWorkflowStatus = "complete";
   cachedMessage.show();
 }
 
 function shouldShowMessage(message: Message): boolean {
-  if (anotherWorkflowStatus === 'inProgress') {
+  if (anotherWorkflowStatus === "inProgress") {
     // store the current message for later use
     Messaging.saveMessage(message);
     cachedMessage = message;
@@ -485,12 +486,11 @@ function shouldShowMessage(message: Message): boolean {
 
 ```javascript
 function otherWorkflowFinished() {
-  anotherWorkflowStatus = 'complete';
+  anotherWorkflowStatus = "complete";
   currentMessage.show();
   currentMessage.clearMessage();
 }
 ```
-
 
 ## Tracking interactions with content cards
 
@@ -501,6 +501,7 @@ Deprecated in 7.2.0: Use `Proposition.track(...)` instead. This API will be remo
 Tracks a Display interaction with the given ContentCard
 
 **Syntax**
+
 ```javascript
 Messaging.trackContentCardDisplay(proposition, contentCard);
 ```
@@ -512,10 +513,138 @@ Deprecated in 7.2.0: Use `Proposition.track(...)` instead. This API will be remo
 Tracks a Click interaction with the given ContentCard
 
 **Syntax**
+
 ```javascript
 Messaging.trackContentCardInteraction(proposition, contentCard);
 ```
 
+## Inbox & Content Cards
+
+The messaging extension provides pre-built React Native UI components for displaying content cards and inbox views in your application.
+
+### ContentCardView
+
+The `ContentCardView` component renders individual content cards with automatic layout handling for different card types (SmallImage, LargeImage, ImageOnly).
+
+**Import:**
+
+```javascript
+import { ContentCardView } from "@adobe/react-native-aepmessaging/ui";
+```
+
+**Basic Usage:**
+
+```javascript
+<ContentCardView
+  template={contentCard}
+  listener={(event, data) => {
+    console.log('Content card event:', event, data);
+  }}
+/>
+```
+
+**Props:**
+
+- `template` (required): The content card template object from `getPropositionsForSurfaces`
+- `listener` (optional): Callback function for content card events (`onDisplay`, `onInteract`, `onDismiss`)
+- `variant` (optional): Override card variant (`SmallImage`, `LargeImage`, `ImageOnly`)
+- `styleOverrides` (optional): Custom style overrides for card components
+
+### useContentCardUI Hook
+
+A convenient hook that manages content card fetching, state, and error handling.
+
+**Import:**
+
+```javascript
+import { useContentCardUI } from "@adobe/react-native-aepmessaging/ui";
+```
+
+**Usage:**
+
+```javascript
+const { content, isLoading, error } = useContentCardUI('homepage');
+
+if (isLoading) return <Text>Loading...</Text>;
+if (error) return <Text>Error: {error.message}</Text>;
+
+return (
+  <FlatList
+    data={content}
+    renderItem={({ item }) => <ContentCardView template={item} />}
+  />
+);
+```
+
+### Inbox Component
+
+The `Inbox` component provides a complete inbox view for content cards with built-in support for loading states, error handling, empty states, pagination, and card management (dismiss, interact).
+
+**Import:**
+
+```javascript
+import { Inbox } from "@adobe/react-native-aepmessaging/ui";
+```
+
+**Basic Usage:**
+
+```javascript
+import { useInbox } from "@adobe/react-native-aepmessaging/ui";
+
+function MyInboxScreen() {
+  const { settings, isLoading, error } = useInbox('homepage');
+
+  return (
+    <Inbox
+      surface="homepage"
+      settings={settings}
+      isLoading={isLoading}
+      error={!!error}
+      LoadingComponent={<ActivityIndicator />}
+      ErrorComponent={<Text>Error loading inbox</Text>}
+    />
+  );
+}
+```
+
+**Props:**
+
+- `surface` (required): Surface identifier for the inbox
+- `settings` (required): Inbox settings from `useInbox` hook or `Messaging.getInbox()`
+- `isLoading` (optional): Loading state
+- `error` (optional): Error state
+- `LoadingComponent` (optional): Custom loading component (default: `<ActivityIndicator />`)
+- `ErrorComponent` (optional): Custom error component
+- `FallbackComponent` (optional): Component shown when settings are null
+- `EmptyComponent` (optional): Custom empty state component
+- `CardProps` (optional): Props passed to individual `ContentCardView` components
+- All `FlatListProps` are supported for layout customization
+
+### useInbox Hook
+
+A hook that fetches inbox settings for a given surface.
+
+**Import:**
+
+```javascript
+import { useInbox } from "@adobe/react-native-aepmessaging/ui";
+```
+
+**Usage:**
+
+```javascript
+const { settings, isLoading, error, refetch } = useInbox('homepage');
+
+// settings contains inbox configuration (layout, capacity, heading, etc.)
+// refetch can be called to reload settings
+```
+
+For detailed examples and customization options, see the [Content Cards Tutorial](./tutorials/ContentCards.md), [Content Card Customization Guide](./tutorials/ContentCardCustomizationGuide.md), and [Inbox Tutorial](./tutorials/Inbox.md).
 
 ## Tutorials
-[Native handling of Javascript Events](./tutorials/In-App%20Messaging.md)
+
+- [Content Cards Tutorial](./tutorials/ContentCards.md) - Complete guide to implementing content cards
+- [Content Card Customization Guide](./tutorials/ContentCardCustomizationGuide.md) - Advanced styling and customization
+- [Inbox Tutorial](./tutorials/Inbox.md) - Complete guide to implementing inbox views
+- [Content Card UI API Reference](./tutorials/ContentCardUI_API_Reference.md) - Complete API reference for UI components
+- [In-App Messaging Tutorial](./tutorials/In-App%20Messaging.md) - Native handling of JavaScript events

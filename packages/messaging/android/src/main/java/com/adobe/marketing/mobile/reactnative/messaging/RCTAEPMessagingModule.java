@@ -14,6 +14,8 @@ package com.adobe.marketing.mobile.reactnative.messaging;
 import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertMessageToMap;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -31,9 +33,9 @@ import com.adobe.marketing.mobile.messaging.PropositionItem;
 import com.adobe.marketing.mobile.messaging.Surface;
 import com.adobe.marketing.mobile.services.ServiceProvider;
 import com.adobe.marketing.mobile.services.ui.InAppMessage;
-import com.adobe.marketing.mobile.services.ui.message.InAppMessageEventHandler;
 import com.adobe.marketing.mobile.services.ui.Presentable;
 import com.adobe.marketing.mobile.services.ui.PresentationDelegate;
+import com.adobe.marketing.mobile.services.ui.message.InAppMessageEventHandler;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -133,7 +135,8 @@ public final class RCTAEPMessagingModule
   @ReactMethod
   public void getLatestMessage(final Promise promise) {
     if (this.latestMessage != null) {
-      promise.resolve(RCTAEPMessagingUtil.convertToReadableMap(convertMessageToMap(this.latestMessage)));
+      promise.resolve(RCTAEPMessagingUtil.convertToReadableMap(
+          convertMessageToMap(this.latestMessage)));
     } else {
       promise.resolve(null);
     }
@@ -189,10 +192,9 @@ public final class RCTAEPMessagingModule
 
   @ReactMethod
   public void updatePropositionsForSurfaces(ReadableArray surfaces) {
-    Messaging.updatePropositionsForSurfaces(
+     Messaging.updatePropositionsForSurfaces(
         RCTAEPMessagingUtil.convertSurfaces(surfaces));
         propositionItemByUuid.clear();
-
   }
 
   // Message Methods
@@ -239,15 +241,18 @@ public final class RCTAEPMessagingModule
   }
 
   @ReactMethod
-  public void handleJavascriptMessage(final String messageId, final String handlerName) {
+  public void handleJavascriptMessage(final String messageId,
+                                      final String handlerName) {
     Presentable<?> presentable = presentableCache.get(messageId);
     if (presentable == null || !(presentable.getPresentation() instanceof InAppMessage)) {
       Log.w(TAG, "handleJavascriptMessage: No presentable found for messageId: " + messageId);
       return;
     }
 
-    Presentable<InAppMessage> inAppMessagePresentable = (Presentable<InAppMessage>) presentable;
-    InAppMessageEventHandler eventHandler = inAppMessagePresentable.getPresentation().getEventHandler();
+    Presentable<InAppMessage> inAppMessagePresentable =
+        (Presentable<InAppMessage>)presentable;
+    InAppMessageEventHandler eventHandler =
+        inAppMessagePresentable.getPresentation().getEventHandler();
 
     eventHandler.handleJavascriptMessage(handlerName, content -> {
       Map<String, String> params = new HashMap<>();
@@ -280,48 +285,52 @@ public final class RCTAEPMessagingModule
   // Messaging Delegate functions
   @Override
   public void onShow(final Presentable<?> presentable) {
-    if (!(presentable.getPresentation() instanceof InAppMessage)) return;
-    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
+    if (!(presentable.getPresentation() instanceof InAppMessage))
+      return;
+    Message message = MessagingUtils.getMessageForPresentable(
+        (Presentable<InAppMessage>)presentable);
     presentableCache.put(message.getId(), presentable);
 
     if (message != null) {
-      Map<String, String> data =
-          convertMessageToMap(message);
+      Map<String, String> data = convertMessageToMap(message);
       emitEvent("onShow", data);
     }
   }
 
   @Override
   public void onDismiss(final Presentable<?> presentable) {
-    if (!(presentable.getPresentation() instanceof InAppMessage)) return;
-    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
+    if (!(presentable.getPresentation() instanceof InAppMessage))
+      return;
+    Message message = MessagingUtils.getMessageForPresentable(
+        (Presentable<InAppMessage>)presentable);
     presentableCache.remove(message.getId());
     
     if (message != null) {
-      Map<String, String> data =
-          convertMessageToMap(message);
+      Map<String, String> data = convertMessageToMap(message);
       emitEvent("onDismiss", data);
     }
   }
 
   @Override
   public void onHide(final Presentable<?> presentable) {
-    if (!(presentable.getPresentation() instanceof InAppMessage)) return;
-    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
+    if (!(presentable.getPresentation() instanceof InAppMessage))
+      return;
+    Message message = MessagingUtils.getMessageForPresentable(
+        (Presentable<InAppMessage>)presentable);
     if (message != null) {
-      Map<String, String> data =
-              convertMessageToMap(message);
+      Map<String, String> data = convertMessageToMap(message);
       emitEvent("onHide", data);
     }
   }
 
   @Override
   public boolean canShow(final Presentable<?> presentable) {
-    if (!(presentable.getPresentation() instanceof InAppMessage)) return false;
-    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
+    if (!(presentable.getPresentation() instanceof InAppMessage))
+      return false;
+    Message message = MessagingUtils.getMessageForPresentable(
+        (Presentable<InAppMessage>)presentable);
     if (message != null) {
-      Map<String, String> data =
-          convertMessageToMap(message);
+      Map<String, String> data = convertMessageToMap(message);
       emitEvent("shouldShowMessage", data);
       // Latch stops the thread until the shouldShowMessage value is received
       // from the JS side on thread dedicated to run JS code. The function
@@ -342,12 +351,14 @@ public final class RCTAEPMessagingModule
     return shouldShowMessage;
   }
 
-  public void onContentLoaded(final Presentable<?> presentable, PresentationContent presentationContent) {
-    if (!(presentable.getPresentation() instanceof InAppMessage)) return;
-    Message message = MessagingUtils.getMessageForPresentable((Presentable<InAppMessage>) presentable);
+  public void onContentLoaded(final Presentable<?> presentable,
+                              PresentationContent presentationContent) {
+    if (!(presentable.getPresentation() instanceof InAppMessage))
+      return;
+    Message message = MessagingUtils.getMessageForPresentable(
+        (Presentable<InAppMessage>)presentable);
     if (message != null) {
-      Map<String, String> data =
-              convertMessageToMap(message);
+      Map<String, String> data = convertMessageToMap(message);
       emitEvent("onContentLoaded", data);
     }
   }
@@ -379,8 +390,10 @@ public final class RCTAEPMessagingModule
   }
 
   @ReactMethod
-  public void trackContentCardDisplay(ReadableMap propositionMap, ReadableMap contentCardMap) {
-    final Map<String, Object> eventData = RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
+  public void trackContentCardDisplay(ReadableMap propositionMap,
+                                      ReadableMap contentCardMap) {
+    final Map<String, Object> eventData =
+        RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
     final Proposition proposition = Proposition.fromEventData(eventData);
     for (PropositionItem item : proposition.getItems()) {
       if (item.getItemId().equals(contentCardMap.getString("id"))) {
@@ -391,8 +404,10 @@ public final class RCTAEPMessagingModule
   }
 
   @ReactMethod
-  public void trackContentCardInteraction(ReadableMap propositionMap, ReadableMap contentCardMap) {
-    final Map<String, Object> eventData = RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
+  public void trackContentCardInteraction(ReadableMap propositionMap,
+                                          ReadableMap contentCardMap) {
+    final Map<String, Object> eventData =
+        RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
     final Proposition proposition = Proposition.fromEventData(eventData);
     for (PropositionItem item : proposition.getItems()) {
       if (item.getItemId().equals(contentCardMap.getString("id"))) {
@@ -446,6 +461,41 @@ public final class RCTAEPMessagingModule
 
     } catch (Exception e) {
       Log.d(TAG, "Error tracking PropositionItem for uuid: " + uuid + ", error: " + e.getMessage(), e);
+    }
+  }
+
+  private static final String INBOX_PREFS = "AEPMessagingInbox";
+  private static final String INBOX_KEY_PREFIX = "aep_messaging_inbox_";
+
+  @ReactMethod
+  public void getInboxState(String activityId, final Promise promise) {
+    try {
+      if (activityId == null || activityId.isEmpty()) {
+        promise.resolve(null);
+        return;
+      }
+      SharedPreferences prefs = reactContext.getSharedPreferences(INBOX_PREFS, Context.MODE_PRIVATE);
+      String value = prefs.getString(INBOX_KEY_PREFIX + activityId, null);
+      promise.resolve(value);
+    } catch (Exception e) {
+      Log.e(TAG, "[MessagingBridge] getInboxState error: " + e.getMessage(), e);
+      promise.resolve(null);
+    }
+  }
+
+  @ReactMethod
+  public void setInboxState(String activityId, String stateJson, final Promise promise) {
+    try {
+      if (activityId == null || activityId.isEmpty()) {
+        promise.resolve(null);
+        return;
+      }
+      SharedPreferences prefs = reactContext.getSharedPreferences(INBOX_PREFS, Context.MODE_PRIVATE);
+      prefs.edit().putString(INBOX_KEY_PREFIX + activityId, stateJson).apply();
+      promise.resolve(null);
+    } catch (Exception e) {
+      Log.e(TAG, "[MessagingBridge] setInboxState error: " + e.getMessage(), e);
+      promise.reject("setInboxState", e.getMessage(), e);
     }
   }
 

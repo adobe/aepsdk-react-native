@@ -77,10 +77,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={scheme === "dark" ? DarkTheme : DefaultTheme}>
       <Drawer>
-        <Drawer.Screen name="index" options={{ title: 'Home' }} />
+      <Drawer.Screen name="index" options={{ title: 'Home' }} />
         <Drawer.Screen name="CoreView" options={{ title: 'CoreView' }} />
         <Drawer.Screen name="AssuranceView" options={{ title: 'AssuranceView' }} />
         <Drawer.Screen name="ConsentView" options={{ title: 'ConsentView' }} />
+        <Drawer.Screen name="InboxView" options={{ title: 'Content Card & Inbox' }} />
         <Drawer.Screen name="EdgeBridgeView" options={{ title: 'EdgeBridgeView' }} />
         <Drawer.Screen name="EdgeView" options={{ title: 'EdgeView' }} />
         <Drawer.Screen name="EdgeIdentityView" options={{ title: 'EdgeIdentityView' }} />

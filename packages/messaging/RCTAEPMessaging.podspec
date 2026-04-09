@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.swift_version = '5.1'
 
   s.dependency "React"
-  s.dependency "AEPMessaging", ">= 5.3.0", "< 6.0.0"
+  s.dependency "AEPMessaging", ">= 5.12.0", "< 6.0.0"
 end
