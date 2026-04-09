@@ -34,5 +34,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
   }
 }
