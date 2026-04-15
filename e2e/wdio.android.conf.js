@@ -57,7 +57,8 @@ const buildCapabilities = () => {
     'appium:noReset': true,
     'appium:forceAppLaunch': true,
     'appium:newCommandTimeout': 120,
-    'appium:waitForIdleTimeout': 10000,
+    'appium:waitForIdleTimeout': 0,
+    'appium:appWaitDuration': 60000,
   };
 
   if (process.env.ANDROID_UDID) {

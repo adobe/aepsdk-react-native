@@ -83,7 +83,17 @@ export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && yarn e2e:ios:build:tu
 
 ---
 
-### 10. Android E2E APK path was hardcoded to debug in wdio config
+### 10. iOS: native log capture fails with subsystem-based predicate
+
+AEP SDK on iOS uses `os_log` under **multiple subsystems** (Optimize, Edge, Core, Messaging, etc.) — NOT a single `com.adobe.mobile.marketing.aep` subsystem. Using `subsystem == "com.adobe.mobile.marketing.aep"` in the `xcrun simctl log stream` predicate filters out most SDK logs.
+
+**Rule:** Use `process == "AwesomeProject"` as the ONLY predicate filter. Post-filter in code if needed. Also resolve explicit simulator UDID instead of using `"booted"` (ambiguous with multiple sims). Use `--style ndjson` for machine-parseable output.
+
+See: `context/ios-native-log-capture.md`
+
+---
+
+### 11. Android E2E APK path was hardcoded to debug in wdio config
 `wdio.android.conf.js` had the APK path hardcoded to the debug build. Release E2E builds fail because the APK isn't at the expected path.
 
 See: `errors/e2e-android-build-cmake-clean-glob-mismatch.md`
@@ -92,16 +102,31 @@ See: `errors/e2e-android-build-cmake-clean-glob-mismatch.md`
 
 ## JS / Metro
 
-### 11. Metro symlink workaround required for local package development
+### 12. Metro symlink workaround required for local package development
 When developing packages locally (symlinked), Metro needs `watchFolders` + `resolver.nodeModulesPaths` configured in `metro.config.js`. Without it, Metro cannot resolve `@adobe/react-native-aep*` from outside `node_modules`.
 
 See: `docs/development.md`
 
 ---
 
+### 13. Android turbo release build: clean library package build dirs too
+
+The `e2e:android:build:release:turbo` script only cleans `app/.cxx` and `app/build` — it does NOT clean `packages/*/android/build/`. Stale codegen, BuildConfig, or compiled classes from a prior build (interop, debug, different branch) cause the turbo module to resolve as an empty JSI stub `{}` with no working methods. All Optimize API calls fail with `TypeError: Cannot read property '<method>' of null`.
+
+**Rule:** Always clean `packages/optimize/android/build/` (and any other migrated turbo module package) before a release turbo build.
+
+```bash
+rm -rf packages/optimize/android/build apps/AwesomeProject/android/app/{.cxx,build}
+cd apps/AwesomeProject/android && USE_INTEROP_ROOT=0 ./gradlew assembleRelease
+```
+
+See: `errors/android-turbo-module-null-stale-build.md`
+
+---
+
 ## General
 
-### 12. Module name must match exactly across JS, iOS, and Android
+### 14. Module name must match exactly across JS, iOS, and Android
 | Location | Expected name |
 |----------|--------------|
 | `TurboModuleRegistry.getEnforcing(...)` | `'NativeAEP<Module>'` |

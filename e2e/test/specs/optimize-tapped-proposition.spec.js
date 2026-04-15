@@ -122,10 +122,21 @@ describe('Optimize tapped proposition (Target mbox)', function () {
     expect(finalLog).not.toContain(TAP_SKIPPED_LOG);
 
     // ── 5. Assert native SDK logs: Edge event dispatched (both platforms) ────
-    // Give the SDK a moment to dispatch the event
-    await browser.pause(2000);
+    // Give the SDK time to dispatch the Edge event.
+    // iOS needs more time than Android because os_log buffering adds latency.
+    await browser.pause(3000);
 
     const sdkLogs = await getNativeSdkLogs();
+
+    // Debug: if logs are empty, dump diagnostic info instead of failing silently
+    if (!sdkLogs || sdkLogs.trim().length === 0) {
+      console.error('[e2e] WARNING: Native SDK logs are EMPTY after tapped() call.');
+      console.error('[e2e] Platform:', browser.capabilities.platformName);
+      console.error('[e2e] This usually means the log capture process did not attach,');
+      console.error('[e2e] or the predicate filtered out all logs.');
+      console.error('[e2e] Check e2e/logs/ios_native_sdk_logs.txt for raw output.');
+    }
+
     expect(sdkLogs).toContain('Optimize Track Propositions Request');
     expect(sdkLogs).toContain('decisioning.propositionInteract');
     expect(sdkLogs).toContain('mboxAug');

@@ -16,6 +16,7 @@ All non-obvious project knowledge lives in [`agent-docs/`](./agent-docs/README.m
 | [`agent-docs/playbooks/new-module-migration.md`](./agent-docs/playbooks/new-module-migration.md) | Before migrating any package to TurboModule |
 | [`agent-docs/playbooks/release-checklist.md`](./agent-docs/playbooks/release-checklist.md) | Before cutting a release |
 | [`agent-docs/migrations/optimize-turbo.md`](./agent-docs/migrations/optimize-turbo.md) | Deep reference for the Optimize TurboModule migration |
+| [`agent-docs/context/ios-native-log-capture.md`](./agent-docs/context/ios-native-log-capture.md) | Before debugging iOS E2E native log capture issues |
 | [`agent-docs/errors/`](./agent-docs/errors/) | When hitting a build, E2E, or native error — check here first |
 
 ---

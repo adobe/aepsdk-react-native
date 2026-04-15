@@ -22,13 +22,13 @@ PODS:
     - AEPCore (< 6.0.0, >= 5.8.0)
   - AEPLifecycle (5.8.0):
     - AEPCore (< 6.0.0, >= 5.8.0)
-  - AEPMessaging (5.11.0):
+  - AEPMessaging (5.13.0):
     - AEPCore (< 6.0.0, >= 5.8.0)
     - AEPEdge (< 6.0.0, >= 5.0.2)
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
     - AEPMessagingLiveActivity (< 6.0.0, >= 5.7.0)
     - AEPServices (< 6.0.0, >= 5.8.0)
-  - AEPMessagingLiveActivity (5.11.0)
+  - AEPMessagingLiveActivity (5.13.0)
   - AEPOptimize (5.6.1):
     - AEPCore (< 6.0.0, >= 5.4.0)
     - AEPEdge (< 6.0.0, >= 5.0.0)
@@ -39,7 +39,7 @@ PODS:
   - AEPServices (5.8.0)
   - AEPSignal (5.8.0):
     - AEPCore (< 6.0.0, >= 5.8.0)
-  - AEPTarget (5.0.0):
+  - AEPTarget (5.1.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
   - AEPUserProfile (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
@@ -2262,14 +2262,14 @@ SPEC CHECKSUMS:
   AEPEdgeIdentity: 3161ff33434586962946912d6b8e9e8fca1c4d23
   AEPIdentity: 2dcdaa0288641441a7c1b1c97f1ed8113d40cc2d
   AEPLifecycle: 1ff56cdd009b043c2ad412ddf8952beefd1f3e3d
-  AEPMessaging: 0b4da0fed0e87752ffb1332b79624515cac299b7
-  AEPMessagingLiveActivity: 65451917c22a58edcf26c90af016f6a227702575
+  AEPMessaging: a6993660695fddc0578093e1c3335220773383e5
+  AEPMessagingLiveActivity: c5ea7db020f4e1fb0c3b7651965fe5ff52cb1665
   AEPOptimize: ac17a3311f3763ec2c2786243c5b8272acaf83dd
   AEPPlaces: 9eec5f88306033ce8190ec30727cbdd4008cc018
   AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
   AEPServices: a5608a9d3749701030e12fe379f53e40fa6f8e6f
   AEPSignal: 63a1c25c5f99c775a78bc398d728ed50a3bc6184
-  AEPTarget: 78197ae0f5455eeb837f8ed9fdc4f3f697cb3dd8
+  AEPTarget: 54d4aac9a1478e97bbbb7211c61314ab3ee1098c
   AEPUserProfile: cf36305d683d993d528337a46b7a269029b63e5d
   FBLazyVector: e97c19a5a442429d1988f182a1940fb08df514da
   hermes-engine: 69759dd5b7350121a9e3bc1bc4113a6bb5545a82
@@ -2281,7 +2281,7 @@ SPEC CHECKSUMS:
   RCTAEPEdgeConsent: 94d66ceefac0058a1586b0b876e37f178d3733d2
   RCTAEPEdgeIdentity: 2ed3fdc9a3150e9bcf268b128c22f293ab4df6aa
   RCTAEPMessaging: a3496d6f9745ec56d35df30a9d353c48347f4c6d
-  RCTAEPOptimize: cab2999611a8dd73d42308e9452882868e3c636b
+  RCTAEPOptimize: e39c070a816ac202309ff4c1a3a2028b710947ef
   RCTAEPPlaces: 4050bda86286605a8683b4c078baac1662ca013a
   RCTAEPTarget: e8bcf8864758faf07635719ffa0eff6a06861910
   RCTAEPUserProfile: 799d618ffbbfc389175c8a8cd5afcc36d852709a

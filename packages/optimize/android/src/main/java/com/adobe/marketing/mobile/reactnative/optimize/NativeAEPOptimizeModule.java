@@ -61,9 +61,7 @@ public class NativeAEPOptimizeModule extends NativeAEPOptimizeSpec {
 
     @Override
     public void extensionVersion(Promise promise) {
-        String version = Optimize.extensionVersion();
-        Log.d(TAG, "extensionVersion called: module=" + NAME + ", USE_INTEROP_ROOT=" + BuildConfig.USE_INTEROP_ROOT + ", version=" + version);
-        promise.resolve(version);
+        promise.resolve(Optimize.extensionVersion());
     }
 
     @Override
