@@ -10,19 +10,19 @@ import {
 } from '../../helpers/rnSelectors.js';
 
 /**
- * Validate Offer.tapped(proposition) sends a propositionInteract Edge event.
+ * Validate Offer.displayed(proposition) sends a propositionDisplay Edge event.
  *
  * Strategy:
  *   1. Populate cache via updatePropositions (callback variant as completion gate).
  *   2. Call getPropositions so the target proposition state is populated.
  *   3. Start native log capture (Android: drain logcat, iOS: spawn log stream).
- *   4. Tap "Tap Target Offer" button which calls offer.tapped(proposition).
- *   5. Assert via callback log: tap invoked, correct scope, no error.
+ *   4. Tap "Display Target Offer" which calls offer.displayed(proposition).
+ *   5. Assert via callback log (both platforms): displayed invoked, correct scope, no error.
  *   6. Assert via native SDK logs (both platforms): SDK dispatched
  *      "Optimize Track Propositions Request" with eventType
- *      "decisioning.propositionInteract" and scope "mboxAug".
+ *      "decisioning.propositionDisplay" and scope "mboxAug".
  *
- * The tapped() call is fire-and-forget — it sends a decisioning.propositionInteract
+ * The displayed() call is fire-and-forget — it sends a decisioning.propositionDisplay
  * Edge event. The callback log confirms the JS side executed correctly. The native
  * logs confirm the SDK actually dispatched the Edge event with the right payload.
  *
@@ -34,10 +34,10 @@ import {
 
 const UPDATE_SUCCESS_LOG = /updatePropositions onSuccess:/;
 const GET_PROPOSITIONS_SIZE_NONZERO = /getPropositions: size=[1-9]/;
-const TAP_SUCCESS_LOG = /Offer\.tapped\(\) invoked for target proposition/;
-const TAP_SKIPPED_LOG = 'Offer.tapped() skipped';
+const DISPLAY_SUCCESS_LOG = /Offer\.displayed\(\) invoked for target proposition/;
+const DISPLAY_SKIPPED_LOG = 'Offer.displayed() skipped';
 
-describe('Optimize tapped proposition (Target mbox)', function () {
+describe('Optimize displayed proposition (Target mbox)', function () {
   before(async function () {
     await activateAwesomeProject();
 
@@ -54,7 +54,7 @@ describe('Optimize tapped proposition (Target mbox)', function () {
     await clearCallbackLog();
   });
 
-  it('tapped sends propositionInteract event for Target HTML offer', async function () {
+  it('displayed sends propositionDisplay event for Target HTML offer', async function () {
     const logContent = await $(byTestId('aepsdk-callback-log-content'));
 
     // ── 1. Populate cache: updatePropositions callback ───────────────────────
@@ -90,37 +90,37 @@ describe('Optimize tapped proposition (Target mbox)', function () {
         timeout: 30000,
         interval: 500,
         timeoutMsg:
-          'getPropositions returned size=0 — cache not populated for tap test.',
+          'getPropositions returned size=0 — cache not populated for display test.',
       },
     );
 
-    // ── 3. Start native log capture, then tap the target offer ───────────────
+    // ── 3. Start native log capture, then display the target offer ─────────
     // Android: drains logcat buffer. iOS: spawns `xcrun simctl log stream`.
     await startNativeLogCapture();
 
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
-      'aepsdk-optimize-btn-tap-target-offer',
+      'aepsdk-optimize-btn-display-target-offer',
     );
 
     await scrollAppScrollToTestId('aepsdk-app-scroll', 'aepsdk-sdk-init-status');
 
     // ── 4. Assert callback log: JS side executed correctly ───────────────────
     await browser.waitUntil(
-      async () => TAP_SUCCESS_LOG.test(await logContent.getText()),
+      async () => DISPLAY_SUCCESS_LOG.test(await logContent.getText()),
       {
         timeout: 10000,
         interval: 500,
         timeoutMsg:
-          'Offer.tapped() did not appear in log. The target proposition may not have been populated.',
+          'Offer.displayed() did not appear in log. The target proposition may not have been populated.',
       },
     );
 
     const finalLog = await logContent.getText();
-    expect(finalLog).toMatch(TAP_SUCCESS_LOG);
+    expect(finalLog).toMatch(DISPLAY_SUCCESS_LOG);
     expect(finalLog).toContain('mboxAug');
     expect(finalLog).toContain('scope=mboxAug');
-    expect(finalLog).not.toContain(TAP_SKIPPED_LOG);
+    expect(finalLog).not.toContain(DISPLAY_SKIPPED_LOG);
 
     // ── 5. Assert native SDK logs: Edge event dispatched (both platforms) ────
     // Give the SDK time to dispatch the Edge event.
@@ -129,7 +129,7 @@ describe('Optimize tapped proposition (Target mbox)', function () {
     const sdkLogs = await getNativeSdkLogs();
 
     if (!sdkLogs || sdkLogs.trim().length === 0) {
-      console.error('[e2e] WARNING: Native SDK logs are EMPTY after tapped() call.');
+      console.error('[e2e] WARNING: Native SDK logs are EMPTY after displayed() call.');
       console.error('[e2e] Platform:', browser.capabilities.platformName);
     }
 
@@ -141,5 +141,6 @@ describe('Optimize tapped proposition (Target mbox)', function () {
     // event `data:` block where iOS os_log truncates long messages with `<…>`
     // and JSON key ordering is non-deterministic. These are fully verified via
     // the callback log assertions above (scope=mboxAug, no skip, correct API).
+    
   });
 });

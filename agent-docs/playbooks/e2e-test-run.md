@@ -138,49 +138,64 @@ The Target HTML offer renders inside a `<WebView>` which has no `testID`. Appium
 
 ---
 
-### Pattern: Fire-and-forget API with no callback — verify via Android logcat
+### Pattern: Fire-and-forget API with no callback — callback log + Android logcat
 
 **APIs:** `Offer.tapped(proposition)`, `Offer.displayed(proposition)`
-**Spec:** `e2e/test/specs/optimize-tapped-proposition.spec.js`
+**Specs:**
+- `e2e/test/specs/optimize-tapped-proposition.spec.js`
+- `e2e/test/specs/optimize-displayed-proposition.spec.js`
 **Decision scope:** `DecisionScope('mboxAug')` — Target mbox
 
 **Why this needs a different pattern:**
-Unlike `updatePropositions` which has a callback variant, `offer.tapped()` is truly fire-and-forget — no return value, no callback, no promise. It dispatches a native `Optimize Track Propositions Request` event internally, which the SDK forwards to Edge as a `decisioning.propositionInteract` event. The only way to verify the SDK actually processed the tap is to inspect the native logcat.
+Unlike `updatePropositions` which has a callback variant, `offer.tapped()` and `offer.displayed()` are truly fire-and-forget — no return value, no callback, no promise. They dispatch native `Optimize Track Propositions Request` events internally, which the SDK forwards to Edge as `decisioning.propositionInteract` / `decisioning.propositionDisplay` events. The only way to verify the SDK actually processed the action beyond JS is to inspect native logs.
 
-**Solution — dual verification (callback log + Android logcat):**
+**Solution — dual verification (callback log on both platforms + Android logcat):**
 
-1. **Callback log** (JS-level): A dedicated button (`aepsdk-optimize-btn-tap-target-offer`) calls `offer.tapped(proposition)` and logs the result via `appendLog`. This confirms the JS side executed without error.
+1. **Callback log** (JS-level, both platforms): A dedicated button (e.g. `aepsdk-optimize-btn-tap-target-offer` or `aepsdk-optimize-btn-display-target-offer`) calls the API and logs the result via `appendLog`. This confirms the JS side executed without error.
 
-2. **Android logcat** (native-level): Use `drainAndroidLogcat()` before the action to clear the buffer, then `getAndroidSdkLogcat()` after to capture `AdobeExperienceSDK` entries. Assert the logcat contains:
-   - `Optimize Track Propositions Request` — event was dispatched
-   - `decisioning.propositionInteract` — correct event type
-   - `mboxAug` — correct scope
-   - `trackpropositions` — correct request type
+2. **Native SDK logs** (both platforms): Use `startNativeLogCapture()` before the action, then `getNativeSdkLogs()` after to capture SDK entries. Assert ONLY these two strings:
+   - `Optimize Track Propositions Request` — event name (in header, never truncated)
+   - `decisioning.propositionInteract` or `decisioning.propositionDisplay` — event type
+   - **Do NOT assert `mboxAug` or `trackpropositions`** in native logs — iOS `os_log` truncates long messages, and JSON key ordering is non-deterministic so these fields may land after the truncation point. Assert them via the callback log instead (step 1).
+
+**iOS native log capture — key details:**
+The AEP SDK on iOS **does** emit logs via `os_log` under `subsystem: com.adobe.mobile.marketing.aep`. However, `xcrun simctl spawn <udid> log stream` (inside simulator sandbox) does NOT see them. The host Mac's `/usr/bin/log stream` captures them correctly. The predicate must filter by subsystem (`subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"`) — filtering by process alone floods with XCUITest accessibility noise.
+
+**Native log assertions work on both platforms.** Do NOT guard them as Android-only. The `startNativeLogCapture()` / `getNativeSdkLogs()` helpers handle both platforms internally.
 
 **Helper functions** (in `e2e/helpers/rnSelectors.js`):
 ```js
-drainAndroidLogcat()      // Call BEFORE the action — clears logcat buffer
-getAndroidSdkLogcat()     // Call AFTER — returns AdobeExperienceSDK entries as string
+startNativeLogCapture()   // Call BEFORE the action — drains logcat buffer (Android), no-op on iOS
+getNativeSdkLogs()        // Call AFTER — returns AdobeExperienceSDK entries as string (Android)
+getE2ePlatform()          // Returns 'Android' or 'iOS' — use for conditional assertions
 ```
 
-Both are no-ops on iOS. `browser.getLogs('logcat')` drains the buffer on each call, so drain→act→read gives a clean window of entries.
+`browser.getLogs('logcat')` drains the buffer on each call, so drain→act→read gives a clean window of entries.
 
 **Full validation sequence:**
 ```
 1. Wait for SDK ready
 2. updatePropositions callback → wait for onSuccess (populate cache)
 3. getPropositions → verify size > 0 (populate targetProposition state)
-4. drainAndroidLogcat()
-5. Tap aepsdk-optimize-btn-tap-target-offer
-6. Assert callback log: /Offer.tapped() invoked/, contains 'mboxAug', no 'skipped'
-7. pause(2000) — give SDK time to dispatch the native event
-8. Assert logcat: 'Optimize Track Propositions Request', 'propositionInteract', 'mboxAug'
+4. startNativeLogCapture() — both platforms (Android: drains logcat, iOS: host log stream)
+5. Tap the action button (e.g. aepsdk-optimize-btn-display-target-offer)
+6. Assert callback log: /Offer.displayed() invoked/, contains 'mboxAug', no 'skipped'
+7. pause(3000) — give SDK time to dispatch the native event
+8. Assert native logs (both platforms): 'Optimize Track Propositions Request',
+   'decisioning.propositionDisplay'
+   (NOT 'mboxAug' or 'trackpropositions' — os_log truncation + non-deterministic key order)
 ```
+
+**Adapting for tapped vs displayed:**
+Both specs follow the identical structure. The only differences are:
+- Button testID: `aepsdk-optimize-btn-tap-target-offer` vs `aepsdk-optimize-btn-display-target-offer`
+- Callback log pattern: `Offer.tapped()` vs `Offer.displayed()`
+- Native event type: `decisioning.propositionInteract` vs `decisioning.propositionDisplay`
 
 **When to use this pattern:**
 - The API is fire-and-forget with **no callback and no paired read API**
 - You need to verify the SDK actually dispatched an Edge event, not just that JS ran
-- Currently **Android only** — iOS has no logcat equivalent in Appium
+- Native log assertion is **Android only**; iOS relies on callback log alone
 
 **When NOT to use this pattern:**
 - The API has a callback variant (use the callback as a gate instead — e.g. updatePropositions)
@@ -200,6 +215,14 @@ Both are no-ops on iOS. `browser.getLogs('logcat')` drains the buffer on each ca
 7. **Add negative assertions** (`not.toContain('error')`) alongside positive ones.
 8. **Use `clearCallbackLog()` only once in the `before` hook** — clears SDK init logs so spec assertions start clean. Do NOT call it mid-test between steps; it causes stale element references on Android (React re-renders the log panel, invalidating UiAutomator2 element IDs). The log accumulates across steps within a single `it()` and assertions use regex to match the relevant line.
 9. **Document in this runbook** when writing a new spec — capture the pattern, scope/API names, and any timeout decisions.
+10. **Run the failing spec in isolation first, not the full suite.** When developing or debugging a test that is failing, always run **only that specific spec** until it passes. Do not execute the full suite to check a single test — it wastes time and adds noise. The workflow is: fix → run single spec → confirm pass → then run the full suite to check for regressions. Use the `--spec` flag to target a single file:
+    ```bash
+    # Run a single spec (example)
+    export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh"
+    npx wdio e2e/wdio.android.conf.js --spec e2e/test/specs/optimize-tapped-proposition.spec.js
+    npx wdio e2e/wdio.ios.conf.js --spec e2e/test/specs/optimize-tapped-proposition.spec.js
+    ```
+    Only after the individual spec passes cleanly should you run the full validation gate (all 4 release builds).
 
 ---
 

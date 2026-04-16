@@ -59,7 +59,10 @@
       "Bash(xargs cat:*)",
       "Bash(USE_INTEROP_ROOT=0 ./gradlew assembleRelease)",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('codegenConfig',{}\\), indent=2\\)\\)\")",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(rm -rf packages/optimize/android/build apps/AwesomeProject/android/app/.cxx apps/AwesomeProject/android/app/build)",
+      "Bash(USE_INTEROP_ROOT=1 ./gradlew assembleRelease)",
+      "Bash(python3 -c ':*)"
     ]
   }
 }

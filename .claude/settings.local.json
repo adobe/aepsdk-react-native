@@ -56,7 +56,14 @@
       "Bash(grep:*)",
       "Bash(export NVM_DIR=$HOME/.nvm)",
       "Bash(source $NVM_DIR/nvm.sh)",
-      "Bash(xargs cat:*)"
+      "Bash(xargs cat:*)",
+      "Bash(rm *)",
+      "Bash(timeout 3 head -3)",
+      "Bash(/usr/bin/log stream *)",
+      "Bash(/usr/bin/log help *)",
+      "Bash(/usr/bin/log show *)",
+      "Bash(/usr/bin/log config *)",
+      "Bash(sudo *)"
     ]
   }
 }

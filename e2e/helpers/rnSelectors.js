@@ -14,9 +14,10 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// ── iOS log stream state (module-level) ──────────────────────────────────────
-let _iosLogProcess = null;
-let _iosLogBuffer = '';
+// ── iOS log capture state (module-level) ─────────────────────────────────────
+let _iosLogProcess = null;  // kept for backward compat; unused with log-show approach
+let _iosLogBuffer = '';     // kept for backward compat; unused with log-show approach
+let _iosCaptureStartTime = null; // ISO timestamp for `log show --start`
 
 /** Persistent log file for iOS native log debugging. */
 const IOS_LOG_FILE = path.join(__dirname, '..', 'logs', 'ios_native_sdk_logs.txt');
@@ -127,16 +128,13 @@ function _getBootedSimulatorUdid() {
  *
  * Android: drains the logcat buffer so the next `getNativeSdkLogs()` only
  *          returns entries from after this point.
- * iOS:     spawns `xcrun simctl spawn <udid> log stream` with a broad predicate
- *          capturing all AwesomeProject process logs. The stream accumulates
- *          output into a module-level buffer.
+ * iOS:     spawns `/usr/bin/log stream` on the host Mac (NOT `simctl spawn`)
+ *          filtered by the AEP SDK subsystem. The stream accumulates output
+ *          into a module-level buffer until `getNativeSdkLogs()` kills it.
  *
- * Predicate notes (iOS):
- *   - AEP SDK on iOS uses os_log under various subsystems — NOT a single
- *     "com.adobe.mobile.marketing.aep" subsystem. Event dispatch, Edge
- *     extension, and Optimize extension each log under different subsystems.
- *   - We filter ONLY on process name to avoid missing any SDK log lines.
- *   - Post-filtering is done by the caller (or getNativeSdkLogs) if needed.
+ * Note: `log stream` truncates long os_log messages with `<…>`. Deeply nested
+ * fields like `propositions[].scope` ("mboxAug") may be cut off. Assert those
+ * via the callback log instead. See `agent-docs/context/ios-native-log-capture.md`.
  */
 export async function startNativeLogCapture() {
   if (getE2ePlatform() === 'Android') {
@@ -151,18 +149,15 @@ export async function startNativeLogCapture() {
   }
   _iosLogBuffer = '';
 
-  const udid = _getBootedSimulatorUdid();
-
-  // Broad predicate: capture ALL logs from the AwesomeProject process.
-  // The AEP SDK logs under many os_log subsystems (Optimize, Edge, Core,
-  // Messaging) so restricting by subsystem misses critical entries.
-  // eventMessage-based filtering is too fragile for streaming predicates;
-  // we capture everything and post-filter in getNativeSdkLogs().
-  _iosLogProcess = spawn('xcrun', [
-    'simctl', 'spawn', udid, 'log', 'stream',
+  // Use the HOST Mac `/usr/bin/log stream` (not `xcrun simctl spawn`).
+  // `simctl spawn` runs inside the simulator sandbox and cannot see AEP SDK
+  // os_log entries. The host unified log captures all simulator process logs.
+  // Filter by subsystem to exclude XCUITest accessibility framework noise.
+  _iosLogProcess = spawn('/usr/bin/log', [
+    'stream',
     '--level', 'debug',
-    '--style', 'ndjson',
-    '--predicate', 'process == "AwesomeProject"',
+    '--style', 'compact',
+    '--predicate', 'subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"',
   ]);
 
   _iosLogProcess.stdout.on('data', (chunk) => { _iosLogBuffer += chunk.toString(); });
@@ -171,9 +166,7 @@ export async function startNativeLogCapture() {
     console.warn('[e2e] iOS log stream spawn error:', err.message);
   });
 
-  // Wait for the log stream to fully attach to the process.
-  // 2 seconds is needed because `xcrun simctl spawn` has startup latency —
-  // the daemon needs to connect to the log subsystem before any events flow.
+  // Wait for the log stream to attach to the unified log subsystem.
   await new Promise((r) => setTimeout(r, 2000));
 }
 
@@ -199,11 +192,8 @@ export async function getNativeSdkLogs() {
 
   // iOS: stop the stream and collect buffered output
   if (_iosLogProcess) {
-    // SIGTERM first, then wait for flush
     _iosLogProcess.kill('SIGTERM');
     await new Promise((r) => setTimeout(r, 1000));
-
-    // Force kill if still alive
     try { _iosLogProcess.kill('SIGKILL'); } catch { /* already dead */ }
     _iosLogProcess = null;
   }
@@ -216,42 +206,17 @@ export async function getNativeSdkLogs() {
 
   if (!raw || raw.trim().length === 0) {
     console.warn('[e2e] iOS native log capture returned EMPTY. Possible causes:');
-    console.warn('  - Simulator not booted or wrong UDID');
-    console.warn('  - Log stream did not attach in time (increase startup delay)');
+    console.warn('  - Simulator not booted');
     console.warn('  - App process name mismatch (check process == "AwesomeProject")');
     console.warn(`  - Saved log file: ${IOS_LOG_FILE}`);
     return '';
   }
 
-  // ndjson mode: each line is a JSON object with an "eventMessage" field.
-  // Extract eventMessage from each JSON line for easier assertion matching.
-  // Fall back to raw lines if JSON parsing fails (e.g. header lines).
-  const lines = raw.split('\n');
-  const messages = [];
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    try {
-      const obj = JSON.parse(line);
-      if (obj.eventMessage) {
-        messages.push(obj.eventMessage);
-      } else {
-        // Include the full JSON line for completeness
-        messages.push(line);
-      }
-    } catch {
-      // Non-JSON line (header, etc.) — include as-is
-      messages.push(line);
-    }
-  }
-
-  const result = messages.join('\n');
-
-  // Debug: log a snippet so test output shows what we captured
-  const lineCount = messages.length;
-  const snippet = result.substring(0, 500);
+  const lineCount = raw.split('\n').filter((l) => l.trim()).length;
+  const snippet = raw.substring(0, 500);
   console.log(`[e2e] iOS native logs: ${lineCount} lines captured. Snippet:\n${snippet}...`);
 
-  return result;
+  return raw;
 }
 
 // Keep old names as aliases for backward compatibility within this session

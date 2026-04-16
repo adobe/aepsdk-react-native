@@ -1,20 +1,32 @@
 # iOS Native Log Capture Learnings
 
-**Last updated:** 2026-04-14
+**Last updated:** 2026-04-16
 
 > Lessons from making native SDK log capture work reliably on iOS for e2e tests.
 
 ---
 
-## Why iOS log capture failed initially
+## Key discovery: host `log stream` vs `simctl spawn`
 
-The original implementation used this predicate:
+The AEP SDK on iOS **does** emit logs via `os_log` under a **single** subsystem: `com.adobe.mobile.marketing.aep`. Categories vary by extension (e.g. `AEP SDK DEBUG - <RCTAEPOptimize>`, `AEP SDK TRACE - <EventHub>`, `AEP SDK DEBUG - <AEPEdge>`).
 
-```
-process == "AwesomeProject" AND subsystem == "com.adobe.mobile.marketing.aep"
-```
+**Critical distinction:**
 
-This was **too restrictive**. The AEP SDK on iOS uses `os_log` under **multiple subsystems** — not a single one. The Optimize extension, Edge extension, Core, and Messaging each log under different subsystems. The `AND subsystem ==` clause filtered out most of the logs we needed for assertions.
+| Approach | Sees AEP SDK logs? | Why |
+|----------|-------------------|-----|
+| `xcrun simctl spawn <udid> log stream` | **NO** | Runs inside the simulator sandbox — does not see app-level os_log entries |
+| `/usr/bin/log stream` (host Mac) | **YES** | Captures the unified log including all simulator processes |
+
+This was the root cause of all iOS native log capture failures. The logs exist — `simctl spawn` just can't see them.
+
+---
+
+## Predicate selection
+
+| Predicate | Result |
+|-----------|--------|
+| `process == "AwesomeProject"` | Too broad — floods with XCUITest accessibility noise (scroll.bar.vertical, page.count, AX element queries, CFPrefsSearchListSource). Thousands of entries, zero AEP SDK content. |
+| `subsystem == "com.adobe.mobile.marketing.aep"` | Correct filter — captures only AEP SDK entries. Add `AND process == "AwesomeProject"` to scope to the test app. |
 
 ---
 
@@ -22,34 +34,11 @@ This was **too restrictive**. The AEP SDK on iOS uses `os_log` under **multiple 
 
 | Aspect | Android logcat | iOS os_log / log stream |
 |--------|---------------|------------------------|
-| Tag model | Single `AdobeExperienceSDK` tag for all SDK logs | Multiple os_log subsystems per extension |
-| API | `browser.getLogs('logcat')` via Appium | `xcrun simctl spawn <udid> log stream` as child process |
+| Tag model | Single `AdobeExperienceSDK` tag for all SDK logs | Single subsystem `com.adobe.mobile.marketing.aep`, categories per extension |
+| API | `browser.getLogs('logcat')` via Appium | `/usr/bin/log stream` as child process on the host Mac |
 | Buffering | Ringbuffer, always available, drain-and-read | Stream-based, must be actively listening to capture |
-| Filtering | Post-filter on `AdobeExperienceSDK` in message | Predicate at spawn time (pre-filter) + post-filter |
+| Filtering | Post-filter on `AdobeExperienceSDK` in message | Predicate at spawn time (pre-filter by subsystem) |
 | Timing | Entries available immediately | Stream needs 1–2s to attach, logs can be buffered |
-| Process targeting | N/A (logcat captures all processes) | Must filter by process name or PID |
-
----
-
-## Predicate pitfalls
-
-1. **`subsystem == "com.adobe.mobile.marketing.aep"`** — misses Optimize, Edge, and other extension logs that use different subsystems.
-
-2. **`eventMessage CONTAINS "keyword"`** — fragile in streaming predicates; log daemon may not evaluate complex predicates correctly when the stream starts mid-buffer. Better to use a broad predicate and post-filter.
-
-3. **`process == "AwesomeProject"`** — this is the **reliable** filter. The app binary name is always "AwesomeProject" regardless of which SDK extension is logging.
-
-4. **`"booted"` as device target** — can be ambiguous when multiple simulators exist. Resolving the explicit UDID from `xcrun simctl list devices booted -j` avoids targeting the wrong device.
-
----
-
-## Buffering issues
-
-- `xcrun simctl spawn <udid> log stream` has **startup latency**: it needs ~1–2s after spawn before the first log events flow. Actions performed before the stream attaches produce logs that are silently lost.
-
-- After killing the stream process (`SIGTERM`), there may be buffered data that hasn't been read from stdout yet. A 1s delay after kill lets the Node.js stream callbacks flush.
-
-- Using `--style ndjson` makes output machine-parseable: each line is a JSON object with `eventMessage`, `subsystem`, `processImagePath`, etc. This avoids regex-parsing human-readable log format.
 
 ---
 
@@ -58,13 +47,12 @@ This was **too restrictive**. The AEP SDK on iOS uses `os_log` under **multiple 
 ### `startNativeLogCapture()` (iOS path)
 
 ```javascript
-const udid = _getBootedSimulatorUdid();  // explicit UDID, not "booted"
-
-spawn('xcrun', [
-  'simctl', 'spawn', udid, 'log', 'stream',
+// Host Mac log stream — NOT simctl spawn
+spawn('/usr/bin/log', [
+  'stream',
   '--level', 'debug',
   '--style', 'ndjson',
-  '--predicate', 'process == "AwesomeProject"',  // broad: no subsystem filter
+  '--predicate', 'subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"',
 ]);
 
 await sleep(2000);  // wait for stream to attach
@@ -79,12 +67,14 @@ await sleep(2000);  // wait for stream to attach
 
 ### Test timing
 
-- `browser.pause(3000)` before collecting logs (was 2000) — iOS os_log buffering adds latency vs Android logcat
-- The test assertions check the same strings on both platforms:
-  - `"Optimize Track Propositions Request"` — event name
-  - `"decisioning.propositionInteract"` — event type
-  - `"mboxAug"` — decision scope
-  - `"trackpropositions"` — request type
+- `browser.pause(3000)` before collecting logs — gives the SDK time to dispatch the Edge event
+- The native log assertions check these strings on both platforms:
+  - `"Optimize Track Propositions Request"` — event name (early in message)
+  - `"decisioning.propositionDisplay"` or `"decisioning.propositionInteract"` — event type (early)
+  - `"trackpropositions"` — request type (early)
+- **NOT asserted in native logs:** `"mboxAug"` (scope name) — os_log truncates long
+  messages with `<…>`, and `propositions[].scope` is deep enough to be cut off.
+  Assert `mboxAug` via the **callback log** instead (JS-level, never truncated).
 
 ---
 
@@ -104,19 +94,32 @@ e2e/logs/ios_native_sdk_logs.txt
 ### Manual log capture (terminal)
 
 ```bash
-# Stream all AwesomeProject logs to file
-xcrun simctl spawn booted log stream --level debug \
-  --predicate 'process == "AwesomeProject"' > ios_logs.txt
+# Stream AEP SDK logs from simulator (on host Mac)
+/usr/bin/log stream --level debug \
+  --predicate 'subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"'
 
 # Stream + view simultaneously
-xcrun simctl spawn booted log stream --level debug \
-  --predicate 'process == "AwesomeProject"' | tee ios_logs.txt
-
-# Filtered to Adobe SDK subsystem (may miss some entries)
-xcrun simctl spawn booted log stream --level debug \
-  --predicate 'process == "AwesomeProject" AND subsystem CONTAINS "adobe"' \
+/usr/bin/log stream --level debug \
+  --predicate 'subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"' \
   | tee ios_logs.txt
 ```
+
+---
+
+## os_log message truncation
+
+`os_log` on iOS truncates long messages with `<…>` regardless of output format (`compact`, `ndjson`, etc.). This is a system-level limit, not a format issue.
+
+**Impact on assertions:** The AEP SDK logs large JSON payloads (event data with nested `propositions`, `scopeDetails`, etc.). Only strings in the **event header** (before `data: {`) are guaranteed safe:
+- `"name: Optimize Track Propositions Request"` — in the event header, **always present**
+- `"eventType" : "decisioning.propositionDisplay"` — inside first-level nesting, **usually present**
+
+Strings inside `data: { }` are **unreliable** due to non-deterministic JSON key ordering:
+- `"requesttype" : "trackpropositions"` — sometimes appears before truncation, sometimes after (key ordering varies between runs)
+- `"scope" : "mboxAug"` — deep in `propositions[].scope`, almost always truncated
+- `"eventToken"` — inside `propositions[].scopeDetails.characteristics`, always truncated
+
+**Rule:** Only assert these two strings in iOS native logs: `Optimize Track Propositions Request` (event name, in header) and `decisioning.propositionDisplay`/`propositionInteract` (event type). For everything else (`mboxAug`, `trackpropositions`), assert via the **callback log** (JS-level, never truncated).
 
 ---
 
@@ -124,9 +127,10 @@ xcrun simctl spawn booted log stream --level debug \
 
 If `getNativeSdkLogs()` returns empty on iOS:
 
-1. **Check simulator state**: `xcrun simctl list devices booted` — is a simulator running?
-2. **Check process name**: the binary must be `AwesomeProject` — if renamed, update the predicate
-3. **Check log file**: look at `e2e/logs/ios_native_sdk_logs.txt` for raw output
-4. **Increase startup delay**: try 3000ms instead of 2000ms in `startNativeLogCapture`
-5. **Manual test**: run `xcrun simctl spawn booted log stream --predicate 'process == "AwesomeProject"'` in terminal, then trigger the action in the app — do logs appear?
-6. **Check `IOS_UDID` env var**: if set to wrong value, stream targets wrong device
+1. **Check you're using `/usr/bin/log stream`** — NOT `xcrun simctl spawn`. `simctl spawn` cannot see AEP SDK os_log entries.
+2. **Check simulator state**: `xcrun simctl list devices booted` — is a simulator running?
+3. **Check process name**: the binary must be `AwesomeProject` — if renamed, update the predicate
+4. **Check subsystem predicate**: must be `com.adobe.mobile.marketing.aep` (not `com.adobe.*` or process-only)
+5. **Check log file**: look at `e2e/logs/ios_native_sdk_logs.txt` for raw output
+6. **Increase startup delay**: try 3000ms instead of 2000ms in `startNativeLogCapture`
+7. **Manual test**: run the host `log stream` command above in terminal, then trigger the action in the app — do logs appear?

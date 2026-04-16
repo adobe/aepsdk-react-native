@@ -83,13 +83,19 @@ export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh" && yarn e2e:ios:build:tu
 
 ---
 
-### 10. iOS: native log capture fails with subsystem-based predicate
+### 10. iOS: Must use host `log stream`, not `xcrun simctl spawn`, for AEP SDK logs
 
-AEP SDK on iOS uses `os_log` under **multiple subsystems** (Optimize, Edge, Core, Messaging, etc.) — NOT a single `com.adobe.mobile.marketing.aep` subsystem. Using `subsystem == "com.adobe.mobile.marketing.aep"` in the `xcrun simctl log stream` predicate filters out most SDK logs.
+The AEP SDK on iOS **does** emit logs via `os_log` under `subsystem: com.adobe.mobile.marketing.aep` with categories like `AEP SDK DEBUG - <RCTAEPOptimize>`, `AEP SDK TRACE - <EventHub>`, etc. However:
 
-**Rule:** Use `process == "AwesomeProject"` as the ONLY predicate filter. Post-filter in code if needed. Also resolve explicit simulator UDID instead of using `"booted"` (ambiguous with multiple sims). Use `--style ndjson` for machine-parseable output.
+- **`xcrun simctl spawn <udid> log stream`** runs inside the simulator sandbox and does **NOT** see these log entries — it returns zero AEP SDK matches even with the correct subsystem predicate.
+- **`/usr/bin/log stream`** (host Mac) captures the unified log including all simulator processes — AEP SDK entries appear correctly.
+- **`process == "AwesomeProject"`** predicate is too broad — it captures thousands of XCUITest accessibility framework entries (`scroll.bar.vertical`, `page.count`, `AX element` queries) that drown out SDK logs.
 
-See: `context/ios-native-log-capture.md`
+**Rule:** Use `/usr/bin/log stream` on the host with predicate `subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"`. Use `--style compact` (not ndjson — ndjson also truncates). Native log assertions work on **both** platforms — do NOT guard them as Android-only.
+
+**Caveat — os_log message truncation:** `os_log` truncates long messages with `<…>` regardless of output format, and JSON key ordering is non-deterministic (keys inside `data: {}` appear in different positions across runs). Only assert strings in the **event header** (before truncation): `Optimize Track Propositions Request` (event name) and `decisioning.propositionDisplay`/`propositionInteract` (event type). Do NOT assert `mboxAug` or `trackpropositions` in native logs — assert them via the callback log instead.
+
+See: `context/ios-native-log-capture.md`, `playbooks/e2e-test-run.md` → "Fire-and-forget API" pattern
 
 ---
 

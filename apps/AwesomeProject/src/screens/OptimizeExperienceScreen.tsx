@@ -174,6 +174,20 @@ export function OptimizeExperienceScreen({ appendLog }: Props) {
     }
   };
 
+  const displayTargetOffer = () => {
+    if (targetProposition?.items?.length) {
+      const offer = targetProposition.items[0];
+      offer.displayed(targetProposition);
+      appendLog(
+        `Offer.displayed() invoked for target proposition (scope=${decisionScopeTargetMbox.getName()}, format=${offer.format})`,
+      );
+    } else {
+      appendLog(
+        'Offer.displayed() skipped — no target proposition in cache. Call updatePropositions + getPropositions first.',
+      );
+    }
+  };
+
   const clearCachedProposition = () => {
     Optimize.clearCachedPropositions();
     appendLog('Optimize.clearCachedPropositions()');
@@ -422,6 +436,13 @@ export function OptimizeExperienceScreen({ appendLog }: Props) {
           title="Tap Target Offer"
           onPress={tapTargetOffer}
           testID="aepsdk-optimize-btn-tap-target-offer"
+        />
+      </View>
+      <View style={{ margin: 5 }}>
+        <Button
+          title="Display Target Offer"
+          onPress={displayTargetOffer}
+          testID="aepsdk-optimize-btn-display-target-offer"
         />
       </View>
       <View style={{ margin: 5 }}>
