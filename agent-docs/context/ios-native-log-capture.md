@@ -110,16 +110,27 @@ e2e/logs/ios_native_sdk_logs.txt
 
 `os_log` on iOS truncates long messages with `<…>` regardless of output format (`compact`, `ndjson`, etc.). This is a system-level limit, not a format issue.
 
-**Impact on assertions:** The AEP SDK logs large JSON payloads (event data with nested `propositions`, `scopeDetails`, etc.). Only strings in the **event header** (before `data: {`) are guaranteed safe:
-- `"name: Optimize Track Propositions Request"` — in the event header, **always present**
-- `"eventType" : "decisioning.propositionDisplay"` — inside first-level nesting, **usually present**
+**Impact on assertions:** Two categories of log data have different reliability:
 
-Strings inside `data: { }` are **unreliable** due to non-deterministic JSON key ordering:
-- `"requesttype" : "trackpropositions"` — sometimes appears before truncation, sometimes after (key ordering varies between runs)
-- `"scope" : "mboxAug"` — deep in `propositions[].scope`, almost always truncated
-- `"eventToken"` — inside `propositions[].scopeDetails.characteristics`, always truncated
+**Always reliable (assert with `expect().toContain()`):**
+- Event names in headers: `Optimize Track Propositions Request`, `Edge Optimize Proposition Interaction Request`
+- Short Info-level messages: `Handle server response with streaming enabled`
+- Response event types (short data): `activation:pull`, `personalization:decisions`, `state:store`
 
-**Rule:** Only assert these two strings in iOS native logs: `Optimize Track Propositions Request` (event name, in header) and `decisioning.propositionDisplay`/`propositionInteract` (event type). For everything else (`mboxAug`, `trackpropositions`), assert via the **callback log** (JS-level, never truncated).
+**Unreliable — use soft checks only (if/else with console.log/warn):**
+- `decisioning.propositionDisplay` / `propositionInteract` — survives ~75% of runs
+- `mboxAug` — survives ~75% of runs
+- `trackpropositions` — survives ~50% of runs
+
+**Never visible in `log stream` (Debug-level, Xcode-only):**
+- `EdgeNetworkService - Sending request to URL` (with full request body)
+- `Initiated (POST) network request`
+- `Connection to Experience Edge was successful`
+- `Edge - Queuing event with id`
+
+Debug-level `os_log` messages are only emitted when a debugger (Xcode/lldb) is attached. `log stream` runs without a debugger, so these are invisible. The server response assertion (`Handle server response`) confirms the POST succeeded.
+
+**Rule:** Hard-assert reliable strings. Soft-check unreliable strings (log ✓ if found, ⚠ if not). Verify all payload fields via the callback log (JS-level, never truncated).
 
 ---
 

@@ -93,7 +93,12 @@ The AEP SDK on iOS **does** emit logs via `os_log` under `subsystem: com.adobe.m
 
 **Rule:** Use `/usr/bin/log stream` on the host with predicate `subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"`. Use `--style compact` (not ndjson — ndjson also truncates). Native log assertions work on **both** platforms — do NOT guard them as Android-only.
 
-**Caveat — os_log message truncation:** `os_log` truncates long messages with `<…>` regardless of output format, and JSON key ordering is non-deterministic (keys inside `data: {}` appear in different positions across runs). Only assert strings in the **event header** (before truncation): `Optimize Track Propositions Request` (event name) and `decisioning.propositionDisplay`/`propositionInteract` (event type). Do NOT assert `mboxAug` or `trackpropositions` in native logs — assert them via the callback log instead.
+**Caveat — os_log truncation + Debug-level visibility:**
+1. **Truncation:** `os_log` truncates long messages with `<…>`. JSON key ordering inside `data: {}` is non-deterministic, so the truncation point varies per run. Hard-assert only event names (in header) and short messages. Use soft checks (if/else + console.log) for payload fields like `mboxAug`, `decisioning.propositionDisplay`.
+2. **Debug level:** `EdgeNetworkService - Sending request`, `Initiated (POST)`, `Connection to Experience Edge` are logged at `os_log_debug` level — **only visible when a debugger is attached** (Xcode). `log stream` without Xcode cannot see them. Assert `Handle server response with streaming enabled` (Info level) instead to verify the Edge POST succeeded.
+3. **Persistence doesn't work for simulator:** `log show`, `log collect`, `log config --mode persist:debug` (both host and `xcrun simctl spawn`) — none persist AEP SDK debug entries from simulator processes. Only live `log stream` on the host captures them.
+
+See: `context/ios-native-log-capture.md` for the full comparison table and assertion tiers.
 
 See: `context/ios-native-log-capture.md`, `playbooks/e2e-test-run.md` → "Fire-and-forget API" pattern
 

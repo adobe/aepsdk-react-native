@@ -153,10 +153,18 @@ Unlike `updatePropositions` which has a callback variant, `offer.tapped()` and `
 
 1. **Callback log** (JS-level, both platforms): A dedicated button (e.g. `aepsdk-optimize-btn-tap-target-offer` or `aepsdk-optimize-btn-display-target-offer`) calls the API and logs the result via `appendLog`. This confirms the JS side executed without error.
 
-2. **Native SDK logs** (both platforms): Use `startNativeLogCapture()` before the action, then `getNativeSdkLogs()` after to capture SDK entries. Assert ONLY these two strings:
-   - `Optimize Track Propositions Request` — event name (in header, never truncated)
-   - `decisioning.propositionInteract` or `decisioning.propositionDisplay` — event type
-   - **Do NOT assert `mboxAug` or `trackpropositions`** in native logs — iOS `os_log` truncates long messages, and JSON key ordering is non-deterministic so these fields may land after the truncation point. Assert them via the callback log instead (step 1).
+2. **Native SDK logs** (both platforms): Use `startNativeLogCapture()` before the action, then `getNativeSdkLogs()` after. Three tiers of assertions:
+   - **Hard assertions** (always present, never truncated):
+     - `Optimize Track Propositions Request` — Optimize extension dispatched event
+     - `Edge Optimize Proposition Interaction Request` — Edge extension forwarded it
+     - `Handle server response with streaming enabled` — Edge network round-trip completed
+     - `activation:pull`, `personalization:decisions`, `state:store` — response events
+   - **Soft checks** (present ~75% of runs, os_log truncation is non-deterministic):
+     - `decisioning.propositionDisplay` / `decisioning.propositionInteract` — log ✓ if found, ⚠ if not
+     - `mboxAug` — log ✓ if found, ⚠ if not
+   - **Not available** (Debug-level, only visible in Xcode debugger):
+     - `EdgeNetworkService - Sending request to URL` (Edge POST with full body)
+     - `Initiated (POST) network request`, `Connection to Experience Edge was successful`
 
 **iOS native log capture — key details:**
 The AEP SDK on iOS **does** emit logs via `os_log` under `subsystem: com.adobe.mobile.marketing.aep`. However, `xcrun simctl spawn <udid> log stream` (inside simulator sandbox) does NOT see them. The host Mac's `/usr/bin/log stream` captures them correctly. The predicate must filter by subsystem (`subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"`) — filtering by process alone floods with XCUITest accessibility noise.

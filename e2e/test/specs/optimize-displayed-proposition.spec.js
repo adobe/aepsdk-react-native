@@ -1,6 +1,7 @@
 import { expect } from '@wdio/globals';
 import {
   activateAwesomeProject,
+  assertNativeLogContains,
   byTestId,
   clearCallbackLog,
   getNativeSdkLogs,
@@ -133,14 +134,21 @@ describe('Optimize displayed proposition (Target mbox)', function () {
       console.error('[e2e] Platform:', browser.capabilities.platformName);
     }
 
-    // Native log: assert event name (in header — never truncated by os_log).
+    // ── Native log assertions ──────────────────────────────────────────────
+    // 1. Event names (in header, never truncated)
     expect(sdkLogs).toContain('Optimize Track Propositions Request');
-    // Native log: assert Edge forwarded the event (second event in the flow).
     expect(sdkLogs).toContain('Edge Optimize Proposition Interaction Request');
-    // Payload fields (eventType, mboxAug, trackpropositions) are inside the
-    // event `data:` block where iOS os_log truncates long messages with `<…>`
-    // and JSON key ordering is non-deterministic. These are fully verified via
-    // the callback log assertions above (scope=mboxAug, no skip, correct API).
-    
+    // 2. Edge network round-trip completed (short Info-level messages)
+    expect(sdkLogs).toContain('Handle server response with streaming enabled');
+    // 3. Response events received from Edge (short data, never truncated)
+    expect(sdkLogs).toContain('activation:pull');
+    expect(sdkLogs).toContain('personalization:decisions');
+    expect(sdkLogs).toContain('state:store');
+    // 4. Payload fields: hard assert on Android (logcat never truncates),
+    //    soft check on iOS (os_log truncates, key ordering varies per run).
+    assertNativeLogContains(sdkLogs, 'decisioning.propositionDisplay');
+    assertNativeLogContains(sdkLogs, 'mboxAug');
+    assertNativeLogContains(sdkLogs, 'trackpropositions');
+
   });
 });

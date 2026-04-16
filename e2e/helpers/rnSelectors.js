@@ -7,6 +7,7 @@
  * @see https://medium.com/@jignect/appium-in-action-test-automation-for-flutter-and-react-native-projects-4abb2ce93bf2
  */
 
+import { expect } from '@wdio/globals';
 import { spawn, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -222,6 +223,29 @@ export async function getNativeSdkLogs() {
 // Keep old names as aliases for backward compatibility within this session
 export const drainAndroidLogcat = startNativeLogCapture;
 export const getAndroidSdkLogcat = getNativeSdkLogs;
+
+/**
+ * Assert that `sdkLogs` contains `substring`.
+ *
+ * - Android: hard assertion (`expect().toContain()`) — logcat never truncates.
+ * - iOS: soft check — logs ✓ if found, ⚠ if not. iOS `os_log` truncates long
+ *   messages with `<…>` and JSON key ordering is non-deterministic, so payload
+ *   fields may or may not survive across runs.
+ *
+ * Use this for payload fields inside the event `data:` block (e.g. eventType,
+ * mboxAug, trackpropositions). For event names in the header (never truncated),
+ * use `expect(sdkLogs).toContain(...)` directly.
+ */
+export function assertNativeLogContains(sdkLogs, substring, label) {
+  const tag = label || substring;
+  if (getE2ePlatform() === 'Android') {
+    expect(sdkLogs).toContain(substring);
+  } else if (sdkLogs.includes(substring)) {
+    console.log(`[e2e] ✓ Native log contains ${tag}`);
+  } else {
+    console.warn(`[e2e] ⚠ ${tag} not found in native log (iOS os_log truncation). Verified via callback log.`);
+  }
+}
 
 /**
  * Clear the callback log panel by tapping the "Clear log" button.
