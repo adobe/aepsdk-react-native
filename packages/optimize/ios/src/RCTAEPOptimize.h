@@ -20,6 +20,10 @@
   @interface RCTAEPOptimize : RCTEventEmitter <NativeAEPOptimizeSpec>
 #else
   // Turbo Module path: pure JSI bridging via codegen-generated spec.
+  // Does NOT use RCTEventEmitter — turbo modules should not depend on
+  // the legacy bridge. Event emission for onPropositionsUpdate is not
+  // available on this path until the iOS AEP SDK fires the callback
+  // (currently it doesn't — see known-gotchas.md #17).
   @interface RCTAEPOptimize : NSObject <NativeAEPOptimizeSpec>
 #endif
 

@@ -166,12 +166,18 @@ Key difference discovered: the Edge network response log:
 
 ---
 
-### 16. `Optimize.generateDisplayInteractionXdm(offers)` fails on both platforms
+### 16. `Optimize.generateDisplayInteractionXdm(offers)` — two separate bugs
 
-Returns `TypeError: iterator method is not callable` (Android) or `Error in generating Display interaction XDM for multiple offers` (iOS). The native SDK returns a `Map` type that doesn't serialize properly through the RN bridge — `Object.fromEntries()` fails because the returned object isn't a proper JS iterable. Same error on both turbo and interop layers — this is a bridge serialization issue, not layer-specific.
+**Android (FIXED):** `TypeError: iterator method is not callable` — the native SDK returns a `WritableMap` which the bridge converts to a plain JS Object, NOT a `Map`. The app code called `Object.fromEntries(displayInteractionXdm)` which requires an iterable. Fix: use `JSON.stringify(displayInteractionXdm)` directly (changed in `OptimizeExperienceScreen.tsx`). After fix, Android returns the full XDM payload with `eventType`, `decisioning.propositionDisplay`, `mboxAug`, etc.
+
+**iOS (OPEN):** `Error in generating Display interaction XDM for multiple offers` — the iOS `propositionCache` in `RCTAEPOptimize.mm` fails to cache Target mbox propositions. Root cause: `cachePropositions:` checks `activity.id` at the top level first, but Target mbox propositions have `activity: {}` (empty dict — truthy) with no `id`. The original code used `if/else` so it never reached the `scopeDetails.activity.id` fallback. Partial fix applied (changed to sequential `if (!activityId)` fallback) but the cache is still not populated — `convertPropositionToDict` may return a structure where neither path finds the activity ID. Needs further investigation.
 
 ---
 
 ### 17. `Optimize.onPropositionUpdate()` callback fires on Android only
 
-The listener registers successfully on both platforms. After `updatePropositions`, the callback fires on Android (with `keys=["mboxAug"]`) but does NOT fire on iOS. This is an iOS-specific limitation — the turbo module bridge may not properly forward the listener callback on iOS.
+The listener registers successfully on both platforms. After `updatePropositions`, the callback fires on Android (with `keys=["mboxAug"]`) but does NOT fire on iOS.
+
+**Root cause confirmed via native log tracing:** The RN bridge code is correct — the `onPropositionsUpdate:` block is properly registered with the iOS AEP SDK via `[AEPMobileOptimize onPropositionsUpdate:^(...){...}]`. But the **iOS native AEP Optimize SDK never invokes the block** after `updatePropositions`. The native `log stream` shows `"onPropositionsUpdate is called."` (registration) but the callback block never fires. This is a **native iOS SDK limitation**, not a bridge issue.
+
+**Do NOT add `RCTEventEmitter` to the turbo module path** to try to fix this. Turbo modules should inherit from `NSObject` (pure JSI), not `RCTEventEmitter` (legacy bridge). The `sendEventWithName:` and `RCTEventEmitter` are only for the interop path (`#if USE_INTEROP_ROOT`). The event emission code is correct — the underlying SDK just doesn't call the callback on iOS.

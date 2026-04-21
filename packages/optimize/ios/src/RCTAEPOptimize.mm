@@ -299,12 +299,14 @@ RCT_EXPORT_MODULE(NativeAEPOptimize);
         if (!proposition) { continue; }
         NSString *activityId = nil;
         NSDictionary *propositionDict = [self convertPropositionToDict:proposition];
+        // Try top-level activity.id first
         NSDictionary *activity = [propositionDict valueForKey:@"activity"];
-        if ([propositionDict objectForKey:@"activity"]) {
-          if (activity && [activity objectForKey:@"id"]) {
-              activityId = [activity objectForKey:@"id"];
-          }
-        } else {
+        if (activity && [activity objectForKey:@"id"]) {
+            activityId = [activity objectForKey:@"id"];
+        }
+        // Fallback to scopeDetails.activity.id (Target mbox propositions have
+        // an empty top-level activity {} but scopeDetails.activity.id = "563703")
+        if (!activityId) {
           NSDictionary *scopeDetails = [propositionDict valueForKey:@"scopeDetails"];
           if (scopeDetails && [scopeDetails objectForKey:@"activity"]) {
             NSDictionary *scopeDetailsActivity = [scopeDetails objectForKey:@"activity"];

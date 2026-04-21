@@ -242,12 +242,12 @@ export function OptimizeExperienceScreen({ appendLog }: Props) {
       });
       const displayInteractionXdm =
         await Optimize.generateDisplayInteractionXdm(offers);
+      // The API signature says Map<string, any> but the RN bridge returns
+      // a plain JS Object (WritableMap on Android, NSDictionary on iOS are
+      // both serialized as plain objects). Use JSON.stringify directly —
+      // Object.fromEntries() fails with "iterator method is not callable".
       const serialized = displayInteractionXdm
-        ? JSON.stringify(
-            Object.fromEntries(displayInteractionXdm),
-            null,
-            2,
-          ).slice(0, 8000)
+        ? JSON.stringify(displayInteractionXdm, null, 2).slice(0, 8000)
         : 'null';
       appendLog(`generateDisplayInteractionXdm: ${serialized}`);
     } catch (e) {
