@@ -157,11 +157,12 @@ Unlike `updatePropositions` which has a callback variant, `offer.tapped()` and `
    - **Hard assertions** (always present, never truncated):
      - `Optimize Track Propositions Request` — Optimize extension dispatched event
      - `Edge Optimize Proposition Interaction Request` — Edge extension forwarded it
-     - `Handle server response with streaming enabled` — Edge network round-trip completed
+     - `/server response/i` — Edge network round-trip completed (**use regex, not exact string** — iOS says `Handle server response with streaming enabled`, Android says `Received server response`)
      - `activation:pull`, `personalization:decisions`, `state:store` — response events
-   - **Soft checks** (present ~75% of runs, os_log truncation is non-deterministic):
-     - `decisioning.propositionDisplay` / `decisioning.propositionInteract` — log ✓ if found, ⚠ if not
-     - `mboxAug` — log ✓ if found, ⚠ if not
+   - **Soft checks via `assertNativeLogContains()`** (Android: hard assert; iOS: log ✓/⚠ due to os_log truncation):
+     - `decisioning.propositionDisplay` / `decisioning.propositionInteract`
+     - `mboxAug`
+     - `trackpropositions`
    - **Not available** (Debug-level, only visible in Xcode debugger):
      - `EdgeNetworkService - Sending request to URL` (Edge POST with full body)
      - `Initiated (POST) network request`, `Connection to Experience Edge was successful`
@@ -173,12 +174,37 @@ The AEP SDK on iOS **does** emit logs via `os_log` under `subsystem: com.adobe.m
 
 **Helper functions** (in `e2e/helpers/rnSelectors.js`):
 ```js
-startNativeLogCapture()   // Call BEFORE the action — drains logcat buffer (Android), no-op on iOS
-getNativeSdkLogs()        // Call AFTER — returns AdobeExperienceSDK entries as string (Android)
-getE2ePlatform()          // Returns 'Android' or 'iOS' — use for conditional assertions
+startNativeLogCapture()          // Call BEFORE the action — Android: drains logcat, iOS: spawns host log stream
+getNativeSdkLogs()               // Call AFTER — returns SDK log entries as string (both platforms)
+getE2ePlatform()                 // Returns 'Android' or 'iOS'
+assertNativeLogContains(sdkLogs, substring, label)
+  // Android: hard expect().toContain() — logcat never truncates
+  // iOS: soft check — logs ✓ if found, ⚠ if not (os_log truncates)
+  // Use for payload fields inside event data: {} (eventType, mboxAug, trackpropositions)
+  // Use expect().toContain() directly for event names in headers (never truncated)
+clearCallbackLog()               // Tap "Clear log" — use in before() hook only
+scrollAppScrollToTestId(scroll, target)        // Scroll to element (no click)
+scrollAppScrollToTestIdAndClick(scroll, target) // Scroll to element + click
 ```
 
 `browser.getLogs('logcat')` drains the buffer on each call, so drain→act→read gives a clean window of entries.
+
+**Cross-platform native log differences:**
+
+The AEP SDK uses different log message formats on iOS vs Android. Never hard-code platform-specific strings — use regex or `assertNativeLogContains()`:
+
+| Event | iOS (`os_log`) | Android (`logcat`) | Safe assertion |
+|-------|---------------|-------------------|----------------|
+| Edge response | `Handle server response with streaming enabled` | `Received server response` | `expect(sdkLogs).toMatch(/server response/i)` |
+| Event dispatch | `Dispatching Event #Optional(N)` | `Dispatching Event #N` | `expect(sdkLogs).toContain('Dispatching Event')` |
+| Event name | In header, never truncated | In header, always full | `expect(sdkLogs).toContain('Optimize Track Propositions Request')` |
+| Payload fields | Truncated by os_log `<…>` | Full in logcat | `assertNativeLogContains(sdkLogs, 'mboxAug')` |
+
+**Android-specific behavior confirmed via testing (8/8 specs pass on both turbo and interop):**
+- `onPropositionUpdate` callback **fires** on Android (doesn't fire on iOS)
+- `Optimize.displayed(offers)` dispatches full Edge event flow on Android (only DecisionScope warnings visible on iOS)
+- `generateDisplayInteractionXdm` returns `TypeError: iterator method is not callable` on Android (same `Map` serialization issue on both layers)
+- Android `UiScrollable` needs `browser.pause(1000)` after long scroll sequences before the next `scrollIntoView` (see known gotcha #7)
 
 **Full validation sequence:**
 ```
@@ -208,6 +234,144 @@ Both specs follow the identical structure. The only differences are:
 **When NOT to use this pattern:**
 - The API has a callback variant (use the callback as a gate instead — e.g. updatePropositions)
 - The API returns a value or populates a cache that can be read (use a paired read API)
+
+---
+
+### Pattern: Listener registration + async callback
+
+**API:** `Optimize.onPropositionUpdate()`
+**Spec:** `e2e/test/specs/optimize-on-proposition-update.spec.js`
+**Decision scope:** `DecisionScope('mboxAug')` — Target mbox
+
+**Why this needs its own pattern:**
+`onPropositionUpdate()` registers a listener that fires asynchronously when propositions change (e.g. after `updatePropositions`). The listener must be registered BEFORE the triggering action. The callback fires after the Edge response arrives, which is asynchronous and may lag behind the `updatePropositions onSuccess` callback.
+
+**Solution — register-then-trigger with soft callback check:**
+1. Register the listener first (tap `aepsdk-optimize-btn-proposition-update`)
+2. Assert registration log: `Optimize.onPropositionUpdate() registered`
+3. Trigger `updatePropositions` (callback variant as gate)
+4. Wait for `onSuccess` to confirm the update completed
+5. Pause 5s to allow the listener callback to fire asynchronously
+6. **Soft check** the listener callback: `onPropositionUpdate callback: keys=[...]`
+
+The callback is a soft check because the turbo module may not fire it reliably. Hard-assert registration + updatePropositions success. Log ✓/⚠ for the callback.
+
+**Full validation sequence:**
+```
+1. Wait for SDK ready
+2. Tap aepsdk-optimize-btn-proposition-update
+3. Assert: log contains 'Optimize.onPropositionUpdate() registered'
+4. Tap aepsdk-optimize-btn-update-propositions-callback
+5. waitUntil: log contains /updatePropositions onSuccess:/
+6. pause(5000)
+7. Soft check: log matches /onPropositionUpdate callback: keys=\[/
+8. If found: assert log contains 'mboxAug'
+9. Assert: log does NOT contain 'onPropositionUpdate error'
+```
+
+**When to use this pattern:**
+- The API registers a listener/observer that fires on a future event
+- The callback timing is unpredictable or platform-dependent
+- You need to verify registration succeeded even if callback behavior varies
+
+---
+
+### Pattern: Batch API with optional native log verification
+
+**API:** `Optimize.displayed(offers)` (static batch method)
+**Spec:** `e2e/test/specs/optimize-multiple-displayed.spec.js`
+**Decision scope:** `DecisionScope('mboxAug')` — Target mbox
+
+**Why this needs its own pattern:**
+`Optimize.displayed(offers)` is a static batch API that takes an array of `Offer` objects (unlike `Offer.displayed(proposition)` which is an instance method on a single offer). The API calls `getPropositions` internally, gathers all offers, then dispatches a batch display event. The native events may not be visible in `log stream` (they may dispatch at Debug level only visible in Xcode).
+
+**Solution — callback log + conditional native log:**
+1. Populate cache (updatePropositions + getPropositions as gates)
+2. Start native log capture
+3. Tap `aepsdk-optimize-btn-multiple-displayed`
+4. Hard-assert callback log: `Optimize.displayed() with N offer(s)` where N >= 1
+5. Collect native logs — if events are captured, assert the full flow; if empty, log ⚠ and rely on callback log
+
+**Full validation sequence:**
+```
+1. Wait for SDK ready
+2. updatePropositions callback → wait for onSuccess
+3. getPropositions → verify size > 0
+4. startNativeLogCapture()
+5. Tap aepsdk-optimize-btn-multiple-displayed
+6. Assert callback: /Optimize\.displayed\(\) with [1-9]\d* offer\(s\)/
+7. Assert: log does NOT contain 'multipleOffersDisplayed error:'
+8. pause(3000), getNativeSdkLogs()
+9. If native logs contain 'Optimize Track': assert full event flow
+10. Else: log ⚠ (API may dispatch at Debug level only)
+```
+
+**When to use this pattern:**
+- The API works at the JS/callback level but native events may not be visible
+- You want maximum verification when possible, graceful degradation when not
+
+---
+
+### Pattern: Local API returning data — callback log only
+
+**API:** `Optimize.generateDisplayInteractionXdm(offers)`
+**Spec:** `e2e/test/specs/optimize-generate-display-xdm.spec.js`
+**Decision scope:** `DecisionScope('mboxAug')` — Target mbox
+
+**Why this needs its own pattern:**
+`generateDisplayInteractionXdm` is a purely local API — it generates an XDM payload and returns it without sending any Edge event. There are no native SDK events to capture. The API may also return an error if the turbo module implementation doesn't support it.
+
+**Solution — callback log with success/error branching:**
+1. Populate cache (updatePropositions + getPropositions as gates)
+2. Tap `aepsdk-optimize-btn-generate-display-xdm`
+3. Assert the API was invoked (log contains `generateDisplayInteractionXdm`)
+4. Branch on result:
+   - **Success** (log contains `generateDisplayInteractionXdm: {`): assert XDM fields (`eventType`, `decisioning.propositionDisplay`, `_experience`)
+   - **Error** (log contains `generateDisplayInteractionXdm error:`): assert error is properly logged (known turbo module limitation)
+
+**Full validation sequence:**
+```
+1. Wait for SDK ready
+2. updatePropositions callback → wait for onSuccess
+3. getPropositions → verify size > 0
+4. Tap aepsdk-optimize-btn-generate-display-xdm
+5. Assert: log matches /generateDisplayInteractionXdm/
+6. If log contains 'generateDisplayInteractionXdm: {': assert XDM fields
+7. Else if log contains 'generateDisplayInteractionXdm error:': log ⚠ (known limitation)
+8. Else: throw unexpected result error
+```
+
+**When to use this pattern:**
+- The API is local (no Edge event, no native log)
+- The API may not be fully implemented in the turbo module
+- You need to verify both success and error paths gracefully
+
+---
+
+### Pattern summary: which pattern for which API type
+
+| API type | Pattern | Native logs? | Example |
+|----------|---------|:---:|---------|
+| Fire-and-forget + paired read | Callback gate → read → assert | No | `updatePropositions` + `getPropositions` |
+| Fire-and-forget, no callback | Callback log + native log (dual) | Yes | `Offer.displayed()`, `Offer.tapped()` |
+| Listener registration | Register → trigger → soft callback | No | `onPropositionUpdate()` |
+| Batch API | Callback log + conditional native | Optional | `Optimize.displayed(offers)` |
+| Local/sync API | Callback log with success/error branch | No | `generateDisplayInteractionXdm()` |
+
+---
+
+### Complete E2E spec inventory
+
+| # | API | Spec file | Pattern |
+|---|-----|-----------|---------|
+| 1 | `extensionVersion()` | `optimize-extension-version.spec.js` | Simple callback |
+| 2 | `updatePropositions()` + `getPropositions()` | `optimize-update-get-propositions.spec.js` | Fire-and-forget + paired read |
+| 3 | `clearCachedPropositions()` | `optimize-clear-cached-propositions.spec.js` | Fire-and-forget + paired read |
+| 4 | `Offer.displayed(proposition)` | `optimize-displayed-proposition.spec.js` | Fire-and-forget, dual verification |
+| 5 | `Offer.tapped(proposition)` | `optimize-tapped-proposition.spec.js` | Fire-and-forget, dual verification |
+| 6 | `onPropositionUpdate()` | `optimize-on-proposition-update.spec.js` | Listener registration |
+| 7 | `Optimize.displayed(offers)` | `optimize-multiple-displayed.spec.js` | Batch API |
+| 8 | `generateDisplayInteractionXdm(offers)` | `optimize-generate-display-xdm.spec.js` | Local API |
 
 ---
 

@@ -50,7 +50,13 @@ Android reads `BuildConfig.USE_INTEROP_ROOT` at runtime in `RCTAEPOptimizePackag
 
 ## E2E / Appium
 
-### 7. UiAutomator2/XCUITest only sees elements in the current viewport — scroll before reading
+### 7. Android UiScrollable needs a pause after long scroll sequences
+
+After scrolling far down (e.g. to button #8) then back to the top (`aepsdk-sdk-init-status`), `UiScrollable.scrollIntoView()` can fail to find elements on the next downward scroll. Add `browser.pause(1000)` between scrolling to top and the next `scrollAppScrollToTestIdAndClick` to let UiScrollable settle. Discovered in `optimize-on-proposition-update.spec.js` where registering a listener (far down) then tapping update-propositions-callback (near top) failed without the pause.
+
+---
+
+### 8. UiAutomator2/XCUITest only sees elements in the current viewport — scroll before reading
 
 After calling `scrollAppScrollToTestIdAndClick()` to tap a button deep in the page, any element that was ABOVE that button (e.g. `CallbackLogPanel`) gets pushed off-screen and disappears from the element hierarchy entirely. Calling `.getText()` on it will throw "element wasn't found".
 
@@ -145,3 +151,27 @@ See: `errors/android-turbo-module-null-stale-build.md`
 | Android `getName()` | `NativeAEP<Module>` |
 
 Any mismatch causes a silent "module not found" or `undefined is not an object` at runtime.
+
+---
+
+### 15. AEP SDK native log messages differ between iOS and Android
+
+The same SDK event produces different log message text on each platform. Never hard-code a platform-specific string in E2E assertions — use regex or `assertNativeLogContains()`.
+
+Key difference discovered: the Edge network response log:
+- iOS: `"Handle server response with streaming enabled"` (from `EdgeNetworkService`)
+- Android: `"Received server response"` (from `Edge/NetworkResponseHandler`)
+
+**Rule:** Use `expect(sdkLogs).toMatch(/server response/i)` instead of `.toContain('Handle server response with streaming enabled')`. Always verify assertions pass on BOTH platforms before merging.
+
+---
+
+### 16. `Optimize.generateDisplayInteractionXdm(offers)` fails on both platforms
+
+Returns `TypeError: iterator method is not callable` (Android) or `Error in generating Display interaction XDM for multiple offers` (iOS). The native SDK returns a `Map` type that doesn't serialize properly through the RN bridge — `Object.fromEntries()` fails because the returned object isn't a proper JS iterable. Same error on both turbo and interop layers — this is a bridge serialization issue, not layer-specific.
+
+---
+
+### 17. `Optimize.onPropositionUpdate()` callback fires on Android only
+
+The listener registers successfully on both platforms. After `updatePropositions`, the callback fires on Android (with `keys=["mboxAug"]`) but does NOT fire on iOS. This is an iOS-specific limitation — the turbo module bridge may not properly forward the listener callback on iOS.

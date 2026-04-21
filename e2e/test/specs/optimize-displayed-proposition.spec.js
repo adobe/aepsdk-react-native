@@ -138,8 +138,10 @@ describe('Optimize displayed proposition (Target mbox)', function () {
     // 1. Event names (in header, never truncated)
     expect(sdkLogs).toContain('Optimize Track Propositions Request');
     expect(sdkLogs).toContain('Edge Optimize Proposition Interaction Request');
-    // 2. Edge network round-trip completed (short Info-level messages)
-    expect(sdkLogs).toContain('Handle server response with streaming enabled');
+    // 2. Edge network round-trip completed
+    //    iOS: "Handle server response with streaming enabled"
+    //    Android: "Received server response"
+    expect(sdkLogs).toMatch(/server response/i);
     // 3. Response events received from Edge (short data, never truncated)
     expect(sdkLogs).toContain('activation:pull');
     expect(sdkLogs).toContain('personalization:decisions');

@@ -42,6 +42,19 @@ This was the root cause of all iOS native log capture failures. The logs exist â
 
 ---
 
+## Cross-platform log message differences
+
+The AEP SDK uses different log message wording on iOS vs Android for the same events. Always use regex or platform-agnostic substrings:
+
+| Event | iOS message | Android message | Safe pattern |
+|-------|------------|-----------------|--------------|
+| Edge response received | `Handle server response with streaming enabled` | `Received server response` | `/server response/i` |
+| Event dispatch | `Dispatching Event #Optional(N)` | `Dispatching Event #N` | `Dispatching Event` |
+
+**Rule:** Never hard-code `Handle server response with streaming enabled` â€” it fails on Android. Use `expect(sdkLogs).toMatch(/server response/i)`.
+
+---
+
 ## Final working solution
 
 ### `startNativeLogCapture()` (iOS path)
@@ -51,7 +64,7 @@ This was the root cause of all iOS native log capture failures. The logs exist â
 spawn('/usr/bin/log', [
   'stream',
   '--level', 'debug',
-  '--style', 'ndjson',
+  '--style', 'compact',
   '--predicate', 'subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"',
 ]);
 
