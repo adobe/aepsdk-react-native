@@ -5,7 +5,12 @@
  */
 
 import type { TurboModule } from 'react-native';
+import type { EventSubscription } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
+
+export type PropositionsPayload = {
+  propositions: Object;
+};
 
 export interface Spec extends TurboModule {
   extensionVersion(): Promise<string>;
@@ -18,7 +23,7 @@ export interface Spec extends TurboModule {
     onSuccess?: (propositions: Object) => void,
     onError?: (error: Object) => void
   ): void;
-  onPropositionsUpdate(): void;
+  registerOnPropositionsUpdate(): void;
   multipleOffersDisplayed(offersArray: Array<Object>): void;
   multipleOffersGenerateDisplayInteractionXdm(offersArray: Array<Object>): Promise<Object>;
   offerDisplayed(offerId: string, propositionMap: Object): void;
@@ -26,8 +31,12 @@ export interface Spec extends TurboModule {
   generateDisplayInteractionXdm(offerId: string, propositionMap: Object): Promise<Object>;
   generateTapInteractionXdm(offerId: string, propositionMap: Object): Promise<Object>;
   generateReferenceXdm(propositionMap: Object): Promise<Object>;
+  // Legacy event support (required for interop path's NativeEventEmitter)
   addListener(eventName: string): void;
   removeListeners(count: number): void;
+  // Turbo path: codegen-generated JSI event emitter (different name to avoid
+  // conflict with interop's sendEventWithName:@"onPropositionsUpdate").
+  onPropositionsUpdated(callback: (payload: PropositionsPayload) => void): EventSubscription;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPOptimize');

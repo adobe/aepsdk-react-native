@@ -174,10 +174,20 @@ Key difference discovered: the Edge network response log:
 
 ---
 
-### 17. `Optimize.onPropositionUpdate()` callback fires on Android only
+### 17. `sendEventWithName:` is dead for turbo-registered modules on RN 0.84+
 
-The listener registers successfully on both platforms. After `updatePropositions`, the callback fires on Android (with `keys=["mboxAug"]`) but does NOT fire on iOS.
+`RCTTurboModuleManager.mm:794` hardcodes `callableJSModules:nil` for ALL modules with `getTurboModule:`. Since `getTurboModule:` is required by `RCTModuleProviders.mm` for any module with a codegen spec, `sendEventWithName:` silently drops events on BOTH turbo and interop paths. This affects any module that needs to emit events from native to JS.
 
-**Root cause confirmed via native log tracing:** The RN bridge code is correct — the `onPropositionsUpdate:` block is properly registered with the iOS AEP SDK via `[AEPMobileOptimize onPropositionsUpdate:^(...){...}]`. But the **iOS native AEP Optimize SDK never invokes the block** after `updatePropositions`. The native `log stream` shows `"onPropositionsUpdate is called."` (registration) but the callback block never fires. This is a **native iOS SDK limitation**, not a bridge issue.
+**Root cause:** `sendEventWithName:` calls `[_callableJSModules invokeModule:@"RCTDeviceEventEmitter" ...]`. When `_callableJSModules` is nil, the call silently returns.
 
-**Do NOT add `RCTEventEmitter` to the turbo module path** to try to fix this. Turbo modules should inherit from `NSObject` (pure JSI), not `RCTEventEmitter` (legacy bridge). The `sendEventWithName:` and `RCTEventEmitter` are only for the interop path (`#if USE_INTEROP_ROOT`). The event emission code is correct — the underlying SDK just doesn't call the callback on iOS.
+**Fix:** Use `CodegenTypes.EventEmitter` + `NativeAEPOptimizeSpecBase`. The codegen generates `emitOnPropositionsUpdated:` which uses `_eventEmitterCallback` (JSI-native, bypasses `callableJSModules` entirely).
+
+**Files changed:**
+- `specs/NativeAEPOptimize.ts`: `readonly onPropositionsUpdated: CodegenTypes.EventEmitter<PropositionsPayload>`
+- `RCTAEPOptimize.h`: `NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>` on both paths
+- `RCTAEPOptimize.mm`: `[self emitOnPropositionsUpdated:@{...}]`, no `#if USE_INTEROP_ROOT`
+- `Optimize.ts`: `NativeAEPOptimize.onPropositionsUpdated(callback)`
+
+**Result:** ✓ callback fires on both iOS turbo and iOS interop.
+
+See: `agent-docs/context/turbo-module-event-emission.md` for the full investigation.

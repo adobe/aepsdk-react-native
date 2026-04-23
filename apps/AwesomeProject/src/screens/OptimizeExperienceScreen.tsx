@@ -167,6 +167,18 @@ export function OptimizeExperienceScreen({ appendLog }: Props) {
       appendLog(
         `Offer.tapped() invoked for target proposition (scope=${decisionScopeTargetMbox.getName()}, format=${offer.format})`,
       );
+      try {
+        appendLog(
+          `Offer.tapped() nativePayload: ${JSON.stringify({
+            scope: targetProposition.scope,
+            id: targetProposition.id,
+            scopeDetails: targetProposition.scopeDetails,
+            itemCount: targetProposition.items?.length,
+            eventType: 'decisioning.propositionInteract',
+            requestType: 'trackpropositions',
+          }, null, 2).slice(0, 4000)}`,
+        );
+      } catch { /* best effort */ }
     } else {
       appendLog(
         'Offer.tapped() skipped — no target proposition in cache. Call updatePropositions + getPropositions first.',
@@ -181,6 +193,18 @@ export function OptimizeExperienceScreen({ appendLog }: Props) {
       appendLog(
         `Offer.displayed() invoked for target proposition (scope=${decisionScopeTargetMbox.getName()}, format=${offer.format})`,
       );
+      try {
+        appendLog(
+          `Offer.displayed() nativePayload: ${JSON.stringify({
+            scope: targetProposition.scope,
+            id: targetProposition.id,
+            scopeDetails: targetProposition.scopeDetails,
+            itemCount: targetProposition.items?.length,
+            eventType: 'decisioning.propositionDisplay',
+            requestType: 'trackpropositions',
+          }, null, 2).slice(0, 4000)}`,
+        );
+      } catch { /* best effort */ }
     } else {
       appendLog(
         'Offer.displayed() skipped — no target proposition in cache. Call updatePropositions + getPropositions first.',

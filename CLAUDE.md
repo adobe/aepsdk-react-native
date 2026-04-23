@@ -17,6 +17,8 @@ All non-obvious project knowledge lives in [`agent-docs/`](./agent-docs/README.m
 | [`agent-docs/playbooks/release-checklist.md`](./agent-docs/playbooks/release-checklist.md) | Before cutting a release |
 | [`agent-docs/migrations/optimize-turbo.md`](./agent-docs/migrations/optimize-turbo.md) | Deep reference for the Optimize TurboModule migration |
 | [`agent-docs/context/ios-native-log-capture.md`](./agent-docs/context/ios-native-log-capture.md) | Before debugging iOS E2E native log capture issues |
+| [`agent-docs/context/turbo-module-event-emission.md`](./agent-docs/context/turbo-module-event-emission.md) | Before adding event emission to any TurboModule (sendEventWithName: is dead on RN 0.84+) |
+| [`agent-docs/context/rn-084-085-impact-on-sdk.md`](./agent-docs/context/rn-084-085-impact-on-sdk.md) | Before upgrading React Native or assessing compatibility with 0.84/0.85 |
 | [`agent-docs/errors/`](./agent-docs/errors/) | When hitting a build, E2E, or native error — check here first |
 
 ---

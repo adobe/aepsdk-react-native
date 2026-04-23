@@ -121,7 +121,7 @@ public class NativeAEPOptimizeModule extends NativeAEPOptimizeSpec {
     }
 
     @Override
-    public void onPropositionsUpdate() {
+    public void registerOnPropositionsUpdate() {
         Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void call(Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
@@ -166,6 +166,7 @@ public class NativeAEPOptimizeModule extends NativeAEPOptimizeSpec {
         RCTAEPOptimizeUtil.generateReferenceXdm(propositionMap, promise);
     }
 
+    // addListener/removeListeners kept for NativeEventEmitter compatibility (interop path).
     @Override
     public void addListener(String eventName) {
     }

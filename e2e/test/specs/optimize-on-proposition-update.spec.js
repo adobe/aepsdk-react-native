@@ -109,7 +109,8 @@ describe('Optimize onPropositionUpdate listener', function () {
       expect(finalLog).toMatch(ON_UPDATE_CALLBACK_LOG);
       expect(finalLog).toContain('mboxAug');
     } else {
-      console.warn('[e2e] ⚠ onPropositionUpdate callback did not fire (known turbo module limitation). Listener registration verified.');
+      throw new Error('onPropositionUpdate callback did not fire');
+      //console.warn('[e2e] ⚠ onPropositionUpdate callback did not fire (known turbo module limitation). Listener registration verified.');
     }
 
     expect(finalLog).not.toContain('onPropositionUpdate error');

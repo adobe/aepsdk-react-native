@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { EventSubscription, NativeEventEmitter } from 'react-native';
+import { EventSubscription } from 'react-native';
 import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
 import Offer from './models/Offer';
@@ -34,9 +34,7 @@ interface IOptimize {
   generateDisplayInteractionXdm: (offers: Array<Offer>) => Promise<Map<string, any>>;
 }
 
-declare var onPropositionUpdateSubscription: EventSubscription;
-
-var onPropositionUpdateSubscription: EventSubscription;
+var onPropositionUpdateSubscription: EventSubscription | null = null;
 
 
 /**
@@ -55,21 +53,32 @@ const Optimize: IOptimize = {
    * This API registers a permanent callback which is invoked whenever the Edge extension dispatches a response Event received from the Experience Edge Network upon a personalization query.
    * @param {Object} onPropositionUpdateCallback - the callback that will be called with the updated Propositions.
    */
-  onPropositionUpdate(adobeCallback: AdobePropositionCallback) {        
+  onPropositionUpdate(adobeCallback: AdobePropositionCallback) {
+    // Remove previous subscription
     if (onPropositionUpdateSubscription) {
       onPropositionUpdateSubscription.remove();
+      onPropositionUpdateSubscription = null;
     }
+
     const native = NativeAEPOptimize;
-    const eventEmitter = new NativeEventEmitter(native);
-    onPropositionUpdateSubscription = eventEmitter.addListener('onPropositionsUpdate', (propositions: Proposition[]) => {
-      const map = new Map<string, Proposition>();
-      for (const [key, value] of Object.entries(propositions)) {
-        map.set(key, new Proposition(value));
+
+    // Subscribe via CodegenTypes.EventEmitter (JSI-native, both paths).
+    // The native side emits via emitOnPropositionsUpdated: (codegen-generated
+    // on NativeAEPOptimizeSpecBase). No NativeEventEmitter / sendEventWithName:
+    // because RCTTurboModuleManager sets callableJSModules:nil for turbo modules.
+    onPropositionUpdateSubscription = native.onPropositionsUpdated(
+      (payload: { propositions: any }) => {
+        const map = new Map<string, Proposition>();
+        for (const [key, value] of Object.entries(payload.propositions)) {
+          map.set(key, new Proposition(value as any));
+        }
+        adobeCallback.call(map);
       }
-      adobeCallback.call(map);
-    });
-    native.onPropositionsUpdate();        
-  }, 
+    );
+
+    // Register the listener on the native AEP SDK side
+    native.registerOnPropositionsUpdate();
+  },
 
   /**
   * Clears the client-side in-memory propositions cache.

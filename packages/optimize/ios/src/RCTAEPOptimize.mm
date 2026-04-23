@@ -18,13 +18,11 @@
 static NSString *const TAG = @"RCTAEPOptimize";
 
 @implementation RCTAEPOptimize {
-  bool hasListeners;
   NSMutableDictionary<NSString *, AEPOptimizeProposition *> *propositionCache;
 }
 
 - (instancetype)init {
   self = [super init];
-  hasListeners = false;
   propositionCache = [[NSMutableDictionary alloc] init];
   return self;
 }
@@ -37,28 +35,12 @@ static NSString *const TAG = @"RCTAEPOptimize";
   return dispatch_get_main_queue();
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// USE_INTEROP_ROOT = 1 → RCTEventEmitter base class + RCT_EXPORT_MODULE bridge
-//                        registration. getTurboModule: still returns
-//                        NativeAEPOptimizeSpecJSI so the codegen RCTModuleProvider
-//                        check passes and TurboModuleRegistry resolves correctly.
-// USE_INTEROP_ROOT = 0 → NSObject <NativeAEPOptimizeSpec>; +moduleName only.
-//                        Pure JSI/TurboModule path.
-// getTurboModule: is shared — both paths return NativeAEPOptimizeSpecJSI.
-// ──────────────────────────────────────────────────────────────────────────────
-
-#if USE_INTEROP_ROOT
-// ── Interop path ──────────────────────────────────────────────────────────────
-// Bridge registration so the module is also reachable via the legacy bridge.
-RCT_EXPORT_MODULE(NativeAEPOptimize);
-#else
-// ── Turbo Module path ─────────────────────────────────────────────────────────
+// Module name for TurboModuleRegistry resolution.
 + (NSString *)moduleName { return @"NativeAEPOptimize"; }
-#endif
 
-// Shared for both paths: returns the codegen-generated JSI spec so
-// TurboModuleRegistry.getEnforcing('NativeAEPOptimize') resolves and all
-// protocol methods are dispatched correctly via NativeAEPOptimizeSpecJSI.
+// Required on both paths: RCTModuleProviders.mm (codegen-generated) checks
+// respondsToSelector:@selector(getTurboModule:) at startup. Without it,
+// the module is skipped and TurboModuleRegistry returns null.
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
@@ -131,8 +113,8 @@ RCT_EXPORT_MODULE(NativeAEPOptimize);
   }];
 }
 
-- (void)onPropositionsUpdate {
-  [AEPLog traceWithLabel:TAG message:@"onPropositionsUpdate is called."];
+- (void)registerOnPropositionsUpdate {
+  [AEPLog traceWithLabel:TAG message:@"registerOnPropositionsUpdate is called."];
   [AEPMobileOptimize onPropositionsUpdate:^(
                          NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *>
                              *decisionScopePropositionDict) {
@@ -144,10 +126,11 @@ RCT_EXPORT_MODULE(NativeAEPOptimize);
       [propositionDictionary setValue:[self convertPropositionToDict:proposition]
                                forKey:key.name];
     }
-    if (self->hasListeners) {
-#if USE_INTEROP_ROOT
-      [self sendEventWithName:@"onPropositionsUpdate" body:propositionDictionary];
-#endif
+    // Emit via codegen-generated emitOnPropositionsUpdated: (JSI-native).
+    // Guard: _eventEmitterCallback may be nil if the SDK fires the callback
+    // before JS has subscribed (e.g. cached propositions from a prior update).
+    if (_eventEmitterCallback) {
+      [self emitOnPropositionsUpdated:@{@"propositions": propositionDictionary}];
     }
   }];
 }
@@ -238,29 +221,13 @@ RCT_EXPORT_MODULE(NativeAEPOptimize);
   resolve([proposition generateReferenceXdm]);
 }
 
+// addListener/removeListeners kept in spec for backward compatibility.
+// No-ops — event emission uses CodegenTypes.EventEmitter (JSI), not bridge.
 - (void)addListener:(NSString *)eventName {
-  hasListeners = true;
 }
 
 - (void)removeListeners:(double)count {
-  hasListeners = false;
 }
-
-#if USE_INTEROP_ROOT
-#pragma mark - RCTEventEmitter (interop only)
-
-- (NSArray<NSString *> *)supportedEvents {
-  return @[ @"onPropositionsUpdate" ];
-}
-
-- (void)startObserving {
-  hasListeners = true;
-}
-
-- (void)stopObserving {
-  hasListeners = false;
-}
-#endif
 
 #pragma mark - Shared helper methods
 

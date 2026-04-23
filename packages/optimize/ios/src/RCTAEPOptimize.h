@@ -12,19 +12,16 @@
 #import <Foundation/Foundation.h>
 #import <NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
 
-#if USE_INTEROP_ROOT
-  // Interop path: RCTEventEmitter base class for sendEventWithName: support.
-  // Still conforms to NativeAEPOptimizeSpec so getTurboModule: can return
-  // NativeAEPOptimizeSpecJSI and satisfy the codegen RCTModuleProvider check.
-  #import <React/RCTEventEmitter.h>
-  @interface RCTAEPOptimize : RCTEventEmitter <NativeAEPOptimizeSpec>
-#else
-  // Turbo Module path: pure JSI bridging via codegen-generated spec.
-  // Does NOT use RCTEventEmitter — turbo modules should not depend on
-  // the legacy bridge. Event emission for onPropositionsUpdate is not
-  // available on this path until the iOS AEP SDK fires the callback
-  // (currently it doesn't — see known-gotchas.md #17).
-  @interface RCTAEPOptimize : NSObject <NativeAEPOptimizeSpec>
-#endif
+// NativeAEPOptimizeSpecBase (codegen-generated) provides emitOnPropositionsUpdated:
+// for JSI-native event emission. Used on BOTH turbo and interop paths because:
+//
+// 1. getTurboModule: is required on both paths (RCTModuleProviders.mm checks it)
+// 2. getTurboModule: → RCTTurboModuleManager creates module with callableJSModules:nil
+// 3. callableJSModules:nil → sendEventWithName: silently drops events
+// 4. Therefore RCTEventEmitter's sendEventWithName: is dead for any turbo-registered module
+// 5. emitOnPropositionsUpdated: bypasses callableJSModules — uses JSI EventEmitterCallback
+//
+// See: https://reactnative.dev/docs/the-new-architecture/native-modules-custom-events
+@interface RCTAEPOptimize : NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>
 
 @end

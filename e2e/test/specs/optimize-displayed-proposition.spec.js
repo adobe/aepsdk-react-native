@@ -1,7 +1,6 @@
 import { expect } from '@wdio/globals';
 import {
   activateAwesomeProject,
-  assertNativeLogContains,
   byTestId,
   clearCallbackLog,
   getNativeSdkLogs,
@@ -123,8 +122,15 @@ describe('Optimize displayed proposition (Target mbox)', function () {
     expect(finalLog).toContain('scope=mboxAug');
     expect(finalLog).not.toContain(DISPLAY_SKIPPED_LOG);
 
-    // ── 5. Assert native SDK logs: Edge event dispatched (both platforms) ────
-    // Give the SDK time to dispatch the Edge event.
+    // ── 5. Assert nativePayload via callback log (never truncated) ──────────
+    // The app logs the full proposition data before calling the native SDK.
+    // This is the untruncated source of truth for what the SDK received.
+    expect(finalLog).toContain('Offer.displayed() nativePayload:');
+    expect(finalLog).toContain('"eventType": "decisioning.propositionDisplay"');
+    expect(finalLog).toContain('"requestType": "trackpropositions"');
+    expect(finalLog).toContain('"scope": "mboxAug"');
+
+    // ── 6. Assert native SDK logs: Edge event dispatched (both platforms) ────
     await browser.pause(3000);
 
     const sdkLogs = await getNativeSdkLogs();
@@ -134,23 +140,13 @@ describe('Optimize displayed proposition (Target mbox)', function () {
       console.error('[e2e] Platform:', browser.capabilities.platformName);
     }
 
-    // ── Native log assertions ──────────────────────────────────────────────
-    // 1. Event names (in header, never truncated)
+    // Event names in header (never truncated by os_log)
     expect(sdkLogs).toContain('Optimize Track Propositions Request');
     expect(sdkLogs).toContain('Edge Optimize Proposition Interaction Request');
-    // 2. Edge network round-trip completed
-    //    iOS: "Handle server response with streaming enabled"
-    //    Android: "Received server response"
     expect(sdkLogs).toMatch(/server response/i);
-    // 3. Response events received from Edge (short data, never truncated)
     expect(sdkLogs).toContain('activation:pull');
     expect(sdkLogs).toContain('personalization:decisions');
     expect(sdkLogs).toContain('state:store');
-    // 4. Payload fields: hard assert on Android (logcat never truncates),
-    //    soft check on iOS (os_log truncates, key ordering varies per run).
-    assertNativeLogContains(sdkLogs, 'decisioning.propositionDisplay');
-    assertNativeLogContains(sdkLogs, 'mboxAug');
-    assertNativeLogContains(sdkLogs, 'trackpropositions');
 
   });
 });

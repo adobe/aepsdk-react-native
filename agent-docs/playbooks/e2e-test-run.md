@@ -153,19 +153,18 @@ Unlike `updatePropositions` which has a callback variant, `offer.tapped()` and `
 
 1. **Callback log** (JS-level, both platforms): A dedicated button (e.g. `aepsdk-optimize-btn-tap-target-offer` or `aepsdk-optimize-btn-display-target-offer`) calls the API and logs the result via `appendLog`. This confirms the JS side executed without error.
 
-2. **Native SDK logs** (both platforms): Use `startNativeLogCapture()` before the action, then `getNativeSdkLogs()` after. Three tiers of assertions:
-   - **Hard assertions** (always present, never truncated):
+2. **Callback log `nativePayload:`** (JS-level, never truncated, both platforms): The app logs the full proposition data to the callback log BEFORE calling the fire-and-forget native API. This is the untruncated source of truth. Hard-assert on:
+     - `"eventType": "decisioning.propositionDisplay"` or `"decisioning.propositionInteract"`
+     - `"requestType": "trackpropositions"`
+     - `"scope": "mboxAug"`
+
+3. **Native SDK logs** (both platforms): Use `startNativeLogCapture()` before the action, then `getNativeSdkLogs()` after. Hard-assert on event names and Edge response (these are in log headers, never truncated by os_log):
      - `Optimize Track Propositions Request` — Optimize extension dispatched event
      - `Edge Optimize Proposition Interaction Request` — Edge extension forwarded it
-     - `/server response/i` — Edge network round-trip completed (**use regex, not exact string** — iOS says `Handle server response with streaming enabled`, Android says `Received server response`)
+     - `/server response/i` — Edge network round-trip completed (**use regex** — iOS says `Handle server response with streaming enabled`, Android says `Received server response`)
      - `activation:pull`, `personalization:decisions`, `state:store` — response events
-   - **Soft checks via `assertNativeLogContains()`** (Android: hard assert; iOS: log ✓/⚠ due to os_log truncation):
-     - `decisioning.propositionDisplay` / `decisioning.propositionInteract`
-     - `mboxAug`
-     - `trackpropositions`
-   - **Not available** (Debug-level, only visible in Xcode debugger):
-     - `EdgeNetworkService - Sending request to URL` (Edge POST with full body)
-     - `Initiated (POST) network request`, `Connection to Experience Edge was successful`
+
+**Do NOT use `assertNativeLogContains()` soft checks for payload fields.** Use the callback log `nativePayload:` instead — it has the same data, never truncated, and hard-asserts on both platforms.
 
 **iOS native log capture — key details:**
 The AEP SDK on iOS **does** emit logs via `os_log` under `subsystem: com.adobe.mobile.marketing.aep`. However, `xcrun simctl spawn <udid> log stream` (inside simulator sandbox) does NOT see them. The host Mac's `/usr/bin/log stream` captures them correctly. The predicate must filter by subsystem (`subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"`) — filtering by process alone floods with XCUITest accessibility noise.
@@ -180,8 +179,8 @@ getE2ePlatform()                 // Returns 'Android' or 'iOS'
 assertNativeLogContains(sdkLogs, substring, label)
   // Android: hard expect().toContain() — logcat never truncates
   // iOS: soft check — logs ✓ if found, ⚠ if not (os_log truncates)
-  // Use for payload fields inside event data: {} (eventType, mboxAug, trackpropositions)
-  // Use expect().toContain() directly for event names in headers (never truncated)
+  // DEPRECATED for payload fields — use callback log nativePayload: instead
+  // Still useful for event names in headers (never truncated)
 clearCallbackLog()               // Tap "Clear log" — use in before() hook only
 scrollAppScrollToTestId(scroll, target)        // Scroll to element (no click)
 scrollAppScrollToTestIdAndClick(scroll, target) // Scroll to element + click
@@ -198,12 +197,32 @@ The AEP SDK uses different log message formats on iOS vs Android. Never hard-cod
 | Edge response | `Handle server response with streaming enabled` | `Received server response` | `expect(sdkLogs).toMatch(/server response/i)` |
 | Event dispatch | `Dispatching Event #Optional(N)` | `Dispatching Event #N` | `expect(sdkLogs).toContain('Dispatching Event')` |
 | Event name | In header, never truncated | In header, always full | `expect(sdkLogs).toContain('Optimize Track Propositions Request')` |
-| Payload fields | Truncated by os_log `<…>` | Full in logcat | `assertNativeLogContains(sdkLogs, 'mboxAug')` |
+| Payload fields | Truncated by os_log `<…>` | Full in logcat | Use callback log `nativePayload:` instead (never truncated) |
+
+**Payload assertion strategy (no soft checks):**
+
+iOS os_log truncates long messages with `<…>`. JSON key ordering is non-deterministic, so payload fields like `mboxAug`, `decisioning.propositionDisplay`, `trackpropositions` may or may not survive truncation. Instead of soft-checking native logs for these fields, the app logs the FULL proposition data to the callback log via `nativePayload:` BEFORE calling the native SDK. The E2E test hard-asserts on this untruncated callback log data.
+
+```
+// In OptimizeExperienceScreen.tsx — logged before calling offer.displayed():
+appendLog(`Offer.displayed() nativePayload: ${JSON.stringify({
+    scope: targetProposition.scope,
+    id: targetProposition.id,
+    scopeDetails: targetProposition.scopeDetails,
+    eventType: 'decisioning.propositionDisplay',
+    requestType: 'trackpropositions',
+}, null, 2)}`);
+
+// In E2E spec — hard assertions (no soft checks):
+expect(finalLog).toContain('"eventType": "decisioning.propositionDisplay"');
+expect(finalLog).toContain('"requestType": "trackpropositions"');
+expect(finalLog).toContain('"scope": "mboxAug"');
+```
 
 **Android-specific behavior confirmed via testing (8/8 specs pass on both turbo and interop):**
-- `onPropositionUpdate` callback **fires** on Android (doesn't fire on iOS)
+- `onPropositionUpdate` callback **fires** on both Android and iOS (fixed via CodegenTypes.EventEmitter)
 - `Optimize.displayed(offers)` dispatches full Edge event flow on Android (only DecisionScope warnings visible on iOS)
-- `generateDisplayInteractionXdm` returns `TypeError: iterator method is not callable` on Android (same `Map` serialization issue on both layers)
+- `generateDisplayInteractionXdm` works on Android after `Object.fromEntries()` fix; iOS returns XDM payload after `cachePropositions` fix
 - Android `UiScrollable` needs `browser.pause(1000)` after long scroll sequences before the next `scrollIntoView` (see known gotcha #7)
 
 **Full validation sequence:**
@@ -213,10 +232,10 @@ The AEP SDK uses different log message formats on iOS vs Android. Never hard-cod
 3. getPropositions → verify size > 0 (populate targetProposition state)
 4. startNativeLogCapture() — both platforms (Android: drains logcat, iOS: host log stream)
 5. Tap the action button (e.g. aepsdk-optimize-btn-display-target-offer)
-6. Assert callback log: /Offer.displayed() invoked/, contains 'mboxAug', no 'skipped'
-7. pause(3000) — give SDK time to dispatch the native event
-8. Assert native logs (both platforms): 'Optimize Track Propositions Request',
-   'decisioning.propositionDisplay'
+6. Assert callback log: /Offer.displayed() invoked/, 'scope=mboxAug', no 'skipped'
+7. Assert callback log nativePayload: "eventType", "requestType", "scope" (hard, never truncated)
+8. pause(3000) — give SDK time to dispatch the native event
+9. Assert native logs: event names (hard) + Edge response (hard)
    (NOT 'mboxAug' or 'trackpropositions' — os_log truncation + non-deterministic key order)
 ```
 
