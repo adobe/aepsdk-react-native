@@ -15,6 +15,8 @@ All non-obvious project knowledge lives in [`agent-docs/`](./agent-docs/README.m
 | [`agent-docs/playbooks/e2e-test-run.md`](./agent-docs/playbooks/e2e-test-run.md) | Before running or debugging E2E tests |
 | [`agent-docs/playbooks/new-module-migration.md`](./agent-docs/playbooks/new-module-migration.md) | Before migrating any package to TurboModule |
 | [`agent-docs/playbooks/release-checklist.md`](./agent-docs/playbooks/release-checklist.md) | Before cutting a release |
+| [`agent-docs/playbooks/rn-upgrade-generic.md`](./agent-docs/playbooks/rn-upgrade-generic.md) | Before upgrading AEPSampleApp to any new RN version |
+| [`agent-docs/playbooks/rn-upgrade-083-to-084.md`](./agent-docs/playbooks/rn-upgrade-083-to-084.md) | Version-specific reference for RN 0.83 → 0.84 |
 | [`agent-docs/migrations/optimize-turbo.md`](./agent-docs/migrations/optimize-turbo.md) | Deep reference for the Optimize TurboModule migration |
 | [`agent-docs/context/ios-native-log-capture.md`](./agent-docs/context/ios-native-log-capture.md) | Before debugging iOS E2E native log capture issues |
 | [`agent-docs/context/turbo-module-event-emission.md`](./agent-docs/context/turbo-module-event-emission.md) | Before adding event emission to any TurboModule (sendEventWithName: is dead on RN 0.84+) |
