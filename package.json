@@ -52,5 +52,13 @@
     "ts-jest": "^29.4.4",
     "tslib": "^2.3.1",
     "typescript": "^5.0.0"
+  },
+  "resolutions": {
+    "metro@npm:0.80.12": "patch:metro@npm%3A0.84.3#~/.yarn/patches/metro-npm-0.84.3-9a44ce7b5d.patch",
+    "metro@npm:^0.83.1": "patch:metro@npm%3A0.84.3#~/.yarn/patches/metro-npm-0.84.3-9a44ce7b5d.patch",
+    "metro@npm:0.83.3": "patch:metro@npm%3A0.84.3#~/.yarn/patches/metro-npm-0.84.3-9a44ce7b5d.patch",
+    "metro@npm:0.84.3": "patch:metro@npm%3A0.84.3#~/.yarn/patches/metro-npm-0.84.3-9a44ce7b5d.patch",
+    "metro@npm:^0.84.0": "patch:metro@npm%3A0.84.3#~/.yarn/patches/metro-npm-0.84.3-9a44ce7b5d.patch",
+    "metro@npm:0.83.6": "patch:metro@npm%3A0.84.3#~/.yarn/patches/metro-npm-0.84.3-9a44ce7b5d.patch"
   }
 }
