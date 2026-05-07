@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(yarn install *)",
+      "Bash(npm run *)",
+      "Bash(yarn --version)",
+      "Bash(security find-identity *)",
+      "Bash(xcodebuild -workspace AEPSampleApp.xcworkspace -scheme AEPSampleApp -configuration Release -destination generic/platform=iOS -archivePath ./build/AEPSampleApp.xcarchive DEVELOPMENT_TEAM=YNBZY3F3GZ CODE_SIGN_STYLE=Automatic archive)",
+      "Bash(xcodebuild -workspace AEPSampleApp.xcworkspace -scheme AEPSampleApp -configuration Release -destination generic/platform=iOS -archivePath ./build/AEPSampleApp.xcarchive DEVELOPMENT_TEAM=YNBZY3F3GZ CODE_SIGN_STYLE=Automatic -allowProvisioningUpdates archive)",
+      "Bash(xcodebuild -workspace AEPSampleApp.xcworkspace -scheme AEPSampleApp -configuration Release -destination generic/platform=iOS -archivePath ./build/AEPSampleApp.xcarchive -allowProvisioningUpdates archive)",
+      "Bash(xcodebuild -exportArchive -archivePath ./build/AEPSampleApp.xcarchive -exportPath ./build/IPA -exportOptionsPlist /tmp/ExportOptions.plist -allowProvisioningUpdates)",
+      "Bash(xcodebuild -exportArchive -archivePath /Users/namarora/aepsdk-react-native/apps/AEPSampleApp/ios/build/AEPSampleApp.xcarchive -exportPath /Users/namarora/aepsdk-react-native/apps/AEPSampleApp/ios/build/IPA -exportOptionsPlist /tmp/ExportOptions.plist -allowProvisioningUpdates)",
+      "Bash(xcodebuild *)"
+    ]
+  }
+}
