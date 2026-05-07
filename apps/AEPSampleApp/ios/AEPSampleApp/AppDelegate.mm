@@ -12,7 +12,28 @@ governing permissions and limitations under the License.
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTBridgeModule.h>
 #import <ReactAppDependencyProvider/RCTAppDependencyProvider.h>
+
+@interface RCTNSLogger : NSObject <RCTBridgeModule> @end
+@implementation RCTNSLogger
+RCT_EXPORT_MODULE(NSLogger)
+RCT_EXPORT_METHOD(log:(NSString *)message) { NSLog(@"[JS] %@", message); }
++ (BOOL)requiresMainQueueSetup { return NO; }
+@end
+
+@interface RCTBuildInfo : NSObject <RCTBridgeModule> @end
+@implementation RCTBuildInfo
+RCT_EXPORT_MODULE(BuildInfo)
+- (NSDictionary *)constantsToExport {
+#if DEBUG
+  return @{ @"isDebug": @YES };
+#else
+  return @{ @"isDebug": @NO };
+#endif
+}
++ (BOOL)requiresMainQueueSetup { return NO; }
+@end
 
 @implementation AppDelegate
 
@@ -20,9 +41,13 @@ governing permissions and limitations under the License.
 {
   self.moduleName = @"AEPSampleApp";
   self.dependencyProvider = [RCTAppDependencyProvider new];
-  // You can add your custom initial props in the dictionary below.
-  // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
+
+#if DEBUG
+  NSLog(@"[BUILD] ✅ DEBUG BUILD");
+#else
+  NSLog(@"[BUILD] 🚀 RELEASE BUILD");
+#endif
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
@@ -35,6 +60,10 @@ governing permissions and limitations under the License.
 - (NSURL *)bundleURL
 {
 #if DEBUG
+  NSURL *embeddedBundle = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  if (embeddedBundle) {
+    return embeddedBundle;
+  }
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
