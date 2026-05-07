@@ -71,8 +71,8 @@ PODS:
   - RCTAEPEdgeIdentity (7.0.0):
     - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
     - React
-  - RCTAEPMessaging (7.4.0):
-    - AEPMessaging (< 6.0.0, >= 5.12.0)
+  - RCTAEPMessaging (7.3.0):
+    - AEPMessaging (< 6.0.0, >= 5.3.0)
     - React
   - RCTAEPOptimize (7.1.1):
     - AEPOptimize (< 6.0.0, >= 5.0.0)
@@ -2491,7 +2491,7 @@ SPEC CHECKSUMS:
   RCTAEPEdgeBridge: 8d778ec9cbb0dd2315e38b8df79b85a6ad915b2d
   RCTAEPEdgeConsent: 94d66ceefac0058a1586b0b876e37f178d3733d2
   RCTAEPEdgeIdentity: 2ed3fdc9a3150e9bcf268b128c22f293ab4df6aa
-  RCTAEPMessaging: d97f2750b4698d54953e6a9b824506a18be1695c
+  RCTAEPMessaging: a3496d6f9745ec56d35df30a9d353c48347f4c6d
   RCTAEPOptimize: 160b9d7aa20c4524e70b930934dbd5c0f7a58f14
   RCTAEPPlaces: 4050bda86286605a8683b4c078baac1662ca013a
   RCTAEPTarget: e8bcf8864758faf07635719ffa0eff6a06861910

@@ -25,6 +25,8 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  TextInput,
+  StyleSheet,
 } from 'react-native';
 import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
 
@@ -47,6 +49,7 @@ const defaultPropositions = {
 
 export default ({navigation}: any) => {
   const [version, setVersion] = useState('0.0.0');
+  const [customScopeInput, setCustomScopeInput] = useState('demoLoc3');
   const [textProposition, setTextProposition] = useState<Proposition>();
   const [imageProposition, setImageProposition] = useState<Proposition>();
   const [htmlProposition, setHtmlProposition] = useState<Proposition>();
@@ -65,7 +68,7 @@ export default ({navigation}: any) => {
   const decisionScopeJson = new DecisionScope(
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9',
   );
-  const decisionScopeTargetMbox = new DecisionScope('demoLoc3');
+  const decisionScopeTargetMbox = new DecisionScope(customScopeInput.trim() || 'demoLoc3');
 
   const decisionScopes = [
     decisionScopeText,
@@ -154,6 +157,12 @@ export default ({navigation}: any) => {
   });
 
   var {width} = Dimensions.get('window');
+  const inputStyles = StyleSheet.create({
+    label: {fontWeight: '600', marginTop: 8, marginBottom: 2, color: '#333', alignSelf: 'flex-start'},
+    input: {borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, fontSize: 13, marginBottom: 2, backgroundColor: '#fff', width: width - 32},
+    hint: {fontSize: 11, color: '#666', marginBottom: 4, alignSelf: 'flex-start'},
+    divider: {height: 1, backgroundColor: '#ddd', marginVertical: 8, width: width - 32},
+  });
 
   let layoutProvider = new LayoutProvider(
     index => {
@@ -321,6 +330,19 @@ export default ({navigation}: any) => {
     <View style={{...styles.container, marginTop: 30}}>
       <Button onPress={() => navigation.goBack()} title="Go to main page" />
       <Text style={styles.welcome}>Optimize</Text>
+
+      <Text style={inputStyles.label}>Decision Scope (Target Mbox)</Text>
+      <TextInput
+        style={inputStyles.input}
+        value={customScopeInput}
+        onChangeText={setCustomScopeInput}
+        placeholder="e.g. demoLoc3"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+      <Text style={inputStyles.hint}>Active scope: {customScopeInput.trim() || 'demoLoc3'}</Text>
+      <View style={inputStyles.divider} />
+
       <View style={{margin: 5}}>
         <Button title="Extension Version" onPress={optimizeExtensionVersion} />
       </View>

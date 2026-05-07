@@ -10,8 +10,15 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { AppRegistry } from 'react-native';
+import { AppRegistry, NativeModules } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
+
+if (!__DEV__) {
+  const { NSLogger } = NativeModules;
+  if (NSLogger) {
+    console.log = (...args) => NSLogger.log(args.map(String).join(' '));
+  }
+}
 
 AppRegistry.registerComponent(appName, () => App);

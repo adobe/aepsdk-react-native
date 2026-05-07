@@ -10,8 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React from 'react';
-import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {Button, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {
   Target,
   TargetOrder,
@@ -23,6 +23,9 @@ import {
 import {NavigationProps} from '../types/props';
 
 function TargetView({navigation}: NavigationProps) {
+  const [mbox1, setMbox1] = useState('clickTestRyan');
+  const [mbox2, setMbox2] = useState('mboxName2');
+
   const targetExtensionVersion = async () => {
     const version = await Target.extensionVersion();
     console.log(`AdobeExperienceSDK: Target version: ${version}`);
@@ -51,145 +54,126 @@ function TargetView({navigation}: NavigationProps) {
     Target.setPreviewRestartDeeplink('https://www.adobe.com');
 
   const setSessionId = () => Target.setSessionId('sessionId');
-
   const setTntId = () => Target.setTntId('tntId');
-
   const setThirdPartyId = () => Target.setThirdPartyId('thirdPartyId');
 
   const retrieveLocationContent = () => {
     const mboxParameters1 = {status: 'platinum'};
     const mboxParameters2 = {userType: 'Paid'};
     const purchaseIDs = ['34', '125'];
-
     const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     const targetProduct = new TargetProduct('24D3412', 'Books');
-    const parameters1 = new TargetParameters(mboxParameters1);
+
     const request1 = new TargetRequestObject(
-      'clickTestRyan',
-      parameters1,
+      mbox1,
+      new TargetParameters(mboxParameters1),
       'defaultContent1',
       (error, content) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log('Adobe content:' + content);
-        }
+        if (error) console.error(error);
+        else console.log('Adobe content:' + content);
       },
     );
 
-    const parameters2 = new TargetParameters(
-      mboxParameters2,
-      {profileParameters: 'parameterValue'},
-      targetProduct,
-      targetOrder,
-    );
     const request2 = new TargetRequestObject(
-      'mboxName2',
-      parameters2,
+      mbox2,
+      new TargetParameters(mboxParameters2, {profileParameters: 'parameterValue'}, targetProduct, targetOrder),
       'defaultContent2',
       (error, content) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log('Adobe content:' + content);
-        }
+        if (error) console.error(error);
+        else console.log('Adobe content:' + content);
       },
     );
-
-    const locationRequests = [request1, request2];
-    const profileParameters1 = {ageGroup: '20-32'};
 
     const parameters = new TargetParameters(
       {parameters: 'parametervalue'},
-      profileParameters1,
+      {ageGroup: '20-32'},
       targetProduct,
       targetOrder,
     );
-    Target.retrieveLocationContent(locationRequests, parameters);
+    Target.retrieveLocationContent([request1, request2], parameters);
   };
 
   const displayedLocations = () =>
-    Target.displayedLocations(['clickTestRyan', 'clickTestRyan']);
+    Target.displayedLocations([mbox1, mbox2]);
 
   const clickedLocation = () => {
     const purchaseIDs = ['34', '125'];
-
     const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     const targetProduct = new TargetProduct('24D3412', 'Books');
-    const profileParameters1 = {ageGroup: '20-32'};
     const parameters = new TargetParameters(
       {parameters: 'parametervalue'},
-      profileParameters1,
+      {ageGroup: '20-32'},
       targetProduct,
       targetOrder,
     );
-
-    Target.clickedLocation('clickTestRyan', parameters);
+    Target.clickedLocation(mbox1, parameters);
   };
 
   const prefetchContent = () => {
     const mboxParameters1 = {status: 'platinum'};
     const mboxParameters2 = {userType: 'Paid'};
     const purchaseIDs = ['34', '125'];
-
     const targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
     const targetProduct = new TargetProduct('24D3412', 'Books');
-    const parameters1 = new TargetParameters(mboxParameters1);
-    const prefetch1 = new TargetPrefetchObject('clickTestRyan', parameters1);
 
-    const parameters2 = new TargetParameters(
-      mboxParameters2,
-      {profileParameters: 'parameterValue'},
-      targetProduct,
-      targetOrder,
+    const prefetch1 = new TargetPrefetchObject(mbox1, new TargetParameters(mboxParameters1));
+    const prefetch2 = new TargetPrefetchObject(
+      mbox2,
+      new TargetParameters(mboxParameters2, {profileParameters: 'parameterValue'}, targetProduct, targetOrder),
     );
-    const prefetch2 = new TargetPrefetchObject('mboxName2', parameters2);
-
-    const prefetchList = [prefetch1, prefetch2];
-    const profileParameters1 = {ageGroup: '20-32'};
 
     const parameters = new TargetParameters(
       {parameters: 'parametervalue'},
-      profileParameters1,
+      {ageGroup: '20-32'},
       targetProduct,
       targetOrder,
     );
-    Target.prefetchContent(prefetchList, parameters)
+    Target.prefetchContent([prefetch1, prefetch2], parameters)
       .then(success => console.log(success))
       .catch(err => console.log(err));
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{marginTop: 75}}>
+      <ScrollView contentContainerStyle={{padding: 16, marginTop: 30, paddingBottom: 40}}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Target Test App</Text>
-        <Button title="extensionVersion()" onPress={targetExtensionVersion} />
-        <Button
-          title="clearPrefetchCache()"
-          onPress={() => clearPrefetchCache()}
+
+        <Text style={styles.label}>Mbox 1</Text>
+        <TextInput
+          style={styles.input}
+          value={mbox1}
+          onChangeText={setMbox1}
+          placeholder="Mbox name 1"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
-        <Button title="getSessionId()" onPress={getSessionId} />
-        <Button title="getThirdPartyId()" onPress={getThirdPartyId} />
-        <Button title="getTntId()" onPress={getTntId} />
-        <Button title="resetExperience()" onPress={resetExperience} />
-        <Button
-          title="setPreviewRestartDeeplink(...)"
-          onPress={setPreviewRestartDeeplink}
+        <Text style={styles.label}>Mbox 2</Text>
+        <TextInput
+          style={styles.input}
+          value={mbox2}
+          onChangeText={setMbox2}
+          placeholder="Mbox name 2"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
-        <Button title="setSessionId(...)" onPress={setSessionId} />
-        <Button title="setThirdPartyId(...)" onPress={setThirdPartyId} />
-        <Button title="setTntId(...)" onPress={setTntId} />
-        <Button
-          title="retrieveLocationContent(...)"
-          onPress={retrieveLocationContent}
-        />
-        <Button title="prefetchContent(...)" onPress={prefetchContent} />
-        <Button title="displayedLocations(...)" onPress={displayedLocations} />
-        <Button
-          title="clickedLocation(...)"
-          onPress={clickedLocation}
-        />
+
+        <View style={styles.divider} />
+
+        <View style={styles.buttonWrapper}><Button title="extensionVersion()" onPress={targetExtensionVersion} /></View>
+        <View style={styles.buttonWrapper}><Button title="clearPrefetchCache()" onPress={() => clearPrefetchCache()} /></View>
+        <View style={styles.buttonWrapper}><Button title="getSessionId()" onPress={getSessionId} /></View>
+        <View style={styles.buttonWrapper}><Button title="getThirdPartyId()" onPress={getThirdPartyId} /></View>
+        <View style={styles.buttonWrapper}><Button title="getTntId()" onPress={getTntId} /></View>
+        <View style={styles.buttonWrapper}><Button title="resetExperience()" onPress={resetExperience} /></View>
+        <View style={styles.buttonWrapper}><Button title="setPreviewRestartDeeplink(...)" onPress={setPreviewRestartDeeplink} /></View>
+        <View style={styles.buttonWrapper}><Button title="setSessionId(...)" onPress={setSessionId} /></View>
+        <View style={styles.buttonWrapper}><Button title="setThirdPartyId(...)" onPress={setThirdPartyId} /></View>
+        <View style={styles.buttonWrapper}><Button title="setTntId(...)" onPress={setTntId} /></View>
+        <View style={styles.buttonWrapper}><Button title={`retrieveLocationContent(${mbox1}, ${mbox2})`} onPress={retrieveLocationContent} /></View>
+        <View style={styles.buttonWrapper}><Button title={`prefetchContent(${mbox1}, ${mbox2})`} onPress={prefetchContent} /></View>
+        <View style={styles.buttonWrapper}><Button title={`displayedLocations(${mbox1}, ${mbox2})`} onPress={displayedLocations} /></View>
+        <View style={styles.buttonWrapper}><Button title={`clickedLocation(${mbox1})`} onPress={clickedLocation} /></View>
       </ScrollView>
     </View>
   );
@@ -198,14 +182,35 @@ function TargetView({navigation}: NavigationProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 22,
     textAlign: 'center',
     margin: 10,
+  },
+  label: {
+    fontWeight: '600',
+    marginTop: 8,
+    marginBottom: 2,
+    color: '#333',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    padding: 8,
+    fontSize: 13,
+    marginBottom: 4,
+    backgroundColor: '#fff',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#ddd',
+    marginVertical: 12,
+  },
+  buttonWrapper: {
+    marginVertical: 4,
   },
 });
 

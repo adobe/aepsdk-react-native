@@ -21,7 +21,7 @@ import {
 import styles from '../styles/styles';
 import { useRouter } from 'expo-router';
 
-const SURFACES = ['android-cbe-preview', 'cbe/json', 'android-cc'];
+const SURFACES = ['cbehtml-ios', 'android-cc'];
 const SURFACES_WITH_CONTENT_CARDS = ['android-cc'];
 
 
