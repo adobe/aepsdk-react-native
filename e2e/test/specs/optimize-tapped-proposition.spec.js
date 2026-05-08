@@ -57,6 +57,9 @@ describe('Optimize tapped proposition (Target mbox)', function () {
   it('tapped sends propositionInteract event for Target HTML offer', async function () {
     const logContent = await $(byTestId('aepsdk-callback-log-content'));
 
+    // Give the app a moment to settle after activation before first button press.
+    await browser.pause(3000);
+
     // ── 1. Populate cache: updatePropositions callback ───────────────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -76,6 +79,8 @@ describe('Optimize tapped proposition (Target mbox)', function () {
       },
     );
 
+    await browser.pause(3000);
+
     // ── 2. Get propositions (populates targetProposition state) ──────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -93,6 +98,8 @@ describe('Optimize tapped proposition (Target mbox)', function () {
           'getPropositions returned size=0 — cache not populated for tap test.',
       },
     );
+
+    await browser.pause(3000);
 
     // ── 3. Start native log capture, then tap the target offer ───────────────
     // Android: drains logcat buffer. iOS: spawns `xcrun simctl log stream`.

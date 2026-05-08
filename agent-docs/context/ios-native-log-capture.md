@@ -1,6 +1,6 @@
 # iOS Native Log Capture Learnings
 
-**Last updated:** 2026-04-16
+**Last updated:** 2026-05-08
 
 > Lessons from making native SDK log capture work reliably on iOS for e2e tests.
 
@@ -74,35 +74,39 @@ await sleep(2000);  // wait for stream to attach
 ### `getNativeSdkLogs()` (iOS path)
 
 1. Kill the stream process (SIGTERM → 1s pause → SIGKILL fallback)
-2. Parse ndjson lines, extract `eventMessage` fields
-3. Persist raw logs to `e2e/logs/ios_native_sdk_logs.txt` for debugging
-4. Return concatenated messages for assertion
+2. Run `log show --last 60s` as a fallback (catches anything the stream missed)
+3. Merge stream buffer + `log show` output for maximum coverage
+4. Persist two dump files for debugging:
+   - `e2e/logs/ios_native_sdk_logs_raw.txt` — full unfiltered stream buffer
+   - `e2e/logs/ios_native_sdk_logs.txt` — AEP-subsystem-filtered entries (timestamped sections, append mode)
+5. Return merged string for assertion
 
 ### Test timing
 
 - `browser.pause(3000)` before collecting logs — gives the SDK time to dispatch the Edge event
-- The native log assertions check these strings on both platforms:
-  - `"Optimize Track Propositions Request"` — event name (early in message)
-  - `"decisioning.propositionDisplay"` or `"decisioning.propositionInteract"` — event type (early)
-  - `"trackpropositions"` — request type (early)
-- **NOT asserted in native logs:** `"mboxAug"` (scope name) — os_log truncates long
-  messages with `<…>`, and `propositions[].scope` is deep enough to be cut off.
-  Assert `mboxAug` via the **callback log** instead (JS-level, never truncated).
+- All native log assertions use hard `expect().toContain()` / `expect().toMatch()` on both platforms:
+  - `"Optimize Track Propositions Request"` — event name (in header)
+  - `"Edge Optimize Proposition Interaction Request"` — forwarded to Edge
+  - `/server response/i` — Edge round-trip completed (regex: iOS says "Handle server response", Android says "Received server response")
+  - `"activation:pull"`, `"personalization:decisions"`, `"state:store"` — response event types
+- **NOT asserted in native logs:** `"mboxAug"`, `"decisioning.propositionDisplay"`, `"trackpropositions"` — os_log truncates long messages with `<…>` and JSON key ordering is non-deterministic. Assert these via the **callback log `nativePayload:`** (JS-level, never truncated).
 
 ---
 
 ## File logging approach
 
-All iOS native log captures are persisted to:
+iOS native log captures are persisted to two files:
 
 ```
-e2e/logs/ios_native_sdk_logs.txt
+e2e/logs/ios_native_sdk_logs_raw.txt   # Full unfiltered stream buffer (all lines)
+e2e/logs/ios_native_sdk_logs.txt       # AEP-subsystem-filtered entries
 ```
 
 - **Append mode**: each capture adds a timestamped section header
-- File is created if missing; directory is created if missing
+- Files are created if missing; directory is created if missing
 - Works across multiple test runs — logs accumulate
-- Useful for post-mortem debugging when assertions fail
+- `ios_native_sdk_logs_raw.txt` is the authoritative debug file — it always has content even if the AEP predicate missed entries
+- Both files are gitignored
 
 ### Manual log capture (terminal)
 
@@ -125,15 +129,17 @@ e2e/logs/ios_native_sdk_logs.txt
 
 **Impact on assertions:** Two categories of log data have different reliability:
 
-**Always reliable (assert with `expect().toContain()`):**
+**Always reliable — hard assert with `expect().toContain()` / `expect().toMatch()`:**
 - Event names in headers: `Optimize Track Propositions Request`, `Edge Optimize Proposition Interaction Request`
-- Short Info-level messages: `Handle server response with streaming enabled`
-- Response event types (short data): `activation:pull`, `personalization:decisions`, `state:store`
+- Response: `/server response/i` (regex — iOS and Android use different wording)
+- Response event types: `activation:pull`, `personalization:decisions`, `state:store`
 
-**Unreliable — use soft checks only (if/else with console.log/warn):**
-- `decisioning.propositionDisplay` / `propositionInteract` — survives ~75% of runs
-- `mboxAug` — survives ~75% of runs
-- `trackpropositions` — survives ~50% of runs
+**Unreliable in native logs — assert via callback log `nativePayload:` instead:**
+- `decisioning.propositionDisplay` / `propositionInteract` — JSON key ordering non-deterministic
+- `mboxAug` — deep in the propositions array, often truncated
+- `trackpropositions` — inside `data:` block, may be cut off
+
+The app logs the full proposition data to the callback log (JS-level) via `nativePayload:` BEFORE calling the native fire-and-forget API. Hard-assert these fields via callback log — it is never truncated.
 
 **Never visible in `log stream` (Debug-level, Xcode-only):**
 - `EdgeNetworkService - Sending request to URL` (with full request body)
@@ -141,9 +147,9 @@ e2e/logs/ios_native_sdk_logs.txt
 - `Connection to Experience Edge was successful`
 - `Edge - Queuing event with id`
 
-Debug-level `os_log` messages are only emitted when a debugger (Xcode/lldb) is attached. `log stream` runs without a debugger, so these are invisible. The server response assertion (`Handle server response`) confirms the POST succeeded.
+Debug-level `os_log` messages are only emitted when a debugger (Xcode/lldb) is attached. `log stream` runs without a debugger, so these are invisible. The server response assertion (`/server response/i`) confirms the POST succeeded.
 
-**Rule:** Hard-assert reliable strings. Soft-check unreliable strings (log ✓ if found, ⚠ if not). Verify all payload fields via the callback log (JS-level, never truncated).
+**Rule:** Hard-assert event names and response strings in native logs. Assert payload fields (scope, eventType, requestType) via callback log `nativePayload:`. Do NOT use soft checks (`console.warn`) for native log assertions — all assertions are hard on both iOS and Android.
 
 ---
 

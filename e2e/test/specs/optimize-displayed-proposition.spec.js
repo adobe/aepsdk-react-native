@@ -57,6 +57,9 @@ describe('Optimize displayed proposition (Target mbox)', function () {
   it('displayed sends propositionDisplay event for Target HTML offer', async function () {
     const logContent = await $(byTestId('aepsdk-callback-log-content'));
 
+    // Give the app a moment to settle after activation before first button press.
+    await browser.pause(3000);
+
     // ── 1. Populate cache: updatePropositions callback ───────────────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -76,6 +79,8 @@ describe('Optimize displayed proposition (Target mbox)', function () {
       },
     );
 
+    await browser.pause(3000);
+
     // ── 2. Get propositions (populates targetProposition state) ──────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -93,6 +98,8 @@ describe('Optimize displayed proposition (Target mbox)', function () {
           'getPropositions returned size=0 — cache not populated for display test.',
       },
     );
+
+    await browser.pause(3000);
 
     // ── 3. Start native log capture, then display the target offer ─────────
     // Android: drains logcat buffer. iOS: spawns `xcrun simctl log stream`.
@@ -130,7 +137,10 @@ describe('Optimize displayed proposition (Target mbox)', function () {
     expect(finalLog).toContain('"requestType": "trackpropositions"');
     expect(finalLog).toContain('"scope": "mboxAug"');
 
-    // ── 6. Assert native SDK logs: Edge event dispatched (both platforms) ────
+    // ── 6. Assert native SDK logs: Edge event dispatched ─────────────────────
+    // Hard assertions on both Android and iOS.
+    // Logs are dumped to e2e/logs/ for post-mortem debugging.
+    // iOS: /usr/bin/log stream + log show --last 60s (merged for max coverage).
     await browser.pause(3000);
 
     const sdkLogs = await getNativeSdkLogs();
@@ -138,9 +148,9 @@ describe('Optimize displayed proposition (Target mbox)', function () {
     if (!sdkLogs || sdkLogs.trim().length === 0) {
       console.error('[e2e] WARNING: Native SDK logs are EMPTY after displayed() call.');
       console.error('[e2e] Platform:', browser.capabilities.platformName);
+      console.error('[e2e] Check e2e/logs/ios_native_sdk_logs_raw.txt for raw dump.');
     }
 
-    // Event names in header (never truncated by os_log)
     expect(sdkLogs).toContain('Optimize Track Propositions Request');
     expect(sdkLogs).toContain('Edge Optimize Proposition Interaction Request');
     expect(sdkLogs).toMatch(/server response/i);

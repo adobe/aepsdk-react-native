@@ -55,6 +55,9 @@ describe('Optimize updatePropositions + getPropositions (Target mbox)', function
   });
 
   it('updatePropositions populates cache; getPropositions returns Target HTML offer', async function () {
+    // Give the app a moment to settle after activation before first button press.
+    await browser.pause(3000);
+
     // ── 1. Call updatePropositions (callback variant) ────────────────────────
     // Scroll DOWN to reach the button (pushes log panel off screen).
     await scrollAppScrollToTestIdAndClick(

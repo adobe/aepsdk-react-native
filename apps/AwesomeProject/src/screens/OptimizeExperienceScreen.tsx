@@ -218,25 +218,29 @@ export function OptimizeExperienceScreen({ appendLog }: Props) {
   };
 
   const onPropositionUpdate = () => {
-    Optimize.onPropositionUpdate({
-      call(propositions: Map<string, Proposition>) {
-        appendLog(
-          `onPropositionUpdate callback: keys=${JSON.stringify([
-            ...propositions.keys(),
-          ])}`,
-        );
-        if (propositions) {
-          setTextProposition(propositions.get(decisionScopeText.getName()));
-          setImageProposition(propositions.get(decisionScopeImage.getName()));
-          setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
-          setJsonProposition(propositions.get(decisionScopeJson.getName()));
-          setTargetProposition(
-            propositions.get(decisionScopeTargetMbox.getName()),
+    try {
+      Optimize.onPropositionUpdate({
+        call(propositions: Map<string, Proposition>) {
+          appendLog(
+            `onPropositionUpdate callback: keys=${JSON.stringify([
+              ...propositions.keys(),
+            ])}`,
           );
-        }
-      },
-    });
-    appendLog('Optimize.onPropositionUpdate() registered');
+          if (propositions) {
+            setTextProposition(propositions.get(decisionScopeText.getName()));
+            setImageProposition(propositions.get(decisionScopeImage.getName()));
+            setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
+            setJsonProposition(propositions.get(decisionScopeJson.getName()));
+            setTargetProposition(
+              propositions.get(decisionScopeTargetMbox.getName()),
+            );
+          }
+        },
+      });
+      appendLog('Optimize.onPropositionUpdate() registered');
+    } catch (e: any) {
+      appendLog(`onPropositionUpdate error: ${e?.message ?? String(e)}`);
+    }
   };
 
   const multipleOffersDisplayed = async () => {

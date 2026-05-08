@@ -1,6 +1,6 @@
 # Known Gotchas & Non-Obvious Rules
 
-**Last updated:** 2026-03-30
+**Last updated:** 2026-05-08
 
 > Quick reference for things that burned us and aren't obvious from reading the code.
 
@@ -100,9 +100,11 @@ The AEP SDK on iOS **does** emit logs via `os_log` under `subsystem: com.adobe.m
 **Rule:** Use `/usr/bin/log stream` on the host with predicate `subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"`. Use `--style compact` (not ndjson — ndjson also truncates). Native log assertions work on **both** platforms — do NOT guard them as Android-only.
 
 **Caveat — os_log truncation + Debug-level visibility:**
-1. **Truncation:** `os_log` truncates long messages with `<…>`. JSON key ordering inside `data: {}` is non-deterministic, so the truncation point varies per run. Hard-assert only event names (in header) and short messages. Use soft checks (if/else + console.log) for payload fields like `mboxAug`, `decisioning.propositionDisplay`.
-2. **Debug level:** `EdgeNetworkService - Sending request`, `Initiated (POST)`, `Connection to Experience Edge` are logged at `os_log_debug` level — **only visible when a debugger is attached** (Xcode). `log stream` without Xcode cannot see them. Assert `Handle server response with streaming enabled` (Info level) instead to verify the Edge POST succeeded.
-3. **Persistence doesn't work for simulator:** `log show`, `log collect`, `log config --mode persist:debug` (both host and `xcrun simctl spawn`) — none persist AEP SDK debug entries from simulator processes. Only live `log stream` on the host captures them.
+1. **Truncation:** `os_log` truncates long messages with `<…>`. JSON key ordering inside `data: {}` is non-deterministic, so the truncation point varies per run. Hard-assert event names (in header) and short response strings. Assert payload fields (`mboxAug`, `decisioning.propositionDisplay`, `trackpropositions`) via the **callback log `nativePayload:`** — the app logs the full proposition data before calling the fire-and-forget API, so it is never truncated.
+2. **Debug level:** `EdgeNetworkService - Sending request`, `Initiated (POST)`, `Connection to Experience Edge` are logged at `os_log_debug` level — **only visible when a debugger is attached** (Xcode). `log stream` without Xcode cannot see them. Use `/server response/i` (regex) to verify the Edge POST succeeded — it matches both iOS (`Handle server response with streaming enabled`) and Android (`Received server response`).
+3. **Persistence doesn't work for simulator:** `log show`, `log collect`, `log config --mode persist:debug` (both host and `xcrun simctl spawn`) — none persist AEP SDK debug entries from simulator processes. Only live `log stream` on the host captures them. The `log show --last 60s` fallback in `getNativeSdkLogs()` provides extra coverage for entries that the stream buffer may have missed.
+
+**All native log assertions are now hard (`expect().toContain()` / `expect().toMatch()`) on both iOS and Android.** iOS log capture via host `log stream` + `log show --last 60s` fallback is confirmed working. Soft checks (`assertNativeLogContains()`) are deprecated — do not use in new specs.
 
 See: `context/ios-native-log-capture.md` for the full comparison table and assertion tiers.
 
@@ -171,6 +173,59 @@ Key difference discovered: the Edge network response log:
 **Android (FIXED):** `TypeError: iterator method is not callable` — the native SDK returns a `WritableMap` which the bridge converts to a plain JS Object, NOT a `Map`. The app code called `Object.fromEntries(displayInteractionXdm)` which requires an iterable. Fix: use `JSON.stringify(displayInteractionXdm)` directly (changed in `OptimizeExperienceScreen.tsx`). After fix, Android returns the full XDM payload with `eventType`, `decisioning.propositionDisplay`, `mboxAug`, etc.
 
 **iOS (OPEN):** `Error in generating Display interaction XDM for multiple offers` — the iOS `propositionCache` in `RCTAEPOptimize.mm` fails to cache Target mbox propositions. Root cause: `cachePropositions:` checks `activity.id` at the top level first, but Target mbox propositions have `activity: {}` (empty dict — truthy) with no `id`. The original code used `if/else` so it never reached the `scopeDetails.activity.id` fallback. Partial fix applied (changed to sequential `if (!activityId)` fallback) but the cache is still not populated — `convertPropositionToDict` may return a structure where neither path finds the activity ID. Needs further investigation.
+
+---
+
+### 18. Android CodegenTypes.EventEmitter: not JS-callable + different payload shape
+
+On Android, `CodegenTypes.EventEmitter<T>` in the TS spec generates only `emitOnPropositionsUpdated` in the Java spec (native→JS direction). There is no `@ReactMethod` for JS to call. Calling `native.onPropositionsUpdated(callback)` from JS throws `Cannot read property 'onPropositionsUpdated' of null`.
+
+**Fix:** On Android, subscribe via `NativeEventEmitter.addListener('onPropositionsUpdate', callback)`.
+
+Additionally, Android's payload shape differs from iOS:
+- **Android** (`RCTAEPOptimizeUtil.createCallbackResponse`): emits the scopes map directly: `{ scopeName: proposition }`
+- **iOS** (`RCTAEPOptimize.mm`): wraps it: `{ propositions: { scopeName: proposition } }`
+
+**Rule:** Always branch on `Platform.OS === 'android'` for both the subscription mechanism and payload destructuring. See `context/turbo-module-event-emission.md` for the complete JS pattern.
+
+---
+
+### 19. E2E: `pause(3000)` required between `updatePropositions onSuccess` → `getPropositions` → action tap
+
+Specs that call `getPropositions` immediately after `updatePropositions onSuccess` and then immediately tap an action button (e.g. `multipleOffersDisplayed`, `generateDisplayInteractionXdm`) fail intermittently on Android because the SDK cache hasn't fully settled by the time the next API is called.
+
+**Confirmed pattern that works:**
+```
+updatePropositions callback → waitUntil onSuccess → pause(3000)
+→ getPropositions → waitUntil size > 0 → pause(3000)
+→ tap action button
+```
+
+**Affected specs:** `optimize-multiple-displayed.spec.js`, `optimize-generate-display-xdm.spec.js`
+
+**Rule:** Add `browser.pause(3000)` after the `updatePropositions onSuccess` waitUntil AND after the `getPropositions size > 0` waitUntil, before tapping any API that depends on the populated cache.
+
+---
+
+### 21. E2E: Add `pause(3000)` at the start of `it()` before the first button press
+
+After `activateAwesomeProject()` + SDK "ready" status check, the SDK may not yet be fully settled for network calls — especially after a fresh emulator/simulator restart. Immediately pressing the first button (e.g. `update-propositions-callback`) causes `updatePropositions onError` because the SDK hasn't connected to the network yet.
+
+**Fix:** Add `await browser.pause(3000)` at the very start of `it()` before any `scrollAppScrollToTestIdAndClick` call. This is separate from the inter-step pauses (gotcha #19) and applies to all specs that make network calls on their first action.
+
+**Affected specs:** `optimize-displayed-proposition.spec.js`, `optimize-tapped-proposition.spec.js`
+
+---
+
+### 20. Editing package TypeScript source requires `yarn build` before running e2e
+
+Packages use `"main": "./dist/index.js"` — Metro and release builds serve the compiled output, not the TypeScript source. Editing `packages/optimize/src/*.ts` has no effect until the dist is rebuilt.
+
+**Rule:** After any change to `packages/*/src/`, always run `yarn build` from the repo root before rebuilding the app or running e2e tests. Skipping this causes the old compiled JS to be bundled, making the fix invisible at runtime.
+
+```bash
+cd /path/to/aepsdk-react-native && yarn build   # rebuilds all packages via lerna tsc
+```
 
 ---
 

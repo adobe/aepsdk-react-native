@@ -1,6 +1,6 @@
 # Playbook: Run E2E Tests (iOS / Android)
 
-**Last updated:** 2026-03-30
+**Last updated:** 2026-05-08
 
 ---
 
@@ -175,16 +175,15 @@ The AEP SDK on iOS **does** emit logs via `os_log` under `subsystem: com.adobe.m
 ```js
 startNativeLogCapture()          // Call BEFORE the action — Android: drains logcat, iOS: spawns host log stream
 getNativeSdkLogs()               // Call AFTER — returns SDK log entries as string (both platforms)
+                                 // iOS: merges stream buffer + log show --last 60s; dumps to e2e/logs/
 getE2ePlatform()                 // Returns 'Android' or 'iOS'
-assertNativeLogContains(sdkLogs, substring, label)
-  // Android: hard expect().toContain() — logcat never truncates
-  // iOS: soft check — logs ✓ if found, ⚠ if not (os_log truncates)
-  // DEPRECATED for payload fields — use callback log nativePayload: instead
-  // Still useful for event names in headers (never truncated)
 clearCallbackLog()               // Tap "Clear log" — use in before() hook only
 scrollAppScrollToTestId(scroll, target)        // Scroll to element (no click)
 scrollAppScrollToTestIdAndClick(scroll, target) // Scroll to element + click
 ```
+
+**`assertNativeLogContains(sdkLogs, substring, label)` — DEPRECATED. Do NOT use in new specs.**
+All native log assertions are now hard `expect(sdkLogs).toContain(...)` / `expect(sdkLogs).toMatch(...)` on both iOS and Android. iOS log capture is confirmed working (see `context/ios-native-log-capture.md`).
 
 `browser.getLogs('logcat')` drains the buffer on each call, so drain→act→read gives a clean window of entries.
 
@@ -248,7 +247,6 @@ Both specs follow the identical structure. The only differences are:
 **When to use this pattern:**
 - The API is fire-and-forget with **no callback and no paired read API**
 - You need to verify the SDK actually dispatched an Edge event, not just that JS ran
-- Native log assertion is **Android only**; iOS relies on callback log alone
 
 **When NOT to use this pattern:**
 - The API has a callback variant (use the callback as a gate instead — e.g. updatePropositions)
@@ -295,39 +293,43 @@ The callback is a soft check because the turbo module may not fire it reliably. 
 
 ---
 
-### Pattern: Batch API with optional native log verification
+### Pattern: Batch API — same dual verification as single fire-and-forget
 
 **API:** `Optimize.displayed(offers)` (static batch method)
 **Spec:** `e2e/test/specs/optimize-multiple-displayed.spec.js`
 **Decision scope:** `DecisionScope('mboxAug')` — Target mbox
 
-**Why this needs its own pattern:**
-`Optimize.displayed(offers)` is a static batch API that takes an array of `Offer` objects (unlike `Offer.displayed(proposition)` which is an instance method on a single offer). The API calls `getPropositions` internally, gathers all offers, then dispatches a batch display event. The native events may not be visible in `log stream` (they may dispatch at Debug level only visible in Xcode).
+**Why:** `Optimize.displayed(offers)` is a static batch API (unlike the instance method `Offer.displayed(proposition)`), but it dispatches the same native `Optimize Track Propositions Request` → Edge flow. The same hard native log assertions apply.
 
-**Solution — callback log + conditional native log:**
+**Solution — callback log + hard native log assertions (both platforms):**
 1. Populate cache (updatePropositions + getPropositions as gates)
 2. Start native log capture
 3. Tap `aepsdk-optimize-btn-multiple-displayed`
 4. Hard-assert callback log: `Optimize.displayed() with N offer(s)` where N >= 1
-5. Collect native logs — if events are captured, assert the full flow; if empty, log ⚠ and rely on callback log
+5. `browser.pause(5000)` — batch API may need slightly longer than single-offer (uses 5s instead of 3s)
+6. Collect native logs — hard-assert the full 6-event flow on both platforms
 
 **Full validation sequence:**
 ```
 1. Wait for SDK ready
-2. updatePropositions callback → wait for onSuccess
-3. getPropositions → verify size > 0
+2. updatePropositions callback → wait for onSuccess → pause(3000)
+3. getPropositions → verify size > 0 → pause(3000)
 4. startNativeLogCapture()
 5. Tap aepsdk-optimize-btn-multiple-displayed
 6. Assert callback: /Optimize\.displayed\(\) with [1-9]\d* offer\(s\)/
 7. Assert: log does NOT contain 'multipleOffersDisplayed error:'
-8. pause(3000), getNativeSdkLogs()
-9. If native logs contain 'Optimize Track': assert full event flow
-10. Else: log ⚠ (API may dispatch at Debug level only)
+8. pause(5000), getNativeSdkLogs()
+9. Hard assert: 'Optimize Track Propositions Request'
+10. Hard assert: 'Edge Optimize Proposition Interaction Request'
+11. Hard assert: /server response/i
+12. Hard assert: 'activation:pull', 'personalization:decisions', 'state:store'
 ```
 
+> **pause(3000) after onSuccess and after size>0** — the SDK cache needs time to settle before subsequent API calls. Without these pauses, `getPropositions` may return stale data and the action button may act on an empty cache. See known-gotchas.md #19.
+
 **When to use this pattern:**
-- The API works at the JS/callback level but native events may not be visible
-- You want maximum verification when possible, graceful degradation when not
+- Batch fire-and-forget APIs that dispatch an Edge event
+- Same as the single fire-and-forget pattern but with a longer pause (5s vs 3s)
 
 ---
 
@@ -351,14 +353,16 @@ The callback is a soft check because the turbo module may not fire it reliably. 
 **Full validation sequence:**
 ```
 1. Wait for SDK ready
-2. updatePropositions callback → wait for onSuccess
-3. getPropositions → verify size > 0
+2. updatePropositions callback → wait for onSuccess → pause(3000)
+3. getPropositions → verify size > 0 → pause(3000)
 4. Tap aepsdk-optimize-btn-generate-display-xdm
 5. Assert: log matches /generateDisplayInteractionXdm/
 6. If log contains 'generateDisplayInteractionXdm: {': assert XDM fields
 7. Else if log contains 'generateDisplayInteractionXdm error:': log ⚠ (known limitation)
 8. Else: throw unexpected result error
 ```
+
+> **pause(3000) after onSuccess and after size>0** — same cache settling rule as the batch API pattern. See known-gotchas.md #19.
 
 **When to use this pattern:**
 - The API is local (no Edge event, no native log)
@@ -372,9 +376,9 @@ The callback is a soft check because the turbo module may not fire it reliably. 
 | API type | Pattern | Native logs? | Example |
 |----------|---------|:---:|---------|
 | Fire-and-forget + paired read | Callback gate → read → assert | No | `updatePropositions` + `getPropositions` |
-| Fire-and-forget, no callback | Callback log + native log (dual) | Yes | `Offer.displayed()`, `Offer.tapped()` |
-| Listener registration | Register → trigger → soft callback | No | `onPropositionUpdate()` |
-| Batch API | Callback log + conditional native | Optional | `Optimize.displayed(offers)` |
+| Fire-and-forget, no callback | Callback log + hard native log (dual) | Yes | `Offer.displayed()`, `Offer.tapped()` |
+| Batch fire-and-forget | Same as above, pause(5000) | Yes | `Optimize.displayed(offers)` |
+| Listener registration | Register → trigger → hard callback | No | `onPropositionUpdate()` |
 | Local/sync API | Callback log with success/error branch | No | `generateDisplayInteractionXdm()` |
 
 ---

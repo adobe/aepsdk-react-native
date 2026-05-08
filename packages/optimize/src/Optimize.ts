@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { EventSubscription } from 'react-native';
+import { EventSubscription, NativeEventEmitter, Platform } from 'react-native';
 import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
 import Offer from './models/Offer';
@@ -61,20 +61,28 @@ const Optimize: IOptimize = {
     }
 
     const native = NativeAEPOptimize;
-
-    // Subscribe via CodegenTypes.EventEmitter (JSI-native, both paths).
-    // The native side emits via emitOnPropositionsUpdated: (codegen-generated
-    // on NativeAEPOptimizeSpecBase). No NativeEventEmitter / sendEventWithName:
-    // because RCTTurboModuleManager sets callableJSModules:nil for turbo modules.
-    onPropositionUpdateSubscription = native.onPropositionsUpdated(
-      (payload: { propositions: any }) => {
+    if (Platform.OS === 'android') {
+      // Android emits the propositions map directly (no 'propositions' wrapper key).
+      // RCTAEPOptimizeUtil.createCallbackResponse returns { scopeName: proposition, ... }.
+      // Delivered via RCTDeviceEventEmitter — not a callable @ReactMethod on Android.
+      const emitter = new NativeEventEmitter(native as any);
+      onPropositionUpdateSubscription = emitter.addListener('onPropositionsUpdate', (payload: any) => {
+        const map = new Map<string, Proposition>();
+        for (const [key, value] of Object.entries(payload)) {
+          map.set(key, new Proposition(value as any));
+        }
+        adobeCallback.call(map);
+      });
+    } else {
+      // iOS: codegen JSI event emitter wraps payload as { propositions: { scopeName: ... } }.
+      onPropositionUpdateSubscription = native.onPropositionsUpdated((payload: { propositions: any }) => {
         const map = new Map<string, Proposition>();
         for (const [key, value] of Object.entries(payload.propositions)) {
           map.set(key, new Proposition(value as any));
         }
         adobeCallback.call(map);
-      }
-    );
+      });
+    }
 
     // Register the listener on the native AEP SDK side
     native.registerOnPropositionsUpdate();

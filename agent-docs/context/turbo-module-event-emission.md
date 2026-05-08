@@ -1,4 +1,4 @@
-# TurboModule Event Emission on RN 0.84+ (iOS)
+# TurboModule Event Emission on RN 0.84+ (iOS and Android)
 
 **Last updated:** 2026-04-22
 
@@ -156,3 +156,59 @@ See: https://reactnative.dev/docs/the-new-architecture/native-modules-custom-eve
 | `ReactCommon/react/nativemodule/core/ReactCommon/TurboModuleBinding.cpp:61` | `nativeModuleProxy` tries turbo first |
 | `Libraries/BatchedBridge/NativeModules.js:183` | `NativeModules` = `global.nativeModuleProxy` |
 | `build/generated/ios/ReactCodegen/RCTModuleProviders.mm:38` | `getTurboModule:` check at startup |
+
+---
+
+## Android Event Emission (confirmed 2026-05-08)
+
+Android codegen behavior differs from iOS in two critical ways:
+
+### 1. `onPropositionsUpdated` is not callable from JS on Android
+
+The generated `NativeAEPOptimizeSpec.java` only has:
+```java
+protected final void emitOnPropositionsUpdated(ReadableMap value) {
+    mEventEmitterCallback.invoke("onPropositionsUpdated", value);
+}
+```
+There is NO `@ReactMethod onPropositionsUpdated` — it is native→JS only.
+Calling `native.onPropositionsUpdated(callback)` from JS on Android throws
+`Cannot read property 'onPropositionsUpdated' of null`.
+
+**Fix:** Use `NativeEventEmitter.addListener('onPropositionsUpdate', callback)` on Android.
+Note: `RCTAEPOptimizeUtil.emitOnPropositionsUpdate` emits via `RCTDeviceEventEmitter`
+with event name `"onPropositionsUpdate"` (no trailing 'd').
+
+### 2. Android payload is NOT wrapped in a `propositions` key
+
+`RCTAEPOptimizeUtil.createCallbackResponse` returns the scopes map directly:
+```
+{ "mboxAug": { ...proposition... }, "scope2": { ... } }
+```
+iOS wraps it: `@{ @"propositions": dict }` → `payload.propositions`.
+Android emits the map as the top-level payload → use `payload` directly.
+
+### JS-side branch in `Optimize.ts`
+
+```typescript
+if (Platform.OS === 'android') {
+  const emitter = new NativeEventEmitter(native as any);
+  onPropositionUpdateSubscription = emitter.addListener('onPropositionsUpdate', (payload: any) => {
+    const map = new Map<string, Proposition>();
+    for (const [key, value] of Object.entries(payload)) {  // payload IS the map
+      map.set(key, new Proposition(value as any));
+    }
+    adobeCallback.call(map);
+  });
+} else {
+  // iOS: codegen JSI emitter, payload wrapped in { propositions: {...} }
+  onPropositionUpdateSubscription = native.onPropositionsUpdated((payload) => {
+    const map = new Map<string, Proposition>();
+    for (const [key, value] of Object.entries(payload.propositions)) {
+      map.set(key, new Proposition(value as any));
+    }
+    adobeCallback.call(map);
+  });
+}
+native.registerOnPropositionsUpdate();
+```

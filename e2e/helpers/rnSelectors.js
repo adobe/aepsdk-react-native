@@ -22,6 +22,8 @@ let _iosCaptureStartTime = null; // ISO timestamp for `log show --start`
 
 /** Persistent log file for iOS native log debugging. */
 const IOS_LOG_FILE = path.join(__dirname, '..', 'logs', 'ios_native_sdk_logs.txt');
+/** Full unfiltered raw log dump — includes all lines, not just AEP subsystem. */
+const IOS_LOG_RAW_FILE = path.join(__dirname, '..', 'logs', 'ios_native_sdk_logs_raw.txt');
 
 /** Must match `applicationId` (see apps/AwesomeProject/android/app/build.gradle). */
 export const ANDROID_APP_ID = 'com.awesomeproject';
@@ -202,22 +204,47 @@ export async function getNativeSdkLogs() {
   const raw = _iosLogBuffer;
   _iosLogBuffer = '';
 
-  // Persist to file for debugging (append mode)
-  _appendToIosLogFile('getNativeSdkLogs() capture', raw || '(empty)');
+  // ── Dump 1: full raw buffer (all lines, unfiltered) ──────────────────────
+  // This file always has something even if the AEP predicate missed entries.
+  try {
+    const dir = path.dirname(IOS_LOG_RAW_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    const header = `\n${'='.repeat(72)}\n[${new Date().toISOString()}] RAW log stream buffer\n${'='.repeat(72)}\n`;
+    fs.appendFileSync(IOS_LOG_RAW_FILE, header + (raw || '(empty)') + '\n');
+  } catch { /* best-effort */ }
 
-  if (!raw || raw.trim().length === 0) {
+  // ── Dump 2: `log show` fallback for last 60s (catches what stream missed) ─
+  let logShowOutput = '';
+  try {
+    const udid = _getBootedSimulatorUdid();
+    logShowOutput = execSync(
+      `/usr/bin/log show --last 60s --style compact --predicate 'subsystem == "com.adobe.mobile.marketing.aep" AND process == "AwesomeProject"'`,
+      { encoding: 'utf-8', timeout: 15000 },
+    );
+    _appendToIosLogFile('log show --last 60s (AEP subsystem)', logShowOutput || '(empty)');
+  } catch (e) {
+    _appendToIosLogFile('log show --last 60s ERROR', String(e));
+  }
+
+  // ── Dump 3: filtered AEP stream buffer (original behaviour) ──────────────
+  _appendToIosLogFile('log stream buffer (AEP subsystem filtered)', raw || '(empty)');
+
+  // Merge stream buffer + log show for assertions (maximises coverage)
+  const merged = [raw, logShowOutput].filter(Boolean).join('\n');
+
+  if (!merged || merged.trim().length === 0) {
     console.warn('[e2e] iOS native log capture returned EMPTY. Possible causes:');
     console.warn('  - Simulator not booted');
     console.warn('  - App process name mismatch (check process == "AwesomeProject")');
-    console.warn(`  - Saved log file: ${IOS_LOG_FILE}`);
+    console.warn(`  - Raw dump: ${IOS_LOG_RAW_FILE}`);
+    console.warn(`  - AEP dump: ${IOS_LOG_FILE}`);
     return '';
   }
 
-  const lineCount = raw.split('\n').filter((l) => l.trim()).length;
-  const snippet = raw.substring(0, 500);
-  console.log(`[e2e] iOS native logs: ${lineCount} lines captured. Snippet:\n${snippet}...`);
+  const lineCount = merged.split('\n').filter((l) => l.trim()).length;
+  console.log(`[e2e] iOS native logs: ${lineCount} lines. Raw: ${IOS_LOG_RAW_FILE}`);
 
-  return raw;
+  return merged;
 }
 
 // Keep old names as aliases for backward compatibility within this session

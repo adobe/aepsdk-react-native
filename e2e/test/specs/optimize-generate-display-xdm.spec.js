@@ -49,6 +49,9 @@ describe('Optimize generateDisplayInteractionXdm', function () {
   it('generateDisplayInteractionXdm returns XDM payload with expected fields', async function () {
     const logContent = await $(byTestId('aepsdk-callback-log-content'));
 
+    // Give the app a moment to settle after activation before first button press.
+    await browser.pause(3000);
+
     // ── 1. Populate cache: updatePropositions callback ───────────────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -68,6 +71,8 @@ describe('Optimize generateDisplayInteractionXdm', function () {
       },
     );
 
+    await browser.pause(3000);
+
     // ── 2. Get propositions (confirms cache populated) ───────────────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -85,6 +90,8 @@ describe('Optimize generateDisplayInteractionXdm', function () {
           'getPropositions returned size=0 — cache not populated.',
       },
     );
+
+    await browser.pause(3000);
 
     // ── 3. Tap generate display interaction XDM ──────────────────────────────
     await scrollAppScrollToTestIdAndClick(

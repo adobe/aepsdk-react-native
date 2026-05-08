@@ -1,7 +1,6 @@
 import { expect } from '@wdio/globals';
 import {
   activateAwesomeProject,
-  assertNativeLogContains,
   byTestId,
   clearCallbackLog,
   getNativeSdkLogs,
@@ -20,7 +19,7 @@ import {
  *   3. Start native log capture.
  *   4. Tap "Multiple Offers Displayed" which calls Optimize.displayed(offers).
  *   5. Assert callback log: displayed with N offer(s), N >= 1, no error.
- *   6. Assert native SDK logs if captured (event names + soft payload checks).
+ *   6. Assert native SDK logs: event names, server response, and state entries.
  *
  * Unlike Offer.displayed(proposition) which tracks a single offer,
  * Optimize.displayed(offers) is a batch API for multiple offers.
@@ -53,6 +52,9 @@ describe('Optimize batch displayed (multiple offers)', function () {
   it('displayed sends propositionDisplay event for multiple offers', async function () {
     const logContent = await $(byTestId('aepsdk-callback-log-content'));
 
+    // Give the app a moment to settle after activation before first button press.
+    await browser.pause(3000);
+
     // ── 1. Populate cache: updatePropositions callback ───────────────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -72,6 +74,8 @@ describe('Optimize batch displayed (multiple offers)', function () {
       },
     );
 
+    await browser.pause(3000);
+
     // ── 2. Get propositions (confirms cache populated) ───────────────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
@@ -89,6 +93,8 @@ describe('Optimize batch displayed (multiple offers)', function () {
           'getPropositions returned size=0 — cache not populated.',
       },
     );
+
+    await browser.pause(3000);
 
     // ── 3. Start native log capture ──────────────────────────────────────────
     await startNativeLogCapture();
@@ -123,28 +129,15 @@ describe('Optimize batch displayed (multiple offers)', function () {
     const sdkLogs = await getNativeSdkLogs();
 
     if (!sdkLogs || sdkLogs.trim().length === 0) {
-      // iOS: log stream may not capture events for this API (Debug level only)
-      console.warn('[e2e] ⚠ Native SDK logs empty for batch displayed. Verified via callback log.');
-    } else {
-      console.log('[e2e] ✓ Native SDK logs captured for batch displayed');
-
-      // Event dispatch assertions — these are synchronous and always present
-      assertNativeLogContains(sdkLogs, 'Optimize Track Propositions Request');
-      assertNativeLogContains(sdkLogs, 'Edge Optimize Proposition Interaction Request');
-
-      // Payload assertions — Android logcat has full payload, iOS truncates
-      assertNativeLogContains(sdkLogs, 'decisioning.propositionDisplay');
-      assertNativeLogContains(sdkLogs, 'mboxAug');
-      assertNativeLogContains(sdkLogs, 'trackpropositions');
-
-      // Edge network round-trip — may not be captured if response is slow
-      if (/server response/i.test(sdkLogs)) {
-        console.log('[e2e] ✓ Edge server response captured');
-        assertNativeLogContains(sdkLogs, 'activation:pull');
-        assertNativeLogContains(sdkLogs, 'personalization:decisions');
-      } else {
-        console.warn('[e2e] ⚠ Edge server response not yet captured (network latency). Event dispatch verified.');
-      }
+      console.error('[e2e] WARNING: Native SDK logs are EMPTY after batch displayed() call.');
+      console.error('[e2e] Platform:', browser.capabilities.platformName);
     }
+
+    expect(sdkLogs).toContain('Optimize Track Propositions Request');
+    expect(sdkLogs).toContain('Edge Optimize Proposition Interaction Request');
+    expect(sdkLogs).toMatch(/server response/i);
+    expect(sdkLogs).toContain('activation:pull');
+    expect(sdkLogs).toContain('personalization:decisions');
+    expect(sdkLogs).toContain('state:store');
   });
 });

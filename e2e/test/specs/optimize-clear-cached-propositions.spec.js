@@ -47,6 +47,9 @@ describe('Optimize clearCachedPropositions', function () {
   });
 
   it('clearCachedPropositions empties cache; getPropositions returns size=0', async function () {
+    // Give the app a moment to settle after activation before first button press.
+    await browser.pause(3000);
+
     // ── 1. Populate cache: updatePropositions callback ───────────────────────
     await scrollAppScrollToTestIdAndClick(
       'aepsdk-app-scroll',
