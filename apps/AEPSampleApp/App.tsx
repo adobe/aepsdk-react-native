@@ -28,8 +28,11 @@ import TargetView from './extensions/TargetView';
 import PlacesView from './extensions/PlacesView';
 import {NavigationProps} from './types/props';
 import CampaignClassicView from './extensions/CampaignClassicView';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MobileCore, LogLevel } from '@adobe/react-native-aepcore';
 import { useState, useEffect, createContext, useContext } from 'react';
+
+const STORAGE_KEY = 'aep_app_id';
 
 const DEFAULT_APP_ID = '3149c49c3910/7d2ab2dc04a6/launch-d8cf4c819bb7-development';
 
@@ -41,6 +44,9 @@ export const AppContext = createContext({
 function HomeScreen({navigation}: NavigationProps) {
   const { appId, initSDK } = useContext(AppContext);
   const [inputAppId, setInputAppId] = useState(appId);
+
+  // Sync input when persisted appId is loaded on startup.
+  useEffect(() => { setInputAppId(appId); }, [appId]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -84,6 +90,7 @@ export default function App() {
     const trimmed = id.trim();
     if (!trimmed) return;
     setAppId(trimmed);
+    AsyncStorage.setItem(STORAGE_KEY, trimmed);
     MobileCore.setLogLevel(LogLevel.VERBOSE);
     MobileCore.initializeWithAppId(trimmed)
       .then(() => console.log('AEP SDK Initialized with:', trimmed))
@@ -91,7 +98,9 @@ export default function App() {
   };
 
   useEffect(() => {
-    initSDK(appId);
+    AsyncStorage.getItem(STORAGE_KEY).then(stored => {
+      initSDK(stored ?? DEFAULT_APP_ID);
+    });
   }, []);
 
   return (
