@@ -21,27 +21,26 @@ import com.facebook.react.module.model.ReactModuleInfoProvider;
 
 /**
  * Registers the Optimize native module per React Native Turbo Module doc.
- * Build-time switch: only one root is registered.
- * USE_INTEROP_ROOT true  -> AEPOptimize (bridge); isTurboModule = false.
- * USE_INTEROP_ROOT false -> NativeAEPOptimize (Turbo); isTurboModule = true.
+ * Build-time switch: only one root is registered, but both paths register under
+ * the same JS-visible name "NativeAEPOptimize" so the codegen JS spec
+ * (`TurboModuleRegistry.getEnforcing('NativeAEPOptimize')`) resolves on either path.
+ * Matches iOS, where both paths expose moduleName "NativeAEPOptimize".
+ *
+ * USE_INTEROP_ROOT true  -> RCTAEPOptimizeModule (classic bridge); isTurboModule = false.
+ * USE_INTEROP_ROOT false -> NativeAEPOptimizeModule (Turbo);       isTurboModule = true.
  */
 public class RCTAEPOptimizePackage extends BaseReactPackage {
 
-    private static final String NAME_INTEROP = "AEPOptimize";
-    private static final String NAME_TURBO = "NativeAEPOptimize";
+    private static final String MODULE_NAME = "NativeAEPOptimize";
 
     @Override
     public NativeModule getModule(String name, ReactApplicationContext reactContext) {
-        if (BuildConfig.USE_INTEROP_ROOT) {
-            if (NAME_INTEROP.equals(name)) {
-                return new RCTAEPOptimizeModule(reactContext);
-            }
-        } else {
-            if (NAME_TURBO.equals(name)) {
-                return new NativeAEPOptimizeModule(reactContext);
-            }
+        if (!MODULE_NAME.equals(name)) {
+            return null;
         }
-        return null;
+        return BuildConfig.USE_INTEROP_ROOT
+                ? new RCTAEPOptimizeModule(reactContext)
+                : new NativeAEPOptimizeModule(reactContext);
     }
 
     @Override
@@ -50,25 +49,15 @@ public class RCTAEPOptimizePackage extends BaseReactPackage {
             @Override
             public Map<String, ReactModuleInfo> getReactModuleInfos() {
                 Map<String, ReactModuleInfo> map = new HashMap<>();
-                if (BuildConfig.USE_INTEROP_ROOT) {
-                    map.put(NAME_INTEROP, new ReactModuleInfo(
-                            NAME_INTEROP,
-                            NAME_INTEROP,
-                            false,
-                            false,
-                            false,
-                            false
-                    ));
-                } else {
-                    map.put(NAME_TURBO, new ReactModuleInfo(
-                            NAME_TURBO,
-                            NAME_TURBO,
-                            false,
-                            false,
-                            false,
-                            true
-                    ));
-                }
+                boolean isTurboModule = !BuildConfig.USE_INTEROP_ROOT;
+                map.put(MODULE_NAME, new ReactModuleInfo(
+                        MODULE_NAME,
+                        MODULE_NAME,
+                        false,
+                        false,
+                        false,
+                        isTurboModule
+                ));
                 return map;
             }
         };

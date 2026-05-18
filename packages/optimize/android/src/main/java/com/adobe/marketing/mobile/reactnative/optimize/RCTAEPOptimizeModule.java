@@ -59,7 +59,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "AEPOptimize";
+        return "NativeAEPOptimize";
     }
 
     @ReactMethod
