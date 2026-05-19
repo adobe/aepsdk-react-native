@@ -23,8 +23,8 @@ import {
 import {NavigationProps} from '../types/props';
 
 function TargetView({navigation}: NavigationProps) {
-  const [mbox1, setMbox1] = useState('clickTestRyan');
-  const [mbox2, setMbox2] = useState('mboxName2');
+  const [mbox1, setMbox1] = useState('sdk_smoke_tests_target');
+  const [mbox2, setMbox2] = useState('aep-loc-2');
 
   const targetExtensionVersion = async () => {
     const version = await Target.extensionVersion();
@@ -170,10 +170,10 @@ function TargetView({navigation}: NavigationProps) {
         <View style={styles.buttonWrapper}><Button title="setSessionId(...)" onPress={setSessionId} /></View>
         <View style={styles.buttonWrapper}><Button title="setThirdPartyId(...)" onPress={setThirdPartyId} /></View>
         <View style={styles.buttonWrapper}><Button title="setTntId(...)" onPress={setTntId} /></View>
-        <View style={styles.buttonWrapper}><Button title={`retrieveLocationContent(${mbox1}, ${mbox2})`} onPress={retrieveLocationContent} /></View>
-        <View style={styles.buttonWrapper}><Button title={`prefetchContent(${mbox1}, ${mbox2})`} onPress={prefetchContent} /></View>
-        <View style={styles.buttonWrapper}><Button title={`displayedLocations(${mbox1}, ${mbox2})`} onPress={displayedLocations} /></View>
-        <View style={styles.buttonWrapper}><Button title={`clickedLocation(${mbox1})`} onPress={clickedLocation} /></View>
+        <View style={styles.buttonWrapper}><Button title={`retrieveLocationContent()`} onPress={retrieveLocationContent} /></View>
+        <View style={styles.buttonWrapper}><Button title={`prefetchContent()`} onPress={prefetchContent} /></View>
+        <View style={styles.buttonWrapper}><Button title={`displayedLocations()`} onPress={displayedLocations} /></View>
+        <View style={styles.buttonWrapper}><Button title={`clickedLocation()`} onPress={clickedLocation} /></View>
       </ScrollView>
     </View>
   );

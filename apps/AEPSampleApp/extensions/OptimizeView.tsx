@@ -89,6 +89,67 @@ export default ({navigation}: any) => {
     console.log('Updated Propositions');
   };
 
+  const updatePropositionsWithCallback = () => {
+    Optimize.updatePropositions(
+      decisionScopes,
+      undefined,
+      undefined,
+      (response: Map<string, Proposition>) => {
+        console.log('updatePropositions onSuccess:', response);
+      },
+      (error: any) => {
+        console.log('updatePropositions onError:', error);
+      },
+    );
+  };
+
+  const displayTargetOffer = () => {
+    if (targetProposition?.items?.[0]) {
+      targetProposition.items[0].displayed(targetProposition);
+      console.log('Display Target Offer invoked');
+    } else {
+      console.log('No target proposition cached — run Get Propositions first');
+    }
+  };
+
+  const tapTargetOffer = () => {
+    if (targetProposition?.items?.[0]) {
+      targetProposition.items[0].tapped(targetProposition);
+    } else {
+      console.log('No target proposition cached — run Get Propositions first');
+    }
+  };
+
+  const multipleOffersDisplayed = () => {
+    const allOffers: any[] = [];
+    for (const prop of [textProposition, imageProposition, htmlProposition, jsonProposition, targetProposition]) {
+      if (prop?.items) {
+        for (const offer of prop.items) {
+          allOffers.push(offer);
+        }
+      }
+    }
+    Optimize.displayed(allOffers);
+    console.log('Multiple Offers Displayed with ' + allOffers.length + ' offers');
+  };
+
+  const multipleOffersGenerateDisplayInteractionXdm = async () => {
+    const allOffers: any[] = [];
+    for (const prop of [textProposition, imageProposition, htmlProposition, jsonProposition, targetProposition]) {
+      if (prop?.items) {
+        for (const offer of prop.items) {
+          allOffers.push(offer);
+        }
+      }
+    }
+    try {
+      const xdm = await Optimize.generateDisplayInteractionXdm(allOffers);
+      console.log('generateDisplayInteractionXdm:', JSON.stringify(xdm));
+    } catch (e) {
+      console.log('generateDisplayInteractionXdm error:', e);
+    }
+  };
+
   const getPropositions = async () => {
     const propositions: Map<string, Proposition> =
       await Optimize.getPropositions(decisionScopes);
@@ -350,7 +411,16 @@ export default ({navigation}: any) => {
         <Button title="Update Propositions" onPress={updatePropositions} />
       </View>
       <View style={{margin: 5}}>
+        <Button title="Update Propositions (Callback)" onPress={updatePropositionsWithCallback} />
+      </View>
+      <View style={{margin: 5}}>
         <Button title="Get Propositions" onPress={getPropositions} />
+      </View>
+      <View style={{margin: 5}}>
+        <Button title="Display Target Offer" onPress={displayTargetOffer} />
+      </View>
+      <View style={{margin: 5}}>
+        <Button title="Tap Target Offer" onPress={tapTargetOffer} />
       </View>
       <View style={{margin: 5}}>
         <Button
@@ -364,12 +434,18 @@ export default ({navigation}: any) => {
           onPress={onPropositionUpdate}
         />
       </View>
+      <View style={{margin: 5}}>
+        <Button title="Multiple Offers Displayed" onPress={multipleOffersDisplayed} />
+      </View>
+      <View style={{margin: 5}}>
+        <Button title="Multiple Offers Generate Display Interaction XDM" onPress={multipleOffersGenerateDisplayInteractionXdm} />
+      </View>
       <Text style={{...styles.welcome, fontSize: 20}}>
         SDK Version:: {version}
       </Text>
       <Text style={styles.welcome}>Personalized Offers</Text>
       <RecyclerListView
-        style={{width: width}}
+        style={{width: width, height: 300}}
         layoutProvider={layoutProvider}
         dataProvider={getContent()}
         rowRenderer={rowRenderer}
