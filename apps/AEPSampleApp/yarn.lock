@@ -75,15 +75,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@adobe/react-native-aepmessaging@npm:^7.3.0":
-  version: 7.3.0
-  resolution: "@adobe/react-native-aepmessaging@npm:7.3.0"
+"@adobe/react-native-aepmessaging@npm:7.4.0":
+  version: 7.4.0
+  resolution: "@adobe/react-native-aepmessaging@npm:7.4.0"
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedge": ^7.0.0
     "@adobe/react-native-aepedgeidentity": ^7.0.0
+    react: "*"
     react-native: ">=0.60.0"
-  checksum: c15f44971552858dfd804325517a1a670dbeb0c52dab668b26b2721619cfbf7c2724b85577e6dea692b349bcf7d29eaeafca67a6382a9f712c4bcd3d1d58406d
+  checksum: 649b5436f929d56c8cd429a1f2be03729ca328cb8c89ce7a557209a15bb9a9b942e046aa2d24dcc3bf3fddb48222ccd25283b15dac3b4a7af89a738a6b75ca15
   languageName: node
   linkType: hard
 
@@ -3379,7 +3380,7 @@ __metadata:
     "@adobe/react-native-aepedgebridge": ^7.0.1
     "@adobe/react-native-aepedgeconsent": ^7.0.0
     "@adobe/react-native-aepedgeidentity": ^7.0.0
-    "@adobe/react-native-aepmessaging": ^7.3.0
+    "@adobe/react-native-aepmessaging": 7.4.0
     "@adobe/react-native-aepoptimize": ^7.1.1
     "@adobe/react-native-aepplaces": ^7.0.1
     "@adobe/react-native-aeptarget": ^7.0.0

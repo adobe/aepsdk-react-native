@@ -17,7 +17,7 @@
     "@adobe/react-native-aepedgebridge": "^7.0.1",
     "@adobe/react-native-aepedgeconsent": "^7.0.0",
     "@adobe/react-native-aepedgeidentity": "^7.0.0",
-    "@adobe/react-native-aepmessaging": "^7.3.0",
+    "@adobe/react-native-aepmessaging": "7.4.0",
     "@adobe/react-native-aepoptimize": "^7.1.1",
     "@adobe/react-native-aepplaces": "^7.0.1",
     "@adobe/react-native-aeptarget": "^7.0.0",
