@@ -2,6 +2,7 @@
   "name": "aepsdk-react-native",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "yarn@4.1.1",
   "workspaces": {
     "packages": [
       "packages/*",
@@ -18,6 +19,7 @@
     "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf dist",
     "build": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled -- tsc",
     "test": "jest",
+    "test:ui": "npx lerna run test:ui --scope @adobe/react-native-aepmessaging",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
     "sampleapp:ios:pod:install": "cd apps/AEPSampleApp/ios && pod install",
     "sampleapp:ios:build": "cd apps/AEPSampleApp && npx react-native run-ios --verbose",
@@ -32,26 +34,7 @@
     "sampleappnewarchenabled:android:build": "cd apps/AEPSampleAppNewArchEnabled && expo run:android",
     "sampleappnewarchenabled:start": "cd apps/AEPSampleAppNewArchEnabled && npx expo start",
     "sampleappnewarchenabled:ios:run": "cd apps/AEPSampleAppNewArchEnabled && npx expo run:ios",
-    "sampleappnewarchenabled:android:run": "cd apps/AEPSampleAppNewArchEnabled && npx expo run:android",
-    "awesomeproject:start": "cd apps/AwesomeProject && yarn start",
-    "awesomeproject:ios:pod": "cd apps/AwesomeProject/ios && pod install",
-    "awesomeproject:ios:run": "cd apps/AwesomeProject && yarn ios",
-    "awesomeproject:android:run": "cd apps/AwesomeProject && yarn android",
-    "awesomeproject:android:assembleDebug": "cd apps/AwesomeProject/android && ./gradlew assembleDebug",
-    "awpackagesomeproject:android:assembleRelease": "cd apps/AwesomeProject/android && ./gradlew assembleRelease",
-    "awesomeproject:ios:build": "cd apps/AwesomeProject/ios && xcodebuild -workspace AwesomeProject.xcworkspace -scheme AwesomeProject -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ./build",
-    "awesomeproject:ios:build:release": "cd apps/AwesomeProject/ios && xcodebuild -workspace AwesomeProject.xcworkspace -scheme AwesomeProject -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ./build",
-    "e2e": "node ./e2e/run-e2e.mjs",
-    "e2e:build": "node ./e2e/run-e2e-build.mjs",
-    "e2e:android": "yarn workspace aepsdk-e2e wdio:android",
-    "e2e:android:build": "yarn awesomeproject:android:assembleDebug && yarn e2e:android",
-    "e2e:android:build:release:turbo": "cd apps/AwesomeProject/android && rm -rf app/.cxx app/build && USE_INTEROP_ROOT=0 ./gradlew assembleRelease && cd ../.. && ANDROID_CONFIGURATION=release yarn e2e:android",
-    "e2e:android:build:release:interop": "cd apps/AwesomeProject/android && rm -rf app/.cxx app/build && USE_INTEROP_ROOT=1 ./gradlew assembleRelease && cd ../.. && ANDROID_CONFIGURATION=release yarn e2e:android",
-    "e2e:ios": "yarn workspace aepsdk-e2e wdio:ios",
-    "e2e:ios:build": "yarn awesomeproject:ios:build && yarn e2e:ios",
-    "e2e:ios:build:turbo": "cd apps/AwesomeProject/ios && rm -rf Pods Podfile.lock build && USE_INTEROP_ROOT=0 pod install && cd .. && yarn awesomeproject:ios:build && yarn e2e:ios",
-    "e2e:ios:build:release:turbo": "cd apps/AwesomeProject/ios && rm -rf Pods Podfile.lock build && USE_INTEROP_ROOT=0 pod install && cd .. && yarn awesomeproject:ios:build:release && IOS_CONFIGURATION=Release yarn e2e:ios",
-    "e2e:ios:build:release:interop": "cd apps/AwesomeProject/ios && rm -rf Pods Podfile.lock build && USE_INTEROP_ROOT=1 pod install && cd .. && yarn awesomeproject:ios:build:release && IOS_CONFIGURATION=Release yarn e2e:ios"
+    "sampleappnewarchenabled:android:run": "cd apps/AEPSampleAppNewArchEnabled && npx expo run:android"
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",
@@ -74,6 +57,5 @@
     "ts-jest": "^29.1.1",
     "tslib": "^2.3.1",
     "typescript": "^5.0.0"
-  },
-  "packageManager": "yarn@3.6.4"
+  }
 }
