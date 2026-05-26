@@ -6,9 +6,7 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "apps/AEPSampleAppNewArchEnabled",
-      "apps/AwesomeProject",
-      "e2e"
+      "apps/AEPSampleAppNewArchEnabled"
     ],
     "nohoist": [
       "**"
