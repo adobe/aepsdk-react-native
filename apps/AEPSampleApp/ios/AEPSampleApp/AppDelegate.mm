@@ -22,19 +22,6 @@ RCT_EXPORT_METHOD(log:(NSString *)message) { NSLog(@"[JS] %@", message); }
 + (BOOL)requiresMainQueueSetup { return NO; }
 @end
 
-@interface RCTBuildInfo : NSObject <RCTBridgeModule> @end
-@implementation RCTBuildInfo
-RCT_EXPORT_MODULE(BuildInfo)
-- (NSDictionary *)constantsToExport {
-#if DEBUG
-  return @{ @"isDebug": @YES };
-#else
-  return @{ @"isDebug": @NO };
-#endif
-}
-+ (BOOL)requiresMainQueueSetup { return NO; }
-@end
-
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -42,12 +29,6 @@ RCT_EXPORT_MODULE(BuildInfo)
   self.moduleName = @"AEPSampleApp";
   self.dependencyProvider = [RCTAppDependencyProvider new];
   self.initialProps = @{};
-
-#if DEBUG
-  NSLog(@"[BUILD] ✅ DEBUG BUILD");
-#else
-  NSLog(@"[BUILD] 🚀 RELEASE BUILD");
-#endif
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
