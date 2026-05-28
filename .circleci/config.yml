@@ -160,7 +160,7 @@ jobs:
         command: sudo xcode-select -s /Applications/Xcode.app
 
     - node/install:
-        node-version: '22.12.0'
+        node-version: '20.19.4'
 
     - run:
         name: Enable Corepack
