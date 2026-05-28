@@ -155,6 +155,11 @@ jobs:
     steps:
     - checkout
 
+    - restore_cache:
+        keys:
+            - yarn-cache-aepsampleapp-{{ checksum "apps/AEPSampleApp/yarn.lock" }}
+            - yarn-cache-aepsampleapp-
+
     - run:
         name: Set Xcode Path
         command: sudo xcode-select -s /Applications/Xcode.app
@@ -167,11 +172,7 @@ jobs:
         command: sudo corepack enable
 
     - run:
-        name: Clean node_modules
-        command: find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + 2>/dev/null || true
-
-    - run:
-        name: Install Node.js and Yarn Dependencies
+        name: Install Root Dependencies
         command: yarn install --immutable --network-timeout 300000
         no_output_timeout: 20m
         environment:
@@ -183,10 +184,16 @@ jobs:
 
     - run:
         name: Install AEPSampleApp Dependencies
-        command: cd apps/AEPSampleApp && npm install --legacy-peer-deps
+        command: cd apps/AEPSampleApp && yarn install --immutable --network-timeout 300000
         no_output_timeout: 20m
         environment:
           NODE_OPTIONS: "--max-old-space-size=4096"
+
+    - save_cache:
+        paths:
+            - apps/AEPSampleApp/.yarn/cache
+            - apps/AEPSampleApp/.yarn/unplugged
+        key: yarn-cache-aepsampleapp-{{ checksum "apps/AEPSampleApp/yarn.lock" }}
 
     - run:
         name: Install Cocoapods
