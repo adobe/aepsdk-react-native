@@ -41,10 +41,6 @@ RCT_EXPORT_METHOD(log:(NSString *)message) { NSLog(@"[JS] %@", message); }
 - (NSURL *)bundleURL
 {
 #if DEBUG
-  NSURL *embeddedBundle = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-  if (embeddedBundle) {
-    return embeddedBundle;
-  }
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
