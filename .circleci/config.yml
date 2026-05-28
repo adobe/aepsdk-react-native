@@ -183,7 +183,7 @@ jobs:
 
     - run:
         name: Install AEPSampleApp Dependencies
-        command: cd apps/AEPSampleApp && yarn install --network-timeout 300000
+        command: cd apps/AEPSampleApp && npm install --legacy-peer-deps
         no_output_timeout: 20m
         environment:
           NODE_OPTIONS: "--max-old-space-size=4096"
