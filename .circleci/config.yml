@@ -182,6 +182,13 @@ jobs:
         command: yarn run build
 
     - run:
+        name: Install AEPSampleApp Dependencies
+        command: cd apps/AEPSampleApp && yarn install --network-timeout 300000
+        no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+    - run:
         name: Install Cocoapods
         command: sudo gem install cocoapods
 
