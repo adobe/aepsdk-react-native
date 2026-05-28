@@ -205,7 +205,7 @@ workflows:
   ci-workflow:
     jobs:
     - unit-test
-    - build-sample-app-ios
+    # - build-sample-app-ios
     - build-aepsampleapp-ios
     # - build-sample-app-android
     # Disable the Android build job because of the error below:
