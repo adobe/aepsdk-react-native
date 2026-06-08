@@ -1,6 +1,6 @@
 # Playbook: Migrate an AEP Module to Turbo Native Module
 
-**Last updated:** 2026-03-30
+**Last updated:** 2026-06-08
 **Reference implementation:** `packages/optimize` (`extensionVersion` API)
 
 ---
@@ -38,7 +38,7 @@ See `migrations/optimize-turbo.md` for the full Optimize playbook with detailed 
 - [ ] `RCTAEP<Module>.mm` (Obj-C++ required for `getTurboModule:` C++ return type)
   - `getTurboModule:` returning `NativeAEP<Module>SpecJSI` must be **outside** the `#if/#else` — both paths need it
   - Protocol method implementations outside `#if/#else` (shared)
-  - Event emission (`sendEventWithName:`, `supportedEvents`, etc.) inside `#if USE_INTEROP_ROOT`
+  - **Event emission:** do NOT use `sendEventWithName:` — it is dead for any module with `getTurboModule:` (see known-gotchas #17). Use `CodegenTypes.EventEmitter<T>` in the spec; the class must inherit `NativeAEP<Module>SpecBase` (not `RCTEventEmitter`) to get the codegen-generated `emitOn<EventName>:` method. On Android, call `emitOn<EventName>(payload)` from `NativeAEP<Module>Module.java`. JS subscribes via `NativeAEP<Module>.on<EventName>(callback)` — no `NativeEventEmitter`, no `Platform.OS` branch. See `context/turbo-module-event-emission.md`.
 - [ ] `RCTAEP<Module>.podspec` — read `ENV['USE_INTEROP_ROOT']`, inject into `GCC_PREPROCESSOR_DEFINITIONS`
 
 ### 4. E2E

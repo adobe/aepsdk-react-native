@@ -282,6 +282,41 @@ See: `agent-docs/context/turbo-module-event-emission.md` for the full investigat
 
 ---
 
+### 24. Multi-version RN monorepo: Metro picks up the wrong `react-native` from root `node_modules`
+
+When multiple apps in a monorepo use different RN versions, root `devDependencies` must NOT include `react-native` or `react`. If they do, Metro (which searches `nodeModulesPaths` including root) may resolve the wrong version and produce hard-to-trace codegen errors like:
+
+```
+Unable to determine event arguments for "onModeChange" in "VirtualViewExperimentalNativeComponent.js"
+```
+
+**Fix (three layers):**
+
+1. **Yarn install-time** — remove `react-native`/`react` from root `devDependencies`; resolve `react-native` for Jest from `AwesomeProject/node_modules` via `moduleNameMapper` in `jest.config.js`.
+
+2. **Metro bundle-time** — in `apps/AEPSampleAppNewArchEnabled/metro.config.js`, block root `node_modules/react-native` and `node_modules/react` via `blockList`, and pin them with `extraNodeModules` to the app's own `node_modules`.
+
+3. **`@react-navigation` multiple-copies crash** — `expo-router` ships its own nested `@react-navigation/core` and `@react-navigation/native` that conflict with the app's top-level versions. Fix: block `expo-router/node_modules/@react-navigation` in `blockList`, pin all `@react-navigation/*` in `extraNodeModules`, and add a `resolutions` block in `apps/AEPSampleAppNewArchEnabled/package.json` so yarn deduplicates them at install time.
+
+```js
+// apps/AEPSampleAppNewArchEnabled/metro.config.js (key parts)
+config.resolver.blockList = [
+  new RegExp(`^${escapePath(resolve(monorepoRoot, 'node_modules/react-native'))}/.*`),
+  new RegExp(`^${escapePath(resolve(monorepoRoot, 'node_modules/react'))}/.*`),
+  new RegExp(`^${escapePath(join(projectRoot, 'node_modules/expo-router/node_modules/@react-navigation'))}/.*`),
+];
+config.resolver.extraNodeModules = {
+  'react-native': join(projectRoot, 'node_modules/react-native'),
+  'react': join(projectRoot, 'node_modules/react'),
+  '@react-navigation/core': join(projectRoot, 'node_modules/@react-navigation/core'),
+  // ... other @react-navigation/* packages
+};
+```
+
+**`AEPSampleApp` is NOT in root workspaces** — its `react-native@0.85` lives exclusively in `apps/AEPSampleApp/node_modules` and cannot leak. No blockList needed for it.
+
+---
+
 ### 23. `JSON.stringify(Map)` always outputs `{}`
 
 JavaScript's `JSON.stringify` cannot serialize `Map` objects — it outputs `{}` regardless of contents. This made `onPropositionUpdate` logs appear empty when the data was actually flowing correctly.

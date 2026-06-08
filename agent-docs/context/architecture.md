@@ -1,6 +1,6 @@
 # Architecture Overview
 
-**Last updated:** 2026-03-30
+**Last updated:** 2026-06-08
 
 ---
 
@@ -8,23 +8,35 @@
 
 ```
 aepsdk-react-native/
-├── packages/              ← one npm package per AEP extension
+├── packages/                       ← one npm package per AEP extension
 │   ├── core/
-│   ├── optimize/          ← first TurboModule migration (reference impl)
+│   ├── optimize/                   ← first TurboModule migration (reference impl)
 │   ├── messaging/
 │   └── ...
 ├── apps/
-│   └── AwesomeProject/    ← RN test app used for E2E
+│   ├── AwesomeProject/             ← RN 0.85 test app used for E2E (in root workspaces)
+│   │   ├── ios/
+│   │   └── android/
+│   ├── AEPSampleAppNewArchEnabled/ ← Expo/RN 0.81.5 New Arch sample app (in root workspaces)
+│   │   ├── app/                    ← expo-router screens
+│   │   ├── ios/
+│   │   └── android/
+│   └── AEPSampleApp/               ← RN 0.85 classic sample app (STANDALONE — NOT in root workspaces)
 │       ├── ios/
 │       └── android/
-├── e2e/                   ← WebdriverIO + Appium test suite
+├── e2e/                            ← WebdriverIO 9 + Appium 3 test suite (in root workspaces)
 │   ├── test/specs/
 │   ├── helpers/
 │   ├── wdio.ios.conf.js
 │   └── wdio.android.conf.js
-├── docs/                  ← committed project docs
-└── cursor-docs/           ← gitignored local notes (this folder)
+└── docs/                           ← committed project docs
 ```
+
+### Workspace membership
+
+Root `package.json` workspaces: `packages/*`, `apps/AEPSampleAppNewArchEnabled`, `apps/AwesomeProject`, `e2e`.
+
+**`AEPSampleApp` is NOT in root workspaces** — it uses published npm versions of AEP packages (not `workspace:*`) and has its own separate `yarn.lock`. Run `yarn install` from inside `apps/AEPSampleApp/` to manage its deps independently.
 
 ---
 
@@ -41,7 +53,7 @@ iOS:  RCTAEPModule : RCTEventEmitter  (RCT_EXPORT_MODULE)
 Android: RCTAEPModule extends ReactContextBaseJavaModule
 ```
 
-### TurboModule pattern (optimize, in progress)
+### TurboModule pattern (optimize — migrated)
 
 ```
 JS spec: specs/NativeAEP<Module>.ts   (Codegen source of truth)
