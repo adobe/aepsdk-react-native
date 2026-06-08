@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 */
 
 import Messaging from './Messaging';
-import { ContentCard, ContentCardData } from './models/ContentCard';
 
 import { InAppMessage } from './models/InAppMessage';
 import { HTMLProposition, HTMLPropositionData } from './models/HTMLProposition';
@@ -26,11 +25,12 @@ import { PersonalizationSchema } from './models/PersonalizationSchema';
 import { PropositionItem, PropositionItemData } from './models/PropositionItem';
 import { Activity, Characteristics } from './models/ScopeDetails';
 
+export * from './models/ContentCard';
+export * from './ui';
+
 export {
   Activity,
   Characteristics,
-  ContentCard,
-  ContentCardData,
   InAppMessage,
   Messaging,
   Message,

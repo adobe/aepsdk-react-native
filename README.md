@@ -37,7 +37,7 @@ This repository is a monorepo and contains a collection of React Native modules 
 
 - React Native
 
-Requires React Native (0.60.0 and above)
+Requires React Native (0.83.0 and above)
 
 - Xcode
 

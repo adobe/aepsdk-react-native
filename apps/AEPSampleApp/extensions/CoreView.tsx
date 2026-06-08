@@ -25,7 +25,7 @@ import styles from '../styles/styles';
 import {NavigationProps} from '../types/props';
 
 function trackAction() {
-  MobileCore.trackAction('action name', {key: 'value'});
+  MobileCore.trackAction('trigger_postback', {key: 'value'});
 }
 
 function trackState() {
@@ -81,6 +81,21 @@ function getLogLevel() {
 
 function setLogLevel() {
   MobileCore.setLogLevel(LogLevel.VERBOSE);
+}
+
+function lifecycleStart() {
+  Lifecycle.lifecycleStart();
+  console.log('AdobeExperienceSDK: lifecycleStart called');
+}
+
+function lifecycleStartWithContextData() {
+  Lifecycle.lifecycleStart({contextKey: 'contextValue'});
+  console.log('AdobeExperienceSDK: lifecycleStart with context data called');
+}
+
+function lifecyclePause() {
+  Lifecycle.lifecyclePause();
+  console.log('AdobeExperienceSDK: lifecyclePause called');
 }
 
 function lifecycleExtensionVersion() {
@@ -150,6 +165,12 @@ const CoreView = ({navigation}: NavigationProps) => {
         />
         <Button title="resetIdentities()" onPress={resetIdentities} />
         <Text style={styles.welcome}>Lifecycle</Text>
+        <Button title="lifecycleStart" onPress={lifecycleStart} />
+        <Button
+          title="lifecycleStart(contextData)"
+          onPress={lifecycleStartWithContextData}
+        />
+        <Button title="lifecyclePause" onPress={lifecyclePause} />
         <Button
           title="Lifecycle::extensionVersion()"
           onPress={lifecycleExtensionVersion}
