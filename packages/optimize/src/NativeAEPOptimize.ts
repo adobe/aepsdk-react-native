@@ -4,8 +4,7 @@
  * you may not use this file except in compliance with the License.
  */
 
-import type { TurboModule } from 'react-native';
-import type { EventSubscription } from 'react-native';
+import type { TurboModule, CodegenTypes } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
 export type PropositionsPayload = {
@@ -31,12 +30,12 @@ export interface Spec extends TurboModule {
   generateDisplayInteractionXdm(offerId: string, propositionMap: Object): Promise<Object>;
   generateTapInteractionXdm(offerId: string, propositionMap: Object): Promise<Object>;
   generateReferenceXdm(propositionMap: Object): Promise<Object>;
-  // Legacy event support (required for interop path's NativeEventEmitter)
   addListener(eventName: string): void;
   removeListeners(count: number): void;
-  // Turbo path: codegen-generated JSI event emitter (different name to avoid
-  // conflict with interop's sendEventWithName:@"onPropositionsUpdate").
-  onPropositionsUpdated(callback: (payload: PropositionsPayload) => void): EventSubscription;
+  // New Architecture: CodegenTypes.EventEmitter for JSI-native event delivery.
+  // Codegen generates emitOnPropositionsUpdated: (iOS) / emitOnPropositionsUpdated() (Android)
+  // in the SpecBase. See: https://reactnative.dev/docs/the-new-architecture/native-modules-custom-events
+  readonly onPropositionsUpdated: CodegenTypes.EventEmitter<PropositionsPayload>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPOptimize');

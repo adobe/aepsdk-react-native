@@ -1,6 +1,6 @@
 # Known Gotchas & Non-Obvious Rules
 
-**Last updated:** 2026-06-05
+**Last updated:** 2026-06-08
 
 > Quick reference for things that burned us and aren't obvious from reading the code.
 
@@ -198,17 +198,27 @@ Key difference discovered: the Edge network response log:
 
 ---
 
-### 18. Android CodegenTypes.EventEmitter: not JS-callable + different payload shape
+### 18. Android CodegenTypes.EventEmitter: subscribe via `native.onPropositionsUpdated(callback)` (unified with iOS)
 
-On Android, `CodegenTypes.EventEmitter<T>` in the TS spec generates only `emitOnPropositionsUpdated` in the Java spec (native→JS direction). There is no `@ReactMethod` for JS to call. Calling `native.onPropositionsUpdated(callback)` from JS throws `Cannot read property 'onPropositionsUpdated' of null`.
+**Updated 2026-06-08 — old workaround replaced.**
 
-**Fix:** On Android, subscribe via `NativeEventEmitter.addListener('onPropositionsUpdate', callback)`.
+On Android (turbo path), `CodegenTypes.EventEmitter<T>` generates `emitOnPropositionsUpdated(ReadableMap)` in the Java spec. JS subscribes via `NativeAEPOptimize.onPropositionsUpdated(callback)` — the same call used on iOS. No `NativeEventEmitter.addListener` or `Platform.OS` branch needed.
 
-Additionally, Android's payload shape differs from iOS:
-- **Android** (`RCTAEPOptimizeUtil.createCallbackResponse`): emits the scopes map directly: `{ scopeName: proposition }`
-- **iOS** (`RCTAEPOptimize.mm`): wraps it: `{ propositions: { scopeName: proposition } }`
+The Android native module wraps the payload in `{ propositions: ... }` to match `PropositionsPayload`:
+```java
+WritableMap payload = Arguments.createMap();
+payload.putMap("propositions", RCTAEPOptimizeUtil.createCallbackResponse(map));
+emitOnPropositionsUpdated(payload);
+```
 
-**Rule:** Always branch on `Platform.OS === 'android'` for both the subscription mechanism and payload destructuring. See `context/turbo-module-event-emission.md` for the complete JS pattern.
+JS reads `payload.propositions` on both platforms:
+```typescript
+NativeAEPOptimize.onPropositionsUpdated((payload) => {
+  for (const [key, value] of Object.entries(payload.propositions)) { ... }
+});
+```
+
+**Historical note:** Before 2026-06-08, Android used `RCTDeviceEventEmitter.emit("onPropositionsUpdate", flatMap)` (flat payload, no wrapper) and JS used `NativeEventEmitter.addListener('onPropositionsUpdate', ...)`. This is still used in the legacy interop path (`RCTAEPOptimizeModule.java`) but NOT on the turbo path. See `context/turbo-module-event-emission.md`.
 
 ---
 
@@ -262,9 +272,27 @@ cd /path/to/aepsdk-react-native && yarn build   # rebuilds all packages via lern
 **Files changed:**
 - `specs/NativeAEPOptimize.ts`: `readonly onPropositionsUpdated: CodegenTypes.EventEmitter<PropositionsPayload>`
 - `RCTAEPOptimize.h`: `NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>` on both paths
-- `RCTAEPOptimize.mm`: `[self emitOnPropositionsUpdated:@{...}]`, no `#if USE_INTEROP_ROOT`
-- `Optimize.ts`: `NativeAEPOptimize.onPropositionsUpdated(callback)`
+- `RCTAEPOptimize.mm`: `[self emitOnPropositionsUpdated:@{@"propositions": dict}]`
+- `NativeAEPOptimizeModule.java`: `emitOnPropositionsUpdated(payload)` where payload wraps in `{propositions: ...}`
+- `Optimize.ts`: `NativeAEPOptimize.onPropositionsUpdated(callback)` — unified, no `Platform.OS` branch
 
-**Result:** ✓ callback fires on both iOS turbo and iOS interop.
+**Result:** ✓ callback fires on both iOS and Android turbo paths.
 
 See: `agent-docs/context/turbo-module-event-emission.md` for the full investigation.
+
+---
+
+### 23. `JSON.stringify(Map)` always outputs `{}`
+
+JavaScript's `JSON.stringify` cannot serialize `Map` objects — it outputs `{}` regardless of contents. This made `onPropositionUpdate` logs appear empty when the data was actually flowing correctly.
+
+**Symptom:** `console.log(JSON.stringify(propositions))` → `{}` even though `propositions.size > 0`.
+
+**Fix:** Convert to a plain object first:
+```typescript
+console.log(JSON.stringify(Object.fromEntries(propositions), null, 2));
+// or for class instances with non-enumerable properties:
+propositions.forEach((val, key) => console.log(key, JSON.stringify(val)));
+```
+
+**Rule:** Never `JSON.stringify` a `Map` directly in debug logs. Always use `Object.fromEntries(map)` or iterate the entries.

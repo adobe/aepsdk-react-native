@@ -22,6 +22,7 @@ import com.adobe.marketing.mobile.optimize.DecisionScope;
 import com.adobe.marketing.mobile.optimize.Optimize;
 import com.adobe.marketing.mobile.optimize.OptimizeProposition;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -126,7 +127,11 @@ public class NativeAEPOptimizeModule extends NativeAEPOptimizeSpec {
             @Override
             public void call(Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
                 RCTAEPOptimizeUtil.cachePropositionOffers(decisionScopePropositionMap, propositionCache);
-                RCTAEPOptimizeUtil.emitOnPropositionsUpdate(getReactApplicationContext(), decisionScopePropositionMap, true);
+                // Wrap in { propositions: ... } to match PropositionsPayload spec type.
+                // Delivered via JSI EventEmitterCallback (CodegenTypes.EventEmitter), not RCTDeviceEventEmitter.
+                WritableMap payload = Arguments.createMap();
+                payload.putMap("propositions", RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap));
+                emitOnPropositionsUpdated(payload);
             }
         });
     }

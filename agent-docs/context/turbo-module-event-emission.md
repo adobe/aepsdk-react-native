@@ -1,6 +1,6 @@
 # TurboModule Event Emission on RN 0.84+ (iOS and Android)
 
-**Last updated:** 2026-04-22
+**Last updated:** 2026-06-08
 
 > Critical discovery from the Optimize TurboModule migration. Applies to ALL
 > native modules that need to emit events to JS on RN 0.84+ new architecture.
@@ -112,9 +112,22 @@ if (_eventEmitterCallback) {
 }
 ```
 
-### JS Subscription
+### Android Implementation (`NativeAEPOptimizeModule.java`)
+```java
+WritableMap payload = Arguments.createMap();
+payload.putMap("propositions", RCTAEPOptimizeUtil.createCallbackResponse(map));
+emitOnPropositionsUpdated(payload);  // codegen-generated method in NativeAEPOptimizeSpec
+```
+
+### JS Subscription (unified — no Platform.OS branch)
 ```typescript
-NativeAEPOptimize.onPropositionsUpdated((payload) => { ... });
+onPropositionUpdateSubscription = NativeAEPOptimize.onPropositionsUpdated((payload) => {
+  const map = new Map<string, Proposition>();
+  for (const [key, value] of Object.entries(payload.propositions)) {
+    map.set(key, new Proposition(value as any));
+  }
+  adobeCallback.call(map);
+});
 NativeAEPOptimize.registerOnPropositionsUpdate();  // register on native SDK
 ```
 
@@ -159,56 +172,45 @@ See: https://reactnative.dev/docs/the-new-architecture/native-modules-custom-eve
 
 ---
 
-## Android Event Emission (confirmed 2026-05-08)
+## Android Event Emission (updated 2026-06-08)
 
-Android codegen behavior differs from iOS in two critical ways:
+Android now uses the same `CodegenTypes.EventEmitter` path as iOS — no `NativeEventEmitter`
+or `RCTDeviceEventEmitter` involved on the turbo path.
 
-### 1. `onPropositionsUpdated` is not callable from JS on Android
+### What codegen generates (`NativeAEPOptimizeSpec.java`)
 
-The generated `NativeAEPOptimizeSpec.java` only has:
 ```java
 protected final void emitOnPropositionsUpdated(ReadableMap value) {
     mEventEmitterCallback.invoke("onPropositionsUpdated", value);
 }
 ```
-There is NO `@ReactMethod onPropositionsUpdated` — it is native→JS only.
-Calling `native.onPropositionsUpdated(callback)` from JS on Android throws
-`Cannot read property 'onPropositionsUpdated' of null`.
 
-**Fix:** Use `NativeEventEmitter.addListener('onPropositionsUpdate', callback)` on Android.
-Note: `RCTAEPOptimizeUtil.emitOnPropositionsUpdate` emits via `RCTDeviceEventEmitter`
-with event name `"onPropositionsUpdate"` (no trailing 'd').
+No `@ReactMethod` for `onPropositionsUpdated` — it is native→JS only via JSI callback.
+JS subscribes via `NativeAEPOptimize.onPropositionsUpdated(callback)` which wires
+`mEventEmitterCallback` through the TurboModule layer.
 
-### 2. Android payload is NOT wrapped in a `propositions` key
+### Payload must be wrapped
 
-`RCTAEPOptimizeUtil.createCallbackResponse` returns the scopes map directly:
+Android module wraps in `{ propositions: ... }` to match `PropositionsPayload`:
+```java
+WritableMap payload = Arguments.createMap();
+payload.putMap("propositions", RCTAEPOptimizeUtil.createCallbackResponse(map));
+emitOnPropositionsUpdated(payload);
 ```
-{ "mboxAug": { ...proposition... }, "scope2": { ... } }
-```
-iOS wraps it: `@{ @"propositions": dict }` → `payload.propositions`.
-Android emits the map as the top-level payload → use `payload` directly.
 
-### JS-side branch in `Optimize.ts`
+### No more `Platform.OS` branch in JS
 
+Both platforms use:
 ```typescript
-if (Platform.OS === 'android') {
-  const emitter = new NativeEventEmitter(native as any);
-  onPropositionUpdateSubscription = emitter.addListener('onPropositionsUpdate', (payload: any) => {
-    const map = new Map<string, Proposition>();
-    for (const [key, value] of Object.entries(payload)) {  // payload IS the map
-      map.set(key, new Proposition(value as any));
-    }
-    adobeCallback.call(map);
-  });
-} else {
-  // iOS: codegen JSI emitter, payload wrapped in { propositions: {...} }
-  onPropositionUpdateSubscription = native.onPropositionsUpdated((payload) => {
-    const map = new Map<string, Proposition>();
-    for (const [key, value] of Object.entries(payload.propositions)) {
-      map.set(key, new Proposition(value as any));
-    }
-    adobeCallback.call(map);
-  });
-}
-native.registerOnPropositionsUpdate();
+NativeAEPOptimize.onPropositionsUpdated((payload: { propositions: any }) => {
+  // payload.propositions = { scopeName: propositionDict, ... }
+});
 ```
+
+### Historical note (pre 2026-06-08)
+
+The old Android path used `RCTDeviceEventEmitter.emit("onPropositionsUpdate", writableMap)`
+(note: no trailing 'd') with a flat payload (no `propositions` wrapper), and JS subscribed via
+`new NativeEventEmitter(native).addListener('onPropositionsUpdate', callback)`.
+This is no longer used on the turbo path. The legacy interop module (`RCTAEPOptimizeModule.java`)
+still uses `RCTDeviceEventEmitter` since it runs outside the codegen spec.

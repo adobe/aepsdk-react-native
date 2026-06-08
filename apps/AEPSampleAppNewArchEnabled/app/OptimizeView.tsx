@@ -67,13 +67,13 @@ export default () => {
   const decisionScopeJson = new DecisionScope(
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9',
   );
-  const decisionScopeTargetMbox = new DecisionScope('demoLoc3');
+  const decisionScopeTargetMbox = new DecisionScope('mboxAug');
 
   const decisionScopes = [
-    decisionScopeText,
-    decisionScopeImage,
-    decisionScopeHtml,
-    decisionScopeJson,
+    // decisionScopeText,
+    // decisionScopeImage,
+    // decisionScopeHtml,
+    // decisionScopeJson,
     decisionScopeTargetMbox
   ];
 
@@ -126,7 +126,9 @@ export default () => {
   const onPropositionUpdate = () =>
     Optimize.onPropositionUpdate({
       call(propositions: Map<String, Proposition>) {
+        console.log('onPropositionUpdate called');
         if (propositions) {
+          console.log('propositions bnana', JSON.stringify(Object.fromEntries(propositions), null, 2));
           setTextProposition(propositions.get(decisionScopeText.getName()));
           setImageProposition(propositions.get(decisionScopeImage.getName()));
           setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
