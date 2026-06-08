@@ -17,7 +17,10 @@ module.exports = {
   setupFiles: ["<rootDir>/tests/jest/setup.ts"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   moduleNameMapper: {
-    "^react-native$": "<rootDir>/node_modules/react-native",
+    // Resolve react-native from the E2E test app's local node_modules so root
+    // devDependencies never need to include react-native (avoids hoisting conflicts
+    // between apps that use different RN versions).
+    "^react-native$": "<rootDir>/apps/AwesomeProject/node_modules/react-native",
   },
   testPathIgnorePatterns: [
     "/node_modules/",
