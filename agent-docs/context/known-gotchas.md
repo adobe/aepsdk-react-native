@@ -1,6 +1,6 @@
 # Known Gotchas & Non-Obvious Rules
 
-**Last updated:** 2026-05-08
+**Last updated:** 2026-06-05
 
 > Quick reference for things that burned us and aren't obvious from reading the code.
 
@@ -125,6 +125,28 @@ See: `errors/e2e-android-build-cmake-clean-glob-mismatch.md`
 When developing packages locally (symlinked), Metro needs `watchFolders` + `resolver.nodeModulesPaths` configured in `metro.config.js`. Without it, Metro cannot resolve `@adobe/react-native-aep*` from outside `node_modules`.
 
 See: `docs/development.md`
+
+---
+
+### 22. AEPSampleAppNewArchEnabled: "Could not connect to development server" → Watchman hang, not a network issue
+
+The Expo sample app (`apps/AEPSampleAppNewArchEnabled`) shipped with **no `metro.config.js`** (unlike AwesomeProject). Symptom: native app builds and launches fine, but shows the red **"Could not connect to development server"** screen pointing at `localhost:8081/.expo/.virtual-metro-entry.bundle`.
+
+The error is misleading — Metro's HTTP server is up and answers `/status` (`packager-status:running`), but **every bundle request blocks forever**. Metro's log shows `Waiting for Watchman \`watch-project\` (Ns)...` climbing without end.
+
+**Root cause:** Watchman's daemon socket is unavailable (e.g. in a sandboxed env the state dir resolves to a path like `/tmp/.../namarora-state/sock` that doesn't exist). The watchman *client* hangs at watch establishment, before any `.watchmanconfig` `ignore_dirs` filtering applies — so adding `.watchmanconfig` does **not** fix it.
+
+**Fix:** disable watchman in `metro.config.js` so Metro falls back to its Node-based file watcher:
+
+```js
+config.resolver.useWatchman = false;
+```
+
+(`useWatchman` is a `resolver` config field in Metro 0.83.) After this, the bundle compiles (HTTP 200) and the app connects on reload (`Cmd+R` in the simulator).
+
+The app also needed the standard monorepo `metro.config.js` (`watchFolders` + `nodeModulesPaths` + `extraNodeModules` mapping `@adobe/react-native-aep*` → `packages/*`), mirroring AwesomeProject — see gotcha #12.
+
+**Note:** also confirm Metro is launched with nvm node on PATH (gotcha #9) and that the simulator was reloaded *after* Metro came up — the app caches the failed-connection screen until reloaded.
 
 ---
 

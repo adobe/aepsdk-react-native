@@ -34,9 +34,37 @@ Both Android and iOS use the same `USE_INTEROP_ROOT` flag (`false`/`0` = Turbo, 
 | Platform | Where the flag lives | How it works |
 |----------|---------------------|-------------|
 | **Android** | `packages/optimize/android/build.gradle` → `buildConfigField "boolean", "USE_INTEROP_ROOT", "false"` | `RCTAEPOptimizePackage` reads `BuildConfig.USE_INTEROP_ROOT` at runtime to pick Turbo vs interop module. |
-| **iOS** | `packages/optimize/RCTAEPOptimize.podspec` → `GCC_PREPROCESSOR_DEFINITIONS` → `USE_INTEROP_ROOT=0` | `#if USE_INTEROP_ROOT` in `.h`/`.mm` selects at **compile time** between legacy bridge (`RCTEventEmitter`, `RCT_EXPORT_MODULE`) and Turbo (`NSObject <NativeAEPOptimizeSpec>`, `getTurboModule:`). |
+| **iOS** | `packages/optimize/RCTAEPOptimize.podspec` → `GCC_PREPROCESSOR_DEFINITIONS` → `USE_INTEROP_ROOT=0` | `#if USE_INTEROP_ROOT` in `.mm` toggles **only the registration** at compile time (see below). |
 
 To switch to the interop (legacy bridge) path, change the value to `true` (Android) / `1` (iOS) and rebuild.
+
+### iOS dual-mode — current implementation (2026-06-05)
+
+The `.h` is a **single** declaration on both paths — `RCTAEPOptimize : NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>` — no `#if`. Only `RCTAEPOptimize.mm` branches, and only on *how the class registers*:
+
+```objc
+#if USE_INTEROP_ROOT
+// interop: register as a legacy bridge module. No getTurboModule:, so the
+// codegen-generated RCTModuleProviders.mm skips turbo registration; RN's
+// TurboModule interop layer then adapts this bridge module so
+// TurboModuleRegistry.getEnforcing('NativeAEPOptimize') still resolves it.
+RCT_EXPORT_MODULE(NativeAEPOptimize)
+#else
+// turbo: getTurboModule: makes RCTModuleProviders register it as a TurboModule.
++ (NSString *)moduleName { return @"NativeAEPOptimize"; }
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(...)params { ... }
+#endif
+```
+
+All spec methods are declared with `RCT_EXPORT_METHOD(...)` (not plain `- (void)...`). The macro is **harmless on the turbo path** (the extra bridge metadata is ignored) and **required on the interop path** (the bridge builds its method table from it). This means **the same selectors and bodies serve both paths** — no `reject:`-vs-`rejecter:` / `propositionMap:`-vs-`propositionDictionary:` divergence like the generic reference template.
+
+**Why the toggle is iOS-meaningful now:** previously the `.mm` defined `getTurboModule:` unconditionally, so iOS was *always* turbo regardless of the flag (codegen's `RCTModuleProviders` registers any class that responds to `getTurboModule:`). Gating `getTurboModule:` behind `#if !USE_INTEROP_ROOT` is what lets the flag actually fork the path on iOS, mirroring Android's runtime switch in `RCTAEPOptimizePackage`.
+
+**How to confirm the active path at runtime (iOS):** in an **interop** build (`=1`) the startup log shows a benign
+`RCTLogError: Module provider RCTAEPOptimize does not conform to RCTModuleProvider` —
+this is expected (codegenConfig still lists the module, but `getTurboModule:` is compiled out, so `RCTModuleProviders` skips it and the interop layer takes over). In a **turbo** build (`=0`) that line is **absent**. Presence/absence of that log is the cleanest path indicator.
+
+**Caveat — events in interop mode:** `onPropositionsUpdated` is emitted via the codegen JSI emitter (`emitOnPropositionsUpdated:`), whose `_eventEmitterCallback` is only wired on the turbo path. In an interop build the callback stays nil and the event is silently skipped (the code already guards with `if (_eventEmitterCallback)`). Non-event APIs (extensionVersion, get/updatePropositions, display/tap, generate*Xdm) work on both paths. See known-gotchas #21.
 
 ---
 
@@ -111,6 +139,8 @@ buildFeatures { buildConfig true }
 | `RCTAEPOptimizePackage.java` | **Rewritten.** `extends BaseReactPackage`. `getModule()` + `getReactModuleInfoProvider()` switch on `BuildConfig.USE_INTEROP_ROOT`. |
 
 ### 5. iOS native
+
+> **Note (2026-06-05):** the `.h`/`.mm` snippets in this step show the *original* reference-template approach (dual-mode in the `.h`, divergent selectors). The shipped implementation converged differently — see **"iOS dual-mode — current implementation"** in the Dual-mode switch section above for what the code actually looks like now (single `.h`, registration-only `#if` in the `.mm`, shared `RCT_EXPORT_METHOD` selectors). The steps below are kept for historical context.
 
 | File | Role |
 |------|------|

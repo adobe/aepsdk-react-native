@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {
     "CLANG_ENABLE_MODULES" => "YES",
     "OTHER_CPLUSPLUSFLAGS" => "$(inherited) -fcxx-modules",
-    "HEADER_SEARCH_PATHS" => "$(inherited) \"$(PODS_ROOT)/../build/generated/ios/ReactCodegen\" \"$(PODS_ROOT)/Headers/Public/ReactCodegen\"",
+    "HEADER_SEARCH_PATHS" => "$(inherited) \"$(PODS_ROOT)/../build/generated/ios\" \"$(PODS_ROOT)/../build/generated/ios/ReactCodegen\" \"$(PODS_ROOT)/Headers/Public/ReactCodegen\"",
     "GCC_PREPROCESSOR_DEFINITIONS" => "$(inherited) USE_INTEROP_ROOT=#{use_interop_root}"
   }
 end
