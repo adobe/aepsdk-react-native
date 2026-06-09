@@ -24,7 +24,7 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Dimensions,
+  useWindowDimensions,
   TextInput,
   StyleSheet,
 } from 'react-native';
@@ -49,7 +49,7 @@ const defaultPropositions = {
 
 export default ({navigation}: any) => {
   const [version, setVersion] = useState('0.0.0');
-  const [customScopeInput, setCustomScopeInput] = useState('demoLoc3');
+  const [customScopeInput, setCustomScopeInput] = useState('mboxAug');
   const [textProposition, setTextProposition] = useState<Proposition>();
   const [imageProposition, setImageProposition] = useState<Proposition>();
   const [htmlProposition, setHtmlProposition] = useState<Proposition>();
@@ -68,7 +68,7 @@ export default ({navigation}: any) => {
   const decisionScopeJson = new DecisionScope(
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9',
   );
-  const decisionScopeTargetMbox = new DecisionScope(customScopeInput.trim() || 'demoLoc3');
+  const decisionScopeTargetMbox = new DecisionScope(customScopeInput.trim() || 'mboxAug');
 
   const decisionScopes = [
     // decisionScopeText,
@@ -217,7 +217,7 @@ export default ({navigation}: any) => {
     return data1 !== data2;
   });
 
-  var {width} = Dimensions.get('window');
+  const { width } = useWindowDimensions();
   const inputStyles = StyleSheet.create({
     label: {fontWeight: '600', marginTop: 8, marginBottom: 2, color: '#333', alignSelf: 'flex-start'},
     input: {borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, fontSize: 13, marginBottom: 2, backgroundColor: '#fff', width: width - 32},
