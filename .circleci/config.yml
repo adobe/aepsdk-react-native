@@ -25,8 +25,15 @@ jobs:
         command: sudo corepack enable
 
     - run:
-        name: Install Node.js and Yarn Dependencies
+        name: Install Root Dependencies
         command: yarn install --immutable --network-timeout 300000
+        no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+    - run:
+        name: Install AEPSampleApp Dependencies
+        command: cd apps/AEPSampleApp && yarn install --immutable --network-timeout 300000
         no_output_timeout: 20m
         environment:
           NODE_OPTIONS: "--max-old-space-size=4096"

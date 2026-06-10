@@ -6,7 +6,6 @@
   "workspaces": [
     "packages/*",
     "apps/AEPSampleAppNewArchEnabled",
-    "apps/AwesomeProject",
     "e2e"
   ],
   "scripts": {
