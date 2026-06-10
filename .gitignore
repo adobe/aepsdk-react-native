@@ -162,3 +162,11 @@ agent-docs/
 
 # Local smoke test run reports
 smoke-tests/
+
+# Compiled TypeScript build artifacts in package source/spec directories
+packages/*/src/**/*.js
+packages/*/src/**/*.js.map
+packages/*/src/**/*.d.ts
+packages/*/specs/**/*.js
+packages/*/specs/**/*.js.map
+packages/*/specs/**/*.d.ts
