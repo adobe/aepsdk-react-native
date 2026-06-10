@@ -153,7 +153,12 @@ out/
 # ignore ds store
 .DS_Store
 
-# React Native CLI app `apps/AwesomeProject`: CocoaPods, Gradle, Metro, and Xcode
-# artifacts are covered by `apps/AwesomeProject/.gitignore` and patterns above (**/build/, **/Pods/, .gradle).
+# Claude Code machine-specific files (never commit these)
+.claude/
+**/.claude/
 
-# agent-docs is tracked (playbooks, context, errors, migrations)
+# Internal AI agent documentation (kept locally, not for public PRs)
+agent-docs/
+
+# Local smoke test run reports
+smoke-tests/
