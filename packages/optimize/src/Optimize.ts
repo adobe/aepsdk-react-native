@@ -71,7 +71,7 @@ const Optimize: IOptimize = {
     });
 
     // Register the listener on the native AEP SDK side
-    NativeAEPOptimize.registerOnPropositionsUpdate();
+    NativeAEPOptimize.onPropositionsUpdate();
   },
 
   /**

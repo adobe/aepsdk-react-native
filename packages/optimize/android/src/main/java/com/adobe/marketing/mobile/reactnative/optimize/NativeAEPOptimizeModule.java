@@ -122,7 +122,7 @@ public class NativeAEPOptimizeModule extends NativeAEPOptimizeSpec {
     }
 
     @Override
-    public void registerOnPropositionsUpdate() {
+    public void onPropositionsUpdate() {
         Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void call(Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {

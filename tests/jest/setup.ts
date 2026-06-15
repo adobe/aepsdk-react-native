@@ -172,7 +172,6 @@ jest.doMock('react-native', () => {
           ),
           onPropositionsUpdate: jest.fn(),
           onPropositionsUpdated: jest.fn().mockReturnValue({ remove: jest.fn() }),
-          registerOnPropositionsUpdate: jest.fn(),
           clearCachedPropositions: jest.fn(),
           getPropositions: jest.fn(
             () =>

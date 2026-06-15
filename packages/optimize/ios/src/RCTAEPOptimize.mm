@@ -113,8 +113,8 @@ static NSString *const TAG = @"RCTAEPOptimize";
   }];
 }
 
-- (void)registerOnPropositionsUpdate {
-  [AEPLog traceWithLabel:TAG message:@"registerOnPropositionsUpdate is called."];
+- (void)onPropositionsUpdate {
+  [AEPLog traceWithLabel:TAG message:@"onPropositionsUpdate is called."];
   [AEPMobileOptimize onPropositionsUpdate:^(
                          NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *>
                              *decisionScopePropositionDict) {

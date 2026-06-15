@@ -22,7 +22,7 @@ export interface Spec extends TurboModule {
     onSuccess?: (propositions: Object) => void,
     onError?: (error: Object) => void
   ): void;
-  registerOnPropositionsUpdate(): void;
+  onPropositionsUpdate(): void;
   multipleOffersDisplayed(offersArray: Array<Object>): void;
   multipleOffersGenerateDisplayInteractionXdm(offersArray: Array<Object>): Promise<Object>;
   offerDisplayed(offerId: string, propositionMap: Object): void;

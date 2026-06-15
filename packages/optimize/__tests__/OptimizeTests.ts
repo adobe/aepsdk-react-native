@@ -31,14 +31,15 @@ describe('Optimize', () => {
   });
 
   it('AEPOptimize onPropositionUpdate is called with correct parameters', async () => {
-    // TurboModule migration renamed onPropositionsUpdate → onPropositionsUpdated
-    const spy = jest.spyOn(NativeModules.AEPOptimize, 'onPropositionsUpdated');
+    const registerSpy = jest.spyOn(NativeModules.AEPOptimize, 'onPropositionsUpdate');
+    const subscribeSpy = jest.spyOn(NativeModules.AEPOptimize, 'onPropositionsUpdated');
     let adobeCallback = {
       call(_: Map<string, Proposition>): void {}
     };
 
     await Optimize.onPropositionUpdate(adobeCallback);
-    expect(spy).toHaveBeenCalled();
+    expect(subscribeSpy).toHaveBeenCalled();
+    expect(registerSpy).toHaveBeenCalled();
   });
 
   it('AEPOptimize clearCachedProposition is called', async () => {
