@@ -28,7 +28,6 @@ module.exports = {
     "/android/",
     "/ios/",
     "/apps/",
-    "/e2e/",
     "/packages/messaging/src/ui/"
   ],
 };
