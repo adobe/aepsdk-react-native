@@ -45,6 +45,7 @@ public class NativeAEPOptimizeModule extends NativeAEPOptimizeSpec {
     private static final String TAG = "NativeAEPOptimizeModule";
 
     private final Map<String, OptimizeProposition> propositionCache = new ConcurrentHashMap<>();
+    private boolean propositionsUpdateListenerRegistered = false;
 
     public NativeAEPOptimizeModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -123,6 +124,12 @@ public class NativeAEPOptimizeModule extends NativeAEPOptimizeSpec {
 
     @Override
     public void onPropositionsUpdate() {
+        // AEP SDK stacks listeners on each call — register once per module instance.
+        if (propositionsUpdateListenerRegistered) {
+            Log.d(TAG, "onPropositionsUpdate: AEP listener already registered, skipping duplicate registration.");
+            return;
+        }
+        propositionsUpdateListenerRegistered = true;
         Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void call(Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
@@ -132,6 +139,10 @@ public class NativeAEPOptimizeModule extends NativeAEPOptimizeSpec {
                 WritableMap payload = Arguments.createMap();
                 payload.putMap("propositions", RCTAEPOptimizeUtil.createCallbackResponse(decisionScopePropositionMap));
                 emitOnPropositionsUpdated(payload);
+                // Android JS subscribes via DeviceEventEmitter (flat map). Do not gate on hasActiveReactInstance —
+                // SDK callbacks can fire before the instance flag is set on RN 0.85 new arch.
+                RCTAEPOptimizeUtil.emitOnPropositionsUpdate(
+                        getReactApplicationContext(), decisionScopePropositionMap, false);
             }
         });
     }

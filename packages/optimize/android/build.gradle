@@ -26,12 +26,23 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "boolean", "USE_INTEROP_ROOT", "false"
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled() ? "true" : "false"
     }
     buildFeatures {
         buildConfig true
     }
     lintOptions {
         abortOnError false
+    }
+
+    sourceSets {
+        main {
+            if (!isNewArchitectureEnabled()) {
+                java {
+                    exclude '**/NativeAEPOptimizeModule.java'
+                }
+            }
+        }
     }
 }
 

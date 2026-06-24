@@ -10,18 +10,26 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
 
-// NativeAEPOptimizeSpecBase (codegen-generated) provides emitOnPropositionsUpdated:
-// for JSI-native event emission. Used on BOTH turbo and interop paths because:
-//
-// 1. getTurboModule: is required on both paths (RCTModuleProviders.mm checks it)
-// 2. getTurboModule: → RCTTurboModuleManager creates module with callableJSModules:nil
-// 3. callableJSModules:nil → sendEventWithName: silently drops events
-// 4. Therefore RCTEventEmitter's sendEventWithName: is dead for any turbo-registered module
-// 5. emitOnPropositionsUpdated: bypasses callableJSModules — uses JSI EventEmitterCallback
-//
-// See: https://reactnative.dev/docs/the-new-architecture/native-modules-custom-events
-@interface RCTAEPOptimize : NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>
+#if USE_INTEROP_ROOT
+  #if RCT_NEW_ARCH_ENABLED
+    // RN 0.84+ interop (new arch): SpecBase + getTurboModule: — sendEventWithName: is dead
+    // when getTurboModule: exists (callableJSModules:nil). Use emitOnPropositionsUpdated:.
+    #import <NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
+    @interface RCTAEPOptimize : NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>
+  #else
+    // RN 0.76 old arch: pure classic bridge module (RCT_EXPORT_METHOD + RCTEventEmitter).
+    #import <React/RCTEventEmitter.h>
+    @interface RCTAEPOptimize : RCTEventEmitter
+  #endif
+#else
+  // Turbo path (RN 0.84+ default): SpecBase provides emitOnPropositionsUpdated:
+  // for JSI-native event delivery on both iOS and Android.
+  //
+  // sendEventWithName: is dead for any module registered via getTurboModule:
+  // See: https://reactnative.dev/docs/the-new-architecture/native-modules-custom-events
+  #import <NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
+  @interface RCTAEPOptimize : NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>
+#endif
 
 @end

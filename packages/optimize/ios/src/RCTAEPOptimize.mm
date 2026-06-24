@@ -17,8 +17,17 @@
 
 static NSString *const TAG = @"RCTAEPOptimize";
 
+// Old-arch iOS (classic bridge): NativeModules only exposes methods registered via
+// RCT_EXPORT_METHOD. Protocol/Turbo selectors alone are invisible to JavaScript.
+#if USE_INTEROP_ROOT
+#define AEP_OPTIMIZE_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_OPTIMIZE_METHOD(method) - (void)method
+#endif
+
 @implementation RCTAEPOptimize {
   NSMutableDictionary<NSString *, AEPOptimizeProposition *> *propositionCache;
+  BOOL _propositionsUpdateListenerRegistered;
 }
 
 - (instancetype)init {
@@ -35,35 +44,42 @@ static NSString *const TAG = @"RCTAEPOptimize";
   return dispatch_get_main_queue();
 }
 
-// Module name for TurboModuleRegistry resolution.
-+ (NSString *)moduleName { return @"NativeAEPOptimize"; }
+// Single moduleName registration for all paths (interop + turbo, old + new arch).
+// RCT_EXPORT_MODULE expands to +moduleName — do NOT also define +moduleName manually
+// (duplicate declaration when USE_INTEROP_ROOT=0; see aep-turbo-migrate gotcha #29).
+RCT_EXPORT_MODULE(NativeAEPOptimize);
 
-// Required on both paths: RCTModuleProviders.mm (codegen-generated) checks
-// respondsToSelector:@selector(getTurboModule:) at startup. Without it,
-// the module is skipped and TurboModuleRegistry returns null.
+// Old-arch interop (RN 0.76): turbo is off — skip getTurboModule: so the module
+// registers as a classic bridge NativeModule with RCT_EXPORT_METHOD exports.
+// New-arch interop + turbo path: getTurboModule: required for TurboModuleRegistry.
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
   return std::make_shared<facebook::react::NativeAEPOptimizeSpecJSI>(params);
 }
+#endif
 
 #pragma mark - NativeAEPOptimizeSpec protocol methods
 
-- (void)extensionVersion:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject {
+AEP_OPTIMIZE_METHOD(extensionVersion:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
   [AEPLog traceWithLabel:TAG message:@"extensionVersion is called."];
   resolve([AEPMobileOptimize extensionVersion]);
 }
 
-- (void)clearCachedPropositions {
+AEP_OPTIMIZE_METHOD(clearCachedPropositions)
+{
   [AEPLog traceWithLabel:TAG message:@"clearCachedPropositions is called."];
   [self clearPropositionsCache];
   [AEPMobileOptimize clearCachedPropositions];
 }
 
-- (void)getPropositions:(NSArray *)decisionScopeNames
+AEP_OPTIMIZE_METHOD(getPropositions:(NSArray *)decisionScopeNames
                 resolve:(RCTPromiseResolveBlock)resolve
-                 reject:(RCTPromiseRejectBlock)reject {
+                 reject:(RCTPromiseRejectBlock)reject)
+{
   [AEPLog traceWithLabel:TAG message:@"getPropositions is called."];
   NSArray<AEPDecisionScope *> *decisionScopesArray =
       [self createDecisionScopesArray:decisionScopeNames];
@@ -90,11 +106,12 @@ static NSString *const TAG = @"RCTAEPOptimize";
            }];
 }
 
-- (void)updatePropositions:(NSArray *)decisionScopeNames
+AEP_OPTIMIZE_METHOD(updatePropositions:(NSArray *)decisionScopeNames
                        xdm:(NSDictionary *)xdm
                       data:(NSDictionary *)data
                  onSuccess:(RCTResponseSenderBlock)onSuccess
-                   onError:(RCTResponseSenderBlock)onError {
+                   onError:(RCTResponseSenderBlock)onError)
+{
   [AEPLog traceWithLabel:TAG message:@"updatePropositions is called."];
   NSArray<AEPDecisionScope *> *scopes = [self createDecisionScopesArray:decisionScopeNames];
   [AEPMobileOptimize updatePropositions:scopes
@@ -113,8 +130,16 @@ static NSString *const TAG = @"RCTAEPOptimize";
   }];
 }
 
-- (void)onPropositionsUpdate {
+AEP_OPTIMIZE_METHOD(onPropositionsUpdate)
+{
   [AEPLog traceWithLabel:TAG message:@"onPropositionsUpdate is called."];
+  // AEP SDK adds a new MobileCore event listener on every call — register once per module.
+  if (_propositionsUpdateListenerRegistered) {
+    [AEPLog traceWithLabel:TAG
+                    message:@"onPropositionsUpdate: AEP listener already registered, skipping duplicate registration."];
+    return;
+  }
+  _propositionsUpdateListenerRegistered = YES;
   [AEPMobileOptimize onPropositionsUpdate:^(
                          NSDictionary<AEPDecisionScope *, AEPOptimizeProposition *>
                              *decisionScopePropositionDict) {
@@ -126,16 +151,29 @@ static NSString *const TAG = @"RCTAEPOptimize";
       [propositionDictionary setValue:[self convertPropositionToDict:proposition]
                                forKey:key.name];
     }
-    // Emit via codegen-generated emitOnPropositionsUpdated: (JSI-native).
-    // Guard: _eventEmitterCallback may be nil if the SDK fires the callback
-    // before JS has subscribed (e.g. cached propositions from a prior update).
-    if (_eventEmitterCallback) {
-      [self emitOnPropositionsUpdated:@{@"propositions": propositionDictionary}];
+    NSDictionary *payload = @{@"propositions": propositionDictionary};
+    void (^emitPayload)(void) = ^{
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+      [self sendEventWithName:@"onPropositionsUpdate" body:propositionDictionary];
+#else
+      if (self->_eventEmitterCallback) {
+        [self emitOnPropositionsUpdated:payload];
+      } else {
+        [AEPLog traceWithLabel:TAG
+                        message:@"onPropositionsUpdate: skipped emit — no JS listener registered yet"];
+      }
+#endif
+    };
+    if ([NSThread isMainThread]) {
+      emitPayload();
+    } else {
+      dispatch_async(dispatch_get_main_queue(), emitPayload);
     }
   }];
 }
 
-- (void)multipleOffersDisplayed:(NSArray *)offersArray {
+AEP_OPTIMIZE_METHOD(multipleOffersDisplayed:(NSArray *)offersArray)
+{
   [AEPLog debugWithLabel:TAG message:@"multipleOffersDisplayed is called."];
   NSMutableArray<AEPOffer *> *nativeOffers = [self getNativeOffersFromOffersArray:offersArray];
   if ([nativeOffers count] > 0) {
@@ -143,9 +181,10 @@ static NSString *const TAG = @"RCTAEPOptimize";
   }
 }
 
-- (void)multipleOffersGenerateDisplayInteractionXdm:(NSArray *)offersArray
+AEP_OPTIMIZE_METHOD(multipleOffersGenerateDisplayInteractionXdm:(NSArray *)offersArray
                                             resolve:(RCTPromiseResolveBlock)resolve
-                                             reject:(RCTPromiseRejectBlock)reject {
+                                             reject:(RCTPromiseRejectBlock)reject)
+{
   [AEPLog debugWithLabel:TAG message:@"multipleOffersGenerateDisplayInteractionXdm is called."];
   NSMutableArray<AEPOffer *> *nativeOffers = [self getNativeOffersFromOffersArray:offersArray];
   if ([nativeOffers count] > 0) {
@@ -155,8 +194,9 @@ static NSString *const TAG = @"RCTAEPOptimize";
   }
 }
 
-- (void)offerDisplayed:(NSString *)offerId
-        propositionMap:(NSDictionary *)dictionary {
+AEP_OPTIMIZE_METHOD(offerDisplayed:(NSString *)offerId
+        propositionMap:(NSDictionary *)dictionary)
+{
   [AEPLog debugWithLabel:TAG message:@"Offer Displayed"];
   AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
@@ -165,8 +205,9 @@ static NSString *const TAG = @"RCTAEPOptimize";
   }
 }
 
-- (void)offerTapped:(NSString *)offerId
-     propositionMap:(NSDictionary *)dictionary {
+AEP_OPTIMIZE_METHOD(offerTapped:(NSString *)offerId
+     propositionMap:(NSDictionary *)dictionary)
+{
   [AEPLog debugWithLabel:TAG message:@"Offer Tapped"];
   AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
@@ -175,10 +216,11 @@ static NSString *const TAG = @"RCTAEPOptimize";
   }
 }
 
-- (void)generateDisplayInteractionXdm:(NSString *)offerId
+AEP_OPTIMIZE_METHOD(generateDisplayInteractionXdm:(NSString *)offerId
                        propositionMap:(NSDictionary *)dictionary
                               resolve:(RCTPromiseResolveBlock)resolve
-                               reject:(RCTPromiseRejectBlock)reject {
+                               reject:(RCTPromiseRejectBlock)reject)
+{
   [AEPLog debugWithLabel:TAG message:@"generateDisplayInteractionXdm"];
   AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
@@ -194,10 +236,11 @@ static NSString *const TAG = @"RCTAEPOptimize";
   }
 }
 
-- (void)generateTapInteractionXdm:(NSString *)offerId
+AEP_OPTIMIZE_METHOD(generateTapInteractionXdm:(NSString *)offerId
                    propositionMap:(NSDictionary *)dictionary
                           resolve:(RCTPromiseResolveBlock)resolve
-                           reject:(RCTPromiseRejectBlock)reject {
+                           reject:(RCTPromiseRejectBlock)reject)
+{
   [AEPLog debugWithLabel:TAG message:@"generateTapInteractionXdm"];
   AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   NSArray<AEPOffer *> *offers = [proposition offers];
@@ -213,21 +256,32 @@ static NSString *const TAG = @"RCTAEPOptimize";
   }
 }
 
-- (void)generateReferenceXdm:(NSDictionary *)dictionary
+AEP_OPTIMIZE_METHOD(generateReferenceXdm:(NSDictionary *)dictionary
                       resolve:(RCTPromiseResolveBlock)resolve
-                       reject:(RCTPromiseRejectBlock)reject {
+                       reject:(RCTPromiseRejectBlock)reject)
+{
   [AEPLog debugWithLabel:TAG message:@"Proposition generateReferenceXdm"];
   AEPOptimizeProposition *proposition = [AEPOptimizeProposition initFromData:dictionary];
   resolve([proposition generateReferenceXdm]);
 }
 
-// addListener/removeListeners kept in spec for backward compatibility.
-// No-ops — event emission uses CodegenTypes.EventEmitter (JSI), not bridge.
+// Old-arch interop: RCTEventEmitter provides addListener/removeListeners — do not override.
+// SpecBase paths (turbo + new-arch interop): empty stubs for NativeEventEmitter compatibility.
+#if !USE_INTEROP_ROOT || (USE_INTEROP_ROOT && RCT_NEW_ARCH_ENABLED)
 - (void)addListener:(NSString *)eventName {
 }
 
 - (void)removeListeners:(double)count {
 }
+#endif
+
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#pragma mark - RCTEventEmitter (old-arch interop only)
+
+- (NSArray<NSString *> *)supportedEvents {
+  return @[ @"onPropositionsUpdate" ];
+}
+#endif
 
 #pragma mark - Shared helper methods
 

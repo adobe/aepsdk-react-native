@@ -17,6 +17,7 @@ import Offer from './models/Offer';
 import { AdobePropositionCallback } from './models/AdobePropositionCallback';
 import AEPOptimizeError from './models/AEPOptimizeError';
 import NativeAEPOptimize from './NativeAEPOptimize';
+import { subscribePropositionsUpdated } from './propositionEvents';
 
 interface IOptimize {
   extensionVersion: () => Promise<string>;
@@ -35,6 +36,7 @@ interface IOptimize {
 }
 
 var onPropositionUpdateSubscription: EventSubscription | null = null;
+var nativePropositionsUpdateRegistered = false;
 
 
 /**
@@ -60,18 +62,20 @@ const Optimize: IOptimize = {
       onPropositionUpdateSubscription = null;
     }
 
-    // CodegenTypes.EventEmitter: payload is { propositions: { scopeName: proposition, ... } }
-    // on both iOS and Android (JSI-native delivery, no NativeEventEmitter needed).
-    onPropositionUpdateSubscription = NativeAEPOptimize.onPropositionsUpdated((payload: { propositions: any }) => {
-      const map = new Map<string, Proposition>();
-      for (const [key, value] of Object.entries(payload.propositions)) {
-        map.set(key, new Proposition(value as any));
-      }
-      adobeCallback.call(map);
-    });
+    onPropositionUpdateSubscription = subscribePropositionsUpdated(adobeCallback);
 
-    // Register the listener on the native AEP SDK side
-    NativeAEPOptimize.onPropositionsUpdate();
+    // AEP SDK stacks MobileCore listeners on each onPropositionsUpdate call — register once.
+    if (!nativePropositionsUpdateRegistered) {
+      NativeAEPOptimize.onPropositionsUpdate();
+      nativePropositionsUpdateRegistered = true;
+    }
+
+    // Bridge listener tracking (legacy interop); safe no-op on turbo.
+    try {
+      NativeAEPOptimize.addListener('onPropositionsUpdate');
+    } catch {
+      // Turbo path: optional no-op stub.
+    }
   },
 
   /**

@@ -32,13 +32,11 @@ describe('Optimize', () => {
 
   it('AEPOptimize onPropositionUpdate is called with correct parameters', async () => {
     const registerSpy = jest.spyOn(NativeModules.AEPOptimize, 'onPropositionsUpdate');
-    const subscribeSpy = jest.spyOn(NativeModules.AEPOptimize, 'onPropositionsUpdated');
     let adobeCallback = {
       call(_: Map<string, Proposition>): void {}
     };
 
     await Optimize.onPropositionUpdate(adobeCallback);
-    expect(subscribeSpy).toHaveBeenCalled();
     expect(registerSpy).toHaveBeenCalled();
   });
 

@@ -8,6 +8,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
+    "prepare": "tsc",
     "tsc": "tsc"
   },
   "repository": {

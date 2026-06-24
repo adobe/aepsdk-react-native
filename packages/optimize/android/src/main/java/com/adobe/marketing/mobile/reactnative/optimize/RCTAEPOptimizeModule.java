@@ -51,6 +51,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     private final ReactApplicationContext reactContext;
     // Cache of <Proposition ID, Proposition>
     private final Map<String, OptimizeProposition> propositionCache = new ConcurrentHashMap<>();
+    private boolean propositionsUpdateListenerRegistered = false;
 
     public RCTAEPOptimizeModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -204,6 +205,11 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void onPropositionsUpdate() {
+        if (propositionsUpdateListenerRegistered) {
+            Log.d(TAG, "onPropositionsUpdate: AEP listener already registered, skipping duplicate registration.");
+            return;
+        }
+        propositionsUpdateListenerRegistered = true;
         Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
