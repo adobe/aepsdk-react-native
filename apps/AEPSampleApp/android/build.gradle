@@ -15,3 +15,19 @@ plugins {
     id("org.jetbrains.kotlin.android") version "2.1.20" apply false
     id("com.facebook.react.rootproject")
 }
+
+// USE_INTEROP_ROOT for @adobe/react-native-aepoptimize (RN 0.85 / Gradle 9).
+// gradle.properties USE_INTEROP_ROOT is toggled by scripts/build-matrix.sh.
+def optimizeUseInteropRoot = findProperty("USE_INTEROP_ROOT") ?: "false"
+
+gradle.beforeProject { project ->
+    if (project.name == "adobe_react-native-aepoptimize") {
+        project.afterEvaluate {
+            project.android {
+                defaultConfig {
+                    buildConfigField "boolean", "USE_INTEROP_ROOT", optimizeUseInteropRoot
+                }
+            }
+        }
+    }
+}

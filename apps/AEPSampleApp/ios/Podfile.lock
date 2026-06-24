@@ -76,8 +76,27 @@ PODS:
     - React
   - RCTAEPOptimize (7.1.1):
     - AEPOptimize (< 6.0.0, >= 5.0.0)
-    - React
-    - React-Codegen
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - RCTAEPPlaces (7.0.1):
     - AEPPlaces (< 6.0.0, >= 5.0.0)
     - React
@@ -110,7 +129,6 @@ PODS:
     - React-RCTText (= 0.85.0)
     - React-RCTVibration (= 0.85.0)
   - React-callinvoker (0.85.0)
-  - React-Codegen (0.1.0)
   - React-Core (0.85.0):
     - hermes-engine
     - RCTDeprecation
@@ -2300,7 +2318,6 @@ SPEC REPOS:
     - AEPSignal
     - AEPTarget
     - AEPUserProfile
-    - React-Codegen
 
 EXTERNAL SOURCES:
   FBLazyVector:
@@ -2520,7 +2537,7 @@ SPEC CHECKSUMS:
   RCTAEPEdgeConsent: 94d66ceefac0058a1586b0b876e37f178d3733d2
   RCTAEPEdgeIdentity: 2ed3fdc9a3150e9bcf268b128c22f293ab4df6aa
   RCTAEPMessaging: d97f2750b4698d54953e6a9b824506a18be1695c
-  RCTAEPOptimize: cf583da4e45b6db6e641c4771f5a4204882521f1
+  RCTAEPOptimize: 089bffe4a17ffe9579a39a55db4b841919882ada
   RCTAEPPlaces: 4050bda86286605a8683b4c078baac1662ca013a
   RCTAEPTarget: e8bcf8864758faf07635719ffa0eff6a06861910
   RCTAEPUserProfile: 799d618ffbbfc389175c8a8cd5afcc36d852709a
@@ -2531,7 +2548,6 @@ SPEC CHECKSUMS:
   RCTTypeSafety: abdf2eaed5501a52f2000de668ccfc60b78c3b27
   React: 1b1536b9099195944034e65b1830f463caaa8390
   React-callinvoker: 6dff6d17d1d6cc8fdf85468a649bafed473c65f5
-  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 39ee05b5798296f433dd3c3624c57a187c1510e3
   React-Core-prebuilt: 0eb00afc411cea82c86a1a369b68da88299926f0
   React-CoreModules: e78bfd2617075bc0e50c689df4a29232bd72ad82
@@ -2605,6 +2621,6 @@ SPEC CHECKSUMS:
   RNWorklets: 4dba1eb7cbfc3e8db49e5cce18a1a471fd2ed696
   Yoga: a6fdd7fe90a3d33fb1638cf609f26cb0400a12ad
 
-PODFILE CHECKSUM: a41e57d372ea045697537da4a369f78630806783
+PODFILE CHECKSUM: 48396176f4991c9e063313426b741c27c8d42ceb
 
 COCOAPODS: 1.16.2
