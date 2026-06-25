@@ -90,13 +90,13 @@ __metadata:
 
 "@adobe/react-native-aepoptimize@file:../../packages/optimize::locator=aepsampleapp%40workspace%3A.":
   version: 7.1.1
-  resolution: "@adobe/react-native-aepoptimize@file:../../packages/optimize#../../packages/optimize::hash=9bc250&locator=aepsampleapp%40workspace%3A."
+  resolution: "@adobe/react-native-aepoptimize@file:../../packages/optimize#../../packages/optimize::hash=2243db&locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedge": ^7.0.0
     "@adobe/react-native-aepedgeidentity": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/c4883af770ddcd5b6198087805d92683b52404fcfd858f088ffe9f0987525d9654d30b7bcf4a4497a92c03e1a804e3400040395bfba24d3a046a46cbf5794dba
+  checksum: 10/a9c65ef12ba3ccdb943079d3208d4fac4405662c08c40b7af812ae0b2f99931c4c4896c390c41ed6e4816f3fe71e065405d5ca09df302da1a6bea5e13efda707
   languageName: node
   linkType: hard
 
