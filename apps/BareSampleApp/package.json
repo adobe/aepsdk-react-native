@@ -27,7 +27,7 @@
     "@adobe/react-native-aepedgeconsent": "^7.0.0",
     "@adobe/react-native-aepedgeidentity": "^7.0.0",
     "@adobe/react-native-aepmessaging": "^7.4.0",
-    "@adobe/react-native-aepoptimize": "file:../../packages/optimize",
+    "@adobe/react-native-aepoptimize": "portal:../../packages/optimize",
     "@adobe/react-native-aepplaces": "^7.0.1",
     "@adobe/react-native-aeptarget": "^7.0.0",
     "@adobe/react-native-aepuserprofile": "^7.0.0",

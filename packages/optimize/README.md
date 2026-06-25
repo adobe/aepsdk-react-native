@@ -44,6 +44,56 @@ To initialize the SDK, use the following methods:
 
 Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
+## React Native New Architecture (Turbo Module)
+
+`@adobe/react-native-aepoptimize` supports both the **Turbo Module** path (Codegen `NativeAEPOptimizeSpec`, JSI events) and an **interop** path (bridge / `RCTEventEmitter`) for apps that have not fully migrated native call sites.
+
+| Platform | Turbo (default) | Interop |
+| :--- | :--- | :--- |
+| **iOS** | `USE_INTEROP_ROOT=0` at `pod install` (default) | `USE_INTEROP_ROOT=1 pod install` |
+| **Android (new arch)** | `USE_INTEROP_ROOT=false` in the app `gradle.properties` (default) | `USE_INTEROP_ROOT=true` |
+| **Android (old arch)** | Bridge module always; `USE_INTEROP_ROOT` only affects `BuildConfig` | Primary path on RN 0.76 |
+
+**iOS** — set the env var when installing pods:
+
+```bash
+# Turbo Module (RN 0.84+, recommended when New Architecture is enabled)
+USE_INTEROP_ROOT=0 pod install
+
+# Interop / bridge events (RN 0.76 legacy bridge, or interop testing)
+USE_INTEROP_ROOT=1 pod install
+```
+
+**Android (new architecture)** — override the optimize package `BuildConfig` from the app root `build.gradle` (see [AEPSampleApp](../../apps/AEPSampleApp/android/build.gradle) for a working example):
+
+```gradle
+def optimizeUseInteropRoot = findProperty("USE_INTEROP_ROOT") ?: "false"
+subprojects { subproject ->
+    subproject.afterEvaluate {
+        if (subproject.name == "adobe_react-native-aepoptimize") {
+            subproject.android {
+                defaultConfig {
+                    buildConfigField "boolean", "USE_INTEROP_ROOT", optimizeUseInteropRoot
+                }
+            }
+        }
+    }
+}
+```
+
+Then toggle `USE_INTEROP_ROOT=true|false` in `android/gradle.properties`.
+
+### Validation matrix (June 2026)
+
+Eight Optimize smoke scenarios (extension version, proposition update/listener/callback, get/clear cache, display/tap offer, batch display) were run across sample apps. All **80** executions passed (**10** architecture/mode cells × **8** tests).
+
+| Sample app | React Native | Cells exercised |
+| :--- | :--- | :--- |
+| [BareSampleApp](../../apps/BareSampleApp) | 0.76 | iOS old/new × interop; iOS new turbo; Android old/new × interop; Android new turbo |
+| [AEPSampleApp](../../apps/AEPSampleApp) | 0.85 | iOS/Android new arch × interop and turbo |
+
+Use each app's `yarn build:matrix:list` and `yarn build:*` scripts (see sample app READMEs) to reproduce a cell locally. Optimize API demos live under **Optimize** in the app drawer (`extensions/OptimizeView.tsx`).
+
 ### Importing the extension:
 
 ```typescript

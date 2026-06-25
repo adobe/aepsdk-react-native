@@ -60,7 +60,7 @@ Options:
   -i, --interop true|false          USE_INTEROP_ROOT (default: false = turbo)
   -c, --clean none|light|full       Clean level (default: light)
       --sync                        yarn install before build
-      --link-optimize               use file:../../packages/optimize + prepare (monorepo local dev)
+      --link-optimize               use portal:../../packages/optimize + prepare (monorepo local dev)
       --run                         Install, launch, connect Metro (default for yarn build:* scripts)
       --build-only                  Build only, no install/Metro
       --no-metro                    With --run, do not auto-start Metro
@@ -202,12 +202,12 @@ apply_config() {
 }
 
 link_local_optimize() {
-  log "Linking @adobe/react-native-aepoptimize → file:../../packages/optimize"
+  log "Linking @adobe/react-native-aepoptimize → portal:../../packages/optimize"
   node -e "
     const fs = require('fs');
     const p = process.argv[1];
     const pkg = JSON.parse(fs.readFileSync(p, 'utf8'));
-    pkg.dependencies['@adobe/react-native-aepoptimize'] = 'file:../../packages/optimize';
+    pkg.dependencies['@adobe/react-native-aepoptimize'] = 'portal:../../packages/optimize';
     fs.writeFileSync(p, JSON.stringify(pkg, null, 2) + '\n');
   " "$APP_DIR/package.json"
 }

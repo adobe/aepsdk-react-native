@@ -88,17 +88,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@adobe/react-native-aepoptimize@file:../../packages/optimize::locator=baresampleapp%40workspace%3A.":
-  version: 7.1.1
-  resolution: "@adobe/react-native-aepoptimize@file:../../packages/optimize#../../packages/optimize::hash=9bc250&locator=baresampleapp%40workspace%3A."
+"@adobe/react-native-aepoptimize@portal:../../packages/optimize::locator=baresampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepoptimize@portal:../../packages/optimize::locator=baresampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedge": ^7.0.0
     "@adobe/react-native-aepedgeidentity": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/c4883af770ddcd5b6198087805d92683b52404fcfd858f088ffe9f0987525d9654d30b7bcf4a4497a92c03e1a804e3400040395bfba24d3a046a46cbf5794dba
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@adobe/react-native-aepplaces@npm:^7.0.1":
   version: 7.0.1
@@ -3647,7 +3646,7 @@ __metadata:
     "@adobe/react-native-aepedgeconsent": "npm:^7.0.0"
     "@adobe/react-native-aepedgeidentity": "npm:^7.0.0"
     "@adobe/react-native-aepmessaging": "npm:^7.4.0"
-    "@adobe/react-native-aepoptimize": "file:../../packages/optimize"
+    "@adobe/react-native-aepoptimize": "portal:../../packages/optimize"
     "@adobe/react-native-aepplaces": "npm:^7.0.1"
     "@adobe/react-native-aeptarget": "npm:^7.0.0"
     "@adobe/react-native-aepuserprofile": "npm:^7.0.0"
