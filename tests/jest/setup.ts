@@ -17,6 +17,38 @@ governing permissions and limitations under the License.
 import * as ReactNative from 'react-native';
 
 jest.doMock('react-native', () => {
+  const aepOptimize = {
+    extensionVersion: jest.fn(
+      () => new Promise((resolve) => resolve(''))
+    ),
+    onPropositionsUpdate: jest.fn(),
+    onPropositionsUpdated: jest.fn().mockReturnValue({ remove: jest.fn() }),
+    clearCachedPropositions: jest.fn(),
+    getPropositions: jest.fn(
+      () =>
+        new Promise((resolve) => {
+          let map = new Map();
+          resolve(map);
+        })
+    ),
+    updatePropositions: jest.fn(),
+    offerDisplayed: jest.fn(),
+    offerTapped: jest.fn(),
+    generateDisplayInteractionXdm: jest.fn(
+      () => new Promise((resolve) => resolve(new Map()))
+    ),
+    generateTapInteractionXdm: jest.fn(
+      () => new Promise((resolve) => resolve(new Map()))
+    ),
+    generateReferenceXdm: jest.fn(
+      () => new Promise((resolve) => resolve(new Map()))
+    ),
+    multipleOffersDisplayed: jest.fn(),
+    multipleOffersGenerateDisplayInteractionXdm: jest.fn(
+      () => new Promise((resolve) => resolve(new Map()))
+    )
+  };
+
   return Object.setPrototypeOf(
     {
       NativeModules: {
@@ -166,37 +198,8 @@ jest.doMock('react-native', () => {
           trackContentCardDisplay: jest.fn(),
           trackContentCardInteraction: jest.fn()
         },
-        AEPOptimize: {
-          extensionVersion: jest.fn(
-            () => new Promise((resolve) => resolve(''))
-          ),
-          onPropositionsUpdate: jest.fn(),
-          onPropositionsUpdated: jest.fn().mockReturnValue({ remove: jest.fn() }),
-          clearCachedPropositions: jest.fn(),
-          getPropositions: jest.fn(
-            () =>
-              new Promise((resolve) => {
-                let map = new Map();
-                resolve(map);
-              })
-          ),
-          updatePropositions: jest.fn(),
-          offerDisplayed: jest.fn(),
-          offerTapped: jest.fn(),
-          generateDisplayInteractionXdm: jest.fn(
-            () => new Promise((resolve) => resolve(new Map()))
-          ),
-          generateTapInteractionXdm: jest.fn(
-            () => new Promise((resolve) => resolve(new Map()))
-          ),
-          generateReferenceXdm: jest.fn(
-            () => new Promise((resolve) => resolve(new Map()))
-          ),
-          multipleOffersDisplayed: jest.fn(),
-          multipleOffersGenerateDisplayInteractionXdm: jest.fn(
-            () => new Promise((resolve) => resolve(new Map()))
-          )
-        },
+        AEPOptimize: aepOptimize,
+        NativeAEPOptimize: aepOptimize,
         AEPTarget: {
           extensionVersion: jest.fn(
             () => new Promise((resolve) => resolve(''))

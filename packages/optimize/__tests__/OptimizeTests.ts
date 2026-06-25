@@ -10,12 +10,10 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-// Map the TurboModule to the same mock object as NativeModules.AEPOptimize so that
-// existing jest.spyOn(NativeModules.AEPOptimize, ...) calls continue to fire when
-// Optimize.ts routes calls through NativeAEPOptimize (TurboModule path).
+// Route TurboModule resolver to the shared Optimize mock (NativeAEPOptimize + legacy AEPOptimize).
 jest.mock('../src/NativeAEPOptimize', () => {
   const rn = jest.requireMock('react-native');
-  return { __esModule: true, default: rn.NativeModules.AEPOptimize };
+  return { __esModule: true, default: rn.NativeModules.NativeAEPOptimize };
 });
 
 import { NativeModules } from 'react-native';
