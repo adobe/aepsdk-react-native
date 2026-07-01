@@ -44,7 +44,7 @@ yarn test
 
 ## Optimize extension — manual validation (sample apps)
 
-Beyond Jest, Optimize is validated on devices/simulators through **BareSampleApp** (RN 0.76, old + new architecture) and **AEPSampleApp** (RN 0.85, new architecture only). Each app ships `scripts/build-matrix.sh` to build turbo vs interop cells without hand-editing native config.
+Beyond Jest, Optimize is validated on devices/simulators through **BareSampleApp** (RN 0.76, old + new architecture) and **AEPSampleApp** (RN 0.85, new architecture only). Each app ships `scripts/build-matrix.sh` to build turbo vs bridge cells without hand-editing native config. On iOS new arch, `USE_INTEROP_ROOT` is compile parity only (same SpecBase turbo binary); Android new arch still switches bridge vs turbo at runtime.
 
 | App | Matrix entry | Docs |
 | :--- | :--- | :--- |

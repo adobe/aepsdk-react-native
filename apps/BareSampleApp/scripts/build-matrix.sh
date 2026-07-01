@@ -2,7 +2,7 @@
 #
 # BareSampleApp — build matrix helper (RN 0.76)
 #
-# Configures new/old arch + USE_INTEROP_ROOT (Optimize turbo vs interop) and
+# Configures new/old arch + USE_INTEROP_ROOT (Optimize Android turbo vs bridge; iOS bridge on old arch only) and
 # runs iOS and/or Android builds. Supports incremental, light, and full cleans.
 #
 # Examples:
@@ -63,8 +63,9 @@ Options:
   -p, --platform ios|android|both   Platform to build (default: both)
   -a, --arch new|old                New Architecture on/off (default: new)
   -i, --interop true|false          USE_INTEROP_ROOT for @adobe/react-native-aepoptimize
-                                    true  = RCTEventEmitter / bridge interop
-                                    false = Turbo SpecBase path (default)
+                                    iOS old arch: true = RCTEventEmitter bridge
+                                    iOS new arch: no runtime path change (compile parity only)
+                                    Android new arch: true = bridge module, false = turbo
   -c, --clean none|light|full       Clean level (default: light)
                                     none  = incremental build only
                                     light = invalidate autolinking + pod install / gradle
@@ -73,9 +74,9 @@ Options:
       --run                         Launch app on simulator/device after build
       --build-only                  Build only, do not launch (default)
       --preset <name>               Shortcut for common cells (overrides -p -a -i):
-                                    ios-old-interop      iOS old arch + interop
-                                    ios-new-interop      iOS new arch + interop
-                                    ios-new-turbo        iOS new arch + turbo
+                                    ios-old-interop      iOS old arch + interop (classic bridge)
+                                    ios-new-interop      iOS new arch + USE_INTEROP_ROOT=1 (compile parity; same turbo binary as ios-new-turbo)
+                                    ios-new-turbo        iOS new arch + turbo (primary new-arch iOS cell)
                                     android-old-interop  Android old arch + interop (primary)
                                     android-old-bridge   Android old arch + turbo flag off*
                                     android-new-interop  Android new arch + interop
@@ -95,10 +96,12 @@ iOS pod install env:
   USE_INTEROP_ROOT=0|1
 
 Recommended cells (RN 0.76):
-  iOS     old + interop true   — primary iOS 0.76 bridge path
-  iOS     new + interop false  — turbo path (recommended new arch)
+  iOS     old + interop true   — only true iOS classic-bridge path (RCTEventEmitter)
+  iOS     new + interop false  — primary new-arch iOS cell (SpecBase + getTurboModule:)
+  iOS     new + interop true   — optional compile-flag parity check (same runtime as new+turbo)
   Android old + interop true   — primary Android 0.76 path (always bridge module)
   Android new + interop false  — turbo NativeAEPOptimizeModule
+  Android new + interop true   — bridge RCTAEPOptimizeModule on new arch
   iOS     old + interop false  — NOT supported (methods not exported)
 
 EOF
@@ -188,22 +191,23 @@ needs_android() {
 
 print_matrix() {
   cat <<'EOF'
-BareSampleApp build matrix — 4 arch×interop cells (each platform):
+BareSampleApp build matrix — arch×interop cells:
 
-  # | Arch | Interop | Optimize USE_INTEROP | iOS native root        | Android native root
-  --|------|---------|----------------------|------------------------|-----------------------------
-  1 | old  | true    | true                 | RCTEventEmitter bridge | RCTAEPOptimizeModule (bridge)
-  2 | old  | false   | false                | SpecBase (broken)      | RCTAEPOptimizeModule (bridge)*
-  3 | new  | true    | true                 | RCTEventEmitter+spec   | RCTAEPOptimizeModule (bridge)
-  4 | new  | false   | false                | SpecBase turbo         | NativeAEPOptimizeModule (turbo)
+  # | Arch | Interop | USE_INTEROP | iOS native root (compiled)     | Android native root
+  --|------|---------|-------------|--------------------------------|-----------------------------
+  1 | old  | true    | true        | RCTEventEmitter bridge         | RCTAEPOptimizeModule (bridge)
+  2 | old  | false   | false       | SpecBase (broken smoke cell)   | RCTAEPOptimizeModule (bridge)*
+  3 | new  | true    | true        | SpecBase turbo (parity w/ #4)  | RCTAEPOptimizeModule (bridge)
+  4 | new  | false   | false       | SpecBase turbo (primary iOS)   | NativeAEPOptimizeModule (turbo)
 
-  * Android old arch always loads RCTAEPOptimizeModule regardless of USE_INTEROP_ROOT;
-    the flag still updates BuildConfig for parity with iOS test cells.
+  * Android old arch always loads RCTAEPOptimizeModule regardless of USE_INTEROP_ROOT.
+  iOS new arch rows 3 and 4 compile to the same SpecBase + getTurboModule: binary; row 3 is a
+  compile-flag parity check only (RCT_EXPORT_METHOD vs protocol selectors), not RN interop layer.
 
 Presets:
-  ios-old-interop       android-old-interop (primary 0.76 cells)
+  ios-old-interop       android-old-interop (primary 0.76 bridge cells)
   ios-new-turbo         android-new-turbo     (primary new-arch cells)
-  ios-new-interop       android-new-interop   (interop-on-new-arch smoke tests)
+  ios-new-interop       android-new-interop   (Android bridge on new arch; iOS compile parity)
   android-old-bridge    old Android + USE_INTEROP_ROOT=false
   both-new-turbo        both platforms, new arch turbo
 

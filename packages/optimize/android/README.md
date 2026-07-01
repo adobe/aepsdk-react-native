@@ -1,5 +1,7 @@
 # Android — `@adobe/react-native-aepoptimize`
 
+> **iOS note:** On iOS **new arch**, `USE_INTEROP_ROOT` does not switch runtime paths — both flag values compile to `NativeAEPOptimizeSpecBase` + `getTurboModule:`. Only **iOS old arch + `USE_INTEROP_ROOT=1`** selects the classic `RCTEventEmitter` bridge. See [Optimize README](../README.md#react-native-new-architecture-turbo-module).
+
 ## Module layout
 
 | New Architecture | Native entry | Notes |
@@ -37,6 +39,10 @@ USE_INTEROP_ROOT=false
 ```
 
 Set `USE_INTEROP_ROOT=true` for the interop/bridge event path. [BareSampleApp](../../../apps/BareSampleApp/scripts/build-matrix.sh) and [AEPSampleApp](../../../apps/AEPSampleApp/scripts/build-matrix.sh) automate this toggle for smoke testing.
+
+## ProGuard / R8
+
+The turbo module (`NativeAEPOptimizeModule`) is loaded via `Class.forName` in `RCTAEPOptimizePackage` so old-arch builds can omit codegen sources. The library ships `consumer-rules.pro` via `consumerProguardFiles` so customer release builds with `minifyEnabled true` keep that class. No extra app-side rules are required.
 
 ## Local development
 

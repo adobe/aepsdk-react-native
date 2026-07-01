@@ -1,9 +1,12 @@
 require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
-# Build-time toggle — mirrors Android's buildConfigField "boolean", "USE_INTEROP_ROOT", "false"
-#   USE_INTEROP_ROOT=1 pod install  →  interop layer  (RN 0.76, RCTEventEmitter)
-#   USE_INTEROP_ROOT=0 (default)    →  Turbo Module   (RN 0.84+, SpecBase + JSI events)
+# Build-time toggle for RCTAEPOptimize.{h,mm} preprocessor branches.
+#   USE_INTEROP_ROOT=1 + RCT_NEW_ARCH_ENABLED=0  →  old-arch classic bridge (RCTEventEmitter)
+#   USE_INTEROP_ROOT=* + RCT_NEW_ARCH_ENABLED=1  →  new-arch turbo (NativeAEPOptimizeSpecBase; same binary for 0/1)
+#   USE_INTEROP_ROOT=0 + RCT_NEW_ARCH_ENABLED=0  →  old-arch SpecBase (unsupported smoke cell)
+# On iOS new arch, codegen + getTurboModule: always resolves as TurboModule — not RN's automatic interop layer.
+# Android: USE_INTEROP_ROOT still switches bridge vs turbo module at runtime on new arch.
 use_interop_root = ENV.key?('USE_INTEROP_ROOT') ? ENV['USE_INTEROP_ROOT'].to_i : 0
 
 Pod::Spec.new do |s|

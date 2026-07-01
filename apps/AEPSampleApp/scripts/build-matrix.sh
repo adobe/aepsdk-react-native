@@ -2,7 +2,7 @@
 #
 # AEPSampleApp — new-arch build matrix (RN 0.85)
 #
-# New Architecture only. Toggles USE_INTEROP_ROOT (Optimize turbo vs interop).
+# New Architecture only. Toggles USE_INTEROP_ROOT (Android turbo vs bridge; iOS compile parity only).
 #
 # Examples:
 #   ./scripts/build-matrix.sh --preset ios-turbo -c full --sync --run
@@ -53,18 +53,20 @@ usage() {
   cat <<'EOF'
 Usage: build-matrix.sh [options]
 
-AEPSampleApp (RN 0.85) — New Architecture only. Interop true/false for Optimize.
+AEPSampleApp (RN 0.85) — New Architecture only. USE_INTEROP_ROOT: meaningful on Android; iOS compile parity only.
 
 Options:
   -p, --platform ios|android|both   Platform (default: both)
-  -i, --interop true|false          USE_INTEROP_ROOT (default: false = turbo)
+  -i, --interop true|false          USE_INTEROP_ROOT (default: false = turbo on Android)
+                                    iOS new arch: compile parity only — same SpecBase/turbo binary
+                                    Android new arch: true = bridge, false = NativeAEPOptimizeModule
   -c, --clean none|light|full       Clean level (default: light)
       --sync                        yarn install before build
       --link-optimize               use portal:../../packages/optimize + prepare (monorepo local dev)
       --run                         Install, launch, connect Metro (default for yarn build:* scripts)
       --build-only                  Build only, no install/Metro
       --no-metro                    With --run, do not auto-start Metro
-      --preset <name>                 ios-turbo | ios-interop
+      --preset <name>                 ios-turbo | ios-interop (compile parity)
                                       android-turbo | android-interop
                                       both-turbo | both-interop
       --list-matrix                 Show cells and exit
@@ -139,13 +141,16 @@ print_matrix() {
   cat <<'EOF'
 AEPSampleApp build matrix (RN 0.85 — new arch only):
 
-  # | Interop | USE_INTEROP | iOS path              | Android path
-  --|---------|-------------|-----------------------|---------------------------
-  1 | false   | 0 / false   | SpecBase turbo        | NativeAEPOptimizeModule
-  2 | true    | 1 / true    | RCTEventEmitter+spec  | RCTAEPOptimizeModule
+  # | Interop | USE_INTEROP | iOS path (compiled)              | Android path
+  --|---------|-------------|----------------------------------|---------------------------
+  1 | false   | 0 / false   | SpecBase turbo (primary iOS)     | NativeAEPOptimizeModule
+  2 | true    | 1 / true    | SpecBase turbo (compile parity)  | RCTAEPOptimizeModule
+
+  iOS rows 1 and 2 compile to the same SpecBase + getTurboModule: binary. Row 2 verifies
+  USE_INTEROP_ROOT=1 pod install still builds; it is not RN's automatic interop layer.
 
 Presets:
-  ios-turbo       ios-interop
+  ios-turbo       ios-interop (iOS compile parity)
   android-turbo   android-interop
   both-turbo      both-interop
 

@@ -13,12 +13,12 @@
 
 #if USE_INTEROP_ROOT
   #if RCT_NEW_ARCH_ENABLED
-    // RN 0.84+ interop (new arch): SpecBase + getTurboModule: — sendEventWithName: is dead
-    // when getTurboModule: exists (callableJSModules:nil). Use emitOnPropositionsUpdated:.
+    // New arch: same SpecBase + getTurboModule: as USE_INTEROP_ROOT=0 (compile parity only).
+    // RN interop layer applies to non-codegen modules; this module always resolves as TurboModule.
     #import <NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
     @interface RCTAEPOptimize : NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>
   #else
-    // RN 0.76 old arch: pure classic bridge module (RCT_EXPORT_METHOD + RCTEventEmitter).
+    // Old arch only: classic bridge (RCT_EXPORT_METHOD + RCTEventEmitter events).
     #import <React/RCTEventEmitter.h>
     @interface RCTAEPOptimize : RCTEventEmitter
   #endif
