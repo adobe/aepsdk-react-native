@@ -44,8 +44,14 @@ function isClassicBridge(): boolean {
 }
 
 /**
- * RN 0.76 old arch: no __turboModuleProxy — NativeModules is the only working surface.
- * RN 0.85+ / new arch: turbo first, then bridge fallback.
+ * Resolve NativeAEPOptimize across bridgeless vs classic-bridge runtimes.
+ *
+ * Uses undocumented RN internals (`global.RN$Bridgeless`, TurboModuleRegistry vs
+ * NativeModules registration). Re-validate on every RN minor bump.
+ *
+ * Validated (June 2026 smoke matrix):
+ * - BareSampleApp RN 0.76 — old arch (NativeModules) and new arch (TurboModuleRegistry)
+ * - AEPSampleApp RN 0.85 — new arch / bridgeless (TurboModuleRegistry first, NativeModules fallback)
  */
 function resolveNativeAEPOptimize(): Spec {
   const bridge = NativeModules.NativeAEPOptimize as Spec | undefined;

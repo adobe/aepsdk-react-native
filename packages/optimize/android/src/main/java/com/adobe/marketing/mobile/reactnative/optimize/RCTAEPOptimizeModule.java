@@ -35,7 +35,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -308,10 +307,6 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     private void sendUpdatedPropositionsEvent(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-        final WritableMap writableMap = new WritableNativeMap();
-        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
-            writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
-        }
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("onPropositionsUpdate", writableMap);
+        RCTAEPOptimizeUtil.emitOnPropositionsUpdate(reactContext, decisionScopePropositionMap, false);
     }
 }
