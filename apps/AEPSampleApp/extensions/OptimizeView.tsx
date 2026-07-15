@@ -66,7 +66,7 @@ function SmokeButton({
 
 export default ({navigation}: any) => {
   const [version, setVersion] = useState('0.0.0');
-  const [customScopeInput, setCustomScopeInput] = useState('mboxAug');
+  const [customScopeInput, setCustomScopeInput] = useState('demoLoc3');
   const [textProposition, setTextProposition] = useState<Proposition>();
   const [imageProposition, setImageProposition] = useState<Proposition>();
   const [htmlProposition, setHtmlProposition] = useState<Proposition>();
@@ -96,13 +96,13 @@ export default ({navigation}: any) => {
   const decisionScopeJson = new DecisionScope(
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9',
   );
-  const decisionScopeTargetMbox = new DecisionScope(customScopeInput.trim() || 'mboxAug');
+  const decisionScopeTargetMbox = new DecisionScope(customScopeInput.trim() || 'demoLoc3');
 
   const decisionScopes = [
-    // decisionScopeText,
-    // decisionScopeImage,
-    // decisionScopeHtml,
-    // decisionScopeJson,
+    decisionScopeText,
+    decisionScopeImage,
+    decisionScopeHtml,
+    decisionScopeJson,
     decisionScopeTargetMbox,
   ];
 
@@ -182,8 +182,7 @@ export default ({navigation}: any) => {
   const getPropositions = async () => {
     const propositions: Map<string, Proposition> =
       await Optimize.getPropositions(decisionScopes);
-    console.log('get proposition', propositions);
-    console.log('get proposition iOS', propositions);
+    console.log(propositions);
     if (propositions) {
       setTextProposition(propositions.get(decisionScopeText.getName()));
       setImageProposition(propositions.get(decisionScopeImage.getName()));
@@ -202,14 +201,8 @@ export default ({navigation}: any) => {
     Optimize.onPropositionUpdate({
       call(propositions: Map<String, Proposition>) {
         if (!propositions) {
-          console.log("nothing ")
           return;
         }
-        console.log('i am here ', propositions);
-        console.log(
-          'onPropositionUpdate subscribe callback fired, scopes:',
-          propositions?.size ?? 0,
-        );
 
         // Defer state updates — RecyclerListView crashes if mutated during layout (RN 0.85/Fabric).
         requestAnimationFrame(() => {
@@ -452,11 +445,11 @@ export default ({navigation}: any) => {
         style={inputStyles.input}
         value={customScopeInput}
         onChangeText={setCustomScopeInput}
-        placeholder="e.g. mboxAug"
+        placeholder="e.g. demoLoc3"
         autoCapitalize="none"
         autoCorrect={false}
       />
-      <Text style={inputStyles.hint}>Active scope: {customScopeInput.trim() || 'mboxAug'}</Text>
+      <Text style={inputStyles.hint}>Active scope: {customScopeInput.trim() || 'demoLoc3'}</Text>
       <View style={inputStyles.divider} />
 
       <SmokeButton
