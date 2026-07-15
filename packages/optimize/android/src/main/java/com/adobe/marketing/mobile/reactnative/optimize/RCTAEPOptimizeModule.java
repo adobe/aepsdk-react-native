@@ -35,7 +35,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -51,6 +50,7 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     private final ReactApplicationContext reactContext;
     // Cache of <Proposition ID, Proposition>
     private final Map<String, OptimizeProposition> propositionCache = new ConcurrentHashMap<>();
+    private boolean propositionsUpdateListenerRegistered = false;
 
     public RCTAEPOptimizeModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -204,6 +204,11 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void onPropositionsUpdate() {
+        if (propositionsUpdateListenerRegistered) {
+            Log.d(TAG, "onPropositionsUpdate: AEP listener already registered, skipping duplicate registration.");
+            return;
+        }
+        propositionsUpdateListenerRegistered = true;
         Optimize.onPropositionsUpdate(new AdobeCallback<Map<DecisionScope, OptimizeProposition>>() {
             @Override
             public void call(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
@@ -302,10 +307,6 @@ public class RCTAEPOptimizeModule extends ReactContextBaseJavaModule {
     }
 
     private void sendUpdatedPropositionsEvent(final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap) {
-        final WritableMap writableMap = new WritableNativeMap();
-        for (final Map.Entry<DecisionScope, OptimizeProposition> entry : decisionScopePropositionMap.entrySet()) {
-            writableMap.putMap(entry.getKey().getName(), RCTAEPOptimizeUtil.convertPropositionToWritableMap(entry.getValue()));
-        }
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("onPropositionsUpdate", writableMap);
+        RCTAEPOptimizeUtil.emitOnPropositionsUpdate(reactContext, decisionScopePropositionMap, false);
     }
 }

@@ -5,7 +5,7 @@
  */
 
 import type { TurboModule, EventSubscription } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { NativeModules, TurboModuleRegistry } from 'react-native';
 
 export type PropositionsPayload = {
   propositions: Object;
@@ -32,10 +32,61 @@ export interface Spec extends TurboModule {
   generateReferenceXdm(propositionMap: Object): Promise<Object>;
   addListener(eventName: string): void;
   removeListeners(count: number): void;
-  // TurboModule event delivery — codegen generates emitOnPropositionsUpdated: (iOS / Android).
-  // Declared as an explicit function type because @types/react-native (0.66 era)
-  // predates the CodegenTypes namespace; functionally equivalent to CodegenTypes.EventEmitter<T>.
   readonly onPropositionsUpdated: (handler: (event: PropositionsPayload) => void) => EventSubscription;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPOptimize');
+function hasUpdatePropositions(mod: Spec | null | undefined): mod is Spec {
+  return mod != null && typeof mod.updatePropositions === 'function';
+}
+
+function isClassicBridge(): boolean {
+  return (global as { RN$Bridgeless?: boolean }).RN$Bridgeless !== true;
+}
+
+/**
+ * Resolve NativeAEPOptimize across bridgeless vs classic-bridge runtimes.
+ *
+ * Uses undocumented RN internals (`global.RN$Bridgeless`, TurboModuleRegistry vs
+ * NativeModules registration). Re-validate on every RN minor bump.
+ *
+ * Validated (June 2026 smoke matrix):
+ * - BareSampleApp RN 0.76 — old arch (NativeModules) and new arch (TurboModuleRegistry)
+ * - AEPSampleApp RN 0.85 — new arch / bridgeless (TurboModuleRegistry first, NativeModules fallback)
+ */
+function resolveNativeAEPOptimize(): Spec {
+  const bridge = NativeModules.NativeAEPOptimize as Spec | undefined;
+  if (isClassicBridge() && hasUpdatePropositions(bridge)) {
+    return bridge;
+  }
+  const turbo = TurboModuleRegistry.get<Spec>('NativeAEPOptimize');
+  if (hasUpdatePropositions(turbo)) {
+    return turbo;
+  }
+  if (hasUpdatePropositions(bridge)) {
+    return bridge;
+  }
+  return TurboModuleRegistry.getEnforcing<Spec>('NativeAEPOptimize');
+}
+
+let cachedNative: Spec | undefined;
+
+function getNativeAEPOptimize(): Spec {
+  if (!cachedNative || !hasUpdatePropositions(cachedNative)) {
+    cachedNative = resolveNativeAEPOptimize();
+  }
+  return cachedNative;
+}
+
+const NativeAEPOptimize: Spec = new Proxy({} as Spec, {
+  get(_target, prop) {
+    const mod = getNativeAEPOptimize();
+    const value = (mod as unknown as Record<string | symbol, unknown>)[prop];
+    // Codegen EventEmitter must not be .bind()-wrapped — breaks JSI subscription on RN 0.85.
+    if (prop === 'onPropositionsUpdated') {
+      return value;
+    }
+    return typeof value === 'function' ? (value as Function).bind(mod) : value;
+  },
+});
+
+export default NativeAEPOptimize;

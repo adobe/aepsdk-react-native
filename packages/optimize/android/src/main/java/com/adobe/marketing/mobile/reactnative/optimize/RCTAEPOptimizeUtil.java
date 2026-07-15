@@ -376,10 +376,16 @@ class RCTAEPOptimizeUtil {
             final ReactApplicationContext context,
             final Map<DecisionScope, OptimizeProposition> decisionScopePropositionMap,
             final boolean checkActiveInstance) {
-        WritableMap writableMap = createCallbackResponse(decisionScopePropositionMap);
-        if (!checkActiveInstance || context.hasActiveReactInstance()) {
+        if (checkActiveInstance && !context.hasActiveReactInstance()) {
+            return;
+        }
+        try {
+            WritableMap writableMap = createCallbackResponse(decisionScopePropositionMap);
             context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                     .emit("onPropositionsUpdate", writableMap);
+        } catch (RuntimeException e) {
+            // AEP callbacks may run on a background thread after teardown; getJSModule throws if no live runtime.
+            Log.w(TAG, "emitOnPropositionsUpdate skipped: React runtime not available", e);
         }
     }
 }

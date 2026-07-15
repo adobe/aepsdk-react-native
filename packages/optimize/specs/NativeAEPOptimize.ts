@@ -4,7 +4,8 @@
  * you may not use this file except in compliance with the License.
  */
 
-import type { TurboModule, CodegenTypes } from 'react-native';
+import type { TurboModule } from 'react-native';
+import type { EventEmitter } from 'react-native/Libraries/Types/CodegenTypes';
 import { TurboModuleRegistry } from 'react-native';
 
 export type PropositionsPayload = {
@@ -36,7 +37,7 @@ export interface Spec extends TurboModule {
   // TurboModule event support (codegen generates emitOnPropositionsUpdated:)
   // Different name from the legacy sendEventWithName:@"onPropositionsUpdate"
   // to avoid conflict between bridge and JSI event channels.
-  readonly onPropositionsUpdated: CodegenTypes.EventEmitter<PropositionsPayload>;
+  readonly onPropositionsUpdated: EventEmitter<PropositionsPayload>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPOptimize');

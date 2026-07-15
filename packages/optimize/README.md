@@ -44,6 +44,59 @@ To initialize the SDK, use the following methods:
 
 Refer to the root [Readme](https://github.com/adobe/aepsdk-react-native/blob/main/README.md) for more information about the SDK setup.
 
+## React Native New Architecture (Turbo Module)
+
+`@adobe/react-native-aepoptimize` supports a **Turbo Module** path (Codegen `NativeAEPOptimizeSpec`, JSI events) and, on **Android new arch** and **iOS old arch**, a **bridge/interop** path. Platform semantics differ — do not assume `USE_INTEROP_ROOT` toggles the same native path on both platforms.
+
+| Platform | Turbo (default) | Interop / bridge |
+| :--- | :--- | :--- |
+| **iOS (new arch)** | `USE_INTEROP_ROOT=0` at `pod install` | **Same SpecBase + turbo binary as default** — compile-flag parity only (`RCT_EXPORT_METHOD` vs protocol selectors); not RN's interop layer |
+| **iOS (old arch)** | Not supported for smoke | `USE_INTEROP_ROOT=1 pod install` → `RCTEventEmitter` classic bridge (only true iOS interop path) |
+| **Android (new arch)** | `USE_INTEROP_ROOT=false` in app `gradle.properties` | `USE_INTEROP_ROOT=true` → `RCTAEPOptimizeModule` (bridge) vs `NativeAEPOptimizeModule` (turbo) |
+| **Android (old arch)** | Bridge module always; flag affects `BuildConfig` only | Primary path on RN 0.76 |
+
+**iOS** — set the env var when installing pods:
+
+```bash
+# New Architecture (RN 0.84+) — turbo path (default)
+USE_INTEROP_ROOT=0 pod install
+
+# Old Architecture (RN 0.76) — classic bridge only; on new arch this flag does not select a different runtime path
+USE_INTEROP_ROOT=1 pod install
+```
+
+**Android (new architecture)** — override the optimize package `BuildConfig` from the app root `build.gradle` (see [AEPSampleApp](../../apps/AEPSampleApp/android/build.gradle) for a working example):
+
+```gradle
+def optimizeUseInteropRoot = findProperty("USE_INTEROP_ROOT") ?: "false"
+subprojects { subproject ->
+    subproject.afterEvaluate {
+        if (subproject.name == "adobe_react-native-aepoptimize") {
+            subproject.android {
+                defaultConfig {
+                    buildConfigField "boolean", "USE_INTEROP_ROOT", optimizeUseInteropRoot
+                }
+            }
+        }
+    }
+}
+```
+
+Then toggle `USE_INTEROP_ROOT=true|false` in `android/gradle.properties`.
+
+**ProGuard / R8 (release builds):** The library ships `android/consumer-rules.pro` via `consumerProguardFiles` so customer apps with `minifyEnabled true` retain `NativeAEPOptimizeModule` when loaded via reflection. See [android/README.md](android/README.md).
+
+### Validation matrix (June 2026)
+
+Eight Optimize smoke scenarios (extension version, proposition update/listener/callback, get/clear cache, display/tap offer, batch display) were run across sample apps. All **80** executions passed (**10** architecture/mode cells × **8** tests).
+
+| Sample app | React Native | Cells exercised |
+| :--- | :--- | :--- |
+| [BareSampleApp](../../apps/BareSampleApp) | 0.76 | iOS old interop (bridge); iOS new turbo; iOS new interop (compile parity); Android old/new × interop/turbo |
+| [AEPSampleApp](../../apps/AEPSampleApp) | 0.85 | iOS new turbo; iOS new interop (compile parity); Android new interop/turbo |
+
+Use each app's `yarn build:matrix:list` and `yarn build:*` scripts (see sample app READMEs) to reproduce a cell locally. Optimize API demos live under **Optimize** in the app drawer (`extensions/OptimizeView.tsx`).
+
 ### Importing the extension:
 
 ```typescript

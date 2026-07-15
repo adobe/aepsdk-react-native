@@ -5,6 +5,14 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "build:matrix": "bash scripts/build-matrix.sh",
+    "build:matrix:list": "bash scripts/build-matrix.sh --list-matrix",
+    "build:ios:turbo": "bash scripts/build-matrix.sh --preset ios-turbo -c full --sync --run",
+    "build:ios:interop": "bash scripts/build-matrix.sh --preset ios-interop -c full --sync --run",
+    "build:android:turbo": "bash scripts/build-matrix.sh --preset android-turbo -c full --sync --run",
+    "build:android:interop": "bash scripts/build-matrix.sh --preset android-interop -c full --sync --run",
+    "build:both:turbo": "bash scripts/build-matrix.sh --preset both-turbo -c full --sync --run",
+    "build:both:interop": "bash scripts/build-matrix.sh --preset both-interop -c full --sync --run",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest"
@@ -18,7 +26,7 @@
     "@adobe/react-native-aepedgeconsent": "^7.0.0",
     "@adobe/react-native-aepedgeidentity": "^7.0.0",
     "@adobe/react-native-aepmessaging": "^7.4.0",
-    "@adobe/react-native-aepoptimize": "^7.1.1",
+    "@adobe/react-native-aepoptimize": "portal:../../packages/optimize",
     "@adobe/react-native-aepplaces": "^7.0.1",
     "@adobe/react-native-aeptarget": "^7.0.0",
     "@adobe/react-native-aepuserprofile": "^7.0.0",

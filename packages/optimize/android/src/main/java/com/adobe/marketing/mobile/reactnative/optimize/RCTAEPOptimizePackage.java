@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.facebook.react.BaseReactPackage;
+import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.model.ReactModuleInfo;
@@ -29,7 +30,7 @@ import com.facebook.react.module.model.ReactModuleInfoProvider;
  * USE_INTEROP_ROOT true  -> RCTAEPOptimizeModule (classic bridge); isTurboModule = false.
  * USE_INTEROP_ROOT false -> NativeAEPOptimizeModule (Turbo);       isTurboModule = true.
  */
-public class RCTAEPOptimizePackage extends BaseReactPackage {
+public class RCTAEPOptimizePackage extends BaseReactPackage implements ReactPackage {
 
     private static final String MODULE_NAME = "NativeAEPOptimize";
 
@@ -38,9 +39,23 @@ public class RCTAEPOptimizePackage extends BaseReactPackage {
         if (!MODULE_NAME.equals(name)) {
             return null;
         }
-        return BuildConfig.USE_INTEROP_ROOT
-                ? new RCTAEPOptimizeModule(reactContext)
-                : new NativeAEPOptimizeModule(reactContext);
+        if (BuildConfig.USE_INTEROP_ROOT || !BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+            return new RCTAEPOptimizeModule(reactContext);
+        }
+        return createTurboModule(reactContext);
+    }
+
+    /** Reflection avoids compile-time dep on NativeAEPOptimizeModule when old arch omits codegen sources. */
+    private static NativeModule createTurboModule(ReactApplicationContext reactContext) {
+        try {
+            Class<?> cls = Class.forName(
+                    "com.adobe.marketing.mobile.reactnative.optimize.NativeAEPOptimizeModule");
+            return (NativeModule) cls.getConstructor(ReactApplicationContext.class).newInstance(reactContext);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(
+                    "NativeAEPOptimizeModule not available — enable New Architecture or set USE_INTEROP_ROOT=true",
+                    e);
+        }
     }
 
     @Override
@@ -49,7 +64,8 @@ public class RCTAEPOptimizePackage extends BaseReactPackage {
             @Override
             public Map<String, ReactModuleInfo> getReactModuleInfos() {
                 Map<String, ReactModuleInfo> map = new HashMap<>();
-                boolean isTurboModule = !BuildConfig.USE_INTEROP_ROOT;
+                boolean isTurboModule =
+                        BuildConfig.IS_NEW_ARCHITECTURE_ENABLED && !BuildConfig.USE_INTEROP_ROOT;
                 map.put(MODULE_NAME, new ReactModuleInfo(
                         MODULE_NAME,
                         MODULE_NAME,
