@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Optimize,
   DecisionScope,
@@ -24,9 +24,10 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Dimensions,
+  useWindowDimensions,
   TextInput,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
 
@@ -47,6 +48,22 @@ const defaultPropositions = {
   jsonProposition: '{"Type": "JSON place holder"}',
 };
 
+function SmokeButton({
+  id,
+  title,
+  onPress,
+}: {
+  id: string;
+  title: string;
+  onPress: () => void;
+}) {
+  return (
+    <View style={{margin: 5}}>
+      <Button testID={id} accessibilityLabel={id} title={title} onPress={onPress} />
+    </View>
+  );
+}
+
 export default ({navigation}: any) => {
   const [version, setVersion] = useState('0.0.0');
   const [customScopeInput, setCustomScopeInput] = useState('demoLoc3');
@@ -55,6 +72,17 @@ export default ({navigation}: any) => {
   const [htmlProposition, setHtmlProposition] = useState<Proposition>();
   const [jsonProposition, setJsonProposition] = useState<Proposition>();
   const [targetProposition, setTargetProposition] = useState<Proposition | undefined>();
+  const [listKey, setListKey] = useState(0);
+
+  const dataProvider = useMemo(
+    () =>
+      new DataProvider((data1, data2) => {
+        return data1 !== data2;
+      }),
+    [],
+  );
+
+  const { width } = useWindowDimensions();
 
   const decisionScopeText = new DecisionScope(
     'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9',
@@ -115,6 +143,7 @@ export default ({navigation}: any) => {
   const tapTargetOffer = () => {
     if (targetProposition?.items?.[0]) {
       targetProposition.items[0].tapped(targetProposition);
+      console.log('Offer is tapped');
     } else {
       console.log('No target proposition cached — run Get Propositions first');
     }
@@ -171,13 +200,34 @@ export default ({navigation}: any) => {
   const onPropositionUpdate = () =>
     Optimize.onPropositionUpdate({
       call(propositions: Map<String, Proposition>) {
-        if (propositions) {
-          setTextProposition(propositions.get(decisionScopeText.getName()));
-          setImageProposition(propositions.get(decisionScopeImage.getName()));
-          setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
-          setJsonProposition(propositions.get(decisionScopeJson.getName()));
-          setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+        if (!propositions) {
+          return;
         }
+
+        // Defer state updates — RecyclerListView crashes if mutated during layout (RN 0.85/Fabric).
+        requestAnimationFrame(() => {
+          const target = propositions.get(decisionScopeTargetMbox.getName());
+          if (target) {
+            setTargetProposition(target);
+          }
+          const text = propositions.get(decisionScopeText.getName());
+          if (text) {
+            setTextProposition(text);
+          }
+          const image = propositions.get(decisionScopeImage.getName());
+          if (image) {
+            setImageProposition(image);
+          }
+          const html = propositions.get(decisionScopeHtml.getName());
+          if (html) {
+            setHtmlProposition(html);
+          }
+          const json = propositions.get(decisionScopeJson.getName());
+          if (json) {
+            setJsonProposition(json);
+          }
+          setListKey((k) => k + 1);
+        });
       },
     });
 
@@ -213,11 +263,6 @@ export default ({navigation}: any) => {
     return <Text>Default Target Offer</Text>;
   };
 
-  let dataProvider = new DataProvider((data1, data2) => {
-    return data1 !== data2;
-  });
-
-  var {width} = Dimensions.get('window');
   const inputStyles = StyleSheet.create({
     label: {fontWeight: '600', marginTop: 8, marginBottom: 2, color: '#333', alignSelf: 'flex-start'},
     input: {borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, fontSize: 13, marginBottom: 2, backgroundColor: '#fff', width: width - 32},
@@ -225,34 +270,35 @@ export default ({navigation}: any) => {
     divider: {height: 1, backgroundColor: '#ddd', marginVertical: 8, width: width - 32},
   });
 
-  let layoutProvider = new LayoutProvider(
-    index => {
-      if (index % 2 === 0) {
-        //View type is for header
-        return ViewTypes.header;
-      } else {
-        //View type is for Content
-        return ViewTypes.content;
-      }
-    },
-    (type, dimen) => {
-      switch (type) {
-        case ViewTypes.header:
-          dimen.width = width;
-          dimen.height = 50;
-          break;
+  const layoutProvider = useMemo(
+    () =>
+      new LayoutProvider(
+        index => {
+          if (index % 2 === 0) {
+            return ViewTypes.header;
+          }
+          return ViewTypes.content;
+        },
+        (type, dimen) => {
+          switch (type) {
+            case ViewTypes.header:
+              dimen.width = width;
+              dimen.height = 50;
+              break;
 
-        case ViewTypes.content:
-          dimen.width = width;
-          dimen.height = 200;
-          break;
+            case ViewTypes.content:
+              dimen.width = width;
+              dimen.height = 200;
+              break;
 
-        default:
-          dimen.width = 0;
-          dimen.height = 0;
-          break;
-      }
-    },
+            default:
+              dimen.width = 0;
+              dimen.height = 0;
+              break;
+          }
+        },
+      ),
+    [width],
   );
 
   let rowRenderer = (type: any, data: any) => {
@@ -388,7 +434,9 @@ export default ({navigation}: any) => {
   };
 
   return (
-    <View style={{...styles.container, marginTop: 30}}>
+    <ScrollView
+      style={{flex: 1, backgroundColor: '#F5FCFF'}}
+      contentContainerStyle={{alignItems: 'center', paddingBottom: 24, marginTop: 30}}>
       <Button onPress={() => navigation.goBack()} title="Go to main page" />
       <Text style={styles.welcome}>Optimize</Text>
 
@@ -404,39 +452,51 @@ export default ({navigation}: any) => {
       <Text style={inputStyles.hint}>Active scope: {customScopeInput.trim() || 'demoLoc3'}</Text>
       <View style={inputStyles.divider} />
 
-      <View style={{margin: 5}}>
-        <Button title="Extension Version" onPress={optimizeExtensionVersion} />
-      </View>
-      <View style={{margin: 5}}>
-        <Button title="Update Propositions" onPress={updatePropositions} />
-      </View>
-      <View style={{margin: 5}}>
-        <Button title="Update Propositions (Callback)" onPress={updatePropositionsWithCallback} />
-      </View>
-      <View style={{margin: 5}}>
-        <Button title="Get Propositions" onPress={getPropositions} />
-      </View>
-      <View style={{margin: 5}}>
-        <Button title="Display Target Offer" onPress={displayTargetOffer} />
-      </View>
-      <View style={{margin: 5}}>
-        <Button title="Tap Target Offer" onPress={tapTargetOffer} />
-      </View>
-      <View style={{margin: 5}}>
-        <Button
-          title="Clear Cached Proposition"
-          onPress={clearCachedProposition}
-        />
-      </View>
-      <View style={{margin: 5}}>
-        <Button
-          title="Subscribe to Proposition Update"
-          onPress={onPropositionUpdate}
-        />
-      </View>
-      <View style={{margin: 5}}>
-        <Button title="Multiple Offers Displayed" onPress={multipleOffersDisplayed} />
-      </View>
+      <SmokeButton
+        id="smoke-extension-version"
+        title="Extension Version"
+        onPress={optimizeExtensionVersion}
+      />
+      <SmokeButton
+        id="smoke-subscribe-proposition-update"
+        title="Subscribe to Proposition Update"
+        onPress={onPropositionUpdate}
+      />
+      <SmokeButton
+        id="smoke-update-propositions"
+        title="Update Propositions"
+        onPress={updatePropositions}
+      />
+      <SmokeButton
+        id="smoke-update-propositions-callback"
+        title="Update Propositions (Callback)"
+        onPress={updatePropositionsWithCallback}
+      />
+      <SmokeButton
+        id="smoke-get-propositions"
+        title="Get Propositions"
+        onPress={getPropositions}
+      />
+      <SmokeButton
+        id="smoke-display-target-offer"
+        title="Display Target Offer"
+        onPress={displayTargetOffer}
+      />
+      <SmokeButton
+        id="smoke-tap-target-offer"
+        title="Tap Target Offer"
+        onPress={tapTargetOffer}
+      />
+      <SmokeButton
+        id="smoke-clear-cached-proposition"
+        title="Clear Cached Proposition"
+        onPress={clearCachedProposition}
+      />
+      <SmokeButton
+        id="smoke-multiple-offers-displayed"
+        title="Multiple Offers Displayed"
+        onPress={multipleOffersDisplayed}
+      />
       <View style={{margin: 5}}>
         <Button title="Multiple Offers Generate Display Interaction XDM" onPress={multipleOffersGenerateDisplayInteractionXdm} />
       </View>
@@ -444,13 +504,18 @@ export default ({navigation}: any) => {
         SDK Version:: {version}
       </Text>
       <Text style={styles.welcome}>Personalized Offers</Text>
-      <RecyclerListView
-        style={{width: width, height: 300}}
-        layoutProvider={layoutProvider}
-        dataProvider={getContent()}
-        rowRenderer={rowRenderer}
-        onVisibleIndicesChanged={indicesChangeHandler}
-      />
-    </View>
+      {width > 0 ? (
+        <View style={{width, height: 300}}>
+          <RecyclerListView
+            key={listKey}
+            style={{flex: 1}}
+            layoutProvider={layoutProvider}
+            dataProvider={getContent()}
+            rowRenderer={rowRenderer}
+            onVisibleIndicesChanged={indicesChangeHandler}
+          />
+        </View>
+      ) : null}
+    </ScrollView>
   );
 };

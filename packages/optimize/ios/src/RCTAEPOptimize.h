@@ -9,11 +9,27 @@
  governing permissions and limitations under the License.
  */
 
-#import <React/RCTBridgeModule.h>
 #import <Foundation/Foundation.h>
-#import <React/RCTEventEmitter.h>
 
-@interface RCTAEPOptimize : RCTEventEmitter <RCTBridgeModule>
+#if USE_INTEROP_ROOT
+  #if RCT_NEW_ARCH_ENABLED
+    // New arch: same SpecBase + getTurboModule: as USE_INTEROP_ROOT=0 (compile parity only).
+    // RN interop layer applies to non-codegen modules; this module always resolves as TurboModule.
+    #import <NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
+    @interface RCTAEPOptimize : NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>
+  #else
+    // Old arch only: classic bridge (RCT_EXPORT_METHOD + RCTEventEmitter events).
+    #import <React/RCTEventEmitter.h>
+    @interface RCTAEPOptimize : RCTEventEmitter
+  #endif
+#else
+  // Turbo path (RN 0.84+ default): SpecBase provides emitOnPropositionsUpdated:
+  // for JSI-native event delivery on both iOS and Android.
+  //
+  // sendEventWithName: is dead for any module registered via getTurboModule:
+  // See: https://reactnative.dev/docs/the-new-architecture/native-modules-custom-events
+  #import <NativeAEPOptimizeSpec/NativeAEPOptimizeSpec.h>
+  @interface RCTAEPOptimize : NativeAEPOptimizeSpecBase <NativeAEPOptimizeSpec>
+#endif
 
 @end
-

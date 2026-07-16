@@ -10,14 +10,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { EventSubscription, NativeModules } from 'react-native';
-import { NativeEventEmitter } from 'react-native';
+import { EventSubscription } from 'react-native';
 import Proposition from './models/Proposition';
 import DecisionScope from './models/DecisionScope';
 import Offer from './models/Offer';
-import { AdobePropositionCallback }  from './models/AdobePropositionCallback';
+import { AdobePropositionCallback } from './models/AdobePropositionCallback';
 import AEPOptimizeError from './models/AEPOptimizeError';
-
+import NativeAEPOptimize from './NativeAEPOptimize';
+import { subscribePropositionsUpdated } from './propositionEvents';
 
 interface IOptimize {
   extensionVersion: () => Promise<string>;
@@ -35,11 +35,8 @@ interface IOptimize {
   generateDisplayInteractionXdm: (offers: Array<Offer>) => Promise<Map<string, any>>;
 }
 
-const RCTAEPOptimize = NativeModules.AEPOptimize;
-
-declare var onPropositionUpdateSubscription: EventSubscription;
-
-var onPropositionUpdateSubscription: EventSubscription;
+var onPropositionUpdateSubscription: EventSubscription | null = null;
+var nativePropositionsUpdateRegistered = false;
 
 
 /**
@@ -50,35 +47,42 @@ const Optimize: IOptimize = {
    * Returns the version of the AEPOptimize extension
    * @return {string} - Promise a promise that resolves with the extension version
    */
-  extensionVersion(): Promise<string> {     
-    return Promise.resolve(RCTAEPOptimize.extensionVersion());
+  extensionVersion(): Promise<string> {
+    return Promise.resolve(NativeAEPOptimize.extensionVersion());
   },
 
   /**
    * This API registers a permanent callback which is invoked whenever the Edge extension dispatches a response Event received from the Experience Edge Network upon a personalization query.
    * @param {Object} onPropositionUpdateCallback - the callback that will be called with the updated Propositions.
    */
-  onPropositionUpdate(adobeCallback: AdobePropositionCallback) {        
-    if(onPropositionUpdateSubscription) {
+  onPropositionUpdate(adobeCallback: AdobePropositionCallback) {
+    // Remove previous subscription
+    if (onPropositionUpdateSubscription) {
       onPropositionUpdateSubscription.remove();
+      onPropositionUpdateSubscription = null;
     }
 
-    const eventEmitter = new NativeEventEmitter(RCTAEPOptimize);        
-    onPropositionUpdateSubscription = eventEmitter.addListener("onPropositionsUpdate", (propositions: Proposition[]) => {      
-      const map = new Map<string, Proposition>();
-      for (const [key, value] of Object.entries(propositions)) {
-        map.set(key, new Proposition(value));  
-      }      
-      adobeCallback.call(map);
-    });    
-    RCTAEPOptimize.onPropositionsUpdate();        
-  }, 
+    onPropositionUpdateSubscription = subscribePropositionsUpdated(adobeCallback);
+
+    // AEP SDK stacks MobileCore listeners on each onPropositionsUpdate call — register once.
+    if (!nativePropositionsUpdateRegistered) {
+      NativeAEPOptimize.onPropositionsUpdate();
+      nativePropositionsUpdateRegistered = true;
+    }
+
+    // Bridge listener tracking (legacy interop); safe no-op on turbo.
+    try {
+      NativeAEPOptimize.addListener('onPropositionsUpdate');
+    } catch {
+      // Turbo path: optional no-op stub.
+    }
+  },
 
   /**
   * Clears the client-side in-memory propositions cache.
   */
-  clearCachedPropositions() {    
-    RCTAEPOptimize.clearCachedPropositions();
+  clearCachedPropositions() {
+    NativeAEPOptimize.clearCachedPropositions();
   },
 
  /**
@@ -89,11 +93,11 @@ const Optimize: IOptimize = {
   getPropositions(decisionScopes: Array<DecisionScope>): Promise<Map<string, Proposition>> {    
     var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
     return new Promise((resolve, reject) => {      
-      RCTAEPOptimize.getPropositions(decisionScopeNames).then((propositions: Proposition[]) => {
+      NativeAEPOptimize.getPropositions(decisionScopeNames).then((propositions: any) => {
         const map = new Map<string, Proposition>();
         for (const [key, value] of Object.entries(propositions)) {
-          map.set(key, new Proposition(value));  
-        }      
+          map.set(key, new Proposition(value as any));
+        }
         resolve(map);
       }).catch((error: any) => reject(error));
     });
@@ -115,7 +119,7 @@ const Optimize: IOptimize = {
     onError?: (error: AEPOptimizeError) => void
   ) {
     var decisionScopeNames: Array<string> = decisionScopes.map(decisionScope => decisionScope.getName());
-    RCTAEPOptimize.updatePropositions(
+    NativeAEPOptimize.updatePropositions(
       decisionScopeNames,
       xdm,
       data,
@@ -136,7 +140,7 @@ const Optimize: IOptimize = {
    * @param {Array<Offer>} offers - an array of Proposition Offers
    */
   displayed(offers: Array<Offer>) {
-    RCTAEPOptimize.multipleOffersDisplayed(offers);
+    NativeAEPOptimize.multipleOffersDisplayed(offers);
   },
 
 /**
@@ -146,7 +150,7 @@ const Optimize: IOptimize = {
  * @return {Promise<Map<string, any>>} - a promise that resolves to xdm map
  */
   generateDisplayInteractionXdm(offers: Array<Offer>) {
-    return RCTAEPOptimize.multipleOffersGenerateDisplayInteractionXdm(offers);
+    return NativeAEPOptimize.multipleOffersGenerateDisplayInteractionXdm(offers) as Promise<Map<string, any>>;
   },
 };
 
