@@ -86,17 +86,6 @@ Then toggle `USE_INTEROP_ROOT=true|false` in `android/gradle.properties`.
 
 **ProGuard / R8 (release builds):** The library ships `android/consumer-rules.pro` via `consumerProguardFiles` so customer apps with `minifyEnabled true` retain `NativeAEPOptimizeModule` when loaded via reflection. See [android/README.md](android/README.md).
 
-### Validation matrix (June 2026)
-
-Eight Optimize smoke scenarios (extension version, proposition update/listener/callback, get/clear cache, display/tap offer, batch display) were run across sample apps. All **80** executions passed (**10** architecture/mode cells × **8** tests).
-
-| Sample app | React Native | Cells exercised |
-| :--- | :--- | :--- |
-| [BareSampleApp](../../apps/BareSampleApp) | 0.76 | iOS old interop (bridge); iOS new turbo; iOS new interop (compile parity); Android old/new × interop/turbo |
-| [AEPSampleApp](../../apps/AEPSampleApp) | 0.85 | iOS new turbo; iOS new interop (compile parity); Android new interop/turbo |
-
-Use each app's `yarn build:matrix:list` and `yarn build:*` scripts (see sample app READMEs) to reproduce a cell locally. Optimize API demos live under **Optimize** in the app drawer (`extensions/OptimizeView.tsx`).
-
 ### Importing the extension:
 
 ```typescript

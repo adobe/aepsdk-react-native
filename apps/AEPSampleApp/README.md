@@ -81,7 +81,7 @@ Then navigate to apps/AEPSampleApp/android, double click on the `build.gradle` f
 
 ### Optimize extension and build matrix
 
-AEPSampleApp targets **React Native 0.85** with **New Architecture enabled**. It links `@adobe/react-native-aepoptimize` from `packages/optimize` for local development and includes **OptimizeView** (`extensions/OptimizeView.tsx`) with buttons for the Optimize smoke scenarios (update propositions, listeners, display/tap offers, clear cache, and batch display).
+AEPSampleApp targets **React Native 0.85** with **New Architecture enabled**. It links `@adobe/react-native-aepoptimize` from `packages/optimize` for local development and includes **OptimizeView** (`extensions/OptimizeView.tsx`) with buttons for Optimize APIs (update propositions, listeners, display/tap offers, clear cache, and batch display).
 
 To switch Optimize native wiring without editing Gradle/Podfiles by hand, use the build matrix script. On **Android new arch**, `USE_INTEROP_ROOT` selects bridge vs turbo. On **iOS new arch**, both flag values compile to the same SpecBase turbo binary — `ios-interop` is an optional compile-flag parity check, not a separate RN interop path.
 
@@ -100,8 +100,6 @@ Each `yarn build:*` preset runs `scripts/build-matrix.sh` with `--sync --run` (s
 ```bash
 ./scripts/build-matrix.sh --preset android-turbo -c full --sync --build-only
 ```
-
-**Validated cells (June 2026):** `aep-ios-new-turbo`, `aep-android-new-interop`, and `aep-android-new-turbo` — **8/8** smoke tests pass on each. `aep-ios-new-interop` is compile-flag parity with `aep-ios-new-turbo` (same SpecBase runtime). See [Optimize package README](../../packages/optimize/README.md#validation-matrix-june-2026) for the full cross-app matrix including BareSampleApp on RN 0.76.
 
 ### Validate with Assurance:
 

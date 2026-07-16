@@ -38,7 +38,7 @@ newArchEnabled=true
 USE_INTEROP_ROOT=false
 ```
 
-Set `USE_INTEROP_ROOT=true` for the interop/bridge event path. [BareSampleApp](../../../apps/BareSampleApp/scripts/build-matrix.sh) and [AEPSampleApp](../../../apps/AEPSampleApp/scripts/build-matrix.sh) automate this toggle for smoke testing.
+Set `USE_INTEROP_ROOT=true` for the interop/bridge event path. [BareSampleApp](../../../apps/BareSampleApp/scripts/build-matrix.sh) and [AEPSampleApp](../../../apps/AEPSampleApp/scripts/build-matrix.sh) automate this toggle for sample app builds.
 
 ## ProGuard / R8
 

@@ -62,7 +62,7 @@ yarn bareapp:android:run
 
 ## Optimize extension and build matrix
 
-BareSampleApp links `@adobe/react-native-aepoptimize` from `packages/optimize`. **OptimizeView** (`extensions/OptimizeView.tsx`) exposes the same eight smoke-test flows as AEPSampleApp (extension version, proposition update/listener/callback, get/clear, display/tap, batch display).
+BareSampleApp links `@adobe/react-native-aepoptimize` from `packages/optimize`. **OptimizeView** (`extensions/OptimizeView.tsx`) exposes Optimize API flows for manual testing.
 
 The matrix script toggles **new/old architecture** and **USE_INTEROP_ROOT**. On **Android**, the flag selects bridge vs turbo on new arch. On **iOS new arch**, both flag values compile to the same SpecBase turbo binary (row 3 is compile parity only); the only true iOS bridge path is **old arch + interop**.
 
@@ -85,8 +85,6 @@ Manual invocation:
 ./scripts/build-matrix.sh --preset ios-new-turbo -c full --sync --run
 ./scripts/build-matrix.sh --platform android --arch old --interop true -c light --sync
 ```
-
-**Validated cells (June 2026):** all six BareSampleApp matrix cells passed **8/8** tests each. On iOS new arch, `bare-ios-new-interop` and `bare-ios-new-turbo` exercise the same SpecBase turbo runtime (compile-flag parity). Combined with AEPSampleApp (RN 0.85), the repo matrix is **80/80** pass. Details: [Optimize README](../../packages/optimize/README.md#validation-matrix-june-2026).
 
 > **Note:** On Android old architecture the bridge module is always used; `USE_INTEROP_ROOT=false` on old arch only changes `BuildConfig`, not the loaded Java class. On iOS new architecture, `USE_INTEROP_ROOT` does not select a different runtime path — only old arch + interop uses `RCTEventEmitter`.
 
