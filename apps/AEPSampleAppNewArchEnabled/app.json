@@ -49,7 +49,8 @@
         {
           "ios": {
             "newArchEnabled": true,
-            "useFrameworks": "static"
+            "useFrameworks": "static",
+            "buildReactNativeFromSource": true
           },
           "android": {
             "newArchEnabled": true
@@ -57,7 +58,9 @@
         }
       ],
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-splash-screen",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true
