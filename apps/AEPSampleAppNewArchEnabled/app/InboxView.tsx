@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { MobileCore } from "@adobe/react-native-aepcore";
+import {MobileCore} from "@adobe/react-native-aepcore";
 import {
   InboxSettings,
   Inbox,
@@ -20,7 +20,7 @@ import {
   useInbox,
   Messaging
 } from "@adobe/react-native-aepmessaging";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, {memo, useCallback, useEffect, useState} from "react";
 import {
   Appearance,
   ColorSchemeName,
@@ -33,9 +33,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Colors } from "../constants/Colors";
-import { useColorScheme } from "../hooks/useColorScheme";
-import { mockSettings, MockSurface } from "../mocks/contentCards/inbox/mockSettings";
+import {Colors} from "../constants/Colors";
+import {useColorScheme} from "../hooks/useColorScheme";
+import {mockSettings, MockSurface} from "../mocks/contentCards/inbox/mockSettings";
 import {
   DemoItem,
   IMAGE_ONLY_TEMPLATES,
@@ -58,9 +58,9 @@ const THEME_OPTIONS: Array<{
   label: string;
   value: ColorSchemeName;
 }> = [
-    { label: "Light", value: "light" },
-    { label: "Dark", value: "dark" },
-    { label: "System", value: null },
+    {label: "Light", value: "light"},
+    {label: "Dark", value: "dark"},
+    {label: "System", value: "unspecified"},
   ];
 
 const TEMPLATE_OPTIONS: Array<{
@@ -68,9 +68,9 @@ const TEMPLATE_OPTIONS: Array<{
   value: string;
   items: DemoItem[];
 }> = [
-    { label: "Small Image", value: "SmallImage", items: SMALL_IMAGE_TEMPLATES },
-    { label: "Large Image", value: "LargeImage", items: LARGE_IMAGE_TEMPLATES },
-    { label: "Image Only", value: "ImageOnly", items: IMAGE_ONLY_TEMPLATES },
+    {label: "Small Image", value: "SmallImage", items: SMALL_IMAGE_TEMPLATES},
+    {label: "Large Image", value: "LargeImage", items: LARGE_IMAGE_TEMPLATES},
+    {label: "Image Only", value: "ImageOnly", items: IMAGE_ONLY_TEMPLATES},
   ];
 type TemplateOption = typeof TEMPLATE_OPTIONS[number]['value'];
 
@@ -78,31 +78,31 @@ const ITEMS_BY_VIEW = Object.fromEntries(
   TEMPLATE_OPTIONS.map(o => [o.value, o.items])
 ) as Record<TemplateOption, DemoItem[]>;
 
-const StyledText = ({ text }: { text: string }) => {
+const StyledText = ({text}: {text: string}) => {
   return <Text style={[styles.infoText, styles.textCenter]}>{text}</Text>;
 };
 
-const Switcher = ({ title, options, selected, onChange, colors, colorScheme }: {
+const Switcher = ({title, options, selected, onChange, colors, colorScheme}: {
   title: string;
-  options: { label: string; value: string }[];
+  options: {label: string; value: string}[];
   selected: string;
   onChange: (value: string) => void;
   colors: any;
   colorScheme: ColorSchemeName;
 }) => (
-  <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
-    <Text style={[styles.titleText, { color: colors.text }]}>{title}</Text>
-    <View style={[styles.themeSwitcher, { backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1 }]}>
-      {options.map(({ label, value }) => (
+  <View style={[styles.section, styles.panel, {backgroundColor: colors.background, borderColor: colors.panelBorder}]}>
+    <Text style={[styles.titleText, {color: colors.text}]}>{title}</Text>
+    <View style={[styles.themeSwitcher, {backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1}]}>
+      {options.map(({label, value}) => (
         <TouchableOpacity
           key={label}
           style={[
             styles.themeOption,
-            selected === value ? [styles.themeOptionSelected, { backgroundColor: colors.tint }] : styles.themeOptionUnselected,
+            selected === value ? [styles.themeOptionSelected, {backgroundColor: colors.tint}] : styles.themeOptionUnselected,
           ]}
           onPress={() => onChange(value)}
         >
-          <Text style={[styles.textLabel, { color: selected === value ? (colorScheme === 'dark' ? '#000' : '#fff') : colors.text }]}>
+          <Text style={[styles.textLabel, {color: selected === value ? (colorScheme === 'dark' ? '#000' : '#fff') : colors.text}]}>
             {label}
           </Text>
         </TouchableOpacity>
@@ -152,22 +152,22 @@ const Header = ({
   const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
 
   return (
-    <View style={{ marginTop: 10 }}>
+    <View style={{marginTop: 10}}>
       {/* View Picker */}
-      <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
-        <Text style={[styles.titleText, { color: colors.text }]}>Select View Type</Text>
+      <View style={[styles.section, styles.panel, {backgroundColor: colors.background, borderColor: colors.panelBorder}]}>
+        <Text style={[styles.titleText, {color: colors.text}]}>Select View Type</Text>
         <TouchableOpacity
-          style={[styles.buttonNeutral, { borderColor: colors.panelBorder, backgroundColor: colors.inputBg }]}
+          style={[styles.buttonNeutral, {borderColor: colors.panelBorder, backgroundColor: colors.inputBg}]}
           onPress={() => setShowPicker(true)}
         >
-          <Text style={{ color: colors.text }}>{selectedView}</Text>
+          <Text style={{color: colors.text}}>{selectedView}</Text>
         </TouchableOpacity>
       </View>
 
       {/* Theme Switcher */}
       <Switcher
         title="Theme"
-        options={THEME_OPTIONS.map(({ label }) => ({ label, value: label }))}
+        options={THEME_OPTIONS.map(({label}) => ({label, value: label}))}
         selected={selectedTheme}
         onChange={(label) => handleThemeChange(label, THEME_OPTIONS.find(o => o.label === label)!.value)}
         colors={colors}
@@ -178,7 +178,7 @@ const Header = ({
         /* Template Switcher */
         <Switcher
           title="Template"
-          options={TEMPLATE_OPTIONS.map(({ label, value }) => ({ label, value }))}
+          options={TEMPLATE_OPTIONS.map(({label, value}) => ({label, value}))}
           selected={selectedTemplate}
           onChange={(val) => onTemplateChange(val as TemplateOption)}
           colors={colors}
@@ -187,11 +187,11 @@ const Header = ({
 
         /* Track Action Input */
         : (
-          <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
-            <Text style={[styles.titleText, { color: colors.text }]}>Track Action</Text>
+          <View style={[styles.section, styles.panel, {backgroundColor: colors.background, borderColor: colors.panelBorder}]}>
+            <Text style={[styles.titleText, {color: colors.text}]}>Track Action</Text>
             <View style={styles.rowCenter}>
               <TextInput
-                style={[styles.trackInput, { borderColor: colors.inputBorder, color: colors.text }]}
+                style={[styles.trackInput, {borderColor: colors.inputBorder, color: colors.text}]}
                 value={trackInput}
                 onChangeText={setTrackInput}
                 placeholder="Enter action name"
@@ -199,11 +199,11 @@ const Header = ({
                 autoCapitalize="none"
               />
               <TouchableOpacity
-                style={[styles.buttonPrimary, { backgroundColor: colors.tint }]}
+                style={[styles.buttonPrimary, {backgroundColor: colors.tint}]}
                 onPress={handleTrackAction}
                 disabled={!trackInput.trim() || isLoading}
               >
-                <Text style={[styles.trackButtonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+                <Text style={[styles.trackButtonText, {color: colorScheme === 'dark' ? '#000' : '#fff'}]}>
                   {isLoading ? 'Loading...' : 'Track'}
                 </Text>
               </TouchableOpacity>
@@ -224,7 +224,7 @@ const Header = ({
         ]}
       >
         <TouchableOpacity style={styles.modalOverlay} onPress={() => setShowPicker(false)}>
-          <View style={[styles.modalCard, { backgroundColor: colors.background }]}>
+          <View style={[styles.modalCard, {backgroundColor: colors.background}]}>
             {VIEW_OPTIONS.map((option) => (
               <TouchableOpacity
                 key={option}
@@ -234,7 +234,7 @@ const Header = ({
                   setShowPicker(false);
                 }}
               >
-                <Text style={{ color: colors.text }}>{option}</Text>
+                <Text style={{color: colors.text}}>{option}</Text>
               </TouchableOpacity>
             ))}
             <TouchableOpacity style={styles.modalCancel} onPress={() => setShowPicker(false)}>
@@ -255,10 +255,10 @@ const InboxView = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateOption>('SmallImage');
 
   const surface = "spujari_bug_bash"
-    // Platform.OS === "android"
-    //   ? "rn/android/remote_image"
-    //   : "rn/cards"";
-  const { isLoading, refetch } = useContentCardUI(surface);
+  // Platform.OS === "android"
+  //   ? "rn/android/remote_image"
+  //   : "rn/cards"";
+  const {isLoading, refetch} = useContentCardUI(surface);
   const {
     settings,
     error,
@@ -269,7 +269,7 @@ const InboxView = () => {
   const items = selectedView === 'Templates' ? ITEMS_BY_VIEW[selectedTemplate] : undefined;
 
   useEffect(() => {
-   void Messaging.updatePropositionsForSurfaces([surface]);
+    void Messaging.updatePropositionsForSurfaces([surface]);
   }, [surface]);
 
   if (selectedView === 'Remote') {
@@ -300,31 +300,31 @@ const InboxView = () => {
 
     const settings = mockSettings[
       getMocks(selectedView)
-    ] as { surfaceSettings: InboxSettings; inboxStyle?: any; CardProps?: any };
+    ] as {surfaceSettings: InboxSettings; inboxStyle?: any; CardProps?: any};
 
     return (
-        <Inbox
-          surface={surface}
-          settings={settings.surfaceSettings}
-          contentContainerStyle={[
-            settings.inboxStyle,
-            selectedView === 'Inbox with Styling' && colorScheme === 'dark' && {
-              backgroundColor: '#881337',
-              borderColor: '#F472B6',
-            },
-          ]}
-          CardProps={settings?.CardProps}
-          isLoading={isLoadingInbox}
-          error={error}
-          ListHeaderComponent={<MemoHeader
-            isLoading={false}
-            onTrackAction={refetchInbox}
-            selectedView={selectedView}
-            setSelectedView={setSelectedView}
-            selectedTemplate={selectedTemplate}
-            onTemplateChange={setSelectedTemplate}
-          />}
-        />
+      <Inbox
+        surface={surface}
+        settings={settings.surfaceSettings}
+        contentContainerStyle={[
+          settings.inboxStyle,
+          selectedView === 'Inbox with Styling' && colorScheme === 'dark' && {
+            backgroundColor: '#881337',
+            borderColor: '#F472B6',
+          },
+        ]}
+        CardProps={settings?.CardProps}
+        isLoading={isLoadingInbox}
+        error={error}
+        ListHeaderComponent={<MemoHeader
+          isLoading={false}
+          onTrackAction={refetchInbox}
+          selectedView={selectedView}
+          setSelectedView={setSelectedView}
+          selectedTemplate={selectedTemplate}
+          onTemplateChange={setSelectedTemplate}
+        />}
+      />
     );
   }
 
@@ -356,7 +356,7 @@ const InboxView = () => {
     <FlatList
       data={items || []}
       keyExtractor={(item: any) => item.key}
-      renderItem={({ item }: any) =>
+      renderItem={({item}: any) =>
         renderContentCard(item, false)
       }
       ListHeaderComponent={
@@ -374,7 +374,7 @@ const InboxView = () => {
 };
 export default InboxView;
 
-const SPACING = { s: 10, m: 20, l: 24 };
+const SPACING = {s: 10, m: 20, l: 24};
 
 const styles = StyleSheet.create({
   infoText: {
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 1,
     alignItems: "center",
     justifyContent: "center",
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowRadius: 2,
   },
   themeOptionSelected: {
