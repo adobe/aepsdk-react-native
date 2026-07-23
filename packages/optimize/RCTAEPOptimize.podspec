@@ -26,11 +26,14 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "AEPOptimize", ">= 5.0.0", "< 6.0.0"
+  s.dependency "React-jsinspectorcdp"
+  s.dependency "React-jsinspectortracing"
 
   s.pod_target_xcconfig = {
     "CLANG_ENABLE_MODULES" => "YES",
+    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES" => "YES",
     "OTHER_CPLUSPLUSFLAGS" => "$(inherited) -fcxx-modules -include $(PODS_TARGET_SRCROOT)/ios/RCTAEPOptimizeCppPrefix.h",
-    "HEADER_SEARCH_PATHS" => "$(inherited) \"$(PODS_ROOT)/RCT-Folly\" \"$(PODS_ROOT)/DoubleConversion\" \"$(PODS_ROOT)/fmt/include\" \"$(PODS_CONFIGURATION_BUILD_DIR)/React-jsinspector/jsinspector_modern.framework/Headers\" \"$(PODS_ROOT)/../build/generated/ios\" \"$(PODS_ROOT)/../build/generated/ios/ReactCodegen\" \"$(PODS_ROOT)/Headers/Public/ReactCodegen\"",
+    "HEADER_SEARCH_PATHS" => "$(inherited) \"$(PODS_ROOT)/RCT-Folly\" \"$(PODS_ROOT)/DoubleConversion\" \"$(PODS_ROOT)/fmt/include\" \"$(PODS_CONFIGURATION_BUILD_DIR)/React-jsinspector/jsinspector_modern.framework/Headers\" \"$(PODS_CONFIGURATION_BUILD_DIR)/React-jsinspectorcdp/jsinspector_moderncdp.framework/Headers\" \"$(PODS_CONFIGURATION_BUILD_DIR)/React-jsinspectortracing/jsinspector_moderntracing.framework/Headers\" \"$(PODS_ROOT)/../build/generated/ios\" \"$(PODS_ROOT)/../build/generated/ios/ReactCodegen\" \"$(PODS_ROOT)/Headers/Public/ReactCodegen\"",
     "GCC_PREPROCESSOR_DEFINITIONS" => "$(inherited) USE_INTEROP_ROOT=#{use_interop_root}"
   }
 
