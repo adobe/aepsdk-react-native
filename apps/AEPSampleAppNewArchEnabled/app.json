@@ -60,7 +60,13 @@
       "expo-font",
       "expo-web-browser",
       "expo-splash-screen",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "./plugins/withInteropRoot",
+        {
+          "value": "0"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

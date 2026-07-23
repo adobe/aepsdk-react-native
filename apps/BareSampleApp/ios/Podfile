@@ -1,0 +1,61 @@
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+
+require 'json'
+
+platform :ios, min_ios_version_supported
+
+# Old-arch interop path for @adobe/react-native-aepoptimize (RN 0.76).
+# Matches Android USE_INTEROP_ROOT=true in android/build.gradle.
+ENV['USE_INTEROP_ROOT'] ||= '1'
+
+podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties.json')))
+new_arch_enabled = podfile_properties.fetch('newArchEnabled', 'false') == 'true'
+ENV['RCT_NEW_ARCH_ENABLED'] = new_arch_enabled ? '1' : '0'
+
+prepare_react_native_project!
+
+# Required for AEP SDK with New Architecture - use static frameworks
+use_frameworks! :linkage => :static
+
+target 'BareSampleApp' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/..",
+    :new_arch_enabled => new_arch_enabled,
+    :fabric_enabled => new_arch_enabled
+  )
+
+  target 'BareSampleAppTests' do
+    inherit! :complete
+  end
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false
+    )
+
+    installer.pods_project.targets.each do |t|
+      t.build_configurations.each do |bc|
+        bc.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+        if t.name == 'RNScreens'
+          bc.build_settings['HEADER_SEARCH_PATHS'] ||= '$(inherited)'
+          bc.build_settings['HEADER_SEARCH_PATHS'] << ' "$(PODS_TARGET_SRCROOT)/common/cpp/react/renderer/components/rnscreens"'
+        end
+      end
+      if t.name.start_with?("AEP")
+        t.build_configurations.each do |bc|
+          bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
+        end
+      end
+    end
+  end
+end

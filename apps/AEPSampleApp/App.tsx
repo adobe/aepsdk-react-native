@@ -35,7 +35,7 @@ import { useState, useEffect, createContext, useContext } from 'react';
 
 const STORAGE_KEY = 'aep_app_id';
 
-const DEFAULT_APP_ID = '';
+const DEFAULT_APP_ID = '3149c49c3910/0f12baf27522/launch-0d096c129660-development';
 
 export const AppContext = createContext({
   appId: DEFAULT_APP_ID,

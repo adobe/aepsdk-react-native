@@ -3,7 +3,7 @@ const { defaults: tsjPreset } = require("ts-jest/presets");
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   ...tsjPreset,
-  preset: "@react-native/jest-preset",
+  preset: "<rootDir>/apps/AEPSampleApp/node_modules/react-native",
   testEnvironment: "node",
   transform: {
     "^.+\\.jsx$": "babel-jest",
@@ -17,7 +17,9 @@ module.exports = {
   setupFiles: ["<rootDir>/tests/jest/setup.ts"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   moduleNameMapper: {
-    "^react-native$": "<rootDir>/node_modules/react-native",
+    // Resolve react-native from AEPSampleApp's node_modules — react-native is not hoisted
+    // to root (nmHoistingLimits: workspaces), so we point both preset and mapper here.
+    "^react-native$": "<rootDir>/apps/AEPSampleApp/node_modules/react-native",
   },
   testPathIgnorePatterns: [
     "/node_modules/",
