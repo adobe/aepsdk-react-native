@@ -20,7 +20,7 @@ import {
   PrivacyStatus,
 } from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
-import {useRouter} from 'expo-router';
+import { useRouter } from 'expo-router';
 
 
 function trackAction() {

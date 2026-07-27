@@ -26,8 +26,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "AEPOptimize", ">= 5.0.0", "< 6.0.0"
-  s.dependency "React-jsinspectorcdp"
-  s.dependency "React-jsinspectortracing"
 
   s.pod_target_xcconfig = {
     "CLANG_ENABLE_MODULES" => "YES",
