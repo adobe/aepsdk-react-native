@@ -83,7 +83,7 @@ const StyledText = ({ text }: { text: string }) => {
 
 const Switcher = ({ title, options, selected, onChange, colors, colorScheme }: {
   title: string;
-  options: {label: string; value: string}[];
+  options: { label: string; value: string }[];
   selected: string;
   onChange: (value: string) => void;
   colors: any;
@@ -92,7 +92,7 @@ const Switcher = ({ title, options, selected, onChange, colors, colorScheme }: {
   <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
     <Text style={[styles.titleText, { color: colors.text }]}>{title}</Text>
     <View style={[styles.themeSwitcher, { backgroundColor: colors.inputBg, borderColor: colors.panelBorder, borderWidth: 1 }]}>
-      {options.map(({label, value}) => (
+      {options.map(({ label, value }) => (
         <TouchableOpacity
           key={label}
           style={[
@@ -254,9 +254,9 @@ const InboxView = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateOption>('SmallImage');
 
   const surface = "spujari_bug_bash"
-   // Platform.OS === "android"
-   //   ? "rn/android/remote_image"
-   //   : "rn/cards"";
+    // Platform.OS === "android"
+    //   ? "rn/android/remote_image"
+    //   : "rn/cards"";
   const { isLoading, refetch } = useContentCardUI(surface);
   const {
     settings,
@@ -268,7 +268,7 @@ const InboxView = () => {
   const items = selectedView === 'Templates' ? ITEMS_BY_VIEW[selectedTemplate] : undefined;
 
   useEffect(() => {
-  void Messaging.updatePropositionsForSurfaces([surface]);
+   void Messaging.updatePropositionsForSurfaces([surface]);
   }, [surface]);
 
   if (selectedView === 'Remote') {
