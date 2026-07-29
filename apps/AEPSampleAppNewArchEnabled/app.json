@@ -50,7 +50,8 @@
           "ios": {
             "newArchEnabled": true,
             "useFrameworks": "static",
-            "buildReactNativeFromSource": true
+            "buildReactNativeFromSource": true,
+            "deploymentTarget": "16.4"
           },
           "android": {
             "newArchEnabled": true
