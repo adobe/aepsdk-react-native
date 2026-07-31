@@ -526,6 +526,10 @@ Submits a generic event containing the provided push token with event type `gene
 setPushIdentifier(pushIdentifier?: string) 
 ```
 
+**Note**:
+- **Android**: The FCM token can be passed directly as a string.
+- **iOS**: The APNs device token must be passed as a hex-encoded string. Passing a non-hex string will result in a corrupted token being registered.
+
 **Example**
 
 ```typescript
