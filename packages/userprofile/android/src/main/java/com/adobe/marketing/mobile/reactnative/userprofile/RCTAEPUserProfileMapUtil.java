@@ -115,6 +115,8 @@ public class RCTAEPUserProfileMapUtil {
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), RCTAEPUserProfileArrayUtil.toWritableArray((Object[]) value));
             }
+
+            iterator.remove();
         }
 
         return writableMap;
