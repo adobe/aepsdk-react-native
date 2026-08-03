@@ -20,13 +20,12 @@ import {
   useInbox,
   Messaging
 } from "@adobe/react-native-aepmessaging";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import {
   Appearance,
   ColorSchemeName,
   FlatList,
   Modal,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -60,7 +59,7 @@ const THEME_OPTIONS: Array<{
 }> = [
     { label: "Light", value: "light" },
     { label: "Dark", value: "dark" },
-    { label: "System", value: null },
+    { label: "System", value: "unspecified" },
   ];
 
 const TEMPLATE_OPTIONS: Array<{

@@ -33,20 +33,22 @@ config.watchFolders = [
   resolve(monorepoRoot, 'node_modules'),
 ];
 
-// After merging main, root node_modules gained react-native@0.85 (devDep for jest).
-// This app uses react-native@0.81 (Expo 54). Block root's react-native so Metro
-// always resolves it from the app's own node_modules instead.
+// Some workspace packages (e.g. messaging) keep their own private devDependency
+// copies of react/react-native under packages/<name>/node_modules because Yarn
+// can't hoist them. Metro's Node resolution finds those before the app's own
+// copy, silently bundling a second react-native runtime alongside the app's —
+// which breaks bridgeless/new-arch init (e.g. "MessageQueue doesn't exist").
+// Block every nested node_modules under packages/*, plus root's copies and
+// expo-router's nested @react-navigation, so Metro always resolves these
+// singletons to the app's own node_modules instead.
 // Escape special regex chars in absolute paths used for blockList patterns.
 const escapePath = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-// Block root node_modules react-native/react (root devDeps for Jest) so Metro
-// always uses the app's own Expo-managed versions.
-// Block expo-router's nested @react-navigation so only ONE copy (the app's
-// top-level versions) is bundled — prevents "multiple NavigationContainer" crash.
 config.resolver.blockList = [
   new RegExp(`^${escapePath(resolve(monorepoRoot, 'node_modules/react-native'))}/.*`),
   new RegExp(`^${escapePath(resolve(monorepoRoot, 'node_modules/react'))}/.*`),
   new RegExp(`^${escapePath(join(projectRoot, 'node_modules/expo-router/node_modules/@react-navigation'))}/.*`),
+  new RegExp(`^${escapePath(resolve(monorepoRoot, 'packages'))}/[^/]+/node_modules/.*`),
 ];
 
 config.resolver.nodeModulesPaths = [
@@ -65,8 +67,8 @@ config.resolver.extraNodeModules = {
   // Pin singleton packages to the app's own node_modules so there is never more
   // than one copy in the bundle.
   //
-  // react / react-native: blocked from root node_modules (root has 0.85 devDep
-  //   for Jest while this app uses 0.81 via Expo 54).
+  // react / react-native: blocked from root and packages/*/node_modules above
+  //   (some workspace packages carry their own private devDependency copies).
   //
   // @react-navigation/*: expo-router ships its own older nested copies
   //   (@react-navigation/core@7.14 vs app's 7.17, native@7.1.28 vs 7.2.2).

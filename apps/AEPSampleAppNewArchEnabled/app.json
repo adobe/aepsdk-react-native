@@ -49,7 +49,9 @@
         {
           "ios": {
             "newArchEnabled": true,
-            "useFrameworks": "static"
+            "useFrameworks": "static",
+            "buildReactNativeFromSource": true,
+            "deploymentTarget": "16.4"
           },
           "android": {
             "newArchEnabled": true
@@ -58,6 +60,8 @@
       ],
       "expo-font",
       "expo-web-browser",
+      "expo-splash-screen",
+      "expo-status-bar",
       [
         "./plugins/withInteropRoot",
         {
