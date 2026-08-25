@@ -12,7 +12,15 @@ governing permissions and limitations under the License.
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTBridgeModule.h>
 #import <ReactAppDependencyProvider/RCTAppDependencyProvider.h>
+
+@interface RCTNSLogger : NSObject <RCTBridgeModule> @end
+@implementation RCTNSLogger
+RCT_EXPORT_MODULE(NSLogger)
+RCT_EXPORT_METHOD(log:(NSString *)message) { NSLog(@"[JS] %@", message); }
++ (BOOL)requiresMainQueueSetup { return NO; }
+@end
 
 @implementation AppDelegate
 
@@ -20,8 +28,6 @@ governing permissions and limitations under the License.
 {
   self.moduleName = @"AEPSampleApp";
   self.dependencyProvider = [RCTAppDependencyProvider new];
-  // You can add your custom initial props in the dictionary below.
-  // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];

@@ -9,8 +9,6 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-
-import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {
   MobileCore,
@@ -22,9 +20,7 @@ import {
   PrivacyStatus,
 } from '@adobe/react-native-aepcore';
 import styles from '../styles/styles';
-import {NavigationProps} from '../types/props';
-
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 
 function trackAction() {
@@ -111,7 +107,7 @@ function coreExtensionVersion() {
 }
 
 function setPrivacyOptIn() {
-  MobileCore.setPrivacyStatus(PrivacyStatus.OPT_OUT);
+  MobileCore.setPrivacyStatus(PrivacyStatus.OPT_IN);
 }
 
 function getPrivacyStatus() {

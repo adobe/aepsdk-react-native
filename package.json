@@ -3,16 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "packageManager": "yarn@4.1.1",
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "apps/*"
-    ]
-  },
+  "workspaces": [
+    "packages/*",
+    "apps/AEPSampleAppNewArchEnabled"
+  ],
   "scripts": {
     "clean": "rm yarn.lock & find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
-    "prebuild": "npx lerna exec --ignore aepsampleapp -- rm -rf dist",
-    "build": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled -- yarn tsc",
+    "prebuild": "npx lerna exec --ignore aepsampleapp --ignore baresampleapp -- rm -rf dist",
+    "build": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled --ignore baresampleapp -- tsc",
     "test": "jest",
     "test:ui": "npx lerna run test:ui --scope @adobe/react-native-aepmessaging",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
@@ -38,7 +36,8 @@
     "@babel/preset-flow": "^7.25.0",
     "@babel/preset-typescript": "^7.27.1",
     "@react-native/babel-preset": "^0.81.0",
-    "@types/jest": "^30.0.0",
+    "@react-native/jest-preset": "^0.85.0",
+    "@types/jest": "^29.5.12",
     "@types/node": "^22.9.0",
     "@types/react": "^19.0.0",
     "@types/react-native": "^0.66.16",

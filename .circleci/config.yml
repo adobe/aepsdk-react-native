@@ -25,7 +25,7 @@ jobs:
         command: sudo corepack enable
 
     - run:
-        name: Install Node.js and Yarn Dependencies
+        name: Install Root Dependencies
         command: yarn install --immutable --network-timeout 300000
         no_output_timeout: 20m
         environment:
@@ -34,6 +34,13 @@ jobs:
     - run:
         name: Build the Project
         command: yarn run build
+
+    - run:
+        name: Install AEPSampleApp Dependencies
+        command: cd apps/AEPSampleApp && yarn install --immutable --network-timeout 300000
+        no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
     - run:
         name: Expo Prebuild
@@ -85,7 +92,7 @@ jobs:
 
   build-sample-app-ios:
     macos:
-      xcode: 16.4.0
+      xcode: 26.4.0
     resource_class: m4pro.medium
 
     steps:
@@ -147,12 +154,80 @@ jobs:
             -destination "generic/platform=iOS Simulator" \
             clean build
 
+  build-aepsampleapp-ios:
+    macos:
+      xcode: 16.4.0
+    resource_class: m4pro.medium
+
+    steps:
+    - checkout
+
+    - restore_cache:
+        keys:
+            - yarn-cache-aepsampleapp-{{ checksum "apps/AEPSampleApp/yarn.lock" }}
+            - yarn-cache-aepsampleapp-
+
+    - run:
+        name: Set Xcode Path
+        command: sudo xcode-select -s /Applications/Xcode.app
+
+    - node/install:
+        node-version: '22.12.0'
+
+    - run:
+        name: Enable Corepack
+        command: sudo corepack enable
+
+    - run:
+        name: Install Root Dependencies
+        command: yarn install --immutable --network-timeout 300000
+        no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+    - run:
+        name: Build the Project
+        command: yarn run build
+
+    - run:
+        name: Install AEPSampleApp Dependencies
+        command: cd apps/AEPSampleApp && yarn install --immutable --network-timeout 300000
+        no_output_timeout: 20m
+        environment:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+    - save_cache:
+        paths:
+            - apps/AEPSampleApp/.yarn/cache
+            - apps/AEPSampleApp/.yarn/unplugged
+        key: yarn-cache-aepsampleapp-{{ checksum "apps/AEPSampleApp/yarn.lock" }}
+
+    - run:
+        name: Install Cocoapods
+        command: sudo gem install cocoapods
+
+    - run:
+        name: Install Pods
+        command: yarn sampleapp:ios:pod:install
+
+    - run:
+        name: Building AEPSampleApp iOS
+        command: |
+          cd apps/AEPSampleApp/ios
+          xcodebuild \
+            -workspace AEPSampleApp.xcworkspace \
+            -scheme AEPSampleApp \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            clean build
+
 workflows:
   version: 2.1
   ci-workflow:
     jobs:
     - unit-test
     - build-sample-app-ios
+    - build-aepsampleapp-ios
     # - build-sample-app-android
     # Disable the Android build job because of the error below:
     # Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'.

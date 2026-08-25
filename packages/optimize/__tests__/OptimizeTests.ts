@@ -10,6 +10,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+// Route TurboModule resolver to the shared Optimize mock (NativeAEPOptimize + legacy AEPOptimize).
+jest.mock('../src/NativeAEPOptimize', () => {
+  const rn = jest.requireMock('react-native');
+  return { __esModule: true, default: rn.NativeModules.NativeAEPOptimize };
+});
+
 import { NativeModules } from 'react-native';
 import { Optimize, Proposition, DecisionScope, Offer } from '../src';
 import offerJson from './offer.json';
@@ -23,13 +29,13 @@ describe('Optimize', () => {
   });
 
   it('AEPOptimize onPropositionUpdate is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPOptimize, 'onPropositionsUpdate');
+    const registerSpy = jest.spyOn(NativeModules.AEPOptimize, 'onPropositionsUpdate');
     let adobeCallback = {
       call(_: Map<string, Proposition>): void {}
     };
 
     await Optimize.onPropositionUpdate(adobeCallback);
-    expect(spy).toHaveBeenCalled();
+    expect(registerSpy).toHaveBeenCalled();
   });
 
   it('AEPOptimize clearCachedProposition is called', async () => {

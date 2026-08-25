@@ -4,6 +4,7 @@
   "compilerOptions": {
     "noEmit": false,
     "rootDir": "./src",
+    "outDir": "./dist",
     "declaration": true,
     "preserveSymlinks": true,
     "target": "es6",

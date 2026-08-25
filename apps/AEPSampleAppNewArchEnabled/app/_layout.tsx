@@ -1,12 +1,11 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { Drawer } from 'expo-router/drawer';
 
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { MobileCore , LogLevel} from '@adobe/react-native-aepcore';
-import { Messaging } from '@adobe/react-native-aepmessaging';
+import { MobileCore, LogLevel} from '@adobe/react-native-aepcore';
 import { useEffect } from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -18,23 +17,23 @@ export default function RootLayout() {
   setTimeout(() => {
     SplashScreen.hideAsync();
   }, 3000);
-  
+
   useEffect(() => {
     // If you need more customization, you can use the initOptions object and MobileCore.initialize() method.
-  
+
     // const initOptions = {
     //   appId: "YOUR-APP-ID", //optional,
     //   lifecycleAutomaticTrackingEnabled: true, //optional
     //   lifecycleAdditionalContextData: { "contextDataKey": "contextDataValue" }, //optional
     //   appGroupIOS: "group.com.your.app.identifier" //optional, for iOS app groups
     // };
-  
+
     // MobileCore.initialize(initOptions).then(() => {  
     //   console.log("AEP SDK Initialized");
     // }).catch((error) => { 
     //   console.log("AEP SDK Initialization error", error);            
     // });
-  
+
     // Initialize SDK once in App.tsx or the entry file.
     // For functional components, use useEffect with an empty dependency array.
     // For class components, call initializeWithAppId inside componentDidMount.
@@ -42,7 +41,7 @@ export default function RootLayout() {
     MobileCore.initializeWithAppId("YOUR-APP-ID")
       .then(() => {
         console.log("AEP SDK Initialized");
-        
+
         // // Set up messaging delegate after SDK initialization
         // const unsubscribe = Messaging.setMessagingDelegate({
         //   onDismiss: (message) => {
@@ -63,9 +62,9 @@ export default function RootLayout() {
         //     console.log('URL loaded:', url, 'for message:', message);
         //   },
         // });
-        
+
         // console.log("Messaging delegate set up successfully");
-        
+
         // Store unsubscribe function if needed for cleanup
         // You could return it from useEffect if you need to clean up on unmount
       })

@@ -152,3 +152,21 @@ out/
 
 # ignore ds store
 .DS_Store
+
+# Claude Code machine-specific files (never commit these)
+.claude/
+**/.claude/
+
+# Internal AI agent documentation (kept locally, not for public PRs)
+agent-docs/
+
+# Local smoke test run reports
+smoke-tests/
+
+# Compiled TypeScript build artifacts in package source/spec directories
+packages/*/src/**/*.js
+packages/*/src/**/*.js.map
+packages/*/src/**/*.d.ts
+packages/*/specs/**/*.js
+packages/*/specs/**/*.js.map
+packages/*/specs/**/*.d.ts

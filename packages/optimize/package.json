@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepoptimize",
-  "version": "7.1.1",
+  "version": "7.2.0",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
@@ -8,6 +8,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "cleanup": "rm -rf node_modules",
+    "prepare": "tsc",
     "tsc": "tsc"
   },
   "repository": {
@@ -38,5 +39,18 @@
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
+  },
+  "codegenConfig": {
+    "name": "NativeAEPOptimizeSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.optimize"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPOptimize": "RCTAEPOptimize"
+      }
+    }
   }
 }

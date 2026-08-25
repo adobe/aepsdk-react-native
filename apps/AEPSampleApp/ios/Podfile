@@ -5,7 +5,17 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
+require 'json'
+
 platform :ios, min_ios_version_supported
+
+# USE_INTEROP_ROOT for @adobe/react-native-aepoptimize (0 = turbo, 1 = interop).
+ENV['USE_INTEROP_ROOT'] ||= '0'
+
+podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties.json')))
+new_arch_enabled = podfile_properties.fetch('newArchEnabled', 'true') == 'true'
+ENV['RCT_NEW_ARCH_ENABLED'] = new_arch_enabled ? '1' : '0'
+
 prepare_react_native_project!
 
 # Required for AEP SDK with New Architecture - use static frameworks
@@ -18,7 +28,9 @@ target 'aepsampleapp' do
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
-    :app_path => "#{Pod::Config.instance.installation_root}/.."
+    :app_path => "#{Pod::Config.instance.installation_root}/..",
+    :new_arch_enabled => new_arch_enabled,
+    :fabric_enabled => new_arch_enabled
   )
 
   target 'aepsampleappTests' do
