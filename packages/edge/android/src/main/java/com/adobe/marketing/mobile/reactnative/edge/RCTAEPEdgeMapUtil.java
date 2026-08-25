@@ -90,8 +90,6 @@ class RCTAEPEdgeMapUtil {
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), RCTAEPEdgeArrayUtil.toWritableArray((Object[]) value));
             }
-
-            iterator.remove();
         }
 
         return writableMap;

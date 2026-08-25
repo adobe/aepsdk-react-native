@@ -106,8 +106,6 @@
          writableMap.putArray((String)pair.getKey(),
                               toWritableArray((Object[])value));
        }
-
-       iterator.remove();
      }
  
      return writableMap;
