@@ -98,6 +98,18 @@ jobs:
     steps:
     - checkout
 
+    - run:
+        name: Force git to use HTTPS for GitHub
+        command: |
+          # CircleCI's `checkout` injects a global git rule that rewrites https://github.com -> SSH.
+          # On this resource class SSH egress is blocked, so CocoaPods' HTTPS clone URLs fail.
+          # Remove that rewrite and force any SSH GitHub URLs back to HTTPS.
+          git config --global --get-regexp 'url\..*\.insteadof' 2>/dev/null | awk '{print $1}' | while read -r key; do
+            git config --global --unset-all "$key" || true
+          done || true
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git config --global --add url."https://github.com/".insteadOf "ssh://git@github.com/"
+
     - restore_cache:
         keys:
             - yarn-cache-{{ checksum "yarn.lock" }}
@@ -161,6 +173,18 @@ jobs:
 
     steps:
     - checkout
+
+    - run:
+        name: Force git to use HTTPS for GitHub
+        command: |
+          # CircleCI's `checkout` injects a global git rule that rewrites https://github.com -> SSH.
+          # On this resource class SSH egress is blocked, so CocoaPods' HTTPS clone URLs fail.
+          # Remove that rewrite and force any SSH GitHub URLs back to HTTPS.
+          git config --global --get-regexp 'url\..*\.insteadof' 2>/dev/null | awk '{print $1}' | while read -r key; do
+            git config --global --unset-all "$key" || true
+          done || true
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git config --global --add url."https://github.com/".insteadOf "ssh://git@github.com/"
 
     - restore_cache:
         keys:
