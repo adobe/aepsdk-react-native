@@ -92,7 +92,6 @@ class RCTAEPEdgeConsentUtils {
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), toWritableArray((Object[]) value));
             }
-            iterator.remove();
         }
 
         return writableMap;

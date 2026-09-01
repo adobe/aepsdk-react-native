@@ -115,8 +115,6 @@ class RCTAEPMapUtil {
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), RCTAEPArrayUtil.toWritableArray((Object[]) value));
             }
-
-            iterator.remove();
         }
 
         return writableMap;
