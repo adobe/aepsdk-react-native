@@ -36,11 +36,19 @@ jobs:
         command: yarn run build
 
     - run:
+        name: Verify TypeScript Type Resolution (arethetypeswrong)
+        command: yarn verify:types
+
+    - run:
         name: Install AEPSampleApp Dependencies
         command: cd apps/AEPSampleApp && yarn install --immutable --network-timeout 300000
         no_output_timeout: 20m
         environment:
           NODE_OPTIONS: "--max-old-space-size=4096"
+
+    - run:
+        name: Verify Consumer Type Resolution (AEPSampleApp)
+        command: cd apps/AEPSampleApp && yarn typecheck:consumers
 
     - run:
         name: Expo Prebuild
