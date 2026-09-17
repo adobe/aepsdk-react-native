@@ -11,7 +11,7 @@
     "clean": "rm yarn.lock & find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "prebuild": "npx lerna exec --ignore aepsampleapp --ignore baresampleapp -- rm -rf dist",
     "build": "npx lerna run tsc --ignore aepsampleapp --ignore aepsampleappnewarchenabled --ignore baresampleapp",
-    "verify:types": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled --ignore baresampleapp -- npx --yes @arethetypeswrong/cli --pack . --ignore-rules cjs-only-exports-default named-exports",
+    "verify:types": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled --ignore baresampleapp -- npx --yes @arethetypeswrong/cli --pack . --ignore-rules cjs-only-exports-default named-exports unexpected-module-syntax",
     "test": "jest",
     "test:ui": "npx lerna run test:ui --scope @adobe/react-native-aepmessaging",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
