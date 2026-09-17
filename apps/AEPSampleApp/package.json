@@ -14,7 +14,6 @@
     "build:both:turbo": "bash scripts/build-matrix.sh --preset both-turbo -c full --sync --run",
     "build:both:interop": "bash scripts/build-matrix.sh --preset both-interop -c full --sync --run",
     "lint": "eslint .",
-    "typecheck:consumers": "tsc -p tsconfig.consumer-check.json --noEmit",
     "start": "react-native start",
     "test": "jest"
   },

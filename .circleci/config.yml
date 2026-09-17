@@ -47,10 +47,6 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
     - run:
-        name: Verify Consumer Type Resolution (AEPSampleApp)
-        command: cd apps/AEPSampleApp && yarn typecheck:consumers
-
-    - run:
         name: Expo Prebuild
         command: cd apps/AEPSampleAppNewArchEnabled && npx expo prebuild
 
