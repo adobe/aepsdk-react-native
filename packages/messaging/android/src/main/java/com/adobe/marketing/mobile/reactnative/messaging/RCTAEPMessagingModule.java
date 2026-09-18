@@ -192,9 +192,17 @@ public final class RCTAEPMessagingModule
 
   @ReactMethod
   public void updatePropositionsForSurfaces(ReadableArray surfaces) {
+     // ⚠️ REPRODUCTION TEST for issue #589:
+     // The delay is now in the NATIVE SDK (aepsdk-messaging-android/Messaging.java)
+     // to accurately simulate a slow network call.
+     // This bridge method calls the SDK synchronously, which blocks the native modules thread.
+     Log.d(TAG, "[REPRO-BRIDGE] Calling Messaging.updatePropositionsForSurfaces() (fire-and-forget)...");
+
      Messaging.updatePropositionsForSurfaces(
         RCTAEPMessagingUtil.convertSurfaces(surfaces));
         propositionItemByUuid.clear();
+
+     Log.d(TAG, "[REPRO-BRIDGE] updatePropositionsForSurfaces() returned (but SDK may still be processing)");
   }
 
   // Message Methods

@@ -74,6 +74,36 @@ function MessagingView({navigation}: NavigationProps) {
     console.log('Updated Propositions for:', surfaces);
   };
 
+  // ⚠️ REPRODUCTION TEST for issue #589
+  const reproduceQueueingIssue = async () => {
+    const startTime = Date.now();
+    console.log(`[REPRO] ${new Date().toISOString()} - Starting reproduction test...`);
+    console.log(`[REPRO] Surfaces: ${surfaces.join(', ')}`);
+
+    // Call updatePropositions (which has 30s delay) - don't await
+    console.log(`[REPRO] ${new Date().toISOString()} - Calling updatePropositionsForSurfaces() WITHOUT await...`);
+    Messaging.updatePropositionsForSurfaces(surfaces);
+    console.log(`[REPRO] ${new Date().toISOString()} - updatePropositionsForSurfaces() returned immediately (fire-and-forget)`);
+
+    // Immediately call getPropositions
+    console.log(`[REPRO] ${new Date().toISOString()} - Now calling getPropositionsForSurfaces()...`);
+    try {
+      const messages = await Messaging.getPropositionsForSurfaces(surfaces);
+      const endTime = Date.now();
+      const elapsedSeconds = ((endTime - startTime) / 1000).toFixed(1);
+
+      console.log(`[REPRO] ${new Date().toISOString()} - getPropositionsForSurfaces() returned after ${elapsedSeconds}s`);
+      console.log(`[REPRO] Result: ${JSON.stringify(messages)}`);
+      console.log(`[REPRO] ✅ If this took ~30 seconds, it proves getPropositions was QUEUED behind updatePropositions`);
+    } catch (error) {
+      const endTime = Date.now();
+      const elapsedSeconds = ((endTime - startTime) / 1000).toFixed(1);
+      console.log(`[REPRO] ${new Date().toISOString()} - getPropositionsForSurfaces() FAILED after ${elapsedSeconds}s`);
+      console.log(`[REPRO] Error: ${error}`);
+      console.log(`[REPRO] ⚠️ If this timed out, it confirms the queuing/blocking issue!`);
+    }
+  };
+
   const getCachedMessages = async () => {
     const messages = await Messaging.getCachedMessages();
     console.log('Cached messages:', messages);
@@ -202,6 +232,20 @@ function MessagingView({navigation}: NavigationProps) {
         <Button title="updatePropositionsForSurfaces()" onPress={updatePropositionsForSurfaces} />
         <Button title="Unified Tracking Example" onPress={unifiedTrackingExample} />
 
+        {/* ⚠️ REPRODUCTION TEST for issue #589 */}
+        <View style={styles.reproSection}>
+          <Text style={styles.reproLabel}>⚠️ Issue #589 Reproduction Test</Text>
+          <Text style={styles.reproHint}>
+            This test adds a 30s delay to updatePropositions to prove getPropositions gets queued.
+            Watch console logs for timing details.
+          </Text>
+          <Button
+            title="🧪 Reproduce Queuing Issue"
+            onPress={reproduceQueueingIssue}
+            color="#d9534f"
+          />
+        </View>
+
         <View style={styles.divider} />
 
         {/* ── Uses Content Card Surfaces ── */}
@@ -239,6 +283,26 @@ const styles = StyleSheet.create({
   badge: {
     fontSize: 11, color: '#555', backgroundColor: '#e8e8e8',
     paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, overflow: 'hidden',
+  },
+  reproSection: {
+    backgroundColor: '#fff5f5',
+    borderWidth: 1,
+    borderColor: '#ffcccc',
+    borderRadius: 6,
+    padding: 12,
+    marginVertical: 8,
+  },
+  reproLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#d9534f',
+    marginBottom: 4,
+  },
+  reproHint: {
+    fontSize: 11,
+    color: '#666',
+    marginBottom: 8,
+    lineHeight: 16,
   },
 });
 

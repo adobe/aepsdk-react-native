@@ -68,6 +68,8 @@ android {
 }
 
 repositories {
+  // ⚠️ REPRODUCTION TEST: Check local Maven first for modified native SDK
+  mavenLocal()
   mavenCentral()
   google()
 }
@@ -80,7 +82,13 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation platform("com.adobe.marketing.mobile:sdk-bom:3.+")
-  api "com.adobe.marketing.mobile:messaging"
+
+  // ⚠️ REPRODUCTION TEST: Use local SNAPSHOT instead of BOM
+  // Original (Maven):
+  // implementation platform("com.adobe.marketing.mobile:sdk-bom:3.+")
+  // api "com.adobe.marketing.mobile:messaging"
+
+  // Local SNAPSHOT (with 30-second delay):
+  api "com.adobe.marketing.mobile:messaging:3.12.0-SNAPSHOT"
 
 }

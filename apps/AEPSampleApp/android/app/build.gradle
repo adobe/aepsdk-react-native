@@ -75,9 +75,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.aepsampleapp"
+    namespace "com.adobe.marketing.mobile.messagingsample"
     defaultConfig {
-        applicationId "com.aepsampleapp"
+        applicationId "com.adobe.marketing.mobile.messagingsample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -104,6 +104,53 @@ android {
         }
     }
 }
+
+// ⚠️ REPRODUCTION TEST: Force local SNAPSHOT version
+configurations.all {
+    resolutionStrategy {
+        force 'com.adobe.marketing.mobile:messaging:3.12.0-SNAPSHOT'
+
+        // Log what's being resolved
+        eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'com.adobe.marketing.mobile' && details.requested.name == 'messaging') {
+                println "[GRADLE] Messaging dependency: ${details.requested.version} -> ${details.target.version}"
+            }
+        }
+    }
+}
+
+// ⚠️ REPRODUCTION TEST: Prove the Messaging artifact actually resolved from
+// ~/.m2 (mavenLocal), not just that the version string matches. A version
+// match alone doesn't prove the source repo; the artifact's file path does.
+// Uses a detached configuration (plain Gradle module resolution) instead of
+// the app module's AGP-managed runtime classpath, which avoids AGP's
+// variant-attribute matching entirely (that classpath isn't meant to be
+// resolved directly via the legacy resolvedConfiguration API).
+tasks.register("verifyMessagingLocalMavenSource") {
+    doLast {
+        def dep = project.dependencies.create("com.adobe.marketing.mobile:messaging:3.12.0-SNAPSHOT")
+        dep.setTransitive(false)
+        def detached = project.configurations.detachedConfiguration(dep)
+        detached.attributes {
+            attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage, Usage.JAVA_RUNTIME))
+            attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category, Category.LIBRARY))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, project.objects.named(Bundling, Bundling.EXTERNAL))
+        }
+        def resolvedFiles = detached.resolve()
+        if (resolvedFiles.isEmpty()) {
+            throw new GradleException("[GRADLE] Could not resolve com.adobe.marketing.mobile:messaging:3.12.0-SNAPSHOT at all")
+        }
+        resolvedFiles.each { file ->
+            def isLocalMaven = file.path.contains(".m2${File.separator}repository")
+            println "[GRADLE] Messaging artifact file: ${file}"
+            println "[GRADLE] Resolved from local Maven (~/.m2): ${isLocalMaven}"
+            if (!isLocalMaven) {
+                throw new GradleException("[GRADLE] Expected Messaging artifact to resolve from ~/.m2/repository (mavenLocal), but got: ${file}")
+            }
+        }
+    }
+}
+preBuild.dependsOn("verifyMessagingLocalMavenSource")
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
