@@ -10,7 +10,8 @@
   "scripts": {
     "clean": "rm yarn.lock & find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "prebuild": "npx lerna exec --ignore aepsampleapp --ignore baresampleapp -- rm -rf dist",
-    "build": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled --ignore baresampleapp -- tsc",
+    "build": "npx lerna run tsc --ignore aepsampleapp --ignore aepsampleappnewarchenabled --ignore baresampleapp",
+    "verify:types": "npx lerna exec --ignore aepsampleapp --ignore aepsampleappnewarchenabled --ignore baresampleapp -- npx --yes @arethetypeswrong/cli --pack . --ignore-rules cjs-only-exports-default named-exports unexpected-module-syntax",
     "test": "jest",
     "test:ui": "npx lerna run test:ui --scope @adobe/react-native-aepmessaging",
     "sampleapp:ios:pod:update": "cd apps/AEPSampleApp/ios && pod update",
@@ -30,6 +31,7 @@
     "sampleappnewarchenabled:android:run": "cd apps/AEPSampleAppNewArchEnabled && npx expo run:android"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@babel/core": "^7.25.0",
     "@babel/generator": "^7.25.0",
     "@babel/preset-env": "^7.25.0",
