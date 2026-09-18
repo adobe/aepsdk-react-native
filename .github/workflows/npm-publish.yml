@@ -31,6 +31,8 @@ jobs:
           NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
       - name: transpile
         run: yarn build
+      - name: verify TypeScript type resolution (arethetypeswrong)
+        run: yarn verify:types
       - name: skill lerna publish error
         run: git stash
       - name: lerna publish
