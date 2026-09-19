@@ -8,16 +8,6 @@ pluginManagement {
 }
 plugins { id("com.facebook.react.settings") }
 
-// ⚠️ REPRODUCTION TEST: Add mavenLocal for SNAPSHOT dependencies
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-    }
-}
-
 def nodeExecutable = System.getenv("HOME") + "/.nvm/versions/node/v22.13.0/bin/node"
 def cliScript = file("../node_modules/@react-native-community/cli/build/bin.js").absolutePath
 
