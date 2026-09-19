@@ -35,7 +35,7 @@ import { useState, useEffect, createContext, useContext } from 'react';
 
 const STORAGE_KEY = 'aep_app_id';
 
-const DEFAULT_APP_ID = '3149c49c3910/0f12baf27522/launch-0d096c129660-development';
+const DEFAULT_APP_ID = '3149c49c3910/473386a6e5b0/launch-6099493a8c97-development';
 
 export const AppContext = createContext({
   appId: DEFAULT_APP_ID,
@@ -94,7 +94,7 @@ export default function App() {
     setAppId(trimmed);
     AsyncStorage.setItem(STORAGE_KEY, trimmed);
     MobileCore.setLogLevel(LogLevel.VERBOSE);
-    MobileCore.initializeWithAppId(trimmed)
+    MobileCore.initializeWithAppId(DEFAULT_APP_ID)
       .then(() => console.log('AEP SDK Initialized with:', trimmed))
       .catch((error) => console.error('AEP SDK Initialization error:', error));
   };

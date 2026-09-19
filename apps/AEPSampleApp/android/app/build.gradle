@@ -75,9 +75,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.aepsampleapp"
+    namespace "com.adobe.marketing.mobile.messagingsample"
     defaultConfig {
-        applicationId "com.aepsampleapp"
+        applicationId "com.adobe.marketing.mobile.messagingsample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

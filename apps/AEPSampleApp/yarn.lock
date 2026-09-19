@@ -5,88 +5,80 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"@adobe/react-native-aepassurance@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@adobe/react-native-aepassurance@npm:7.0.0"
+"@adobe/react-native-aepassurance@portal:../../packages/assurance::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepassurance@portal:../../packages/assurance::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/e0c1444641c358707006546001a081141f91fe44cfb54f630007db3dcbf67521244e444ded515ec1ded09ce227e44de58811b76191e90beb037e91180b372913
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aepcampaignclassic@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@adobe/react-native-aepcampaignclassic@npm:7.0.0"
+"@adobe/react-native-aepcampaignclassic@portal:../../packages/campaignclassic::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepcampaignclassic@portal:../../packages/campaignclassic::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/93a563b6e6b4ba281f2511cabf61497745aa5eb68717b633bb987786c3cb84d32c54a615845b79b35a515328278701af7bd13872ff251d5988f332cfb36952c8
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aepcore@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@adobe/react-native-aepcore@npm:7.0.0"
+"@adobe/react-native-aepcore@portal:../../packages/core::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepcore@portal:../../packages/core::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     react-native: ">=0.60.0"
-  checksum: 10/afff9023b3d18c1b5926543c8d1563da75dc69d654e0ee001c8fdc1de86f3343b83a701bb957f72fc4fb3c84ff5afd5b030c562e4436a860e10f5857dee76090
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aepedge@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@adobe/react-native-aepedge@npm:7.0.0"
+"@adobe/react-native-aepedge@portal:../../packages/edge::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepedge@portal:../../packages/edge::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedgeidentity": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/9daaa9fc349bb48c7852264e96eac6bbb2eb4f01704894e48a4f31ffaccfed1d7d9052ea658c27884af3c6a5546ce3ded9a00455d42bca311cad5828958c91fe
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aepedgebridge@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "@adobe/react-native-aepedgebridge@npm:7.0.1"
+"@adobe/react-native-aepedgebridge@portal:../../packages/edgebridge::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepedgebridge@portal:../../packages/edgebridge::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/1694d09b772929efb280c6df9bb9592cda948a82200b9915726e5479a36e7eee8c3ba2285b08f5e3ddbc1ebeead93c7a0370a95877ac97ebe799836c2fbd5af4
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aepedgeconsent@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@adobe/react-native-aepedgeconsent@npm:7.0.0"
+"@adobe/react-native-aepedgeconsent@portal:../../packages/edgeconsent::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepedgeconsent@portal:../../packages/edgeconsent::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/f8c0ed97e4b3c20378ff0c4632c5a1c9dcc276174a66e53c68aec0f3c784fe950edcaf4a139384d823bed3f697eb95e2b67ecbf903635745132f2a51bdbd3df2
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aepedgeidentity@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@adobe/react-native-aepedgeidentity@npm:7.0.0"
+"@adobe/react-native-aepedgeidentity@portal:../../packages/edgeidentity::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepedgeidentity@portal:../../packages/edgeidentity::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/da4fe75f4066bed2ade55932e557c709679690c96e3fe60f5ff431496bf1da6e7026909eebeba3547a754af67a1fd3fd52c48677375dfe7b5417fff72481fa5e
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aepmessaging@npm:^7.4.0":
-  version: 7.4.0
-  resolution: "@adobe/react-native-aepmessaging@npm:7.4.0"
+"@adobe/react-native-aepmessaging@portal:../../packages/messaging::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepmessaging@portal:../../packages/messaging::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedge": ^7.0.0
     "@adobe/react-native-aepedgeidentity": ^7.0.0
     react: "*"
     react-native: ">=0.60.0"
-  checksum: 10/1af488a0a84f08c775aeca58ad80e27ef6f50dd0e93c314676d92f11353a2770197caab6757de6c1e15d46c6f59f48e0a1293ab30b5a72da4a34ec7753a6df08
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@adobe/react-native-aepoptimize@portal:../../packages/optimize::locator=aepsampleapp%40workspace%3A.":
   version: 0.0.0-use.local
@@ -99,36 +91,33 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@adobe/react-native-aepplaces@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "@adobe/react-native-aepplaces@npm:7.0.1"
+"@adobe/react-native-aepplaces@portal:../../packages/places::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepplaces@portal:../../packages/places::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/189a5cd12b45db1ffc402028b42928d15df489c27b72b7a140bdfe53312e52edac2cb711b1b6a5f8e84a9cbd554bb9ba0b555a17014e30e408be19364435cfec
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aeptarget@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@adobe/react-native-aeptarget@npm:7.0.0"
+"@adobe/react-native-aeptarget@portal:../../packages/target::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aeptarget@portal:../../packages/target::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     "@adobe/react-native-aepedge": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/c492e98553ac0f694e460492f881d04c643e7bc269c7bffdf6b9d8ca644bd8cea688e3baf28a67e6ccc2a0d388cbec53e5d86f74b203749fb40e98a4cdf979dc
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@adobe/react-native-aepuserprofile@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@adobe/react-native-aepuserprofile@npm:7.0.0"
+"@adobe/react-native-aepuserprofile@portal:../../packages/userprofile::locator=aepsampleapp%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@adobe/react-native-aepuserprofile@portal:../../packages/userprofile::locator=aepsampleapp%40workspace%3A."
   peerDependencies:
     "@adobe/react-native-aepcore": ^7.0.0
     react-native: ">=0.60.0"
-  checksum: 10/ed7bd52832b4dac18f021d150c06392e87e65f88847c3849859b58c4413f21f7bee0127f030ad99662d0c36e43a9d92299b4b369012e1dc34d2c0e974cace1ec
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.29.0, @babel/code-frame@npm:^7.29.7":
   version: 7.29.7
@@ -3041,18 +3030,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "aepsampleapp@workspace:."
   dependencies:
-    "@adobe/react-native-aepassurance": "npm:^7.0.0"
-    "@adobe/react-native-aepcampaignclassic": "npm:^7.0.0"
-    "@adobe/react-native-aepcore": "npm:^7.0.0"
-    "@adobe/react-native-aepedge": "npm:^7.0.0"
-    "@adobe/react-native-aepedgebridge": "npm:^7.0.1"
-    "@adobe/react-native-aepedgeconsent": "npm:^7.0.0"
-    "@adobe/react-native-aepedgeidentity": "npm:^7.0.0"
-    "@adobe/react-native-aepmessaging": "npm:^7.4.0"
+    "@adobe/react-native-aepassurance": "portal:../../packages/assurance"
+    "@adobe/react-native-aepcampaignclassic": "portal:../../packages/campaignclassic"
+    "@adobe/react-native-aepcore": "portal:../../packages/core"
+    "@adobe/react-native-aepedge": "portal:../../packages/edge"
+    "@adobe/react-native-aepedgebridge": "portal:../../packages/edgebridge"
+    "@adobe/react-native-aepedgeconsent": "portal:../../packages/edgeconsent"
+    "@adobe/react-native-aepedgeidentity": "portal:../../packages/edgeidentity"
+    "@adobe/react-native-aepmessaging": "portal:../../packages/messaging"
     "@adobe/react-native-aepoptimize": "portal:../../packages/optimize"
-    "@adobe/react-native-aepplaces": "npm:^7.0.1"
-    "@adobe/react-native-aeptarget": "npm:^7.0.0"
-    "@adobe/react-native-aepuserprofile": "npm:^7.0.0"
+    "@adobe/react-native-aepplaces": "portal:../../packages/places"
+    "@adobe/react-native-aeptarget": "portal:../../packages/target"
+    "@adobe/react-native-aepuserprofile": "portal:../../packages/userprofile"
     "@babel/core": "npm:^7.25.2"
     "@babel/preset-env": "npm:^7.25.3"
     "@babel/runtime": "npm:^7.25.0"
