@@ -20,13 +20,13 @@ jobs:
         env: # More info about the environment variables in the README
           NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
       - name: tag messaging
-        run: npm dist-tag add @adobe/react-native-aepmessaging@5.1.0-beta.1 beta
+        run: npm dist-tag add @adobe/react-native-aepmessaging@7.4.0-beta.1 beta
         env: # More info about the environment variables in the README
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
           NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
       - name: tag messaging latest
-        run: npm dist-tag add @adobe/react-native-aepmessaging@5.0.0 latest
+        run: npm dist-tag add @adobe/react-native-aepmessaging@7.4.0 latest
         env: # More info about the environment variables in the README
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
