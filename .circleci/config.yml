@@ -36,6 +36,10 @@ jobs:
         command: yarn run build
 
     - run:
+        name: Verify TypeScript Type Resolution (arethetypeswrong)
+        command: yarn verify:types
+
+    - run:
         name: Install AEPSampleApp Dependencies
         command: cd apps/AEPSampleApp && yarn install --immutable --network-timeout 300000
         no_output_timeout: 20m
