@@ -10,13 +10,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPLifecycle from './NativeAEPLifecycle';
 
 interface ILifecycle {
   extensionVersion: () => Promise<string>;
 }
 
-const RCTAEPLifecycle: ILifecycle = NativeModules.AEPLifecycle;
+const RCTAEPLifecycle: ILifecycle = NativeAEPLifecycle as unknown as ILifecycle;
 
 const Lifecycle: ILifecycle = {
   /**

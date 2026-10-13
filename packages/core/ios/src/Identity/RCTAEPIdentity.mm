@@ -13,6 +13,7 @@ governing permissions and limitations under the License.
 #import "RCTAEPIdentity.h"
 @import AEPIdentity;
 @import AEPCore;
+@import AEPServices;
 
 // Visitor ID Auth State
 static NSString* const AEP_VISITOR_AUTH_STATE_AUTHENTICATED = @"VISITOR_AUTH_STATE_AUTHENTICATED";
@@ -25,85 +26,15 @@ static NSString* const VISITOR_ID_ID_TYPE_KEY = @"idType";
 static NSString* const VISITOR_ID_ID_KEY = @"identifier";
 static NSString* const VISITOR_ID_AUTH_STATE_KEY = @"authenticationState";
 
-static NSString* const EXTENSION_NAME = @"AEPIdentity";
+static NSString* const EXTENSION_NAME = @"RCTAEPIdentity";
 
-@implementation RCTAEPIdentity
-
-RCT_EXPORT_MODULE(AEPIdentity);
-
-- (dispatch_queue_t)methodQueue
-{
-    return dispatch_get_main_queue();
-}
-
-RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve([AEPMobileIdentity extensionVersion]);
-}
-
-RCT_EXPORT_METHOD(appendVisitorInfoForURL:(nonnull NSString*)baseUrl resolver:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    [AEPMobileIdentity appendToUrl:[NSURL URLWithString:baseUrl] completion:^(NSURL * _Nullable url, NSError * _Nullable error) {
-        if (error) {
-            [self handleError:error rejecter:reject errorLocation:@"appendVisitorInfoForURL"];
-        } else {
-            resolve(url.absoluteString);
-        }
-    }];
-}
-
-RCT_EXPORT_METHOD(getUrlVariables:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    [AEPMobileIdentity getUrlVariables:^(NSString * _Nullable variables, NSError * _Nullable error) {
-        if (error) {
-            [self handleError:error rejecter:reject errorLocation:@"getUrlVariables"];
-        } else {
-            resolve(variables);
-        }
-    }];
-}
-
-RCT_EXPORT_METHOD(getIdentifiers:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    [AEPMobileIdentity getIdentifiers:^(NSArray<id<AEPIdentifiable>> * _Nullable visitorIDs, NSError * _Nullable error) {
-        if (error) {
-            [self handleError:error rejecter:reject errorLocation:@"getIdentifiers"];
-        } else {
-            NSMutableArray *visitorIDArr = [NSMutableArray array];
-            for (id<AEPIdentifiable> visitorId in visitorIDs) {
-                NSMutableDictionary *visitorIdDict = [NSMutableDictionary dictionary];
-                visitorIdDict[VISITOR_ID_ID_ORIGIN_KEY] = visitorId.origin;
-                visitorIdDict[VISITOR_ID_ID_TYPE_KEY] = visitorId.type;
-                visitorIdDict[VISITOR_ID_ID_KEY] = visitorId.identifier;
-                visitorIdDict[VISITOR_ID_AUTH_STATE_KEY] = stringFromAuthState(visitorId.authenticationState);
-                [visitorIDArr addObject:visitorIdDict];
-            }
-
-            resolve(visitorIDArr);
-        }
-    }];
-}
-
-RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    [AEPMobileIdentity getExperienceCloudId:^(NSString * _Nullable experienceCloudId, NSError * _Nullable error) {
-        if (error) {
-            [self handleError:error rejecter:reject errorLocation:@"getExperienceCloudId"];
-        } else {
-            resolve(experienceCloudId);
-        }
-    }];
-}
-
-RCT_EXPORT_METHOD(syncIdentifier:(nonnull NSString*)identifierType
-            identifier:(nonnull NSString*)identifier
-                  authentication:(NSString *)authenticationState) {
-    [AEPMobileIdentity syncIdentifierWithType:identifierType identifier:identifier authenticationState:authStateFromString(authenticationState)];
-}
-
-RCT_EXPORT_METHOD(syncIdentifiers:(nullable NSDictionary*)identifiers) {
-    [AEPMobileIdentity syncIdentifiers:identifiers];
-}
-
-RCT_EXPORT_METHOD(syncIdentifiersWithAuthState:(nullable NSDictionary*)identifiers
-                  authentication:(NSString *)authenticationState) {
-    [AEPMobileIdentity syncIdentifiers:identifiers authenticationState:authStateFromString(authenticationState)];
-}
+// Old-arch iOS (classic bridge): NativeModules only exposes methods registered via
+// RCT_EXPORT_METHOD. Protocol/Turbo selectors alone are invisible to JavaScript.
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#define AEP_IDENTITY_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_IDENTITY_METHOD(method) - (void)method
+#endif
 
 static AEPMobileVisitorAuthState authStateFromString(NSString* authStateString) {
     if ([authStateString isEqualToString:AEP_VISITOR_AUTH_STATE_AUTHENTICATED]) {
@@ -126,6 +57,104 @@ static NSString* stringFromAuthState(AEPMobileVisitorAuthState authState) {
     }
 }
 
+@implementation RCTAEPIdentity
+
++ (BOOL)requiresMainQueueSetup {
+  return NO;
+}
+
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
+}
+
+RCT_EXPORT_MODULE(NativeAEPIdentity);
+
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeAEPIdentitySpecJSI>(params);
+}
+#endif
+
+#pragma mark - NativeAEPIdentitySpec protocol methods
+
+AEP_IDENTITY_METHOD(extensionVersion:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+    resolve([AEPMobileIdentity extensionVersion]);
+}
+
+AEP_IDENTITY_METHOD(appendVisitorInfoForURL:(NSString *)baseURL
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+    [AEPMobileIdentity appendToUrl:[NSURL URLWithString:baseURL] completion:^(NSURL * _Nullable url, NSError * _Nullable error) {
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"appendVisitorInfoForURL"];
+        } else {
+            resolve(url.absoluteString);
+        }
+    }];
+}
+
+AEP_IDENTITY_METHOD(getUrlVariables:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+    [AEPMobileIdentity getUrlVariables:^(NSString * _Nullable variables, NSError * _Nullable error) {
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getUrlVariables"];
+        } else {
+            resolve(variables);
+        }
+    }];
+}
+
+AEP_IDENTITY_METHOD(getIdentifiers:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+    [AEPMobileIdentity getIdentifiers:^(NSArray<id<AEPIdentifiable>> * _Nullable visitorIDs, NSError * _Nullable error) {
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getIdentifiers"];
+        } else {
+            NSMutableArray *visitorIDArr = [NSMutableArray array];
+            for (id<AEPIdentifiable> visitorId in visitorIDs) {
+                NSMutableDictionary *visitorIdDict = [NSMutableDictionary dictionary];
+                visitorIdDict[VISITOR_ID_ID_ORIGIN_KEY] = visitorId.origin;
+                visitorIdDict[VISITOR_ID_ID_TYPE_KEY] = visitorId.type;
+                visitorIdDict[VISITOR_ID_ID_KEY] = visitorId.identifier;
+                visitorIdDict[VISITOR_ID_AUTH_STATE_KEY] = stringFromAuthState(visitorId.authenticationState);
+                [visitorIDArr addObject:visitorIdDict];
+            }
+
+            resolve(visitorIDArr);
+        }
+    }];
+}
+
+AEP_IDENTITY_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+    [AEPMobileIdentity getExperienceCloudId:^(NSString * _Nullable experienceCloudId, NSError * _Nullable error) {
+        if (error) {
+            [self handleError:error rejecter:reject errorLocation:@"getExperienceCloudId"];
+        } else {
+            resolve(experienceCloudId);
+        }
+    }];
+}
+
+AEP_IDENTITY_METHOD(syncIdentifier:(NSString *)identifierType
+            identifier:(NSString *)identifier
+            authenticationState:(NSString *)authenticationState) {
+    [AEPMobileIdentity syncIdentifierWithType:identifierType identifier:identifier authenticationState:authStateFromString(authenticationState)];
+}
+
+AEP_IDENTITY_METHOD(syncIdentifiers:(NSDictionary *)identifiers) {
+    [AEPMobileIdentity syncIdentifiers:identifiers];
+}
+
+AEP_IDENTITY_METHOD(syncIdentifiersWithAuthState:(nullable NSDictionary *)identifiers
+                  authenticationState:(NSString *)authenticationState) {
+    [AEPMobileIdentity syncIdentifiers:identifiers authenticationState:authStateFromString(authenticationState)];
+}
+
 #pragma mark - Helper methods
 
  - (void) handleError:(NSError *) error rejecter:(RCTPromiseRejectBlock) reject errorLocation:(NSString *) location {
@@ -142,7 +171,7 @@ static NSString* stringFromAuthState(AEPMobileVisitorAuthState authState) {
         }else {
             reject(EXTENSION_NAME, errorUnexpected, error);
         }
-     } 
+     }
 
  }
 

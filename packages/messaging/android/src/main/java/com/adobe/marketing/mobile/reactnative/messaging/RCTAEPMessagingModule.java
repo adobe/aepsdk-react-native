@@ -111,7 +111,7 @@ public final class RCTAEPMessagingModule
 
   @Override
   public String getName() {
-    return "AEPMessaging";
+    return "NativeAEPMessaging";
   }
 
   // Required for rn built in EventEmitter Calls.

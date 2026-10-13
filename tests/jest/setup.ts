@@ -49,6 +49,17 @@ jest.doMock('react-native', () => {
     )
   };
 
+  const aepUserProfile = {
+    extensionVersion: jest.fn(
+      () => new Promise((resolve) => resolve(''))
+    ),
+    removeUserAttributes: jest.fn(),
+    getUserAttributes: jest.fn(
+      () => new Promise((resolve) => resolve(null))
+    ),
+    updateUserAttributes: jest.fn()
+  };
+
   return Object.setPrototypeOf(
     {
       NativeModules: {
@@ -109,16 +120,8 @@ jest.doMock('react-native', () => {
           ),
           startSession: jest.fn()
         },
-        AEPUserProfile: {
-          extensionVersion: jest.fn(
-            () => new Promise((resolve) => resolve(''))
-          ),
-          removeUserAttributes: jest.fn(),
-          getUserAttributes: jest.fn(
-            () => new Promise((resolve) => resolve(null))
-          ),
-          updateUserAttributes: jest.fn()
-        },
+        AEPUserProfile: aepUserProfile,
+        NativeAEPUserProfile: aepUserProfile,
         AEPSignal: {
           extensionVersion: jest.fn(() => new Promise((resolve) => resolve('')))
         },

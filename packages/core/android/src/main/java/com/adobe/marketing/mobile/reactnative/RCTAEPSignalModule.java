@@ -29,7 +29,7 @@ public class RCTAEPSignalModule extends ReactContextBaseJavaModule {
     // Required for RN modules
     @Override
     public String getName() {
-        return "AEPSignal";
+        return "NativeAEPSignal";
     }
 
     @ReactMethod

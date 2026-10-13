@@ -10,7 +10,19 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPMessaging', () => {
+  const emitter = () => jest.fn(() => ({ remove: jest.fn() }));
+  return {
+    __esModule: true,
+    default: {
+      trackPropositionItem: jest.fn(),
+      onJavascriptMessage: emitter(),
+      onJavascriptResult: emitter()
+    }
+  };
+});
+
+import NativeAEPMessaging from '../src/NativeAEPMessaging';
 import { MessagingEdgeEventType, PropositionItem, PropositionItemData, PersonalizationSchema } from '../src';
 
 describe('PropositionItem', () => {
@@ -34,7 +46,7 @@ describe('PropositionItem', () => {
     const item = new PropositionItem(baseData);
     item.track(MessagingEdgeEventType.DISPLAY);
 
-    expect(NativeModules.AEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
+    expect(NativeAEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
       activityID,
       null,
       MessagingEdgeEventType.DISPLAY,
@@ -46,7 +58,7 @@ describe('PropositionItem', () => {
     const item = new PropositionItem(baseData);
     item.track('click', MessagingEdgeEventType.INTERACT, null);
 
-    expect(NativeModules.AEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
+    expect(NativeAEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
       activityID,
       'click',
       MessagingEdgeEventType.INTERACT,
@@ -59,7 +71,7 @@ describe('PropositionItem', () => {
     const tokens = ['t1', 't2'];
     item.track('click', MessagingEdgeEventType.INTERACT, tokens);
 
-    expect(NativeModules.AEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
+    expect(NativeAEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
       activityID,
       'click',
       MessagingEdgeEventType.INTERACT,
@@ -72,7 +84,7 @@ describe('PropositionItem', () => {
     const tokens = ['a'];
     item.track(null, MessagingEdgeEventType.DISPLAY, tokens);
 
-    expect(NativeModules.AEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
+    expect(NativeAEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
       activityID,
       null,
       MessagingEdgeEventType.DISPLAY,

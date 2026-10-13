@@ -37,7 +37,7 @@ public class RCTAEPIdentityModule extends ReactContextBaseJavaModule {
     // Required for RN modules
     @Override
     public String getName() {
-        return "AEPIdentity";
+        return "NativeAEPIdentity";
     }
 
     @ReactMethod
