@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 
 import TargetPrefetchObject from './TargetPrefetchObject';
 import TargetParameters from './TargetParameters';
-import { NativeModules } from 'react-native';
+import NativeAEPTarget from '../NativeAEPTarget';
 
 interface ITargetRequests {
   registerTargetRequests: (
@@ -20,7 +20,7 @@ interface ITargetRequests {
   ) => void;
 }
 
-const RCTTarget: ITargetRequests = NativeModules.AEPTarget;
+const RCTTarget: ITargetRequests = NativeAEPTarget as unknown as ITargetRequests;
 
 class TargetRequestObject extends TargetPrefetchObject {
   defaultContent: string;

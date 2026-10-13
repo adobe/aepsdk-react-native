@@ -35,6 +35,19 @@
   "publishConfig": {
     "access": "public"
   },
+  "codegenConfig": {
+    "name": "NativeAEPTargetSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.target"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPTarget": "RCTAEPTarget"
+      }
+    }
+  },
   "installConfig": {
     "hoistingLimits": "dependencies"
   }

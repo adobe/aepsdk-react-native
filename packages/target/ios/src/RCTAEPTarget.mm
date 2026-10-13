@@ -11,6 +11,14 @@ specific language governing permissions and limitations under the License.
 
 @import AEPCore;
 @import AEPTarget;
+
+// Old-arch iOS (classic bridge): NativeModules only exposes methods registered via
+// RCT_EXPORT_METHOD. Protocol/Turbo selectors alone are invisible to JavaScript.
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#define AEP_TARGET_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_TARGET_METHOD(method) - (void)method
+#endif
 #import "RCTAEPTarget.h"
 #import "AEPTargetParametersDataBridge.h"
 #import "AEPTargetPrefetchObjectDataBridge.h"
@@ -18,50 +26,54 @@ specific language governing permissions and limitations under the License.
 
 @implementation RCTAEPTarget
 
-RCT_EXPORT_MODULE(AEPTarget);
+RCT_EXPORT_MODULE(NativeAEPTarget);
+
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeAEPTargetSpecJSI>(params);
+}
+#endif
 
 - (dispatch_queue_t)methodQueue {
   return dispatch_get_main_queue();
 }
 
-RCT_EXPORT_METHOD(extensionVersion
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_TARGET_METHOD(extensionVersion:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   resolve([AEPMobileTarget extensionVersion]);
 }
 
-RCT_EXPORT_METHOD(clearPrefetchCache) { [AEPMobileTarget clearPrefetchCache]; }
+AEP_TARGET_METHOD(clearPrefetchCache) { [AEPMobileTarget clearPrefetchCache]; }
 
-RCT_EXPORT_METHOD(getThirdPartyId
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_TARGET_METHOD(getThirdPartyId:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   [AEPMobileTarget getThirdPartyId:^(NSString *_Nullable thirdPartyId,
                                      NSError *_Nullable error) {
     resolve(thirdPartyId);
   }];
 }
 
-RCT_EXPORT_METHOD(getSessionId
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_TARGET_METHOD(getSessionId:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   [AEPMobileTarget
       getSessionId:^(NSString *_Nullable sessionId, NSError *_Nullable error) {
         resolve(sessionId);
       }];
 }
 
-RCT_EXPORT_METHOD(getTntId
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_TARGET_METHOD(getTntId:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   [AEPMobileTarget
       getTntId:^(NSString *_Nullable tntId, NSError *_Nullable error) {
         resolve(tntId);
       }];
 }
 
-RCT_EXPORT_METHOD(resetExperience) { [AEPMobileTarget resetExperience]; }
+AEP_TARGET_METHOD(resetExperience) { [AEPMobileTarget resetExperience]; }
 
-RCT_EXPORT_METHOD(setPreviewRestartDeeplink : (nonnull NSString *)deepLink) {
+AEP_TARGET_METHOD(setPreviewRestartDeeplink:(NSString *)deepLink) {
   NSURL *url = [NSURL URLWithString:deepLink];
   if (url) {
     [AEPMobileTarget setPreviewRestartDeepLink:url];
@@ -71,21 +83,20 @@ RCT_EXPORT_METHOD(setPreviewRestartDeeplink : (nonnull NSString *)deepLink) {
   }
 }
 
-RCT_EXPORT_METHOD(setSessionId : (nonnull NSString *)sessionId) {
+AEP_TARGET_METHOD(setSessionId:(NSString *)sessionId) {
   [AEPMobileTarget setSessionId:sessionId];
 }
 
-RCT_EXPORT_METHOD(setTntId : (nonnull NSString *)tntId) {
+AEP_TARGET_METHOD(setTntId:(NSString *)tntId) {
   [AEPMobileTarget setTntId:tntId];
 }
 
-RCT_EXPORT_METHOD(setThirdPartyId : (nonnull NSString *)thirdPartyId) {
+AEP_TARGET_METHOD(setThirdPartyId:(NSString *)thirdPartyId) {
   [AEPMobileTarget setThirdPartyId:thirdPartyId];
 }
 
-RCT_EXPORT_METHOD(retrieveLocationContent
-                  : (nonnull NSArray *)requests withParameters
-                  : (nullable NSDictionary *)parameters) {
+AEP_TARGET_METHOD(retrieveLocationContent:(NSArray *)requests
+                  parameters:(NSDictionary *)parameters) {
 
   NSMutableArray *requestsArr = [NSMutableArray array];
   for (NSDictionary *requestDict in requests) {
@@ -103,11 +114,10 @@ RCT_EXPORT_METHOD(retrieveLocationContent
                             withParameters:parametersObj];
 }
 
-RCT_EXPORT_METHOD(prefetchContent
-                  : (nonnull NSArray *)prefetchObjectArray withParameters
-                  : (nullable NSDictionary *)parameters resolver
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_TARGET_METHOD(prefetchContent:(NSArray *)prefetchObjectArray
+                  parameters:(NSDictionary *)parameters
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   NSMutableArray *prefetchObjArray = [NSMutableArray array];
 
   for (NSDictionary *prefetchDict in prefetchObjectArray) {
@@ -133,30 +143,27 @@ RCT_EXPORT_METHOD(prefetchContent
              }];
 }
 
-RCT_EXPORT_METHOD(displayedLocations
-                  : (nonnull NSArray *)mboxNames withTargetParameters
-                  : (nullable NSDictionary *)parameters) {
+AEP_TARGET_METHOD(displayedLocations:(NSArray *)mboxNames
+                  parameters:(NSDictionary *)parameters) {
   AEPTargetParameters *parametersObj =
       [AEPTargetParameters targetParametersFromDict:parameters];
   [AEPMobileTarget displayedLocations:mboxNames
                  withTargetParameters:parametersObj];
 }
 
-RCT_EXPORT_METHOD(clickedLocation
-                  : (nonnull NSString *)name targetParameters
-                  : (nullable NSDictionary *)parameters) {
+AEP_TARGET_METHOD(clickedLocation:(NSString *)name
+                  parameters:(NSDictionary *)parameters) {
   AEPTargetParameters *parametersObj =
       [AEPTargetParameters targetParametersFromDict:parameters];
   [AEPMobileTarget clickedLocation:name withTargetParameters:parametersObj];
 }
 
-RCT_EXPORT_METHOD(registerTargetRequests
-                  : (nonnull NSDictionary *)requestDict callback
-                  : (RCTResponseSenderBlock)callback) {
+AEP_TARGET_METHOD(registerTargetRequests:(NSDictionary *)requestDict
+                  callback:(RCTResponseSenderBlock)callback) {
   AEPTargetRequestObject *obj = [AEPTargetRequestObject
       targetRequestObjectFromDict:requestDict
                          callback:^(NSString *_Nullable content) {
-                           callback(@[ [NSNull null], content ]);
+                           callback(@[ [NSNull null], content ?: [NSNull null] ]);
                          }];
 
   if (!_registeredTargetRequests) {
