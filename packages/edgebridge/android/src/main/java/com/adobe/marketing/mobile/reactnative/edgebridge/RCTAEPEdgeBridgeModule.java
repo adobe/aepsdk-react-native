@@ -27,7 +27,7 @@ public class RCTAEPEdgeBridgeModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "AEPEdgeBridge";
+    return "NativeAEPEdgeBridge";
   }
 
   @ReactMethod

@@ -28,6 +28,19 @@
   "author": {
     "name": "Adobe Experience Platform SDK Team"
   },
+  "codegenConfig": {
+    "name": "NativeAEPAssuranceSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.assurance"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPAssurance": "RCTAEPAssurance"
+      }
+    }
+  },
   "peerDependencies": {
     "@adobe/react-native-aepcore": "^7.0.0",
     "react-native": ">=0.60.0"

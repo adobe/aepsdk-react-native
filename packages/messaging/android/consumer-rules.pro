@@ -1,0 +1,1 @@
+-keep class com.adobe.marketing.mobile.reactnative.messaging.NativeAEPMessagingModule { *; }

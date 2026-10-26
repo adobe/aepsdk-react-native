@@ -10,9 +10,11 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
+import { Platform } from 'react-native';
+import NativeAEPMessaging from '../NativeAEPMessaging';
+import { subscribeMessagingEvent } from '../messagingEvents';
 
-const RCTAEPMessaging = NativeModules.AEPMessaging;
+const RCTAEPMessaging = NativeAEPMessaging;
 
 // Registery to store inAppMessage callbacks for each message in Message.handleJavascriptMessage
 // Record - {messageId : {handlerName : callback}}
@@ -22,17 +24,15 @@ const jsMessageHandlers: Record<string, Record<string, (content: string) => void
 // Record - {messageId : {javascriptString : callback}}
 const jsResultHandlers: Record<string, Record<string, (result: string) => void>> = {};
 
-const handleJSMessageEventEmitter = new NativeEventEmitter(RCTAEPMessaging);
-
 // invokes the callback registered in Message.handleJavascriptMessage with the content received from the inAppMessage webview
-handleJSMessageEventEmitter.addListener('onJavascriptMessage', (event) => {
+subscribeMessagingEvent('onJavascriptMessage', (event) => {
   const {messageId, handlerName, content} = event;
   if (jsMessageHandlers[messageId] && jsMessageHandlers[messageId][handlerName]) {
     jsMessageHandlers[messageId][handlerName](content);
   }
 });
 
-handleJSMessageEventEmitter.addListener('onJavascriptResult', (event) => {
+subscribeMessagingEvent('onJavascriptResult', (event) => {
   const {messageId, javascriptString, result} = event;
   if (jsResultHandlers[messageId] && jsResultHandlers[messageId][javascriptString]) {
     // Convert result to string to maintain API parity

@@ -31,6 +31,19 @@
     "@adobe/react-native-aepcore": "^7.0.0",
     "react-native": ">=0.60.0"
   },
+  "codegenConfig": {
+    "name": "NativeAEPCampaignClassicSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.campaignclassic"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPCampaignClassic": "RCTAEPCampaignClassic"
+      }
+    }
+  },
   "publishConfig": {
     "access": "public"
   },

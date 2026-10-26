@@ -37,15 +37,21 @@ const AssuranceView = () => {
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back}  title="Go to main page" />
         <Text style={styles.welcome}>Assurance v{version}</Text>
-        <Button title="Start Session" onPress={startSessionClicked} />
-        <TextInput
+         <TextInput
           style={{height: 40, margin: 10}}
           placeholder="assurance://"
           onChangeText={val => setsessionURL(val)}
         />
+        <Button title="Start Session" onPress={startSessionClicked} />
+        <Button title="Quick Connect" onPress={quickConnectClicked} />
       </ScrollView>
     </View>
   );
+
+  function quickConnectClicked() {
+    // No url: starts the Assurance Quick Connect flow (debug builds only).
+    Assurance.startSession();
+  }
 
   function startSessionClicked() {
     Assurance.startSession(sessionURL);

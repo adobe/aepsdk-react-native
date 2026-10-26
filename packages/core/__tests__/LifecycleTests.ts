@@ -10,14 +10,32 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPLifecycle', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue('1.0.0')
+  }
+}));
+jest.mock('../src/NativeAEPCore', () => ({
+  __esModule: true,
+  default: { extensionVersion: jest.fn().mockResolvedValue('1.0.0') }
+}));
+jest.mock('../src/NativeAEPIdentity', () => ({
+  __esModule: true,
+  default: { extensionVersion: jest.fn().mockResolvedValue('1.0.0') }
+}));
+jest.mock('../src/NativeAEPSignal', () => ({
+  __esModule: true,
+  default: { extensionVersion: jest.fn().mockResolvedValue('1.0.0') }
+}));
+
 import { Lifecycle } from '../src';
+import NativeAEPLifecycle from '../src/NativeAEPLifecycle';
 
 describe('Lifecycle', () => {
   it('extensionVersion is called', async () => {
     expect(Lifecycle.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPLifecycle, 'extensionVersion');
     await Lifecycle.extensionVersion();
-    expect(spy).toHaveBeenCalled();
+    expect(NativeAEPLifecycle.extensionVersion).toHaveBeenCalled();
   });
 });

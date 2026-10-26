@@ -10,13 +10,20 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPEdgeBridge', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue('')
+  }
+}));
+
+import NativeAEPEdgeBridge from '../src/NativeAEPEdgeBridge';
 import { EdgeBridge } from '../src';
 
 describe('Edge Bridge', () => {
   it('extensionVersion is called', async () => {
     expect(EdgeBridge.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPEdgeBridge, 'extensionVersion');
+    const spy = jest.spyOn((NativeAEPEdgeBridge as any), 'extensionVersion');
     await EdgeBridge.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });

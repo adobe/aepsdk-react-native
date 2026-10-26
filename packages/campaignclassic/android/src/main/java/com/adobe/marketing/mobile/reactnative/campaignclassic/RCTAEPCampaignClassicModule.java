@@ -42,7 +42,7 @@ public class RCTAEPCampaignClassicModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "AEPCampaignClassic";
+    return "NativeAEPCampaignClassic";
   }
 
   @ReactMethod

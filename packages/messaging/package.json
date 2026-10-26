@@ -53,6 +53,19 @@
   "installConfig": {
     "hoistingLimits": "dependencies"
   },
+  "codegenConfig": {
+    "name": "NativeAEPMessagingSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.messaging"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPMessaging": "RCTAEPMessaging"
+      }
+    }
+  },
   "react-native-builder-bob": {
     "source": "src",
     "output": "dist",

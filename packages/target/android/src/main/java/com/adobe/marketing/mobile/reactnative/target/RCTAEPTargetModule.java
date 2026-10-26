@@ -43,7 +43,7 @@ public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "AEPTarget";
+    return "NativeAEPTarget";
   }
 
   @ReactMethod

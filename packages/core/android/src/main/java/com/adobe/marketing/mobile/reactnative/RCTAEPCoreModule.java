@@ -58,7 +58,7 @@ public class RCTAEPCoreModule extends ReactContextBaseJavaModule {
     // Required for RN modules
     @Override
     public String getName() {
-        return "AEPCore";
+        return "NativeAEPCore";
     }
 
     @ReactMethod

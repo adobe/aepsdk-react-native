@@ -30,7 +30,7 @@ public class RCTAEPLifecycleModule extends ReactContextBaseJavaModule {
     // Required for RN modules
     @Override
     public String getName() {
-        return "AEPLifecycle";
+        return "NativeAEPLifecycle";
     }
 
     @ReactMethod

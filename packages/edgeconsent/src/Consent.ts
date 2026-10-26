@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPEdgeConsent from './NativeAEPEdgeConsent';
 
 interface IConsent {
   extensionVersion: () => Promise<string>;
@@ -18,7 +18,7 @@ interface IConsent {
   getConsents: () => Promise<Record<string, any>>;
 }
 
-const RCTAEPEdgeConsent: IConsent = NativeModules.AEPEdgeConsent;
+const RCTAEPEdgeConsent = NativeAEPEdgeConsent;
 
 const Consent: IConsent = {
   /**
@@ -45,7 +45,7 @@ const Consent: IConsent = {
    * if an unexpected error occurs or the request timed out
    */
   getConsents(): Promise<Record<string, any>> {
-    return RCTAEPEdgeConsent.getConsents();
+    return RCTAEPEdgeConsent.getConsents() as Promise<Record<string, any>>;
   }
 };
 

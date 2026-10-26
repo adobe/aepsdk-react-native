@@ -10,10 +10,19 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-
-#import <React/RCTBridgeModule.h>
 #import <Foundation/Foundation.h>
 
-@interface RCTAEPCore : NSObject <RCTBridgeModule>
+#if USE_INTEROP_ROOT
+  #if RCT_NEW_ARCH_ENABLED
+    #import <NativeAEPCoreSpec/NativeAEPCoreSpec.h>
+    @interface RCTAEPCore : NSObject <NativeAEPCoreSpec>
+  #else
+    #import <React/RCTBridgeModule.h>
+    @interface RCTAEPCore : NSObject <RCTBridgeModule>
+  #endif
+#else
+  #import <NativeAEPCoreSpec/NativeAEPCoreSpec.h>
+  @interface RCTAEPCore : NSObject <NativeAEPCoreSpec>
+#endif
 
 @end

@@ -10,12 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import {
-  NativeModules,
-  NativeEventEmitter,
-  NativeModule,
-  Platform,
-} from "react-native";
+import { EventSubscription, Platform } from "react-native";
 import Message from "./models/Message";
 import { MessagingDelegate } from "./models/MessagingDelegate";
 import { MessagingProposition } from "./models/MessagingProposition";
@@ -26,6 +21,8 @@ import {
   InboxSettings,
   SettingsPlacement,
 } from "./ui/providers/InboxProvider";
+import NativeAEPMessaging from "./NativeAEPMessaging";
+import { subscribeMessagingEvent } from "./messagingEvents";
 
 export interface NativeMessagingModule {
   extensionVersion: () => Promise<string>;
@@ -57,8 +54,8 @@ export interface NativeMessagingModule {
   ) => void;
 }
 
-const RCTAEPMessaging: NativeModule & NativeMessagingModule =
-  NativeModules.AEPMessaging;
+const RCTAEPMessaging: NativeMessagingModule =
+  NativeAEPMessaging as unknown as NativeMessagingModule;
 
 declare var messagingDelegate: MessagingDelegate;
 var messagingDelegate: MessagingDelegate;
@@ -299,56 +296,58 @@ class Messaging {
   static setMessagingDelegate(delegate: MessagingDelegate): () => void {
     messagingDelegate = delegate;
 
-    const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
+    const subscriptions: EventSubscription[] = [];
 
-    eventEmitter.addListener("onShow", (message: Message) =>
-      messagingDelegate?.onShow?.(new Message(message))
+    subscriptions.push(
+      subscribeMessagingEvent("onShow", (message: Message) =>
+        messagingDelegate?.onShow?.(new Message(message))
+      )
     );
 
-    eventEmitter.addListener("onDismiss", (message: Message) => {
-      const messageInstance = new Message(message);
-      messageInstance._clearJavascriptMessageHandlers();
-      messageInstance._clearJavascriptResultHandlers();
-      messagingDelegate?.onDismiss?.(messageInstance);
-    });
+    subscriptions.push(
+      subscribeMessagingEvent("onDismiss", (message: Message) => {
+        const messageInstance = new Message(message);
+        messageInstance._clearJavascriptMessageHandlers();
+        messageInstance._clearJavascriptResultHandlers();
+        messagingDelegate?.onDismiss?.(messageInstance);
+      })
+    );
 
-    eventEmitter.addListener("shouldShowMessage", (message: Message) => {
-      const messageInstance = new Message(message);
-      const shouldShowMessage =
-        messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
-      const shouldSaveMessage =
-        messagingDelegate?.shouldSaveMessage?.(messageInstance) ?? false;
-      RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
-    });
+    subscriptions.push(
+      subscribeMessagingEvent("shouldShowMessage", (message: Message) => {
+        const messageInstance = new Message(message);
+        const shouldShowMessage =
+          messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
+        const shouldSaveMessage =
+          messagingDelegate?.shouldSaveMessage?.(messageInstance) ?? false;
+        RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
+      })
+    );
 
     if (Platform.OS === "ios") {
-      eventEmitter.addListener(
-        "urlLoaded",
-        (event: { url: string; message: Message }) =>
-          messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
+      subscriptions.push(
+        subscribeMessagingEvent(
+          "urlLoaded",
+          (event: { url: string; message: Message }) =>
+            messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
+        )
       );
     }
 
     if (Platform.OS === "android") {
-      eventEmitter.addListener(
-        "onContentLoaded",
-        (event: { message: Message }) =>
-          messagingDelegate?.onContentLoaded?.(new Message(event.message))
+      subscriptions.push(
+        subscribeMessagingEvent(
+          "onContentLoaded",
+          (event: { message: Message }) =>
+            messagingDelegate?.onContentLoaded?.(new Message(event.message))
+        )
       );
     }
 
     RCTAEPMessaging.setMessagingDelegate();
 
     return () => {
-      eventEmitter.removeAllListeners("onDismiss");
-      eventEmitter.removeAllListeners("onShow");
-      eventEmitter.removeAllListeners("shouldShowMessage");
-      if (Platform.OS === "ios") {
-        eventEmitter.removeAllListeners("urlLoaded");
-      }
-      if (Platform.OS === "android") {
-        eventEmitter.removeAllListeners("onContentLoaded");
-      }
+      subscriptions.forEach((subscription) => subscription.remove());
     };
   }
 
