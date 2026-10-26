@@ -10,19 +10,27 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPAssurance', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue(''),
+    startSession: jest.fn()
+  }
+}));
+
+import NativeAEPAssurance from '../src/NativeAEPAssurance';
 import { Assurance } from '../src';
 
 describe('Assurance', () => {
   it('extensionVersion is called', async () => {
     expect(Assurance.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPAssurance, 'extensionVersion');
+    const spy = jest.spyOn((NativeAEPAssurance as any), 'extensionVersion');
     await Assurance.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('startSession is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPAssurance, 'startSession');
+    const spy = jest.spyOn((NativeAEPAssurance as any), 'startSession');
     await Assurance.startSession('');
     expect(spy).toHaveBeenCalled();
   });

@@ -10,26 +10,35 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPEdgeConsent', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue('1.0.0'),
+    update: jest.fn(),
+    getConsents: jest.fn().mockResolvedValue({})
+  }
+}));
+
+import NativeAEPEdgeConsent from '../src/NativeAEPEdgeConsent';
 import { Consent } from '../src';
 
 describe('Consent', () => {
   it('extensionVersion is called', async () => {
     expect(Consent.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPEdgeConsent, 'extensionVersion');
+    const spy = jest.spyOn((NativeAEPEdgeConsent as any), 'extensionVersion');
     await Consent.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('updateConsents is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPEdgeConsent, 'update');
+    const spy = jest.spyOn((NativeAEPEdgeConsent as any), 'update');
     let consents = { consents: { collect: { val: 'y' } } };
     await Consent.update(consents);
     expect(spy).toHaveBeenCalledWith(consents);
   });
 
   it('getConsents is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPEdgeConsent, 'getConsents');
+    const spy = jest.spyOn((NativeAEPEdgeConsent as any), 'getConsents');
     await Consent.getConsents();
     expect(spy).toHaveBeenCalled();
   });

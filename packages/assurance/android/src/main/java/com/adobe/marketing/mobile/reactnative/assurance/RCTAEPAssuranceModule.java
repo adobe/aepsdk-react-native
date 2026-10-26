@@ -11,6 +11,8 @@ governing permissions and limitations under the License.
 
 package com.adobe.marketing.mobile.reactnative.assurance;
 
+import androidx.annotation.Nullable;
+
 import com.adobe.marketing.mobile.Assurance;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -30,14 +32,17 @@ public class RCTAEPAssuranceModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startSession(final String url) {
-        if(url != null){
+    public void startSession(@Nullable final String url) {
+        if (url != null && !url.isEmpty()) {
             Assurance.startSession(url);
+        } else {
+            // No url: start the Quick Connect flow (debuggable builds only).
+            Assurance.startSession();
         }
     }
 
     @Override
     public String getName() {
-        return "AEPAssurance";
+        return "NativeAEPAssurance";
     }
 }

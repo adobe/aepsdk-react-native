@@ -10,14 +10,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPAssurance from './NativeAEPAssurance';
 
 interface IAssurance {
   extensionVersion: () => Promise<string>;
-  startSession: (url: string) => void;
+  startSession: (url?: string) => void;
 }
 
-const RCTAEPAssurance: IAssurance = NativeModules.AEPAssurance;
+const RCTAEPAssurance = NativeAEPAssurance;
 
 const Assurance: IAssurance = {
   /**
@@ -34,10 +34,13 @@ const Assurance: IAssurance = {
    * to initiate a new Assurance session.
    * A call to this API with an non assurance session url will be ignored
    *
-   * @param url a valid Assurance URL string to start a session
+   * When called without a url, the Quick Connect flow is started instead. Quick Connect is only
+   * available in debuggable (debug) builds; in release builds the call is a no-op.
+   *
+   * @param url a valid Assurance URL string to start a session; omit to start Quick Connect
    */
-  startSession(url: string) {
-    RCTAEPAssurance.startSession(url);
+  startSession(url?: string) {
+    RCTAEPAssurance.startSession(url ?? null);
   }
 };
 

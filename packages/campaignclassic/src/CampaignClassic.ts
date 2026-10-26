@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPCampaignClassic from './NativeAEPCampaignClassic';
 import { UserInfo } from './models/UserInfo';
 
 interface ICampaignClassic {
@@ -24,7 +24,7 @@ interface ICampaignClassic {
   trackNotificationReceiveWithUserInfo(userInfo: UserInfo): void;
 }
 
-const RCTAEPCampaignClassic = NativeModules.AEPCampaignClassic;
+const RCTAEPCampaignClassic = NativeAEPCampaignClassic;
 
 /**
  * Public APIs for Campaign Classic extension

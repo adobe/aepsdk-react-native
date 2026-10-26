@@ -11,29 +11,38 @@
  */
 
 #import "RCTAEPCampaignClassic.h"
-#import <React/RCTEventEmitter.h>
 @import AEPCampaignClassic;
 @import AEPServices;
 @import Foundation;
 
+// Old-arch iOS (classic bridge): NativeModules only exposes methods registered via
+// RCT_EXPORT_METHOD. Protocol/Turbo selectors alone are invisible to JavaScript.
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#define AEP_CAMPAIGNCLASSIC_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_CAMPAIGNCLASSIC_METHOD(method) - (void)method
+#endif
+
 static NSString *const TAG = @"RCTAEPCampaignClassic";
 
-@implementation RCTAEPCampaignClassic {
-  bool hasListeners;
-}
+@implementation RCTAEPCampaignClassic
 
-- (NSArray<NSString *> *)supportedEvents {
-  return @[ @"Accelerometer" ];
-}
+RCT_EXPORT_MODULE(NativeAEPCampaignClassic);
 
-- (instancetype)init {
-  self = [super init];
-  hasListeners = false;
-  return self;
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeAEPCampaignClassicSpecJSI>(params);
 }
+#endif
 
 + (BOOL)requiresMainQueueSetup {
   return NO;
+}
+
+- (dispatch_queue_t)methodQueue {
+  return dispatch_get_main_queue();
 }
 
 - (NSData *)dataFromHexString:(NSString *)string {
@@ -52,36 +61,26 @@ static NSString *const TAG = @"RCTAEPCampaignClassic";
   return [NSData dataWithData:result];
 }
 
-RCT_EXPORT_MODULE(AEPCampaignClassic);
-
-- (dispatch_queue_t)methodQueue {
-  return dispatch_get_main_queue();
-}
-
-RCT_EXPORT_METHOD(extensionVersion
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_CAMPAIGNCLASSIC_METHOD(extensionVersion:(RCTPromiseResolveBlock)resolve
+                           reject:(RCTPromiseRejectBlock)reject) {
   [AEPLog traceWithLabel:TAG message:@"extensionVersion is called."];
   resolve([AEPMobileCampaignClassic extensionVersion]);
 }
 
-RCT_EXPORT_METHOD(registerDeviceWithToken
-                  : (nonnull NSString *)deviceToken
-                  : (nullable NSString *)userKey
-                  : (nullable NSDictionary *)additionalParams) {
+AEP_CAMPAIGNCLASSIC_METHOD(registerDeviceWithToken:(NSString *)deviceToken
+                           userKey:(NSString * _Nullable)userKey
+                           additionalParameters:(NSDictionary * _Nullable)additionalParams) {
   [AEPMobileCampaignClassic
       registerDeviceWithToken:[self dataFromHexString:deviceToken]
                       userKey:userKey
          additionalParameters:additionalParams];
 }
 
-RCT_EXPORT_METHOD(trackNotificationClickWithUserInfo
-                  : (nonnull NSDictionary *)userInfo) {
+AEP_CAMPAIGNCLASSIC_METHOD(trackNotificationClickWithUserInfo:(NSDictionary *)userInfo) {
   [AEPMobileCampaignClassic trackNotificationClickWithUserInfo:userInfo];
 }
 
-RCT_EXPORT_METHOD(trackNotificationReceiveWithUserInfo
-                  : (nonnull NSDictionary *)userInfo) {
+AEP_CAMPAIGNCLASSIC_METHOD(trackNotificationReceiveWithUserInfo:(NSDictionary *)userInfo) {
   [AEPMobileCampaignClassic trackNotificationReceiveWithUserInfo:userInfo];
 }
 

@@ -37,7 +37,7 @@ public class RCTAEPEdgeModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "AEPEdge";
+    return "NativeAEPEdge";
   }
 
   @ReactMethod

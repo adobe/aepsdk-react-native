@@ -9,6 +9,14 @@
  governing permissions and limitations under the License.
  */
 
+
+// Old-arch iOS (classic bridge): NativeModules only exposes methods registered via
+// RCT_EXPORT_METHOD. Protocol/Turbo selectors alone are invisible to JavaScript.
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#define AEP_EDGECONSENT_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_EDGECONSENT_METHOD(method) - (void)method
+#endif
 #import "RCTAEPEdgeConsent.h"
 @import AEPEdgeConsent;
 @import AEPCore;
@@ -17,23 +25,31 @@
 
 static NSString* const EXTENSION_NAME = @"AEPEdgeConsent";
 
-RCT_EXPORT_MODULE(AEPEdgeConsent);
+RCT_EXPORT_MODULE(NativeAEPEdgeConsent);
+
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeAEPEdgeConsentSpecJSI>(params);
+}
+#endif
 
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
 }
 
-RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGECONSENT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([AEPMobileEdgeConsent extensionVersion]);
 }
 
-RCT_EXPORT_METHOD(update: (nonnull NSDictionary*)consents) {
+AEP_EDGECONSENT_METHOD(update: (NSDictionary *)consents) {
     [AEPMobileEdgeConsent updateWithConsents:consents];
 }
 
-RCT_EXPORT_METHOD(getConsents:(RCTPromiseResolveBlock) resolve
-                  rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGECONSENT_METHOD(getConsents:(RCTPromiseResolveBlock) resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
     [AEPMobileEdgeConsent getConsents:^(NSDictionary* consents, NSError* error) {
         if (error && error.code != AEPErrorNone) {
             if (error.code == AEPErrorCallbackTimeout) {

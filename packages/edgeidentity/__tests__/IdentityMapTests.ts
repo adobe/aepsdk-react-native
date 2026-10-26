@@ -10,6 +10,20 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+jest.mock('../src/NativeAEPEdgeIdentity', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue(''),
+    getExperienceCloudId: jest.fn().mockResolvedValue(''),
+    getIdentities: jest.fn().mockResolvedValue({
+      ABC: [{ id: 'id1', authenticatedState: 'ambiguous', primary: false }]
+    }),
+    getUrlVariables: jest.fn().mockResolvedValue(''),
+    updateIdentities: jest.fn(),
+    removeIdentity: jest.fn()
+  }
+}));
+
 import { AuthenticatedState, IdentityItem, IdentityMap } from '../src';
 
 describe('IdentityMap', () => {

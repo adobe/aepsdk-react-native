@@ -35,18 +35,24 @@ const AssuranceView = ({navigation}: NavigationProps) => {
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Assurance v{version}</Text>
-        <Button title="Start Session" onPress={startSessionClicked} />
         <TextInput
           style={{height: 40, margin: 10}}
           placeholder="assurance://"
           onChangeText={val => setsessionURL(val)}
         />
+        <Button title="Start Session" onPress={startSessionClicked} />
+        <Button title="Quick Connect" onPress={quickConnectClicked} />
       </ScrollView>
     </View>
   );
 
+  function quickConnectClicked() {
+    // No url: starts the Assurance Quick Connect flow (debug builds only).
+    Assurance.startSession();
+  }
+
   function startSessionClicked() {
-    Assurance.startSession("edgetutorialapp://?adb_validation_sessionid=827183a9-582f-4f39-afbd-3d02705cba7d");
+    Assurance.startSession(sessionURL);
   }
 };
 

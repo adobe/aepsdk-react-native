@@ -33,7 +33,7 @@ public class RCTAEPEdgeConsentModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "AEPEdgeConsent";
+    return "NativeAEPEdgeConsent";
   }
 
   @ReactMethod
