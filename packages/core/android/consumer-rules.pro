@@ -1,0 +1,4 @@
+-keep class com.adobe.marketing.mobile.reactnative.NativeAEPCoreModule { *; }
+-keep class com.adobe.marketing.mobile.reactnative.NativeAEPIdentityModule { *; }
+-keep class com.adobe.marketing.mobile.reactnative.NativeAEPLifecycleModule { *; }
+-keep class com.adobe.marketing.mobile.reactnative.NativeAEPSignalModule { *; }

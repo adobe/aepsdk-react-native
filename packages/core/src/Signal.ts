@@ -10,13 +10,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPSignal from './NativeAEPSignal';
 
 interface ISignal {
   extensionVersion: () => Promise<string>;
 }
 
-const RCTAEPSignal: ISignal = NativeModules.AEPSignal;
+const RCTAEPSignal: ISignal = NativeAEPSignal as unknown as ISignal;
 
 const Signal: ISignal = {
   /**

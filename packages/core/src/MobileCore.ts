@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPCore from './NativeAEPCore';
 import Event from './models/Event';
 import { LogLevel } from './models/LogLevel';
 import { PrivacyStatus } from './models/PrivacyStatus';
@@ -41,7 +41,7 @@ interface IMobileCore {
   initializeWithAppId: (appId: string) => Promise<void>;
 }
 
-const RCTAEPCore: IMobileCore = NativeModules.AEPCore;
+const RCTAEPCore: IMobileCore = NativeAEPCore as unknown as IMobileCore;
 
 const MobileCore: IMobileCore = {
   /**
