@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPTarget from './NativeAEPTarget';
 import TargetPrefetchObject from './models/TargetPrefetchObject';
 import TargetRequestObject from './models/TargetRequestObject';
 import TargetParameters from './models/TargetParameters';
@@ -43,7 +43,7 @@ interface ITarget {
   ) => void;
 }
 
-const RCTTarget: ITarget = NativeModules.AEPTarget;
+const RCTTarget: ITarget = NativeAEPTarget as unknown as ITarget;
 
 const Target: ITarget = {
   /**

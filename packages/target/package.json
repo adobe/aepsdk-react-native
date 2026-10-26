@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aeptarget",
-  "version": "7.0.2",
+  "version": "7.0.1",
   "description": "Adobe Experience Platform support for React Native apps.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation",
   "license": "Apache-2.0",
@@ -34,6 +34,19 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "codegenConfig": {
+    "name": "NativeAEPTargetSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.target"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPTarget": "RCTAEPTarget"
+      }
+    }
   },
   "installConfig": {
     "hoistingLimits": "dependencies"

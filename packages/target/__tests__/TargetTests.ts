@@ -9,7 +9,28 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPTarget', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue('1.0.0'),
+    clearPrefetchCache: jest.fn(),
+    getThirdPartyId: jest.fn().mockResolvedValue('thirdPartyId'),
+    getSessionId: jest.fn().mockResolvedValue('sessionId'),
+    getTntId: jest.fn().mockResolvedValue('tntId'),
+    resetExperience: jest.fn(),
+    setPreviewRestartDeeplink: jest.fn(),
+    setSessionId: jest.fn(),
+    setTntId: jest.fn(),
+    setThirdPartyId: jest.fn(),
+    retrieveLocationContent: jest.fn(),
+    prefetchContent: jest.fn().mockResolvedValue(true),
+    displayedLocations: jest.fn(),
+    clickedLocation: jest.fn(),
+    registerTargetRequests: jest.fn()
+  }
+}));
+
+import NativeAEPTarget from '../src/NativeAEPTarget';
 import Target from '../src/Target';
 import TargetPrefetchObject from '../src/models/TargetPrefetchObject';
 import TargetRequestObject from '../src/models/TargetRequestObject';
@@ -19,68 +40,65 @@ import TargetParameters from '../src/models/TargetParameters';
 
 describe('Target', () => {
   test('extensionVersion is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'extensionVersion');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'extensionVersion');
     await Target.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   test('clearPrefetchCache is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'clearPrefetchCache');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'clearPrefetchCache');
     await Target.clearPrefetchCache();
     expect(spy).toHaveBeenCalled();
   });
 
   test('getSessionId is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'getSessionId');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'getSessionId');
     await Target.getSessionId();
     expect(spy).toHaveBeenCalled();
   });
 
   test('getTntId is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'getTntId');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'getTntId');
     await Target.getTntId();
     expect(spy).toHaveBeenCalled();
   });
 
   test('resetExperience is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'resetExperience');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'resetExperience');
     await Target.resetExperience();
     expect(spy).toHaveBeenCalled();
   });
 
   test('setPreviewRestartDeeplink is called with correct parameter', async () => {
-    const spy = jest.spyOn(
-      NativeModules.AEPTarget,
-      'setPreviewRestartDeeplink'
-    );
+    const spy = jest.spyOn(NativeAEPTarget as any, 'setPreviewRestartDeeplink');
     let url = 'adobe.com';
     await Target.setPreviewRestartDeeplink(url);
     expect(spy).toHaveBeenCalledWith(url);
   });
 
   test('setSessionId is called with the correct parameter', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'setSessionId');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'setSessionId');
     let id = 'sessionTestId';
     await Target.setSessionId(id);
     expect(spy).toHaveBeenCalledWith(id);
   });
 
   test('setThirdPartyId is called with correct parameter', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'setThirdPartyId');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'setThirdPartyId');
     let id = 'thirdPartyTestId';
     await Target.setThirdPartyId(id);
     expect(spy).toHaveBeenCalledWith(id);
   });
 
   test('setTntId is called with the correct parameter', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'setTntId');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'setTntId');
     let id = 'tntTestId';
     await Target.setTntId(id);
     expect(spy).toHaveBeenCalledWith(id);
   });
 
   test('retrieveLocationContent is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'retrieveLocationContent');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'retrieveLocationContent');
     var mboxParameters1 = { status: 'platinum' };
     var purchaseIDs = ['34', '125'];
 
@@ -134,7 +152,7 @@ describe('Target', () => {
   });
 
   test('displayedLocations is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'displayedLocations');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'displayedLocations');
     var purchaseIDs = ['34', '125'];
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
@@ -158,7 +176,7 @@ describe('Target', () => {
   });
 
   test('clickedLocation is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'clickedLocation');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'clickedLocation');
     var purchaseIDs = ['34', '125'];
 
     var targetOrder = new TargetOrder('ADCKKIM', 344.3, purchaseIDs);
@@ -178,7 +196,7 @@ describe('Target', () => {
 
  test('prefetchContent is called with correct parameters', async () => {
    
-    const spy = jest.spyOn(NativeModules.AEPTarget, 'prefetchContent');
+    const spy = jest.spyOn(NativeAEPTarget as any, 'prefetchContent');
     var mboxParameters1 = { status: 'platinum' };
     var purchaseIDs = ['34', '125'];
 
