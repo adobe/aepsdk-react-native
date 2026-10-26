@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { createNativeModuleProxy } from './utils/resolveNativeModule';
 
 export interface Spec extends TurboModule {
   extensionVersion(): Promise<string>;
@@ -31,4 +31,6 @@ export interface Spec extends TurboModule {
   getExperienceCloudId(): Promise<string>;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPIdentity');
+export default createNativeModuleProxy<Spec>('NativeAEPIdentity', {
+  probeMethod: 'extensionVersion'
+});

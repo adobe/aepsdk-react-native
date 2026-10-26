@@ -11,10 +11,12 @@ governing permissions and limitations under the License.
 */
 
 import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { createNativeModuleProxy } from './utils/resolveNativeModule';
 
 export interface Spec extends TurboModule {
   extensionVersion(): Promise<string>;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPSignal');
+export default createNativeModuleProxy<Spec>('NativeAEPSignal', {
+  probeMethod: 'extensionVersion'
+});

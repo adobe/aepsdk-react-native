@@ -7,7 +7,6 @@
  */
 package com.adobe.marketing.mobile.reactnative;
 
-import com.adobe.marketing.mobile.Signal;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 
@@ -30,7 +29,7 @@ public class NativeAEPSignalModule extends NativeAEPSignalSpec {
 
     @Override
     public void extensionVersion(Promise promise) {
-        promise.resolve(Signal.extensionVersion());
+        RCTAEPSignalUtil.extensionVersion(promise);
     }
 
 }
