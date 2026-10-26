@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPUserProfile from './NativeAEPUserProfile';
 
 interface IUserProfile {
   extensionVersion: () => Promise<string>;
@@ -21,7 +21,7 @@ interface IUserProfile {
   updateUserAttributes: (attributeMap: Record<string, any>) => void;
 }
 
-const RCTAEPUserProfile: IUserProfile = NativeModules.AEPUserProfile;
+const RCTAEPUserProfile: IUserProfile = NativeAEPUserProfile as unknown as IUserProfile;
 
 const UserProfile: IUserProfile = {
   /**
