@@ -10,7 +10,6 @@
 The Adobe Experience Platform Target extension has the following peer dependency, which must be installed prior to installing the target extension:
 
 - [Core](../core/README.md)
-- [Edge](../edge/README.md)
 
 ## Installation
 
