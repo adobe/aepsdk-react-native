@@ -81,6 +81,6 @@ dependencies {
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation platform("com.adobe.marketing.mobile:sdk-bom:3.+")
-  api "com.adobe.marketing.mobile:messaging"
+  implementation "com.adobe.marketing.mobile:messaging"
 
 }
