@@ -205,13 +205,55 @@ var parameters = new TargetParameters(
 Target.retrieveLocationContent(locationRequests, parameters);
 ```
 
+### Reading response tokens and A4T payloads (detailed callback):
+
+A `TargetRequestObject` callback can also be an object with a `call(content, data)` function and an optional `fail(error)` function. This mirrors the native `AdobeTargetDetailedCallback` (Android) and `contentWithDataCallback` (iOS). `data` contains one or more of the following keys, when available in the Target response:
+
+- `responseTokens`: response tokens
+- `analytics.payload`: Analytics for Target (A4T) payload
+- `clickmetric.analytics.payload`: click tracking A4T payload
+
+`fail` is invoked with `{ code, message }` when the content cannot be retrieved. It is Android only; iOS has no error path for this callback.
+
+**Syntax**
+
+```typescript
+interface TargetDetailedCallback {
+  call: (content: string | null, data: TargetResponseData | null) => void;
+  fail?: (error: { code: number; message: string }) => void;
+}
+
+new TargetRequestObject(name: string, targetParameters: TargetParameters, defaultContent: string, callback: TargetDetailedCallback)
+```
+
+**Example**
+
+```typescript
+var request = new TargetRequestObject("mboxName", new TargetParameters(), "defaultContent", {
+  call: (content, data) => {
+    console.log("Adobe content:" + content);
+
+    const responseTokens = data?.responseTokens ?? {};
+    const analyticsPayload = data?.["analytics.payload"] ?? {};
+    const clickMetricAnalyticsPayload = data?.["clickmetric.analytics.payload"] ?? {};
+  },
+  fail: (error) => {
+    console.error("Failed to fetch content: " + error.message);
+  },
+});
+
+Target.retrieveLocationContent([request], new TargetParameters());
+```
+
 ### Using the prefetch APIs:
 
 **Syntax**
 
 ```typescript
-prefetchContent(Array<TargetPrefetchObject>, <TargetParameters>): Promise<any>
+prefetchContent(Array<TargetPrefetchObject>, <TargetParameters>, <timeout>): Promise<any>
 ```
+
+`timeout` is optional. It is the network request timeout in seconds and, when provided, takes precedence over the `target.timeout` configuration and the default SDK timeout of 5 seconds. It must be a positive number, otherwise the returned promise is rejected. The timeout is supported on **iOS only**; the Android Target SDK has no equivalent, so it is ignored there.
 
 **Example**
 
@@ -243,6 +285,11 @@ var parameters = new TargetParameters(
   targetOrder
 );
 Target.prefetchContent(prefetchList, parameters)
+  .then((success) => console.log(success))
+  .catch((err) => console.log(err));
+
+// With a 5 second timeout (iOS only)
+Target.prefetchContent(prefetchList, parameters, 5)
   .then((success) => console.log(success))
   .catch((err) => console.log(err));
 ```
@@ -354,7 +401,12 @@ constructor(name?: string, targetParameters?: TargetParameters);
 The Target extension exports a class `TargetRequestObject`, which extends `TargetPrefetchObject`.
 
 ```typescript
-constructor(name: string, targetParameters: TargetParameters, defaultContent: string);
+constructor(
+  name: string,
+  targetParameters: TargetParameters,
+  defaultContent: string,
+  callback: ((error: Error | null, content: string | null) => void) | TargetDetailedCallback
+);
 ```
 
 ### TargetOrder:

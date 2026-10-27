@@ -112,6 +112,11 @@ public final class NativeAEPTargetModule extends NativeAEPTargetSpec {
   }
 
   @Override
+  public void prefetchContentWithTimeout(ReadableArray mboxPrefetchList, @Nullable ReadableMap parameters, double timeout, final Promise promise) {
+    RCTAEPTargetUtil.prefetchContentWithTimeout(mboxPrefetchList, parameters, timeout, promise, NAME);
+  }
+
+  @Override
   public void registerTargetRequests(ReadableMap requestMap, Callback successCallback) {
     RCTAEPTargetUtil.registerTargetRequests(requestMap, successCallback, registeredTargetRequests);
   }

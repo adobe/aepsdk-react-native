@@ -114,10 +114,11 @@ AEP_TARGET_METHOD(retrieveLocationContent:(NSArray *)requests
                             withParameters:parametersObj];
 }
 
-AEP_TARGET_METHOD(prefetchContent:(NSArray *)prefetchObjectArray
-                  parameters:(NSDictionary *)parameters
-                  resolve:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject) {
+// Shared by prefetchContent and prefetchContentWithTimeout. A nil timeout uses the SDK default.
+static void AEPTargetPrefetch(NSArray *prefetchObjectArray,
+                              NSDictionary *parameters, NSNumber *timeout,
+                              RCTPromiseResolveBlock resolve,
+                              RCTPromiseRejectBlock reject) {
   NSMutableArray *prefetchObjArray = [NSMutableArray array];
 
   for (NSDictionary *prefetchDict in prefetchObjectArray) {
@@ -129,18 +130,42 @@ AEP_TARGET_METHOD(prefetchContent:(NSArray *)prefetchObjectArray
   AEPTargetParameters *parametersObj =
       [AEPTargetParameters targetParametersFromDict:parameters];
 
-  [AEPMobileTarget
-      prefetchContent:prefetchObjArray
-       withParameters:parametersObj
-             callback:^(NSError *_Nullable error) {
-               if (error) {
-                 NSString *errorCode =
-                     [NSString stringWithFormat:@"%ld", (long)error.code];
-                 reject(errorCode, [error localizedDescription], error);
-               } else {
-                 resolve(@(YES));
-               }
-             }];
+  void (^completion)(NSError *_Nullable) = ^(NSError *_Nullable error) {
+    if (error) {
+      NSString *errorCode =
+          [NSString stringWithFormat:@"%ld", (long)error.code];
+      reject(errorCode, [error localizedDescription], error);
+    } else {
+      resolve(@(YES));
+    }
+  };
+
+  if (timeout) {
+    [AEPMobileTarget prefetchContent:prefetchObjArray
+                      withParameters:parametersObj
+                             timeout:[timeout doubleValue]
+                            callback:completion];
+  } else {
+    [AEPMobileTarget prefetchContent:prefetchObjArray
+                      withParameters:parametersObj
+                            callback:completion];
+  }
+}
+
+AEP_TARGET_METHOD(prefetchContent:(NSArray *)prefetchObjectArray
+                  parameters:(NSDictionary *)parameters
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+  AEPTargetPrefetch(prefetchObjectArray, parameters, nil, resolve, reject);
+}
+
+AEP_TARGET_METHOD(prefetchContentWithTimeout:(NSArray *)prefetchObjectArray
+                  parameters:(NSDictionary *)parameters
+                  timeout:(double)timeout
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+  AEPTargetPrefetch(prefetchObjectArray, parameters, @(timeout), resolve,
+                    reject);
 }
 
 AEP_TARGET_METHOD(displayedLocations:(NSArray *)mboxNames
@@ -160,11 +185,24 @@ AEP_TARGET_METHOD(clickedLocation:(NSString *)name
 
 AEP_TARGET_METHOD(registerTargetRequests:(NSDictionary *)requestDict
                   callback:(RCTResponseSenderBlock)callback) {
-  AEPTargetRequestObject *obj = [AEPTargetRequestObject
-      targetRequestObjectFromDict:requestDict
-                         callback:^(NSString *_Nullable content) {
-                           callback(@[ [NSNull null], content ?: [NSNull null] ]);
-                         }];
+  AEPTargetRequestObject *obj;
+
+  if ([requestDict[@"detailedCallback"] boolValue]) {
+    obj = [AEPTargetRequestObject
+        targetRequestObjectFromDict:requestDict
+            contentWithDataCallback:^(NSString *_Nullable content,
+                                      NSDictionary<NSString *, id> *_Nullable data) {
+              callback(@[
+                [NSNull null], content ?: [NSNull null], data ?: [NSNull null]
+              ]);
+            }];
+  } else {
+    obj = [AEPTargetRequestObject
+        targetRequestObjectFromDict:requestDict
+                           callback:^(NSString *_Nullable content) {
+                             callback(@[ [NSNull null], content ?: [NSNull null] ]);
+                           }];
+  }
 
   if (!_registeredTargetRequests) {
     _registeredTargetRequests = [NSMutableDictionary dictionary];

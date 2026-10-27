@@ -133,6 +133,16 @@ final class RCTAEPTargetUtil {
     Target.prefetchContent(prefetchList, parametersObj, resolveWith(promise));
   }
 
+  /**
+   * The Android Target SDK has no prefetchContent overload with a timeout, so the timeout is
+   * ignored here and the SDK's configured timeout applies (it is honoured on iOS only).
+   */
+  static void prefetchContentWithTimeout(final ReadableArray mboxPrefetchList, final ReadableMap parameters,
+                                         final double timeout, final Promise promise, final String moduleName) {
+    Log.d(moduleName, "prefetchContent timeout (" + timeout + "s) is not supported on Android and is ignored");
+    prefetchContent(mboxPrefetchList, parameters, promise);
+  }
+
   static void registerTargetRequests(final ReadableMap requestMap, final Callback successCallback,
                                      final Map<String, TargetRequest> registeredTargetRequests) {
     TargetRequest request = RCTAEPTargetDataBridge.mapToRequest(requestMap, successCallback);

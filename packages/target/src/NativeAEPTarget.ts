@@ -26,12 +26,19 @@ export interface Spec extends TurboModule {
   setThirdPartyId(thirdPartyId: string): void;
   retrieveLocationContent(requests: Array<Object>, parameters?: Object): void;
   prefetchContent(prefetchObjectArray: Array<Object>, parameters?: Object): Promise<Object>;
+  // Prefetch with an explicit network timeout in seconds. Honoured on iOS only; Android ignores it.
+  prefetchContentWithTimeout(
+    prefetchObjectArray: Array<Object>,
+    parameters: Object | null,
+    timeout: number
+  ): Promise<Object>;
   displayedLocations(mboxNames: Array<string>, parameters?: Object): void;
   clickedLocation(name: string, parameters?: Object): void;
-  // Registers the callback for a TargetRequestObject (invoked once, with (null, content)).
+  // Registers the callback for a TargetRequestObject (invoked once). Plain requests receive
+  // (null, content); requests flagged `detailedCallback` receive (null, content, data) or (error, null, null).
   registerTargetRequests(
     requestMap: Object,
-    callback: (error: Object | null, content: string | null) => void
+    callback: (error: Object | null, content: string | null, data: Object | null) => void
   ): void;
 }
 

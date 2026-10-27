@@ -24,6 +24,7 @@ jest.mock('../src/NativeAEPTarget', () => ({
     setThirdPartyId: jest.fn(),
     retrieveLocationContent: jest.fn(),
     prefetchContent: jest.fn().mockResolvedValue(true),
+    prefetchContentWithTimeout: jest.fn().mockResolvedValue(true),
     displayedLocations: jest.fn(),
     clickedLocation: jest.fn(),
     registerTargetRequests: jest.fn()
@@ -230,4 +231,103 @@ describe('Target', () => {
 
     expect(spy).toHaveBeenCalledWith(prefetchList, parameters);
  });
+
+  describe('prefetchContent with timeout', () => {
+    const prefetchList = [new TargetPrefetchObject('mbox', new TargetParameters())];
+    const parameters = new TargetParameters({ key: 'value' });
+
+    beforeEach(() => {
+      (NativeAEPTarget as any).prefetchContent.mockClear();
+      (NativeAEPTarget as any).prefetchContentWithTimeout.mockClear();
+    });
+
+    test('routes to the timeout variant when a timeout is given', async () => {
+      await Target.prefetchContent(prefetchList, parameters, 5);
+      expect((NativeAEPTarget as any).prefetchContentWithTimeout).toHaveBeenCalledWith(prefetchList, parameters, 5);
+      expect((NativeAEPTarget as any).prefetchContent).not.toHaveBeenCalled();
+    });
+
+    test('passes null parameters when none are given', async () => {
+      await Target.prefetchContent(prefetchList, undefined, 2.5);
+      expect((NativeAEPTarget as any).prefetchContentWithTimeout).toHaveBeenCalledWith(prefetchList, null, 2.5);
+    });
+
+    test('uses the regular prefetch when no timeout is given', async () => {
+      await Target.prefetchContent(prefetchList, parameters);
+      expect((NativeAEPTarget as any).prefetchContent).toHaveBeenCalledWith(prefetchList, parameters);
+      expect((NativeAEPTarget as any).prefetchContentWithTimeout).not.toHaveBeenCalled();
+    });
+
+    test.each([0, -1, NaN, Infinity, '5'])('rejects an invalid timeout (%p)', async (timeout) => {
+      await expect(Target.prefetchContent(prefetchList, parameters, timeout as any)).rejects.toThrow(
+        'timeout must be a positive number of seconds'
+      );
+      expect((NativeAEPTarget as any).prefetchContentWithTimeout).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('TargetRequestObject callbacks', () => {
+    const register = NativeAEPTarget.registerTargetRequests as unknown as jest.Mock;
+
+    beforeEach(() => register.mockClear());
+
+    test('a function callback is registered as a plain request and receives (error, content)', () => {
+      const callback = jest.fn();
+      const request = new TargetRequestObject('mbox', new TargetParameters(), 'default', callback);
+
+      expect(request.detailedCallback).toBe(false);
+      expect(register).toHaveBeenCalledWith(request, expect.any(Function));
+
+      register.mock.calls[0][1](null, 'content', { responseTokens: {} });
+      expect(callback).toHaveBeenCalledWith(null, 'content');
+    });
+
+    test('a detailed callback is flagged for the native layer and receives (content, data)', () => {
+      const call = jest.fn();
+      const fail = jest.fn();
+      const request = new TargetRequestObject('mbox', new TargetParameters(), 'default', { call, fail });
+
+      expect(request.detailedCallback).toBe(true);
+      expect(register).toHaveBeenCalledWith(request, expect.any(Function));
+
+      const data = { responseTokens: { 'activity.name': 'a' }, 'analytics.payload': { pe: 'tnt' } };
+      register.mock.calls[0][1](null, 'content', data);
+
+      expect(call).toHaveBeenCalledWith('content', data);
+      expect(fail).not.toHaveBeenCalled();
+    });
+
+    test('a detailed callback receives null data when the response has none', () => {
+      const call = jest.fn();
+      new TargetRequestObject('mbox', new TargetParameters(), 'default', { call });
+
+      register.mock.calls[0][1](null, 'content', undefined);
+      expect(call).toHaveBeenCalledWith('content', null);
+    });
+
+    test('a detailed callback reports errors through fail', () => {
+      const call = jest.fn();
+      const fail = jest.fn();
+      new TargetRequestObject('mbox', new TargetParameters(), 'default', { call, fail });
+
+      const error = { code: 1, message: 'NETWORK_ERROR' };
+      register.mock.calls[0][1](error, null, null);
+
+      expect(fail).toHaveBeenCalledWith(error);
+      expect(call).not.toHaveBeenCalled();
+    });
+
+    test('an error without a fail handler is ignored', () => {
+      const call = jest.fn();
+      new TargetRequestObject('mbox', new TargetParameters(), 'default', { call });
+
+      expect(() => register.mock.calls[0][1]({ code: 1, message: 'x' }, null, null)).not.toThrow();
+      expect(call).not.toHaveBeenCalled();
+    });
+
+    test.each([[null], [{}], [{ fail: () => {} }], ['callback']])('rejects an invalid callback (%p)', (callback) => {
+      expect(() => new TargetRequestObject('mbox', new TargetParameters(), 'default', callback as any)).toThrow(TypeError);
+      expect(register).not.toHaveBeenCalled();
+    });
+  });
 });

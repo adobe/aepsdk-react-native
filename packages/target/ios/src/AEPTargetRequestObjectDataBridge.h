@@ -20,4 +20,12 @@
                        callback:(nullable void (^)(
                                     NSString *__nullable content))callback;
 
+/// Builds the request with the detailed callback (content plus response tokens / A4T payloads).
++ (AEPTargetRequestObject *)
+    targetRequestObjectFromDict:(NSDictionary *)dict
+        contentWithDataCallback:
+            (nullable void (^)(NSString *__nullable content,
+                               NSDictionary<NSString *, id> *__nullable data))
+                callback;
+
 @end
