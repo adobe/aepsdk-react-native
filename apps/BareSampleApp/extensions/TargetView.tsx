@@ -93,6 +93,39 @@ function TargetView({navigation}: NavigationProps) {
     Target.retrieveLocationContent([request1, request2], parameters);
   };
 
+  const retrieveLocationContentWithData = () => {
+    const detailed = (mbox: string) => ({
+      call: (content: string | null, data: any) => {
+        console.log(`Adobe detailed content (${mbox}): ${content}`);
+        console.log(`Adobe response tokens (${mbox}): ${JSON.stringify(data?.responseTokens)}`);
+        console.log(`Adobe analytics payload (${mbox}): ${JSON.stringify(data?.['analytics.payload'])}`);
+        console.log(`Adobe click analytics payload (${mbox}): ${JSON.stringify(data?.['clickmetric.analytics.payload'])}`);
+      },
+      fail: (error: any) => console.log(`Adobe detailed failure (${mbox}): ${JSON.stringify(error)}`),
+    });
+
+    Target.retrieveLocationContent(
+      [
+        new TargetRequestObject(mbox1, new TargetParameters({status: 'platinum'}), 'defaultContent1', detailed(mbox1)),
+        new TargetRequestObject(mbox2, new TargetParameters({userType: 'Paid'}), 'defaultContent2', detailed(mbox2)),
+      ],
+      new TargetParameters({parameters: 'parametervalue'}),
+    );
+  };
+
+  const prefetchContentWithTimeout = () => {
+    Target.prefetchContent(
+      [
+        new TargetPrefetchObject(mbox1, new TargetParameters({status: 'platinum'})),
+        new TargetPrefetchObject(mbox2, new TargetParameters({userType: 'Paid'})),
+      ],
+      new TargetParameters({parameters: 'parametervalue'}),
+      7,
+    )
+      .then(success => console.log('Prefetch with timeout: ' + success))
+      .catch(err => console.log('Prefetch with timeout failed: ' + JSON.stringify(err)));
+  };
+
   const displayedLocations = () =>
     Target.displayedLocations([mbox1, mbox2]);
 
@@ -172,6 +205,8 @@ function TargetView({navigation}: NavigationProps) {
         <View style={styles.buttonWrapper}><Button title="setTntId(...)" onPress={setTntId} /></View>
         <View style={styles.buttonWrapper}><Button title={`retrieveLocationContent()`} onPress={retrieveLocationContent} /></View>
         <View style={styles.buttonWrapper}><Button title={`prefetchContent()`} onPress={prefetchContent} /></View>
+        <View style={styles.buttonWrapper}><Button title="retrieveLocationContentWithData()" onPress={retrieveLocationContentWithData} /></View>
+        <View style={styles.buttonWrapper}><Button title="prefetchContentWithTimeout()" onPress={prefetchContentWithTimeout} /></View>
         <View style={styles.buttonWrapper}><Button title={`displayedLocations()`} onPress={displayedLocations} /></View>
         <View style={styles.buttonWrapper}><Button title={`clickedLocation()`} onPress={clickedLocation} /></View>
       </ScrollView>

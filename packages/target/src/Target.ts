@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPTarget from './NativeAEPTarget';
 import TargetPrefetchObject from './models/TargetPrefetchObject';
 import TargetRequestObject from './models/TargetRequestObject';
 import TargetParameters from './models/TargetParameters';
@@ -31,7 +31,8 @@ interface ITarget {
   ) => void;
   prefetchContent: (
     prefetchObjectArray: Array<TargetPrefetchObject>,
-    parameters?: TargetParameters
+    parameters?: TargetParameters,
+    timeout?: number
   ) => Promise<any>;
   displayedLocations: (
     mboxNames: Array<string>,
@@ -43,7 +44,7 @@ interface ITarget {
   ) => void;
 }
 
-const RCTTarget: ITarget = NativeModules.AEPTarget;
+const RCTTarget: ITarget = NativeAEPTarget as unknown as ITarget;
 
 const Target: ITarget = {
   /**
@@ -197,16 +198,32 @@ const Target: ITarget = {
    *
    *  @param prefetchObjectArray an array of TargetPrefetchObject representing the desired mboxes to prefetch
    *  @param parameters a TargetParameters object containing parameters for all the mboxes in the request array
-   *  @param callback a function pointer which will be called after the prefetch is complete.  The error parameter
-   *         in the callback will be nil if the prefetch completed successfully, or will contain error message otherwise
+   *  @param timeout optional network request timeout in seconds. When provided it takes precedence over the
+   *         `target.timeout` configuration and the default SDK timeout of 5 seconds. Supported on iOS only;
+   *         it is ignored on Android. Must be a positive number.
+   *
+   *  @returns a Promise that resolves once the prefetch completes, or rejects with the error otherwise
    *
    *  @see TargetPrefetchObject
    */
   prefetchContent(
     prefetchObjectArray: Array<TargetPrefetchObject>,
-    parameters?: TargetParameters
+    parameters?: TargetParameters,
+    timeout?: number
   ): Promise<any> {
-    return RCTTarget.prefetchContent(prefetchObjectArray, parameters);
+    if (timeout === undefined || timeout === null) {
+      return RCTTarget.prefetchContent(prefetchObjectArray, parameters);
+    }
+    if (typeof timeout !== 'number' || !isFinite(timeout) || timeout <= 0) {
+      return Promise.reject(
+        new Error('prefetchContent timeout must be a positive number of seconds')
+      );
+    }
+    return (RCTTarget as any).prefetchContentWithTimeout(
+      prefetchObjectArray,
+      parameters ?? null,
+      timeout
+    );
   },
 
   /**
