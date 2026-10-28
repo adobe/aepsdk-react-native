@@ -11,134 +11,67 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative;
 
-import com.adobe.marketing.mobile.AdobeCallbackWithError;
-import com.adobe.marketing.mobile.AdobeError;
-import com.adobe.marketing.mobile.Identity;
-import com.adobe.marketing.mobile.VisitorID;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.bridge.WritableNativeArray;
 
-import java.util.List;
-
+/**
+ * Legacy bridge module (old architecture / interop). Business logic lives in {@link RCTAEPIdentityUtil},
+ * shared with {@link NativeAEPIdentityModule}.
+ */
 public class RCTAEPIdentityModule extends ReactContextBaseJavaModule {
 
-    private final ReactApplicationContext reactContext;
+    private final static String NAME = "NativeAEPIdentity";
 
     public RCTAEPIdentityModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.reactContext = reactContext;
     }
 
     // Required for RN modules
     @Override
     public String getName() {
-        return "AEPIdentity";
+        return NAME;
     }
 
     @ReactMethod
     public void extensionVersion(final Promise promise) {
-        promise.resolve(Identity.extensionVersion());
+        RCTAEPIdentityUtil.extensionVersion(promise);
     }
 
     @ReactMethod
     public void syncIdentifiers(final ReadableMap identifiers) {
-        Identity.syncIdentifiers(RCTAEPMapUtil.toStringMap(identifiers));
+        RCTAEPIdentityUtil.syncIdentifiers(identifiers);
     }
 
     @ReactMethod
-    public void syncIdentifiersWithAuthState(final ReadableMap identifiers,
-                                final String authenticationState) {
-        VisitorID.AuthenticationState authState = RCTAEPIdentityDataBridge.authenticationStateFromString(authenticationState);
-        Identity.syncIdentifiers(RCTAEPMapUtil.toStringMap(identifiers), RCTAEPIdentityDataBridge.authenticationStateFromString(authenticationState));
+    public void syncIdentifiersWithAuthState(final ReadableMap identifiers, final String authenticationState) {
+        RCTAEPIdentityUtil.syncIdentifiersWithAuthState(identifiers, authenticationState);
     }
 
     @ReactMethod
-    public void syncIdentifier(final String identifierType,
-                               final String identifier,
-                               final String authenticationState) {
-        VisitorID.AuthenticationState authState = RCTAEPIdentityDataBridge.authenticationStateFromString(authenticationState);
-        Identity.syncIdentifier(identifierType, identifier, authState);
+    public void syncIdentifier(final String identifierType, final String identifier, final String authenticationState) {
+        RCTAEPIdentityUtil.syncIdentifier(identifierType, identifier, authenticationState);
     }
 
     @ReactMethod
     public void appendVisitorInfoForURL(final String baseURL, final Promise promise) {
-        Identity.appendVisitorInfoForURL(baseURL, new AdobeCallbackWithError<String>() {
-            @Override
-            public void fail(AdobeError adobeError) {
-                handleError(promise, adobeError, "appendVisitorInfoForURL");
-            }
-
-            @Override
-            public void call(String s) {
-                promise.resolve(s);
-            }
-        });
+        RCTAEPIdentityUtil.appendVisitorInfoForURL(baseURL, promise, NAME);
     }
 
     @ReactMethod
     public void getUrlVariables(final Promise promise) {
-        Identity.getUrlVariables(new AdobeCallbackWithError<String>() {
-            @Override
-            public void fail(AdobeError adobeError) {
-                handleError(promise, adobeError, "getUrlVariables");
-            }
-
-            @Override
-            public void call(String s) {
-                promise.resolve(s);
-            }
-        });
+        RCTAEPIdentityUtil.getUrlVariables(promise, NAME);
     }
 
     @ReactMethod
     public void getIdentifiers(final Promise promise) {
-        Identity.getIdentifiers(new AdobeCallbackWithError<List<VisitorID>>() {
-            @Override
-            public void fail(AdobeError adobeError) {
-                handleError(promise, adobeError, "getIdentifiers");
-            }
-
-            @Override
-            public void call(List<VisitorID> visitorIDS) {
-                WritableArray arr = new WritableNativeArray();   
-                if  (visitorIDS == null) {
-                    promise.resolve(arr);
-                    return;
-                }
-
-                for (VisitorID vid: visitorIDS) {
-                    arr.pushMap(RCTAEPIdentityDataBridge.mapFromVisitorIdentifier(vid));
-                }
-                promise.resolve(arr);
-            }
-        });
+        RCTAEPIdentityUtil.getIdentifiers(promise, NAME);
     }
 
     @ReactMethod
     public void getExperienceCloudId(final Promise promise) {
-        Identity.getExperienceCloudId(new AdobeCallbackWithError<String>() {
-            @Override
-            public void fail(AdobeError adobeError) {
-                handleError(promise, adobeError, "getExperienceCloudId");
-            }
-            @Override
-            public void call(String s) {
-                promise.resolve(s);
-            }
-        });
+        RCTAEPIdentityUtil.getExperienceCloudId(promise, NAME);
     }
-
-    private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
-        if (error == null || promise == null) {
-            return;
-        }
-
-        promise.reject(getName(), String.format("%s returned an unexpected error: %s", errorLocation, error.getErrorName()), new Error(error.getErrorName()));
-    }
-
 }

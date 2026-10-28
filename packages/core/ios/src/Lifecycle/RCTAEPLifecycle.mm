@@ -14,16 +14,35 @@ governing permissions and limitations under the License.
 @import AEPCore;
 @import AEPLifecycle;
 
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#define AEP_LIFECYCLE_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_LIFECYCLE_METHOD(method) - (void)method
+#endif
+
 @implementation RCTAEPLifecycle
 
-RCT_EXPORT_MODULE(AEPLifecycle);
++ (BOOL)requiresMainQueueSetup {
+  return NO;
+}
 
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
 }
 
-RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_MODULE(NativeAEPLifecycle);
+
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeAEPLifecycleSpecJSI>(params);
+}
+#endif
+
+AEP_LIFECYCLE_METHOD(extensionVersion:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
     resolve([AEPMobileLifecycle extensionVersion]);
 }
 

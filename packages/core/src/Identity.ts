@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPIdentity from './NativeAEPIdentity';
 import { MobileVisitorAuthenticationState } from './models/MobileVisitorAuthenticationState';
 import VisitorID from './models/VisitorID';
 
@@ -32,7 +32,7 @@ interface IIdentity {
   getExperienceCloudId: () => Promise<string>;
 }
 
-const RCTAEPIdentity: IIdentity = NativeModules.AEPIdentity;
+const RCTAEPIdentity: IIdentity = NativeAEPIdentity as unknown as IIdentity;
 
 const Identity: IIdentity = {
   /**

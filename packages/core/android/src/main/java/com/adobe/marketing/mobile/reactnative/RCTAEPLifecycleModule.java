@@ -12,7 +12,6 @@ governing permissions and limitations under the License.
 package com.adobe.marketing.mobile.reactnative;
 
 
-import com.adobe.marketing.mobile.Lifecycle;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -30,12 +29,12 @@ public class RCTAEPLifecycleModule extends ReactContextBaseJavaModule {
     // Required for RN modules
     @Override
     public String getName() {
-        return "AEPLifecycle";
+        return "NativeAEPLifecycle";
     }
 
     @ReactMethod
     public void extensionVersion(final Promise promise) {
-        promise.resolve(Lifecycle.extensionVersion());
+        RCTAEPLifecycleUtil.extensionVersion(promise);
     }
 
 }
