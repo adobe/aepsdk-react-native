@@ -36,6 +36,31 @@ function CampaignClassicView({navigation}: NavigationProps) {
     CampaignClassic.trackNotificationReceiveWithUserInfo({'_mId': '12345', '_dId': 'testDId'});
     console.log('Notification received!')
   }
+
+  const registerDeviceWithAdditionalParams = () => {
+    CampaignClassic.registerDeviceWithToken('myToken', 'myUserKey', {
+      firstName: 'someFirstName',
+      lastName: 'someLastName',
+      age: 30,
+    });
+    console.log('Device registered with additional params!')
+  }
+
+  // Android only: builds and shows the notification from an FCM data payload.
+  // Resolves false on iOS, or when the payload cannot be turned into a notification.
+  const handleRemoteMessage = async () => {
+    try {
+      const handled = await CampaignClassic.handleRemoteMessage({
+        _mId: '12345',
+        _dId: 'testDId',
+        _msg: 'Hello from Campaign Classic',
+        adb_title: 'Campaign Classic',
+      });
+      console.log(`AdobeExperienceSDK: handleRemoteMessage handled: ${handled}`);
+    } catch (e) {
+      console.log(`AdobeExperienceSDK: handleRemoteMessage failed: ${e}`);
+    }
+  }
     
 
   return (
@@ -47,6 +72,10 @@ function CampaignClassicView({navigation}: NavigationProps) {
           <Button title="Extension Version" onPress={extensionVersion} />
           <Button title="Register Device" onPress={registerDeviceWithToken} />
           <Button
+            title="Register Device (additional params)"
+            onPress={registerDeviceWithAdditionalParams}
+          />
+          <Button
             title="Track User Click"
             onPress={trackNotificationClickWithUserInfo}
           />
@@ -54,6 +83,7 @@ function CampaignClassicView({navigation}: NavigationProps) {
             title="Track User Receive"
             onPress={trackNotificationReceiveWithUserInfo}
           />
+          <Button title="Handle Remote Message" onPress={handleRemoteMessage} />
         </View>
       </ScrollView>
     </View>

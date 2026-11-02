@@ -34,6 +34,19 @@
   "publishConfig": {
     "access": "public"
   },
+  "codegenConfig": {
+    "name": "NativeAEPCampaignClassicSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.campaignclassic"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPCampaignClassic": "RCTAEPCampaignClassic"
+      }
+    }
+  },
   "installConfig": {
     "hoistingLimits": "dependencies"
   }
