@@ -9,109 +9,37 @@
     ANY KIND, either express or implied. See the License for the specific
     language governing permissions and limitations under the License.
  */
+
 package com.adobe.marketing.mobile.reactnative.messaging;
 
-import static com.adobe.marketing.mobile.reactnative.messaging.RCTAEPMessagingUtil.convertMessageToMap;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.AdobeCallbackWithError;
-import com.adobe.marketing.mobile.AdobeError;
-import com.adobe.marketing.mobile.Message;
-import com.adobe.marketing.mobile.Messaging;
-import com.adobe.marketing.mobile.MessagingEdgeEventType;
-import com.adobe.marketing.mobile.messaging.MessagingUtils;
-import com.adobe.marketing.mobile.messaging.Proposition;
-import com.adobe.marketing.mobile.messaging.PropositionItem;
-import com.adobe.marketing.mobile.messaging.Surface;
-import com.adobe.marketing.mobile.services.ServiceProvider;
-import com.adobe.marketing.mobile.services.ui.InAppMessage;
-import com.adobe.marketing.mobile.services.ui.Presentable;
-import com.adobe.marketing.mobile.services.ui.PresentationDelegate;
-import com.adobe.marketing.mobile.services.ui.message.InAppMessageEventHandler;
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Legacy bridge module (old architecture / USE_INTEROP_ROOT=true). All logic lives in
+ * {@link RCTAEPMessagingUtil}, shared with the Turbo module.
+ */
+public final class RCTAEPMessagingModule extends ReactContextBaseJavaModule {
 
+  public static final String NAME = "NativeAEPMessaging";
 
-public final class RCTAEPMessagingModule
-    extends ReactContextBaseJavaModule implements PresentationDelegate {
-  // We cache uuid -> Proposition (not PropositionItem) for iOS parity: storing items on iOS lost
-  // weak parent references. Propositions currently contain a single item, so using the first item
-  // for tracking is valid.
-  private final Map<String, Proposition> propositionItemByUuid = new ConcurrentHashMap<>();
-
-  /**
-   * Parses the given Proposition and extracts the activity ID.
-   *
-   * Expected location: scopeDetails.activity.id in the proposition's event data.
-   * Returns null when any of the nested structures are missing or the id is not a String.
-   */
-  private String extractActivityId(Proposition proposition) {
-    try {
-      Map<String, Object> eventData = proposition.toEventData();
-      if (eventData == null) {
-        Log.d(TAG, "[MessagingBridge] Proposition toEventData() returned null; cannot extract activity.id");
-        return null;
-      }
-      Object scopeDetailsObj = eventData.get("scopeDetails");
-      if (!(scopeDetailsObj instanceof Map)) return null;
-      Map<String, Object> scopeDetails = (Map<String, Object>) scopeDetailsObj;
-      Object activityObj = scopeDetails.get("activity");
-      if (!(activityObj instanceof Map)) {
-        Log.d(TAG, "[MessagingBridge] Missing activity under scopeDetails; cannot extract activity.id");
-        return null;
-      }
-      Map<String, Object> activity = (Map<String, Object>) activityObj;
-      Object id = activity.get("id");
-      if (id instanceof String) {
-        return (String) id;
-      } else {
-        Log.d(TAG, "[MessagingBridge] Missing activity.id or not a String; skipping uuid cache mapping");
-        return null;
-      }
-    } catch (Exception e) {
-      Log.d(TAG, "[MessagingBridge] Exception extracting activity.id: " + e.getMessage(), e);
-      return null;
-    }
-  }
-  private static final String TAG = "RCTAEPMessagingModule";
-  private final Map<String, Message> messageCache = new HashMap<>();
-  private final ReactApplicationContext reactContext;
-  private boolean shouldSaveMessage = false;
-  private boolean shouldShowMessage = false;
-  private CountDownLatch latch = new CountDownLatch(1);
-  private Message latestMessage = null;
-  private final Map<String, Presentable<?>> presentableCache = new HashMap<>();
+  private final RCTAEPMessagingState state;
+  private final RCTAEPMessagingPresentationDelegate presentationDelegate;
 
   public RCTAEPMessagingModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    this.reactContext = reactContext;
+    this.state = new RCTAEPMessagingState(reactContext);
+    this.presentationDelegate = new RCTAEPMessagingPresentationDelegate(state);
   }
 
   @Override
   public String getName() {
-    return "AEPMessaging";
+    return NAME;
   }
 
   // Required for rn built in EventEmitter Calls.
@@ -123,380 +51,109 @@ public final class RCTAEPMessagingModule
 
   @ReactMethod
   public void extensionVersion(final Promise promise) {
-    promise.resolve(Messaging.extensionVersion());
+    RCTAEPMessagingUtil.extensionVersion(promise);
   }
 
   @ReactMethod
   public void getCachedMessages(final Promise promise) {
-    promise.resolve(
-        RCTAEPMessagingUtil.convertMessagesToJS(this.messageCache.values()));
+    RCTAEPMessagingUtil.getCachedMessages(state, promise);
   }
 
   @ReactMethod
   public void getLatestMessage(final Promise promise) {
-    if (this.latestMessage != null) {
-      promise.resolve(RCTAEPMessagingUtil.convertToReadableMap(
-          convertMessageToMap(this.latestMessage)));
-    } else {
-      promise.resolve(null);
-    }
+    RCTAEPMessagingUtil.getLatestMessage(state, promise);
   }
 
   @ReactMethod
-  public void getPropositionsForSurfaces(ReadableArray surfaces,
-                                         final Promise promise) {
-    String bundleId = this.reactContext.getPackageName();
-    Messaging.getPropositionsForSurfaces(
-            RCTAEPMessagingUtil.convertSurfaces(surfaces),
-            new AdobeCallbackWithError<Map<Surface, List<Proposition>>>() {
-              @Override
-              public void fail(final AdobeError adobeError) {
-                promise.reject(adobeError.getErrorName(),
-                        "Unable to get Propositions");
-              }
-
-              @Override
-              public void call(
-                      Map<Surface, List<Proposition>> propositionsMap) {
-                // Build UUID->Proposition map keyed by scopeDetails.activity.id
-                try {
-                  for (Map.Entry<Surface, List<Proposition>> entry : propositionsMap.entrySet()) {
-                    List<Proposition> propositions = entry.getValue();
-                    if (propositions == null) continue;
-                    for (Proposition proposition : propositions) {
-                      try {
-                        String key = extractActivityId(proposition);
-                        if (key != null) {
-                          propositionItemByUuid.put(key, proposition);
-                        }
-                      } catch (Throwable ignore) {}
-                    }
-                  }
-                } catch (Throwable ignore) {}
-
-                promise.resolve(RCTAEPMessagingUtil.convertSurfacePropositions(
-                        propositionsMap, bundleId));
-              }
-            });
+  public void getPropositionsForSurfaces(ReadableArray surfaces, final Promise promise) {
+    RCTAEPMessagingUtil.getPropositionsForSurfaces(state, surfaces, promise);
   }
 
   @ReactMethod
   public void refreshInAppMessages() {
-    Messaging.refreshInAppMessages();
+    RCTAEPMessagingUtil.refreshInAppMessages();
   }
 
   @ReactMethod
   public void setMessagingDelegate() {
-    ServiceProvider.getInstance().getUIService().setPresentationDelegate(this);
+    RCTAEPMessagingUtil.setMessagingDelegate(presentationDelegate);
   }
 
   @ReactMethod
-  public void updatePropositionsForSurfaces(ReadableArray surfaces) {
-     Messaging.updatePropositionsForSurfaces(
-        RCTAEPMessagingUtil.convertSurfaces(surfaces));
-        propositionItemByUuid.clear();
+  public void updatePropositionsForSurfaces(ReadableArray surfaces, final Promise promise) {
+    RCTAEPMessagingUtil.updatePropositionsForSurfaces(state, surfaces, promise);
   }
 
   // Message Methods
 
   @ReactMethod
   public void clear(final String messageId) {
-    if (messageId != null) {
-      messageCache.remove(messageId);
-    }
+    RCTAEPMessagingUtil.clear(state, messageId);
   }
 
-
+  // suppressAutoTrack is accepted for parity with iOS and ignored on Android.
   @ReactMethod
-  public void dismiss(final String messageId) {
-    if (messageId != null && messageCache.get(messageId) != null) {
-      messageCache.get(messageId).dismiss();
-    }
+  public void dismiss(final String messageId, final boolean suppressAutoTrack) {
+    RCTAEPMessagingUtil.dismiss(state, messageId);
   }
 
   @ReactMethod
   public void setAutoTrack(final String messageId, final boolean autoTrack) {
-    if (messageId != null && messageCache.get(messageId) != null) {
-      messageCache.get(messageId).setAutoTrack(autoTrack);
-    }
+    RCTAEPMessagingUtil.setAutoTrack(state, messageId, autoTrack);
   }
 
   @ReactMethod
   public void show(final String messageId) {
-    if (messageId != null && messageCache.get(messageId) != null) {
-      messageCache.get(messageId).show();
-    }
+    RCTAEPMessagingUtil.show(state, messageId);
   }
 
   @ReactMethod
-  public void track(final String messageId, final String interaction,
-                    final int eventType) {
-    if (messageId != null && messageCache.get(messageId) != null) {
-      MessagingEdgeEventType edgeEventType =
-          RCTAEPMessagingUtil.getEventType(eventType);
-      if (edgeEventType != null) {
-        messageCache.get(messageId).track(interaction, edgeEventType);
-      }
-    }
+  public void track(final String messageId, final String interaction, final int eventType) {
+    RCTAEPMessagingUtil.track(state, messageId, interaction, eventType);
   }
 
   @ReactMethod
-  public void handleJavascriptMessage(final String messageId,
-                                      final String handlerName) {
-    Presentable<?> presentable = presentableCache.get(messageId);
-    if (presentable == null || !(presentable.getPresentation() instanceof InAppMessage)) {
-      Log.w(TAG, "handleJavascriptMessage: No presentable found for messageId: " + messageId);
-      return;
-    }
-
-    Presentable<InAppMessage> inAppMessagePresentable =
-        (Presentable<InAppMessage>)presentable;
-    InAppMessageEventHandler eventHandler =
-        inAppMessagePresentable.getPresentation().getEventHandler();
-
-    eventHandler.handleJavascriptMessage(handlerName, content -> {
-      Map<String, String> params = new HashMap<>();
-      params.put(RCTAEPMessagingConstants.MESSAGE_ID_KEY, messageId);
-      params.put(RCTAEPMessagingConstants.HANDLER_NAME_KEY, handlerName);
-      params.put(RCTAEPMessagingConstants.CONTENT_KEY, content);
-      emitEvent(RCTAEPMessagingConstants.ON_JAVASCRIPT_MESSAGE_EVENT, params);
-    });
+  public void handleJavascriptMessage(final String messageId, final String handlerName) {
+    RCTAEPMessagingUtil.handleJavascriptMessage(state, messageId, handlerName);
   }
 
   @ReactMethod
   public void evaluateJavascript(final String messageId, final String javascriptString) {
-    Presentable<?> presentable = presentableCache.get(messageId);
-    if (presentable == null || !(presentable.getPresentation() instanceof InAppMessage)) {
-      Log.w(TAG, "evaluateJavascript: No presentable found for messageId: " + messageId);
-      return;
-    }
-
-    Presentable<InAppMessage> inAppMessagePresentable = (Presentable<InAppMessage>) presentable;
-    InAppMessageEventHandler eventHandler = inAppMessagePresentable.getPresentation().getEventHandler();
-    eventHandler.evaluateJavascript(javascriptString, result -> {
-      Map<String, String> params = new HashMap<>();
-      params.put(RCTAEPMessagingConstants.MESSAGE_ID_KEY, messageId);
-      params.put(RCTAEPMessagingConstants.JAVASCRIPT_STRING_KEY, javascriptString);
-      params.put(RCTAEPMessagingConstants.RESULT_KEY, result);
-      emitEvent(RCTAEPMessagingConstants.ON_JAVASCRIPT_RESULT_EVENT, params);
-    });
+    RCTAEPMessagingUtil.evaluateJavascript(state, messageId, javascriptString);
   }
 
-  // Messaging Delegate functions
-  @Override
-  public void onShow(final Presentable<?> presentable) {
-    if (!(presentable.getPresentation() instanceof InAppMessage))
-      return;
-    Message message = MessagingUtils.getMessageForPresentable(
-        (Presentable<InAppMessage>)presentable);
-    presentableCache.put(message.getId(), presentable);
-
-    if (message != null) {
-      Map<String, String> data = convertMessageToMap(message);
-      emitEvent("onShow", data);
-    }
-  }
-
-  @Override
-  public void onDismiss(final Presentable<?> presentable) {
-    if (!(presentable.getPresentation() instanceof InAppMessage))
-      return;
-    Message message = MessagingUtils.getMessageForPresentable(
-        (Presentable<InAppMessage>)presentable);
-    presentableCache.remove(message.getId());
-    
-    if (message != null) {
-      Map<String, String> data = convertMessageToMap(message);
-      emitEvent("onDismiss", data);
-    }
-  }
-
-  @Override
-  public void onHide(final Presentable<?> presentable) {
-    if (!(presentable.getPresentation() instanceof InAppMessage))
-      return;
-    Message message = MessagingUtils.getMessageForPresentable(
-        (Presentable<InAppMessage>)presentable);
-    if (message != null) {
-      Map<String, String> data = convertMessageToMap(message);
-      emitEvent("onHide", data);
-    }
-  }
-
-  @Override
-  public boolean canShow(final Presentable<?> presentable) {
-    if (!(presentable.getPresentation() instanceof InAppMessage))
-      return false;
-    Message message = MessagingUtils.getMessageForPresentable(
-        (Presentable<InAppMessage>)presentable);
-    if (message != null) {
-      Map<String, String> data = convertMessageToMap(message);
-      emitEvent("shouldShowMessage", data);
-      // Latch stops the thread until the shouldShowMessage value is received
-      // from the JS side on thread dedicated to run JS code. The function
-      // called from JS that resumes the thread is "shouldShowMessage".
-      try {
-        latch.await();
-      } catch (final InterruptedException e) {
-      }
-    }
-
-    if (shouldShowMessage) {
-      this.latestMessage = message;
-    }
-
-    if (shouldSaveMessage) {
-      messageCache.put(message.getId(), message);
-    }
-    return shouldShowMessage;
-  }
-
-  public void onContentLoaded(final Presentable<?> presentable,
-                              PresentationContent presentationContent) {
-    if (!(presentable.getPresentation() instanceof InAppMessage))
-      return;
-    Message message = MessagingUtils.getMessageForPresentable(
-        (Presentable<InAppMessage>)presentable);
-    if (message != null) {
-      Map<String, String> data = convertMessageToMap(message);
-      emitEvent("onContentLoaded", data);
-    }
-  }
-
-  // Messaging Delegate Callback
   @ReactMethod(isBlockingSynchronousMethod = true)
   public boolean setMessageSettings(final boolean shouldShowMessage,
-                                 final boolean shouldSaveMessage) {
-    this.shouldShowMessage = shouldShowMessage;
-    this.shouldSaveMessage = shouldSaveMessage;
-    latch.countDown();
+                                    final boolean shouldSaveMessage) {
+    RCTAEPMessagingUtil.setMessageSettings(state, shouldShowMessage, shouldSaveMessage);
     return true;
   }
 
-  /**
-   * Emits an event along with data to be handled by the Javascript
-   *
-   * @param name event name
-   * @param data data sent along with event
-   */
-  private void emitEvent(final String name, final Map<String, String> data) {
-    WritableMap eventData = Arguments.createMap();
-    for (final Map.Entry<String, String> entry : data.entrySet()) {
-      eventData.putString(entry.getKey(), entry.getValue());
-    }
-    reactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-        .emit(name, eventData);
-  }
-
   @ReactMethod
-  public void trackContentCardDisplay(ReadableMap propositionMap,
-                                      ReadableMap contentCardMap) {
-    final Map<String, Object> eventData =
-        RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
-    final Proposition proposition = Proposition.fromEventData(eventData);
-    for (PropositionItem item : proposition.getItems()) {
-      if (item.getItemId().equals(contentCardMap.getString("id"))) {
-        item.track(MessagingEdgeEventType.DISPLAY);
-        break;
-      }
-    }
+  public void trackContentCardDisplay(ReadableMap propositionMap, ReadableMap contentCardMap) {
+    RCTAEPMessagingUtil.trackContentCardDisplay(propositionMap, contentCardMap);
   }
 
   @ReactMethod
   public void trackContentCardInteraction(ReadableMap propositionMap,
                                           ReadableMap contentCardMap) {
-    final Map<String, Object> eventData =
-        RCTAEPMessagingUtil.convertReadableMapToMap(propositionMap);
-    final Proposition proposition = Proposition.fromEventData(eventData);
-    for (PropositionItem item : proposition.getItems()) {
-      if (item.getItemId().equals(contentCardMap.getString("id"))) {
-        item.track("click", MessagingEdgeEventType.INTERACT, null);
-        break;
-      }
-    }
+    RCTAEPMessagingUtil.trackContentCardInteraction(propositionMap, contentCardMap);
   }
 
-  /**
-   * Tracks interactions with a PropositionItem using the provided interaction and event type.
-   * This method is used by the React Native PropositionItem.track() method.
-   * 
-   * @param interaction A custom string value to be recorded in the interaction (nullable)
-   * @param eventType The MessagingEdgeEventType numeric value
-   * @param tokens Array containing the sub-item tokens for recording interaction (nullable)
-   */
   @ReactMethod
-  public void trackPropositionItem(String uuid, @Nullable String interaction, int eventType, @Nullable ReadableArray tokens) {
-    try {
-      // Convert eventType int to MessagingEdgeEventType enum
-      final MessagingEdgeEventType edgeEventType = RCTAEPMessagingUtil.getEventType(eventType);
-      if (edgeEventType == null) {
-        return;
-      }
-      // Resolve PropositionItem by UUID
-      if (uuid == null) {
-        Log.d(TAG, "[MessagingBridge] Null uuid provided");
-        return;
-      }
-      final Proposition proposition = propositionItemByUuid.get(uuid);
-      if (proposition == null) {
-        Log.d(TAG, "[MessagingBridge] No cached proposition for uuid=" + uuid);
-        return;
-      }
-      final List<PropositionItem> items = proposition.getItems();
-      if (items == null || items.isEmpty()) {
-        return;
-      }
-      final PropositionItem propositionItem = items.get(0);
-
-      // Convert ReadableArray tokens -> List<String> (empty list if none)
-      List<String> tokenList = new ArrayList<>();
-      if (tokens != null) {
-        for (int i = 0; i < tokens.size(); i++) {
-          tokenList.add(tokens.getString(i));
-        }
-      }
-      Log.d(TAG, "[MessagingBridge] Tracking (direct) uuid=" + uuid + ", interaction=" + interaction + ", tokens=" + tokenList + ", eventType=" + edgeEventType.name());
-      propositionItem.track(interaction, edgeEventType, tokenList);
-
-    } catch (Exception e) {
-      Log.d(TAG, "Error tracking PropositionItem for uuid: " + uuid + ", error: " + e.getMessage(), e);
-    }
+  public void trackPropositionItem(String uuid, @Nullable String interaction, int eventType,
+                                   @Nullable ReadableArray tokens, final Promise promise) {
+    RCTAEPMessagingUtil.trackPropositionItem(state, uuid, interaction, eventType, tokens,
+                                             promise);
   }
-
-  private static final String INBOX_PREFS = "AEPMessagingInbox";
-  private static final String INBOX_KEY_PREFIX = "aep_messaging_inbox_";
 
   @ReactMethod
   public void getInboxState(String activityId, final Promise promise) {
-    try {
-      if (activityId == null || activityId.isEmpty()) {
-        promise.resolve(null);
-        return;
-      }
-      SharedPreferences prefs = reactContext.getSharedPreferences(INBOX_PREFS, Context.MODE_PRIVATE);
-      String value = prefs.getString(INBOX_KEY_PREFIX + activityId, null);
-      promise.resolve(value);
-    } catch (Exception e) {
-      Log.e(TAG, "[MessagingBridge] getInboxState error: " + e.getMessage(), e);
-      promise.resolve(null);
-    }
+    RCTAEPMessagingUtil.getInboxState(state.reactContext, activityId, promise);
   }
 
   @ReactMethod
   public void setInboxState(String activityId, String stateJson, final Promise promise) {
-    try {
-      if (activityId == null || activityId.isEmpty()) {
-        promise.resolve(null);
-        return;
-      }
-      SharedPreferences prefs = reactContext.getSharedPreferences(INBOX_PREFS, Context.MODE_PRIVATE);
-      prefs.edit().putString(INBOX_KEY_PREFIX + activityId, stateJson).apply();
-      promise.resolve(null);
-    } catch (Exception e) {
-      Log.e(TAG, "[MessagingBridge] setInboxState error: " + e.getMessage(), e);
-      promise.reject("setInboxState", e.getMessage(), e);
-    }
+    RCTAEPMessagingUtil.setInboxState(state.reactContext, activityId, stateJson, promise);
   }
-
 }

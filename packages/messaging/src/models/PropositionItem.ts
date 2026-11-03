@@ -10,11 +10,11 @@
     language governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPMessaging from '../NativeAEPMessaging';
 import { PersonalizationSchema } from './PersonalizationSchema';
 import MessagingEdgeEventType from './MessagingEdgeEventType';
 
-const RCTAEPMessaging = NativeModules.AEPMessaging;
+const RCTAEPMessaging = NativeAEPMessaging;
 
 /**
  * Base PropositionItem interface that all proposition items implement

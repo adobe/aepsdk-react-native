@@ -13,7 +13,8 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 
-@interface RCT_EXTERN_MODULE (RCTAEPMessaging, RCTEventEmitter)
+// Old architecture only: registered under the same JS name as the TurboModule (NativeAEPMessaging).
+@interface RCT_EXTERN_REMAP_MODULE (NativeAEPMessaging, RCTAEPMessaging, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(supportedEvents)
 

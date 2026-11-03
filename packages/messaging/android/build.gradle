@@ -48,7 +48,23 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+    buildConfigField "boolean", "USE_INTEROP_ROOT", "false"
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled() ? "true" : "false"
+    consumerProguardFiles "consumer-rules.pro"
+  }
 
+  buildFeatures {
+    buildConfig true
+  }
+
+  sourceSets {
+    main {
+      if (!isNewArchitectureEnabled()) {
+        java {
+          exclude '**/NativeAEPMessagingModule.java'
+        }
+      }
+    }
   }
 
   buildTypes {
