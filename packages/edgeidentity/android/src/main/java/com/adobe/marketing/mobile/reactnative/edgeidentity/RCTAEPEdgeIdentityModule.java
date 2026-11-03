@@ -10,104 +10,52 @@
  */
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
-
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.AdobeCallbackWithError;
-import com.adobe.marketing.mobile.AdobeError;
-import com.adobe.marketing.mobile.edge.identity.Identity;
-import com.adobe.marketing.mobile.edge.identity.IdentityItem;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
-import com.adobe.marketing.mobile.edge.identity.IdentityMap;
-import com.facebook.react.bridge.WritableMap;
 
+/** Legacy-bridge module; all logic lives in {@link RCTAEPEdgeIdentityUtil}. */
 public class RCTAEPEdgeIdentityModule extends ReactContextBaseJavaModule {
+  private static final String NAME = "NativeAEPEdgeIdentity";
 
-    private final ReactApplicationContext reactContext;
+  public RCTAEPEdgeIdentityModule(ReactApplicationContext reactContext) {
+    super(reactContext);
+  }
 
-    public RCTAEPEdgeIdentityModule(ReactApplicationContext reactContext) {
-        super(reactContext);
-        this.reactContext = reactContext;
-    }
+  @Override
+  public String getName() {
+    return NAME;
+  }
 
-    @Override
-    public String getName() {
-        return "AEPEdgeIdentity";
-    }
+  @ReactMethod
+  public void extensionVersion(final Promise promise) {
+    RCTAEPEdgeIdentityUtil.extensionVersion(promise);
+  }
 
-    @ReactMethod
-    public void extensionVersion(final Promise promise) {
-        promise.resolve(Identity.extensionVersion());
-    }
+  @ReactMethod
+  public void getExperienceCloudId(final Promise promise) {
+    RCTAEPEdgeIdentityUtil.getExperienceCloudId(promise, NAME);
+  }
 
-    @ReactMethod
-    public void getExperienceCloudId(final Promise promise) {
-        Identity.getExperienceCloudId(new AdobeCallbackWithError<String>() {
-            @Override
-            public void fail(AdobeError error) {
-                handleError(promise, error, "getExperienceCloudId");
-            }
+  @ReactMethod
+  public void getIdentities(final Promise promise) {
+    RCTAEPEdgeIdentityUtil.getIdentities(promise, NAME);
+  }
 
-            @Override
-            public void call(String s) {
-                promise.resolve(s);
-            }
-        });
-    }
+  @ReactMethod
+  public void getUrlVariables(final Promise promise) {
+    RCTAEPEdgeIdentityUtil.getUrlVariables(promise, NAME);
+  }
 
-    @ReactMethod
-    public void getIdentities(final Promise promise) {
-        Identity.getIdentities(new AdobeCallbackWithError<IdentityMap>() {
+  @ReactMethod
+  public void updateIdentities(final ReadableMap identitymap) {
+    RCTAEPEdgeIdentityUtil.updateIdentities(identitymap);
+  }
 
-            @Override
-            public void fail(AdobeError error) {
-                handleError(promise, error, "getIdentities");
-            }
-
-            @Override
-            public void call(IdentityMap map) {
-                WritableMap identitymap = RCTAEPEdgeIdentityDataBridge.mapFromIdentityMap(map);
-                promise.resolve(identitymap);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void getUrlVariables(final Promise promise) {
-        Identity.getUrlVariables(new AdobeCallbackWithError<String>() {
-            @Override
-            public void fail(AdobeError error) {
-                handleError(promise, error, "getUrlVariables");
-            }
-
-            @Override
-            public void call(String s) {
-                promise.resolve(s);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void updateIdentities(final ReadableMap identitymap) {
-        IdentityMap mapobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityMap(identitymap);
-        Identity.updateIdentities(mapobj);
-    }
-
-    @ReactMethod
-    public void removeIdentity(final ReadableMap item, String namespace) {
-        IdentityItem itemobj  = RCTAEPEdgeIdentityDataBridge.mapToIdentityItem(item);
-        Identity.removeIdentity(itemobj, namespace);
-    }
-
-   // Helper method
-   private void handleError(final Promise promise, final AdobeError error, final String errorLocation) {
-    if (error == null || promise == null) {
-      return;
-    }
-    
-    promise.reject(getName(), String.format("%s returned an unexpected error: %s", errorLocation, error.getErrorName()), new Error(error.getErrorName()));  
+  @ReactMethod
+  public void removeIdentity(final ReadableMap item, String namespace) {
+    RCTAEPEdgeIdentityUtil.removeIdentity(item, namespace);
   }
 }
