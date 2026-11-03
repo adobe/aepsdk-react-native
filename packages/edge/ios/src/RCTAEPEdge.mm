@@ -9,6 +9,14 @@
  governing permissions and limitations under the License.
  */
 
+
+// Old-arch iOS (classic bridge): NativeModules only exposes methods registered via
+// RCT_EXPORT_METHOD. Protocol/Turbo selectors alone are invisible to JavaScript.
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#define AEP_EDGE_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_EDGE_METHOD(method) - (void)method
+#endif
 #import "RCTAEPEdge.h"
 @import AEPEdge;
 @import AEPCore;
@@ -16,7 +24,15 @@
 
 @implementation RCTAEPEdge
 
-RCT_EXPORT_MODULE(AEPEdge);
+RCT_EXPORT_MODULE(NativeAEPEdge);
+
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeAEPEdgeSpecJSI>(params);
+}
+#endif
 
 static NSString* const EXTENSION_NAME = @"AEPEdge";
 static NSString* const FAILED_TO_CONVERT_EXPERIENCE_EVENT = @"Failed to convert dictionary to Experience Event, Experience Event could be null.";
@@ -26,12 +42,12 @@ static NSString* const FAILED_TO_CONVERT_EXPERIENCE_EVENT = @"Failed to convert 
     return dispatch_get_main_queue();
 }
 
-RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGE_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([AEPMobileEdge extensionVersion]);
 }
 
 
-RCT_EXPORT_METHOD(sendEvent: (nonnull NSDictionary*) experienceEventDict resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGE_METHOD(sendEvent: (NSDictionary *)experienceEventDict resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     
     AEPExperienceEvent *experienceEvent = [RCTAEPExperienceEventDataBridge experienceEventFromDictionary:experienceEventDict];
 
@@ -45,7 +61,7 @@ RCT_EXPORT_METHOD(sendEvent: (nonnull NSDictionary*) experienceEventDict resolve
     }];
 }
 
-RCT_EXPORT_METHOD(getLocationHint: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGE_METHOD(getLocationHint: (RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject) {
     [AEPMobileEdge getLocationHint:^(NSString * _Nullable content, NSError * _Nullable error) {
         if (error) {
             [self handleError:error rejecter:reject errorLocation:@"getLocationHint"];
@@ -55,7 +71,7 @@ RCT_EXPORT_METHOD(getLocationHint: (RCTPromiseResolveBlock) resolve rejecter:(RC
     }];
 }
 
-RCT_EXPORT_METHOD(setLocationHint: (nullable NSString*) hint) {
+AEP_EDGE_METHOD(setLocationHint: (nullable NSString*) hint) {
     [AEPMobileEdge setLocationHint:hint];
 }
 

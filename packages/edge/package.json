@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-native-aepedge",
-  "version": "7.0.2",
+  "version": "7.0.1",
   "description": "Adobe Experience Platform Edge Network extension for Adobe Experience Platform Mobile SDK. Written and maintained by Adobe.",
   "homepage": "https://developer.adobe.com/client-sdks/documentation/",
   "license": "Apache-2.0",
@@ -25,6 +25,19 @@
   ],
   "author": {
     "name": "Adobe Experience Platform SDK Team"
+  },
+  "codegenConfig": {
+    "name": "NativeAEPEdgeSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.edge"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPEdge": "RCTAEPEdge"
+      }
+    }
   },
   "peerDependencies": {
     "@adobe/react-native-aepcore": "^7.0.0",
