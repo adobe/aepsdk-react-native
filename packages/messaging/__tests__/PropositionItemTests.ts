@@ -10,7 +10,35 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPMessaging', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue('1.0.0'),
+    getCachedMessages: jest.fn().mockResolvedValue([]),
+    getLatestMessage: jest.fn().mockResolvedValue(null),
+    getPropositionsForSurfaces: jest.fn().mockResolvedValue({}),
+    refreshInAppMessages: jest.fn(),
+    setMessagingDelegate: jest.fn(),
+    setMessageSettings: jest.fn(),
+    updatePropositionsForSurfaces: jest.fn().mockResolvedValue(undefined),
+    trackContentCardDisplay: jest.fn(),
+    trackContentCardInteraction: jest.fn(),
+    trackPropositionItem: jest.fn().mockResolvedValue(undefined),
+    setAutoTrack: jest.fn(),
+    show: jest.fn(),
+    dismiss: jest.fn(),
+    track: jest.fn(),
+    clear: jest.fn(),
+    handleJavascriptMessage: jest.fn(),
+    evaluateJavascript: jest.fn(),
+    getInboxState: jest.fn().mockResolvedValue(null),
+    setInboxState: jest.fn().mockResolvedValue(undefined),
+    addListener: jest.fn(),
+    removeListeners: jest.fn()
+  }
+}));
+
+import NativeAEPMessaging from '../src/NativeAEPMessaging';
 import { MessagingEdgeEventType, PropositionItem, PropositionItemData, PersonalizationSchema } from '../src';
 
 describe('PropositionItem', () => {
@@ -34,7 +62,7 @@ describe('PropositionItem', () => {
     const item = new PropositionItem(baseData);
     item.track(MessagingEdgeEventType.DISPLAY);
 
-    expect(NativeModules.AEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
+    expect(NativeAEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
       activityID,
       null,
       MessagingEdgeEventType.DISPLAY,
@@ -46,7 +74,7 @@ describe('PropositionItem', () => {
     const item = new PropositionItem(baseData);
     item.track('click', MessagingEdgeEventType.INTERACT, null);
 
-    expect(NativeModules.AEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
+    expect(NativeAEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
       activityID,
       'click',
       MessagingEdgeEventType.INTERACT,
@@ -59,7 +87,7 @@ describe('PropositionItem', () => {
     const tokens = ['t1', 't2'];
     item.track('click', MessagingEdgeEventType.INTERACT, tokens);
 
-    expect(NativeModules.AEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
+    expect(NativeAEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
       activityID,
       'click',
       MessagingEdgeEventType.INTERACT,
@@ -72,7 +100,7 @@ describe('PropositionItem', () => {
     const tokens = ['a'];
     item.track(null, MessagingEdgeEventType.DISPLAY, tokens);
 
-    expect(NativeModules.AEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
+    expect(NativeAEPMessaging.trackPropositionItem).toHaveBeenCalledWith(
       activityID,
       null,
       MessagingEdgeEventType.DISPLAY,

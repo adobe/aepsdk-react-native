@@ -10,12 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import {
-  NativeModules,
-  NativeEventEmitter,
-  NativeModule,
-  Platform,
-} from "react-native";
+import { EventSubscription, Platform } from "react-native";
+import NativeAEPMessaging from "./NativeAEPMessaging";
+import { subscribeMessagingEvent } from "./messagingEvents";
 import Message from "./models/Message";
 import { MessagingDelegate } from "./models/MessagingDelegate";
 import { MessagingProposition } from "./models/MessagingProposition";
@@ -57,8 +54,7 @@ export interface NativeMessagingModule {
   ) => void;
 }
 
-const RCTAEPMessaging: NativeModule & NativeMessagingModule =
-  NativeModules.AEPMessaging;
+const RCTAEPMessaging = NativeAEPMessaging;
 
 declare var messagingDelegate: MessagingDelegate;
 var messagingDelegate: MessagingDelegate;
@@ -214,7 +210,7 @@ class Messaging {
    * @returns An array of messages that have been cached
    */
   static async getCachedMessages(): Promise<Message[]> {
-    const messages = await RCTAEPMessaging.getCachedMessages();
+    const messages = (await RCTAEPMessaging.getCachedMessages()) as any[];
     return messages.map((msg) => new Message(msg));
   }
 
@@ -223,7 +219,7 @@ class Messaging {
    * @returns The latest message to have been displayed
    */
   static async getLatestMessage(): Promise<Message | null | undefined> {
-    const message = await RCTAEPMessaging.getLatestMessage();
+    const message = (await RCTAEPMessaging.getLatestMessage()) as any;
     return message ? new Message(message) : undefined;
   }
 
@@ -237,7 +233,9 @@ class Messaging {
     surfaces: string[]
   ): Promise<Record<string, MessagingProposition[]>> {
 
-    const propositionsList = await RCTAEPMessaging.getPropositionsForSurfaces(surfaces);
+    const propositionsList = (await RCTAEPMessaging.getPropositionsForSurfaces(
+      surfaces
+    )) as Record<string, any[]>;
     let messagingPropositionsForSurfaces: Record<string, MessagingProposition[]> = {};
     
     for (const [surface, propositions] of Object.entries(propositionsList)) {
@@ -256,7 +254,7 @@ class Messaging {
     proposition: MessagingProposition,
     contentCard: ContentCard
   ): void {
-    RCTAEPMessaging.trackContentCardDisplay(proposition, contentCard);
+    RCTAEPMessaging.trackContentCardDisplay(proposition as any, contentCard as any);
   }
 
    /**
@@ -266,7 +264,7 @@ class Messaging {
     proposition: MessagingProposition,
     contentCard: ContentCard
   ): void {
-    RCTAEPMessaging.trackContentCardInteraction(proposition, contentCard);
+    RCTAEPMessaging.trackContentCardInteraction(proposition as any, contentCard as any);
   }
 
   /**
@@ -299,56 +297,61 @@ class Messaging {
   static setMessagingDelegate(delegate: MessagingDelegate): () => void {
     messagingDelegate = delegate;
 
-    const eventEmitter = new NativeEventEmitter(RCTAEPMessaging);
+    const subscriptions: EventSubscription[] = [];
 
-    eventEmitter.addListener("onShow", (message: Message) =>
-      messagingDelegate?.onShow?.(new Message(message))
+    subscriptions.push(
+      subscribeMessagingEvent("onShow", "onMessageShown", (message: Message) =>
+        messagingDelegate?.onShow?.(new Message(message))
+      )
     );
 
-    eventEmitter.addListener("onDismiss", (message: Message) => {
-      const messageInstance = new Message(message);
-      messageInstance._clearJavascriptMessageHandlers();
-      messageInstance._clearJavascriptResultHandlers();
-      messagingDelegate?.onDismiss?.(messageInstance);
-    });
+    subscriptions.push(
+      subscribeMessagingEvent("onDismiss", "onMessageDismissed", (message: Message) => {
+        const messageInstance = new Message(message);
+        messageInstance._clearJavascriptMessageHandlers();
+        messageInstance._clearJavascriptResultHandlers();
+        messagingDelegate?.onDismiss?.(messageInstance);
+      })
+    );
 
-    eventEmitter.addListener("shouldShowMessage", (message: Message) => {
-      const messageInstance = new Message(message);
-      const shouldShowMessage =
-        messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
-      const shouldSaveMessage =
-        messagingDelegate?.shouldSaveMessage?.(messageInstance) ?? false;
-      RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
-    });
+    subscriptions.push(
+      subscribeMessagingEvent("shouldShowMessage", "onShouldShowMessage", (message: Message) => {
+        const messageInstance = new Message(message);
+        const shouldShowMessage =
+          messagingDelegate?.shouldShowMessage?.(messageInstance) ?? true;
+        const shouldSaveMessage =
+          messagingDelegate?.shouldSaveMessage?.(messageInstance) ?? false;
+        RCTAEPMessaging.setMessageSettings(shouldShowMessage, shouldSaveMessage);
+      })
+    );
 
     if (Platform.OS === "ios") {
-      eventEmitter.addListener(
-        "urlLoaded",
-        (event: { url: string; message: Message }) =>
-          messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
+      subscriptions.push(
+        subscribeMessagingEvent(
+          "urlLoaded",
+          "onMessageUrlLoaded",
+          (event: { url: string; message: Message }) =>
+            messagingDelegate?.urlLoaded?.(event.url, new Message(event.message))
+        )
       );
     }
 
     if (Platform.OS === "android") {
-      eventEmitter.addListener(
-        "onContentLoaded",
-        (event: { message: Message }) =>
-          messagingDelegate?.onContentLoaded?.(new Message(event.message))
+      // Android-only event; delivered over DeviceEventEmitter, so no JSI emitter name applies.
+      subscriptions.push(
+        subscribeMessagingEvent(
+          "onContentLoaded",
+          "onMessageShown",
+          (event: { message: Message }) =>
+            messagingDelegate?.onContentLoaded?.(new Message(event.message))
+        )
       );
     }
 
     RCTAEPMessaging.setMessagingDelegate();
 
     return () => {
-      eventEmitter.removeAllListeners("onDismiss");
-      eventEmitter.removeAllListeners("onShow");
-      eventEmitter.removeAllListeners("shouldShowMessage");
-      if (Platform.OS === "ios") {
-        eventEmitter.removeAllListeners("urlLoaded");
-      }
-      if (Platform.OS === "android") {
-        eventEmitter.removeAllListeners("onContentLoaded");
-      }
+      subscriptions.forEach((subscription) => subscription.remove());
     };
   }
 

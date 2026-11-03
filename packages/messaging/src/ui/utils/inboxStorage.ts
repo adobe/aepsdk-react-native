@@ -10,14 +10,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPMessaging from '../../NativeAEPMessaging';
 
 export interface InboxPersistedState {
   dismissed: string[];
   interacted: string[];
 }
 
-const RCTAEPMessaging = NativeModules.AEPMessaging;
+const RCTAEPMessaging = NativeAEPMessaging;
 
 /**
  * Load persisted inbox state (dismissed and read card IDs) from native storage.

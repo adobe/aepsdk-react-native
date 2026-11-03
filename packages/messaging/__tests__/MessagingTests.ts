@@ -10,24 +10,52 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPMessaging', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue('1.0.0'),
+    getCachedMessages: jest.fn().mockResolvedValue([]),
+    getLatestMessage: jest.fn().mockResolvedValue(null),
+    getPropositionsForSurfaces: jest.fn().mockResolvedValue({}),
+    refreshInAppMessages: jest.fn(),
+    setMessagingDelegate: jest.fn(),
+    setMessageSettings: jest.fn(),
+    updatePropositionsForSurfaces: jest.fn().mockResolvedValue(undefined),
+    trackContentCardDisplay: jest.fn(),
+    trackContentCardInteraction: jest.fn(),
+    trackPropositionItem: jest.fn().mockResolvedValue(undefined),
+    setAutoTrack: jest.fn(),
+    show: jest.fn(),
+    dismiss: jest.fn(),
+    track: jest.fn(),
+    clear: jest.fn(),
+    handleJavascriptMessage: jest.fn(),
+    evaluateJavascript: jest.fn(),
+    getInboxState: jest.fn().mockResolvedValue(null),
+    setInboxState: jest.fn().mockResolvedValue(undefined),
+    addListener: jest.fn(),
+    removeListeners: jest.fn()
+  }
+}));
+
+import NativeAEPMessaging from '../src/NativeAEPMessaging';
 import { Messaging, Message, MessagingEdgeEventType } from '../src';
 
 describe('Messaging', () => {
   it('extensionVersion is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'extensionVersion');
+    const spy = jest.spyOn(NativeAEPMessaging, 'extensionVersion');
     await Messaging.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('refreshInAppMessages is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'refreshInAppMessages');
+    const spy = jest.spyOn(NativeAEPMessaging, 'refreshInAppMessages');
     await Messaging.refreshInAppMessages();
     expect(spy).toHaveBeenCalled();
   });
 
   it('setMessagingDelegate is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'setMessagingDelegate');
+    const spy = jest.spyOn(NativeAEPMessaging, 'setMessagingDelegate');
     let delegate = {
       onShow(_: Message) {},
       onDismiss(_: Message) {},
@@ -41,7 +69,7 @@ describe('Messaging', () => {
   });
 
   it('setAutoTrack is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'setAutoTrack');
+    const spy = jest.spyOn(NativeAEPMessaging, 'setAutoTrack');
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
@@ -50,7 +78,7 @@ describe('Messaging', () => {
   });
 
   it('show is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'show');
+    const spy = jest.spyOn(NativeAEPMessaging, 'show');
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
@@ -59,7 +87,7 @@ describe('Messaging', () => {
   });
 
   it('dismiss is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'dismiss');
+    const spy = jest.spyOn(NativeAEPMessaging, 'dismiss');
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
@@ -68,7 +96,7 @@ describe('Messaging', () => {
   });
 
   it('track is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'track');
+    const spy = jest.spyOn(NativeAEPMessaging, 'track');
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
@@ -79,7 +107,7 @@ describe('Messaging', () => {
   });
 
   it('clear is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'clear');
+    const spy = jest.spyOn(NativeAEPMessaging, 'clear');
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
@@ -88,7 +116,7 @@ describe('Messaging', () => {
   });
 
   it('handleJavascriptMessage is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'handleJavascriptMessage');
+    const spy = jest.spyOn(NativeAEPMessaging, 'handleJavascriptMessage');
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
@@ -99,7 +127,7 @@ describe('Messaging', () => {
   });
 
   it('evaluateJavascript is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'evaluateJavascript');
+    const spy = jest.spyOn(NativeAEPMessaging, 'evaluateJavascript');
     let id = 'id';
     let autoTrack = true;
     let message = new Message({id, autoTrack});
@@ -110,7 +138,7 @@ describe('Messaging', () => {
   });
 
   it('should call updatePropositionsForSurfaces', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'updatePropositionsForSurfaces');
+    const spy = jest.spyOn(NativeAEPMessaging, 'updatePropositionsForSurfaces');
     await Messaging.updatePropositionsForSurfaces([
       'testSurface1',
       'testSurface2'
@@ -119,7 +147,7 @@ describe('Messaging', () => {
   });
 
   it('should call getPropositionsForSurfaces', async () => {
-    const spy = jest.spyOn(NativeModules.AEPMessaging, 'getPropositionsForSurfaces');
+    const spy = jest.spyOn(NativeAEPMessaging, 'getPropositionsForSurfaces');
     await Messaging.getPropositionsForSurfaces([
       'testSurface1',
       'testSurface2'
@@ -129,7 +157,7 @@ describe('Messaging', () => {
 
   it('should call trackContentCardDisplay', async () => {
     const spy = jest.spyOn(
-      NativeModules.AEPMessaging,
+      NativeAEPMessaging,
       'trackContentCardDisplay'
     );
     const mockProposition = { propositionId: 'mockPropositionId' } as any;
@@ -140,7 +168,7 @@ describe('Messaging', () => {
 
   it('should call trackContentCardInteraction', async () => {
     const spy = jest.spyOn(
-      NativeModules.AEPMessaging,
+      NativeAEPMessaging,
       'trackContentCardInteraction'
     );
     const mockProposition = { propositionId: 'mockPropositionId' } as any;

@@ -10,21 +10,20 @@
     governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPMessaging from '../../NativeAEPMessaging';
 import { loadInboxState, saveInboxState } from './inboxStorage';
 
-jest.mock('react-native', () => ({
-  NativeModules: {
-    AEPMessaging: {
-      getInboxState: jest.fn(),
-      setInboxState: jest.fn(),
-    },
+jest.mock('../../NativeAEPMessaging', () => ({
+  __esModule: true,
+  default: {
+    getInboxState: jest.fn(),
+    setInboxState: jest.fn(),
   },
 }));
 
 describe('inboxStorage', () => {
   const activityId = 'activity-123';
-  const aep = NativeModules.AEPMessaging as {
+  const aep = NativeAEPMessaging as unknown as {
     getInboxState: jest.Mock;
     setInboxState: jest.Mock;
   };
