@@ -33,6 +33,19 @@
   "publishConfig": {
     "access": "public"
   },
+  "codegenConfig": {
+    "name": "NativeAEPPlacesSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.places"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPPlaces": "RCTAEPPlaces"
+      }
+    }
+  },
   "installConfig": {
     "hoistingLimits": "dependencies"
   }
