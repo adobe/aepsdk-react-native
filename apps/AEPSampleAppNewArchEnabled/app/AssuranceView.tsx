@@ -38,6 +38,7 @@ const AssuranceView = () => {
         <Button onPress={router.back}  title="Go to main page" />
         <Text style={styles.welcome}>Assurance v{version}</Text>
         <Button title="Start Session" onPress={startSessionClicked} />
+        <Button title="Quick Connect" onPress={() => Assurance.startSession()} />
         <TextInput
           style={{height: 40, margin: 10}}
           placeholder="assurance://"
