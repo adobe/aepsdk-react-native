@@ -11,7 +11,8 @@ governing permissions and limitations under the License.
 
 package com.adobe.marketing.mobile.reactnative.assurance;
 
-import com.adobe.marketing.mobile.Assurance;
+import androidx.annotation.Nullable;
+
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -26,18 +27,16 @@ public class RCTAEPAssuranceModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void extensionVersion(final Promise promise) {
-        promise.resolve(Assurance.extensionVersion());
+        RCTAEPAssuranceUtil.extensionVersion(promise);
     }
 
     @ReactMethod
-    public void startSession(final String url) {
-        if(url != null){
-            Assurance.startSession(url);
-        }
+    public void startSession(@Nullable final String url) {
+        RCTAEPAssuranceUtil.startSession(url);
     }
 
     @Override
     public String getName() {
-        return "AEPAssurance";
+        return "NativeAEPAssurance";
     }
 }

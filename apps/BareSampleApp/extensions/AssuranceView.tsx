@@ -24,7 +24,9 @@ import { NavigationProps } from '../types/props';
 
 const AssuranceView = ({navigation}: NavigationProps) => {
   const [version, setVersion] = useState('');
-  const [sessionURL, setsessionURL] = useState('your-assurance-url');
+  const [sessionURL, setsessionURL] = useState(
+    '',
+  );
 
   Assurance.extensionVersion().then(version => {
     setVersion(version);
@@ -35,18 +37,23 @@ const AssuranceView = ({navigation}: NavigationProps) => {
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={() => navigation.goBack()} title="Go to main page" />
         <Text style={styles.welcome}>Assurance v{version}</Text>
-        <Button title="Start Session" onPress={startSessionClicked} />
         <TextInput
           style={{height: 40, margin: 10}}
           placeholder="assurance://"
+          value={sessionURL}
+          autoCapitalize="none"
+          autoCorrect={false}
           onChangeText={val => setsessionURL(val)}
         />
+        <Button title="Start Session" onPress={startSessionClicked} />
+        <Button title="Quick Connect" onPress={() => Assurance.startSession()} />
+        
       </ScrollView>
     </View>
   );
 
   function startSessionClicked() {
-    Assurance.startSession("edgetutorialapp://?adb_validation_sessionid=827183a9-582f-4f39-afbd-3d02705cba7d");
+    Assurance.startSession(sessionURL);
   }
 };
 
