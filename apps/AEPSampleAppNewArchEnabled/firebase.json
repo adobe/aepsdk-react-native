@@ -1,0 +1,5 @@
+{
+  "react-native": {
+    "messaging_installation_id_enabled": true
+  }
+}
