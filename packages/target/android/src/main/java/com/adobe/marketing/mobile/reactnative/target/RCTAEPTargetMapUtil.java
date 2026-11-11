@@ -104,10 +104,14 @@ public class RCTAEPTargetMapUtil {
                 writableMap.putDouble((String) pair.getKey(), (Double) value);
             } else if (value instanceof Integer) {
                 writableMap.putInt((String) pair.getKey(), (Integer) value);
+            } else if (value instanceof Long) {
+                writableMap.putDouble((String) pair.getKey(), ((Long) value).doubleValue());
             } else if (value instanceof String) {
                 writableMap.putString((String) pair.getKey(), (String) value);
             } else if (value instanceof Map) {
                 writableMap.putMap((String) pair.getKey(), RCTAEPTargetMapUtil.toWritableMap((Map<String, Object>) value));
+            } else if (value instanceof java.util.List) {
+                writableMap.putArray((String) pair.getKey(), RCTAEPTargetArrayUtil.toWritableArray(((java.util.List<?>) value).toArray()));
             } else if (value.getClass() != null && value.getClass().isArray()) {
                 writableMap.putArray((String) pair.getKey(), RCTAEPTargetArrayUtil.toWritableArray((Object[]) value));
             }

@@ -15,6 +15,11 @@ import TargetParameters from './models/TargetParameters';
 import TargetPrefetchObject from './models/TargetPrefetchObject';
 import TargetProduct from './models/TargetProduct';
 import TargetRequestObject from './models/TargetRequestObject';
+import type {
+  TargetCallbackError,
+  TargetDetailedCallback,
+  TargetResponseData
+} from './models/TargetDetailedCallback';
 
 export {
   // Native models
@@ -26,3 +31,5 @@ export {
   // Native modules
   Target
 };
+
+export type { TargetCallbackError, TargetDetailedCallback, TargetResponseData };
