@@ -78,7 +78,8 @@
         {
           "value": "0"
         }
-      ]
+      ],
+      "./plugins/withCampaignClassicPush"
     ],
     "experiments": {
       "typedRoutes": true

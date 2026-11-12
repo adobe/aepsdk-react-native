@@ -70,3 +70,7 @@ styles/styles.js
 
 # testing
 /coverage
+
+# Firebase config (per-developer)
+google-services.json
+GoogleService-Info.plist

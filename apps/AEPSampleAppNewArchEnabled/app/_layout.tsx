@@ -6,18 +6,12 @@ import { Drawer } from 'expo-router/drawer';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MobileCore, LogLevel} from '@adobe/react-native-aepcore';
-import { CampaignClassic } from '@adobe/react-native-aepcampaignclassic';
 import { getMessaging, setBackgroundMessageHandler } from '@react-native-firebase/messaging';
 import { useEffect } from 'react';
-import { Platform } from 'react-native';
 
-// Must be registered at module level so it also runs when the app is in the background or killed.
-// Android only: the Campaign Classic payload is a data message that the SDK turns into a notification.
-if (Platform.OS === 'android') {
-  setBackgroundMessageHandler(getMessaging(), async (remoteMessage) => {
-    await CampaignClassic.handleRemoteMessage((remoteMessage.data ?? {}) as Record<string, string>);
-  });
-}
+// Required by React Native Firebase's headless task. Campaign Classic pushes are displayed
+// natively by NotificationService (see plugins/withCampaignClassicPush.js).
+setBackgroundMessageHandler(getMessaging(), async () => {});
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

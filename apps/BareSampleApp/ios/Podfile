@@ -21,6 +21,12 @@ prepare_react_native_project!
 
 # Required for AEP SDK with New Architecture - use static frameworks
 use_frameworks! :linkage => :static
+$RNFirebaseAsStaticFramework = true
+
+# react-native-permissions: only the notification handler is needed
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve("react-native-permissions/scripts/setup.rb", {paths: [process.argv[1]]})', __dir__]).strip
+setup_permissions(['Notifications'])
 
 target 'BareSampleApp' do
   config = use_native_modules!

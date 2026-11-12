@@ -81,13 +81,10 @@ function CampaignClassicView() {
     })();
   }, []);
 
-  // Foreground messages on Android are handed to the SDK, which builds and shows the notification.
+  // Foreground pushes are displayed natively by NotificationService; this only logs them.
   useEffect(() => {
     return onMessage(getMessaging(), async (remoteMessage) => {
       console.log('AdobeExperienceSDK: foreground push received', JSON.stringify(remoteMessage));
-      if (Platform.OS === 'android') {
-        await CampaignClassic.handleRemoteMessage((remoteMessage.data ?? {}) as Record<string, string>);
-      }
     });
   }, []);
 
@@ -102,9 +99,9 @@ function CampaignClassicView() {
     console.log(`Device registered for ${userKey}`);
   };
 
-  const registerDeviceSameUser = () => registerDevice('ACC-Extension-Test-User');
+  const registerDeviceSameUser = () => registerDevice('new-ACC-Extension-Test-User');
 
-  const registerDeviceNewUser = () => registerDevice('ACC-Extension-Test-NewUser');
+  const registerDeviceNewUser = () => registerDevice('new-ACC-Extension-Test-NewUser');
 
   const registerDeviceWithAdditionalParams = () =>
     registerDevice('ACC-Extension-Test-User', {
@@ -120,12 +117,12 @@ function CampaignClassicView() {
   };
 
   const trackNotificationClickWithUserInfo = () => {
-    CampaignClassic.trackNotificationClickWithUserInfo({ _mId: '2001', _dId: '443' });
+    CampaignClassic.trackNotificationClickWithUserInfo({ _mId: '4005', _dId: '4d9' });
     console.log('Notification clicked!');
   };
 
   const trackNotificationReceiveWithUserInfo = () => {
-    CampaignClassic.trackNotificationReceiveWithUserInfo({ _mId: '2001', _dId: '443' });
+    CampaignClassic.trackNotificationReceiveWithUserInfo({ _mId: '4005', _dId: '4d9' });
     console.log('Notification received!');
   };
 
