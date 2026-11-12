@@ -13,8 +13,12 @@
 package com.adobe.marketing.mobile.reactnative.campaignclassic;
 
 import android.util.Log;
+import android.content.Context;
+import com.adobe.marketing.mobile.AEPMessagingService;
+import com.adobe.marketing.mobile.CampaignClassic;
 import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
@@ -23,6 +27,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.google.firebase.messaging.RemoteMessage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +43,51 @@ class RCTAEPCampaignClassicUtil {
   private static final String TAG = "RCTAEPCampaignClassic";
 
   private RCTAEPCampaignClassicUtil() {}
+
+  static void extensionVersion(final Promise promise) {
+    promise.resolve(CampaignClassic.extensionVersion());
+  }
+
+  static void registerDeviceWithToken(final String deviceToken,
+                                      final String userKey,
+                                      final ReadableMap additionalParams) {
+    final Map<String, Object> additionalParamsMap =
+        additionalParams != null ? convertReadableMapToMap(additionalParams)
+                                 : null;
+    CampaignClassic.registerDevice(deviceToken, userKey, additionalParamsMap);
+  }
+
+  static void handleRemoteMessage(final Context context,
+                                  final ReadableMap data,
+                                  final Promise promise) {
+    try {
+      final RemoteMessage.Builder builder =
+          new RemoteMessage.Builder("aepsdk@fcm.googleapis.com");
+      for (Map.Entry<String, String> entry :
+           convertTrackInfoToMap(data).entrySet()) {
+        builder.addData(entry.getKey(), entry.getValue());
+      }
+      promise.resolve(
+          AEPMessagingService.handleRemoteMessage(context, builder.build()));
+    } catch (final LinkageError e) {
+      // firebase-messaging is provided by the host app; it is not bundled with this package.
+      promise.reject(
+          "handleRemoteMessage",
+          "handleRemoteMessage requires com.google.firebase:firebase-messaging in the app: " +
+              e.getMessage(),
+          e);
+    } catch (final Exception e) {
+      promise.reject("handleRemoteMessage", e.getMessage(), e);
+    }
+  }
+
+  static void trackNotificationReceiveWithUserInfo(final ReadableMap trackInfo) {
+    CampaignClassic.trackNotificationReceive(convertTrackInfoToMap(trackInfo));
+  }
+
+  static void trackNotificationClickWithUserInfo(final ReadableMap trackInfo) {
+    CampaignClassic.trackNotificationClick(convertTrackInfoToMap(trackInfo));
+  }
 
   static Map<String, String>
   convertTrackInfoToMap(final ReadableMap readableMap) {

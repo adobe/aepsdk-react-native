@@ -6,7 +6,12 @@ import { Drawer } from 'expo-router/drawer';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MobileCore, LogLevel} from '@adobe/react-native-aepcore';
+import { getMessaging, setBackgroundMessageHandler } from '@react-native-firebase/messaging';
 import { useEffect } from 'react';
+
+// Required by React Native Firebase's headless task. Campaign Classic pushes are displayed
+// natively by NotificationService (see plugins/withCampaignClassicPush.js).
+setBackgroundMessageHandler(getMessaging(), async () => {});
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -79,6 +84,7 @@ export default function RootLayout() {
       <Drawer.Screen name="index" options={{ title: 'Home' }} />
         <Drawer.Screen name="CoreView" options={{ title: 'CoreView' }} />
         <Drawer.Screen name="AssuranceView" options={{ title: 'AssuranceView' }} />
+        <Drawer.Screen name="CampaignClassicView" options={{ title: 'CampaignClassicView' }} />
         <Drawer.Screen name="ConsentView" options={{ title: 'ConsentView' }} />
         <Drawer.Screen name="InboxView" options={{ title: 'Content Card & Inbox' }} />
         <Drawer.Screen name="EdgeBridgeView" options={{ title: 'EdgeBridgeView' }} />

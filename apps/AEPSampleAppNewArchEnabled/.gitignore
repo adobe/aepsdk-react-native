@@ -10,6 +10,10 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# Firebase config (contains project keys)
+google-services.json
+GoogleService-Info.plist
+
 # macOS
 .DS_Store
 
