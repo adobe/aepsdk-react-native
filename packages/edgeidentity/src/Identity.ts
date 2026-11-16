@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPEdgeIdentity from './NativeAEPEdgeIdentity';
 import IdentityMap from './models/IdentityMap';
 import IdentityItem from './models/IdentityItem';
 
@@ -24,7 +24,7 @@ interface IIdentity {
 
 }
 
-const RCTAEPEdgeIdentity: IIdentity = NativeModules.AEPEdgeIdentity;
+const RCTAEPEdgeIdentity = NativeAEPEdgeIdentity;
 
 const Identity: IIdentity = {
   /**
@@ -67,7 +67,7 @@ const Identity: IIdentity = {
     const getIdentitiesPromise = new Promise<IdentityMap>((resolve, reject) => {
       RCTAEPEdgeIdentity.getIdentities()
         .then((identities) => {
-          let identityMap = toIdentityMap(identities);
+          let identityMap = toIdentityMap(identities as IdentityMap);
           resolve(identityMap);
         })
         .catch((error) => {

@@ -27,6 +27,19 @@
   "author": {
     "name": "Adobe Experience Platform SDK Team"
   },
+  "codegenConfig": {
+    "name": "NativeAEPEdgeConsentSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.edgeconsent"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPEdgeConsent": "RCTAEPEdgeConsent"
+      }
+    }
+  },
   "peerDependencies": {
     "@adobe/react-native-aepcore": "^7.0.0",
     "react-native": ">=0.60.0"

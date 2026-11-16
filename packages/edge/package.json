@@ -26,6 +26,19 @@
   "author": {
     "name": "Adobe Experience Platform SDK Team"
   },
+  "codegenConfig": {
+    "name": "NativeAEPEdgeSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.edge"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPEdge": "RCTAEPEdge"
+      }
+    }
+  },
   "peerDependencies": {
     "@adobe/react-native-aepcore": "^7.0.0",
     "@adobe/react-native-aepedgeidentity": "^7.0.0",

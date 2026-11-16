@@ -11,6 +11,14 @@
 
 @import AEPEdgeIdentity;
 @import AEPCore;
+
+// Old-arch iOS (classic bridge): NativeModules only exposes methods registered via
+// RCT_EXPORT_METHOD. Protocol/Turbo selectors alone are invisible to JavaScript.
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#define AEP_EDGEIDENTITY_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_EDGEIDENTITY_METHOD(method) - (void)method
+#endif
 #import "RCTAEPEdgeIdentity.h"
 #import "RCTAEPEdgeIdentityDataBridge.h"
 
@@ -19,18 +27,26 @@
 
 static NSString* const EXTENSION_NAME = @"AEPEdgeIdentity";
 
-RCT_EXPORT_MODULE(AEPEdgeIdentity);
+RCT_EXPORT_MODULE(NativeAEPEdgeIdentity);
+
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeAEPEdgeIdentitySpecJSI>(params);
+}
+#endif
 
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
 }
 
-RCT_EXPORT_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGEIDENTITY_METHOD(extensionVersion: (RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([AEPMobileEdgeIdentity extensionVersion]);
 }
 
-RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGEIDENTITY_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject) {
     [AEPMobileEdgeIdentity getExperienceCloudId:^(NSString * _Nullable experienceCloudId, NSError * _Nullable error) {
         
         if (error) {
@@ -41,7 +57,7 @@ RCT_EXPORT_METHOD(getExperienceCloudId:(RCTPromiseResolveBlock) resolve rejecter
     }];
 }
 
-RCT_EXPORT_METHOD(getIdentities:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGEIDENTITY_METHOD(getIdentities:(RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject) {
     
     [AEPMobileEdgeIdentity getIdentities:^(AEPIdentityMap * _Nullable IdentityMap, NSError * _Nullable error) {
         
@@ -53,7 +69,7 @@ RCT_EXPORT_METHOD(getIdentities:(RCTPromiseResolveBlock) resolve rejecter:(RCTPr
     }];
 }
 
-RCT_EXPORT_METHOD(getUrlVariables:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock)reject) {
+AEP_EDGEIDENTITY_METHOD(getUrlVariables:(RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject) {
     [AEPMobileEdgeIdentity getUrlVariables:^(NSString * _Nullable urlVariables, NSError * _Nullable error) {
         
         if (error) {
@@ -64,22 +80,22 @@ RCT_EXPORT_METHOD(getUrlVariables:(RCTPromiseResolveBlock) resolve rejecter:(RCT
     }];
 }
 
-RCT_EXPORT_METHOD(updateIdentities:(nonnull NSDictionary*) map) {
+AEP_EDGEIDENTITY_METHOD(updateIdentities:(NSDictionary *)map) {
     AEPIdentityMap *convertMap = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityMap:map];
 
     [AEPMobileEdgeIdentity updateIdentities:(AEPIdentityMap * _Nonnull) convertMap];
 }
 
-RCT_EXPORT_METHOD(removeIdentity:(nonnull NSDictionary*)item
-                  namespace:(NSString *)namespace) {
+AEP_EDGEIDENTITY_METHOD(removeIdentity:(NSDictionary *)item
+                  identityNamespace:(NSString *)identityNamespace) {
     
     AEPIdentityItem *convertItem = [RCTAEPEdgeIdentityDataBridge dictionaryToIdentityItem:item];
     
-    if (!convertItem || !namespace) {
+    if (!convertItem || !identityNamespace) {
     return;
     }
 
-    [AEPMobileEdgeIdentity removeIdentityItem:(AEPIdentityItem * _Nonnull) convertItem withNamespace:(NSString * _Nonnull) namespace];
+    [AEPMobileEdgeIdentity removeIdentityItem:(AEPIdentityItem * _Nonnull) convertItem withNamespace:(NSString * _Nonnull) identityNamespace];
 }
 
 #pragma mark - Helper methods

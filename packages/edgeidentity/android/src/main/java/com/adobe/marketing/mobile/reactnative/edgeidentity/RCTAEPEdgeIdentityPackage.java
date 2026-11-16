@@ -1,37 +1,64 @@
 /*
- Copyright 2022 Adobe. All rights reserved.
- This file is licensed to you under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License. You may obtain a copy
- of the License at http://www.apache.org/licenses/LICENSE-2.0
- Unless required by applicable law or agreed to in writing, software distributed under
- the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- OF ANY KIND, either express or implied. See the License for the specific language
- governing permissions and limitations under the License.
- */
+Copyright 2022 Adobe. All rights reserved.
+This file is licensed to you under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain a copy
+of the License at http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+OF ANY KIND, either express or implied. See the License for the specific language
+governing permissions and limitations under the License.
+*/
 package com.adobe.marketing.mobile.reactnative.edgeidentity;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import com.facebook.react.BaseReactPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.ViewManager;
-import com.facebook.react.bridge.JavaScriptModule;
-public class RCTAEPEdgeIdentityPackage implements ReactPackage {
-    @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RCTAEPEdgeIdentityModule(reactContext));
-    }
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
 
-    // Deprecated from RN 0.47
-    public List<Class<? extends JavaScriptModule>> createJSModules() {
-      return Collections.emptyList();
-    }
+import java.util.HashMap;
+import java.util.Map;
 
-    @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-      return Collections.emptyList();
+/**
+ * USE_INTEROP_ROOT true  -> RCTAEPEdgeIdentityModule (classic bridge); isTurboModule = false.
+ * USE_INTEROP_ROOT false -> NativeAEPEdgeIdentityModule (Turbo);       isTurboModule = true.
+ * Both register under "NativeAEPEdgeIdentity" so the codegen JS spec resolves on either path.
+ */
+public class RCTAEPEdgeIdentityPackage extends BaseReactPackage implements ReactPackage {
+
+  private static final String MODULE_NAME = "NativeAEPEdgeIdentity";
+
+  @Override
+  public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+    if (!MODULE_NAME.equals(name)) {
+      return null;
     }
+    if (BuildConfig.USE_INTEROP_ROOT || !BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      return new RCTAEPEdgeIdentityModule(reactContext);
+    }
+    // Reflection: old-arch builds exclude NativeAEPEdgeIdentityModule.java (see build.gradle).
+    try {
+      Class<?> cls = Class.forName("com.adobe.marketing.mobile.reactnative.edgeidentity.NativeAEPEdgeIdentityModule");
+      return (NativeModule) cls.getConstructor(ReactApplicationContext.class).newInstance(reactContext);
+    } catch (ReflectiveOperationException e) {
+      throw new RuntimeException(
+          "NativeAEPEdgeIdentityModule not available - enable New Architecture or set USE_INTEROP_ROOT=true", e);
+    }
+  }
+
+  @Override
+  public ReactModuleInfoProvider getReactModuleInfoProvider() {
+    return new ReactModuleInfoProvider() {
+      @Override
+      public Map<String, ReactModuleInfo> getReactModuleInfos() {
+        boolean isTurboModule =
+            BuildConfig.IS_NEW_ARCHITECTURE_ENABLED && !BuildConfig.USE_INTEROP_ROOT;
+        Map<String, ReactModuleInfo> map = new HashMap<>();
+        map.put(MODULE_NAME, new ReactModuleInfo(
+            MODULE_NAME, MODULE_NAME, false, false, false, isTurboModule));
+        return map;
+      }
+    };
+  }
 }

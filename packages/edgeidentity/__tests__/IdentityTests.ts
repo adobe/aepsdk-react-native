@@ -10,7 +10,21 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPEdgeIdentity', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue(''),
+    getExperienceCloudId: jest.fn().mockResolvedValue(''),
+    getIdentities: jest.fn().mockResolvedValue({
+      ABC: [{ id: 'id1', authenticatedState: 'ambiguous', primary: false }]
+    }),
+    getUrlVariables: jest.fn().mockResolvedValue(''),
+    updateIdentities: jest.fn(),
+    removeIdentity: jest.fn()
+  }
+}));
+
+import NativeAEPEdgeIdentity from '../src/NativeAEPEdgeIdentity';
 import { Identity, AuthenticatedState, IdentityItem, IdentityMap } from '../src';
 
 afterEach(() => {
@@ -20,14 +34,14 @@ afterEach(() => {
 describe('Identity for Edge Network', () => {
   it('extensionVersion is called', async () => {
     expect(Identity.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'extensionVersion');
+    const spy = jest.spyOn((NativeAEPEdgeIdentity as any), 'extensionVersion');
     await Identity.extensionVersion();
     expect(spy).toHaveBeenCalled();
   });
 
   it('getExperienceCloudId is called', async () => {
     const spy = jest.spyOn(
-      NativeModules.AEPEdgeIdentity,
+      (NativeAEPEdgeIdentity as any),
       'getExperienceCloudId'
     );
     await Identity.getExperienceCloudId();
@@ -36,7 +50,7 @@ describe('Identity for Edge Network', () => {
 
    it('getUrlVariables is called', async () => {
     const spy = jest.spyOn(
-      NativeModules.AEPEdgeIdentity,
+      (NativeAEPEdgeIdentity as any),
       'getUrlVariables'
     );
     await Identity.getUrlVariables();
@@ -44,7 +58,7 @@ describe('Identity for Edge Network', () => {
   });
 
   it('getIdentities is called', async () => {
-    const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'getIdentities');
+    const spy = jest.spyOn((NativeAEPEdgeIdentity as any), 'getIdentities');
     await Identity.getIdentities();
     expect(spy).toHaveBeenCalled();
   });
@@ -212,7 +226,7 @@ describe('Identity for Edge Network', () => {
   });
 
   it('updateIdentities is validated', async () => {
-    const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'updateIdentities');
+    const spy = jest.spyOn((NativeAEPEdgeIdentity as any), 'updateIdentities');
     let identifier1 = 'id1';
     let namespace1 = 'namespace1';
     let authenticatedState1 = AuthenticatedState.AMBIGUOUS;
@@ -265,7 +279,7 @@ describe('Identity for Edge Network', () => {
   });
 
   it('removeIdentity is called with correct data', async () => {
-    const spy = jest.spyOn(NativeModules.AEPEdgeIdentity, 'removeIdentity');
+    const spy = jest.spyOn((NativeAEPEdgeIdentity as any), 'removeIdentity');
     let namespace1 = 'namespace1';
 
     let identityItem1 = new IdentityItem(

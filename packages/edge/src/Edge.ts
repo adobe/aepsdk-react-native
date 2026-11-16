@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPEdge from './NativeAEPEdge';
 import ExperienceEvent from './models/ExperienceEvent';
 import EdgeEventHandle from './models/EdgeEventHandle';
 
@@ -23,7 +23,7 @@ interface IEdge {
   getLocationHint: () => Promise<string | null>;
 }
 
-const RCTAEPEdge: IEdge = NativeModules.AEPEdge;
+const RCTAEPEdge = NativeAEPEdge;
 
 const Edge: IEdge = {
   /**
@@ -48,7 +48,7 @@ const Edge: IEdge = {
       (resolve, reject) => {
         RCTAEPEdge.sendEvent(experienceEvent)
           .then((eventHandles) => {
-            let eventHandlesPromise = toEventHandle(eventHandles);
+            let eventHandlesPromise = toEventHandle(eventHandles as Array<EdgeEventHandle>);
             resolve(eventHandlesPromise);
           })
           .catch((error) => {
