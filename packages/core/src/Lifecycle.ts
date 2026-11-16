@@ -16,7 +16,7 @@ interface ILifecycle {
   extensionVersion: () => Promise<string>;
 }
 
-const RCTAEPLifecycle: ILifecycle = NativeAEPLifecycle as unknown as ILifecycle;
+const RCTAEPLifecycle: ILifecycle = NativeAEPLifecycle;
 
 const Lifecycle: ILifecycle = {
   /**

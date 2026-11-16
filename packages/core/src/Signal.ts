@@ -16,7 +16,7 @@ interface ISignal {
   extensionVersion: () => Promise<string>;
 }
 
-const RCTAEPSignal: ISignal = NativeAEPSignal as unknown as ISignal;
+const RCTAEPSignal: ISignal = NativeAEPSignal;
 
 const Signal: ISignal = {
   /**

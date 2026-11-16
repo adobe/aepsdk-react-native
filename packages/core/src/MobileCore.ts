@@ -18,7 +18,7 @@ import { InitOptions } from './models/InitOptions';
 
 interface IMobileCore {
   extensionVersion: () => Promise<string>;
-  configureWithAppId: (appId?: String) => void;
+  configureWithAppId: (appId?: string) => void;
   updateConfiguration: (configMap?: Record<string, any>) => void;
   setLogLevel: (mode: LogLevel) => void;
   getLogLevel: () => Promise<LogLevel>;
@@ -26,7 +26,7 @@ interface IMobileCore {
   getPrivacyStatus: () => Promise<PrivacyStatus>;
   getSdkIdentities: () => Promise<string>;
   dispatchEvent: (event: Event) => Promise<boolean>;
-  dispatchEventWithResponseCallback: (event: Event, timeoutMS:Number) => Promise<Event>;
+  dispatchEventWithResponseCallback: (event: Event, timeoutMS: number) => Promise<Event>;
   trackAction: (action?: string, contextData?: Record<string, any>) => void;
   trackState: (state?: string, contextData?: Record<string, string>) => void;
   setAdvertisingIdentifier: (advertisingIdentifier?: string) => void;
@@ -41,7 +41,7 @@ interface IMobileCore {
   initializeWithAppId: (appId: string) => Promise<void>;
 }
 
-const RCTAEPCore: IMobileCore = NativeAEPCore as unknown as IMobileCore;
+const RCTAEPCore = NativeAEPCore;
 
 const MobileCore: IMobileCore = {
   /**
@@ -105,7 +105,7 @@ const MobileCore: IMobileCore = {
    * added to the ADBMobile JSON file when downloaded from the Adobe Mobile Services UI and can be
    * found in Manage App Settings. A value of `nil` has no effect.
    */
-  configureWithAppId(appId?: String) {
+  configureWithAppId(appId?: string) {
     RCTAEPCore.configureWithAppId(appId);
   },
 
@@ -149,7 +149,7 @@ const MobileCore: IMobileCore = {
    */
 
   getLogLevel(): Promise<LogLevel> {
-    return RCTAEPCore.getLogLevel();
+    return RCTAEPCore.getLogLevel() as Promise<LogLevel>;
   },
 
   /**
@@ -167,7 +167,7 @@ const MobileCore: IMobileCore = {
    * @return {PrivacyStatus} the current privacy status
    */
   getPrivacyStatus(): Promise<PrivacyStatus> {
-    return RCTAEPCore.getPrivacyStatus();
+    return RCTAEPCore.getPrivacyStatus() as Promise<PrivacyStatus>;
   },
 
   /**
@@ -200,8 +200,8 @@ const MobileCore: IMobileCore = {
    * @return Promise a promise that resolves with {@link Event}
    *
    */
-  dispatchEventWithResponseCallback(event: Event, timeoutMS: Number): Promise<Event> {
-    return RCTAEPCore.dispatchEventWithResponseCallback(event, timeoutMS);
+  dispatchEventWithResponseCallback(event: Event, timeoutMS: number): Promise<Event> {
+    return RCTAEPCore.dispatchEventWithResponseCallback(event, timeoutMS) as Promise<Event>;
   },
 
   /**
