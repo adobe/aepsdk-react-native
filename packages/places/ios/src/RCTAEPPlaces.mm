@@ -15,46 +15,59 @@ specific language governing permissions and limitations under the License.
 #import <CoreLocation/CoreLocation.h>
 @import AEPPlaces;
 
+// Old-arch iOS (classic bridge): NativeModules only exposes methods registered via
+// RCT_EXPORT_METHOD. Protocol/Turbo selectors alone are invisible to JavaScript.
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+#define AEP_PLACES_METHOD(method) RCT_EXPORT_METHOD(method)
+#else
+#define AEP_PLACES_METHOD(method) - (void)method
+#endif
+
 @implementation RCTAEPPlaces
 
 static NSString *const EXTENSION_NAME = @"AEPPlaces";
 
-RCT_EXPORT_MODULE(AEPPlaces);
+RCT_EXPORT_MODULE(NativeAEPPlaces);
+
+#if !USE_INTEROP_ROOT || RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeAEPPlacesSpecJSI>(params);
+}
+#endif
 
 - (dispatch_queue_t)methodQueue {
   return dispatch_get_main_queue();
 }
 
-RCT_EXPORT_METHOD(extensionVersion
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_PLACES_METHOD(extensionVersion:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   resolve([AEPMobilePlaces extensionVersion]);
 }
 
-RCT_EXPORT_METHOD(getLastKnownLocation
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_PLACES_METHOD(getLastKnownLocation:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   [AEPMobilePlaces getLastKnownLocation:^(CLLocation *_Nullable lastLocation) {
     resolve([RCTAEPPlacesDataBridge dictionaryFromCLLocation:lastLocation]);
   }];
 }
 
-RCT_EXPORT_METHOD(clear) { [AEPMobilePlaces clear]; }
+AEP_PLACES_METHOD(clear) { [AEPMobilePlaces clear]; }
 
-RCT_EXPORT_METHOD(setAuthorizationStatus : (nonnull NSString *)authStatus) {
+AEP_PLACES_METHOD(setAuthorizationStatus:(NSString *)authStatus) {
   [AEPMobilePlaces setAuthorizationStatus:[RCTAEPPlacesDataBridge
                                               authStatusFromString:authStatus]];
 }
 
-RCT_EXPORT_METHOD(getNearbyPointsOfInterest
-                  : (nonnull NSDictionary *)locationDict limit
-                  : (int)limit resolver
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_PLACES_METHOD(getNearbyPointsOfInterest:(NSDictionary *)locationDict
+                  limit:(double)limit
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   [AEPMobilePlaces
       getNearbyPointsOfInterest:[RCTAEPPlacesDataBridge
                                     CLLocationFromDict:locationDict]
-                          limit:limit
+                          limit:(int)limit
                        callback:^(NSArray<AEPPlacesPoi *> *_Nonnull nearbyPoi,
                                   enum AEPPlacesQueryResponseCode code) {
                          NSMutableArray *poiArray = [NSMutableArray array];
@@ -67,18 +80,16 @@ RCT_EXPORT_METHOD(getNearbyPointsOfInterest
                        }];
 }
 
-RCT_EXPORT_METHOD(processGeofence
-                  : (nonnull NSDictionary *)geofenceDict transitionType
-                  : (int)transitionType) {
+AEP_PLACES_METHOD(processGeofence:(NSDictionary *)geofenceDict
+                  transitionType:(double)transitionType) {
   [AEPMobilePlaces
       processRegionEvent:[RCTAEPPlacesDataBridge
-                          regionEventFromInt:transitionType]
+                          regionEventFromInt:(int)transitionType]
       forRegion:[RCTAEPPlacesDataBridge clRegionFromDict:geofenceDict]];
 }
 
-RCT_EXPORT_METHOD(getCurrentPointsOfInterest
-                  : (RCTPromiseResolveBlock)resolve rejecter
-                  : (RCTPromiseRejectBlock)reject) {
+AEP_PLACES_METHOD(getCurrentPointsOfInterest:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   [AEPMobilePlaces getCurrentPointsOfInterest:^(
                        NSArray<AEPPlacesPoi *> *_Nullable userWithinPoi) {
     NSMutableArray *poiArray = [NSMutableArray array];
