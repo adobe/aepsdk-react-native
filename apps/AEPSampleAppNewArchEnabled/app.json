@@ -60,7 +60,7 @@
         {
           "ios": {
             "newArchEnabled": true,
-            "useFrameworks": "static",
+            "useFrameworks": "dynamic",
             "buildReactNativeFromSource": true,
             "deploymentTarget": "16.4"
           },

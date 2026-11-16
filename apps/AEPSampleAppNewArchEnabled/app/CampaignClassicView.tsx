@@ -60,8 +60,16 @@ const fetchFid = (): Promise<string> =>
   });
 
 // iOS: Campaign Classic expects the APNs device token.
-const fetchPushToken = async (): Promise<string | null> =>
-  Platform.OS === 'ios' ? getAPNSToken(getMessaging()) : fetchFid();
+// The iOS simulator never gets an APNs token, so debug builds fall back to a placeholder (no real push can arrive).
+const SIMULATOR_TOKEN = 'simulator-test-token';
+
+const fetchPushToken = async (): Promise<string | null> => {
+  if (Platform.OS !== 'ios') {
+    return fetchFid();
+  }
+  const apnsToken = await getAPNSToken(getMessaging());
+  return apnsToken ?? (__DEV__ ? SIMULATOR_TOKEN : null);
+};
 
 function CampaignClassicView() {
   const router = useRouter();
