@@ -10,13 +10,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPEdgeBridge from './NativeAEPEdgeBridge';
 
 interface IEdgeBridge {
   extensionVersion: () => Promise<string>;
 }
 
-const RCTAEPEdgeBridge: IEdgeBridge = NativeModules.AEPEdgeBridge;
+const RCTAEPEdgeBridge = NativeAEPEdgeBridge;
 
 const EdgeBridge: IEdgeBridge = {
   /**

@@ -10,7 +10,6 @@
  */
 package com.adobe.marketing.mobile.reactnative.edgebridge;
 
-import com.adobe.marketing.mobile.edge.bridge.EdgeBridge;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -27,11 +26,11 @@ public class RCTAEPEdgeBridgeModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "AEPEdgeBridge";
+    return "NativeAEPEdgeBridge";
   }
 
   @ReactMethod
   public void extensionVersion(final Promise promise) {
-    promise.resolve(EdgeBridge.extensionVersion());
+    RCTAEPEdgeBridgeUtil.extensionVersion(promise);
   }
 }
