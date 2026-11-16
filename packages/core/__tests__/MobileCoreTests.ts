@@ -10,8 +10,6 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
-
 const mockAEPCore = {
   extensionVersion: jest.fn(() => Promise.resolve('1.0.0')),
   configureWithAppId: jest.fn(() => Promise.resolve()),
@@ -37,7 +35,22 @@ const mockAEPCore = {
   clearUpdatedConfiguration: jest.fn(() => Promise.resolve())
 };
 
-NativeModules.AEPCore = mockAEPCore;
+jest.mock('../src/NativeAEPCore', () => ({
+  __esModule: true,
+  default: mockAEPCore
+}));
+jest.mock('../src/NativeAEPIdentity', () => ({
+  __esModule: true,
+  default: { extensionVersion: jest.fn().mockResolvedValue('1.0.0') }
+}));
+jest.mock('../src/NativeAEPLifecycle', () => ({
+  __esModule: true,
+  default: { extensionVersion: jest.fn().mockResolvedValue('1.0.0') }
+}));
+jest.mock('../src/NativeAEPSignal', () => ({
+  __esModule: true,
+  default: { extensionVersion: jest.fn().mockResolvedValue('1.0.0') }
+}));
 
 import { MobileCore, LogLevel, PrivacyStatus, Event } from '../src';
 

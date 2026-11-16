@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import NativeAEPIdentity from './NativeAEPIdentity';
 import { MobileVisitorAuthenticationState } from './models/MobileVisitorAuthenticationState';
 import VisitorID from './models/VisitorID';
 
@@ -22,17 +22,17 @@ interface IIdentity {
     authenticationState: MobileVisitorAuthenticationState
   ) => void;
   syncIdentifier: (
-    identifierType: String,
-    identifier: String,
+    identifierType: string,
+    identifier: string,
     authenticationState: MobileVisitorAuthenticationState
   ) => void;
-  appendVisitorInfoForURL: (baseURL?: String) => Promise<string>;
+  appendVisitorInfoForURL: (baseURL?: string) => Promise<string>;
   getUrlVariables: () => Promise<string>;
   getIdentifiers: () => Promise<Array<VisitorID>>;
   getExperienceCloudId: () => Promise<string>;
 }
 
-const RCTAEPIdentity: IIdentity = NativeModules.AEPIdentity;
+const RCTAEPIdentity: IIdentity = NativeAEPIdentity;
 
 const Identity: IIdentity = {
   /**
@@ -108,8 +108,8 @@ const Identity: IIdentity = {
    * @see PrivacyStatus
    */
   syncIdentifier(
-    identifierType: String,
-    identifier: String,
+    identifierType: string,
+    identifier: string,
     authenticationState: MobileVisitorAuthenticationState
   ) {
     RCTAEPIdentity.syncIdentifier(
@@ -130,7 +130,7 @@ const Identity: IIdentity = {
    * @param baseURL URL to which the visitor info needs to be appended. Returned as is if it is nil or empty.
    * @return promise method which will be invoked once the updated url is available.
    */
-  appendVisitorInfoForURL(baseURL?: String): Promise<string> {
+  appendVisitorInfoForURL(baseURL?: string): Promise<string> {
     return RCTAEPIdentity.appendVisitorInfoForURL(baseURL);
   },
 

@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative;
 
-import com.adobe.marketing.mobile.Signal;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -29,12 +28,12 @@ public class RCTAEPSignalModule extends ReactContextBaseJavaModule {
     // Required for RN modules
     @Override
     public String getName() {
-        return "AEPSignal";
+        return "NativeAEPSignal";
     }
 
     @ReactMethod
     public void extensionVersion(final Promise promise) {
-        promise.resolve(Signal.extensionVersion());
+        RCTAEPSignalUtil.extensionVersion(promise);
     }
 
 }
