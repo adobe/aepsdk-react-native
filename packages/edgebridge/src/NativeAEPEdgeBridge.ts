@@ -11,10 +11,55 @@ governing permissions and limitations under the License.
 */
 
 import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { NativeModules, TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
   extensionVersion(): Promise<string>;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPEdgeBridge');
+function hasExtensionVersion(mod: Spec | null | undefined): mod is Spec {
+  return mod != null && typeof mod.extensionVersion === 'function';
+}
+
+function isClassicBridge(): boolean {
+  return (global as { RN$Bridgeless?: boolean }).RN$Bridgeless !== true;
+}
+
+/**
+ * Resolve NativeAEPEdgeBridge across bridgeless vs classic-bridge runtimes
+ * (same pattern as NativeAEPOptimize): classic bridge first, then
+ * TurboModuleRegistry.get(), then NativeModules, finally getEnforcing().
+ */
+export function resolveNativeAEPEdgeBridge(): Spec {
+  const bridge = NativeModules.NativeAEPEdgeBridge as Spec | undefined;
+  if (isClassicBridge() && hasExtensionVersion(bridge)) {
+    return bridge;
+  }
+  const turbo = TurboModuleRegistry.get<Spec>('NativeAEPEdgeBridge');
+  if (hasExtensionVersion(turbo)) {
+    return turbo;
+  }
+  if (hasExtensionVersion(bridge)) {
+    return bridge;
+  }
+  return TurboModuleRegistry.getEnforcing<Spec>('NativeAEPEdgeBridge');
+}
+
+let cachedNative: Spec | undefined;
+
+function getNativeAEPEdgeBridge(): Spec {
+  if (!cachedNative) {
+    cachedNative = resolveNativeAEPEdgeBridge();
+  }
+  return cachedNative;
+}
+
+const NativeAEPEdgeBridge: Spec = new Proxy({} as Spec, {
+  get(_target, prop) {
+    const mod = getNativeAEPEdgeBridge();
+    const value = (mod as unknown as Record<string | symbol, unknown>)[prop];
+    return typeof value === 'function' ? (value as Function).bind(mod) : value;
+  },
+});
+
+export default NativeAEPEdgeBridge;
