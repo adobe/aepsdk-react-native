@@ -60,12 +60,4 @@ public class NativeAEPUserProfileModule extends NativeAEPUserProfileSpec {
         UserProfile.removeUserAttributes(RCTAEPUserProfileArrayUtil.toStringList(attributeNames));
     }
 
-    // addListener/removeListeners kept for NativeEventEmitter compatibility (interop path).
-    @Override
-    public void addListener(String eventName) {
-    }
-
-    @Override
-    public void removeListeners(double count) {
-    }
 }

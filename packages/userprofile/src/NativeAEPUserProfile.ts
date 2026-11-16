@@ -18,8 +18,6 @@ export interface Spec extends TurboModule {
   removeUserAttributes(attributeNames: Array<string>): void;
   getUserAttributes(attributeNames: Array<string>): Promise<Object>;
   updateUserAttributes(attributeMap: Object): void;
-  addListener(eventName: string): void;
-  removeListeners(count: number): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPUserProfile');

@@ -18,9 +18,6 @@ export interface Spec extends TurboModule {
   removeUserAttributes(attributeNames: Array<string>): void;
   getUserAttributes(attributeNames: Array<string>): Promise<Object>;
   updateUserAttributes(attributeMap: Object): void;
-  // Legacy event listener shims (required for interop path's NativeEventEmitter)
-  addListener(eventName: string): void;
-  removeListeners(count: number): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPUserProfile');

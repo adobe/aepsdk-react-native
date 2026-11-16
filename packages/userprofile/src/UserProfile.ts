@@ -21,7 +21,7 @@ interface IUserProfile {
   updateUserAttributes: (attributeMap: Record<string, any>) => void;
 }
 
-const RCTAEPUserProfile: IUserProfile = NativeAEPUserProfile as unknown as IUserProfile;
+const RCTAEPUserProfile = NativeAEPUserProfile;
 
 const UserProfile: IUserProfile = {
   /**
