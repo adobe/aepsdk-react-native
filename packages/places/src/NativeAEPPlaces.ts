@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { NativeModules, TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
   extensionVersion(): Promise<string>;
@@ -23,4 +23,49 @@ export interface Spec extends TurboModule {
   setAuthorizationStatus(authStatus?: string): void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('NativeAEPPlaces');
+function hasPlaces(mod: Spec | null | undefined): mod is Spec {
+  return mod != null && typeof mod.extensionVersion === 'function';
+}
+
+function isClassicBridge(): boolean {
+  return (global as { RN$Bridgeless?: boolean }).RN$Bridgeless !== true;
+}
+
+/**
+ * Resolve NativeAEPPlaces across bridgeless vs classic-bridge runtimes
+ * (same pattern as NativeAEPOptimize): classic bridge first, then
+ * TurboModuleRegistry.get(), then NativeModules, finally getEnforcing().
+ */
+function resolveNativeAEPPlaces(): Spec {
+  const bridge = NativeModules.NativeAEPPlaces as Spec | undefined;
+  if (isClassicBridge() && hasPlaces(bridge)) {
+    return bridge;
+  }
+  const turbo = TurboModuleRegistry.get<Spec>('NativeAEPPlaces');
+  if (hasPlaces(turbo)) {
+    return turbo;
+  }
+  if (hasPlaces(bridge)) {
+    return bridge;
+  }
+  return TurboModuleRegistry.getEnforcing<Spec>('NativeAEPPlaces');
+}
+
+let cachedNative: Spec | undefined;
+
+function getNativeAEPPlaces(): Spec {
+  if (!cachedNative) {
+    cachedNative = resolveNativeAEPPlaces();
+  }
+  return cachedNative;
+}
+
+const NativeAEPPlaces: Spec = new Proxy({} as Spec, {
+  get(_target, prop) {
+    const mod = getNativeAEPPlaces();
+    const value = (mod as unknown as Record<string | symbol, unknown>)[prop];
+    return typeof value === 'function' ? (value as Function).bind(mod) : value;
+  },
+});
+
+export default NativeAEPPlaces;
