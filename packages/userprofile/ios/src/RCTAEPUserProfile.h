@@ -9,9 +9,22 @@
  governing permissions and limitations under the License.
  */
 
- #import <React/RCTBridgeModule.h>
- #import <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 
-@interface RCTAEPUserProfile : NSObject <RCTBridgeModule>
+#if USE_INTEROP_ROOT
+  #if RCT_NEW_ARCH_ENABLED
+    // New arch: same Spec conformance as USE_INTEROP_ROOT=0 (compile parity only).
+    #import <NativeAEPUserProfileSpec/NativeAEPUserProfileSpec.h>
+    @interface RCTAEPUserProfile : NSObject <NativeAEPUserProfileSpec>
+  #else
+    // Old arch only: classic bridge (RCT_EXPORT_METHOD).
+    #import <React/RCTBridgeModule.h>
+    @interface RCTAEPUserProfile : NSObject <RCTBridgeModule>
+  #endif
+#else
+  // Turbo path (RN 0.84+ default).
+  #import <NativeAEPUserProfileSpec/NativeAEPUserProfileSpec.h>
+  @interface RCTAEPUserProfile : NSObject <NativeAEPUserProfileSpec>
+#endif
 
 @end

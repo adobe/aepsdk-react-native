@@ -32,7 +32,7 @@ public class RCTAEPUserProfileModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "AEPUserProfile";
+    return "NativeAEPUserProfile";
   }
 
   @ReactMethod

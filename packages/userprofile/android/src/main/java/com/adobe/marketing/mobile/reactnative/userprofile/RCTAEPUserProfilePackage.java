@@ -10,28 +10,71 @@
  */
 package com.adobe.marketing.mobile.reactnative.userprofile;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.facebook.react.BaseReactPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.ViewManager;
-import com.facebook.react.bridge.JavaScriptModule;
-public class RCTAEPUserProfilePackage implements ReactPackage {
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
+
+/**
+ * Registers the UserProfile native module per React Native Turbo Module doc.
+ * Build-time switch: only one root is registered, but both paths register under
+ * the same JS-visible name "NativeAEPUserProfile" so the codegen JS spec
+ * (`TurboModuleRegistry.getEnforcing('NativeAEPUserProfile')`) resolves on either path.
+ *
+ * USE_INTEROP_ROOT true  -> RCTAEPUserProfileModule (classic bridge); isTurboModule = false.
+ * USE_INTEROP_ROOT false -> NativeAEPUserProfileModule (Turbo);       isTurboModule = true.
+ */
+public class RCTAEPUserProfilePackage extends BaseReactPackage implements ReactPackage {
+
+    private static final String MODULE_NAME = "NativeAEPUserProfile";
+
     @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RCTAEPUserProfileModule(reactContext));
+    public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+        if (!MODULE_NAME.equals(name)) {
+            return null;
+        }
+        if (BuildConfig.USE_INTEROP_ROOT || !BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+            return new RCTAEPUserProfileModule(reactContext);
+        }
+        return createTurboModule(reactContext);
     }
 
-    // Deprecated from RN 0.47
-    public List<Class<? extends JavaScriptModule>> createJSModules() {
-      return Collections.emptyList();
+    /** Reflection avoids compile-time dep on NativeAEPUserProfileModule when old arch omits codegen sources. */
+    private static NativeModule createTurboModule(ReactApplicationContext reactContext) {
+        try {
+            Class<?> cls = Class.forName(
+                    "com.adobe.marketing.mobile.reactnative.userprofile.NativeAEPUserProfileModule");
+            return (NativeModule) cls.getConstructor(ReactApplicationContext.class).newInstance(reactContext);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(
+                    "NativeAEPUserProfileModule not available — enable New Architecture or set USE_INTEROP_ROOT=true",
+                    e);
+        }
     }
 
     @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-      return Collections.emptyList();
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        return new ReactModuleInfoProvider() {
+            @Override
+            public Map<String, ReactModuleInfo> getReactModuleInfos() {
+                Map<String, ReactModuleInfo> map = new HashMap<>();
+                boolean isTurboModule =
+                        BuildConfig.IS_NEW_ARCHITECTURE_ENABLED && !BuildConfig.USE_INTEROP_ROOT;
+                map.put(MODULE_NAME, new ReactModuleInfo(
+                        MODULE_NAME,
+                        MODULE_NAME,
+                        false,
+                        false,
+                        false,
+                        isTurboModule
+                ));
+                return map;
+            }
+        };
     }
 }

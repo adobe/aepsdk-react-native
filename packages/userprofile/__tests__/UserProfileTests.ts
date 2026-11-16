@@ -10,41 +10,47 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+jest.mock('../src/NativeAEPUserProfile', () => ({
+  __esModule: true,
+  default: {
+    extensionVersion: jest.fn().mockResolvedValue('1.0.0'),
+    removeUserAttributes: jest.fn(),
+    getUserAttributes: jest.fn().mockResolvedValue({}),
+    updateUserAttributes: jest.fn()
+  }
+}));
+
 import { UserProfile } from '../src';
+import NativeAEPUserProfile from '../src/NativeAEPUserProfile';
 
 describe('UserProfile', () => {
   it('extensionVersion is called', async () => {
     expect(UserProfile.extensionVersion).toBeDefined();
-    const spy = jest.spyOn(NativeModules.AEPUserProfile, 'extensionVersion');
     await UserProfile.extensionVersion();
-    expect(spy).toHaveBeenCalled();
+    expect(NativeAEPUserProfile.extensionVersion).toHaveBeenCalled();
   });
 
   it('removeUserAttributes is called with correct parameter', async () => {
-    const spy = jest.spyOn(
-      NativeModules.AEPUserProfile,
-      'removeUserAttributes'
-    );
     let attributeNames = ['attrNameTest'];
     await UserProfile.removeUserAttributes(attributeNames);
-    expect(spy).toHaveBeenCalledWith(attributeNames);
+    expect(NativeAEPUserProfile.removeUserAttributes).toHaveBeenCalledWith(
+      attributeNames
+    );
   });
 
   it('getUserAttributes is called with correct parameters', async () => {
-    const spy = jest.spyOn(NativeModules.AEPUserProfile, 'getUserAttributes');
     let attributeNames = ['attrNameTest'];
     await UserProfile.getUserAttributes(attributeNames);
-    expect(spy).toHaveBeenCalledWith(attributeNames);
+    expect(NativeAEPUserProfile.getUserAttributes).toHaveBeenCalledWith(
+      attributeNames
+    );
   });
 
   it('updateUserAttributes is called with correct parameter', async () => {
-    const spy = jest.spyOn(
-      NativeModules.AEPUserProfile,
-      'updateUserAttributes'
-    );
     let attrMap = { mapKey: 'mapValue', mapKey1: 'mapValue1' };
     await UserProfile.updateUserAttributes(attrMap);
-    expect(spy).toHaveBeenCalledWith(attrMap);
+    expect(NativeAEPUserProfile.updateUserAttributes).toHaveBeenCalledWith(
+      attrMap
+    );
   });
 });

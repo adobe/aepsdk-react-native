@@ -36,5 +36,18 @@
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
+  },
+  "codegenConfig": {
+    "name": "NativeAEPUserProfileSpec",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.adobe.marketing.mobile.reactnative.userprofile"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeAEPUserProfile": "RCTAEPUserProfile"
+      }
+    }
   }
 }
