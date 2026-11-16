@@ -10,176 +10,114 @@ governing permissions and limitations under the License.
 */
 package com.adobe.marketing.mobile.reactnative.target;
 
-import android.net.Uri;
-import android.util.Log;
-
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.target.TargetParameters;
-import com.adobe.marketing.mobile.target.TargetPrefetch;
 import com.adobe.marketing.mobile.target.TargetRequest;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.Callback;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Legacy bridge module (old architecture / interop). Business logic lives in {@link RCTAEPTargetUtil},
+ * shared with {@link NativeAEPTargetModule}.
+ */
 public class RCTAEPTargetModule extends ReactContextBaseJavaModule {
 
-  private final ReactApplicationContext reactContext;
-  private final String REQUEST_ID_KEY = "id";
+  private static final String NAME = "NativeAEPTarget";
 
-  private HashMap<String, TargetRequest> registeredTargetRequests = new HashMap<>();
+  private final HashMap<String, TargetRequest> registeredTargetRequests = new HashMap<>();
 
   public RCTAEPTargetModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    this.reactContext = reactContext;
   }
 
   @Override
   public String getName() {
-    return "AEPTarget";
+    return NAME;
   }
 
   @ReactMethod
   public void extensionVersion(final Promise promise) {
-    promise.resolve(Target.extensionVersion());
+    RCTAEPTargetUtil.extensionVersion(promise);
   }
 
   @ReactMethod
   public void clearPrefetchCache() {
-    Target.clearPrefetchCache();
+    RCTAEPTargetUtil.clearPrefetchCache();
   }
 
   @ReactMethod
   public void getSessionId(final Promise promise) {
-    Target.getSessionId(new AdobeCallback<String>() {
-      @Override
-      public void call(String sessionId) {
-        promise.resolve(sessionId);
-      }
-    });
+    RCTAEPTargetUtil.getSessionId(promise);
   }
 
   @ReactMethod
   public void getThirdPartyId(final Promise promise) {
-    Target.getThirdPartyId(new AdobeCallback<String>() {
-      @Override
-      public void call(String thirdPartyId) {
-        promise.resolve(thirdPartyId);
-      }
-    });
+    RCTAEPTargetUtil.getThirdPartyId(promise);
   }
 
   @ReactMethod
   public void getTntId(final Promise promise) {
-    Target.getTntId(new AdobeCallback<String>() {
-      @Override
-      public void call(String tntId) {
-        promise.resolve(tntId);
-      }
-    });
+    RCTAEPTargetUtil.getTntId(promise);
   }
 
   @ReactMethod
-  public void setSessionId(final String setSessionId) {
-    Target.setSessionId(setSessionId);
+  public void setSessionId(final String sessionId) {
+    RCTAEPTargetUtil.setSessionId(sessionId);
   }
 
   @ReactMethod
   public void setTntId(final String tntId) {
-    Target.setTntId(tntId);
+    RCTAEPTargetUtil.setTntId(tntId);
   }
 
   @ReactMethod
   public void setThirdPartyId(final String thirdPartyId) {
-    Target.setThirdPartyId(thirdPartyId);
+    RCTAEPTargetUtil.setThirdPartyId(thirdPartyId);
   }
 
   @ReactMethod
   public void resetExperience() {
-    Target.resetExperience();
+    RCTAEPTargetUtil.resetExperience();
   }
 
   @ReactMethod
   public void setPreviewRestartDeeplink(final String deepLinkString) {
-    Uri deepLink = null;
-    try {
-      deepLink = Uri.parse(deepLinkString);
-    }catch(Exception e){
-      e.printStackTrace();
-    }
-
-    if (deepLink != null) {
-      Target.setPreviewRestartDeepLink(deepLink);
-    } else {
-      Log.d(getName(), "Deep link URI cannot be null");
-    }
+    RCTAEPTargetUtil.setPreviewRestartDeeplink(deepLinkString, NAME);
   }
 
   @ReactMethod
   public void retrieveLocationContent(ReadableArray targetRequestList, ReadableMap parameters) {
-    ArrayList<TargetRequest> requestList = new ArrayList<>();
-    for (int i = 0; i < targetRequestList.size(); i++) {
-      String identifier = targetRequestList.getMap(i).getString(REQUEST_ID_KEY);
-
-      if (registeredTargetRequests.containsKey(identifier)) {
-        requestList.add(registeredTargetRequests.get(identifier));
-      }
-    }
-
-    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
-
-    Target.retrieveLocationContent(requestList, parametersObj);
+    RCTAEPTargetUtil.retrieveLocationContent(targetRequestList, parameters, registeredTargetRequests);
   }
 
   @ReactMethod
   public void displayedLocations(ReadableArray mboxNames, ReadableMap parameters) {
-    ArrayList<String> mboxNamesList = new ArrayList<>();
-    for (int i = 0; i < mboxNames.size(); i++) {
-      String mboxName = mboxNames.getString(i);
-      mboxNamesList.add(mboxName);
-    }
-
-    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
-
-    Target.displayedLocations(mboxNamesList, parametersObj);
+    RCTAEPTargetUtil.displayedLocations(mboxNames, parameters);
   }
 
   @ReactMethod
   public void clickedLocation(String mboxName, ReadableMap parameters) {
-    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
-
-    Target.clickedLocation(mboxName, parametersObj);
+    RCTAEPTargetUtil.clickedLocation(mboxName, parameters);
   }
 
   @ReactMethod
   public void prefetchContent(ReadableArray mboxPrefetchList, ReadableMap parameters, final Promise promise) {
-    ArrayList<TargetPrefetch> prefetchList = new ArrayList<>();
-    for (int i = 0; i < mboxPrefetchList.size(); i++) {
-      TargetPrefetch prefetch = RCTAEPTargetDataBridge.mapToPrefetch(mboxPrefetchList.getMap(i));
-      prefetchList.add(prefetch);
-    }
+    RCTAEPTargetUtil.prefetchContent(mboxPrefetchList, parameters, promise);
+  }
 
-    TargetParameters parametersObj = RCTAEPTargetDataBridge.mapToParameters(parameters);
-
-    Target.prefetchContent(prefetchList, parametersObj, new AdobeCallback<String>() {
-      @Override
-      public void call(String s) {
-        promise.resolve(s);
-      }
-    });
+  @ReactMethod
+  public void prefetchContentWithTimeout(ReadableArray mboxPrefetchList, ReadableMap parameters, double timeout, final Promise promise) {
+    RCTAEPTargetUtil.prefetchContentWithTimeout(mboxPrefetchList, parameters, timeout, promise, NAME);
   }
 
   @ReactMethod
   public void registerTargetRequests(ReadableMap requestMap, Callback successCallback) {
-    TargetRequest request = RCTAEPTargetDataBridge.mapToRequest(requestMap, successCallback);
-    registeredTargetRequests.put(requestMap.getString(REQUEST_ID_KEY), request);
+    RCTAEPTargetUtil.registerTargetRequests(requestMap, successCallback, registeredTargetRequests);
   }
 
 }

@@ -10,10 +10,17 @@ specific language governing permissions and limitations under the License.
 */
 
 #import <Foundation/Foundation.h>
-#import <React/RCTBridgeModule.h>
-#import <React/RCTUtils.h>
 
-@interface RCTAEPTarget : NSObject <RCTBridgeModule>
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+  // Old-arch classic bridge.
+  #import <React/RCTBridgeModule.h>
+  #import <React/RCTUtils.h>
+  @interface RCTAEPTarget : NSObject <RCTBridgeModule>
+#else
+  #import <React/RCTUtils.h>
+  #import <NativeAEPTargetSpec/NativeAEPTargetSpec.h>
+  @interface RCTAEPTarget : NSObject <NativeAEPTargetSpec>
+#endif
 
 @property(nonatomic, strong) NSMutableDictionary *registeredTargetRequests;
 

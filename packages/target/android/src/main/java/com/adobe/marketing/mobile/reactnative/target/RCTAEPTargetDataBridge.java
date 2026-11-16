@@ -12,14 +12,18 @@ governing permissions and limitations under the License.
 package com.adobe.marketing.mobile.reactnative.target;
 
 import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.AdobeError;
+import com.adobe.marketing.mobile.target.AdobeTargetDetailedCallback;
 import com.adobe.marketing.mobile.target.TargetOrder;
 import com.adobe.marketing.mobile.target.TargetParameters;
 import com.adobe.marketing.mobile.target.TargetPrefetch;
 import com.adobe.marketing.mobile.target.TargetProduct;
 import com.adobe.marketing.mobile.target.TargetRequest;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +33,7 @@ public class RCTAEPTargetDataBridge {
     final private static String NAME_KEY = "name";
     final private static String PARAMETERS_KEY = "parameters";
     final private static String DEFAULT_CONTENT_KEY = "defaultContent";
+    final private static String DETAILED_CALLBACK_KEY = "detailedCallback";
 
     final private static String TARGET_PARAMETERS_KEY = "targetParameters";
     final private static String PROFILE_PARAMETERS_KEY = "profileParameters";
@@ -57,7 +62,27 @@ public class RCTAEPTargetDataBridge {
         }
 
         TargetParameters parameters = mapToParameters(getNullableMap(map, TARGET_PARAMETERS_KEY));
-        return new TargetRequest(getNullableString(map, NAME_KEY), parameters, getNullableString(map, DEFAULT_CONTENT_KEY), new AdobeCallback<String>() {
+        String name = getNullableString(map, NAME_KEY);
+        String defaultContent = getNullableString(map, DEFAULT_CONTENT_KEY);
+
+        if (map.hasKey(DETAILED_CALLBACK_KEY) && map.getBoolean(DETAILED_CALLBACK_KEY)) {
+            return new TargetRequest(name, parameters, defaultContent, new AdobeTargetDetailedCallback() {
+                @Override
+                public void call(String content, Map<String, Object> data) {
+                    successCallback.invoke(null, content, RCTAEPTargetMapUtil.toWritableMap(data));
+                }
+
+                @Override
+                public void fail(AdobeError error) {
+                    WritableMap errorMap = Arguments.createMap();
+                    errorMap.putInt("code", error.getErrorCode());
+                    errorMap.putString("message", error.getErrorName());
+                    successCallback.invoke(errorMap, null, null);
+                }
+            });
+        }
+
+        return new TargetRequest(name, parameters, defaultContent, new AdobeCallback<String>() {
             @Override
             public void call(String content) {
                 successCallback.invoke(null, content);

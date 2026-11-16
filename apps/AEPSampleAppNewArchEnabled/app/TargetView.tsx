@@ -108,6 +108,40 @@ function TargetView() {
     Target.retrieveLocationContent(locationRequests, targetParameters1);
   };
 
+  const retrieveLocationContentWithData = () => {
+    const detailed = (mbox: string) => ({
+      call: (content: string | null, data: any) => {
+        console.log(`Adobe detailed content (${mbox}): ${content}`);
+        console.log(`Adobe response tokens (${mbox}): ${JSON.stringify(data?.responseTokens)}`);
+        console.log(`Adobe analytics payload (${mbox}): ${JSON.stringify(data?.['analytics.payload'])}`);
+        console.log(`Adobe click analytics payload (${mbox}): ${JSON.stringify(data?.['clickmetric.analytics.payload'])}`);
+      },
+      fail: (error: any) => console.log(`Adobe detailed failure (${mbox}): ${JSON.stringify(error)}`),
+    });
+
+    Target.retrieveLocationContent(
+      [
+        new TargetRequestObject('sdk_smoke_tests_target', new TargetParameters(), 'DefaultValue1', detailed('sdk_smoke_tests_target')),
+        new TargetRequestObject('aep-loc-2', new TargetParameters(), 'DefaultValue2', detailed('aep-loc-2')),
+        new TargetRequestObject('sdk_smoke_tests_target_a4t', targetParameters1, 'DefaultValuex', detailed('sdk_smoke_tests_target_a4t')),
+      ],
+      targetParameters1,
+    );
+  };
+
+  const prefetchContentWithTimeout = () => {
+    Target.prefetchContent(
+      [
+        new TargetPrefetchObject('sdk_smoke_tests_target', new TargetParameters()),
+        new TargetPrefetchObject('aep-loc-2', targetParameters1),
+      ],
+      targetParameters1,
+      7,
+    )
+      .then(success => console.log('Prefetch with timeout: ' + success))
+      .catch(err => console.log('Prefetch with timeout failed: ' + JSON.stringify(err)));
+  };
+
   const displayedLocations = () =>
     Target.displayedLocations([
       'sdk_smoke_tests_target',
@@ -167,6 +201,8 @@ function TargetView() {
           onPress={retrieveLocationContent}
         />
         <Button title="prefetchContent(...)" onPress={prefetchContent} />
+        <Button title="retrieveLocationContentWithData()" onPress={retrieveLocationContentWithData} />
+        <Button title="prefetchContentWithTimeout()" onPress={prefetchContentWithTimeout} />
         <Button title="displayedLocations(...)" onPress={displayedLocations} />
         <Button title="clickedLocation(...)" onPress={clickedLocation} />
       </ScrollView>
