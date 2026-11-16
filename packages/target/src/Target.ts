@@ -44,7 +44,7 @@ interface ITarget {
   ) => void;
 }
 
-const RCTTarget: ITarget = NativeAEPTarget as unknown as ITarget;
+const RCTTarget = NativeAEPTarget;
 
 const Target: ITarget = {
   /**
@@ -219,7 +219,7 @@ const Target: ITarget = {
         new Error('prefetchContent timeout must be a positive number of seconds')
       );
     }
-    return (RCTTarget as any).prefetchContentWithTimeout(
+    return RCTTarget.prefetchContentWithTimeout(
       prefetchObjectArray,
       parameters ?? null,
       timeout

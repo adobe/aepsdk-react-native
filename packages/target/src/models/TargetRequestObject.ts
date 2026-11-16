@@ -14,8 +14,7 @@ import TargetParameters from './TargetParameters';
 import NativeAEPTarget from '../NativeAEPTarget';
 import type {
   TargetCallbackError,
-  TargetDetailedCallback,
-  TargetResponseData
+  TargetDetailedCallback
 } from './TargetDetailedCallback';
 
 /** Callback receiving only the mbox content. */
@@ -24,18 +23,7 @@ type TargetContentCallback = (
   content: string | null
 ) => void;
 
-interface ITargetRequests {
-  registerTargetRequests: (
-    requestMap: TargetRequestObject,
-    callback: (
-      error: Error | TargetCallbackError | null,
-      content: string | null,
-      data?: TargetResponseData | null
-    ) => void
-  ) => void;
-}
-
-const RCTTarget: ITargetRequests = NativeAEPTarget as unknown as ITargetRequests;
+const RCTTarget = NativeAEPTarget;
 
 class TargetRequestObject extends TargetPrefetchObject {
   defaultContent: string;
