@@ -622,6 +622,14 @@
 					"${PODS_ROOT}/React-graphics/react/renderer/graphics/platform/ios",
 					"${PODS_ROOT}/React-featureflags",
 					"${PODS_ROOT}/React-renderercss",
+					"${PODS_ROOT}/React-Fabric/react/renderer/components/scrollview/platform/cxx",
+					"${PODS_ROOT}/React-Fabric/react/renderer/components/scrollview/platform/ios",
+					"${PODS_ROOT}/React-FabricComponents/react/renderer/textlayoutmanager/platform/ios",
+					"${PODS_ROOT}/React-FabricComponents/react/renderer/components/text/platform/cxx",
+					"${PODS_ROOT}/React-FabricComponents/react/renderer/components/textinput/platform/ios",
+					"${PODS_ROOT}/React-FabricComponents/react/renderer/components/switch/iosswitch",
+					"${PODS_ROOT}/React-bridging",
+					"${PODS_ROOT}/React-cxxstableapi",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -651,6 +659,7 @@
 					"$(inherited)",
 					" ",
 				);
+				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -725,6 +734,14 @@
 					"${PODS_ROOT}/React-graphics/react/renderer/graphics/platform/ios",
 					"${PODS_ROOT}/React-featureflags",
 					"${PODS_ROOT}/React-renderercss",
+					"${PODS_ROOT}/React-Fabric/react/renderer/components/scrollview/platform/cxx",
+					"${PODS_ROOT}/React-Fabric/react/renderer/components/scrollview/platform/ios",
+					"${PODS_ROOT}/React-FabricComponents/react/renderer/textlayoutmanager/platform/ios",
+					"${PODS_ROOT}/React-FabricComponents/react/renderer/components/text/platform/cxx",
+					"${PODS_ROOT}/React-FabricComponents/react/renderer/components/textinput/platform/ios",
+					"${PODS_ROOT}/React-FabricComponents/react/renderer/components/switch/iosswitch",
+					"${PODS_ROOT}/React-bridging",
+					"${PODS_ROOT}/React-cxxstableapi",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -753,6 +770,7 @@
 					"$(inherited)",
 					" ",
 				);
+				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ENABLE_EXPLICIT_MODULES = NO;

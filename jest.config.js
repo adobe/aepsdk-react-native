@@ -3,7 +3,8 @@ const { defaults: tsjPreset } = require("ts-jest/presets");
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   ...tsjPreset,
-  preset: "<rootDir>/apps/AEPSampleApp/node_modules/react-native",
+  // RN 0.85+ moved the jest preset out of react-native into @react-native/jest-preset
+  preset: "<rootDir>/apps/AEPSampleApp/node_modules/@react-native/jest-preset",
   testEnvironment: "node",
   transform: {
     "^.+\\.jsx$": "babel-jest",
