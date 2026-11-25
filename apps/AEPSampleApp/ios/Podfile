@@ -46,6 +46,13 @@ target 'aepsampleapp' do
       :ccache_enabled => true
     )
     
+    # RN 0.88 headers still include non-modular headers across framework boundaries.
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |bc|
+        bc.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      end
+    end
+
     installer.pods_project.targets.each do |t|
       if t.name.start_with?("AEP")
         t.build_configurations.each do |bc|

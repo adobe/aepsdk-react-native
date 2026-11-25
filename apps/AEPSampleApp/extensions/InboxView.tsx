@@ -26,7 +26,6 @@ import {
   ColorSchemeName,
   FlatList,
   Modal,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -54,13 +53,15 @@ const VIEW_OPTIONS = [
 ] as const;
 type ViewOption = (typeof VIEW_OPTIONS)[number];
 
+type ColorSchemeOverride = Parameters<typeof Appearance.setColorScheme>[0];
+
 const THEME_OPTIONS: Array<{
   label: string;
-  value: ColorSchemeName;
+  value: ColorSchemeOverride;
 }> = [
     { label: "Light", value: "light" },
     { label: "Dark", value: "dark" },
-    { label: "System", value: null },
+    { label: "System", value: "unspecified" },
   ];
 
 const TEMPLATE_OPTIONS: Array<{
@@ -88,7 +89,7 @@ const Switcher = ({ title, options, selected, onChange, colors, colorScheme }: {
   selected: string;
   onChange: (value: string) => void;
   colors: any;
-  colorScheme: ColorSchemeName;
+  colorScheme: ColorSchemeName | null;
 }) => (
   <View style={[styles.section, styles.panel, { backgroundColor: colors.background, borderColor: colors.panelBorder }]}>
     <Text style={[styles.titleText, { color: colors.text }]}>{title}</Text>
@@ -132,14 +133,8 @@ const Header = ({
   const colorScheme = useColorScheme();
 
   const handleThemeChange = useCallback(
-    (theme: string, value: ColorSchemeName) => {
+    (theme: string, value: ColorSchemeOverride) => {
       setSelectedTheme(theme);
-      // Android's AppearanceModule.setColorScheme parameter is @NonNull, so
-      // passing null (the "System" choice) crashes the bridge. Skip the call
-      // on Android — the scheme stays on whatever was last set explicitly.
-      if (Platform.OS === 'android' && value == null) {
-        return;
-      }
       Appearance.setColorScheme(value);
     }, []
   );
