@@ -12,7 +12,6 @@ governing permissions and limitations under the License.
 
 import { CampaignClassic } from '@adobe/react-native-aepcampaignclassic';
 import {
-  getAPNSToken,
   getMessaging,
   onMessage,
   onRegistered,
@@ -59,16 +58,14 @@ const fetchFid = (): Promise<string> =>
     register(messaging).catch((e) => finish(() => reject(e)));
   });
 
-// iOS: Campaign Classic expects the APNs device token.
-// The iOS simulator never gets an APNs token, so debug builds fall back to a placeholder (no real push can arrive).
-const SIMULATOR_TOKEN = 'simulator-test-token';
-
+// iOS: Campaign Classic expects the raw APNs device token (hex), same as the native SDK.
+// expo-notifications registers for remote notifications and returns it without Firebase.
 const fetchPushToken = async (): Promise<string | null> => {
   if (Platform.OS !== 'ios') {
     return fetchFid();
   }
-  const apnsToken = await getAPNSToken(getMessaging());
-  return apnsToken ?? (__DEV__ ? SIMULATOR_TOKEN : null);
+  const { data } = await Notifications.getDevicePushTokenAsync();
+  return typeof data === 'string' ? data : null;
 };
 
 function CampaignClassicView() {
@@ -107,9 +104,9 @@ function CampaignClassicView() {
     console.log(`Device registered for ${userKey}`);
   };
 
-  const registerDeviceSameUser = () => registerDevice('new-ACC-Extension-Test-User');
+  const registerDeviceSameUser = () => registerDevice('acc-token');
 
-  const registerDeviceNewUser = () => registerDevice('new-ACC-Extension-Test-NewUser');
+  const registerDeviceNewUser = () => registerDevice('acc-new-token');
 
   const registerDeviceWithAdditionalParams = () =>
     registerDevice('ACC-Extension-Test-User', {
@@ -125,12 +122,12 @@ function CampaignClassicView() {
   };
 
   const trackNotificationClickWithUserInfo = () => {
-    CampaignClassic.trackNotificationClickWithUserInfo({ _mId: '4005', _dId: '4d9' });
+    CampaignClassic.trackNotificationClickWithUserInfo({ _mId: '15000', _dId: '5e9' });
     console.log('Notification clicked!');
   };
 
   const trackNotificationReceiveWithUserInfo = () => {
-    CampaignClassic.trackNotificationReceiveWithUserInfo({ _mId: '4005', _dId: '4d9' });
+    CampaignClassic.trackNotificationReceiveWithUserInfo({ _mId: '15000', _dId: '5e9' });
     console.log('Notification received!');
   };
 
