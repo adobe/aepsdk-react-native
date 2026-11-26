@@ -11,68 +11,56 @@
  */
 package com.adobe.marketing.mobile.reactnative.campaignclassic;
 
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.AdobeCallbackWithError;
-import com.adobe.marketing.mobile.AdobeError;
 import com.adobe.marketing.mobile.CampaignClassic;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
+/**
+ * Legacy bridge module (old architecture / USE_INTEROP_ROOT=true). All logic
+ * lives in {@link RCTAEPCampaignClassicUtil}, shared with the Turbo module.
+ */
 public class RCTAEPCampaignClassicModule extends ReactContextBaseJavaModule {
 
-  private static final String TAG = "RCTAEPCampaignClassicModule";
-  private final ReactApplicationContext reactContext;
+  public static final String NAME = "NativeAEPCampaignClassic";
 
   public RCTAEPCampaignClassicModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    this.reactContext = reactContext;
   }
 
   @Override
   public String getName() {
-    return "AEPCampaignClassic";
+    return NAME;
   }
 
   @ReactMethod
   public void extensionVersion(final Promise promise) {
-    promise.resolve(CampaignClassic.extensionVersion());
+    RCTAEPCampaignClassicUtil.extensionVersion(promise);
   }
 
   @ReactMethod
   public void registerDeviceWithToken(final String deviceToken,
                                       final String userKey,
-                                      ReadableMap additionalParams) {
-    final Map<String, Object> additionalParamsMap =
-        additionalParams != null
-            ? RCTAEPCampaignClassicUtil.convertReadableMapToMap(
-                  additionalParams)
-            : null;
-      CampaignClassic.registerDevice(deviceToken, userKey, additionalParamsMap);
+                                      final ReadableMap additionalParams) {
+    RCTAEPCampaignClassicUtil.registerDeviceWithToken(deviceToken, userKey,
+                                                      additionalParams);
   }
 
   @ReactMethod
-  public void trackNotificationReceiveWithUserInfo(ReadableMap trackInfo) {
-    final Map<String, String> trackInfoMap =
-        RCTAEPCampaignClassicUtil.convertTrackInfoToMap(trackInfo);
-    CampaignClassic.trackNotificationReceive(trackInfoMap);
+  public void handleRemoteMessage(final ReadableMap data, final Promise promise) {
+    RCTAEPCampaignClassicUtil.handleRemoteMessage(
+        getReactApplicationContext().getApplicationContext(), data, promise);
   }
 
   @ReactMethod
-  public void trackNotificationClickWithUserInfo(ReadableMap trackInfo) {
-    final Map<String, String> trackInfoMap =
-        RCTAEPCampaignClassicUtil.convertTrackInfoToMap(trackInfo);
-    CampaignClassic.trackNotificationClick(trackInfoMap);
+  public void trackNotificationReceiveWithUserInfo(final ReadableMap trackInfo) {
+    RCTAEPCampaignClassicUtil.trackNotificationReceiveWithUserInfo(trackInfo);
+  }
+
+  @ReactMethod
+  public void trackNotificationClickWithUserInfo(final ReadableMap trackInfo) {
+    RCTAEPCampaignClassicUtil.trackNotificationClickWithUserInfo(trackInfo);
   }
 }

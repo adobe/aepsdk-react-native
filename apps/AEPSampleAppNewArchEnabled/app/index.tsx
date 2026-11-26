@@ -37,6 +37,7 @@ export default function HomeScreen() {
       <Button onPress={() => router.push('/InboxView')} title="Content Card & Inbox" />
       <Button onPress={() => router.push('/EdgeBridgeView')} title="Edge Bridge" />
       <Button onPress={() => router.push('/AssuranceView')} title="Assurance" />
+      <Button onPress={() => router.push('/CampaignClassicView')} title="Campaign Classic" />
       <Button
         onPress={() => router.push('/TargetView')}
         title="Target"

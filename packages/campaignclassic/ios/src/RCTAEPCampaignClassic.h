@@ -9,11 +9,15 @@
  governing permissions and limitations under the License.
  */
 
-#import <React/RCTBridgeModule.h>
 #import <Foundation/Foundation.h>
-#import <React/RCTEventEmitter.h>
 
-@interface RCTAEPCampaignClassic : RCTEventEmitter <RCTBridgeModule>
+#if USE_INTEROP_ROOT && !RCT_NEW_ARCH_ENABLED
+  // Old-arch classic bridge.
+  #import <React/RCTBridgeModule.h>
+  @interface RCTAEPCampaignClassic : NSObject <RCTBridgeModule>
+#else
+  #import <NativeAEPCampaignClassicSpec/NativeAEPCampaignClassicSpec.h>
+  @interface RCTAEPCampaignClassic : NSObject <NativeAEPCampaignClassicSpec>
+#endif
 
 @end
-

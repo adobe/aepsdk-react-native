@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { NativeModules } from 'react-native';
+import RCTAEPCampaignClassic from './NativeAEPCampaignClassic';
 import { UserInfo } from './models/UserInfo';
 
 interface ICampaignClassic {
@@ -22,9 +22,8 @@ interface ICampaignClassic {
   ): void;
   trackNotificationClickWithUserInfo(userInfo: UserInfo): void;
   trackNotificationReceiveWithUserInfo(userInfo: UserInfo): void;
+  handleRemoteMessage(data: Record<string, string>): Promise<boolean>;
 }
-
-const RCTAEPCampaignClassic = NativeModules.AEPCampaignClassic;
 
 /**
  * Public APIs for Campaign Classic extension
@@ -73,6 +72,19 @@ const CampaignClassic: ICampaignClassic = {
    */
   trackNotificationReceiveWithUserInfo(userInfo: UserInfo): void {
     RCTAEPCampaignClassic.trackNotificationReceiveWithUserInfo(userInfo);
+  },
+
+  /**
+   * Android only. Builds and displays an out-of-the-box Campaign Classic push notification from
+   * an FCM data payload and sends the notification-receive tracking request. When this returns
+   * true, do not also call `trackNotificationReceiveWithUserInfo` or
+   * `trackNotificationClickWithUserInfo` for the same message.
+   * On iOS this is a no-op that resolves false.
+   * @param data the FCM message data payload (string key-value pairs)
+   * @return {Promise<boolean>} true if the notification was handled by the extension
+   */
+  async handleRemoteMessage(data: Record<string, string>): Promise<boolean> {
+    return await RCTAEPCampaignClassic.handleRemoteMessage(data);
   }
 };
 

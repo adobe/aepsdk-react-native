@@ -13,6 +13,7 @@ governing permissions and limitations under the License.
 import 'react-native-gesture-handler';
 import { AppRegistry, NativeModules } from 'react-native';
 import App from './App.tsx';
+import { getMessaging, setBackgroundMessageHandler } from '@react-native-firebase/messaging';
 import { name as appName } from './app.json';
 
 console.log('[BareSampleApp] Bridgeless:', global.RN$Bridgeless);
@@ -27,5 +28,9 @@ if (!__DEV__) {
     console.log = (...args) => NSLogger.log(args.map(String).join(' '));
   }
 }
+
+// Campaign Classic pushes are displayed natively by NotificationService (Android).
+// This no-op only satisfies React Native Firebase's headless background task.
+setBackgroundMessageHandler(getMessaging(), async () => {});
 
 AppRegistry.registerComponent(appName, () => App);
